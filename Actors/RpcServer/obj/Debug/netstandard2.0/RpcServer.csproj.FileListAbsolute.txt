@@ -1,8 +1,0 @@
-/home/joshua/Projects/ADL/Actors/RpcServer/bin/Debug/netstandard2.0/RpcServer.deps.json
-/home/joshua/Projects/ADL/Actors/RpcServer/bin/Debug/netstandard2.0/RpcServer.dll
-/home/joshua/Projects/ADL/Actors/RpcServer/bin/Debug/netstandard2.0/RpcServer.pdb
-/home/joshua/Projects/ADL/Actors/RpcServer/obj/Debug/netstandard2.0/RpcServer.csproj.CoreCompileInputs.cache
-/home/joshua/Projects/ADL/Actors/RpcServer/obj/Debug/netstandard2.0/RpcServer.AssemblyInfoInputs.cache
-/home/joshua/Projects/ADL/Actors/RpcServer/obj/Debug/netstandard2.0/RpcServer.AssemblyInfo.cs
-/home/joshua/Projects/ADL/Actors/RpcServer/obj/Debug/netstandard2.0/RpcServer.dll
-/home/joshua/Projects/ADL/Actors/RpcServer/obj/Debug/netstandard2.0/RpcServer.pdb

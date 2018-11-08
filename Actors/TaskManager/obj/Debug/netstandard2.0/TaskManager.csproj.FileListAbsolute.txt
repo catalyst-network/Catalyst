@@ -1,8 +1,0 @@
-/home/joshua/Projects/ADL/Actors/TaskManager/bin/Debug/netstandard2.0/TaskManager.deps.json
-/home/joshua/Projects/ADL/Actors/TaskManager/bin/Debug/netstandard2.0/TaskManager.dll
-/home/joshua/Projects/ADL/Actors/TaskManager/bin/Debug/netstandard2.0/TaskManager.pdb
-/home/joshua/Projects/ADL/Actors/TaskManager/obj/Debug/netstandard2.0/TaskManager.csproj.CoreCompileInputs.cache
-/home/joshua/Projects/ADL/Actors/TaskManager/obj/Debug/netstandard2.0/TaskManager.AssemblyInfoInputs.cache
-/home/joshua/Projects/ADL/Actors/TaskManager/obj/Debug/netstandard2.0/TaskManager.AssemblyInfo.cs
-/home/joshua/Projects/ADL/Actors/TaskManager/obj/Debug/netstandard2.0/TaskManager.dll
-/home/joshua/Projects/ADL/Actors/TaskManager/obj/Debug/netstandard2.0/TaskManager.pdb

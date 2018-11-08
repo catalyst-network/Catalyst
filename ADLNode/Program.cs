@@ -10,7 +10,7 @@ namespace ADL.ADLNode
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var app = new Microsoft.Extensions.CommandLineUtils.CommandLineApplication();
 
@@ -88,8 +88,9 @@ namespace ADL.ADLNode
                 var result = app.Execute(args);
                 Environment.Exit(result);
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                Console.WriteLine(error);
             }
         }
     }
