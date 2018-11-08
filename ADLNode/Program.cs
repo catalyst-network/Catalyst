@@ -22,7 +22,7 @@ namespace ADL.ADLNode
                 var portOption   = app.Option("-p|--port", "Specify a listening port", CommandOptionType.SingleValue);
                 var edgesOption  = app.Option("-e|--edges", "Specify a maximum number of connections", CommandOptionType.SingleValue);
                 var homeOption   = app.Option("-m|--home", "Specify a home directory", CommandOptionType.SingleValue);
-                var hostOption   = app.Option("-t|--host", "Run daemon with sysop shell", CommandOptionType.SingleValue);
+                var hostOption   = app.Option("-t|--host", "daemon host", CommandOptionType.SingleValue);
 
                 app.OnExecute(() =>
                 {
@@ -39,11 +39,11 @@ namespace ADL.ADLNode
                     if (sysopOption.HasValue())
                     {
                         Console.WriteLine($"Running daemon with sysop shell");
-                        Env.Shell = true;
+                        Env.Sysop = true;
                     }
                     else
                     {
-                        Env.Shell = false;
+                        Env.Sysop = false;
                     }
 
                     if (portOption.HasValue())
@@ -69,12 +69,11 @@ namespace ADL.ADLNode
                         Env.Host = hostOption.Value();
                         Console.WriteLine($"Adress of daemon host: {hostOption.Value()}");
                     }
-
+                    
                     var actrsys = ActorSystem.Create("test-actor-system");
                     var firstactor = actrsys.ActorOf(Props.Create<FirstActor>(), "first-actor");
                     firstactor.Tell("test");
                     actrsys.Stop(firstactor);
-                    Console.ReadLine();
                     
                     return 0;
                 });
