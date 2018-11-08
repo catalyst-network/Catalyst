@@ -5,7 +5,7 @@ using Akka.Remote;
 
 namespace ADL.RpcServer
 {
-    public class RpcServer : UntypedActor
+    public class RpcServerService : UntypedActor
     {
         protected override void PreStart() => Console.WriteLine("Started actor");
     

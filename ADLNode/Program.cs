@@ -71,7 +71,7 @@ namespace ADL.ADLNode
                     }
 
                     var actrsys = ActorSystem.Create("test-actor-system");
-                    var firstactor = actrsys.ActorOf(Props.Create<FirstActor>(), "first-actor");
+                    var firstactor = actrsys.ActorOf(Props.Create<RpcServerService>(), "first-actor");
                     firstactor.Tell("test");
                     actrsys.Stop(firstactor);
                     Console.ReadLine();

@@ -2,7 +2,7 @@
 
 namespace ADL.Ledger
 {
-    public class Ledger
+    public class LedgerService
     {
     }
 }

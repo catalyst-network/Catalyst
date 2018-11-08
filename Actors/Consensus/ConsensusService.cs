@@ -2,7 +2,7 @@
 
 namespace ADL.Consensus
 {
-    public class Consensus
+    public class ConsensusService
     {
     }
 }

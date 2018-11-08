@@ -1,6 +1,6 @@
 namespace ADL.DFS
 {
-    public interface IDFS
+    public interface IDFSService
     {
         
     }

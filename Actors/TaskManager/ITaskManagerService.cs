@@ -1,6 +1,6 @@
 namespace ADL.TaskManager
 {
-    public interface ITaskManager
+    public interface ITaskManagerService
     {
         
     }

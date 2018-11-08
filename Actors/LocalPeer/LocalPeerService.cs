@@ -2,7 +2,7 @@
 
 namespace ADL.LocalPeer
 {
-    public class LocalPeer
+    public class LocalPeerService
     {
     }
 }

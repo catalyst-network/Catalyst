@@ -2,7 +2,7 @@
 
 namespace ADL.DFS
 {
-    public class DFS
+    public class DFSService
     {
     }
 }

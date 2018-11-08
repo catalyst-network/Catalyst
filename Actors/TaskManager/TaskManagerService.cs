@@ -2,7 +2,7 @@
 
 namespace ADL.TaskManager
 {
-    public class TaskManager
+    public class TaskManagerService
     {
     }
 }
