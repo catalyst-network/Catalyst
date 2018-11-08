@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Akka" Version="1.3.10" />
+    <PackageReference Include="Akka.Remote" Version="1.3.10" />
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Actors\Consensus\Consensus.csproj" />
+    <ProjectReference Include="..\Actors\DFS\DFS.csproj" />
+    <ProjectReference Include="..\Actors\Ledger\Ledger.csproj" />
+    <ProjectReference Include="..\Actors\LocalPeer\LocalPeer.csproj" />
+    <ProjectReference Include="..\Actors\RpcServer\RpcServer.csproj" />
+    <ProjectReference Include="..\Actors\TaskManager\TaskManager.csproj" />
+  </ItemGroup>
+
+</Project>

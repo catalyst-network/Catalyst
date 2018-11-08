@@ -1,0 +1,9 @@
+/home/joshua/Projects/ADL/Actors/Consensus/bin/Debug/netstandard2.0/Consensus.deps.json
+/home/joshua/Projects/ADL/Actors/Consensus/bin/Debug/netstandard2.0/Consensus.dll
+/home/joshua/Projects/ADL/Actors/Consensus/bin/Debug/netstandard2.0/Consensus.pdb
+/home/joshua/Projects/ADL/Actors/Consensus/obj/Debug/netstandard2.0/Consensus.csprojAssemblyReference.cache
+/home/joshua/Projects/ADL/Actors/Consensus/obj/Debug/netstandard2.0/Consensus.csproj.CoreCompileInputs.cache
+/home/joshua/Projects/ADL/Actors/Consensus/obj/Debug/netstandard2.0/Consensus.AssemblyInfoInputs.cache
+/home/joshua/Projects/ADL/Actors/Consensus/obj/Debug/netstandard2.0/Consensus.AssemblyInfo.cs
+/home/joshua/Projects/ADL/Actors/Consensus/obj/Debug/netstandard2.0/Consensus.dll
+/home/joshua/Projects/ADL/Actors/Consensus/obj/Debug/netstandard2.0/Consensus.pdb

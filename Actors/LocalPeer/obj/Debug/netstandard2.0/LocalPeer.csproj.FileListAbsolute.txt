@@ -1,0 +1,8 @@
+/home/joshua/Projects/ADL/Actors/LocalPeer/bin/Debug/netstandard2.0/LocalPeer.deps.json
+/home/joshua/Projects/ADL/Actors/LocalPeer/bin/Debug/netstandard2.0/LocalPeer.dll
+/home/joshua/Projects/ADL/Actors/LocalPeer/bin/Debug/netstandard2.0/LocalPeer.pdb
+/home/joshua/Projects/ADL/Actors/LocalPeer/obj/Debug/netstandard2.0/LocalPeer.csproj.CoreCompileInputs.cache
+/home/joshua/Projects/ADL/Actors/LocalPeer/obj/Debug/netstandard2.0/LocalPeer.AssemblyInfoInputs.cache
+/home/joshua/Projects/ADL/Actors/LocalPeer/obj/Debug/netstandard2.0/LocalPeer.AssemblyInfo.cs
+/home/joshua/Projects/ADL/Actors/LocalPeer/obj/Debug/netstandard2.0/LocalPeer.dll
+/home/joshua/Projects/ADL/Actors/LocalPeer/obj/Debug/netstandard2.0/LocalPeer.pdb
