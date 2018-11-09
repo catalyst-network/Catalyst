@@ -10,7 +10,9 @@ namespace ADL.ADLNode
         public Atlas(IRpcServerService rpcServerService) {
             Console.WriteLine("Parent Actor created!");
  
+/*
             var childActorProps = Context.DI().Props<ChildActor>();
+*/
             /*var childActor = Context.ActorOf(childActorProps, "ChildActor");*/
         } 
     }

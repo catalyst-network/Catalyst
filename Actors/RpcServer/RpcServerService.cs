@@ -13,6 +13,8 @@ namespace ADL.RpcServer
     
         protected override void OnReceive(object message)
         {
+            Console.WriteLine("123");
+
             Console.WriteLine($"Message received {message}");
         }
     }

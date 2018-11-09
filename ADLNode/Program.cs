@@ -8,7 +8,9 @@ using ADL.RpcServer;
 using Akka.DI.Ninject;
 using Ninject;
 using Akka.DI.Core;
-
+using Autofac;
+using Akka.DI.AutoFac;
+    
 namespace ADL.ADLNode
 {   
     class Program
@@ -17,6 +19,7 @@ namespace ADL.ADLNode
         {
             var app = new Microsoft.Extensions.CommandLineUtils.CommandLineApplication();
 
+            
             app.Command("", config =>
             {
                 // All the options that we support on the command line
@@ -73,26 +76,20 @@ namespace ADL.ADLNode
                         Console.WriteLine($"Adress of daemon host: {hostOption.Value()}");
                     }
                     
-                    var container = new StandardKernel();
-                    container.Bind<IRpcServerService>().To<RpcServerService>();
- 
-                    using (var actorSystem = ActorSystem.Create("AtlasSystem"))
-                    {
-                        var resolver = new NinjectDependencyResolver(container, actorSystem);
- 
-                        var actor = actorSystem.ActorOf(
-                            actorSystem.DI().Props<Atlas>(), "ParentActor");
- 
-                        Console.WriteLine("Press ENTER to exit...");
-                        Console.ReadLine();
-                    }
-
-                    Console.ReadLine();
-                    
                     return 0;
                 });
             });
 
+            using (var actorSystem = ActorSystem.Create("HeroActorSystem"))
+            {
+                var resolver = InjectDependencies(actorSystem);
+                // Get an instance of our HeroActor, having Akka.DI.Autofac take care of the Props
+                var rpcActor = actorSystem.ActorOf(resolver.Create<RpcServerService>(), "RpcServerService");
+                Console.WriteLine("kek");
+                rpcActor.Tell("im a message");
+                Console.ReadLine();
+            }
+            
             //give people help with --help
             app.HelpOption("-? | -h | --help");
 
@@ -105,6 +102,17 @@ namespace ADL.ADLNode
             {
                 Console.WriteLine(error);
             }
+        }
+        
+        private static IDependencyResolver InjectDependencies(ActorSystem actorSystem)
+        {
+            var builder = new ContainerBuilder();
+
+            builder.RegisterType<RpcServerService>();
+
+            IContainer container = builder.Build();
+
+            return new AutoFacDependencyResolver(container, actorSystem);
         }
     }
 }
