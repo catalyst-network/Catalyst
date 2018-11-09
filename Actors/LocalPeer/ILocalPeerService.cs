@@ -1,6 +1,6 @@
 namespace ADL.LocalPeer
 {
-    public interface ILocalPeer
+    public interface ILocalPeerService
     {
         
     }
