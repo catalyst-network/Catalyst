@@ -1,12 +1,12 @@
 ﻿using System;
-using Akka;
 using Akka.Actor;
-using Akka.Remote;
 
 namespace ADL.RpcServer
 {
-    public class FirstActor : UntypedActor
+    public class RpcServerActor : UntypedActor
     {
+        public static Props Props => Props.Create(() => new RpcServerActor());
+        
         protected override void PreStart() => Console.WriteLine("Started actor");
     
         protected override void PostStop() => Console.WriteLine("Stopped actor");

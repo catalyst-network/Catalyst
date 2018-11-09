@@ -1,10 +1,8 @@
 ﻿using System;
-using ADL.RpcServer;
-using Akka;
-using Akka.Actor;
-using Akka.Remote;
 using Microsoft.Extensions.CommandLineUtils;
 using ADL.Helpers;
+using ADL.ActorManager;
+using Akka.Actor;
 
 namespace ADL.ADLNode
 {
@@ -67,13 +65,16 @@ namespace ADL.ADLNode
                     if (hostOption.HasValue())
                     {
                         Env.Host = hostOption.Value();
-                        Console.WriteLine($"Adress of daemon host: {hostOption.Value()}");
+                        Console.WriteLine($"Address of daemon host: {hostOption.Value()}");
                     }
                     
-                    var actrsys = ActorSystem.Create("test-actor-system");
-                    var firstactor = actrsys.ActorOf(Props.Create<FirstActor>(), "first-actor");
-                    firstactor.Tell("test");
-                    actrsys.Stop(firstactor);
+                    ActorModel.StartActorSystem();
+                    
+                    ActorModel.RpcServerActorRef.Tell("test-rpcserver");
+                    ActorModel.DFSActorRef.Tell("test-dfs");
+                    
+                    ActorModel.DFSActorRef.GracefulStop(TimeSpan.FromSeconds(5));
+                    ActorModel.RpcServerActorRef.GracefulStop(TimeSpan.FromSeconds(5));
                     
                     return 0;
                 });
