@@ -1,13 +1,16 @@
 ﻿using System;
-using ADL.RpcServer;
 using Akka;
 using Akka.Actor;
 using Akka.Remote;
 using Microsoft.Extensions.CommandLineUtils;
 using ADL.Helpers;
+using ADL.RpcServer;
+using Akka.DI.Ninject;
+using Ninject;
+using Akka.DI.Core;
 
 namespace ADL.ADLNode
-{
+{   
     class Program
     {
         public static void Main(string[] args)
@@ -69,11 +72,21 @@ namespace ADL.ADLNode
                         Env.Host = hostOption.Value();
                         Console.WriteLine($"Adress of daemon host: {hostOption.Value()}");
                     }
+                    
+                    var container = new StandardKernel();
+                    container.Bind<IRpcServerService>().To<RpcServerService>();
+ 
+                    using (var actorSystem = ActorSystem.Create("AtlasSystem"))
+                    {
+                        var resolver = new NinjectDependencyResolver(container, actorSystem);
+ 
+                        var actor = actorSystem.ActorOf(
+                            actorSystem.DI().Props<Atlas>(), "ParentActor");
+ 
+                        Console.WriteLine("Press ENTER to exit...");
+                        Console.ReadLine();
+                    }
 
-                    var actrsys = ActorSystem.Create("test-actor-system");
-                    var firstactor = actrsys.ActorOf(Props.Create<RpcServerService>(), "first-actor");
-                    firstactor.Tell("test");
-                    actrsys.Stop(firstactor);
                     Console.ReadLine();
                     
                     return 0;
