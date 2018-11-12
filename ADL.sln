@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADLNode", "ADLNode\ADLNode.csproj", "{65CB1AFE-4DA8-4C3B-9039-D06626AC09C3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consensus", "Actors\Consensus\Consensus.csproj", "{A98831D9-2351-42DE-A761-C58A22E6E4C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFS", "Actors\DFS\DFS.csproj", "{8F603900-D097-4D7D-A89B-2F33C13701DE}"
@@ -16,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpcServer", "Actors\RpcServer\RpcServer.csproj", "{A4CE2FB2-DBE7-429C-A45F-D91B53D9C4E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager", "Actors\TaskManager\TaskManager.csproj", "{13399C1B-B05A-4AE9-9B5B-0C8217B2EB20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Node", "Node\Node.csproj", "{65CB1AFE-4DA8-4C3B-9039-D06626AC09C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Cli\Cli.csproj", "{6A3A8E69-A2E6-4C28-8F87-2E6CF0C4454A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

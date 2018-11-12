@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Consensus</RootNamespace>
+    <RootNamespace>ADL.Consensus</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
