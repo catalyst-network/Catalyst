@@ -7,7 +7,7 @@ namespace ADL.ActorManager
 {
     public static class ActorModel
     {
-        public static ActorSystem ADLActorSystem { get; set; }
+        private static ActorSystem ADLActorSystem { get; set; }
         
         public static IActorRef RpcServerActorRef { get; set; }
         public static IActorRef DFSActorRef { get; set; }

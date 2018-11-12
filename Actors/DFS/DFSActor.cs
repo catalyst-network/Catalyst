@@ -10,7 +10,7 @@ namespace ADL.DFS
         protected override void OnReceive(object message)
         {
             if (!(message is string)) return;
-            var msg = message as string;
+            var msg = (string) message;
             Console.WriteLine($"Message received {msg}");
         }
     }
