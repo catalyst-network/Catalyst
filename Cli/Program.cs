@@ -4,8 +4,10 @@ using ADL.Cli.Shell;
 
 namespace ADL.Cli
 {
-    class Program
+    public class Program
     {
+        private const string _CONFIG_FILE_PATH = "Configuration.json";
+
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             using (FileStream fs = new FileStream("error.log", FileMode.Create, FileAccess.Write, FileShare.None))

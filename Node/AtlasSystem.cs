@@ -13,29 +13,31 @@ using ADL.TaskManager;
 
 namespace ADL.Node
 {
-    public class AtlasSystem
+    public class AtlasSystem : IDisposable
     {
+        private ActorSystem _actorSystem;
+        
         public AtlasSystem()
         {
             RegisterServices();
         }
         
-        private static void RegisterServices()
+        private void RegisterServices()
         {
             Console.WriteLine("RegisterServices trace");
 
-            using (var actorSystem = ActorSystem.Create("AtlasSystem"))
+            using (_actorSystem = ActorSystem.Create("AtlasSystem"))
             {
                 Console.WriteLine("AtlasSystem create trace");
 
-                var container = BuildContainer(actorSystem);
+                var container = BuildContainer(_actorSystem);
 
-                var rpcActor = actorSystem.ActorOf(container.Create<RpcServerService>(), "RpcServerService");
-                var taskManagerActor = actorSystem.ActorOf(container.Create<TaskManagerService>(), "TaskManagerService");
-                var peerActor = actorSystem.ActorOf(container.Create<LocalPeerService>(), "LocalPeerService");
-                var ledgerActor = actorSystem.ActorOf(container.Create<LedgerService>(), "LedgerService");
-                var dfsActor = actorSystem.ActorOf(container.Create<DFSService>(), "DFSService");
-                var consensusActor = actorSystem.ActorOf(container.Create<ConsensusService>(), "ConsensusService");
+                var rpcActor = _actorSystem.ActorOf(container.Create<RpcServerService>(), "RpcServerService");
+                var taskManagerActor = _actorSystem.ActorOf(container.Create<TaskManagerService>(), "TaskManagerService");
+                var peerActor = _actorSystem.ActorOf(container.Create<LocalPeerService>(), "LocalPeerService");
+                var ledgerActor = _actorSystem.ActorOf(container.Create<LedgerService>(), "LedgerService");
+                var dfsActor = _actorSystem.ActorOf(container.Create<DFSService>(), "DFSService");
+                var consensusActor = _actorSystem.ActorOf(container.Create<ConsensusService>(), "ConsensusService");
 
                 rpcActor.Tell("im a rpcActor message");
                 taskManagerActor.Tell("im a TaskManagerActor message");
@@ -47,7 +49,7 @@ namespace ADL.Node
             }
         }
         
-        private static IDependencyResolver BuildContainer(ActorSystem actorSystem)
+        private IDependencyResolver BuildContainer(ActorSystem actorSystem)
         {
             Console.WriteLine("BuildContainer trace");
 
@@ -63,5 +65,13 @@ namespace ADL.Node
             IContainer container = builder.Build();
             return new AutoFacDependencyResolver(container, actorSystem);
         }
+        
+        public void Dispose()
+        {
+//            RpcServer?.Dispose();
+//            ActorSystem.Stop(LocalNode);
+            _actorSystem.Dispose();
+        }
+
     }
 }

@@ -6,7 +6,7 @@ namespace ADL.Cli.Shell
 {
     public class MainService : ConsoleServiceBase
     {
-        private LevelDBStore store;
+//        private LevelDBStore store;
         private AtlasSystem system;
         
         protected override string Prompt => "atlas";
@@ -42,9 +42,9 @@ namespace ADL.Cli.Shell
         
         protected internal override void OnStart(string[] args)
         {
-            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
-            system = new AtlasSystem(store);
-            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
+//            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
+            system = new AtlasSystem();
+//            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
         }
 
         private bool OnStartCommand(string[] args)
@@ -61,14 +61,14 @@ namespace ADL.Cli.Shell
         private bool OnStartConsensusCommand(string[] args)
         {
             ShowPrompt = false;
-            system.StartConsensus(Program.Wallet);
+//            system.StartConsensus(Program.Wallet);
             return true;
         }
 
         protected internal override void OnStop()
         {
             system.Dispose();
-            store.Dispose();
+//            store.Dispose();
         }
     }
 }
