@@ -1,8 +1,9 @@
 using System;
+using ADL.Node.Interfaces;
 
 namespace ADL.Node
 {
-    public class AtlasSystem : IDisposable
+    public class AtlasSystem : IDisposable, IAtlasSystem
     {        
         public AtlasSystem()
         {
@@ -21,8 +22,8 @@ namespace ADL.Node
             Console.WriteLine("Consensus starting....");
         }
         
-        public void StartNode(int port = 0, int ws_port = 0)
-        {
+        public void StartNode()
+        {89
             Console.WriteLine("Node starting....");
         }
         

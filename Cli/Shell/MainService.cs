@@ -23,6 +23,8 @@ namespace ADL.Cli.Shell
         {
             switch (args[0].ToLower())
             {
+                case "help":
+                    return OnHelpCommand(args);
                 case "start":
                     return OnStartCommand(args);
                 default:

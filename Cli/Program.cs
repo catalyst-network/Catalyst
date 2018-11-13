@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using ADL.Cli.Interfaces;
 using ADL.Cli.Shell;
 using ADL.Consensus;
 using ADL.DFS;
@@ -12,14 +14,17 @@ using Akka.DI.Core;
 using Akka.DI.AutoFac;
 using ADL.RpcServer;
 using ADL.TaskManager;
+using Thinktecture.IO;
+using Thinktecture.IO.Adapters;
+using Microsoft.Extensions.Configuration;
+using Thinktecture;
 
 namespace ADL.Cli
 {
     public class Program
     {
-        private const string _CONFIG_FILE_PATH = "Configuration.json";
-
         private static ActorSystem _actorSystem;
+        public static IDependencyResolver Kernal;
 
         public static void Main(string[] args)
         {
@@ -40,14 +45,14 @@ namespace ADL.Cli
             {
                 Console.WriteLine("AtlasSystem create trace");
 
-                var container = BuildContainer(_actorSystem);
+                var Kernal = BuildContainer(_actorSystem);
 
-                var rpcActor = _actorSystem.ActorOf(container.Create<RpcServerService>(), "RpcServerService");
-                var taskManagerActor = _actorSystem.ActorOf(container.Create<TaskManagerService>(), "TaskManagerService");
-                var peerActor = _actorSystem.ActorOf(container.Create<LocalPeerService>(), "LocalPeerService");
-                var ledgerActor = _actorSystem.ActorOf(container.Create<LedgerService>(), "LedgerService");
-                var dfsActor = _actorSystem.ActorOf(container.Create<DFSService>(), "DFSService");
-                var consensusActor = _actorSystem.ActorOf(container.Create<ConsensusService>(), "ConsensusService");
+                var rpcActor = _actorSystem.ActorOf(Kernal.Create<RpcServerService>(), "RpcServerService");
+                var taskManagerActor = _actorSystem.ActorOf(Kernal.Create<TaskManagerService>(), "TaskManagerService");
+                var peerActor = _actorSystem.ActorOf(Kernal.Create<LocalPeerService>(), "LocalPeerService");
+                var ledgerActor = _actorSystem.ActorOf(Kernal.Create<LedgerService>(), "LedgerService");
+                var dfsActor = _actorSystem.ActorOf(Kernal.Create<DFSService>(), "DFSService");
+                var consensusActor = _actorSystem.ActorOf(Kernal.Create<ConsensusService>(), "ConsensusService");
             }
         }
 
@@ -57,6 +62,14 @@ namespace ADL.Cli
 
             var builder = new ContainerBuilder();
             
+            builder.RegisterType<ICliApplication>().AsImplementedInterfaces();
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile(Directory.GetCurrentDirectory() + "/Configs/config.json", false, true)
+                .Build();
+
+            builder.RegisterMicrosoftConfigurationProvider(config);
+            builder.RegisterMicrosoftConfiguration<Settings>().As<INodeConfiguration>();
+            
             builder.RegisterType<RpcServerService>().As<RpcServerService>();
             builder.RegisterType<TaskManagerService>().As<TaskManagerService>();
             builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
@@ -65,6 +78,9 @@ namespace ADL.Cli
             builder.RegisterType<ConsensusService>().As<ConsensusService>();
 
             IContainer container = builder.Build();
+            var myConfig = container.Resolve<INodeConfiguration>();
+
+            Console.WriteLine(myConfig);
             return new AutoFacDependencyResolver(container, actorSystem);
         }
 
