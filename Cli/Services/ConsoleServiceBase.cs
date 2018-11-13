@@ -65,6 +65,18 @@ namespace ADL.ADLCli.Services
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 string line = Console.ReadLine()?.Trim();
+                if (line == "is it friday?")
+                {
+                    if (System.DateTime.Now.DayOfWeek.ToString() == "Friday")
+                    {
+                        Console.WriteLine("yes");
+                    }
+                    else
+                    {
+                        Console.WriteLine("no");
+                    }
+                    continue;
+                }
                 if (line == null) break;
                 Console.ForegroundColor = ConsoleColor.White;
                 string[] args = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
