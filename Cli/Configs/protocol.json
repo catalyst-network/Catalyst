@@ -1,0 +1,13 @@
+{
+  "ProtocolConfiguration": {
+    "Magic": 4206942,
+    "AddressVersion": 23,
+    "SeedList": [
+      "seed1.network.atlas.io:42069",
+      "seed2.network.atlas.io:42069",
+      "seed3.network.atlas.io:42069",
+      "seed4.network.atlas.io:42069",
+      "seed5.network.atlas.io:42069"
+    ]
+  }
+}

@@ -11,6 +11,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
       <PackageReference Include="Thinktecture.Configuration" Version="2.1.0" />
+      <PackageReference Include="Thinktecture.Extensions.Configuration.Autofac" Version="2.1.0" />
+      <PackageReference Include="Thinktecture.IO.FileSystem.Abstractions" Version="2.4.0" />
     </ItemGroup>
 </Project>

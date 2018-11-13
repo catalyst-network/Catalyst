@@ -2,10 +2,11 @@ using System;
 using System.Reflection;
 using System.Security;
 using System.Text;
+using ADL.Cli.Interfaces;
 
 namespace ADL.ADLCli.Services
 {
-    public abstract class ConsoleServiceBase
+    public abstract class ConsoleServiceBase : IShellBase
     {
         protected virtual string Prompt => "service";
 
@@ -97,6 +98,13 @@ namespace ADL.ADLCli.Services
             }
 
             Console.ResetColor();
+        }
+        
+        public void PrintConfiguration()
+        {
+//            Console.WriteLine(Environment.NewLine + "Application configuration: " + _config.ApplicationValue);
+//            Console.WriteLine("Component configuration: " + _config.ComponentValue);
+//            Console.WriteLine("Component configuration -> other configuration: " + _config.OtherConfiguration?.OtherComponentValue);
         }
     }
 }

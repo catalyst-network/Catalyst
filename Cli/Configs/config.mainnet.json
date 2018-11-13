@@ -1,0 +1,17 @@
+{
+  "ApplicationConfiguration": {
+    "Paths": {
+      "Chain": "Chain_{0}",
+      "Index": "Index_{0}"
+    },
+    "P2P": {
+      "Port": 42069
+    },
+    "RPC": {
+      "BindAddress": "127.0.0.1",
+      "Port": 42042,
+      "SslCert": "",
+      "SslCertPassword": ""
+    }
+  }
+}
