@@ -10,14 +10,19 @@ namespace ADL.Cli.Shell
         private AtlasSystem system;
         
         protected override string Prompt => "atlas";
-        public override string ServiceName => "ATLAS-CLI";
+        public override string ServiceName => "Atlas Distributed Ledger";
         
+        protected internal override void OnStart(string[] args)
+        {
+//            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
+            system = new AtlasSystem();
+//            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
+        }
+       
         protected override bool OnCommand(string[] args)
         {
             switch (args[0].ToLower())
             {
-                case "help":
-                    return OnHelpCommand(args);
                 case "start":
                     return OnStartCommand(args);
                 default:
@@ -38,13 +43,6 @@ namespace ADL.Cli.Shell
                 "Advanced Commands:\n" +
                 "\tstart consensus\n");
             return true;
-        }
-        
-        protected internal override void OnStart(string[] args)
-        {
-//            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
-            system = new AtlasSystem();
-//            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
         }
 
         private bool OnStartCommand(string[] args)
@@ -67,7 +65,7 @@ namespace ADL.Cli.Shell
 
         protected internal override void OnStop()
         {
-            system.Dispose();
+//            system.Dispose();
 //            store.Dispose();
         }
     }
