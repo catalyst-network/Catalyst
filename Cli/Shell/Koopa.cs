@@ -7,6 +7,8 @@ using ADL.Cli.Shell.Commands;
 using ADL.Node;
 using Akka.DI.Core;
 using Autofac;
+using Microsoft.Extensions.Configuration;
+using ADL.Cli.Shell.Commands;
 
 namespace ADL.Cli.Shell
 {
@@ -22,7 +24,6 @@ namespace ADL.Cli.Shell
             Kernel = kernel;
         }
         
-        
         protected override bool OnCommand(string[] args)
         {
             switch (args[0].ToLower())
@@ -31,6 +32,8 @@ namespace ADL.Cli.Shell
                     return OnHelpCommand(args);
                 case "start":
                     return OnStartCommand(args);
+                case "config":
+                    return PrintConfiguration(args);
                 default:
                     return base.OnCommand(args);
             }
@@ -47,8 +50,10 @@ namespace ADL.Cli.Shell
         {
             var config = Kernel.Resolve<INodeConfiguration>();
 
+            PrintConfig();
+
             var printConfig = new PrintConfig();
-//            printConfig.Print(config);
+            printConfig.Print(config);
             return true;
         }
         
@@ -56,6 +61,7 @@ namespace ADL.Cli.Shell
         {
             Console.Write(
                 "Normal Commands:\n" +
+                "\tconfig\n" +
                 "\tversion\n" +
                 "\thelp\n" +
                 "\tclear\n" +
