@@ -5,10 +5,8 @@ namespace ADL.Cli.Interfaces
         uint Magic { get; }
         byte AddressVersion { get; }
         string[] SeedList { get; }
-        string ChainPath { get; }
-        string ChainIndex { get; }
-        int P2PPort { get; }
-        int RPCAddress { get; }
-        int RPCPort { get; }
+        IPathSettings Paths { get; }
+        IP2PSettings P2P { get; }
+        IRPCSettings RPC { get; }
     }
 }

@@ -8,7 +8,7 @@ namespace ADL.Cli.Shell.Commands
 {
     internal class PrintConfig
     {
-        static void Print(INodeConfiguration config)
+        public void Print(INodeConfiguration config)
         {
             foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(config))
             {
