@@ -70,7 +70,7 @@ namespace ADL.Cli
             
             builder.RegisterType<ICliApplication>().AsImplementedInterfaces();
 
-            builder.RegisterMicrosoftConfigurationProvider(config);
+//            builder.RegisterMicrosoftConfigurationProvider(config);
             builder.RegisterMicrosoftConfiguration<Settings>().As<INodeConfiguration>();
             
             builder.RegisterType<RpcServerService>().As<RpcServerService>();
@@ -78,7 +78,7 @@ namespace ADL.Cli
             builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
             builder.RegisterType<LedgerService>().As<LedgerService>();
             builder.RegisterType<DFSService>().As<DFSService>();
-            builder.RegisterType<ConsensusService>().As<ConsensusService>();
+            builder.RegisterType<ConsensusService>().As<ConsensusService>().InstancePerLifetimeScope();
 
             var container = builder.Build();
             

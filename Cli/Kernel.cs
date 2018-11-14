@@ -1,5 +1,5 @@
-using ADL.Cli.Interfaces;
 using Autofac;
+using ADL.Cli.Interfaces;
 
 namespace ADL.Cli
 {
