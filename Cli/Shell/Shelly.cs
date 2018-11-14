@@ -3,20 +3,29 @@ using System.Reflection;
 using System.Security;
 using System.Text;
 using ADL.Cli.Interfaces;
+using ADL.Cli.Shell.Commands;
 using ADL.Node;
+using Autofac;
 
 namespace ADL.Cli.Shell
 {
-    public class Shelly : IShellBase
+    internal class Shelly : IShellBase
     {
 //        private LevelDBStore store;
         private AtlasSystem system;
-        
-        protected bool ShowPrompt { get; set; } = true;
-        
-        protected string Prompt => "shelly";
 
-        public string ServiceName => "Atlas Distributed Ledger";
+        private static IContainer Kernel { get; set; }
+
+        private bool ShowPrompt { get; set; } = true;
+               
+        private string Prompt => "shelly";
+
+        private string ServiceName => "Atlas Distributed Ledger";
+        
+        internal Shelly(IContainer kernel)
+        {
+            Kernel = kernel;
+        }
         
         public void Run(string[] args)
         {
@@ -25,19 +34,21 @@ namespace ADL.Cli.Shell
             OnStop();
         }
         
-        protected internal void OnStart(string[] args)
+        private void OnStart(string[] args)
         {
 //            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
             system = new AtlasSystem();
 //            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
         }
        
-        protected bool OnCommand(string[] args)
+        private bool OnCommand(string[] args)
         {
             switch (args[0].ToLower())
             {
                 case "help":
                     return OnHelpCommand(args);
+                case "print":
+                    return PrintConfiguration(args);
                 case "start":
                     return OnStartCommand(args);
                 case "clear":
@@ -52,6 +63,15 @@ namespace ADL.Cli.Shell
                     Console.WriteLine("error: command not found " + args[0]);
                     return true;
             }
+        }
+
+        private bool PrintConfiguration(string[] args)
+        {
+            var config = Kernel.Resolve<INodeConfiguration>();
+
+            var printConfig = new PrintConfig();
+            printConfig.Print(config);
+            return true;
         }
         
         private void RunConsole()
@@ -145,7 +165,7 @@ namespace ADL.Cli.Shell
             return true;
         }
 
-        protected internal void OnStop()
+        private void OnStop()
         {
 //            system.Dispose();
 //            store.Dispose();
