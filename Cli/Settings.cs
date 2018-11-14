@@ -1,11 +1,9 @@
+using System;
 using System.Linq;
 using System.Net;
 using ADL.Cli.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-/**
- * @TODO we need something to tell this class weather we are running mainnet/testnet/dev to pick the correct config jsons.
- */
 namespace ADL.Cli
 {
     internal class Settings : INodeConfiguration
@@ -20,7 +18,7 @@ namespace ADL.Cli
         static Settings()
         {
             IConfigurationSection section = new ConfigurationBuilder()
-                .AddJsonFile("Configs/config.json")
+                .AddJsonFile("Configs/config."+Environment.GetEnvironmentVariable("ATLASENV")+".json")
                 .Build()
                 .GetSection("ApplicationConfiguration");
             
