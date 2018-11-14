@@ -17,9 +17,9 @@ namespace ADL.Cli.Shell
 //        private LevelDBStore store;
         private AtlasSystem system;
 
-        private static IContainer Kernel { get; set; }
+        private static IKernel Kernel { get; set; }
 
-        internal Koopa(IContainer kernel)
+        internal Koopa(IKernel kernel)
         {
             Kernel = kernel;
         }
@@ -48,9 +48,7 @@ namespace ADL.Cli.Shell
            
         private bool PrintConfiguration(string[] args)
         {
-            var config = Kernel.Resolve<INodeConfiguration>();
-
-            PrintConfig();
+            var config = Kernel.Container.Resolve<INodeConfiguration>();
 
             var printConfig = new PrintConfig();
             printConfig.Print(config);

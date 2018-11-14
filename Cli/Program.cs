@@ -25,7 +25,7 @@ namespace ADL.Cli
     {
         private static ActorSystem _actorSystem;
         
-        private static IContainer Kernel { get; set; }
+        private static IKernel Kernel { get; set; }
                 
         private static IShellBase Shell { get; set; }
 
@@ -62,7 +62,7 @@ namespace ADL.Cli
             return config;
         }
 
-        private static IContainer BuildKernel(ActorSystem actorSystem, IConfiguration config)
+        private static IKernel BuildKernel(ActorSystem actorSystem, IConfiguration config)
         {
             Console.WriteLine("BuildContainer trace");
 
@@ -82,7 +82,7 @@ namespace ADL.Cli
 
             var container = builder.Build();
             
-            IDependencyResolver resolver = new AutoFacDependencyResolver(container, actorSystem);
+            var resolver = new AutoFacDependencyResolver(container, actorSystem);
             
             var rpcActor = _actorSystem.ActorOf(resolver.Create<RpcServerService>(), "RpcServerService");
             var taskManagerActor = _actorSystem.ActorOf(resolver.Create<TaskManagerService>(), "TaskManagerService");
@@ -91,10 +91,10 @@ namespace ADL.Cli
             var dfsActor = _actorSystem.ActorOf(resolver.Create<DFSService>(), "DFSService");
             var consensusActor = _actorSystem.ActorOf(resolver.Create<ConsensusService>(), "ConsensusService");
             
-            return container;
+            return new Kernel(container, container.Resolve<INodeConfiguration>());
         }
 
-        private static void PrintErrorLogs(StreamWriter writer, Exception ex)
+        private static void PrintErrorLogs(TextWriter writer, Exception ex)
         {
             while (true)
             {
@@ -116,7 +116,6 @@ namespace ADL.Cli
                     ex = ex.InnerException;
                     continue;
                 }
-
                 break;
             }
         }
