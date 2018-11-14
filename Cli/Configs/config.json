@@ -12,6 +12,17 @@
       "Port": 42042,
       "SslCert": "",
       "SslCertPassword": ""
+    },
+    "Protocol":  {
+      "AddressVersion": 23,
+      "Magic": 4206942,
+      "SeedList": [
+        "seed1.network.atlas.io:42069",
+        "seed2.network.atlas.io:42069",
+        "seed3.network.atlas.io:42069",
+        "seed4.network.atlas.io:42069",
+        "seed5.network.atlas.io:42069"
+      ]
     }
   }
 }
