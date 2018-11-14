@@ -23,39 +23,33 @@ namespace ADL.Cli
 {
     public class Program
     {
-        private static ActorSystem ActorSystem;
+        private static ActorSystem _actorSystem;
+        
         private static IContainer Kernel { get; set; }
-        private static INodeConfiguration  NodeConfiguration { get; set; }
-        private static IShellBase _shelly { get; set; }
+                
+        private static IShellBase Shell { get; set; }
 
         public static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
-            var bufferSize = 1024 * 67 + 128;
-            Stream inputStream = Console.OpenStandardInput(bufferSize);
+            const int bufferSize = 1024 * 67 + 128;
+            var inputStream = Console.OpenStandardInput(bufferSize);
             Console.SetIn(new StreamReader(inputStream, Console.InputEncoding, false, bufferSize));
             RegisterServices();
-            _shelly = new Shelly(Kernel);
-            _shelly.Run(args);
+            Shell = new Koopa(Kernel);
+            Shell.Run(args);
         }
         
         private static void RegisterServices()
         {
             Console.WriteLine("RegisterServices trace");
 
-            using (ActorSystem = ActorSystem.Create("AtlasSystem"))
+            var config = BuildConfiguration();
+            
+            using (_actorSystem = ActorSystem.Create("AtlasSystem"))
             {
                 Console.WriteLine("AtlasSystem create trace");
-
-                IConfiguration config = BuildConfiguration();
-                var kernel = BuildKernel(ActorSystem, config);
-
-                var rpcActor = ActorSystem.ActorOf(kernel.Create<RpcServerService>(), "RpcServerService");
-//                IActorRef taskManagerActor = ActorSystem.ActorOf(kernel.Create<TaskManagerService>(), "TaskManagerService");
-//                IActorRef peerActor = ActorSystem.ActorOf(kernel.Create<LocalPeerService>(), "LocalPeerService");
-//                IActorRef ledgerActor = ActorSystem.ActorOf(kernel.Create<LedgerService>(), "LedgerService");
-//                IActorRef dfsActor = ActorSystem.ActorOf(kernel.Create<DFSService>(), "DFSService");
-//                IActorRef consensusActor = ActorSystem.ActorOf(kernel.Create<ConsensusService>(), "ConsensusService");
+                Kernel = BuildKernel(_actorSystem, config);
             }
         }
 
@@ -68,7 +62,7 @@ namespace ADL.Cli
             return config;
         }
 
-        private static IDependencyResolver BuildKernel(ActorSystem actorSystem, IConfiguration config)
+        private static IContainer BuildKernel(ActorSystem actorSystem, IConfiguration config)
         {
             Console.WriteLine("BuildContainer trace");
 
@@ -79,53 +73,67 @@ namespace ADL.Cli
             builder.RegisterMicrosoftConfigurationProvider(config);
             builder.RegisterMicrosoftConfiguration<Settings>().As<INodeConfiguration>();
             
-            builder.RegisterType<RpcServerService>().As<IRpcServerService>();
-            builder.RegisterType<TaskManagerService>().As<ITaskManagerService>();
-            builder.RegisterType<LocalPeerService>().As<ILocalPeerService>();
-            builder.RegisterType<LedgerService>().As<ILedgerService>();
-            builder.RegisterType<DFSService>().As<IDFSService>();
-            builder.RegisterType<ConsensusService>().As<IConsensusService>();
+            builder.RegisterType<RpcServerService>().As<RpcServerService>();
+            builder.RegisterType<TaskManagerService>().As<TaskManagerService>();
+            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
+            builder.RegisterType<LedgerService>().As<LedgerService>();
+            builder.RegisterType<DFSService>().As<DFSService>();
+            builder.RegisterType<ConsensusService>().As<ConsensusService>();
 
-            Kernel = builder.Build();
-            NodeConfiguration = Kernel.Resolve<INodeConfiguration>();
-
-            return new AutoFacDependencyResolver(Kernel, actorSystem);
+            var container = builder.Build();
+            
+            IDependencyResolver resolver = new AutoFacDependencyResolver(container, actorSystem);
+            
+            var rpcActor = _actorSystem.ActorOf(resolver.Create<RpcServerService>(), "RpcServerService");
+            var taskManagerActor = _actorSystem.ActorOf(resolver.Create<TaskManagerService>(), "TaskManagerService");
+            var peerActor = _actorSystem.ActorOf(resolver.Create<LocalPeerService>(), "LocalPeerService");
+            var ledgerActor = _actorSystem.ActorOf(resolver.Create<LedgerService>(), "LedgerService");
+            var dfsActor = _actorSystem.ActorOf(resolver.Create<DFSService>(), "DFSService");
+            var consensusActor = _actorSystem.ActorOf(resolver.Create<ConsensusService>(), "ConsensusService");
+            
+            return container;
         }
 
         private static void PrintErrorLogs(StreamWriter writer, Exception ex)
         {
-            writer.WriteLine(ex.GetType());
-            writer.WriteLine(ex.Message);
-            writer.WriteLine(ex.StackTrace);
-            
-            if (ex is AggregateException ex2)
+            while (true)
             {
-                foreach (Exception inner in ex2.InnerExceptions)
+                writer.WriteLine(ex.GetType());
+                writer.WriteLine(ex.Message);
+                writer.WriteLine(ex.StackTrace);
+
+                if (ex is AggregateException ex2)
+                {
+                    foreach (var inner in ex2.InnerExceptions)
+                    {
+                        writer.WriteLine();
+                        PrintErrorLogs(writer, inner);
+                    }
+                }
+                else if (ex.InnerException != null)
                 {
                     writer.WriteLine();
-                    PrintErrorLogs(writer, inner);
+                    ex = ex.InnerException;
+                    continue;
                 }
-            }
-            else if (ex.InnerException != null)
-            {
-                writer.WriteLine();
-                PrintErrorLogs(writer, ex.InnerException);
+
+                break;
             }
         }
-        
+
         private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            using (FileStream fs = new FileStream("error.log", FileMode.Create, FileAccess.Write, FileShare.None))
+            using (var fs = new FileStream("error.log", FileMode.Create, FileAccess.Write, FileShare.None))
 
-            using (StreamWriter w = new StreamWriter(fs))
+            using (var writer = new StreamWriter(fs))
                 if (e.ExceptionObject is Exception ex)
                 {
-                    PrintErrorLogs(w, ex);
+                    PrintErrorLogs(writer, ex);
                 }
                 else
                 {
-                    w.WriteLine(e.ExceptionObject.GetType());
-                    w.WriteLine(e.ExceptionObject);
+                    writer.WriteLine(e.ExceptionObject.GetType());
+                    writer.WriteLine(e.ExceptionObject);
                 }
         }
     }

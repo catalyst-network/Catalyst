@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ADL.Cli
 {
-    internal class Settings
+    internal class Settings : INodeConfiguration
     {
         public uint Magic { get; private set; }
         public byte AddressVersion { get; private set; }
