@@ -1,5 +1,4 @@
-﻿using System;
-using Akka.Actor;
+﻿using Akka.Actor;
 using ADL.DFS;
 using ADL.RpcServer;
 
@@ -7,17 +6,17 @@ namespace ADL.ActorManager
 {
     public static class ActorModel
     {
-        private static ActorSystem ADLActorSystem { get; set; }
+        private static ActorSystem AdlActorSystem { get; set; }
         
         public static IActorRef RpcServerActorRef { get; set; }
-        public static IActorRef DFSActorRef { get; set; }
+        public static IActorRef DfsActorRef { get; set; }
         
         public static void StartActorSystem()
         {
-            ADLActorSystem = ActorSystem.Create("ADLActorSystem");
-            
-            DFSActorRef = ADLActorSystem.ActorOf(DFSActor.Props, "DFSActor");
-            RpcServerActorRef = ADLActorSystem.ActorOf(RpcServerActor.Props, "RpcServerActor");
+            AdlActorSystem = ActorSystem.Create("ADLActorSystem");
+
+            DfsActorRef = AdlActorSystem.ActorOf<DfsActor>("DFSActor");            
+            RpcServerActorRef = AdlActorSystem.ActorOf<RpcServerActor>("RpcServerActor");
         }
     }
 }

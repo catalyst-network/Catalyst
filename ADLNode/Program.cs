@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.Extensions.CommandLineUtils;
 using ADL.Helpers;
 using ADL.ActorManager;
+using ADL.DFS;
 using Akka.Actor;
 
 namespace ADL.ADLNode
@@ -71,9 +73,17 @@ namespace ADL.ADLNode
                     ActorModel.StartActorSystem();
                     
                     ActorModel.RpcServerActorRef.Tell("test-rpcserver");
-                    ActorModel.DFSActorRef.Tell("test-dfs");
+                    //ActorModel.DfsActorRef.Tell(new DfsActor.AddFile("path")); 
+                    //ActorModel.DfsActorRef.Tell(new DfsActor.ReadFile("hash"));
                     
-                    ActorModel.DFSActorRef.GracefulStop(TimeSpan.FromSeconds(5));
+                    //var task = ActorModel.DfsActorRef.Ask<string>(new DfsActor.ReadFile("hash"));
+                    //task.Wait();
+                    //Thread.Sleep(10000);
+                    var task2 = ActorModel.DfsActorRef.Ask<string>(new DfsActor.AddFile("/home/fioravante/workspace/adlnode/ADLNode/bin/Debug/netcoreapp2.1/test.txt"));
+                    Console.WriteLine(task2.Result);
+                                
+                    Thread.Sleep(10000);
+                    ActorModel.DfsActorRef.GracefulStop(TimeSpan.FromSeconds(5));
                     ActorModel.RpcServerActorRef.GracefulStop(TimeSpan.FromSeconds(5));
                     
                     return 0;

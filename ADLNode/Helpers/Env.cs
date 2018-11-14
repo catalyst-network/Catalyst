@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ADL.Helpers
 {
-    enum Caller{Local=1, RPC};
+    enum Caller{Local=1, Rpc};
 
     internal  class Env
     {
