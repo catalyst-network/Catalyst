@@ -1,19 +1,21 @@
 using System;
+using System.ComponentModel;
+using System.Text;
+
 using ADL.Cli.Interfaces;
 
 namespace ADL.Cli.Shell.Commands
 {
     internal class PrintConfig
     {
-        public static PrintConfig Default { get; }
-
-        public void Print(INodeConfiguration config)
+        static void Print(INodeConfiguration config)
         {
-            Console.WriteLine("print config");
-//            Console.WriteLine(Environment.NewLine + "Application configuration: " + config.ApplicationValue);
-//            Console.WriteLine("Component configuration: " + config.ComponentValue);
-//            Console.WriteLine("Component configuration -> other configuration: " + config.OtherConfiguration?.OtherComponentValue);
+            foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(config))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(config);
+                Console.WriteLine("{0}={1}",name,value);
+            }
         }
-
     }
 }

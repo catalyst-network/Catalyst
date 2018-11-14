@@ -116,7 +116,7 @@ namespace ADL.Cli.Shell
 #endif
             Console.OutputEncoding = Encoding.Unicode;
 
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Version ver = Assembly.GetEntryAssembly().GetName().Version;
             Console.WriteLine($"{ServiceName} Version: {ver}");
             Console.WriteLine();
@@ -125,11 +125,11 @@ namespace ADL.Cli.Shell
             {
                 if (ShowPrompt)
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
                     Console.Write($"{Prompt}> ");
                 }
 
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 string line = Console.ReadLine()?.Trim();
                 if (line == null) break;
                 Console.ForegroundColor = ConsoleColor.White;
@@ -149,7 +149,6 @@ namespace ADL.Cli.Shell
 #endif
                 }
             }
-
             Console.ResetColor();
         }
     }

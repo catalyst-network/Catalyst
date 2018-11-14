@@ -18,6 +18,8 @@ namespace ADL.Cli
         public int RPCAddress { get; }
         public int RPCPort { get; }
         
+        public static Settings Default { get; private set; }
+
         static Settings()
         {
 //            IConfigurationSection section = new ConfigurationBuilder().AddJsonFile("configs/protocol.json").Build().GetSection("ProtocolConfiguration");
