@@ -23,8 +23,10 @@ namespace ADL.Cli
 {
     public class Program
     {
-        private static ActorSystem _actorSystem;
-        public static IDependencyResolver Kernal;
+        private static ActorSystem ActorSystem;
+        private static IContainer Kernel { get; set; }
+        private static INodeConfiguration  NodeConfiguration { get; set; }
+        private static IShellBase _shelly { get; set; }
 
         public static void Main(string[] args)
         {
@@ -33,55 +35,61 @@ namespace ADL.Cli
             Stream inputStream = Console.OpenStandardInput(bufferSize);
             Console.SetIn(new StreamReader(inputStream, Console.InputEncoding, false, bufferSize));
             RegisterServices();
-            var mainService = new Shelly();
-            mainService.Run(args);
+            _shelly = new Shelly(Kernel);
+            _shelly.Run(args);
         }
         
         private static void RegisterServices()
         {
             Console.WriteLine("RegisterServices trace");
 
-            using (_actorSystem = ActorSystem.Create("AtlasSystem"))
+            using (ActorSystem = ActorSystem.Create("AtlasSystem"))
             {
                 Console.WriteLine("AtlasSystem create trace");
 
-                var Kernal = BuildContainer(_actorSystem);
+                IConfiguration config = BuildConfiguration();
+                var kernel = BuildKernel(ActorSystem, config);
 
-                var rpcActor = _actorSystem.ActorOf(Kernal.Create<RpcServerService>(), "RpcServerService");
-                var taskManagerActor = _actorSystem.ActorOf(Kernal.Create<TaskManagerService>(), "TaskManagerService");
-                var peerActor = _actorSystem.ActorOf(Kernal.Create<LocalPeerService>(), "LocalPeerService");
-                var ledgerActor = _actorSystem.ActorOf(Kernal.Create<LedgerService>(), "LedgerService");
-                var dfsActor = _actorSystem.ActorOf(Kernal.Create<DFSService>(), "DFSService");
-                var consensusActor = _actorSystem.ActorOf(Kernal.Create<ConsensusService>(), "ConsensusService");
+                var rpcActor = ActorSystem.ActorOf(kernel.Create<RpcServerService>(), "RpcServerService");
+//                IActorRef taskManagerActor = ActorSystem.ActorOf(kernel.Create<TaskManagerService>(), "TaskManagerService");
+//                IActorRef peerActor = ActorSystem.ActorOf(kernel.Create<LocalPeerService>(), "LocalPeerService");
+//                IActorRef ledgerActor = ActorSystem.ActorOf(kernel.Create<LedgerService>(), "LedgerService");
+//                IActorRef dfsActor = ActorSystem.ActorOf(kernel.Create<DFSService>(), "DFSService");
+//                IActorRef consensusActor = ActorSystem.ActorOf(kernel.Create<ConsensusService>(), "ConsensusService");
             }
         }
 
-        private static IDependencyResolver BuildContainer(ActorSystem actorSystem)
+        private static IConfiguration BuildConfiguration()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile(Directory.GetCurrentDirectory() + "/Configs/config.json", false, true)
+                .Build();
+
+            return config;
+        }
+
+        private static IDependencyResolver BuildKernel(ActorSystem actorSystem, IConfiguration config)
         {
             Console.WriteLine("BuildContainer trace");
 
             var builder = new ContainerBuilder();
             
             builder.RegisterType<ICliApplication>().AsImplementedInterfaces();
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetCurrentDirectory() + "/Configs/config.json", false, true)
-                .Build();
 
             builder.RegisterMicrosoftConfigurationProvider(config);
             builder.RegisterMicrosoftConfiguration<Settings>().As<INodeConfiguration>();
             
-            builder.RegisterType<RpcServerService>().As<RpcServerService>();
-            builder.RegisterType<TaskManagerService>().As<TaskManagerService>();
-            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
-            builder.RegisterType<LedgerService>().As<LedgerService>();
-            builder.RegisterType<DFSService>().As<DFSService>();
-            builder.RegisterType<ConsensusService>().As<ConsensusService>();
+            builder.RegisterType<RpcServerService>().As<IRpcServerService>();
+            builder.RegisterType<TaskManagerService>().As<ITaskManagerService>();
+            builder.RegisterType<LocalPeerService>().As<ILocalPeerService>();
+            builder.RegisterType<LedgerService>().As<ILedgerService>();
+            builder.RegisterType<DFSService>().As<IDFSService>();
+            builder.RegisterType<ConsensusService>().As<IConsensusService>();
 
-            IContainer container = builder.Build();
-            var myConfig = container.Resolve<INodeConfiguration>();
+            Kernel = builder.Build();
+            NodeConfiguration = Kernel.Resolve<INodeConfiguration>();
 
-            Console.WriteLine(myConfig);
-            return new AutoFacDependencyResolver(container, actorSystem);
+            return new AutoFacDependencyResolver(Kernel, actorSystem);
         }
 
         private static void PrintErrorLogs(StreamWriter writer, Exception ex)

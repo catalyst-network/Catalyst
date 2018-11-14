@@ -1,6 +1,8 @@
+using Microsoft.Extensions.Configuration;
+
 namespace ADL.Cli.Interfaces
 {
-    public interface INodeConfiguration
+    public interface INodeConfiguration : IConfiguration
     {
         uint Magic { get; }
         byte AddressVersion { get; }

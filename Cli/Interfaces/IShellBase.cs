@@ -1,7 +1,7 @@
 namespace ADL.Cli.Interfaces
 {
-    public interface IShellBase
-    {
-        void PrintConfiguration();
+    internal interface IShellBase
+    {    
+        void Run(string[] args);
     }
 }
