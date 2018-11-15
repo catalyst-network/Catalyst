@@ -2,10 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using ADL.Cli.Interfaces;
+using ADL.Node.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace ADL.Cli
+namespace ADL.Node
 {
     internal class Settings : INodeConfiguration
     {
@@ -39,7 +39,7 @@ namespace ADL.Cli
             }
             
             IConfigurationSection section = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetCurrentDirectory()+ConfigFileLocation)
+                .AddJsonFile(Directory.GetCurrentDirectory()+"/../Node"+ConfigFileLocation)
                 .Build()
                 .GetSection("ApplicationConfiguration");
             

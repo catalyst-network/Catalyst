@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -10,16 +10,22 @@
     <PackageReference Include="Akka.DI.AutoFac" Version="1.3.9" />
     <PackageReference Include="Akka.Remote" Version="1.3.10" />
     <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Thinktecture.Configuration" Version="2.1.0" />
+    <PackageReference Include="Thinktecture.Extensions.Configuration.Autofac" Version="2.1.0" />
+    <PackageReference Include="Thinktecture.IO.FileSystem.Abstractions" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Actors\Consensus\Consensus.csproj" />
-    <ProjectReference Include="..\Actors\DFS\DFS.csproj" />
     <ProjectReference Include="..\Actors\Ledger\Ledger.csproj" />
-    <ProjectReference Include="..\Actors\LocalPeer\LocalPeer.csproj" />
+    <ProjectReference Include="..\Actors\Consensus\Consensus.csproj" />
+    <ProjectReference Include="..\Actors\Mempool\Mempool.csproj" />
+    <ProjectReference Include="..\Actors\IO\IO.csproj" />
+    <ProjectReference Include="..\Actors\DFS\DFS.csproj" />
+    <ProjectReference Include="..\Actors\P2P\P2P.csproj" />
     <ProjectReference Include="..\Actors\RpcServer\RpcServer.csproj" />
-    <ProjectReference Include="..\Actors\TaskManager\TaskManager.csproj" />
   </ItemGroup>
 
 </Project>

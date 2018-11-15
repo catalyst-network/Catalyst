@@ -1,21 +1,23 @@
+using ADL.Node.Interfaces;
 using Autofac;
-using ADL.Cli.Interfaces;
+using ADL.Node.Interfaces;
+using Akka.DI.Core;
 
-namespace ADL.Cli
+namespace ADL.Node
 {
     internal class Kernel : IKernel
     {
-        public IContainer Container { get; set; }
         public INodeConfiguration Settings { get; set; }
+        public IDependencyResolver Resolver { get; set; }
         
         /// <summary>
         /// Kernel constructor.
         /// </summary>
         /// <param name="container"></param>
         /// <param name="settings"></param>
-        internal Kernel(IContainer container, INodeConfiguration settings)
+        internal Kernel(IDependencyResolver resolver, INodeConfiguration settings)
         {
-            Container = container;
+            Resolver = resolver;
             Settings = settings;
         }
     }
