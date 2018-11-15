@@ -29,18 +29,25 @@ namespace ADL.Cli
                 
         private static IShellBase Shell { get; set; }
 
+        /// <summary>
+        /// Main cli loop
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
             const int bufferSize = 1024 * 67 + 128;
             var inputStream = Console.OpenStandardInput(bufferSize);
             Console.SetIn(new StreamReader(inputStream, Console.InputEncoding, false, bufferSize));
-            RegisterServices();
+            CreateAkkaSupervisor();
             Shell = new Koopa(Kernel);
             Shell.Run(args);
         }
         
-        private static void RegisterServices()
+        /// <summary>
+        /// Creates main Akka supervisor and passes it to the kernel.
+        /// </summary>
+        private static void CreateAkkaSupervisor()
         {
             Console.WriteLine("RegisterServices trace");
            
@@ -51,6 +58,12 @@ namespace ADL.Cli
             }
         }
 
+        /// <summary>
+        /// Registers all services on IOC containers and returns an application kernel.
+        /// </summary>
+        /// <param name="actorSystem"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         private static IKernel BuildKernel(ActorSystem actorSystem, INodeConfiguration settings)
         {
             Console.WriteLine("BuildContainer trace");
@@ -83,6 +96,11 @@ namespace ADL.Cli
             return new Kernel(container, settings);
         }
 
+        /// <summary>
+        /// Prints application errors
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="ex"></param>
         private static void PrintErrorLogs(TextWriter writer, Exception ex)
         {
             while (true)
@@ -109,6 +127,11 @@ namespace ADL.Cli
             }
         }
 
+        /// <summary>
+        /// Catches unhandled exceptions and writes them to an error file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             using (var fs = new FileStream("error.log", FileMode.Create, FileAccess.Write, FileShare.None))

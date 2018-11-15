@@ -8,6 +8,10 @@ namespace ADL.Cli.Shell.Commands
 {
     internal class PrintConfig
     {
+        /// <summary>
+        /// Prints current contexts loaded configuration.
+        /// </summary>
+        /// <param name="config"></param>
         public void Print(INodeConfiguration config)
         {
             foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(config))
