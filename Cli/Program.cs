@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.Loader;
 using ADL.Cli.Interfaces;
 using ADL.Cli.Shell;
 using ADL.Consensus;
@@ -10,6 +14,7 @@ using ADL.LocalPeer;
 using Akka;
 using Akka.Actor;
 using Autofac;
+using Autofac.Configuration;
 using Akka.DI.Core;
 using Akka.DI.AutoFac;
 using ADL.RpcServer;
@@ -68,30 +73,65 @@ namespace ADL.Cli
         {
             Console.WriteLine("BuildContainer trace");
 
-            var builder = new ContainerBuilder();
+            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
+            {
+                // DISCLAIMER: NO PROMISES THIS IS SECURE. You may or may not want this strategy. It's up to
+                // you to determine if allowing any assembly in the directory to be loaded is acceptable. This
+                // is for demo purposes only.
+                Console.WriteLine(assembly.Name);
+                return context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
+            };
             
+            var config = new ConfigurationBuilder()
+                .AddJsonFile(Directory.GetCurrentDirectory()+"/Configs/services.json")
+                .Build();
+            var configModule = new ConfigurationModule(config);
+            
+            var builder = new ContainerBuilder();
+
+            builder.RegisterModule(configModule);
+
             builder.RegisterType<ICliApplication>().AsImplementedInterfaces();
 
 //            builder.RegisterMicrosoftConfigurationProvider(Settings);
 //            builder.RegisterMicrosoftConfigurationProvider<Settings>().As<INodeConfiguration>();
             
-            builder.RegisterType<RpcServerService>().As<RpcServerService>();
-            builder.RegisterType<TaskManagerService>().As<TaskManagerService>();
-            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
-            builder.RegisterType<LedgerService>().As<LedgerService>();
-            builder.RegisterType<DFSService>().As<DFSService>();
-            builder.RegisterType<ConsensusService>().As<ConsensusService>().InstancePerLifetimeScope();
+//            builder.RegisterType<RpcServerService>().As<RpcServerService>();
+//            builder.RegisterType<TaskManagerService>().As<TaskManagerService>();
+//            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
+//            builder.RegisterType<LedgerService>().As<LedgerService>();
+//            builder.RegisterType<DFSService>().As<DFSService>();
+//            builder.RegisterType<ConsensusService>().As<ConsensusService>().InstancePerLifetimeScope();
 
             var container = builder.Build();
             
-            var resolver = new AutoFacDependencyResolver(container, actorSystem);
+            using (var scope = container.BeginLifetimeScope())
+            {
+                //            builder.RegisterType<RpcServerService>().As<RpcServerService>();
+                //            builder.RegisterType<TaskManagerService>().As<TaskManagerService>();
+                //            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
+                //            builder.RegisterType<LedgerService>().As<LedgerService>();
+                //            builder.RegisterType<DFSService>().As<DFSService>();
+                //            builder.RegisterType<ConsensusService>().As<ConsensusService>().InstancePerLifetimeScope();
+//                var plugin = scope.Resolve<IDFSService>();
+                Console.WriteLine("Resolved specific plugin type: {0}");
+
+                Console.WriteLine("All available plugins:");
+//                var allPlugins = scope.Resolve<IEnumerable<IDFSService>>();
+//                foreach (var resolved in allPlugins)
+//                {
+//                    Console.WriteLine("- {0}");
+//                }
+            }
             
-            var rpcActor = _actorSystem.ActorOf(resolver.Create<RpcServerService>(), "RpcServerService");
-            var taskManagerActor = _actorSystem.ActorOf(resolver.Create<TaskManagerService>(), "TaskManagerService");
-            var peerActor = _actorSystem.ActorOf(resolver.Create<LocalPeerService>(), "LocalPeerService");
-            var ledgerActor = _actorSystem.ActorOf(resolver.Create<LedgerService>(), "LedgerService");
-            var dfsActor = _actorSystem.ActorOf(resolver.Create<DFSService>(), "DFSService");
-            var consensusActor = _actorSystem.ActorOf(resolver.Create<ConsensusService>(), "ConsensusService");
+            var resolver = new AutoFacDependencyResolver(container, actorSystem);
+            resolver.Create(new DFSService());
+//            var rpcActor = _actorSystem.ActorOf(resolver.Create<RpcServerService>(), "RpcServerService");
+//            var taskManagerActor = _actorSystem.ActorOf(resolver.Create<TaskManagerService>(), "TaskManagerService");
+//            var peerActor = _actorSystem.ActorOf(resolver.Create<LocalPeerService>(), "LocalPeerService");
+//            var ledgerActor = _actorSystem.ActorOf(resolver.Create<LedgerService>(), "LedgerService");
+//            var dfsActor = _actorSystem.ActorOf(resolver.Create<DFSService>(), "DFSService");
+//            var consensusActor = _actorSystem.ActorOf(resolver.Create<ConsensusService>(), "ConsensusService");
             
             return new Kernel(container, settings);
         }
