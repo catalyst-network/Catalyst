@@ -10,25 +10,10 @@
         <ProjectReference Include="..\Node\Node.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-      <PackageReference Include="Thinktecture.Configuration" Version="2.1.0" />
-      <PackageReference Include="Thinktecture.Extensions.Configuration.Autofac" Version="2.1.0" />
-      <PackageReference Include="Thinktecture.IO.FileSystem.Abstractions" Version="2.4.0" />
-    </ItemGroup>
-
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <ItemGroup>
             <PluginAssembly Include="$(SolutionDir)\src\DFS\bin\$(ConfigurationName)\**\DFS.dll" />
         </ItemGroup>
         <Copy SourceFiles="@(PluginAssembly)" DestinationFolder="$(OutDir)" />
     </Target>
-    
-    <ItemGroup>
-        <None Update="Configs/services.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
 </Project>

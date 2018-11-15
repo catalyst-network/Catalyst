@@ -3,17 +3,11 @@ using Akka.Actor;
 
 namespace ADL.RpcServer
 {
-    public class RpcServerService : UntypedActor, IRpcServerService
+    public class RpcServerService : IRpcServerService
     {
-        protected override void PreStart() => Console.WriteLine("Started RpcServerService actor");
-    
-        protected override void PostStop() => Console.WriteLine("Stopped RpcServerService actor");
-    
-        protected override void OnReceive(object message)
+        public RpcServerService()
         {
-            Console.WriteLine("RpcServerService OnReceive");
-
-            Console.WriteLine($"Message received {message}");
+            Console.WriteLine("RCP server starting....");
         }
     }
 }

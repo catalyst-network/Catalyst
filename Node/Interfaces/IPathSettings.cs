@@ -1,4 +1,4 @@
-namespace ADL.Cli.Interfaces
+namespace ADL.Node.Interfaces
 {
     public interface IPathSettings {}
 }

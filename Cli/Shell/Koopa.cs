@@ -1,29 +1,14 @@
 using System;
-using System.Reflection;
-using System.Security;
-using System.Text;
-using ADL.Cli.Interfaces;
 using ADL.Cli.Shell.Commands;
 using ADL.Node;
-using Akka.DI.Core;
-using Autofac;
-using Microsoft.Extensions.Configuration;
-using ADL.Cli.Shell.Commands;
 
 namespace ADL.Cli.Shell
 {
     internal class Koopa : ShellBase
     {
 //        private LevelDBStore store;
-        private AtlasSystem system;
+        private AtlasSystem Atlas { get; set; }
 
-        private static IKernel Kernel { get; set; }
-
-        internal Koopa(IKernel kernel)
-        {
-            Kernel = kernel;
-        }
-        
         /// <inheritdoc />
         /// <summary>
         /// Cli command service router.
@@ -52,7 +37,8 @@ namespace ADL.Cli.Shell
         protected override void OnStart(string[] args)
         {
 //            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
-            system = new AtlasSystem();
+            Console.WriteLine("OnStart trace");
+            Atlas = new AtlasSystem();
 //            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
         }
         
@@ -63,10 +49,10 @@ namespace ADL.Cli.Shell
         /// <returns></returns>
         private static bool PrintConfiguration(string[] args)
         {
-            var config = Kernel.Container.Resolve<INodeConfiguration>();
+//            var config = Kernel.Container.Resolve<INodeConfiguration>();
 
             var printConfig = new PrintConfig();
-            printConfig.Print(config);
+//            printConfig.Print(config);
             return true;
         }
         
@@ -102,9 +88,17 @@ namespace ADL.Cli.Shell
             {
                 case "consensus":
                     return OnStartConsensusCommand(args);
+                case "rpc":
+                    return OnStartRpc(args);
                 default:
                     return OnCommand(args);
             }
+        }
+
+        private bool OnStartRpc(string[] args)
+        {
+            Atlas.StartRcp();
+            return true;
         }
 
         /// <summary>
@@ -114,7 +108,7 @@ namespace ADL.Cli.Shell
         /// <returns></returns>
         private bool OnStartConsensusCommand(string[] args)
         {
-            ShowPrompt = false;
+            ShowPrompt = true;
             //system.StartConsensus(Program.Wallet);
             return true;
         }
