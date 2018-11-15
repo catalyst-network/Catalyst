@@ -1,3 +1,13 @@
 {
-  
+  "defaultAssembly": "Cli",
+  "components": [
+    {
+      "type": "ADL.DFS.DFSService, DFS",
+      "services": [
+        {
+          "type": "ADL.DFS.IDFSService, DFS"
+        }
+      ]
+    }
+  ]
 }
