@@ -19,13 +19,55 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Actors\Ledger\Ledger.csproj" />
-    <ProjectReference Include="..\Actors\Consensus\Consensus.csproj" />
-    <ProjectReference Include="..\Actors\Mempool\Mempool.csproj" />
-    <ProjectReference Include="..\Actors\IO\IO.csproj" />
-    <ProjectReference Include="..\Actors\DFS\DFS.csproj" />
-    <ProjectReference Include="..\Actors\P2P\P2P.csproj" />
-    <ProjectReference Include="..\Actors\RpcServer\RpcServer.csproj" />
+    <ProjectReference Include="..\Components\Ledger\Ledger.csproj" />
+    <ProjectReference Include="..\Components\Consensus\Consensus.csproj" />
+    <ProjectReference Include="..\Components\Mempool\Mempool.csproj" />
+    <ProjectReference Include="..\Components\IO\IO.csproj" />
+    <ProjectReference Include="..\Components\DFS\DFS.csproj" />
+    <ProjectReference Include="..\Components\P2P\P2P.csproj" />
+    <ProjectReference Include="..\Components\Rpc\Server\RpcServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Node.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Node.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Node.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Node.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Node.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Node.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Node.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Node.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Node.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Node.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Node.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Node.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Node.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Node.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Node.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Node.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Node.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Node.application" />
   </ItemGroup>
 
 </Project>

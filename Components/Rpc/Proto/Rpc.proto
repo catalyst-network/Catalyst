@@ -1,0 +1,13 @@
+package RpcProtos;
+
+message PingRequest {
+    int32 ping = 1;
+}
+
+message PongRequest {
+    int32 pong = 0;
+}
+
+service RpcService {
+    rpc Greeting(PingRequest) returns (PongRequest);
+}

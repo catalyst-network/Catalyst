@@ -11,7 +11,7 @@ using Autofac;
 using Autofac.Configuration;
 using Akka.DI.Core;
 using Akka.DI.AutoFac;
-using ADL.RpcServer;
+using ADL.Rpc.Server;
 using Akka.Actor.Dsl;
 using Thinktecture.IO;
 using Thinktecture.IO.Adapters;
@@ -119,7 +119,7 @@ namespace ADL.Node
         
         public void Dispose()
         {
-//            RpcServer?.Dispose();
+//            Rpc?.Dispose();
 //            ActorSystem.Stop(LocalNode);
 //            _actorSystem.Dispose();
         }
