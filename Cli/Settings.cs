@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using ADL.Cli.Interfaces;
@@ -14,11 +15,31 @@ namespace ADL.Cli
         public IRPCSettings RPC { get; }
         
         public static Settings Default { get; private set; }
-
+        
+        public static string configFileLocation { get; private set; }
+        
         static Settings()
         {
+            string env = Environment.GetEnvironmentVariable("ATLASENV");
+            
+            switch (env)
+            {
+                case "devnet":
+                    configFileLocation = "/Configs/config.devnet.json";
+                    break;
+                case "testnet":
+                    configFileLocation = "/Configs/config.testnet.json";
+                    break;
+                case "mainnet":
+                    configFileLocation = "/Configs/config.mainnet.json";
+                    break;
+                default:
+                    configFileLocation = "/Configs/config.devnet.json";
+                    break;
+            }
+            
             IConfigurationSection section = new ConfigurationBuilder()
-                .AddJsonFile("Configs/config."+Environment.GetEnvironmentVariable("ATLASENV")+".json")
+                .AddJsonFile(Directory.GetCurrentDirectory()+configFileLocation)
                 .Build()
                 .GetSection("ApplicationConfiguration");
             
@@ -32,7 +53,7 @@ namespace ADL.Cli
             P2P = new P2PSettings(section.GetSection("P2P"));
             RPC = new RpcSettings(section.GetSection("RPC"));
         }
-       
+//       
         private class PathSettings : IPathSettings
         {
             private string Chain { get; set; }
@@ -40,8 +61,9 @@ namespace ADL.Cli
 
             protected internal PathSettings(IConfiguration section)
             {
-                Chain = string.Format(section.GetSection("Chain").Value);
-                Index = string.Format(section.GetSection("Index").Value);
+                Console.WriteLine(section.GetSection("Chain"));
+                Chain = section.GetSection("Chain").Value;
+                Index = section.GetSection("Index").Value;
             }
         }
 

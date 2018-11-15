@@ -43,26 +43,15 @@ namespace ADL.Cli
         private static void RegisterServices()
         {
             Console.WriteLine("RegisterServices trace");
-
-            var config = BuildConfiguration();
-            
+           
             using (_actorSystem = ActorSystem.Create("AtlasSystem"))
             {
                 Console.WriteLine("AtlasSystem create trace");
-                Kernel = BuildKernel(_actorSystem, config);
+                Kernel = BuildKernel(_actorSystem, Settings.Default);
             }
         }
 
-        private static IConfiguration BuildConfiguration()
-        {
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetCurrentDirectory() + "/Configs/config.json", false, true)
-                .Build();
-
-            return config;
-        }
-
-        private static IKernel BuildKernel(ActorSystem actorSystem, IConfiguration config)
+        private static IKernel BuildKernel(ActorSystem actorSystem, INodeConfiguration settings)
         {
             Console.WriteLine("BuildContainer trace");
 
@@ -70,8 +59,8 @@ namespace ADL.Cli
             
             builder.RegisterType<ICliApplication>().AsImplementedInterfaces();
 
-//            builder.RegisterMicrosoftConfigurationProvider(config);
-            builder.RegisterMicrosoftConfiguration<Settings>().As<INodeConfiguration>();
+//            builder.RegisterMicrosoftConfigurationProvider(Settings);
+//            builder.RegisterMicrosoftConfigurationProvider<Settings>().As<INodeConfiguration>();
             
             builder.RegisterType<RpcServerService>().As<RpcServerService>();
             builder.RegisterType<TaskManagerService>().As<TaskManagerService>();
@@ -91,7 +80,7 @@ namespace ADL.Cli
             var dfsActor = _actorSystem.ActorOf(resolver.Create<DFSService>(), "DFSService");
             var consensusActor = _actorSystem.ActorOf(resolver.Create<ConsensusService>(), "ConsensusService");
             
-            return new Kernel(container, container.Resolve<INodeConfiguration>());
+            return new Kernel(container, settings);
         }
 
         private static void PrintErrorLogs(TextWriter writer, Exception ex)
