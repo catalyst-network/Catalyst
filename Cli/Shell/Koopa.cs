@@ -24,6 +24,12 @@ namespace ADL.Cli.Shell
             Kernel = kernel;
         }
         
+        /// <inheritdoc />
+        /// <summary>
+        /// Cli command service router.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         protected override bool OnCommand(string[] args)
         {
             switch (args[0].ToLower())
@@ -39,14 +45,23 @@ namespace ADL.Cli.Shell
             }
         }
 
-        protected internal override void OnStart(string[] args)
+        /// <summary>
+        /// Starts the main ADL configuration.
+        /// </summary>
+        /// <param name="args"></param>
+        protected override void OnStart(string[] args)
         {
 //            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
             system = new AtlasSystem();
 //            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
         }
-           
-        private bool PrintConfiguration(string[] args)
+        
+        /// <summary>
+        /// Prints the current loaded settings.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private static bool PrintConfiguration(string[] args)
         {
             var config = Kernel.Container.Resolve<INodeConfiguration>();
 
@@ -55,7 +70,12 @@ namespace ADL.Cli.Shell
             return true;
         }
         
-        private bool OnHelpCommand(string[] args)
+        /// <summary>
+        /// Prints a list of available cli commands.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private static bool OnHelpCommand(string[] args)
         {
             Console.Write(
                 "Normal Commands:\n" +
@@ -71,6 +91,11 @@ namespace ADL.Cli.Shell
             return true;
         }
 
+        /// <summary>
+        /// Service router for a start based commmnd
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         private bool OnStartCommand(string[] args)
         {
             switch (args[1].ToLower())
@@ -82,6 +107,11 @@ namespace ADL.Cli.Shell
             }
         }
 
+        /// <summary>
+        /// Starts the ADL consensus module.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         private bool OnStartConsensusCommand(string[] args)
         {
             ShowPrompt = false;
@@ -89,7 +119,10 @@ namespace ADL.Cli.Shell
             return true;
         }
 
-        protected internal override void OnStop()
+        /// <summary>
+        /// Handles a stop command
+        /// </summary>
+        protected override void OnStop()
         {
 //            system.Dispose();
 //            store.Dispose();

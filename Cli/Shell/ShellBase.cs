@@ -8,16 +8,21 @@ namespace ADL.Cli.Shell
 {
     public abstract class ShellBase : IShellBase
     {
-        protected internal bool ShowPrompt { get; set; } = true;
-               
-        protected internal string Prompt => "koopa";
+        protected bool ShowPrompt { get; set; } = true;
 
-        protected internal string ServiceName => "Atlas Distributed Shell";
-        
-        protected internal abstract void OnStart(string[] args);
+        private static string Prompt => "koopa";
 
-        protected internal abstract void OnStop();
+        private static string ServiceName => "Atlas Distributed Shell";
         
+        protected abstract void OnStart(string[] args);
+
+        protected abstract void OnStop();
+        
+        /// <summary>
+        /// Cli command service router.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         protected virtual bool OnCommand(string[] args)
         {
             switch (args[0].ToLower())
@@ -101,6 +106,10 @@ namespace ADL.Cli.Shell
             return securePwd;
         }
 
+        /// <summary>
+        /// Runs the console
+        /// </summary>
+        /// <param name="args"></param>
         public void Run(string[] args)
         {
             OnStart(args);
@@ -108,6 +117,9 @@ namespace ADL.Cli.Shell
             OnStop();
         }
 
+        /// <summary>
+        /// Runs the main cli ui.
+        /// </summary>
         private void RunConsole()
         {
             bool running = true;

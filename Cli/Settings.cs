@@ -16,7 +16,7 @@ namespace ADL.Cli
         
         public static Settings Default { get; private set; }
         
-        public static string configFileLocation { get; private set; }
+        public static string ConfigFileLocation { get; private set; }
         
         static Settings()
         {
@@ -25,27 +25,31 @@ namespace ADL.Cli
             switch (env)
             {
                 case "devnet":
-                    configFileLocation = "/Configs/config.devnet.json";
+                    ConfigFileLocation = "/Configs/config.devnet.json";
                     break;
                 case "testnet":
-                    configFileLocation = "/Configs/config.testnet.json";
+                    ConfigFileLocation = "/Configs/config.testnet.json";
                     break;
                 case "mainnet":
-                    configFileLocation = "/Configs/config.mainnet.json";
+                    ConfigFileLocation = "/Configs/config.mainnet.json";
                     break;
                 default:
-                    configFileLocation = "/Configs/config.devnet.json";
+                    ConfigFileLocation = "/Configs/config.devnet.json";
                     break;
             }
             
             IConfigurationSection section = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetCurrentDirectory()+configFileLocation)
+                .AddJsonFile(Directory.GetCurrentDirectory()+ConfigFileLocation)
                 .Build()
                 .GetSection("ApplicationConfiguration");
             
             Default = new Settings(section);
         }
         
+        /// <summary>
+        /// Settings constructor
+        /// </summary>
+        /// <param name="section"></param>
         protected internal Settings(IConfiguration section)
         {
             Protocol = new ProtocolSettings(section.GetSection("Protocol"));
@@ -53,12 +57,20 @@ namespace ADL.Cli
             P2P = new P2PSettings(section.GetSection("P2P"));
             RPC = new RpcSettings(section.GetSection("RPC"));
         }
-//       
+
+        /// <summary>
+        /// Path settings class.
+        /// Holds the local storage locations
+        /// </summary>
         private class PathSettings : IPathSettings
         {
             private string Chain { get; set; }
             private string Index { get; set; }
 
+            /// <summary>
+            /// sets the chain and index path locations
+            /// </summary>
+            /// <param name="section"></param>
             protected internal PathSettings(IConfiguration section)
             {
                 Console.WriteLine(section.GetSection("Chain"));
@@ -67,16 +79,26 @@ namespace ADL.Cli
             }
         }
 
+        /// <summary>
+        /// P2P settings class.
+        /// </summary>
         private class P2PSettings : IP2PSettings
         {
             private ushort Port { get; set; }
 
+            /// <summary>
+            /// Sets the p2p settings
+            /// </summary>
+            /// <param name="section"></param>
             protected internal P2PSettings(IConfiguration section)
             {
                 Port = ushort.Parse(section.GetSection("Port").Value);
             }
         }
 
+        /// <summary>
+        /// RPC settings class.
+        /// </summary>
         private class RpcSettings : IRPCSettings
         {
             private IPAddress BindAddress { get; set; }
@@ -84,6 +106,10 @@ namespace ADL.Cli
             private string SslCert { get; set; }
             private string SslCertPassword { get; set; }
 
+            /// <summary>
+            ///  Sets RPC Server settings
+            /// </summary>
+            /// <param name="section"></param>
             protected internal RpcSettings(IConfiguration section)
             {
                 BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
@@ -93,12 +119,19 @@ namespace ADL.Cli
             }
         }
         
+        /// <summary>
+        /// Protocol settings class.
+        /// </summary>
         private class ProtocolSettings : IProtocolSettings
         {
             private uint Magic { get; }
             private byte AddressVersion { get; }
             private string[] SeedList { get; }
 
+            /// <summary>
+            /// Sets the protocol settings
+            /// </summary>
+            /// <param name="section"></param>
             protected internal ProtocolSettings(IConfiguration section)
             {
                 Magic = uint.Parse(section.GetSection("Magic").Value);
