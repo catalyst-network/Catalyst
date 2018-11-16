@@ -3,7 +3,7 @@ using Akka.Actor;
 
 namespace ADL.Consensus
 {
-    public class ConsensusService : UntypedActor, IConsensusService
+    public class ConsensusService : UntypedActor, IConsensus
     {
         protected override void PreStart() => Console.WriteLine("Started DFSService actor");
     

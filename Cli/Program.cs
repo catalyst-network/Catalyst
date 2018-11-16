@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using ADL.Cli.Interfaces;
 using ADL.Cli.Shell;
 
 namespace ADL.Cli

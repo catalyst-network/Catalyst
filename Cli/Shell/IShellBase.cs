@@ -1,4 +1,4 @@
-namespace ADL.Cli.Interfaces
+namespace ADL.Cli
 {
     internal interface IShellBase
     {    

@@ -1,6 +1,6 @@
 namespace ADL.Ledger
 {
-    public interface ILedgerService
+    public interface ILedger
     {
         
     }

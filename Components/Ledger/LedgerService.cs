@@ -3,7 +3,7 @@ using Akka.Actor;
 
 namespace ADL.Ledger
 {
-    public class LedgerService : UntypedActor, ILedgerService
+    public class LedgerService : UntypedActor, ILedger
     {
         protected override void PreStart() => Console.WriteLine("Started LedgerService actor");
     

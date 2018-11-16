@@ -1,9 +1,9 @@
 ﻿using System;
 using Akka.Actor;
 
-namespace ADL.LocalPeer
+namespace ADL.P2P
 {
-    public class LocalPeerService : UntypedActor, ILocalPeerService
+    public class P2PController : UntypedActor, IP2P
     {
         protected override void PreStart() => Console.WriteLine("Started LocalPeerService actor");
     
