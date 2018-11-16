@@ -1,8 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
-using Ipfs.Api;
+
+using System.Net.Http;
 
 namespace ADL.DFS
 {        
@@ -24,17 +25,24 @@ namespace ADL.DFS
         [TestMethod]
         public void AddTextAsync()
         {
-            var hash = _ipfs.AddTextAsync("hello world");
-            Assert.AreEqual("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", hash.Result.Hash);
+            var hash = TestFixture._ipfs_wrapper.AddTextAsync("hello world");
+            Assert.AreEqual("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", hash.Result.Encode());
         }
         
         [TestMethod]
         public void ReadAllTextAsync()
         {
             var hash = _ipfs.AddTextAsync("hello world");
-                        
+            
             var text = _ipfs.ReadAllTextAsync("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD");
             Assert.AreEqual("hello world", text.Result);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(AggregateException), "invalid ipfs ref path")]
+        public void ReadAllTextAsync_Dodgy_Hash()
+        {
+            var text = _ipfs.ReadAllTextAsync("Qmf412jQZiuVAbcdefghilmnopqrst12").Result;
         }
     }
 }
