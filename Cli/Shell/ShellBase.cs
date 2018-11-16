@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using System.Security;
 using System.Text;
-using ADL.Cli.Interfaces;
 
 namespace ADL.Cli.Shell
 {

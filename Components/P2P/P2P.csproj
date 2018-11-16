@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ADL.LocalPeer</RootNamespace>
+    <RootNamespace>ADL.P2P</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka" Version="1.3.10" />
-    <PackageReference Include="Akka.Remote" Version="1.3.10" />
+
   </ItemGroup>
 
   <ItemGroup>

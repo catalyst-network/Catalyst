@@ -1,6 +1,6 @@
 namespace ADL.Consensus
 {
-    public interface IConsensusService
+    public interface IConsensus
     {
         
     }

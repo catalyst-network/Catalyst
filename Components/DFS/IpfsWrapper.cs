@@ -4,7 +4,7 @@ using Ipfs.Api;
 
 namespace ADL.DFS
 {
-    public class IpfsWrapper
+    public class IpfsWrapper : IDFSService
     {
         private readonly IpfsClient Client = new IpfsClient();
 
