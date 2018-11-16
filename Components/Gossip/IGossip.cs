@@ -1,6 +1,6 @@
-namespace ADL.RpcServer
+namespace ADL.Gossip
 {
-    public interface IOService
+    public interface IGossip
     {
     }
 }

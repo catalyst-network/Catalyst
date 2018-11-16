@@ -2,6 +2,22 @@
   "defaultAssembly": "Node",
   "components": [
     {
+      "type": "ADL.Rpc.Server.RpcServer, RpcServer",
+      "services": [
+        {
+          "type": "ADL.Rpc.Server.IRpcServer, RpcServer"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Cryptography.ECCurve, Cryptography",
+      "services": [
+        {
+          "type": "ADL.Cryptography.ICryptography, Cryptography"
+        }
+      ]
+    },
+    {
       "type": "ADL.DFS.IpfsWrapper, DFS",
       "services": [
         {
@@ -10,15 +26,15 @@
       ]
     },
     {
-      "type": "ADL.Economics.DFed, Economics",
+      "type": "ADL.Economics.DMF, Economics",
       "services": [
         {
-          "type": "ADL.Economics.IDFed, Economics"
+          "type": "ADL.Economics.IDMF, Economics"
         }
       ]
     },
     {
-      "type": "ADL.Ledger.LedgerService, Ledger",
+      "type": "ADL.Ledger.Ledger, Ledger",
       "services": [
         {
           "type": "ADL.Ledger.ILedger, Ledger"
@@ -26,18 +42,18 @@
       ]
     },
     {
-      "type": "ADL.Ledger.P2PController, P2P",
+      "type": "ADL.Mempool.MempoolService, Mempool",
       "services": [
         {
-          "type": "ADL.Ledger.IP2P, P2P"
+          "type": "ADL.Mempool.IMempool, Mempool"
         }
       ]
     },
     {
-      "type": "ADL.DFS.Server.RpcServer, RpcServer",
+      "type": "ADL.P2P.P2PController, P2P",
       "services": [
         {
-          "type": "ADL.DFS.Server.IRpcServer, RpcServer"
+          "type": "ADL.P2P.IP2P, P2P"
         }
       ]
     },
@@ -45,7 +61,15 @@
       "type": "ADL.Token.ACL, Token",
       "services": [
         {
-          "type": "ADL.Token.ITx, Token"
+          "type": "ADL.Token.IToken, Token"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Transaction.BasicTransaction, Transaction",
+      "services": [
+        {
+          "type": "ADL.Transaction.ITx, Transaction"
         }
       ]
     }

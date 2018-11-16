@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <RootNamespace>ADL.Token</RootNamespace>
+        <RootNamespace>ADL.Transaction</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Math\Math.csproj" />
+      <ProjectReference Include="..\..\Helpers\Math\Math.csproj" />
     </ItemGroup>
 
     <ItemGroup>
