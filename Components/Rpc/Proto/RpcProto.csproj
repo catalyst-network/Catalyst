@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,22 +13,21 @@
 
     <ItemGroup>
         <Proto Include="*.proto" />
-        <Generated Include=".\generated\*.cs" />
+        <Generated Include=".\Service\*.cs" />
     </ItemGroup>
 
-    <ItemGroup Condition="'@(Generated)' == ''">
-        <Generated Include=".\generated\dummy.cs" />
+    <ItemGroup Condition="'@(Service)' == ''">
+        <Generated Include=".\Service\Rpc.cs" />
     </ItemGroup>
 
     <!-- Generate the code from all of the proto files -->
-    <Target Name="GenProtos" BeforeTargets="BeforeBuild" Inputs="@(Proto)" Outputs="@(Generated)">
+    <Target Name="GenProtos" BeforeTargets="BeforeBuild" Inputs="@(Proto)" Outputs="@(Service)">
         <Message Text="Generating protos @(Proto)" Importance="High" />
         <!-- TODO: Run different command lines per OS. -->
-        <Exec Command="$(ProjectDir)/../../tools/gen_protos.sh" />
+        <Exec Command="$(ProjectDir)/../../Tools/gen_protos.sh" />
         <!-- Ensure all of the generated files are compiled. -->
         <ItemGroup Condition="'@(Compile)' == ''">
-            <Compile Include="generated\*.cs" />
+            <Compile Include="Service\*.cs" />
         </ItemGroup>
     </Target>
-
 </Project>

@@ -1,13 +1,15 @@
-package RpcProtos;
+syntax = "proto3";
+
+package ADL.Rpc.Proto.Service;
 
 message PingRequest {
     int32 ping = 1;
 }
 
-message PongRequest {
-    int32 pong = 0;
+message PongResponse {
+    int32 pong = 2;
 }
 
 service RpcService {
-    rpc Greeting(PingRequest) returns (PongRequest);
+    rpc Greeting(PingRequest) returns (PongResponse);
 }

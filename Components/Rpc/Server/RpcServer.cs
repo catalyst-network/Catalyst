@@ -1,37 +1,22 @@
 ﻿using System;
 using Grpc.Core;
-using GreeterProtos;
+using ADL.Rpc.Proto.Service;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ADL.Rpc.Server
 {
-    class GreeterImpl : Greeter.GreeterBase
-    {
-        // Server side handler of the SayHello RPC
-        public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
-        {
-            return Task.FromResult(new HelloReply { Message = "Hello " + request.Name });
-        }
-
-        public override Task<HelloReply> SayHelloAgain(HelloRequest request, ServerCallContext context)
-        {
-            return Task.FromResult(new HelloReply { Message = "Hello again " + request.Name });
-        }
-    }
-
-    public class Server : IRpcServerService
+    public class RpcServer
     {
         const string Host = "0.0.0.0";
         const int Port = 50051;
 
-        public RpcServerService()
+        public RpcServer()
         {
-            // Build a server
-            var server = new Server
+            var server = new Grpc.Core.Server
             {
-                Services = {GreetingService.BindService(new GreeterServiceImpl())},
-                Ports = {new ServerPort(Host, Port, ServerCredentials.Insecure)}
+                Services = { RpcService.BindService(new RpcServerImpl()) },
+                Ports = { new ServerPort(Host, Port, ServerCredentials.Insecure) }
             };
 
             CancellationTokenSource tokenSource = new CancellationTokenSource();
@@ -53,12 +38,10 @@ namespace ADL.Rpc.Server
             return taskSource.Task;
         }
 
-        private static async Task RunServiceAsync(Server server,
+        private static async Task RunServiceAsync(Grpc.Core.Server server,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            // Start server
             server.Start();
-
             await AwaitCancellation(cancellationToken);
             await server.ShutdownAsync();
         }

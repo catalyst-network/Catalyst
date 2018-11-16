@@ -1,4 +1,4 @@
-namespace ADL.RpcServer
+namespace ADL.Rpc.Server
 {
     public interface IRpcServer
     {
