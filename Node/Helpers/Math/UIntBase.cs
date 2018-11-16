@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace ADL.Math
+namespace ADL.Node.Helpers.Math
 {
     
     /// <summary>

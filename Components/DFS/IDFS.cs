@@ -1,6 +1,6 @@
 namespace ADL.DFS
 {
-    public interface IDFSService
+    public interface IDFS
     {
         public async Task<Ipfs.Cid> AddTextAsync(string text);
         public async Task<Ipfs.Cid> AddFileAsync(string filename);

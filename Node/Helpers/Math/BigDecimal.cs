@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace ADL.Math
+namespace ADL.Node.Helpers.Math
 {
     public struct BigDecimal
     {

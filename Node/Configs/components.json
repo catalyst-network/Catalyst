@@ -1,0 +1,69 @@
+{
+  "defaultAssembly": "Node",
+  "components": [
+    {
+      "type": "ADL.Contract.ContractService, Contract",
+      "services": [
+        {
+          "type": "ADL.DFS.IContract, Contract"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Cryptography.ECCurve, Cryptography",
+      "services": [
+        {
+          "type": "ADL.DFS.ICryptography, Cryptography"
+        }
+      ]
+    },
+    {
+      "type": "ADL.DFS.IpfsWrapper, DFS",
+      "services": [
+        {
+          "type": "ADL.DFS.IDFS, DFS"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Economics.DFed, Economics",
+      "services": [
+        {
+          "type": "ADL.Economics.IDFed, Economics"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Ledger.LedgerService, Ledger",
+      "services": [
+        {
+          "type": "ADL.Ledger.ILedger, Ledger"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Ledger.P2PController, P2P",
+      "services": [
+        {
+          "type": "ADL.Ledger.IP2P, P2P"
+        }
+      ]
+    },
+    {
+      "type": "ADL.DFS.Server.RpcServer, RpcServer",
+      "services": [
+        {
+          "type": "ADL.DFS.Server.IRpcServer, RpcServer"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Token.ACL, Token",
+      "services": [
+        {
+          "type": "ADL.Token.ITx, Token"
+        }
+      ]
+    }
+  ]
+}

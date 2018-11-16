@@ -1,6 +1,4 @@
-using ADL.Node.Interfaces;
-
-namespace ADL.Node.Economics
+namespace ADL.Economics
 {
     /// <summary>
     /// DMF - Decentralised Monetary Fund.

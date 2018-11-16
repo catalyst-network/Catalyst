@@ -49,14 +49,21 @@
       <e p="Node" t="IncludeRecursive">
         <e p="AtlasSystem.cs" t="Include" />
         <e p="Configs" t="Include">
-          <e p="actors.json" t="Include" />
+          <e p="components.json" t="Include" />
           <e p="config.devnet.json" t="Include" />
           <e p="config.mainnet.json" t="Include" />
           <e p="config.testnet.json" t="Include" />
-          <e p="services.json" t="Include" />
         </e>
         <e p="Helpers" t="Include">
           <e p=".gitkeep" t="Include" />
+          <e p="Math" t="Include">
+            <e p="BigDecimal.cs" t="Include" />
+            <e p="Fixed8.cs" t="Include" />
+            <e p="Helper.cs" t="Include" />
+            <e p="UInt160.cs" t="Include" />
+            <e p="UInt256.cs" t="Include" />
+            <e p="UIntBase.cs" t="Include" />
+          </e>
         </e>
         <e p="Interfaces" t="Include">
           <e p="IAtlasSystem.cs" t="Include" />
