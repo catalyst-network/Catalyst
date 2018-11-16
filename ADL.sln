@@ -17,6 +17,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Node", "Node\Node.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Cli\Cli.csproj", "{6A3A8E69-A2E6-4C28-8F87-2E6CF0C4454A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "SharedLibraries\Contract\Contract.csproj", "{29601B05-EDEB-4B25-B8AC-AB1DE8C31158}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography", "SharedLibraries\Cryptography\Cryptography.csproj", "{D20AC7F2-A666-42C3-9332-6737344FCEA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math", "SharedLibraries\Math\Math.csproj", "{C6C3B30C-59C6-4C49-8C07-106D25F6BCA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Token", "SharedLibraries\Token\Token.csproj", "{CEDFC2D7-4DBA-4920-B111-01749BE3ED9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transaction", "SharedLibraries\Transaction\Transaction.csproj", "{DB226237-36F7-410B-A2EE-71202C8937CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wallet", "SharedLibraries\Wallet\Wallet.csproj", "{CA0923F0-9976-4215-8333-AD84550FAD20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL", "Tokens\ACL\ACL.csproj", "{9A70DBFC-BEA0-4A4F-B785-EE3657BB4967}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
