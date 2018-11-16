@@ -1,10 +1,6 @@
 using System;
 using ADL.Node.Interfaces;
 using Akka.Actor;
-using ADL.Consensus;
-using ADL.DFS;
-using ADL.Ledger;
-using ADL.LocalPeer;
 using Akka;
 using Akka.Actor;
 using Autofac;
@@ -62,11 +58,11 @@ namespace ADL.Node
 //            builder.RegisterMicrosoftConfigurationProvider(Settings);
 //            builder.RegisterMicrosoftConfigurationProvider<Settings>().As<INodeConfiguration>();
             
-            builder.RegisterType<RpcServerService>().As<RpcServerService>();
-            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
-            builder.RegisterType<LedgerService>().As<LedgerService>();
-            builder.RegisterType<DFSService>().As<DFSService>();
-            builder.RegisterType<ConsensusService>().As<ConsensusService>().InstancePerLifetimeScope();
+            builder.RegisterType<RpcServer>().As<RpcServer>();
+//            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
+//            builder.RegisterType<LedgerService>().As<LedgerService>();
+//            builder.RegisterType<DFSService>().As<DFSService>();
+//            builder.RegisterType<ConsensusService>().As<ConsensusService>().InstancePerLifetimeScope();
 
             var container = builder.Build();
             
@@ -108,7 +104,7 @@ namespace ADL.Node
         
         public void StartRcp()
         {
-            var rpcServer = new RpcServerService();
+            var rpcServer = new RpcServer();
         }
         
         public void StartDfs()

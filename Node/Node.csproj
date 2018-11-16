@@ -19,12 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Components\Ledger\Ledger.csproj" />
-    <ProjectReference Include="..\Components\Consensus\Consensus.csproj" />
-    <ProjectReference Include="..\Components\Mempool\Mempool.csproj" />
-    <ProjectReference Include="..\Components\IO\IO.csproj" />
-    <ProjectReference Include="..\Components\DFS\DFS.csproj" />
-    <ProjectReference Include="..\Components\P2P\P2P.csproj" />
+    <!--<ProjectReference Include="..\Components\Ledger\Ledger.csproj" />-->
+    <!--<ProjectReference Include="..\Components\Consensus\Consensus.csproj" />-->
+    <!--<ProjectReference Include="..\Components\Mempool\Mempool.csproj" />-->
+    <!--<ProjectReference Include="..\Components\IO\IO.csproj" />-->
+    <!--<ProjectReference Include="..\Components\DFS\DFS.csproj" />-->
+    <!--<ProjectReference Include="..\Components\P2P\P2P.csproj" />-->
     <ProjectReference Include="..\Components\Rpc\Server\RpcServer.csproj" />
   </ItemGroup>
 
