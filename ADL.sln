@@ -3,37 +3,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consensus", "Actors\Consensus\Consensus.csproj", "{A98831D9-2351-42DE-A761-C58A22E6E4C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consensus", "Components\Consensus\Consensus.csproj", "{A98831D9-2351-42DE-A761-C58A22E6E4C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFS", "Actors\DFS\DFS.csproj", "{8F603900-D097-4D7D-A89B-2F33C13701DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFS", "Components\DFS\DFS.csproj", "{8F603900-D097-4D7D-A89B-2F33C13701DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ledger", "Actors\Ledger\Ledger.csproj", "{001D4C6D-13F7-4734-BE64-CAAE9D163E4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ledger", "Components\Ledger\Ledger.csproj", "{001D4C6D-13F7-4734-BE64-CAAE9D163E4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P2P", "Actors\P2P\P2P.csproj", "{9B1C7B57-3339-4565-9BF3-CECD0A8B0A05}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P2P", "Components\P2P\P2P.csproj", "{9B1C7B57-3339-4565-9BF3-CECD0A8B0A05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rpc", "Actors\Rpc\Rpc.csproj", "{A4CE2FB2-DBE7-429C-A45F-D91B53D9C4E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rpc", "Components\Rpc\Server\RpcServer.csproj", "{A4CE2FB2-DBE7-429C-A45F-D91B53D9C4E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Node", "Node\Node.csproj", "{65CB1AFE-4DA8-4C3B-9039-D06626AC09C3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Cli\Cli.csproj", "{6A3A8E69-A2E6-4C28-8F87-2E6CF0C4454A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "SharedLibraries\Contract\Contract.csproj", "{29601B05-EDEB-4B25-B8AC-AB1DE8C31158}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "Components\Contract\Contract.csproj", "{29601B05-EDEB-4B25-B8AC-AB1DE8C31158}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography", "SharedLibraries\Cryptography\Cryptography.csproj", "{D20AC7F2-A666-42C3-9332-6737344FCEA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography", "Components\Cryptography\Cryptography.csproj", "{D20AC7F2-A666-42C3-9332-6737344FCEA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math", "SharedLibraries\Math\Math.csproj", "{C6C3B30C-59C6-4C49-8C07-106D25F6BCA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math", "Helpers\Math\Math.csproj", "{C6C3B30C-59C6-4C49-8C07-106D25F6BCA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Token", "SharedLibraries\Token\Token.csproj", "{CEDFC2D7-4DBA-4920-B111-01749BE3ED9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Token", "Components\Token\Token.csproj", "{CEDFC2D7-4DBA-4920-B111-01749BE3ED9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transaction", "SharedLibraries\Transaction\Transaction.csproj", "{DB226237-36F7-410B-A2EE-71202C8937CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transaction", "Components\Transaction\Transaction.csproj", "{DB226237-36F7-410B-A2EE-71202C8937CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wallet", "SharedLibraries\Wallet\Wallet.csproj", "{CA0923F0-9976-4215-8333-AD84550FAD20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wallet", "Wallet\Wallet.csproj", "{CA0923F0-9976-4215-8333-AD84550FAD20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL", "Tokens\ACL\ACL.csproj", "{9A70DBFC-BEA0-4A4F-B785-EE3657BB4967}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActorsManager", "ActorsManager\ActorsManager.csproj", "{F9B8FF82-40B3-49C7-A9C9-339CC5F7BCF6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{9BEE3E55-9119-4ED4-BF2C-5368CB07324C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL", "Components\Token\Token.csproj", "{9A70DBFC-BEA0-4A4F-B785-EE3657BB4967}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

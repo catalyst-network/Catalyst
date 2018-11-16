@@ -4,27 +4,12 @@
     <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2018.3/system/extResources" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2018.3/system/resharper-host/local/Transient/ReSharperHost/v183/SolutionCaches/_ADL.1482359440.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.nuget/packages/mstest.testadapter/1.3.2/build/_common/Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/mstest.testadapter/1.3.2/build/_common/Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/mstest.testadapter/1.3.2/build/_common/Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll" t="Include" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p="ADL.sln" t="IncludeFlat" />
-      <e p="Actors/Consensus" t="IncludeRecursive">
-        <e p="Consensus.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="Actors/DFS" t="IncludeRecursive">
-        <e p="DFS.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="Actors/Ledger" t="IncludeRecursive">
-        <e p="Ledger.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="Actors/P2P" t="IncludeRecursive">
-        <e p="P2P.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="Actors/Rpc" t="IncludeRecursive">
-        <e p="Rpc.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="ActorsManager" t="IncludeRecursive">
-        <e p="ActorsManager.csproj" t="IncludeRecursive" />
-      </e>
       <e p="Cli" t="IncludeRecursive">
         <e p="Cli.csproj" t="IncludeRecursive" />
         <e p="Program.cs" t="Include" />
@@ -46,6 +31,155 @@
           </e>
         </e>
       </e>
+      <e p="Components/Consensus" t="IncludeRecursive">
+        <e p="Consensus.csproj" t="IncludeRecursive" />
+        <e p="ConsensusService.cs" t="Include" />
+        <e p="IConsensus.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Consensus.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Components/Contract" t="IncludeRecursive">
+        <e p="Contract.csproj" t="IncludeRecursive" />
+        <e p="ContractService.cs" t="Include" />
+        <e p="IContract.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Contract.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Components/Cryptography" t="IncludeRecursive">
+        <e p="Cryptography.csproj" t="IncludeRecursive" />
+        <e p="ECC" t="Include">
+          <e p="ECCurve.cs" t="Include" />
+          <e p="ECDsa.cs" t="Include" />
+          <e p="ECFieldElement.cs" t="Include" />
+          <e p="ECPoint.cs" t="Include" />
+        </e>
+        <e p="ECCurve.cs" t="Include" />
+        <e p="ICryptography.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Cryptography.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Components/DFS" t="IncludeRecursive">
+        <e p="DFS.csproj" t="IncludeRecursive" />
+        <e p="IDFS.cs" t="Include" />
+        <e p="IpfsWrapper.cs" t="Include" />
+        <e p="Tests" t="Include">
+          <e p="DFSFileSystem.cs" t="Include" />
+          <e p="DFSTestFixture.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="DFS.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Components/Ledger" t="IncludeRecursive">
+        <e p="ILedger.cs" t="Include" />
+        <e p="Ledger.csproj" t="IncludeRecursive" />
+        <e p="LedgerService.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ledger.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Components/P2P" t="IncludeRecursive">
+        <e p="IP2P.cs" t="Include" />
+        <e p="P2P.csproj" t="IncludeRecursive" />
+        <e p="P2PController.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="P2P.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Components/Rpc/Server" t="IncludeRecursive">
+        <e p="IRpcServer.cs" t="Include" />
+        <e p="RpcServer.cs" t="Include" />
+        <e p="RpcServer.csproj" t="IncludeRecursive" />
+        <e p="RpcServerImpl.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="RpcServer.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Components/Token" t="IncludeRecursive">
+        <e p="ACL.cs" t="Include" />
+        <e p="GenericToken.cs" t="Include" />
+        <e p="IToken.cs" t="Include" />
+        <e p="Token.csproj" t="IncludeRecursive" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Token.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Components/Transaction" t="IncludeRecursive">
+        <e p="ISigner.cs" t="Include" />
+        <e p="ITx.cs" t="Include" />
+        <e p="P2pkh.cs" t="Include" />
+        <e p="Signer.cs" t="Include" />
+        <e p="Transaction.cs" t="Include" />
+        <e p="Transaction.csproj" t="IncludeRecursive" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Transaction.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Helpers/Math" t="IncludeRecursive">
+        <e p="BigDecimal.cs" t="Include" />
+        <e p="Fixed8.cs" t="Include" />
+        <e p="Helper.cs" t="Include" />
+        <e p="Math.csproj" t="IncludeRecursive" />
+        <e p="UInt160.cs" t="Include" />
+        <e p="UInt256.cs" t="Include" />
+        <e p="UIntBase.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Math.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
       <e p="Node" t="IncludeRecursive">
         <e p="AtlasSystem.cs" t="Include" />
         <e p="Configs" t="Include">
@@ -53,17 +187,6 @@
           <e p="config.devnet.json" t="Include" />
           <e p="config.mainnet.json" t="Include" />
           <e p="config.testnet.json" t="Include" />
-        </e>
-        <e p="Helpers" t="Include">
-          <e p=".gitkeep" t="Include" />
-          <e p="Math" t="Include">
-            <e p="BigDecimal.cs" t="Include" />
-            <e p="Fixed8.cs" t="Include" />
-            <e p="Helper.cs" t="Include" />
-            <e p="UInt160.cs" t="Include" />
-            <e p="UInt256.cs" t="Include" />
-            <e p="UIntBase.cs" t="Include" />
-          </e>
         </e>
         <e p="Interfaces" t="Include">
           <e p="IAtlasSystem.cs" t="Include" />
@@ -80,35 +203,31 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
-            <e p="netcoreapp2.1" t="Include">
+            <e p="netstandard2.0" t="Include">
               <e p="Node.AssemblyInfo.cs" t="Include" />
             </e>
           </e>
         </e>
       </e>
-      <e p="SharedLibraries/Contract" t="IncludeRecursive">
-        <e p="Contract.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="SharedLibraries/Cryptography" t="IncludeRecursive">
-        <e p="Cryptography.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="SharedLibraries/Math" t="IncludeRecursive">
-        <e p="Math.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="SharedLibraries/Token" t="IncludeRecursive">
-        <e p="Token.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="SharedLibraries/Transaction" t="IncludeRecursive">
-        <e p="Transaction.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="SharedLibraries/Wallet" t="IncludeRecursive">
+      <e p="Wallet" t="IncludeRecursive">
+        <e p="Helper.cs" t="Include" />
+        <e p="KeyPair.cs" t="Include" />
+        <e p="Standard" t="Include">
+          <e p="Account.cs" t="Include" />
+          <e p="Address.cs" t="Include" />
+          <e p="UserWalletAccount.cs" t="Include" />
+        </e>
+        <e p="Wallet.cs" t="Include" />
         <e p="Wallet.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="Tokens/ACL" t="IncludeRecursive">
-        <e p="ACL.csproj" t="IncludeRecursive" />
-      </e>
-      <e p="UnitTests" t="IncludeRecursive">
-        <e p="UnitTests.csproj" t="IncludeRecursive" />
+        <e p="WalletAccount.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Wallet.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
       </e>
       <e p="packages" t="ExcludeRecursive" />
     </e>

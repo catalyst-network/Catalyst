@@ -6,7 +6,7 @@ namespace ADL.Contract
     
     public enum StorageType {ADFS, IPFS, MaidSafe, TrustedServer}
     
-    internal class Contract : IContract
+    internal class ContractService : IContract
     {
         public Guid Identity
         {

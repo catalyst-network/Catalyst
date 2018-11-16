@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>ADL.Node</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <!--<RootNamespace>ADL.Node</RootNamespace>-->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka" Version="1.3.10" />
-    <PackageReference Include="Akka.DI.AutoFac" Version="1.3.9" />
-    <PackageReference Include="Akka.Remote" Version="1.3.10" />
-    <PackageReference Include="Autofac" Version="4.8.1" />
-    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    <PackageReference Include="Thinktecture.Configuration" Version="2.1.0" />
-    <PackageReference Include="Thinktecture.Extensions.Configuration.Autofac" Version="2.1.0" />
-    <PackageReference Include="Thinktecture.IO.FileSystem.Abstractions" Version="2.4.0" />
+    <!--<PackageReference Include="Akka" Version="1.3.10" />-->
+    <!--<PackageReference Include="Akka.DI.AutoFac" Version="1.3.9" />-->
+    <!--<PackageReference Include="Akka.Remote" Version="1.3.10" />-->
+    <!--<PackageReference Include="Autofac" Version="4.8.1" />-->
+    <!--<PackageReference Include="Autofac.Configuration" Version="4.1.0" />-->
+    <!--<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />-->
+    <!--<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />-->
+    <!--<PackageReference Include="Thinktecture.Configuration" Version="2.1.0" />-->
+    <!--<PackageReference Include="Thinktecture.Extensions.Configuration.Autofac" Version="2.1.0" />-->
+    <!--<PackageReference Include="Thinktecture.IO.FileSystem.Abstractions" Version="2.4.0" />-->
   </ItemGroup>
 
   <ItemGroup>
@@ -28,46 +28,12 @@
     <ProjectReference Include="..\Components\Rpc\Server\RpcServer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
-    <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
-    <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Node.csproj.ResolveComReference.cache" />
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Node.csproj.ResolveComReference.cache" />
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Node.csproj.ResolveComReference.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Node.dll" />
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Node.dll" />
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Node.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Node.pdb" />
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Node.pdb" />
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Node.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Node.dll" />
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Node.dll" />
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Node.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Node.manifest" />
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Node.manifest" />
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Node.manifest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Node.application" />
-    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Node.application" />
-    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Node.application" />
-  </ItemGroup>
-
+  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">-->
+    <!--<ItemGroup>-->
+      <!--<PluginAssembly Include="$(SolutionDir)\Components\Cryptography\bin\$(ConfigurationName)\**\Cryptography.dll" />-->
+      <!--<PluginAssembly Include="$(SolutionDir)\Components\Rpc\Server\bin\$(ConfigurationName)\**\RpcServer.dll" />-->
+    <!--</ItemGroup>-->
+    <!--<Copy SourceFiles="@(PluginAssembly)" DestinationFolder="$(OutDir)" />-->
+  <!--</Target>-->
+  
 </Project>

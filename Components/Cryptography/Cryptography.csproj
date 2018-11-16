@@ -2,10 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>ADL.Cryptography</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Math\Math.csproj" />
+      <ProjectReference Include="..\..\Helpers\Math\Math.csproj" />
     </ItemGroup>
 
 </Project>

@@ -2,22 +2,6 @@
   "defaultAssembly": "Node",
   "components": [
     {
-      "type": "ADL.Contract.ContractService, Contract",
-      "services": [
-        {
-          "type": "ADL.DFS.IContract, Contract"
-        }
-      ]
-    },
-    {
-      "type": "ADL.Cryptography.ECCurve, Cryptography",
-      "services": [
-        {
-          "type": "ADL.DFS.ICryptography, Cryptography"
-        }
-      ]
-    },
-    {
       "type": "ADL.DFS.IpfsWrapper, DFS",
       "services": [
         {
