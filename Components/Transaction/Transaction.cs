@@ -6,9 +6,8 @@ using ADL.Math;
 
 namespace ADL.Transaction
 {
-    public class BasicTransaction
+    public class BasicTransaction : ITx
     {
-
         public bool bSending { get; set; }
         
         public byte[] ParentBlock { get; set; }
@@ -25,7 +24,6 @@ namespace ADL.Transaction
 
         public byte[] UnlockingProgram { get; set; }
 
-        
         // Constructor taking all the values from a message
         public BasicTransaction( UInt160 fromAddress,
                             UInt160 toAddress,
@@ -53,6 +51,5 @@ namespace ADL.Transaction
             this.InputAddress = fromAddress;
             this.OutputAddress = toAddress;
         }
-        
     }
 }

@@ -1,4 +1,4 @@
-namespace ADL.Node.Interfaces
+namespace ADL.Economics
 {
     public interface IDFed
     {

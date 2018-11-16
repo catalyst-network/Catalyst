@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace ADL.Math
+namespace ADL.Node.Helpers.Math
 {
     /// <summary>
     /// This class stores a 256 bit unsigned int, represented as a 32-byte little-endian byte array
