@@ -22,6 +22,9 @@
       <e p="Actors/Rpc" t="IncludeRecursive">
         <e p="Rpc.csproj" t="IncludeRecursive" />
       </e>
+      <e p="ActorsManager" t="IncludeRecursive">
+        <e p="ActorsManager.csproj" t="IncludeRecursive" />
+      </e>
       <e p="Cli" t="IncludeRecursive">
         <e p="Cli.csproj" t="IncludeRecursive" />
         <e p="Interfaces" t="Include">
@@ -46,6 +49,7 @@
         </e>
       </e>
       <e p="Node" t="IncludeRecursive">
+        <e p="ActorModel.cs" t="Include" />
         <e p="AtlasSystem.cs" t="Include" />
         <e p="Configs" t="Include">
           <e p="actors.json" t="Include" />
@@ -103,6 +107,9 @@
       </e>
       <e p="Tokens/ACL" t="IncludeRecursive">
         <e p="ACL.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="UnitTests" t="IncludeRecursive">
+        <e p="UnitTests.csproj" t="IncludeRecursive" />
       </e>
       <e p="packages" t="ExcludeRecursive" />
     </e>

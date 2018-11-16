@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wallet", "SharedLibraries\W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL", "Tokens\ACL\ACL.csproj", "{9A70DBFC-BEA0-4A4F-B785-EE3657BB4967}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActorsManager", "ActorsManager\ActorsManager.csproj", "{F9B8FF82-40B3-49C7-A9C9-339CC5F7BCF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{9BEE3E55-9119-4ED4-BF2C-5368CB07324C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
