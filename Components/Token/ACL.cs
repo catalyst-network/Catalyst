@@ -1,6 +1,6 @@
 namespace ADL.Token
 {
-    public class ACL : GenericToken
+    public class ACL : GenericToken, IToken
     {
         
     }

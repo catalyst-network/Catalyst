@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ADL.Rpc.Server
 {
-    public class RpcServer
+    public class RpcServer : IRpcServer
     {
         const string Host = "0.0.0.0";
         const int Port = 50051;

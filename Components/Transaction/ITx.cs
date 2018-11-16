@@ -1,4 +1,4 @@
-namespace DefaultNamespace
+namespace ADL.Transaction
 {
     public interface ITx
     {

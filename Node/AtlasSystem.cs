@@ -65,14 +65,14 @@ namespace ADL.Node
             
             using (var scope = container.BeginLifetimeScope())
             {
-                var plugin = scope.Resolve<IRpcServer>();
-                Console.WriteLine("Resolved specific plugin type: {0}");
-                Console.WriteLine("All available plugins:");
-                var allPlugins = scope.Resolve<IEnumerable<IRpcServer>>();
-                foreach (var resolved in allPlugins)
-                {
-                    Console.WriteLine("- {0}");
-                }
+//                var plugin = scope.Resolve<IRpcServer>();
+//                Console.WriteLine("Resolved specific plugin type: {0}");
+//                Console.WriteLine("All available plugins:");
+//                var allPlugins = scope.Resolve<IEnumerable<IRpcServer>>();
+//                foreach (var resolved in allPlugins)
+//                {
+//                    Console.WriteLine("- {0}");
+//                }
             }
             
             var resolver = new AutoFacDependencyResolver(container, actorSystem);

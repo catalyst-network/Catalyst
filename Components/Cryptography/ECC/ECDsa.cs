@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
-using ADL.Math;
+using ADL.Helpers.Math;
 
 namespace ADL.Cryptography.ECC
 {
