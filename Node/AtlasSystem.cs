@@ -1,18 +1,15 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using ADL.Node.Interfaces;
-using Akka.Actor;
-using Akka;
 using Akka.Actor;
 using Autofac;
 using Autofac.Configuration;
-using Akka.DI.Core;
 using Akka.DI.AutoFac;
 using ADL.Rpc.Server;
-using Akka.Actor.Dsl;
-using Thinktecture.IO;
-using Thinktecture.IO.Adapters;
 using Microsoft.Extensions.Configuration;
-using Thinktecture;
+using System.Reflection;
+using System.Runtime.Loader;
 
 namespace ADL.Node
 {
@@ -43,22 +40,22 @@ namespace ADL.Node
             
             var builder = new ContainerBuilder();
 
-//            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
-//            {
-//                return context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
-//            };
+            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
+            {
+                return context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
+            };
             
-//            var config = new ConfigurationBuilder()
-//                .AddJsonFile(Directory.GetCurrentDirectory()+"/Configs/services.json")
-//                .Build();
-//            var configModule = new ConfigurationModule(config);
+            var config = new ConfigurationBuilder()
+                .AddJsonFile(Directory.GetCurrentDirectory()+"/../Node/Configs/components.json")
+                .Build();
+            var configModule = new ConfigurationModule(config);
 //            
-//            builder.RegisterModule(configModule);
+            builder.RegisterModule(configModule);
 
 //            builder.RegisterMicrosoftConfigurationProvider(Settings);
 //            builder.RegisterMicrosoftConfigurationProvider<Settings>().As<INodeConfiguration>();
             
-            builder.RegisterType<RpcServer>().As<RpcServer>();
+//            builder.RegisterType<RpcServer>().As<RpcServer>();
 //            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
 //            builder.RegisterType<LedgerService>().As<LedgerService>();
 //            builder.RegisterType<DFSService>().As<DFSService>();
@@ -68,14 +65,14 @@ namespace ADL.Node
             
             using (var scope = container.BeginLifetimeScope())
             {
-//                var plugin = scope.Resolve<IDFSService>();
-//                Console.WriteLine("Resolved specific plugin type: {0}");
-//                Console.WriteLine("All available plugins:");
-//                var allPlugins = scope.Resolve<IEnumerable<IDFSService>>();
-//                foreach (var resolved in allPlugins)
-//                {
-//                    Console.WriteLine("- {0}");
-//                }
+                var plugin = scope.Resolve<IRpcServer>();
+                Console.WriteLine("Resolved specific plugin type: {0}");
+                Console.WriteLine("All available plugins:");
+                var allPlugins = scope.Resolve<IEnumerable<IRpcServer>>();
+                foreach (var resolved in allPlugins)
+                {
+                    Console.WriteLine("- {0}");
+                }
             }
             
             var resolver = new AutoFacDependencyResolver(container, actorSystem);
@@ -104,7 +101,7 @@ namespace ADL.Node
         
         public void StartRcp()
         {
-            var rpcServer = new RpcServer();
+//            var rpcServer = new RpcServer();
         }
         
         public void StartDfs()

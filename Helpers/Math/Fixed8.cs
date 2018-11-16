@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.IO;
 
-namespace ADL.Node.Helpers.Math
+namespace ADL.Helpers.Math
 {
     public interface ISerializable
     {
@@ -19,6 +19,7 @@ namespace ADL.Node.Helpers.Math
     public struct Fixed8 : IComparable<Fixed8>, IEquatable<Fixed8>, IFormattable, ISerializable
     {
         private const long D = 100_000_000;
+        
         internal long value;
 
         public static readonly Fixed8 MaxValue = new Fixed8 { value = long.MaxValue };
