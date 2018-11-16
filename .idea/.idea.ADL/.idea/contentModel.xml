@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.3/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.3/system/resharper-host/local/Transient/ReSharperHost/v183/SolutionCaches/_ADL.1482359440.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p=".git/info/exclude" t="IncludeRecursive" />
+      <e p="ADL.sln" t="IncludeFlat" />
+      <e p="Actors/Consensus" t="IncludeRecursive">
+        <e p="Consensus.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Actors/DFS" t="IncludeRecursive">
+        <e p="DFS.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Actors/Ledger" t="IncludeRecursive">
+        <e p="Ledger.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Actors/P2P" t="IncludeRecursive">
+        <e p="P2P.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Actors/Rpc" t="IncludeRecursive">
+        <e p="Rpc.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Cli" t="IncludeRecursive">
+        <e p="Cli.csproj" t="IncludeRecursive" />
+        <e p="Interfaces" t="Include">
+          <e p="IShellBase.cs" t="Include" />
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Shell" t="Include">
+          <e p="Commands" t="Include">
+            <e p="PrintConfig.cs" t="Include" />
+          </e>
+          <e p="Koopa.cs" t="Include" />
+          <e p="ShellBase.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="error.log" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.1" t="Include">
+              <e p="Cli.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Node" t="IncludeRecursive">
+        <e p="AtlasSystem.cs" t="Include" />
+        <e p="Configs" t="Include">
+          <e p="actors.json" t="Include" />
+          <e p="config.devnet.json" t="Include" />
+          <e p="config.mainnet.json" t="Include" />
+          <e p="config.testnet.json" t="Include" />
+          <e p="services.json" t="Include" />
+        </e>
+        <e p="Helpers" t="Include">
+          <e p=".gitkeep" t="Include" />
+        </e>
+        <e p="Interfaces" t="Include">
+          <e p="IAtlasSystem.cs" t="Include" />
+          <e p="IKernel.cs" t="Include" />
+          <e p="INodeConfiguration.cs" t="Include" />
+          <e p="IP2PSettings.cs" t="Include" />
+          <e p="IPathSettings.cs" t="Include" />
+          <e p="IProtocolSettings.cs" t="Include" />
+          <e p="IRPCSettings.cs" t="Include" />
+        </e>
+        <e p="Kernel.cs" t="Include" />
+        <e p="Node.csproj" t="IncludeRecursive" />
+        <e p="Settings.cs" t="Include" />
+        <e p="Tokens" t="Include">
+          <e p="ACL" t="Include">
+            <e p="ACL.cs" t="Include" />
+          </e>
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.1" t="Include">
+              <e p="Node.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="SharedLibraries/Contract" t="IncludeRecursive">
+        <e p="Contract.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SharedLibraries/Cryptography" t="IncludeRecursive">
+        <e p="Cryptography.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SharedLibraries/Math" t="IncludeRecursive">
+        <e p="Math.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SharedLibraries/Token" t="IncludeRecursive">
+        <e p="Token.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SharedLibraries/Transaction" t="IncludeRecursive">
+        <e p="Transaction.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SharedLibraries/Wallet" t="IncludeRecursive">
+        <e p="Wallet.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Tokens/ACL" t="IncludeRecursive">
+        <e p="ACL.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
