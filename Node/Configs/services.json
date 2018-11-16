@@ -2,10 +2,10 @@
   "defaultAssembly": "Node",
   "components": [
     {
-      "type": "ADL.DFS.DFSService, DFS",
+      "type": "ADL.DFS.Server.RpcServer, RpcServer",
       "services": [
         {
-          "type": "ADL.DFS.IDFSService, DFS"
+          "type": "ADL.DFS.Server.IRpcServer, RpcServer"
         }
       ]
     }
