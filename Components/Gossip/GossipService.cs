@@ -18,7 +18,7 @@ namespace ADL.Gossip
             switch (message)
             {
                 case BasicTransaction tx:
-                    switch (tx.bSending)
+                    switch (tx.BSending)
                     {
                         case true:
                             // Sending transaction
