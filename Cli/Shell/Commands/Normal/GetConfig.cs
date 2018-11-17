@@ -3,7 +3,7 @@ using ADL.Node;
 
 namespace ADL.Cli.Shell.Commands
 {
-    internal static class GetInfo
+    internal static class GetConfig
     {
         /// <summary>
         /// Prints current contexts loaded configuration.

@@ -1,17 +1,17 @@
 ﻿using System;
 using Grpc.Core;
-using ADL.Rpc.Proto.Service;
 using System.Threading;
+using ADL.Rpc.Proto.Service;
 using System.Threading.Tasks;
 
 namespace ADL.Rpc.Server
 {
     public class RpcServer : IRpcServer
     {
-        internal protected CancellationTokenSource TokenSource { get; private set; }
-        internal protected Task ServerTask { get; private set; }
-        internal protected Grpc.Core.Server Server { get; private set; }
-        internal protected IRpcSettings Settings { get; private set; }
+        private CancellationTokenSource TokenSource { get; set; }
+        private Task ServerTask { get; set; }
+        private Grpc.Core.Server Server { get; set; }
+        private IRpcSettings Settings { get; set; }
 
         public void StartServer(IRpcSettings settings )
         {
@@ -28,7 +28,8 @@ namespace ADL.Rpc.Server
         public void StopServer()
         {
             Console.WriteLine("Dispose started ");
-            TokenSource.Cancel();
+            AwaitCancellation(TokenSource.Token);
+//            TokenSource.Cancel();
             try
             {
                 ServerTask.Wait();
@@ -40,6 +41,11 @@ namespace ADL.Rpc.Server
             Console.WriteLine("RpcServer shutdown");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         private static Task AwaitCancellation(CancellationToken token)
         {
             var taskSource = new TaskCompletionSource<bool>();
@@ -47,11 +53,17 @@ namespace ADL.Rpc.Server
             return taskSource.Task;
         }
 
+        /// <summary>
+        ///  Starts the RpcService
+        /// </summary>
+        /// <param name="server"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task RunServiceAsync(Grpc.Core.Server server,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             server.Start();
-            Console.WriteLine("Rpc Server started, listening on " + server.Ports);
+            Console.WriteLine("Rpc Server started, listening on " + server.Ports.ToString());
             await AwaitCancellation(cancellationToken);
             await server.ShutdownAsync();
         }

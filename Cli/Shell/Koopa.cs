@@ -1,6 +1,6 @@
 using System;
-using ADL.Cli.Shell.Commands;
 using ADL.Node;
+using ADL.Cli.Shell.Commands;
 
 namespace ADL.Cli.Shell
 {
@@ -39,47 +39,69 @@ namespace ADL.Cli.Shell
         {
             Console.Write(
                 "Normal Commands:\n" +
-                "\tversion\n" +
+                "\tboot\n" +
+                "\tshutdown\n" +
                 "\tget info\n" +
+                "\tget config\n" +
+                "\tversion\n" +
                 "\thelp\n" +
                 "\tclear\n" +
                 "\texit\n" +
+                "RPC Commands:\n" +
+                "\tservice rpc start\n" +
+                "\tservice rpc stop\n" +
+                "\tservice rpc status\n" +
+                "\tservice rpc restart\n" +
+                "DFS Commands:\n" +
+                "\tdfs file put\n" +
+                "\tdfs file get\n" +
+                "\tservice dfs start\n" +
+                "\tservice dfs stop\n" +
+                "\tservice dfs status\n" +
+                "\tservice dfs restart\n" +
                 "Wallet Commands:\n" +
-                "\tcreate wallet\n" +
-                "\tlist wallets\n" +
-                "\texport wallet\n" +
-                "\tcreate addresses\n" +
-                "\tget addresses\n" +
-                "\tlist addresses\n" +
-                "\tvalidate addresses\n" +
-                "\tget balance\n" +
-                "\timport privatekey\n" +
-                "\texport privatekey\n" +
-                "\tcreate raw transaction\n" +
-                "\tsign raw transaction\n" +
-                "\tdecode raw tansaction\n" +
-                "\tbroadcast raw transaction\n" +
-                "\tsend to\n" +
-                "\tsend to from\n" +
-                "\tsend many\n" +
-                "\tSend from many\n" +
+                "\twallet create\n" +
+                "\twallet list\n" +
+                "\twallet export\n" +
+                "\twallet addresses create\n" +
+                "\twallet addresses get\n" +
+                "\twallet addresses list\n" +
+                "\twallet addresses validate\n" +
+                "\twallet balance\n" +
+                "\twallet import privatekey\n" +
+                "\twallet export privatekey\n" +
+                "\twallet transaction create\n" +
+                "\twallet transaction sign\n" +
+                "\twallet transaction decode \n" +
+                "\twallet send to\n" +
+                "\twallet send to from\n" +
+                "\twallet send many\n" +
+                "\twallet send from many\n" +
                 "Node Commands:\n" +
-                "\tadd node\n" +
-                "\tget peer list\n" +
-                "\tget peer info\n" +
-                "\tget connection count\n" +
+                "\tnode add\n" +
+                "\tnode peer list\n" +
+                "\tnode peer info\n" +
+                "\tnode connection count\n" +
+                "\tservice p2p start\n" +
+                "\tservice p2p stop\n" +
+                "\tservice p2p status\n" +
+                "\tservice p2p restart\n" +
+                "Gossip Commands:\n" +
+                "\tgossip transaction broadcast\n" +
+                "\tservice gossip start\n" +
+                "\tservice gossip stop\n" +
+                "\tservice gossip status\n" +
+                "\tservice gossip restart\n" +
+                "Consensus Commands:\n" +
+                "\tservice consensus start\n" +
+                "\tservice consensus stop\n" +
+                "\tservice consensus status\n" +
+                "\tservice consensus restart\n" +
                 "Advanced Commands:\n" +
-                "\tboot\n" +
-                "\tshutdown\n" +
                 "\tget delta\n" +
                 "\tget mempool\n" +
-                "\tsign message\n" +
-                "\tverify message\n" +
-                "\tstart gossip\n" +
-                "\tstart consensus\n" +
-                "\tstart rpc\n" +
-                "\tstart dfs\n" +
-                "\tservice status\n"
+                "\tmessage sign\n" +
+                "\tmessage verify\n"
             );
             return true;
         }
@@ -93,7 +115,6 @@ namespace ADL.Cli.Shell
 //            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
             Console.WriteLine("OnStart trace");
             Atlas = new AtlasSystem();
-//            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
         }
         
         private bool OnStartCommand(string[] args)
@@ -118,10 +139,22 @@ namespace ADL.Cli.Shell
             switch (args[1].ToLower())
             {
                 case "info":
-                    return OnGetInfo(args);
+                    return OnGetInfo(args);      
+                case "config":
+                    return OnGetConfig(args);          
                 default:
                     return OnCommand(args);
             }
+        }
+        
+        /// <summary>
+        /// @TODO implement a method of printing node info.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private static bool OnGetInfo(string[] args)
+        {
+            return true;
         }
         
         /// <summary>
@@ -129,12 +162,9 @@ namespace ADL.Cli.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnGetInfo(string[] args)
+        private static bool OnGetConfig(string[] args)
         {
-//            var config = Kernel.Container.Resolve<INodeConfiguration>();
-
-            GetInfo.Print();
-//            printConfig.Print(config);
+            GetConfig.Print();
             return true;
         }
 
