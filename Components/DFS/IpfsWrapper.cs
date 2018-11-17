@@ -4,15 +4,15 @@ using Ipfs.Api;
 
 namespace ADL.DFS
 {
-    public class IpfsWrapper : IDFS
+    public class IpfsWrapper : IDfs
     {
-        private readonly IpfsClient Client = new IpfsClient();
+        private readonly IpfsClient _client = new IpfsClient();
 
         public async Task<Ipfs.Cid> AddTextAsync(string text)
         {
             try
             {
-                var fsn = await Client.FileSystem.AddTextAsync(text);
+                var fsn = await _client.FileSystem.AddTextAsync(text);
                 return fsn.Id;
             }
             catch (Exception e)
@@ -26,7 +26,7 @@ namespace ADL.DFS
         {
             try
             {
-                var fsn = await Client.FileSystem.AddFileAsync(filename);
+                var fsn = await _client.FileSystem.AddFileAsync(filename);
                 return fsn.Id;
             }
             catch (Exception e)
@@ -40,7 +40,7 @@ namespace ADL.DFS
         {
             try
             {
-                var text = await Client.FileSystem.ReadAllTextAsync(filename);
+                var text = await _client.FileSystem.ReadAllTextAsync(filename);
                 return text;
             }
             catch (Exception e)

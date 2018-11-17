@@ -9,8 +9,8 @@ namespace ADL.Rpc.Client
 {
     class Program
     {
-        private const string DefaultHost = "localhost";
-        private const int Port = 50051;
+        private const string DefaultHost = "127.0.0.1";
+        private const int Port = 42042;
 
         public static void Main(string[] args)
         {

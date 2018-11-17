@@ -28,7 +28,7 @@ namespace ADL.Node
 
         public IRpcServer RcpService { get; set; }
         
-        public IDFS DfsService { get; set; }
+        public IDfs DfsService { get; set; }
 
         public AtlasSystem()
         {           
@@ -93,6 +93,7 @@ namespace ADL.Node
             {
                 RcpService = scope.Resolve<IRpcServer>();
             }
+            RcpService.StartServer(Kernel.Settings.RPC);
         }
         
         public void StartDfs()
@@ -100,13 +101,13 @@ namespace ADL.Node
             Console.WriteLine("DFS server starting....");
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-                DfsService = scope.Resolve<IDFS>();
+                DfsService = scope.Resolve<IDfs>();
             }
         }
         
         public void Dispose()
         {
-            RcpService.Dispose();
+            RcpService.StopServer();
             _actorSystem.Stop(ConsensusService);
             _actorSystem.Stop(GossipService);
             _actorSystem.Dispose();

@@ -1,10 +1,8 @@
 using System.Threading.Tasks;
-using System;
-using Ipfs.Api;
 
 namespace ADL.DFS
 {
-    public interface IDFS
+    public interface IDfs
     {
         Task<Ipfs.Cid> AddTextAsync(string text);
         Task<Ipfs.Cid> AddFileAsync(string filename);

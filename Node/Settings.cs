@@ -5,6 +5,7 @@ using System.Net;
 using ADL.Node.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using ADL.Rpc.Server;
 
 namespace ADL.Node
 {
@@ -66,7 +67,7 @@ namespace ADL.Node
             public IProtocolSettings Protocol { get; set; }
             public IPathSettings Paths { get; set; }
             public IP2PSettings P2P { get; set; }
-            public IRPCSettings RPC { get; set; }
+            public IRpcSettings RPC { get; set; }
         }
         
         /// <summary>
@@ -124,12 +125,12 @@ namespace ADL.Node
         /// <summary>
         /// RPC settings class.
         /// </summary>
-        private class RpcSettings : IRPCSettings
+        private class RpcSettings : IRpcSettings
         {
-            public string BindAddress { get; private set; }
-            public ushort Port { get; private set; }
-            public string SslCert { get; private set; }
-            public string SslCertPassword { get; private set; }
+            public string BindAddress { get; set; }
+            public ushort Port { get; set; }
+            public string SslCert { get; set; }
+            public string SslCertPassword { get; set; }
 
             /// <summary>
             ///  Sets RPC Server settings.
