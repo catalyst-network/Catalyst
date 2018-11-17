@@ -4,18 +4,15 @@ using System.Linq;
 using System.Net;
 using ADL.Node.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace ADL.Node
 {
-    internal class Settings : INodeConfiguration
+   
+    public class Settings
     {
-        public IProtocolSettings Protocol { get; }
-        public IPathSettings Paths { get; }
-        public IP2PSettings P2P { get; }
-        public IRPCSettings RPC { get; }
-        
+        public INodeConfiguration Sections { get; private set; }
         public static Settings Default { get; private set; }
-        
         public static string ConfigFileLocation { get; private set; }
         
         static Settings()
@@ -50,25 +47,53 @@ namespace ADL.Node
         /// Settings constructor
         /// </summary>
         /// <param name="section"></param>
-        protected internal Settings(IConfiguration section)
+        private Settings(IConfiguration section)
         {
-            Protocol = new ProtocolSettings(section.GetSection("Protocol"));
-            Paths = new PathSettings(section.GetSection("Paths"));
-            P2P = new P2PSettings(section.GetSection("P2P"));
-            RPC = new RpcSettings(section.GetSection("RPC"));
+            Sections = new SettingSections
+            {
+                RPC = new RpcSettings(section.GetSection("RPC")),
+                P2P = new P2PSettings(section.GetSection("P2P")),
+                Paths =new PathSettings(section.GetSection("Paths")),
+                Protocol = new ProtocolSettings(section.GetSection("Protocol"))
+            };            
+        }
+
+        /// <summary>
+        /// Object to hold setting sections.
+        /// </summary>
+        private struct SettingSections : INodeConfiguration
+        {
+            public IProtocolSettings Protocol { get; set; }
+            public IPathSettings Paths { get; set; }
+            public IP2PSettings P2P { get; set; }
+            public IRPCSettings RPC { get; set; }
+        }
+        
+        /// <summary>
+        /// Serialises setting section to a json string.
+        /// </summary>
+        /// <returns></returns>
+        public string SerializeSettings()
+        {
+            var serializerSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            return JsonConvert.SerializeObject(Sections, serializerSettings);
         }
 
         /// <summary>
         /// Path settings class.
-        /// Holds the local storage locations
+        /// Holds the local storage locations.
         /// </summary>
         private class PathSettings : IPathSettings
         {
-            private string Chain { get; set; }
-            private string Index { get; set; }
+            public string Chain { get; private set; }
+            public string Index { get; private set; }
 
             /// <summary>
-            /// sets the chain and index path locations
+            /// Sets the chain and index path locations.
             /// </summary>
             /// <param name="section"></param>
             protected internal PathSettings(IConfiguration section)
@@ -84,10 +109,10 @@ namespace ADL.Node
         /// </summary>
         private class P2PSettings : IP2PSettings
         {
-            private ushort Port { get; set; }
+            public ushort Port { get; private set; }
 
             /// <summary>
-            /// Sets the p2p settings
+            /// Sets the p2p settings.
             /// </summary>
             /// <param name="section"></param>
             protected internal P2PSettings(IConfiguration section)
@@ -101,18 +126,18 @@ namespace ADL.Node
         /// </summary>
         private class RpcSettings : IRPCSettings
         {
-            private IPAddress BindAddress { get; set; }
-            private ushort Port { get; set; }
-            private string SslCert { get; set; }
-            private string SslCertPassword { get; set; }
+            public string BindAddress { get; private set; }
+            public ushort Port { get; private set; }
+            public string SslCert { get; private set; }
+            public string SslCertPassword { get; private set; }
 
             /// <summary>
-            ///  Sets RPC Server settings
+            ///  Sets RPC Server settings.
             /// </summary>
             /// <param name="section"></param>
             protected internal RpcSettings(IConfiguration section)
             {
-                BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
+                BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
                 Port = ushort.Parse(section.GetSection("Port").Value);
                 SslCert = section.GetSection("SslCert").Value;
                 SslCertPassword = section.GetSection("SslCertPassword").Value;
@@ -124,12 +149,12 @@ namespace ADL.Node
         /// </summary>
         private class ProtocolSettings : IProtocolSettings
         {
-            private uint Magic { get; }
-            private byte AddressVersion { get; }
-            private string[] SeedList { get; }
+            public uint Magic { get; private set; }
+            public byte AddressVersion { get; private set; }
+            public string[] SeedList { get; private set; }
 
             /// <summary>
-            /// Sets the protocol settings
+            /// Sets the protocol settings.
             /// </summary>
             /// <param name="section"></param>
             protected internal ProtocolSettings(IConfiguration section)

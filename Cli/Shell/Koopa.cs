@@ -23,25 +23,13 @@ namespace ADL.Cli.Shell
                     return OnHelpCommand(args);
                 case "start":
                     return OnStartCommand(args);
-                case "config":
-                    return PrintConfiguration(args);
+                case "get":
+                    return OnGetCommand(args);
                 default:
                     return base.OnCommand(args);
             }
         }
 
-        /// <summary>
-        /// Starts the main ADL configuration.
-        /// </summary>
-        /// <param name="args"></param>
-        protected override void OnStart(string[] args)
-        {
-//            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
-            Console.WriteLine("OnStart trace");
-            Atlas = new AtlasSystem();
-//            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
-        }
-        
         /// <summary>
         /// Prints a list of available cli commands.
         /// </summary>
@@ -95,26 +83,19 @@ namespace ADL.Cli.Shell
             );
             return true;
         }
-
-        /// <summary>
-        /// Prints the current loaded settings.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static bool PrintConfiguration(string[] args)
-        {
-//            var config = Kernel.Container.Resolve<INodeConfiguration>();
-
-            var printConfig = new PrintConfig();
-//            printConfig.Print(config);
-            return true;
-        }
         
         /// <summary>
-        /// Service router for a start based commmnd
+        /// Starts the main ADL configuration.
         /// </summary>
         /// <param name="args"></param>
-        /// <returns></returns>
+        protected override void OnStart(string[] args)
+        {
+//            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
+            Console.WriteLine("OnStart trace");
+            Atlas = new AtlasSystem();
+//            system.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
+        }
+        
         private bool OnStartCommand(string[] args)
         {
             switch (args[1].ToLower())
@@ -130,6 +111,31 @@ namespace ADL.Cli.Shell
                 default:
                     return OnCommand(args);
             }
+        }
+
+        private bool OnGetCommand(string[] args)
+        {
+            switch (args[1].ToLower())
+            {
+                case "info":
+                    return OnGetInfo(args);
+                default:
+                    return OnCommand(args);
+            }
+        }
+        
+        /// <summary>
+        /// Prints the current loaded settings.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private static bool OnGetInfo(string[] args)
+        {
+//            var config = Kernel.Container.Resolve<INodeConfiguration>();
+
+            GetInfo.Print();
+//            printConfig.Print(config);
+            return true;
         }
 
         private bool OnStartRpc(string[] args)
