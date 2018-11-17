@@ -63,8 +63,8 @@ namespace ADL.Node
 
             var container = builder.Build();
             
-            using (var scope = container.BeginLifetimeScope())
-            {
+//            using (var scope = container.BeginLifetimeScope())
+//            {
 //                var plugin = scope.Resolve<IRpcServer>();
 //                Console.WriteLine("Resolved specific plugin type: {0}");
 //                Console.WriteLine("All available plugins:");
@@ -73,7 +73,7 @@ namespace ADL.Node
 //                {
 //                    Console.WriteLine("- {0}");
 //                }
-            }
+//            }
             
             var resolver = new AutoFacDependencyResolver(container, actorSystem);
             
@@ -84,7 +84,7 @@ namespace ADL.Node
 //            var dfsActor = _actorSystem.ActorOf(resolver.Create<DFSService>(), "DFSService");
 //            var consensusActor = _actorSystem.ActorOf(resolver.Create<ConsensusService>(), "ConsensusService");
 
-            return new Kernel(resolver, settings);
+            return new Kernel(resolver, settings, container);
         }
         
         public void StartConsensus()
@@ -101,7 +101,11 @@ namespace ADL.Node
         
         public void StartRcp()
         {
-//            var rpcServer = new RpcServer();
+            Console.WriteLine("RPC should start");
+            using (var scope = Kernel.Container.BeginLifetimeScope())
+            {
+                var plugin = scope.Resolve<IRpcServer>();
+            }
         }
         
         public void StartDfs()
