@@ -10,6 +10,7 @@ using ADL.Rpc.Server;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using System.Runtime.Loader;
+using ADL.DFS;
 
 namespace ADL.Node
 {
@@ -29,7 +30,7 @@ namespace ADL.Node
         }
        
         /// <summary>
-        /// Registers all services on IOC containers and returns an application kernel.
+        /// Registers all services on IOC container and returns an application kernel.
         /// </summary>
         /// <param name="actorSystem"></param>
         /// <param name="settings"></param>
@@ -62,18 +63,6 @@ namespace ADL.Node
 //            builder.RegisterType<ConsensusService>().As<ConsensusService>().InstancePerLifetimeScope();
 
             var container = builder.Build();
-            
-//            using (var scope = container.BeginLifetimeScope())
-//            {
-//                var plugin = scope.Resolve<IRpcServer>();
-//                Console.WriteLine("Resolved specific plugin type: {0}");
-//                Console.WriteLine("All available plugins:");
-//                var allPlugins = scope.Resolve<IEnumerable<IRpcServer>>();
-//                foreach (var resolved in allPlugins)
-//                {
-//                    Console.WriteLine("- {0}");
-//                }
-//            }
             
             var resolver = new AutoFacDependencyResolver(container, actorSystem);
             
@@ -110,8 +99,11 @@ namespace ADL.Node
         
         public void StartDfs()
         {
-            Console.WriteLine("DFS server starting....");
-//            var dfsActor = _actorSystem.ActorOf(resolver.Create<DFSService>(), "DFSService");
+//            Console.WriteLine("DFS server starting....");
+//            using (var scope = Kernel.Container.BeginLifetimeScope())
+//            {
+//                var plugin = scope.Resolve<IDFS>();
+//            }
         }
         
         public void Dispose()

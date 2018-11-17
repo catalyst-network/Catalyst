@@ -14,13 +14,31 @@ namespace ADL.Rpc.Proto.Service {
 
     static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.PingRequest> __Marshaller_ADL_Rpc_Proto_Service_PingRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.PingRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.PongResponse> __Marshaller_ADL_Rpc_Proto_Service_PongResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.PongResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.VersionRequest> __Marshaller_ADL_Rpc_Proto_Service_VersionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.VersionRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.VersionResponse> __Marshaller_ADL_Rpc_Proto_Service_VersionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.VersionResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.GetInfoRequest> __Marshaller_ADL_Rpc_Proto_Service_GetInfoRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.GetInfoRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.GetInfoResponse> __Marshaller_ADL_Rpc_Proto_Service_GetInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.GetInfoResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::ADL.Rpc.Proto.Service.PingRequest, global::ADL.Rpc.Proto.Service.PongResponse> __Method_Greeting = new grpc::Method<global::ADL.Rpc.Proto.Service.PingRequest, global::ADL.Rpc.Proto.Service.PongResponse>(
+    static readonly grpc::Method<global::ADL.Rpc.Proto.Service.PingRequest, global::ADL.Rpc.Proto.Service.PongResponse> __Method_Ping = new grpc::Method<global::ADL.Rpc.Proto.Service.PingRequest, global::ADL.Rpc.Proto.Service.PongResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "Greeting",
+        "Ping",
         __Marshaller_ADL_Rpc_Proto_Service_PingRequest,
         __Marshaller_ADL_Rpc_Proto_Service_PongResponse);
+
+    static readonly grpc::Method<global::ADL.Rpc.Proto.Service.VersionRequest, global::ADL.Rpc.Proto.Service.VersionResponse> __Method_Version = new grpc::Method<global::ADL.Rpc.Proto.Service.VersionRequest, global::ADL.Rpc.Proto.Service.VersionResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "Version",
+        __Marshaller_ADL_Rpc_Proto_Service_VersionRequest,
+        __Marshaller_ADL_Rpc_Proto_Service_VersionResponse);
+
+    static readonly grpc::Method<global::ADL.Rpc.Proto.Service.GetInfoRequest, global::ADL.Rpc.Proto.Service.GetInfoResponse> __Method_GetInfo = new grpc::Method<global::ADL.Rpc.Proto.Service.GetInfoRequest, global::ADL.Rpc.Proto.Service.GetInfoResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetInfo",
+        __Marshaller_ADL_Rpc_Proto_Service_GetInfoRequest,
+        __Marshaller_ADL_Rpc_Proto_Service_GetInfoResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -31,7 +49,46 @@ namespace ADL.Rpc.Proto.Service {
     /// <summary>Base class for server-side implementations of RpcService</summary>
     public abstract partial class RpcServiceBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Service.PongResponse> Greeting(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Service.PongResponse> Ping(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Service.VersionResponse> Version(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      /// <summary>
+      ///    rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
+      ///    rpc ListWallet(ListWalletRequest) returns (ListWalletResponse);
+      ///    rpc CreateAddress(CreateAddressRequest) returns (CreateAddressResponse);
+      ///    rpc GetAddress(GetAddressRequest) returns (GetAddressResponse);
+      ///    rpc ListAddress(ListAddressRequest) returns (ListAddressResponse);
+      ///    rpc ValidateAddress(ValidateAddressRequest) returns (ValidateAddressResponse);
+      ///    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+      ///    rpc CreateRawTransaction(CreateRawTransactionRequest) returns (CreateRawTransactionResponse);
+      ///    rpc SignRawTransaction(SignRawTransactionRequest) returns (SignRawTransactionResponse);
+      ///    rpc DecodeRawTransaction(DecodeRawTransactionRequest) returns (DecodeRawTransactionResponse);
+      ///    rpc BroadcastRawTransaction(BroadcastRawTransactionRequest) returns (BroadcastRawTransactionResponse);
+      ///    rpc SendTo(SendToRequest) returns (SendToResponse);
+      ///    rpc SendToFrom(SendToFromRequest) returns (SendToFromResponse);
+      ///    rpc SendMany(SendManyRequest) returns (SendManyResponse);
+      ///    rpc SendFromMany(SendFromManyRequest) returns (SendFromManyResponse);
+      ///    rpc AddNode(AddNodeRequest) returns (AddNodeResponse);
+      ///    rpc GetPeerList(GetPeerListRequest) returns (GetPeerListResponse);
+      ///    rpc GetPeerInfo(GetPeerInfoRequest) returns (GetPeerInfoResponse);
+      ///    rpc GetConnectionCount(GetConnectionCountRequest) returns (GetConnectionCountResponse);
+      ///    rpc GetDelta(GetDeltaRequest) returns (GetDeltaResponse);
+      ///    rpc GetMempool(GetMempoolRequest) returns (GetMempoolResponse);
+      ///    rpc SignMessage(SignMessageRequest) returns (SignMessageResponse);
+      ///    rpc VerifyMessage(VerifyMessageRequest) returns (VerifyMessageResponse);
+      ///    rpc ServiceStatus(ServiceStatusRequest) returns (ServiceStatusResponse);
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Service.GetInfoResponse> GetInfo(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -61,21 +118,173 @@ namespace ADL.Rpc.Proto.Service {
       {
       }
 
-      public virtual global::ADL.Rpc.Proto.Service.PongResponse Greeting(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Rpc.Proto.Service.PongResponse Ping(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return Greeting(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return Ping(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Rpc.Proto.Service.PongResponse Greeting(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Rpc.Proto.Service.PongResponse Ping(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_Greeting, null, options, request);
+        return CallInvoker.BlockingUnaryCall(__Method_Ping, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.PongResponse> GreetingAsync(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.PongResponse> PingAsync(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return GreetingAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return PingAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.PongResponse> GreetingAsync(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.PongResponse> PingAsync(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_Greeting, null, options, request);
+        return CallInvoker.AsyncUnaryCall(__Method_Ping, null, options, request);
+      }
+      public virtual global::ADL.Rpc.Proto.Service.VersionResponse Version(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return Version(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::ADL.Rpc.Proto.Service.VersionResponse Version(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_Version, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.VersionResponse> VersionAsync(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return VersionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.VersionResponse> VersionAsync(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_Version, null, options, request);
+      }
+      /// <summary>
+      ///    rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
+      ///    rpc ListWallet(ListWalletRequest) returns (ListWalletResponse);
+      ///    rpc CreateAddress(CreateAddressRequest) returns (CreateAddressResponse);
+      ///    rpc GetAddress(GetAddressRequest) returns (GetAddressResponse);
+      ///    rpc ListAddress(ListAddressRequest) returns (ListAddressResponse);
+      ///    rpc ValidateAddress(ValidateAddressRequest) returns (ValidateAddressResponse);
+      ///    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+      ///    rpc CreateRawTransaction(CreateRawTransactionRequest) returns (CreateRawTransactionResponse);
+      ///    rpc SignRawTransaction(SignRawTransactionRequest) returns (SignRawTransactionResponse);
+      ///    rpc DecodeRawTransaction(DecodeRawTransactionRequest) returns (DecodeRawTransactionResponse);
+      ///    rpc BroadcastRawTransaction(BroadcastRawTransactionRequest) returns (BroadcastRawTransactionResponse);
+      ///    rpc SendTo(SendToRequest) returns (SendToResponse);
+      ///    rpc SendToFrom(SendToFromRequest) returns (SendToFromResponse);
+      ///    rpc SendMany(SendManyRequest) returns (SendManyResponse);
+      ///    rpc SendFromMany(SendFromManyRequest) returns (SendFromManyResponse);
+      ///    rpc AddNode(AddNodeRequest) returns (AddNodeResponse);
+      ///    rpc GetPeerList(GetPeerListRequest) returns (GetPeerListResponse);
+      ///    rpc GetPeerInfo(GetPeerInfoRequest) returns (GetPeerInfoResponse);
+      ///    rpc GetConnectionCount(GetConnectionCountRequest) returns (GetConnectionCountResponse);
+      ///    rpc GetDelta(GetDeltaRequest) returns (GetDeltaResponse);
+      ///    rpc GetMempool(GetMempoolRequest) returns (GetMempoolResponse);
+      ///    rpc SignMessage(SignMessageRequest) returns (SignMessageResponse);
+      ///    rpc VerifyMessage(VerifyMessageRequest) returns (VerifyMessageResponse);
+      ///    rpc ServiceStatus(ServiceStatusRequest) returns (ServiceStatusResponse);
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::ADL.Rpc.Proto.Service.GetInfoResponse GetInfo(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetInfo(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///    rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
+      ///    rpc ListWallet(ListWalletRequest) returns (ListWalletResponse);
+      ///    rpc CreateAddress(CreateAddressRequest) returns (CreateAddressResponse);
+      ///    rpc GetAddress(GetAddressRequest) returns (GetAddressResponse);
+      ///    rpc ListAddress(ListAddressRequest) returns (ListAddressResponse);
+      ///    rpc ValidateAddress(ValidateAddressRequest) returns (ValidateAddressResponse);
+      ///    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+      ///    rpc CreateRawTransaction(CreateRawTransactionRequest) returns (CreateRawTransactionResponse);
+      ///    rpc SignRawTransaction(SignRawTransactionRequest) returns (SignRawTransactionResponse);
+      ///    rpc DecodeRawTransaction(DecodeRawTransactionRequest) returns (DecodeRawTransactionResponse);
+      ///    rpc BroadcastRawTransaction(BroadcastRawTransactionRequest) returns (BroadcastRawTransactionResponse);
+      ///    rpc SendTo(SendToRequest) returns (SendToResponse);
+      ///    rpc SendToFrom(SendToFromRequest) returns (SendToFromResponse);
+      ///    rpc SendMany(SendManyRequest) returns (SendManyResponse);
+      ///    rpc SendFromMany(SendFromManyRequest) returns (SendFromManyResponse);
+      ///    rpc AddNode(AddNodeRequest) returns (AddNodeResponse);
+      ///    rpc GetPeerList(GetPeerListRequest) returns (GetPeerListResponse);
+      ///    rpc GetPeerInfo(GetPeerInfoRequest) returns (GetPeerInfoResponse);
+      ///    rpc GetConnectionCount(GetConnectionCountRequest) returns (GetConnectionCountResponse);
+      ///    rpc GetDelta(GetDeltaRequest) returns (GetDeltaResponse);
+      ///    rpc GetMempool(GetMempoolRequest) returns (GetMempoolResponse);
+      ///    rpc SignMessage(SignMessageRequest) returns (SignMessageResponse);
+      ///    rpc VerifyMessage(VerifyMessageRequest) returns (VerifyMessageResponse);
+      ///    rpc ServiceStatus(ServiceStatusRequest) returns (ServiceStatusResponse);
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::ADL.Rpc.Proto.Service.GetInfoResponse GetInfo(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_GetInfo, null, options, request);
+      }
+      /// <summary>
+      ///    rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
+      ///    rpc ListWallet(ListWalletRequest) returns (ListWalletResponse);
+      ///    rpc CreateAddress(CreateAddressRequest) returns (CreateAddressResponse);
+      ///    rpc GetAddress(GetAddressRequest) returns (GetAddressResponse);
+      ///    rpc ListAddress(ListAddressRequest) returns (ListAddressResponse);
+      ///    rpc ValidateAddress(ValidateAddressRequest) returns (ValidateAddressResponse);
+      ///    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+      ///    rpc CreateRawTransaction(CreateRawTransactionRequest) returns (CreateRawTransactionResponse);
+      ///    rpc SignRawTransaction(SignRawTransactionRequest) returns (SignRawTransactionResponse);
+      ///    rpc DecodeRawTransaction(DecodeRawTransactionRequest) returns (DecodeRawTransactionResponse);
+      ///    rpc BroadcastRawTransaction(BroadcastRawTransactionRequest) returns (BroadcastRawTransactionResponse);
+      ///    rpc SendTo(SendToRequest) returns (SendToResponse);
+      ///    rpc SendToFrom(SendToFromRequest) returns (SendToFromResponse);
+      ///    rpc SendMany(SendManyRequest) returns (SendManyResponse);
+      ///    rpc SendFromMany(SendFromManyRequest) returns (SendFromManyResponse);
+      ///    rpc AddNode(AddNodeRequest) returns (AddNodeResponse);
+      ///    rpc GetPeerList(GetPeerListRequest) returns (GetPeerListResponse);
+      ///    rpc GetPeerInfo(GetPeerInfoRequest) returns (GetPeerInfoResponse);
+      ///    rpc GetConnectionCount(GetConnectionCountRequest) returns (GetConnectionCountResponse);
+      ///    rpc GetDelta(GetDeltaRequest) returns (GetDeltaResponse);
+      ///    rpc GetMempool(GetMempoolRequest) returns (GetMempoolResponse);
+      ///    rpc SignMessage(SignMessageRequest) returns (SignMessageResponse);
+      ///    rpc VerifyMessage(VerifyMessageRequest) returns (VerifyMessageResponse);
+      ///    rpc ServiceStatus(ServiceStatusRequest) returns (ServiceStatusResponse);
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.GetInfoResponse> GetInfoAsync(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetInfoAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///    rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
+      ///    rpc ListWallet(ListWalletRequest) returns (ListWalletResponse);
+      ///    rpc CreateAddress(CreateAddressRequest) returns (CreateAddressResponse);
+      ///    rpc GetAddress(GetAddressRequest) returns (GetAddressResponse);
+      ///    rpc ListAddress(ListAddressRequest) returns (ListAddressResponse);
+      ///    rpc ValidateAddress(ValidateAddressRequest) returns (ValidateAddressResponse);
+      ///    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+      ///    rpc CreateRawTransaction(CreateRawTransactionRequest) returns (CreateRawTransactionResponse);
+      ///    rpc SignRawTransaction(SignRawTransactionRequest) returns (SignRawTransactionResponse);
+      ///    rpc DecodeRawTransaction(DecodeRawTransactionRequest) returns (DecodeRawTransactionResponse);
+      ///    rpc BroadcastRawTransaction(BroadcastRawTransactionRequest) returns (BroadcastRawTransactionResponse);
+      ///    rpc SendTo(SendToRequest) returns (SendToResponse);
+      ///    rpc SendToFrom(SendToFromRequest) returns (SendToFromResponse);
+      ///    rpc SendMany(SendManyRequest) returns (SendManyResponse);
+      ///    rpc SendFromMany(SendFromManyRequest) returns (SendFromManyResponse);
+      ///    rpc AddNode(AddNodeRequest) returns (AddNodeResponse);
+      ///    rpc GetPeerList(GetPeerListRequest) returns (GetPeerListResponse);
+      ///    rpc GetPeerInfo(GetPeerInfoRequest) returns (GetPeerInfoResponse);
+      ///    rpc GetConnectionCount(GetConnectionCountRequest) returns (GetConnectionCountResponse);
+      ///    rpc GetDelta(GetDeltaRequest) returns (GetDeltaResponse);
+      ///    rpc GetMempool(GetMempoolRequest) returns (GetMempoolResponse);
+      ///    rpc SignMessage(SignMessageRequest) returns (SignMessageResponse);
+      ///    rpc VerifyMessage(VerifyMessageRequest) returns (VerifyMessageResponse);
+      ///    rpc ServiceStatus(ServiceStatusRequest) returns (ServiceStatusResponse);
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.GetInfoResponse> GetInfoAsync(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_GetInfo, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override RpcServiceClient NewInstance(ClientBaseConfiguration configuration)
@@ -89,7 +298,9 @@ namespace ADL.Rpc.Proto.Service {
     public static grpc::ServerServiceDefinition BindService(RpcServiceBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
-          .AddMethod(__Method_Greeting, serviceImpl.Greeting).Build();
+          .AddMethod(__Method_Ping, serviceImpl.Ping)
+          .AddMethod(__Method_Version, serviceImpl.Version)
+          .AddMethod(__Method_GetInfo, serviceImpl.GetInfo).Build();
     }
 
   }

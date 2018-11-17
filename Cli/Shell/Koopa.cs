@@ -43,6 +43,60 @@ namespace ADL.Cli.Shell
         }
         
         /// <summary>
+        /// Prints a list of available cli commands.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private static bool OnHelpCommand(string[] args)
+        {
+            Console.Write(
+                "Normal Commands:\n" +
+                "\tversion\n" +
+                "\tget info\n" +
+                "\thelp\n" +
+                "\tclear\n" +
+                "\texit\n" +
+                "Wallet Commands:\n" +
+                "\tcreate wallet\n" +
+                "\tlist wallets\n" +
+                "\texport wallet\n" +
+                "\tcreate addresses\n" +
+                "\tget addresses\n" +
+                "\tlist addresses\n" +
+                "\tvalidate addresses\n" +
+                "\tget balance\n" +
+                "\timport privatekey\n" +
+                "\texport privatekey\n" +
+                "\tcreate raw transaction\n" +
+                "\tsign raw transaction\n" +
+                "\tdecode raw tansaction\n" +
+                "\tbroadcast raw transaction\n" +
+                "\tsend to\n" +
+                "\tsend to from\n" +
+                "\tsend many\n" +
+                "\tSend from many\n" +
+                "Node Commands:\n" +
+                "\tadd node\n" +
+                "\tget peer list\n" +
+                "\tget peer info\n" +
+                "\tget connection count\n" +
+                "Advanced Commands:\n" +
+                "\tboot\n" +
+                "\tshutdown\n" +
+                "\tget delta\n" +
+                "\tget mempool\n" +
+                "\tsign message\n" +
+                "\tverify message\n" +
+                "\tstart gossip\n" +
+                "\tstart consensus\n" +
+                "\tstart rpc\n" +
+                "\tstart dfs\n" +
+                "\tservice status\n"
+            );
+            return true;
+        }
+
+        /// <summary>
         /// Prints the current loaded settings.
         /// </summary>
         /// <param name="args"></param>
@@ -57,27 +111,6 @@ namespace ADL.Cli.Shell
         }
         
         /// <summary>
-        /// Prints a list of available cli commands.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static bool OnHelpCommand(string[] args)
-        {
-            Console.Write(
-                "Normal Commands:\n" +
-                "\tconfig\n" +
-                "\tversion\n" +
-                "\thelp\n" +
-                "\tclear\n" +
-                "\texit\n" +
-                "Wallet Commands:\n" +
-                "Node Commands:\n" +
-                "Advanced Commands:\n" +
-                "\tstart consensus\n");
-            return true;
-        }
-
-        /// <summary>
         /// Service router for a start based commmnd
         /// </summary>
         /// <param name="args"></param>
@@ -86,9 +119,13 @@ namespace ADL.Cli.Shell
         {
             switch (args[1].ToLower())
             {
+                case "gossip":
+                    return OnStartConsensusCommand(args);
                 case "consensus":
                     return OnStartConsensusCommand(args);
                 case "rpc":
+                    return OnStartRpc(args);
+                case "dfs":
                     return OnStartRpc(args);
                 default:
                     return OnCommand(args);
