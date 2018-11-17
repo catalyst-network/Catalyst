@@ -6,7 +6,7 @@ namespace ADL.Cli.Shell
 {
     internal class Koopa : ShellBase
     {
-//        private LevelDBStore store;
+        //private LevelDBStore store;
         private AtlasSystem Atlas { get; set; }
 
         /// <inheritdoc />

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,7 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Math\Math.csproj" />
+        <ProjectReference Include="..\..\Helpers\Math\Math.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Akka" Version="1.3.10" />
+        <PackageReference Include="Akka.Remote" Version="1.3.10" />
+    </ItemGroup>
+    
 </Project>

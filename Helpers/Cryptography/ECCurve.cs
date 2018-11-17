@@ -1,10 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Numerics;
-using System.Security.Cryptography;
-using ADL.Helpers.Math;
-
-namespace ADL.Cryptography
+﻿namespace ADL.Cryptography
 {
     public class ECCurve : ICryptography
     {

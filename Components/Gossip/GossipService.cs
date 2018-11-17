@@ -4,7 +4,7 @@ using ADL.Transaction;
 
 namespace ADL.Gossip
 {   
-    public class Gossip : UntypedActor, IGossip
+    public class GossipService : UntypedActor, IGossip
     {
         protected override void PreStart() => Console.WriteLine("Started Gossip actor");
     

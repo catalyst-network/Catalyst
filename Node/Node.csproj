@@ -19,11 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Helpers\Cryptography\Cryptography.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Components\Rpc\Proto\RpcProto.csproj" />
     <ProjectReference Include="..\Components\Rpc\Server\RpcServer.csproj" />
     <ProjectReference Include="..\Components\Consensus\Consensus.csproj" />
     <ProjectReference Include="..\Components\Contract\Contract.csproj" />
-    <ProjectReference Include="..\Components\Cryptography\Cryptography.csproj" />
     <ProjectReference Include="..\Components\DFS\DFS.csproj" />
     <ProjectReference Include="..\Components\Economics\Economics.csproj" />
     <ProjectReference Include="..\Components\Gossip\Gossip.csproj" />
@@ -32,6 +35,34 @@
     <ProjectReference Include="..\Components\P2P\P2P.csproj" />
     <ProjectReference Include="..\Components\Token\Token.csproj" />
     <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.0\Node.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.0\Node.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.0\Node.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.0\Node.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.0\Native.Node.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.0\Node.application" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
