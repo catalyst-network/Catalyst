@@ -25,7 +25,7 @@ namespace ADL.Node
             using (_actorSystem = ActorSystem.Create("AtlasSystem"))
             {
                 Console.WriteLine("AtlasSystem create trace");
-                Kernel = BuildKernel(_actorSystem, Settings.Default);
+                Kernel = BuildKernel(_actorSystem, Settings.Default.Sections);
             }
         }
        
