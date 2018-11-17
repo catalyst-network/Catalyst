@@ -21,7 +21,7 @@
       "type": "ADL.DFS.IpfsWrapper, DFS",
       "services": [
         {
-          "type": "ADL.DFS.IDFS, DFS"
+          "type": "ADL.DFS.IDfs, DFS"
         }
       ]
     },

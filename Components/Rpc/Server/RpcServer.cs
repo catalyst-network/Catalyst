@@ -6,25 +6,38 @@ using System.Threading.Tasks;
 
 namespace ADL.Rpc.Server
 {
-    public class RpcServer : IDisposable, IRpcServer
+    public class RpcServer : IRpcServer
     {
-        private const string Host = "0.0.0.0";
-        private const int Port = 50051;
-        private readonly CancellationTokenSource _cancellationTokenSource;
-        private readonly Task _serverTask;
+        internal protected CancellationTokenSource TokenSource { get; private set; }
+        internal protected Task ServerTask { get; private set; }
+        internal protected Grpc.Core.Server Server { get; private set; }
+        internal protected IRpcSettings Settings { get; private set; }
 
-        public RpcServer()
+        public void StartServer(IRpcSettings settings )
         {
-            var server = new Grpc.Core.Server
+            Settings = settings;
+            Server = new Grpc.Core.Server
             {
                 Services = { RpcService.BindService(new RpcServerImpl()) },
-                Ports = { new ServerPort(Host, Port, ServerCredentials.Insecure) }
+                Ports = { new ServerPort(Settings.BindAddress, Settings.Port, ServerCredentials.Insecure) }
             };
-
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
-            _serverTask = RunServiceAsync(server, tokenSource.Token);
-
-            Console.WriteLine("GreeterServer listening on port " + Port);
+            TokenSource = new CancellationTokenSource();
+            ServerTask = RunServiceAsync(Server, TokenSource.Token);
+        }
+        
+        public void StopServer()
+        {
+            Console.WriteLine("Dispose started ");
+            TokenSource.Cancel();
+            try
+            {
+                ServerTask.Wait();
+            }
+            catch (AggregateException)
+            {
+                Console.WriteLine("RpcServer shutdown canceled");
+            }
+            Console.WriteLine("RpcServer shutdown");
         }
 
         private static Task AwaitCancellation(CancellationToken token)
@@ -38,24 +51,9 @@ namespace ADL.Rpc.Server
             CancellationToken cancellationToken = default(CancellationToken))
         {
             server.Start();
+            Console.WriteLine("Rpc Server started, listening on " + server.Ports);
             await AwaitCancellation(cancellationToken);
             await server.ShutdownAsync();
-        }
-        
-        // Enabling dispose shows an error when starting the rpc server,
-        // the rpc server is still alive though.
-        public void Dispose()
-        {
-            _cancellationTokenSource.Cancel();
-            try
-            {
-                _serverTask.Wait();
-            }
-            catch (AggregateException)
-            {
-                Console.WriteLine("DisposableThread task canceled");
-            }
-            Console.WriteLine("DisposableThread disposed");
         }
     }
 }
