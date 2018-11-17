@@ -12,5 +12,26 @@
   <ItemGroup>
     <ProjectReference Include="..\Transaction\Transaction.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\Gossip.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\Gossip.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netstandard2.0\Gossip.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\Gossip.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\Gossip.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.Gossip.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netstandard2.0\Gossip.application" />
+  </ItemGroup>
 
 </Project>

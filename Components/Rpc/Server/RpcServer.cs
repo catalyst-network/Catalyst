@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace ADL.Rpc.Server
 {
-    public class RpcServer : IRpcServer
+    public class RpcServer : IDisposable, IRpcServer
     {
-        const string Host = "0.0.0.0";
-        const int Port = 50051;
+        private const string Host = "0.0.0.0";
+        private const int Port = 50051;
+        private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly Task _serverTask;
 
         public RpcServer()
         {
@@ -20,10 +22,9 @@ namespace ADL.Rpc.Server
             };
 
             CancellationTokenSource tokenSource = new CancellationTokenSource();
-            var serverTask = RunServiceAsync(server, tokenSource.Token);
+            _serverTask = RunServiceAsync(server, tokenSource.Token);
 
             Console.WriteLine("GreeterServer listening on port " + Port);
-//            serverTask.Start();
         }
 
         private static Task AwaitCancellation(CancellationToken token)
@@ -39,6 +40,22 @@ namespace ADL.Rpc.Server
             server.Start();
             await AwaitCancellation(cancellationToken);
             await server.ShutdownAsync();
+        }
+        
+        // Enabling dispose shows an error when starting the rpc server,
+        // the rpc server is still alive though.
+        public void Dispose()
+        {
+            _cancellationTokenSource.Cancel();
+            try
+            {
+                _serverTask.Wait();
+            }
+            catch (AggregateException)
+            {
+                Console.WriteLine("DisposableThread task canceled");
+            }
+            Console.WriteLine("DisposableThread disposed");
         }
     }
 }

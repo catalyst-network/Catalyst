@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using ADL.Node.Interfaces;
 using Akka.Actor;
@@ -10,15 +9,26 @@ using ADL.Rpc.Server;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using System.Runtime.Loader;
+using ADL.Consensus;
+using ADL.Contract;
 using ADL.DFS;
+using ADL.Gossip;
 
 namespace ADL.Node
 {
     public class AtlasSystem : IDisposable, IAtlasSystem
     {        
-        private static ActorSystem _actorSystem;
+        private ActorSystem _actorSystem;
         
         public IKernel Kernel { get; set; }
+        
+        public IActorRef ConsensusService { get; set; }
+
+        public IActorRef GossipService { get; set; }
+
+        public IRpcServer RcpService { get; set; }
+        
+        public IDFS DfsService { get; set; }
 
         public AtlasSystem()
         {           
@@ -50,42 +60,30 @@ namespace ADL.Node
                 .AddJsonFile(Directory.GetCurrentDirectory()+"/../Node/Configs/components.json")
                 .Build();
             var configModule = new ConfigurationModule(config);
-//            
-            builder.RegisterModule(configModule);
 
-//            builder.RegisterMicrosoftConfigurationProvider(Settings);
-//            builder.RegisterMicrosoftConfigurationProvider<Settings>().As<INodeConfiguration>();
+            builder.RegisterModule(configModule);
             
-//            builder.RegisterType<RpcServer>().As<RpcServer>();
-//            builder.RegisterType<LocalPeerService>().As<LocalPeerService>();
-//            builder.RegisterType<LedgerService>().As<LedgerService>();
-//            builder.RegisterType<DFSService>().As<DFSService>();
-//            builder.RegisterType<ConsensusService>().As<ConsensusService>().InstancePerLifetimeScope();
+            builder.RegisterType<ContractService>().As<ContractService>();
+            builder.RegisterType<ConsensusService>().As<ConsensusService>();
+            builder.RegisterType<GossipService>().As<GossipService>();
 
             var container = builder.Build();
             
             var resolver = new AutoFacDependencyResolver(container, actorSystem);
             
-//            var rpcActor = _actorSystem.ActorOf(resolver.Create<RpcServerService>(), "RpcServerService");
-//            var taskManagerActor = _actorSystem.ActorOf(resolver.Create<TaskManagerService>(), "TaskManagerService");
-//            var peerActor = _actorSystem.ActorOf(resolver.Create<LocalPeerService>(), "LocalPeerService");
-//            var ledgerActor = _actorSystem.ActorOf(resolver.Create<LedgerService>(), "LedgerService");
-//            var dfsActor = _actorSystem.ActorOf(resolver.Create<DFSService>(), "DFSService");
-//            var consensusActor = _actorSystem.ActorOf(resolver.Create<ConsensusService>(), "ConsensusService");
-
             return new Kernel(resolver, settings, container);
         }
         
         public void StartConsensus()
         {
             Console.WriteLine("Consensus starting....");
-//            var consensusActor = _actorSystem.ActorOf(resolver.Create<ConsensusService>(), "ConsensusService");
+            ConsensusService = _actorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
         }
         
-        public void StartNode()
+        public void StartGossip()
         {
             Console.WriteLine("Node starting....");
-//            var peerActor = _actorSystem.ActorOf(resolver.Create<LocalPeerService>(), "LocalPeerService");
+            GossipService = _actorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
         }
         
         public void StartRcp()
@@ -93,24 +91,25 @@ namespace ADL.Node
             Console.WriteLine("RPC should start");
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-                var plugin = scope.Resolve<IRpcServer>();
+                RcpService = scope.Resolve<IRpcServer>();
             }
         }
         
         public void StartDfs()
         {
-//            Console.WriteLine("DFS server starting....");
-//            using (var scope = Kernel.Container.BeginLifetimeScope())
-//            {
-//                var plugin = scope.Resolve<IDFS>();
-//            }
+            Console.WriteLine("DFS server starting....");
+            using (var scope = Kernel.Container.BeginLifetimeScope())
+            {
+                DfsService = scope.Resolve<IDFS>();
+            }
         }
         
         public void Dispose()
         {
-//            Rpc?.Dispose();
-//            ActorSystem.Stop(LocalNode);
-//            _actorSystem.Dispose();
+            RcpService.Dispose();
+            _actorSystem.Stop(ConsensusService);
+            _actorSystem.Stop(GossipService);
+            _actorSystem.Dispose();
         }
     }
 }

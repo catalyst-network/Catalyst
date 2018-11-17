@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Cli\Cli.csproj", "{6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "Components\Contract\Contract.csproj", "{29601B05-EDEB-4B25-B8AC-AB1DE8C31158}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography", "Components\Cryptography\Cryptography.csproj", "{D20AC7F2-A666-42C3-9332-6737344FCEA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography", "Helpers\Cryptography\Cryptography.csproj", "{D20AC7F2-A666-42C3-9332-6737344FCEA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transaction", "Components\Transaction\Transaction.csproj", "{DB226237-36F7-410B-A2EE-71202C8937CD}"
 EndProject
