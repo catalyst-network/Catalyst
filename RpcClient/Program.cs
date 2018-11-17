@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Grpc.Core;
 using ADL.Rpc.Proto.Service;
 using System.Threading.Tasks;
@@ -8,17 +9,17 @@ namespace ADL.Rpc.Client
 {
     class Program
     {
-        const string DefaultHost = "localhost";
-        const int Port = 50051;
+        private const string DefaultHost = "localhost";
+        private const int Port = 50051;
 
         public static void Main(string[] args)
         {
             RunAsync(args).Wait();
         }
 
-        private static async Task RunAsync(string[] args)
+        private static async Task RunAsync(IReadOnlyList<string> args)
         {
-            var host = args.Length == 1 ? args[0] : DefaultHost;
+            var host = args.Count == 1 ? args[0] : DefaultHost;
             var channelTarget = $"{host}:{Port}";
 
             Console.WriteLine($"Target: {channelTarget}");
@@ -32,12 +33,14 @@ namespace ADL.Rpc.Client
                 var client = new RpcService.RpcServiceClient(channel);
 
                 // Create a request
-                var request = new PingRequest();
+//                var request = new PingRequest{ Ping = "ping" };
+                var request = new VersionRequest{ Query = true };
 
                 // Send the request
                 Console.WriteLine("GreeterClient sending request");
-                var response = await client.GreetingAsync(request);
-
+//                var response = await client.PingAsync(request);
+                var response = await client.VersionAsync(request);
+                
                 Console.WriteLine("GreeterClient received response: " + response);
             }
             finally

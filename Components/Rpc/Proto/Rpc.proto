@@ -3,13 +3,55 @@ syntax = "proto3";
 package ADL.Rpc.Proto.Service;
 
 message PingRequest {
-    int32 ping = 1;
+    string ping = 1;
 }
 
 message PongResponse {
-    int32 pong = 2;
+    string pong = 2;
+}
+
+message VersionRequest {
+    bool query = 1;
+}
+
+message VersionResponse {
+    string version = 1;
+}
+
+message GetInfoRequest {
+    bool query = 1;
+}
+
+message GetInfoResponse {
+    string query = 1;
 }
 
 service RpcService {
-    rpc Greeting(PingRequest) returns (PongResponse);
+    rpc Ping(PingRequest) returns (PongResponse);
+    rpc Version(VersionRequest) returns (VersionResponse);
+    rpc GetInfo(GetInfoRequest) returns (GetInfoResponse);
+//    rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
+//    rpc ListWallet(ListWalletRequest) returns (ListWalletResponse);
+//    rpc CreateAddress(CreateAddressRequest) returns (CreateAddressResponse);
+//    rpc GetAddress(GetAddressRequest) returns (GetAddressResponse);
+//    rpc ListAddress(ListAddressRequest) returns (ListAddressResponse);
+//    rpc ValidateAddress(ValidateAddressRequest) returns (ValidateAddressResponse);
+//    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+//    rpc CreateRawTransaction(CreateRawTransactionRequest) returns (CreateRawTransactionResponse);
+//    rpc SignRawTransaction(SignRawTransactionRequest) returns (SignRawTransactionResponse);
+//    rpc DecodeRawTransaction(DecodeRawTransactionRequest) returns (DecodeRawTransactionResponse);
+//    rpc BroadcastRawTransaction(BroadcastRawTransactionRequest) returns (BroadcastRawTransactionResponse);
+//    rpc SendTo(SendToRequest) returns (SendToResponse);
+//    rpc SendToFrom(SendToFromRequest) returns (SendToFromResponse);
+//    rpc SendMany(SendManyRequest) returns (SendManyResponse);
+//    rpc SendFromMany(SendFromManyRequest) returns (SendFromManyResponse);
+//    rpc AddNode(AddNodeRequest) returns (AddNodeResponse);
+//    rpc GetPeerList(GetPeerListRequest) returns (GetPeerListResponse);
+//    rpc GetPeerInfo(GetPeerInfoRequest) returns (GetPeerInfoResponse);
+//    rpc GetConnectionCount(GetConnectionCountRequest) returns (GetConnectionCountResponse);
+//    rpc GetDelta(GetDeltaRequest) returns (GetDeltaResponse);
+//    rpc GetMempool(GetMempoolRequest) returns (GetMempoolResponse);
+//    rpc SignMessage(SignMessageRequest) returns (SignMessageResponse);
+//    rpc VerifyMessage(VerifyMessageRequest) returns (VerifyMessageResponse);
+//    rpc ServiceStatus(ServiceStatusRequest) returns (ServiceStatusResponse);
 }
