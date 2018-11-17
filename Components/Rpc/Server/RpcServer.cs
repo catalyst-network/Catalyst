@@ -23,12 +23,7 @@ namespace ADL.Rpc.Server
             var serverTask = RunServiceAsync(server, tokenSource.Token);
 
             Console.WriteLine("GreeterServer listening on port " + Port);
-            Console.WriteLine("Press any key to stop the server...");
-            Console.ReadKey();
-
-            tokenSource.Cancel();
-            Console.WriteLine("Shutting down...");
-            serverTask.Wait();
+//            serverTask.Start();
         }
 
         private static Task AwaitCancellation(CancellationToken token)
