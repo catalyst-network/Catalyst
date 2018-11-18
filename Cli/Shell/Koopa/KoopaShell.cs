@@ -54,7 +54,7 @@ namespace ADL.Cli.Shell.Koopa
                 case "consensus":
                     return OnConsensusCommand(args);
                 default:
-                    return CommandNotFound(args);
+                    return base.OnCommand(args);
             }
         }
                
@@ -178,7 +178,6 @@ namespace ADL.Cli.Shell.Koopa
                 default:
                     return CommandNotFound(args);
             }
-            return true;
         }
 
         /// <summary>
