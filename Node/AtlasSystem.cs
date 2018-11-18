@@ -77,25 +77,7 @@ namespace ADL.Node
         /// <summary>
         /// 
         /// </summary>
-        public void StartConsensus()
-        {
-            Console.WriteLine("Consensus starting....");
-            ConsensusService = _actorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartGossip()
-        {
-            Console.WriteLine("Node starting....");
-            GossipService = _actorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartRcp()
+        public void StartRpc()
         {
             Console.WriteLine("RPC should start");
             using (var scope = Kernel.Container.BeginLifetimeScope())
@@ -103,6 +85,14 @@ namespace ADL.Node
                 RcpService = scope.Resolve<IRpcServer>();
             }
             RcpService.StartServer(Kernel.Settings.RPC);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StopRpc()
+        {
+            RcpService.StopServer();
         }
         
         /// <summary>
@@ -120,11 +110,29 @@ namespace ADL.Node
         /// <summary>
         /// 
         /// </summary>
+        public void StartConsensus()
+        {
+            Console.WriteLine("Consensus starting....");
+            ConsensusService = _actorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StartGossip()
+        {
+            Console.WriteLine("Node starting....");
+            GossipService = _actorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
+        }
+        
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public void Dispose()
         {
-            RcpService.StopServer();
-            _actorSystem.Stop(ConsensusService);
-            _actorSystem.Stop(GossipService);
+            RcpService?.StopServer();
+//            _actorSystem.Stop(ConsensusService);
+//            _actorSystem.Stop(GossipService);
             _actorSystem.Dispose();
         }
     }

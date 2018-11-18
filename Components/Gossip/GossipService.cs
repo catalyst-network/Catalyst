@@ -28,11 +28,7 @@ namespace ADL.Gossip
                             ReceiveTransaction(tx);
                             break;
                     }
-                    
-                    break;
-                
-                default:
-                    break;
+                break;
             }
             
             

@@ -15,6 +15,10 @@ namespace ADL.Cli.Shell
 
         private static string ServiceName => "Atlas Distributed Shell";
         
+        protected abstract void OnStart();
+        
+        protected abstract void OnStop();
+
         /// <summary>
         /// 
         /// </summary>
@@ -60,7 +64,7 @@ namespace ADL.Cli.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnGetCommand(string[] args)
+        private bool OnGetCommand(string[] args)
         {
             switch (args[1].ToLower())
             {
@@ -267,12 +271,20 @@ namespace ADL.Cli.Shell
             securePwd.MakeReadOnly();
             return securePwd;
         }
+
+        public void Run()
+        {
+            Console.WriteLine("run trace");
+            OnStart();
+            RunConsole();
+            OnStop();
+        }
         
         /// <summary>
         /// Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
-        public void RunConsole()
+        private void RunConsole()
         {
             var running = true;
 #if NET461
@@ -321,7 +333,7 @@ namespace ADL.Cli.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool CommandNotFound(IReadOnlyList<string> args)
+        protected bool CommandNotFound(string[] args)
         {
             Console.WriteLine("error: command not found " + args);
             return true;

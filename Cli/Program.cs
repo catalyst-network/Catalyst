@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ADL.Cli.Shell;
+using ADL.Cli.Shell.Koopa;
 
 namespace ADL.Cli
 {
@@ -18,7 +19,7 @@ namespace ADL.Cli
             var inputStream = Console.OpenStandardInput(bufferSize);
             Console.SetIn(new StreamReader(inputStream, Console.InputEncoding, false, bufferSize));
             IShell shell = new KoopaShell();
-            shell.RunConsole();
+            shell.Run();
         }
 
         /// <summary>

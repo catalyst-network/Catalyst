@@ -4,7 +4,7 @@ namespace ADL.Node.Interfaces
     {        
         void StartConsensus();
         void StartGossip();
-        void StartRcp();
+        void StartRpc();
         void StartDfs();
         void Dispose();
     }
