@@ -2,7 +2,7 @@ namespace ADL.Cli.Shell
 {
     internal interface IShell
     {    
-        void RunConsole();
+        void Run();
         bool OnCommand(string[] args);
         bool OnGetCommand(string[] args);
         bool OnRpcCommand(string[] args);

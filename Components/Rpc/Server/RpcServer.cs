@@ -36,7 +36,7 @@ namespace ADL.Rpc.Server
         {
             Console.WriteLine("Dispose started ");
             AwaitCancellation(TokenSource.Token);
-//            TokenSource.Cancel();
+            TokenSource.Cancel();
             try
             {
                 ServerTask.Wait();

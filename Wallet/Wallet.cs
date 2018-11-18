@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Transactions;
-using ADL.Math;
+using ADL.Helpers.Math;
 
 namespace ADL.Wallet
 {
@@ -21,7 +21,7 @@ namespace ADL.Wallet
         
         public abstract WalletAccount CreateAccount(byte[] privateKey);
         
-        public abstract bool    DeleteAccount(byte[] privateKey);
+        public abstract bool DeleteAccount(byte[] privateKey);
         
         public abstract WalletAccount GetAccount(byte[] privateKey);
         

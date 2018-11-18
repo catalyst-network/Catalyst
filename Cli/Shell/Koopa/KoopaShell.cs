@@ -1,12 +1,25 @@
 using System;
 using ADL.Node;
 
-namespace ADL.Cli.Shell
+namespace ADL.Cli.Shell.Koopa
 {
     internal class KoopaShell : ShellBase, IShell
     {
         //private LevelDBStore store;
         private AtlasSystem Atlas { get; set; }
+
+        protected override void OnStart()
+        {
+            //            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
+            Console.WriteLine("OnStart trace");
+            Atlas = new AtlasSystem();
+        }
+        
+        protected override void OnStop()
+        {
+            Atlas.Dispose();
+//            store.Dispose();
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -26,7 +39,7 @@ namespace ADL.Cli.Shell
                 case "message":
                     return OnMessageCommand(args);
                 case "service":
-                    Console.WriteLine("trace1");
+                    Console.WriteLine("OnCommand trace");
                     return OnServiceCommand(args);
                 case "rpc":
                     return OnRpcCommand(args);
@@ -41,7 +54,7 @@ namespace ADL.Cli.Shell
                 case "consensus":
                     return OnConsensusCommand(args);
                 default:
-                    return base.OnCommand(args);
+                    return CommandNotFound(args);
             }
         }
                
@@ -52,9 +65,6 @@ namespace ADL.Cli.Shell
         /// <param name="args"></param>
         protected override bool OnBoot(string[] args)
         {
-//            store = new LevelDBStore(Path.GetFullPath(Settings.Default.Paths.Chain));
-            Console.WriteLine("OnStart trace");
-            Atlas = new AtlasSystem();
             return true;
         }
         
@@ -65,8 +75,6 @@ namespace ADL.Cli.Shell
         /// <param name="args"></param>
         protected override bool OnShutdown(string[] args)
         {
-//            system.Dispose();
-//            store.Dispose();
             return false;
         }
 
@@ -128,9 +136,9 @@ namespace ADL.Cli.Shell
             switch (args[1].ToLower())
             {
                 case "rpc":
-                    Console.WriteLine("trace2");
                     return OnRpcCommand(args);
                 case "dfs":
+                    Console.WriteLine("trace2");
                     return OnDfsCommand(args);
                 case "wallet":
                     return OnWalletCommand(args);
@@ -141,7 +149,7 @@ namespace ADL.Cli.Shell
                 case "consensus":
                     return OnConsensusCommand(args);
                 default:
-                    return OnCommand(args);
+                    return CommandNotFound(args);
             }
         }
 
@@ -155,19 +163,20 @@ namespace ADL.Cli.Shell
             switch (args[2].ToLower())
             {
                 case "start":
-                    Console.WriteLine("trace3");
-                    Atlas.StartRcp();
-                    return false;
-//                    return RpcStart(args);
+                    Atlas.StartRpc();
+                    return true;
                 case "stop":
-                    return false;
-//                    return RpcStop(args);
+                    Atlas.StopRpc();
+                    return true;
                 case "status":
                     return false;
 //                    return RpcStatus(args);
                 case "restart":
-                    return false;
-//                    return RpcTestart(args);
+                    Atlas.StopRpc();
+                    Atlas.StartRpc();
+                    return true;
+                default:
+                    return CommandNotFound(args);
             }
             return true;
         }
@@ -182,8 +191,9 @@ namespace ADL.Cli.Shell
             switch (args[2].ToLower())
             {
                 case "start":
-                    return false;
-//                    return DfsStart(args);
+                    Console.WriteLine("trace3");
+                    Atlas.StartDfs();
+                    return true;
                 case "stop":
                     return false;
 //                    return DfsStop(args);
@@ -193,8 +203,9 @@ namespace ADL.Cli.Shell
                 case "restart":
                     return false;
 //                    return DfsTestart(args);
+                default:
+                    return CommandNotFound(args);
             }
-            return true;
         }
         
         /// <summary>
@@ -218,8 +229,9 @@ namespace ADL.Cli.Shell
                 case "restart":
                     return false;
 //                    return WalletRestart(args);
+                default:
+                    return CommandNotFound(args);
             }
-            return true;
         }
         
         /// <summary>
@@ -243,8 +255,9 @@ namespace ADL.Cli.Shell
                 case "restart":
                     return false;
 //                    return PeerRestart(args);
+                default:
+                    return CommandNotFound(args);                
             }
-            return true;
         }
         
         /// <summary>
@@ -268,8 +281,9 @@ namespace ADL.Cli.Shell
                 case "restart":
                     return false;
 //                    return GossipRestart(args);
+                default:
+                    return CommandNotFound(args);                
             }
-            return true;
         }
        
         /// <summary>
@@ -295,8 +309,9 @@ namespace ADL.Cli.Shell
                 case "restart":
                     return false;
 //                    return ConsensusRestart(args);
+                default:
+                    return CommandNotFound(args);                
             }
-            return true;
         }
     }
 }
