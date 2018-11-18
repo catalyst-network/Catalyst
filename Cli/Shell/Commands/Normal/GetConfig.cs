@@ -1,7 +1,7 @@
 using System;
 using ADL.Node;
 
-namespace ADL.Cli.Shell.Commands
+namespace ADL.Cli.Shell.Commands.Normal
 {
     internal static class GetConfig
     {

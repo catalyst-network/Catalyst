@@ -8,6 +8,12 @@ namespace ADL.Rpc.Server
 {
     public class RpcServerImpl : RpcService.RpcServiceBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override Task<PongResponse> Ping(PingRequest request, ServerCallContext context)
         {
             return Task.FromResult(new PongResponse
@@ -16,6 +22,12 @@ namespace ADL.Rpc.Server
             });
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override Task<VersionResponse> Version(VersionRequest request, ServerCallContext context)
         {
             return Task.FromResult(new VersionResponse

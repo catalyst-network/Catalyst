@@ -13,6 +13,10 @@ namespace ADL.Rpc.Server
         private Grpc.Core.Server Server { get; set; }
         private IRpcSettings Settings { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settings"></param>
         public void StartServer(IRpcSettings settings )
         {
             Settings = settings;
@@ -25,6 +29,9 @@ namespace ADL.Rpc.Server
             ServerTask = RunServiceAsync(Server, TokenSource.Token);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void StopServer()
         {
             Console.WriteLine("Dispose started ");

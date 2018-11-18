@@ -74,18 +74,27 @@ namespace ADL.Node
             return new Kernel(resolver, settings, container);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void StartConsensus()
         {
             Console.WriteLine("Consensus starting....");
             ConsensusService = _actorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void StartGossip()
         {
             Console.WriteLine("Node starting....");
             GossipService = _actorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void StartRcp()
         {
             Console.WriteLine("RPC should start");
@@ -96,6 +105,9 @@ namespace ADL.Node
             RcpService.StartServer(Kernel.Settings.RPC);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void StartDfs()
         {
             Console.WriteLine("DFS server starting....");
@@ -105,6 +117,9 @@ namespace ADL.Node
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             RcpService.StopServer();
