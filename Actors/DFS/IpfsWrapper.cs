@@ -1,20 +1,29 @@
 using System.Threading.Tasks;
 using System;
+using System.Net.Sockets;
 using Ipfs.Api;
 using System.Threading;
+using ADL.DFS.Helpers;
 using Newtonsoft.Json.Linq;
 
 namespace ADL.DFS
 {
+    /// <summary>
+    ///   Wrapper for some of the Ipfs methods.
+    ///   It will try to connect the client to the IPFS daemon.
+    /// </summary>
     public class IpfsWrapper
     {
-        private readonly IpfsClient _client = new IpfsClient();
-
-        public IpfsWrapper()
+        private static readonly IpfsClient _client = new IpfsClient();
+        
+        private bool ClientConnected()
         {
             if (_client == null)
             {
-                throw new ArgumentNullException();
+                // better to throw as there is a problem with creating the
+                // instance rather than connecting to the IPFS daemon
+                //
+                throw new ArgumentNullException(); 
             }
 
             try
@@ -31,13 +40,44 @@ namespace ADL.DFS
 
                 // Just to give an hint that the peer is up and running and has an ID
                 //
-                Console.WriteLine("IPFS peer ID = " + (j["ID"] != null ? $"{j["ID"]}" : "field not found"));
+                Console.WriteLine("Started IPFS peer ID = " + (j["ID"] != null ? $"{j["ID"]}" : "field not found"));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
-                throw;
+                return false;
             }
+
+            return true;
+        }
+
+        private void TryToConnectClient()
+        {
+            var retries = 1;
+            
+            while (retries <= 10)
+            {
+                if (!ClientConnected())
+                {
+                    Console.WriteLine($"IPFS daemon not running - Trying to connect. Attempt #{retries}");
+                    "ipfs daemon".BackgroundCmd(); // invoke as extension method
+                }
+                else
+                {
+                    return;
+                }
+
+                retries--;
+            }
+            
+           // If it could not connect after a few attempt then throw
+           // a socket exception and backup
+           //
+           throw new SocketException();
+        }
+        
+        public IpfsWrapper()
+        {
+            TryToConnectClient();
         }
         
         public async Task<Ipfs.Cid> AddTextAsync(string text)
