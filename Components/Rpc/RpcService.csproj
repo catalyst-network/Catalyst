@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>ADL.Rpc</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Rpc\Proto\RpcProto.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+    <PackageReference Include="Grpc" Version="1.16.0" />
+    <PackageReference Include="Grpc.Core" Version="1.16.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\Rpc.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.0\RpcServer.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.0\RpcServer.dll" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.0\RpcServer.pdb" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.0\RpcServer.dll" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.0\Native.RpcServer.manifest" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.0\RpcServer.application" />
+  </ItemGroup>
+
+</Project>

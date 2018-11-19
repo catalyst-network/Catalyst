@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>ADL.Token</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Helpers\Cryptography\Cryptography.csproj" />
+      <ProjectReference Include="..\Helpers\Math\Math.csproj" />
+    </ItemGroup>
+    
+</Project>
