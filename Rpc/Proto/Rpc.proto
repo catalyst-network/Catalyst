@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ADL.Rpc.Proto.Service;
+package ADL.Rpc.Proto.Server;
 
 message PingRequest {
     string ping = 1;
@@ -26,7 +26,7 @@ message GetInfoResponse {
     string query = 1;
 }
 
-service RpcService {
+service RpcServer {
     rpc Ping(PingRequest) returns (PongResponse);
     rpc Version(VersionRequest) returns (VersionResponse);
     rpc GetInfo(GetInfoRequest) returns (GetInfoResponse);

@@ -10,13 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\P2P.csproj.UnmanagedRegistration.cache" />
-    <_UnmanagedRegistrationCache Remove="obj\P2P.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\P2PService.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\P2PService.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
   <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\P2P.csproj.ResolveComReference.cache" />
-    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\P2P.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\P2PService.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\P2PService.csproj.ResolveComReference.cache" />
   </ItemGroup>
 
   <ItemGroup>

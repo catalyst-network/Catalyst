@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace ADL.Rpc.Proto.Service {
+namespace ADL.Rpc.Proto.Server {
 
   /// <summary>Holder for reflection information generated from Rpc.proto</summary>
   public static partial class RpcReflection {
@@ -24,27 +24,27 @@ namespace ADL.Rpc.Proto.Service {
     static RpcReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CglScGMucHJvdG8SFUFETC5ScGMuUHJvdG8uU2VydmljZSIbCgtQaW5nUmVx",
-            "dWVzdBIMCgRwaW5nGAEgASgJIhwKDFBvbmdSZXNwb25zZRIMCgRwb25nGAIg",
-            "ASgJIh8KDlZlcnNpb25SZXF1ZXN0Eg0KBXF1ZXJ5GAEgASgIIiIKD1ZlcnNp",
-            "b25SZXNwb25zZRIPCgd2ZXJzaW9uGAEgASgJIh8KDkdldEluZm9SZXF1ZXN0",
-            "Eg0KBXF1ZXJ5GAEgASgIIiAKD0dldEluZm9SZXNwb25zZRINCgVxdWVyeRgB",
-            "IAEoCTKRAgoKUnBjU2VydmljZRJPCgRQaW5nEiIuQURMLlJwYy5Qcm90by5T",
-            "ZXJ2aWNlLlBpbmdSZXF1ZXN0GiMuQURMLlJwYy5Qcm90by5TZXJ2aWNlLlBv",
-            "bmdSZXNwb25zZRJYCgdWZXJzaW9uEiUuQURMLlJwYy5Qcm90by5TZXJ2aWNl",
-            "LlZlcnNpb25SZXF1ZXN0GiYuQURMLlJwYy5Qcm90by5TZXJ2aWNlLlZlcnNp",
-            "b25SZXNwb25zZRJYCgdHZXRJbmZvEiUuQURMLlJwYy5Qcm90by5TZXJ2aWNl",
-            "LkdldEluZm9SZXF1ZXN0GiYuQURMLlJwYy5Qcm90by5TZXJ2aWNlLkdldElu",
-            "Zm9SZXNwb25zZWIGcHJvdG8z"));
+            "CglScGMucHJvdG8SFEFETC5ScGMuUHJvdG8uU2VydmVyIhsKC1BpbmdSZXF1",
+            "ZXN0EgwKBHBpbmcYASABKAkiHAoMUG9uZ1Jlc3BvbnNlEgwKBHBvbmcYAiAB",
+            "KAkiHwoOVmVyc2lvblJlcXVlc3QSDQoFcXVlcnkYASABKAgiIgoPVmVyc2lv",
+            "blJlc3BvbnNlEg8KB3ZlcnNpb24YASABKAkiHwoOR2V0SW5mb1JlcXVlc3QS",
+            "DQoFcXVlcnkYASABKAgiIAoPR2V0SW5mb1Jlc3BvbnNlEg0KBXF1ZXJ5GAEg",
+            "ASgJMooCCglScGNTZXJ2ZXISTQoEUGluZxIhLkFETC5ScGMuUHJvdG8uU2Vy",
+            "dmVyLlBpbmdSZXF1ZXN0GiIuQURMLlJwYy5Qcm90by5TZXJ2ZXIuUG9uZ1Jl",
+            "c3BvbnNlElYKB1ZlcnNpb24SJC5BREwuUnBjLlByb3RvLlNlcnZlci5WZXJz",
+            "aW9uUmVxdWVzdBolLkFETC5ScGMuUHJvdG8uU2VydmVyLlZlcnNpb25SZXNw",
+            "b25zZRJWCgdHZXRJbmZvEiQuQURMLlJwYy5Qcm90by5TZXJ2ZXIuR2V0SW5m",
+            "b1JlcXVlc3QaJS5BREwuUnBjLlByb3RvLlNlcnZlci5HZXRJbmZvUmVzcG9u",
+            "c2ViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Service.PingRequest), global::ADL.Rpc.Proto.Service.PingRequest.Parser, new[]{ "Ping" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Service.PongResponse), global::ADL.Rpc.Proto.Service.PongResponse.Parser, new[]{ "Pong" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Service.VersionRequest), global::ADL.Rpc.Proto.Service.VersionRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Service.VersionResponse), global::ADL.Rpc.Proto.Service.VersionResponse.Parser, new[]{ "Version" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Service.GetInfoRequest), global::ADL.Rpc.Proto.Service.GetInfoRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Service.GetInfoResponse), global::ADL.Rpc.Proto.Service.GetInfoResponse.Parser, new[]{ "Query" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Server.PingRequest), global::ADL.Rpc.Proto.Server.PingRequest.Parser, new[]{ "Ping" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Server.PongResponse), global::ADL.Rpc.Proto.Server.PongResponse.Parser, new[]{ "Pong" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Server.VersionRequest), global::ADL.Rpc.Proto.Server.VersionRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Server.VersionResponse), global::ADL.Rpc.Proto.Server.VersionResponse.Parser, new[]{ "Version" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Server.GetInfoRequest), global::ADL.Rpc.Proto.Server.GetInfoRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Rpc.Proto.Server.GetInfoResponse), global::ADL.Rpc.Proto.Server.GetInfoResponse.Parser, new[]{ "Query" }, null, null, null)
           }));
     }
     #endregion
@@ -59,7 +59,7 @@ namespace ADL.Rpc.Proto.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Rpc.Proto.Service.RpcReflection.Descriptor.MessageTypes[0]; }
+      get { return global::ADL.Rpc.Proto.Server.RpcReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -188,7 +188,7 @@ namespace ADL.Rpc.Proto.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Rpc.Proto.Service.RpcReflection.Descriptor.MessageTypes[1]; }
+      get { return global::ADL.Rpc.Proto.Server.RpcReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -317,7 +317,7 @@ namespace ADL.Rpc.Proto.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Rpc.Proto.Service.RpcReflection.Descriptor.MessageTypes[2]; }
+      get { return global::ADL.Rpc.Proto.Server.RpcReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -446,7 +446,7 @@ namespace ADL.Rpc.Proto.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Rpc.Proto.Service.RpcReflection.Descriptor.MessageTypes[3]; }
+      get { return global::ADL.Rpc.Proto.Server.RpcReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -575,7 +575,7 @@ namespace ADL.Rpc.Proto.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Rpc.Proto.Service.RpcReflection.Descriptor.MessageTypes[4]; }
+      get { return global::ADL.Rpc.Proto.Server.RpcReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -704,7 +704,7 @@ namespace ADL.Rpc.Proto.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Rpc.Proto.Service.RpcReflection.Descriptor.MessageTypes[5]; }
+      get { return global::ADL.Rpc.Proto.Server.RpcReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

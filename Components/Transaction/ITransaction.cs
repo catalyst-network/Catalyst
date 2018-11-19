@@ -1,6 +1,6 @@
 namespace ADL.Transaction
 {
-    public interface ITx
+    public interface ITransaction
     {
         
     }

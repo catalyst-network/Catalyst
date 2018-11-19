@@ -7,8 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../Components/Rpc/Proto/RpcProto.csproj" />
-        <ProjectReference Include="../Components/Rpc/Server/RpcServer.csproj" />
+        <ProjectReference Include="../Proto/RpcProto.csproj" />
     </ItemGroup>
 
     <ItemGroup>

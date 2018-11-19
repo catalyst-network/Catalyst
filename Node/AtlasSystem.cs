@@ -1,37 +1,42 @@
-using System;
-using System.IO;
-using ADL.Node.Interfaces;
-using Akka.Actor;
-using Autofac;
-using Autofac.Configuration;
-using Akka.DI.AutoFac;
-using ADL.Rpc.Server;
-using Microsoft.Extensions.Configuration;
-using System.Reflection;
-using System.Runtime.Loader;
-using ADL.Consensus;
-using ADL.Contract;
-using ADL.DFS;
+using ADL.P2P;
+using ADL.Rpc;
+using ADL.Dfs;
 using ADL.Gossip;
+using ADL.Mempool;
+using ADL.Contract;
+using ADL.Consensus;
+using System;
+using Autofac;
+using System.IO;
+using Akka.Actor;
+using Akka.DI.AutoFac;
+using System.Reflection;
+using ADL.Node.Interfaces;
+using Autofac.Configuration;
+using System.Runtime.Loader;
+using ADL.Node.Ledger;
+using Microsoft.Extensions.Configuration;
 
 namespace ADL.Node
 {
     public class AtlasSystem : IDisposable, IAtlasSystem
     {        
         private ActorSystem _actorSystem;
+                
+        public IActorRef ContractSystem { get; set; }
         
-        public IKernel Kernel { get; set; }
-        
-        public IActorRef ConsensusService { get; set; }
+        public IADL ADLedger { get; set; }
 
-        public IActorRef GossipService { get; set; }
-
-        public IRpcServer RcpService { get; set; }
-        
         public IDfs DfsService { get; set; }
+        
+        public IP2P P2PService { get; set; }
+
+        public IRpcService RcpService { get; set; }
+        
+        internal IKernel Kernel { get; set; }
 
         public AtlasSystem()
-        {           
+        {         
             using (_actorSystem = ActorSystem.Create("AtlasSystem"))
             {
                 Console.WriteLine("AtlasSystem create trace");
@@ -63,8 +68,8 @@ namespace ADL.Node
 
             builder.RegisterModule(configModule);
             
-            builder.RegisterType<ContractService>().As<ContractService>();
             builder.RegisterType<ConsensusService>().As<ConsensusService>();
+            builder.RegisterType<ContractService>().As<ContractService>();
             builder.RegisterType<GossipService>().As<GossipService>();
 
             var container = builder.Build();
@@ -82,9 +87,9 @@ namespace ADL.Node
             Console.WriteLine("RPC should start");
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-                RcpService = scope.Resolve<IRpcServer>();
+                RcpService = scope.Resolve<IRpcService>();
             }
-            RcpService.StartServer(Kernel.Settings.RPC);
+            RcpService.StartServer(Kernel.Settings.Rpc);
         }
         
         /// <summary>
@@ -100,7 +105,7 @@ namespace ADL.Node
         /// </summary>
         public void StartDfs()
         {
-            Console.WriteLine("DFS server starting....");
+            Console.WriteLine("Dfs server starting....");
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
                 DfsService = scope.Resolve<IDfs>();
@@ -113,7 +118,7 @@ namespace ADL.Node
         public void StartConsensus()
         {
             Console.WriteLine("Consensus starting....");
-            ConsensusService = _actorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
+            ADLedger.ConsensusService = _actorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
         }
         
         /// <summary>
@@ -122,7 +127,7 @@ namespace ADL.Node
         public void StartGossip()
         {
             Console.WriteLine("Node starting....");
-            GossipService = _actorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
+            ADLedger.GossipService = _actorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
         }
         
         /// <inheritdoc />
@@ -133,7 +138,7 @@ namespace ADL.Node
             RcpService?.StopServer();
 //            _actorSystem.Stop(ConsensusService);
 //            _actorSystem.Stop(GossipService);
-            _actorSystem.Dispose();
+//            _actorSystem.Dispose();
         }
     }
 }

@@ -1,12 +1,12 @@
-using ADL.Rpc.Server;
+using ADL.Rpc;
 
 namespace ADL.Node.Interfaces
 {
-    public interface INodeConfiguration
+    internal interface INodeConfiguration
     {
         IProtocolSettings Protocol { get; }
-        IPathSettings Paths { get; }
+        IPersistanceSettings Persistance { get; }
         IP2PSettings P2P { get; }
-        IRpcSettings RPC { get; }
+        IRpcSettings Rpc { get; }
     }
 }

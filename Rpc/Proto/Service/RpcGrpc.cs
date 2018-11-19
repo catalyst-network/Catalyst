@@ -7,54 +7,54 @@
 
 using grpc = global::Grpc.Core;
 
-namespace ADL.Rpc.Proto.Service {
-  public static partial class RpcService
+namespace ADL.Rpc.Proto.Server {
+  public static partial class RpcServer
   {
-    static readonly string __ServiceName = "ADL.Rpc.Proto.Service.RpcService";
+    static readonly string __ServiceName = "ADL.Rpc.Proto.Server.RpcServer";
 
-    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.PingRequest> __Marshaller_ADL_Rpc_Proto_Service_PingRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.PingRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.PongResponse> __Marshaller_ADL_Rpc_Proto_Service_PongResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.PongResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.VersionRequest> __Marshaller_ADL_Rpc_Proto_Service_VersionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.VersionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.VersionResponse> __Marshaller_ADL_Rpc_Proto_Service_VersionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.VersionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.GetInfoRequest> __Marshaller_ADL_Rpc_Proto_Service_GetInfoRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.GetInfoRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Service.GetInfoResponse> __Marshaller_ADL_Rpc_Proto_Service_GetInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Service.GetInfoResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Server.PingRequest> __Marshaller_ADL_Rpc_Proto_Server_PingRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Server.PingRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Server.PongResponse> __Marshaller_ADL_Rpc_Proto_Server_PongResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Server.PongResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Server.VersionRequest> __Marshaller_ADL_Rpc_Proto_Server_VersionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Server.VersionRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Server.VersionResponse> __Marshaller_ADL_Rpc_Proto_Server_VersionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Server.VersionResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Server.GetInfoRequest> __Marshaller_ADL_Rpc_Proto_Server_GetInfoRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Server.GetInfoRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Rpc.Proto.Server.GetInfoResponse> __Marshaller_ADL_Rpc_Proto_Server_GetInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Rpc.Proto.Server.GetInfoResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::ADL.Rpc.Proto.Service.PingRequest, global::ADL.Rpc.Proto.Service.PongResponse> __Method_Ping = new grpc::Method<global::ADL.Rpc.Proto.Service.PingRequest, global::ADL.Rpc.Proto.Service.PongResponse>(
+    static readonly grpc::Method<global::ADL.Rpc.Proto.Server.PingRequest, global::ADL.Rpc.Proto.Server.PongResponse> __Method_Ping = new grpc::Method<global::ADL.Rpc.Proto.Server.PingRequest, global::ADL.Rpc.Proto.Server.PongResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "Ping",
-        __Marshaller_ADL_Rpc_Proto_Service_PingRequest,
-        __Marshaller_ADL_Rpc_Proto_Service_PongResponse);
+        __Marshaller_ADL_Rpc_Proto_Server_PingRequest,
+        __Marshaller_ADL_Rpc_Proto_Server_PongResponse);
 
-    static readonly grpc::Method<global::ADL.Rpc.Proto.Service.VersionRequest, global::ADL.Rpc.Proto.Service.VersionResponse> __Method_Version = new grpc::Method<global::ADL.Rpc.Proto.Service.VersionRequest, global::ADL.Rpc.Proto.Service.VersionResponse>(
+    static readonly grpc::Method<global::ADL.Rpc.Proto.Server.VersionRequest, global::ADL.Rpc.Proto.Server.VersionResponse> __Method_Version = new grpc::Method<global::ADL.Rpc.Proto.Server.VersionRequest, global::ADL.Rpc.Proto.Server.VersionResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "Version",
-        __Marshaller_ADL_Rpc_Proto_Service_VersionRequest,
-        __Marshaller_ADL_Rpc_Proto_Service_VersionResponse);
+        __Marshaller_ADL_Rpc_Proto_Server_VersionRequest,
+        __Marshaller_ADL_Rpc_Proto_Server_VersionResponse);
 
-    static readonly grpc::Method<global::ADL.Rpc.Proto.Service.GetInfoRequest, global::ADL.Rpc.Proto.Service.GetInfoResponse> __Method_GetInfo = new grpc::Method<global::ADL.Rpc.Proto.Service.GetInfoRequest, global::ADL.Rpc.Proto.Service.GetInfoResponse>(
+    static readonly grpc::Method<global::ADL.Rpc.Proto.Server.GetInfoRequest, global::ADL.Rpc.Proto.Server.GetInfoResponse> __Method_GetInfo = new grpc::Method<global::ADL.Rpc.Proto.Server.GetInfoRequest, global::ADL.Rpc.Proto.Server.GetInfoResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetInfo",
-        __Marshaller_ADL_Rpc_Proto_Service_GetInfoRequest,
-        __Marshaller_ADL_Rpc_Proto_Service_GetInfoResponse);
+        __Marshaller_ADL_Rpc_Proto_Server_GetInfoRequest,
+        __Marshaller_ADL_Rpc_Proto_Server_GetInfoResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::ADL.Rpc.Proto.Service.RpcReflection.Descriptor.Services[0]; }
+      get { return global::ADL.Rpc.Proto.Server.RpcReflection.Descriptor.Services[0]; }
     }
 
-    /// <summary>Base class for server-side implementations of RpcService</summary>
-    public abstract partial class RpcServiceBase
+    /// <summary>Base class for server-side implementations of RpcServer</summary>
+    public abstract partial class RpcServerBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Service.PongResponse> Ping(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Server.PongResponse> Ping(global::ADL.Rpc.Proto.Server.PingRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Service.VersionResponse> Version(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Server.VersionResponse> Version(global::ADL.Rpc.Proto.Server.VersionRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -88,65 +88,65 @@ namespace ADL.Rpc.Proto.Service {
       /// <param name="request">The request received from the client.</param>
       /// <param name="context">The context of the server-side call handler being invoked.</param>
       /// <returns>The response to send back to the client (wrapped by a task).</returns>
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Service.GetInfoResponse> GetInfo(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Rpc.Proto.Server.GetInfoResponse> GetInfo(global::ADL.Rpc.Proto.Server.GetInfoRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
     }
 
-    /// <summary>Client for RpcService</summary>
-    public partial class RpcServiceClient : grpc::ClientBase<RpcServiceClient>
+    /// <summary>Client for RpcServer</summary>
+    public partial class RpcServerClient : grpc::ClientBase<RpcServerClient>
     {
-      /// <summary>Creates a new client for RpcService</summary>
+      /// <summary>Creates a new client for RpcServer</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public RpcServiceClient(grpc::Channel channel) : base(channel)
+      public RpcServerClient(grpc::Channel channel) : base(channel)
       {
       }
-      /// <summary>Creates a new client for RpcService that uses a custom <c>CallInvoker</c>.</summary>
+      /// <summary>Creates a new client for RpcServer that uses a custom <c>CallInvoker</c>.</summary>
       /// <param name="callInvoker">The callInvoker to use to make remote calls.</param>
-      public RpcServiceClient(grpc::CallInvoker callInvoker) : base(callInvoker)
+      public RpcServerClient(grpc::CallInvoker callInvoker) : base(callInvoker)
       {
       }
       /// <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
-      protected RpcServiceClient() : base()
+      protected RpcServerClient() : base()
       {
       }
       /// <summary>Protected constructor to allow creation of configured clients.</summary>
       /// <param name="configuration">The client configuration.</param>
-      protected RpcServiceClient(ClientBaseConfiguration configuration) : base(configuration)
+      protected RpcServerClient(ClientBaseConfiguration configuration) : base(configuration)
       {
       }
 
-      public virtual global::ADL.Rpc.Proto.Service.PongResponse Ping(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Rpc.Proto.Server.PongResponse Ping(global::ADL.Rpc.Proto.Server.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Ping(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Rpc.Proto.Service.PongResponse Ping(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Rpc.Proto.Server.PongResponse Ping(global::ADL.Rpc.Proto.Server.PingRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Ping, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.PongResponse> PingAsync(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Server.PongResponse> PingAsync(global::ADL.Rpc.Proto.Server.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return PingAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.PongResponse> PingAsync(global::ADL.Rpc.Proto.Service.PingRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Server.PongResponse> PingAsync(global::ADL.Rpc.Proto.Server.PingRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_Ping, null, options, request);
       }
-      public virtual global::ADL.Rpc.Proto.Service.VersionResponse Version(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Rpc.Proto.Server.VersionResponse Version(global::ADL.Rpc.Proto.Server.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Version(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Rpc.Proto.Service.VersionResponse Version(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Rpc.Proto.Server.VersionResponse Version(global::ADL.Rpc.Proto.Server.VersionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Version, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.VersionResponse> VersionAsync(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Server.VersionResponse> VersionAsync(global::ADL.Rpc.Proto.Server.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return VersionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.VersionResponse> VersionAsync(global::ADL.Rpc.Proto.Service.VersionRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Server.VersionResponse> VersionAsync(global::ADL.Rpc.Proto.Server.VersionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_Version, null, options, request);
       }
@@ -181,7 +181,7 @@ namespace ADL.Rpc.Proto.Service {
       /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
       /// <param name="cancellationToken">An optional token for canceling the call.</param>
       /// <returns>The response received from the server.</returns>
-      public virtual global::ADL.Rpc.Proto.Service.GetInfoResponse GetInfo(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Rpc.Proto.Server.GetInfoResponse GetInfo(global::ADL.Rpc.Proto.Server.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetInfo(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
@@ -214,7 +214,7 @@ namespace ADL.Rpc.Proto.Service {
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
       /// <returns>The response received from the server.</returns>
-      public virtual global::ADL.Rpc.Proto.Service.GetInfoResponse GetInfo(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Rpc.Proto.Server.GetInfoResponse GetInfo(global::ADL.Rpc.Proto.Server.GetInfoRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetInfo, null, options, request);
       }
@@ -249,7 +249,7 @@ namespace ADL.Rpc.Proto.Service {
       /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
       /// <param name="cancellationToken">An optional token for canceling the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.GetInfoResponse> GetInfoAsync(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Server.GetInfoResponse> GetInfoAsync(global::ADL.Rpc.Proto.Server.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetInfoAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
@@ -282,20 +282,20 @@ namespace ADL.Rpc.Proto.Service {
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Service.GetInfoResponse> GetInfoAsync(global::ADL.Rpc.Proto.Service.GetInfoRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Rpc.Proto.Server.GetInfoResponse> GetInfoAsync(global::ADL.Rpc.Proto.Server.GetInfoRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetInfo, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
-      protected override RpcServiceClient NewInstance(ClientBaseConfiguration configuration)
+      protected override RpcServerClient NewInstance(ClientBaseConfiguration configuration)
       {
-        return new RpcServiceClient(configuration);
+        return new RpcServerClient(configuration);
       }
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
-    public static grpc::ServerServiceDefinition BindService(RpcServiceBase serviceImpl)
+    public static grpc::ServerServiceDefinition BindService(RpcServerBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_Ping, serviceImpl.Ping)

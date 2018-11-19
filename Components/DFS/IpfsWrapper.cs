@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
 using System;
 using Ipfs.Api;
+using System.Threading.Tasks;
 
-namespace ADL.DFS
+namespace ADL.Dfs
 {
     public class IpfsWrapper : IDfs
     {

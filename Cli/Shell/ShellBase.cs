@@ -106,7 +106,7 @@ namespace ADL.Cli.Shell
                 "\tservice rpc stop\n" +
                 "\tservice rpc status\n" +
                 "\tservice rpc restart\n" +
-                "DFS Commands:\n" +
+                "Dfs Commands:\n" +
                 "\tdfs file put\n" +
                 "\tdfs file get\n" +
                 "\tservice dfs start\n" +

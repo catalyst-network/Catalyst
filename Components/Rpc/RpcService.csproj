@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RootNamespace>ADL.Rpc.Server</RootNamespace>
+    <RootNamespace>ADL.Rpc</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Proto\RpcProto.csproj" />
+    <ProjectReference Include="..\..\Rpc\Proto\RpcProto.csproj" />
   </ItemGroup>
   
   <ItemGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\RpcServer.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\Rpc.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
   
   <ItemGroup>

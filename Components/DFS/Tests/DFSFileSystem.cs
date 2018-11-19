@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using Ipfs.Api;
 
-namespace ADL.DFS.Tests
+namespace ADL.Dfs.Tests
 {        
     [TestClass]
     public class FileSystemTest
