@@ -1,9 +1,0 @@
-/home/joshua/Projects/ADL/Actors/DFS/bin/Debug/netstandard2.0/DFS.deps.json
-/home/joshua/Projects/ADL/Actors/DFS/bin/Debug/netstandard2.0/DFS.dll
-/home/joshua/Projects/ADL/Actors/DFS/bin/Debug/netstandard2.0/DFS.pdb
-/home/joshua/Projects/ADL/Actors/DFS/obj/Debug/netstandard2.0/DFS.csprojAssemblyReference.cache
-/home/joshua/Projects/ADL/Actors/DFS/obj/Debug/netstandard2.0/DFS.csproj.CoreCompileInputs.cache
-/home/joshua/Projects/ADL/Actors/DFS/obj/Debug/netstandard2.0/DFS.AssemblyInfoInputs.cache
-/home/joshua/Projects/ADL/Actors/DFS/obj/Debug/netstandard2.0/DFS.AssemblyInfo.cs
-/home/joshua/Projects/ADL/Actors/DFS/obj/Debug/netstandard2.0/DFS.dll
-/home/joshua/Projects/ADL/Actors/DFS/obj/Debug/netstandard2.0/DFS.pdb
