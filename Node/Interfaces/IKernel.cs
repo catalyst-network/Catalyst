@@ -3,7 +3,7 @@ using Autofac;
 
 namespace ADL.Node.Interfaces
 {
-    public interface IKernel
+    internal interface IKernel
     {
         IContainer Container { get; set; }
         INodeConfiguration Settings { get; set; }

@@ -13,10 +13,10 @@
     <ProjectReference Include="..\Transaction\Transaction.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\Gossip.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\GossipService.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
   <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\Gossip.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\GossipService.csproj.ResolveComReference.cache" />
   </ItemGroup>
   <ItemGroup>
     <IntermediateAssembly Remove="obj\Debug\netstandard2.0\Gossip.dll" />

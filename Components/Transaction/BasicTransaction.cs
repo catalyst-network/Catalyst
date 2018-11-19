@@ -2,7 +2,7 @@
 
 namespace ADL.Transaction
 {
-    public class BasicTransaction : ITx
+    public class BasicTransaction : ITransaction
     {
         public bool BSending { get; set; }
         

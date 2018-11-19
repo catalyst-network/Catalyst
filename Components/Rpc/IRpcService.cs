@@ -1,6 +1,6 @@
-namespace ADL.Rpc.Server
+namespace ADL.Rpc
 {
-    public interface IRpcServer
+    public interface IRpcService
     {
         void StartServer(IRpcSettings settings);
         void StopServer();

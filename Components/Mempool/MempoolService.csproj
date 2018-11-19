@@ -11,11 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\Mempool.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\MempoolService.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
   <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\Mempool.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\MempoolService.csproj.ResolveComReference.cache" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,16 +23,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Components\Rpc\Proto\RpcProto.csproj" />
-    <ProjectReference Include="..\Components\Rpc\Server\RpcServer.csproj" />
-    <ProjectReference Include="..\Components\Consensus\Consensus.csproj" />
-    <ProjectReference Include="..\Components\Contract\Contract.csproj" />
-    <ProjectReference Include="..\Components\DFS\DFS.csproj" />
+    <ProjectReference Include="..\Rpc\Proto\RpcProto.csproj" />
+    <ProjectReference Include="..\Components\Rpc\RpcService.csproj" />
+    <ProjectReference Include="..\Components\Consensus\ConsensusService.csproj" />
+    <ProjectReference Include="..\Components\Contract\ContractService.csproj" />
+    <ProjectReference Include="..\Components\Dfs\DfsService.csproj" />
     <ProjectReference Include="..\Components\Economics\Economics.csproj" />
-    <ProjectReference Include="..\Components\Gossip\Gossip.csproj" />
+    <ProjectReference Include="..\Components\Gossip\GossipService.csproj" />
     <ProjectReference Include="..\Components\Ledger\Ledger.csproj" />
-    <ProjectReference Include="..\Components\Mempool\Mempool.csproj" />
-    <ProjectReference Include="..\Components\P2P\P2P.csproj" />
+    <ProjectReference Include="..\Components\Mempool\MempoolService.csproj" />
+    <ProjectReference Include="..\Components\P2P\P2PService.csproj" />
     <ProjectReference Include="..\Components\Token\Token.csproj" />
     <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
   </ItemGroup>
@@ -68,16 +68,16 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcProto.dll" />
-      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcServer.dll" />
-      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Consensus.dll" />
-      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Contract.dll" />
+      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcService.dll" />
+      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\ConsensusService.dll" />
+      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\ContractService.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Cryptography.dll" />
-      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\DFS.dll" />
+      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\DfsService.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Economics.dll" />
-      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Gossip.dll" />
+      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\GossipService.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Ledger.dll" />
-      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Mempool.dll" />
-      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\P2P.dll" />
+      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\MempoolService.dll" />
+      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\P2PService.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Token.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Transaction.dll" />
     </ItemGroup>

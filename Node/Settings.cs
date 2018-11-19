@@ -3,22 +3,22 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using ADL.Node.Interfaces;
+using ADL.Rpc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using ADL.Rpc.Server;
 
 namespace ADL.Node
 {
    
     public class Settings
     {
-        public INodeConfiguration Sections { get; private set; }
+        internal INodeConfiguration Sections { get; private set; }
         public static Settings Default { get; private set; }
-        public static string ConfigFileLocation { get; private set; }
+        private static string ConfigFileLocation { get; set; }
         
         static Settings()
         {
-            string env = Environment.GetEnvironmentVariable("ATLASENV");
+            var env = Environment.GetEnvironmentVariable("ATLASENV");
             
             switch (env)
             {
@@ -36,7 +36,7 @@ namespace ADL.Node
                     break;
             }
             
-            IConfigurationSection section = new ConfigurationBuilder()
+            var section = new ConfigurationBuilder()
                 .AddJsonFile(Directory.GetCurrentDirectory()+"/../Node"+ConfigFileLocation)
                 .Build()
                 .GetSection("ApplicationConfiguration");
@@ -50,24 +50,34 @@ namespace ADL.Node
         /// <param name="section"></param>
         private Settings(IConfiguration section)
         {
-            Sections = new SettingSections
+            Sections = new ServiceSettings
             {
-                RPC = new RpcSettings(section.GetSection("RPC")),
-                P2P = new P2PSettings(section.GetSection("P2P")),
-                Paths =new PathSettings(section.GetSection("Paths")),
-                Protocol = new ProtocolSettings(section.GetSection("Protocol"))
+                Persistance =new LedgerSettings(section.GetSection("Ledger")),
+                Consensus = new ConsensusSettings(section.GetSection("Services").GetSection("Consensus")),
+                Contract = new ContractSettings(section.GetSection("Services").GetSection("Contract")),
+                Dfs = new DfsSettings(section.GetSection("Services").GetSection("Dfs")),
+                Gossip = new GossipSettings(section.GetSection("Services").GetSection("Gossip")),
+                Mempool = new MempoolSettings(section.GetSection("Services").GetSection("Mempool")),
+                P2P = new P2PSettings(section.GetSection("Services").GetSection("P2P")),
+                Rpc = new RpcSettings(section.GetSection("Services").GetSection("Rpc")),
+                Protocol = new ProtocolSettings(section.GetSection("Protocol")),
             };            
         }
 
         /// <summary>
         /// Object to hold setting sections.
         /// </summary>
-        private struct SettingSections : INodeConfiguration
+        private struct ServiceSettings : INodeConfiguration
         {
-            public IProtocolSettings Protocol { get; set; }
-            public IPathSettings Paths { get; set; }
+            public IConsensusSettings Consensus { get; set; }
+            public IContractSettings Contract { get; set; }
+            public IDfsSettings Dfs { get; set; }
+            public IGossipSettings Gossip { get; set; }
+            public IMempoolSettings Mempool { get; set; }
             public IP2PSettings P2P { get; set; }
-            public IRpcSettings RPC { get; set; }
+            public IRpcSettings Rpc { get; set; }
+            public IProtocolSettings Protocol { get; set; }
+            public IPersistanceSettings Persistance { get; set; }
         }
         
         /// <summary>
@@ -85,23 +95,115 @@ namespace ADL.Node
         }
 
         /// <summary>
-        /// Path settings class.
+        /// Persistence settings class.
         /// Holds the local storage locations.
         /// </summary>
-        private class PathSettings : IPathSettings
+        private class LedgerSettings : IPersistanceSettings
         {
-            public string Chain { get; private set; }
-            public string Index { get; private set; }
+            public string Type { get; set; }
+            public string Chain { get; set; }
+            public string Index { get; set; }
 
             /// <summary>
-            /// Sets the chain and index path locations.
+            /// Set attributes
             /// </summary>
             /// <param name="section"></param>
-            protected internal PathSettings(IConfiguration section)
+            protected internal LedgerSettings(IConfiguration section)
             {
-                Console.WriteLine(section.GetSection("Chain"));
-                Chain = section.GetSection("Chain").Value;
-                Index = section.GetSection("Index").Value;
+                Console.WriteLine(section.GetSection("Ledger"));
+                Type = section.GetSection("Persistence").Value;
+                Chain = section.GetSection("Paths").GetSection("Chain").Value;
+                Index = section.GetSection("Paths").GetSection("Index").Value;
+            }
+        }
+        
+        /// <summary>
+        /// Consensus settings class.
+        /// Holds the local storage locations.
+        /// </summary>
+        private class ConsensusSettings : IConsensusSettings
+        {
+            public string nDepth { get; set; }
+
+            /// <summary>
+            /// Set attributes
+            /// </summary>
+            /// <param name="section"></param>
+            protected internal ConsensusSettings(IConfiguration section)
+            {
+                nDepth = section.GetSection("nDepth").Value;
+            }
+        }
+        
+        /// <summary>
+        /// Contract settings class.
+        /// Holds the local storage locations.
+        /// </summary>
+        private class ContractSettings : IContractSettings
+        {
+            public string StorageType { get; set; }
+
+            /// <summary>
+            /// Set attributes
+            /// </summary>
+            /// <param name="section"></param>
+            protected internal ContractSettings(IConfiguration section)
+            {
+                StorageType = section.GetSection("StorageType").Value;
+            }
+        }
+        
+        /// <summary>
+        /// Dfs settings class.
+        /// Holds the local storage locations.
+        /// </summary>
+        private class DfsSettings : IDfsSettings
+        {
+            public string StorageType { get; set; }
+
+            /// <summary>
+            /// Set attributes
+            /// </summary>
+            /// <param name="section"></param>
+            protected internal DfsSettings(IConfiguration section)
+            {
+                StorageType = section.GetSection("StorageType").Value;
+            }
+        }
+
+        /// <summary>
+        /// Gossip settings class.
+        /// Holds the local storage locations.
+        /// </summary>
+        private class GossipSettings : IGossipSettings
+        {
+            public string Instances { get; set; }
+
+            /// <summary>
+            /// Set attributes
+            /// </summary>
+            /// <param name="section"></param>
+            protected internal GossipSettings(IConfiguration section)
+            {
+                Instances = section.GetSection("instances").Value;
+            }
+        }
+        
+        /// <summary>
+        /// Mempool settings class.
+        /// Holds the local storage locations.
+        /// </summary>
+        private class MempoolSettings : IMempoolSettings
+        {
+            public string Type { get; set; }
+
+            /// <summary>
+            /// Set attributes
+            /// </summary>
+            /// <param name="section"></param>
+            protected internal MempoolSettings(IConfiguration section)
+            {
+                Type = section.GetSection("Type").Value;
             }
         }
 
@@ -110,10 +212,10 @@ namespace ADL.Node
         /// </summary>
         private class P2PSettings : IP2PSettings
         {
-            public ushort Port { get; private set; }
+            public ushort Port { get; set; }
 
             /// <summary>
-            /// Sets the p2p settings.
+            /// Set attributes
             /// </summary>
             /// <param name="section"></param>
             protected internal P2PSettings(IConfiguration section)
@@ -133,7 +235,7 @@ namespace ADL.Node
             public string SslCertPassword { get; set; }
 
             /// <summary>
-            ///  Sets RPC Server settings.
+            /// Set attributes
             /// </summary>
             /// <param name="section"></param>
             protected internal RpcSettings(IConfiguration section)
@@ -150,12 +252,12 @@ namespace ADL.Node
         /// </summary>
         private class ProtocolSettings : IProtocolSettings
         {
-            public uint Magic { get; private set; }
-            public byte AddressVersion { get; private set; }
-            public string[] SeedList { get; private set; }
+            public uint Magic { get; set; }
+            public byte AddressVersion { get; set; }
+            public string[] SeedList { get; set; }
 
             /// <summary>
-            /// Sets the protocol settings.
+            /// Set attributes
             /// </summary>
             /// <param name="section"></param>
             protected internal ProtocolSettings(IConfiguration section)

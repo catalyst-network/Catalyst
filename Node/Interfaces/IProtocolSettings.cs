@@ -1,4 +1,9 @@
 namespace ADL.Node.Interfaces
 {
-    public interface IProtocolSettings {}
+    internal interface IProtocolSettings 
+    {
+        uint Magic { get; set; }
+        byte AddressVersion { get; set; }
+        string[] SeedList { get; set; }
+    }
 }

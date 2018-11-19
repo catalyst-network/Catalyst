@@ -5,7 +5,7 @@ namespace ADL.Contract
 {
     public enum ContractType { Standard, External }
     
-    public enum StorageType { ADFS, IPFS, MaidSafe, TrustedServer }
+    public enum StorageType { ADfs, IPFS, MaidSafe, TrustedServer }
     
     public class ContractService : UntypedActor, IContract
     {
@@ -17,13 +17,13 @@ namespace ADL.Contract
         
         public StorageType StorageMedium { get; set; }
         
-        protected override void PreStart() => Console.WriteLine("Started DFSService actor");
+        protected override void PreStart() => Console.WriteLine("Started DfsService actor");
     
-        protected override void PostStop() => Console.WriteLine("Stopped DFSService actor");
+        protected override void PostStop() => Console.WriteLine("Stopped DfsService actor");
     
         protected override void OnReceive(object message)
         {
-            Console.WriteLine("DFSService OnReceive");
+            Console.WriteLine("DfsService OnReceive");
 
             Console.WriteLine($"Message received {message}");
         }

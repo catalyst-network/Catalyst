@@ -2,10 +2,10 @@
   "defaultAssembly": "Node",
   "components": [
     {
-      "type": "ADL.Rpc.Server.RpcServer, RpcServer",
+      "type": "ADL.Rpc.RpcService, RpcService",
       "services": [
         {
-          "type": "ADL.Rpc.Server.IRpcServer, RpcServer"
+          "type": "ADL.Rpc.IRpcService, RpcService"
         }
       ]
     },
@@ -18,10 +18,10 @@
       ]
     },
     {
-      "type": "ADL.DFS.IpfsWrapper, DFS",
+      "type": "ADL.Dfs.IpfsWrapper, DfsService",
       "services": [
         {
-          "type": "ADL.DFS.IDfs, DFS"
+          "type": "ADL.Dfs.IDfs, DfsService"
         }
       ]
     },
@@ -34,26 +34,26 @@
       ]
     },
     {
-      "type": "ADL.Ledger.Ledger, Ledger",
+      "type": "ADL.Node.Ledger.ADLedger, Node",
       "services": [
         {
-          "type": "ADL.Ledger.ILedger, Ledger"
+          "type": "ADL.Node.Ledger.IADL, Node"
         }
       ]
     },
     {
-      "type": "ADL.Mempool.MempoolService, Mempool",
+      "type": "ADL.Mempool.MempoolService, MempoolService",
       "services": [
         {
-          "type": "ADL.Mempool.IMempool, Mempool"
+          "type": "ADL.Mempool.IMempool, MempoolService"
         }
       ]
     },
     {
-      "type": "ADL.P2P.P2PController, P2P",
+      "type": "ADL.P2P.P2PService, P2PService",
       "services": [
         {
-          "type": "ADL.P2P.IP2P, P2P"
+          "type": "ADL.P2P.IP2P, P2PService"
         }
       ]
     },
@@ -69,7 +69,7 @@
       "type": "ADL.Transaction.BasicTransaction, Transaction",
       "services": [
         {
-          "type": "ADL.Transaction.ITx, Transaction"
+          "type": "ADL.Transaction.ITransaction, Transaction"
         }
       ]
     }

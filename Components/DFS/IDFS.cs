@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ADL.DFS
+namespace ADL.Dfs
 {
     public interface IDfs
     {

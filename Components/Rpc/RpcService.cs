@@ -1,12 +1,12 @@
 ﻿using System;
 using Grpc.Core;
 using System.Threading;
-using ADL.Rpc.Proto.Service;
+using ADL.Rpc.Proto.Server;
 using System.Threading.Tasks;
 
-namespace ADL.Rpc.Server
+namespace ADL.Rpc
 {
-    public class RpcServer : IRpcServer
+    public class RpcService : IRpcService
     {
         private CancellationTokenSource TokenSource { get; set; }
         private Task ServerTask { get; set; }
@@ -22,7 +22,7 @@ namespace ADL.Rpc.Server
             Settings = settings;
             Server = new Grpc.Core.Server
             {
-                Services = { RpcService.BindService(new RpcServerImpl()) },
+                Services = { RpcServer.BindService(new RpcServerImpl()) },
                 Ports = { new ServerPort(Settings.BindAddress, Settings.Port, ServerCredentials.Insecure) }
             };
             TokenSource = new CancellationTokenSource();

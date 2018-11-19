@@ -2,11 +2,11 @@ using Grpc.Core;
 using System.Threading.Tasks;
 using System;
 using System.Reflection;
-using ADL.Rpc.Proto.Service;
+using ADL.Rpc.Proto.Server;
 
-namespace ADL.Rpc.Server
+namespace ADL.Rpc
 {
-    public class RpcServerImpl : RpcService.RpcServiceBase
+    public class RpcServerImpl : RpcServer.RpcServerBase
     {
         /// <summary>
         /// 

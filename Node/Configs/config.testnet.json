@@ -1,17 +1,38 @@
 {
   "ApplicationConfiguration": {
-    "Paths": {
-      "Chain": "Chain_{0}",
-      "Index": "Index_{0}"
+    "Ledger": {
+      "Persistence": "LevelDB",
+      "Paths": {
+        "Chain": "Chain_{0}",
+        "Index": "Index_{0}"
+      }
     },
-    "P2P": {
-      "Port": 42069,
-    },
-    "RPC": {
-      "BindAddress": "127.0.0.1",
-      "Port": 42042,
-      "SslCert": "",
-      "SslCertPassword": ""
+    "Services" : {
+      "Consensus": {
+        "nDepth": 100
+      },
+      "Contract": {
+        "StorageType": "Ipfs"
+      },
+      "Dfs": {
+        "StorageType": "Ipfs"
+      },
+      "Gossip": {
+        "instances": 5
+      },
+      "Mempool": {
+        "Type" : "sqlite"
+      },
+      "P2P": {
+        "Port": 42069,
+        "MaxPeers": 10
+      },
+      "RPC": {
+        "BindAddress": "127.0.0.1",
+        "Port": 42042,
+        "SslCert": "",
+        "SslCertPassword": ""
+      }
     },
     "Protocol":  {
       "AddressVersion": 23,

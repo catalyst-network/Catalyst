@@ -1,7 +1,7 @@
-namespace ADL.Ledger
+namespace ADL.Node.Ledger
 {
     public interface ILedger
     {
-        
+
     }
 }
