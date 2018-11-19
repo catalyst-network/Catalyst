@@ -13,9 +13,6 @@
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    <PackageReference Include="Thinktecture.Configuration" Version="2.1.0" />
-    <PackageReference Include="Thinktecture.Extensions.Configuration.Autofac" Version="2.1.0" />
-    <PackageReference Include="Thinktecture.IO.FileSystem.Abstractions" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +27,6 @@
     <ProjectReference Include="..\Components\Dfs\DfsService.csproj" />
     <ProjectReference Include="..\Components\Economics\Economics.csproj" />
     <ProjectReference Include="..\Components\Gossip\GossipService.csproj" />
-    <ProjectReference Include="..\Components\Ledger\Ledger.csproj" />
     <ProjectReference Include="..\Components\Mempool\MempoolService.csproj" />
     <ProjectReference Include="..\Components\P2P\P2PService.csproj" />
     <ProjectReference Include="..\Components\Token\Token.csproj" />
@@ -75,7 +71,6 @@
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\DfsService.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Economics.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\GossipService.dll" />
-      <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Ledger.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\MempoolService.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\P2PService.dll" />
       <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Token.dll" />
