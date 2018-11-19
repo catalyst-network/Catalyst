@@ -1,8 +1,0 @@
-/home/joshua/Projects/ADL/Actors/Ledger/bin/Debug/netstandard2.0/Ledger.deps.json
-/home/joshua/Projects/ADL/Actors/Ledger/bin/Debug/netstandard2.0/Ledger.dll
-/home/joshua/Projects/ADL/Actors/Ledger/bin/Debug/netstandard2.0/Ledger.pdb
-/home/joshua/Projects/ADL/Actors/Ledger/obj/Debug/netstandard2.0/Ledger.csproj.CoreCompileInputs.cache
-/home/joshua/Projects/ADL/Actors/Ledger/obj/Debug/netstandard2.0/Ledger.AssemblyInfoInputs.cache
-/home/joshua/Projects/ADL/Actors/Ledger/obj/Debug/netstandard2.0/Ledger.AssemblyInfo.cs
-/home/joshua/Projects/ADL/Actors/Ledger/obj/Debug/netstandard2.0/Ledger.dll
-/home/joshua/Projects/ADL/Actors/Ledger/obj/Debug/netstandard2.0/Ledger.pdb
