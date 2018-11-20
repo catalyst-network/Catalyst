@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Grpc.Core;
 using ADL.Rpc.Proto.Server;
 using System.Threading.Tasks;
-using ADL.Rpc.Proto.Server;
 
 namespace ADL.Rpc.Client
 {

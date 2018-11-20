@@ -4,7 +4,9 @@ using System.Net.Sockets;
 using Ipfs.Api;
 using System.Threading;
 using ADL.DFS.Helpers;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace ADL.DFS
 {
@@ -14,7 +16,8 @@ namespace ADL.DFS
     /// </summary>
     public class IpfsConnector :IDFS
     {
-        private static readonly IpfsClient _client = new IpfsClient();
+        private readonly IpfsClient _client; 
+        private readonly string _defaultApiEndPoint;
         
         private bool ClientConnected()
         {
@@ -22,7 +25,6 @@ namespace ADL.DFS
             {
                 // better to throw as there is a problem with creating the
                 // instance rather than connecting to the IPFS daemon
-                //
                 throw new ArgumentNullException(); 
             }
 
@@ -31,15 +33,12 @@ namespace ADL.DFS
                 // Try to get id of this peer. If the daemon is not running than
                 // it will throw a socket connection exception. This is just to make
                 // sure that the environment is set-up correctly
-                //
                 var x = _client.DoCommandAsync("id", default(CancellationToken)).Result;
 
                 // It will throw if the json object is not well formed.
-                //
                 var j = JObject.Parse(x);
 
                 // Just to give an hint that the peer is up and running and has an ID
-                //
                 Console.WriteLine("Started IPFS peer ID = " + (j["ID"] != null ? $"{j["ID"]}" : "field not found"));
             }
             catch (Exception)
@@ -71,40 +70,41 @@ namespace ADL.DFS
             
            // If it could not connect after a few attempt then throw
            // a socket exception and backup
-           //
            throw new SocketException();
         }
         
         /// <summary>
         ///   Default constructor for IpfsConnector. It will attempt to to connect to the daemon
-        ///   It will throw an exception if it cannot connect.
+        ///   It will throw a SocketException if it cannot connect.
         /// </summary>
         public IpfsConnector()
         {
+            _client  = new IpfsClient();
+            _defaultApiEndPoint = IpfsClient.DefaultApiUri + "api/v0/";
+
             TryToConnectClient();
         }
         
-        public async Task<Ipfs.Cid> AddTextAsync(string text)
+        /// <summary>
+        ///   Add a file to IPFS.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns>
+        ///   A string containing the hash of the file just added
+        /// </returns>
+        /// <remarks>
+        ///   It uses curl as a workaround to add a file to IPFS
+        /// </remarks>         
+        public string AddFile(string filename)
         {
+            var cmd = $"curl -F \"file=@{filename}\" {_defaultApiEndPoint}add";
+            
             try
             {
-                var fsn = await _client.FileSystem.AddTextAsync(text);
-                Console.WriteLine(fsn.DataStream.ToString());
-                return fsn.Id;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-        
-        public async Task<Ipfs.Cid> AddFileAsync(string filename)
-        {
-            try
-            {
-                var fsn = await _client.FileSystem.AddFileAsync(filename);
-                return fsn.Id;
+                var output = cmd.WaitForCmd();
+                dynamic json = JsonConvert.DeserializeObject(output);
+
+                return json.Hash;
             }
             catch (Exception e)
             {
@@ -113,11 +113,21 @@ namespace ADL.DFS
             }
         }
 
-        public async Task<string> ReadAllTextAsync(string filename)
+        /// <summary>
+        ///   Read a file from IPFS
+        /// </summary>
+        /// <param name="hash"></param>
+        /// <returns>
+        ///   A Task object containing the text of the file just read.
+        /// </returns>
+        /// <remarks>
+        ///   It is an async method and uses IPFS.Api
+        /// </remarks>         
+        public async Task<string> ReadAllTextAsync(string hash)
         {
             try
             {
-                var text = await _client.FileSystem.ReadAllTextAsync(filename);
+                var text = await _client.FileSystem.ReadAllTextAsync(hash);
                 return text;
             }
             catch (Exception e)

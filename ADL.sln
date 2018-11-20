@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfsService", "Components\Df
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpcClient", "Rpc\Client\RpcClient.csproj", "{82C1063D-D1CE-4237-834A-C3484B81550C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{0AA50663-26B8-47E7-8731-BD7001A50294}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{0AA50663-26B8-47E7-8731-BD7001A50294}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
