@@ -6,6 +6,7 @@ using ADL.Mempool;
 using ADL.Contract;
 using ADL.Consensus;
 using System;
+using System.ComponentModel.Design;
 using Autofac;
 using System.IO;
 using Akka.Actor;
@@ -110,6 +111,8 @@ namespace ADL.Node
             {
                 DfsService = scope.Resolve<IDFS>();
             }
+
+            DfsService.Start(Kernel.Settings.Dfs);
         }
         
         /// <summary>

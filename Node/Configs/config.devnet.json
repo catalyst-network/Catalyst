@@ -15,7 +15,9 @@
         "StorageType": "Ipfs"
       },
       "Dfs": {
-        "StorageType": "Ipfs"
+        "StorageType": "Ipfs",
+        "ConnectRetries": 10,
+        "IpfsVersionApi": "api/v0/"
       },
       "Gossip": {
         "instances": 5

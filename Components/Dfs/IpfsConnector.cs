@@ -4,7 +4,9 @@ using System.Net.Sockets;
 using Ipfs.Api;
 using System.Threading;
 using ADL.DFS.Helpers;
-using Google.Protobuf.WellKnownTypes;
+using ADL.Node.Interfaces;
+using System.Diagnostics;
+using Google.Protobuf;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
@@ -14,16 +16,24 @@ namespace ADL.DFS
     ///   Wrapper for some of the Ipfs methods.
     ///   It will try to connect the client to the IPFS daemon.
     /// </summary>
-    public class IpfsConnector :IDFS
+    public class IpfsConnector : IDFS
     {
-        private readonly IpfsClient _client; 
-        private readonly string _defaultApiEndPoint;
+        private IpfsClient _client; 
+        private string _defaultApiEndPoint;
         
-        private bool ClientConnected()
+        private IDfsSettings _settings { get; set; }
+        
+        /// <summary>
+        ///   Check if IPFS client can connect to IPFS daemon
+        /// </summary>
+        /// <returns>
+        ///   Boolen
+        /// </returns>
+        public bool IsClientConnected()
         {
             if (_client == null)
             {
-                // better to throw as there is a problem with creating the
+                // better to throw because there is a problem with creating the
                 // instance rather than connecting to the IPFS daemon
                 throw new ArgumentNullException(); 
             }
@@ -31,14 +41,10 @@ namespace ADL.DFS
             try
             {
                 // Try to get id of this peer. If the daemon is not running than
-                // it will throw a socket connection exception. This is just to make
-                // sure that the environment is set-up correctly
+                // it will throw a socket connection exception.
                 var x = _client.DoCommandAsync("id", default(CancellationToken)).Result;
-
-                // It will throw if the json object is not well formed.
                 var j = JObject.Parse(x);
-
-                // Just to give an hint that the peer is up and running and has an ID
+                
                 Console.WriteLine("Started IPFS peer ID = " + (j["ID"] != null ? $"{j["ID"]}" : "field not found"));
             }
             catch (Exception)
@@ -53,9 +59,9 @@ namespace ADL.DFS
         {
             var retries = 1;
             
-            while (retries <= 10)
+            while (retries <= _settings.ConnectRetries)
             {
-                if (!ClientConnected())
+                if (!IsClientConnected())
                 {
                     Console.WriteLine($"IPFS daemon not running - Trying to connect. Attempt #{retries}");
                     "ipfs daemon".BackgroundCmd(); // invoke as extension method
@@ -65,24 +71,54 @@ namespace ADL.DFS
                     return;
                 }
 
-                retries--;
+                retries++;
             }
             
            // If it could not connect after a few attempt then throw
            // a socket exception and backup
-           throw new SocketException();
+           throw new InvalidOperationException("Failed to connect with IPFS daemon");
+        }
+
+        /// <summary>
+        ///   Start IPFS daemon and set client and settings to null
+        /// </summary>
+        public void Start(IDfsSettings settings)
+        {
+            if (_client != null)
+            {
+                TryToConnectClient(); // just to validate that connection with daemon is alive too
+                return;
+            }
+
+            _client  = new IpfsClient();
+            
+            _settings = settings;            
+            _defaultApiEndPoint = IpfsClient.DefaultApiUri + _settings.IpfsVersionApi;
+            
+            TryToConnectClient();
         }
         
         /// <summary>
-        ///   Default constructor for IpfsConnector. It will attempt to to connect to the daemon
-        ///   It will throw a SocketException if it cannot connect.
+        ///   Stop IPFS daemon and set client and settings to null
         /// </summary>
-        public IpfsConnector()
+        public void Stop()
         {
-            _client  = new IpfsClient();
-            _defaultApiEndPoint = IpfsClient.DefaultApiUri + "api/v0/";
+            var localByName = Process.GetProcessesByName("ipfs");
+            if (localByName.Length == 1)
+            {
+                localByName[0].Kill(); // kill daemon process
+            }
 
-            TryToConnectClient();
+            if (_client != null)
+            {
+                if (IsClientConnected()) // if still connected then operation failed
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+
+            _client = null;
+            _settings = null;
         }
         
         /// <summary>
@@ -120,9 +156,6 @@ namespace ADL.DFS
         /// <returns>
         ///   A Task object containing the text of the file just read.
         /// </returns>
-        /// <remarks>
-        ///   It is an async method and uses IPFS.Api
-        /// </remarks>         
         public async Task<string> ReadAllTextAsync(string hash)
         {
             try
