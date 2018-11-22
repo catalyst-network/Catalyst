@@ -18,10 +18,10 @@
       ]
     },
     {
-      "type": "ADL.Dfs.IpfsWrapper, DfsService",
+      "type": "ADL.DFS.IpfsConnector, DfsService",
       "services": [
         {
-          "type": "ADL.Dfs.IDfs, DfsService"
+          "type": "ADL.DFS.IDFS, DfsService"
         }
       ]
     },
