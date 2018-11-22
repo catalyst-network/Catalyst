@@ -1,11 +1,12 @@
 using ADL.P2P;
 using ADL.Rpc;
-using ADL.Dfs;
+using ADL.DFS;
 using ADL.Gossip;
 using ADL.Mempool;
 using ADL.Contract;
 using ADL.Consensus;
 using System;
+using System.ComponentModel.Design;
 using Autofac;
 using System.IO;
 using Akka.Actor;
@@ -27,7 +28,7 @@ namespace ADL.Node
         
         public IADL ADLedger { get; set; }
 
-        public IDfs DfsService { get; set; }
+        public IDFS DfsService { get; set; }
         
         public IP2P P2PService { get; set; }
 
@@ -108,8 +109,10 @@ namespace ADL.Node
             Console.WriteLine("Dfs server starting....");
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-                DfsService = scope.Resolve<IDfs>();
+                DfsService = scope.Resolve<IDFS>();
             }
+
+            DfsService.Start(Kernel.Settings.Dfs);
         }
         
         /// <summary>

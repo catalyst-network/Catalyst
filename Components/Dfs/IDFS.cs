@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
+using ADL.Node.Interfaces;
 
-namespace ADL.Dfs
+namespace ADL.DFS
 {
-    public interface IDfs
+    public interface IDFS
     {
-        Task<Ipfs.Cid> AddTextAsync(string text);
-        Task<Ipfs.Cid> AddFileAsync(string filename);
+        void Start(IDfsSettings settings);
+        void Stop();
+        string AddFile(string filename);
         Task<string> ReadAllTextAsync(string filename);
     }
 }

@@ -8,5 +8,6 @@ namespace ADL.Node.Interfaces
         IPersistanceSettings Persistance { get; }
         IP2PSettings P2P { get; }
         IRpcSettings Rpc { get; }
+        IDfsSettings Dfs { get; }
     }
 }

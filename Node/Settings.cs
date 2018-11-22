@@ -160,7 +160,9 @@ namespace ADL.Node
         private class DfsSettings : IDfsSettings
         {
             public string StorageType { get; set; }
-
+            public ushort ConnectRetries { get; set; }
+            public string IpfsVersionApi { get; set; }
+            
             /// <summary>
             /// Set attributes
             /// </summary>
@@ -168,6 +170,8 @@ namespace ADL.Node
             protected internal DfsSettings(IConfiguration section)
             {
                 StorageType = section.GetSection("StorageType").Value;
+                ConnectRetries = ushort.Parse(section.GetSection("ConnectRetries").Value);
+                IpfsVersionApi = section.GetSection("IpfsVersionApi").Value;
             }
         }
 

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Grpc.Core;
-using ADL.Rpc.Proto.Service;
+using ADL.Rpc.Proto.Server;
 using System.Threading.Tasks;
-using ADL.Rpc.Proto.Service;
 
 namespace ADL.Rpc.Client
 {
@@ -30,7 +29,7 @@ namespace ADL.Rpc.Client
             try
             {
                 // Create a client with the channel
-                var client = new RpcService.RpcServiceClient(channel);
+                var client = new RpcServer.RpcServerClient(channel);
 
                 // Create a request
 //                var request = new PingRequest{ Ping = "ping" };

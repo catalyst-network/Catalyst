@@ -38,13 +38,4 @@
       <DeployManifest Remove="obj\Debug\netcoreapp2.1\Cli.application" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Shell\Commands\Advanced" />
-      <Folder Include="Shell\Commands\Consensus" />
-      <Folder Include="Shell\Commands\Dfs" />
-      <Folder Include="Shell\Commands\Gossip" />
-      <Folder Include="Shell\Commands\Node" />
-      <Folder Include="Shell\Commands\RCP" />
-      <Folder Include="Shell\Commands\Wallet" />
-    </ItemGroup>
 </Project>
