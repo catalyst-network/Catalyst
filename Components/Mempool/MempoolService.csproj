@@ -39,4 +39,8 @@
     <DeployManifest Remove="obj\Debug\netstandard2.0\Mempool.application" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+
 </Project>

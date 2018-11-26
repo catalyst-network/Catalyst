@@ -15,5 +15,6 @@ namespace ADL.Utilities
 
         public static RedisConnector Instance => _instance ?? (_instance = new RedisConnector());
         public ConnectionMultiplexer Connection => _connection.Value;
+        public IDatabase GetDb => _connection.Value.GetDatabase();
     }
 }

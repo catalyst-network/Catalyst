@@ -25,25 +25,27 @@ namespace ADL.Mempool.Proto {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChZQcm90b0J1Zi9NZW1wb29sLnByb3RvEhFBREwuTWVtcG9vbC5Qcm90bxof",
-            "Z29vZ2xlL3Byb3RvYnVmL3RpbWVzdGFtcC5wcm90byKFAQoCVFgSFQoNYWRk",
+            "Z29vZ2xlL3Byb3RvYnVmL3RpbWVzdGFtcC5wcm90byKAAQoCVHgSFQoNYWRk",
             "cmVzc1NvdXJjZRgBIAEoCRITCgthZGRyZXNzRGVzdBgCIAEoCRIRCglzaWdu",
-            "YXR1cmUYAyABKAkSDgoGYW1vdW50GAQgASgBEjAKDGxhc3RfdXBkYXRlZBgF",
-            "IAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBiBnByb3RvMw=="));
+            "YXR1cmUYAyABKAkSDgoGYW1vdW50GAQgASgBEisKB3VwZGF0ZWQYBSABKAsy",
+            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIh8KA0tleRIYChBoYXNoZWRf",
+            "c2lnbmF0dXJlGAEgASgJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Mempool.Proto.TX), global::ADL.Mempool.Proto.TX.Parser, new[]{ "AddressSource", "AddressDest", "Signature", "Amount", "LastUpdated" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Mempool.Proto.Tx), global::ADL.Mempool.Proto.Tx.Parser, new[]{ "AddressSource", "AddressDest", "Signature", "Amount", "Updated" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Mempool.Proto.Key), global::ADL.Mempool.Proto.Key.Parser, new[]{ "HashedSignature" }, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Messages
-  public sealed partial class TX : pb::IMessage<TX> {
-    private static readonly pb::MessageParser<TX> _parser = new pb::MessageParser<TX>(() => new TX());
+  public sealed partial class Tx : pb::IMessage<Tx> {
+    private static readonly pb::MessageParser<Tx> _parser = new pb::MessageParser<Tx>(() => new Tx());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<TX> Parser { get { return _parser; } }
+    public static pb::MessageParser<Tx> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -56,25 +58,25 @@ namespace ADL.Mempool.Proto {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public TX() {
+    public Tx() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public TX(TX other) : this() {
+    public Tx(Tx other) : this() {
       addressSource_ = other.addressSource_;
       addressDest_ = other.addressDest_;
       signature_ = other.signature_;
       amount_ = other.amount_;
-      lastUpdated_ = other.lastUpdated_ != null ? other.lastUpdated_.Clone() : null;
+      updated_ = other.updated_ != null ? other.updated_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public TX Clone() {
-      return new TX(this);
+    public Tx Clone() {
+      return new Tx(this);
     }
 
     /// <summary>Field number for the "addressSource" field.</summary>
@@ -121,24 +123,24 @@ namespace ADL.Mempool.Proto {
       }
     }
 
-    /// <summary>Field number for the "last_updated" field.</summary>
-    public const int LastUpdatedFieldNumber = 5;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp lastUpdated_;
+    /// <summary>Field number for the "updated" field.</summary>
+    public const int UpdatedFieldNumber = 5;
+    private global::Google.Protobuf.WellKnownTypes.Timestamp updated_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp LastUpdated {
-      get { return lastUpdated_; }
+    public global::Google.Protobuf.WellKnownTypes.Timestamp Updated {
+      get { return updated_; }
       set {
-        lastUpdated_ = value;
+        updated_ = value;
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as TX);
+      return Equals(other as Tx);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(TX other) {
+    public bool Equals(Tx other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -149,7 +151,7 @@ namespace ADL.Mempool.Proto {
       if (AddressDest != other.AddressDest) return false;
       if (Signature != other.Signature) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Amount, other.Amount)) return false;
-      if (!object.Equals(LastUpdated, other.LastUpdated)) return false;
+      if (!object.Equals(Updated, other.Updated)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -160,7 +162,7 @@ namespace ADL.Mempool.Proto {
       if (AddressDest.Length != 0) hash ^= AddressDest.GetHashCode();
       if (Signature.Length != 0) hash ^= Signature.GetHashCode();
       if (Amount != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Amount);
-      if (lastUpdated_ != null) hash ^= LastUpdated.GetHashCode();
+      if (updated_ != null) hash ^= Updated.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -190,9 +192,9 @@ namespace ADL.Mempool.Proto {
         output.WriteRawTag(33);
         output.WriteDouble(Amount);
       }
-      if (lastUpdated_ != null) {
+      if (updated_ != null) {
         output.WriteRawTag(42);
-        output.WriteMessage(LastUpdated);
+        output.WriteMessage(Updated);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -214,8 +216,8 @@ namespace ADL.Mempool.Proto {
       if (Amount != 0D) {
         size += 1 + 8;
       }
-      if (lastUpdated_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(LastUpdated);
+      if (updated_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Updated);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -224,7 +226,7 @@ namespace ADL.Mempool.Proto {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(TX other) {
+    public void MergeFrom(Tx other) {
       if (other == null) {
         return;
       }
@@ -240,11 +242,11 @@ namespace ADL.Mempool.Proto {
       if (other.Amount != 0D) {
         Amount = other.Amount;
       }
-      if (other.lastUpdated_ != null) {
-        if (lastUpdated_ == null) {
-          lastUpdated_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+      if (other.updated_ != null) {
+        if (updated_ == null) {
+          updated_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
         }
-        LastUpdated.MergeFrom(other.LastUpdated);
+        Updated.MergeFrom(other.Updated);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -274,10 +276,139 @@ namespace ADL.Mempool.Proto {
             break;
           }
           case 42: {
-            if (lastUpdated_ == null) {
-              lastUpdated_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            if (updated_ == null) {
+              updated_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
             }
-            input.ReadMessage(lastUpdated_);
+            input.ReadMessage(updated_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Key : pb::IMessage<Key> {
+    private static readonly pb::MessageParser<Key> _parser = new pb::MessageParser<Key>(() => new Key());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Key> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::ADL.Mempool.Proto.MempoolReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Key() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Key(Key other) : this() {
+      hashedSignature_ = other.hashedSignature_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Key Clone() {
+      return new Key(this);
+    }
+
+    /// <summary>Field number for the "hashed_signature" field.</summary>
+    public const int HashedSignatureFieldNumber = 1;
+    private string hashedSignature_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string HashedSignature {
+      get { return hashedSignature_; }
+      set {
+        hashedSignature_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Key);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Key other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (HashedSignature != other.HashedSignature) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (HashedSignature.Length != 0) hash ^= HashedSignature.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (HashedSignature.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(HashedSignature);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (HashedSignature.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(HashedSignature);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Key other) {
+      if (other == null) {
+        return;
+      }
+      if (other.HashedSignature.Length != 0) {
+        HashedSignature = other.HashedSignature;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            HashedSignature = input.ReadString();
             break;
           }
         }

@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StackExchange.Redis;
 
@@ -9,6 +10,22 @@ namespace ADL.Utilities
     {
         private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance.Connection;
         private static readonly IDatabase Db = Cm.GetDatabase();
+
+        private static void Writer(int start, int end)
+        {
+            for (var k = start; k < end; k++)
+            {
+                Assert.IsTrue(Db.StringSet($"mykey:{k}", k));
+            }            
+        }
+
+        private static void Reader(int start, int end)
+        {
+            for (var k = start; k < end; k++)
+            {
+                Assert.AreEqual(k, Db.StringGet($"mykey:{k}"));
+            }
+        }
 
         [TestInitialize]
         public void Initialize()
@@ -37,9 +54,27 @@ namespace ADL.Utilities
         }
 
         [TestMethod]
-        public void WriteReadMany()
+        public void KeyDoesNotExists()
         {
-            
+            var ret = Db.StringGet("mykey");
+            if (ret.HasValue)
+            {
+                Assert.Fail("Expected no value with this key in Redis");
+            }
+        }
+
+        [TestMethod]
+        public void KeyAlreadyExistUpdate()
+        {
+            Assert.IsTrue(Db.StringSet("mykey", 100));
+            Assert.AreEqual(100, Db.StringGet("mykey"));
+            Assert.IsTrue(Db.StringSet("mykey",200));
+            Assert.AreEqual(200, Db.StringGet("mykey"));
+        }
+        
+        [TestMethod]
+        public void WriteReadMany()
+        {            
             const int num = 15000;
             for (var i = 0; i < num; i++)
             {
@@ -49,6 +84,44 @@ namespace ADL.Utilities
             for (var i = 0; i < num; i++)
             {
                 Assert.AreEqual(i, Db.StringGet($"mykey:{i}"));
+            }
+        }
+
+        [TestMethod]
+        public void MultipleClient()
+        {
+            const int threadNum = 5;
+            var threadW = new Thread[threadNum];
+            var threadR = new Thread[threadNum];
+
+            // Set up writer and reader
+            for (var i = 0; i < threadNum; i++)
+            {
+                var i1 = i;
+                threadW[i] = new Thread(() => Writer((i1 * 10000), (i1 + 1) * 10000));
+                threadR[i] = new Thread(() => Reader((i1 * 10000), (i1 + 1) * 10000));
+            }
+
+            // Writers need to put stuff in the DB first
+            for (var i = 0; i < threadNum; i++)
+            {
+                threadW[i].Start();
+            }
+
+            for (var i = 0; i < threadNum; i++)
+            {
+                threadW[i].Join();
+            }
+
+            // ... and now multiple readers
+            for (var i = 0; i < threadNum; i++)
+            {
+                threadR[i].Start();
+            }
+
+            for (var i = 0; i < threadNum; i++)
+            {
+                threadR[i].Join();
             }
         }
     }
