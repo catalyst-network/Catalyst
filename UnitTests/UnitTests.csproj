@@ -17,6 +17,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Components\Dfs\DfsService.csproj" />
       <ProjectReference Include="..\Node\Node.csproj" />
+      <ProjectReference Include="..\Utilities\Utilities.csproj" />
     </ItemGroup>
 
 </Project>

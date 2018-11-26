@@ -18,7 +18,7 @@ namespace ADL.DFS
     /// </summary>
     public class IpfsConnector : IDFS
     {
-        private IpfsClient _client; 
+        private static IpfsClient _client; 
         private string _defaultApiEndPoint;
         
         private IDfsSettings _settings { get; set; }
@@ -75,7 +75,7 @@ namespace ADL.DFS
             }
             
            // If it could not connect after a few attempt then throw
-           // a socket exception and backup
+           // an invalid operation exception and backup
            throw new InvalidOperationException("Failed to connect with IPFS daemon");
         }
 

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package ADL.Mempool.Proto;
+import "google/protobuf/timestamp.proto";
+
+message TX {
+    string addressSource = 1;
+    string addressDest = 2;
+    string signature = 3;
+    double amount = 4;
+    google.protobuf.Timestamp updated = 5;
+}
