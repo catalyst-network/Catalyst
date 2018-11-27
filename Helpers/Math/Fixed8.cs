@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.IO;
 
-namespace ADL.Helpers.Math
+namespace ADL.Math
 {
     public interface ISerializable
     {

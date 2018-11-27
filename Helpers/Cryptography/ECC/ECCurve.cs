@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Numerics;
-using ADL.Helpers.Math;
+using ADL.Math;
 
 namespace ADL.Cryptography.ECC
 {
