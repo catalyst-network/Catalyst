@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ADL.Helpers.Math;
+using ADL.Math;
 
 namespace ADL.Wallet
 {

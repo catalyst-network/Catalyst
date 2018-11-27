@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>ADL.Gossip</RootNamespace>
   </PropertyGroup>
 
@@ -16,22 +16,22 @@
     <_UnmanagedRegistrationCache Remove="obj\GossipService.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
   <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\GossipService.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\GossipService.csproj.ResolveComReference.cache" />
   </ItemGroup>
   <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netstandard2.0\Gossip.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Gossip.dll" />
   </ItemGroup>
   <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\Gossip.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Gossip.pdb" />
   </ItemGroup>
   <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\Gossip.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Gossip.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.Gossip.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Gossip.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netstandard2.0\Gossip.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Gossip.application" />
   </ItemGroup>
 
 </Project>
