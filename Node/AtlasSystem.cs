@@ -1,97 +1,103 @@
-using ADL.P2P;
-using ADL.Rpc;
-using ADL.Dfs;
-using ADL.Gossip;
-using ADL.Mempool;
-using ADL.Contract;
-using ADL.Consensus;
 using System;
 using Autofac;
+using ADL.P2P;
+using ADL.Rpc;
+using ADL.DFS;
 using System.IO;
+using ADL.Gossip;
 using Akka.Actor;
-using Akka.DI.AutoFac;
-using System.Reflection;
-using ADL.Node.Interfaces;
-using Autofac.Configuration;
-using System.Runtime.Loader;
+using ADL.Consensus;
 using ADL.Node.Ledger;
-using Microsoft.Extensions.Configuration;
+using ADL.Node.Interfaces;
+using System.Threading.Tasks;
 
 namespace ADL.Node
 {
     public class AtlasSystem : IDisposable, IAtlasSystem
-    {        
-        private ActorSystem _actorSystem;
-                
+    {
+        private IADL AdLedger { get; set; }
+        public IKernel Kernel { get; set; }
+        private IDFS DfsService { get; set; }
+        private IP2P P2PService { get; set; }
+        private IRpcService RcpService { get; set; }
         public IActorRef ContractSystem { get; set; }
-        
-        public IADL ADLedger { get; set; }
+        private ActorSystem ActorSystem { get; set; }
+        private static AtlasSystem Instance { get; set; }
+        private static readonly object Mutex = new object();
 
-        public IDfs DfsService { get; set; }
-        
-        public IP2P P2PService { get; set; }
-
-        public IRpcService RcpService { get; set; }
-        
-        internal IKernel Kernel { get; set; }
-
-        public AtlasSystem()
-        {         
-            using (_actorSystem = ActorSystem.Create("AtlasSystem"))
-            {
-                Console.WriteLine("AtlasSystem create trace");
-                Kernel = BuildKernel(_actorSystem, Settings.Default.Sections);
-            }
-        }
-       
         /// <summary>
-        /// Registers all services on IOC container and returns an application kernel.
+        /// Get a thread safe AtlasSystem singleton.
         /// </summary>
-        /// <param name="actorSystem"></param>
-        /// <param name="settings"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        private static IKernel BuildKernel(ActorSystem actorSystem, INodeConfiguration settings)
+        public static AtlasSystem GetInstance(NodeOptions options)
         {
-            Console.WriteLine("BuildContainer trace");
-            
-            var builder = new ContainerBuilder();
-
-            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
-            {
-                return context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
-            };
-            
-            var config = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetCurrentDirectory()+"/../Node/Configs/components.json")
-                .Build();
-            var configModule = new ConfigurationModule(config);
-
-            builder.RegisterModule(configModule);
-            
-            builder.RegisterType<ConsensusService>().As<ConsensusService>();
-            builder.RegisterType<ContractService>().As<ContractService>();
-            builder.RegisterType<GossipService>().As<GossipService>();
-
-            var container = builder.Build();
-            
-            var resolver = new AutoFacDependencyResolver(container, actorSystem);
-            
-            return new Kernel(resolver, settings, container);
+            if (Instance == null) 
+            { 
+                lock (Mutex)
+                {
+                    if (Instance == null) 
+                    { 
+                        Instance = new AtlasSystem(options);
+                    }
+                } 
+            }
+            return Instance;
         }
         
+        /// <summary>
+        /// Instantiates basic AtlasSystem.
+        /// </summary>
+        private AtlasSystem(NodeOptions options)
+        {
+            using (ActorSystem = ActorSystem.Create("AtlasSystem"))
+            {
+                Kernel = StartUpRoutine.Boot(ActorSystem, options);
+
+                if (options.P2P)
+                {
+                    StartPeer();        
+                }
+
+                if (options.Rpc)
+                {
+                    StartRpc();       
+                }
+
+                if (options.Dfs)
+                {
+                    StartDfs();                    
+                }
+
+                if (options.Gossip)
+                {
+                    StartGossip();
+                }
+
+                if (options.Contract)
+                {
+                    //@TODO
+                }
+
+                if (options.Consensus)
+                {
+                    StartConsensus();
+                }
+            }            
+        }
+
         /// <summary>
         /// 
         /// </summary>
         public void StartRpc()
         {
-            Console.WriteLine("RPC should start");
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
                 RcpService = scope.Resolve<IRpcService>();
             }
-            RcpService.StartServer(Kernel.Settings.Rpc);
+            RcpService.StartServer(Kernel.Settings.NodeConfiguration.Rpc);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -99,46 +105,60 @@ namespace ADL.Node
         {
             RcpService.StopServer();
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         public void StartDfs()
         {
-            Console.WriteLine("Dfs server starting....");
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-                DfsService = scope.Resolve<IDfs>();
+                DfsService = scope.Resolve<IDFS>();
             }
+            DfsService.Start(Kernel.Settings.NodeConfiguration.Dfs);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         public void StartConsensus()
         {
-            Console.WriteLine("Consensus starting....");
-            ADLedger.ConsensusService = _actorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
+            AdLedger.ConsensusService = ActorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         public void StartGossip()
         {
-            Console.WriteLine("Node starting....");
-            ADLedger.GossipService = _actorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
+            AdLedger.GossipService = ActorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StartPeer()
+        {
+            Console.WriteLine("start p2p controller....");
+            using (var scope = Kernel.Container.BeginLifetimeScope())
+            {
+                P2PService = scope.Resolve<IP2P>();
+            }
+            P2PService.StartServer(Kernel.Settings.NodeConfiguration.P2P, Kernel.Settings.NodeConfiguration.Ssl, new DirectoryInfo(Kernel.Settings.NodeConfiguration.NodeOptions.DataDir));
         }
         
+        public Task Shutdown()
+        {
+            var taskSource = new TaskCompletionSource<bool>();
+            return taskSource.Task;
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void Dispose()
         {
             RcpService?.StopServer();
-//            _actorSystem.Stop(ConsensusService);
-//            _actorSystem.Stop(GossipService);
-//            _actorSystem.Dispose();
         }
     }
 }

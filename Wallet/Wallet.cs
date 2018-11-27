@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Transactions;
-using ADL.Helpers.Math;
+using ADL.Math;
 
 namespace ADL.Wallet
 {

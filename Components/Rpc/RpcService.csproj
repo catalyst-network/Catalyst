@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>ADL.Rpc</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Rpc\Proto\RpcProto.csproj" />
+    <ProjectReference Include="..\..\Protocols\Rpc\Node\NodeRpcProto.csproj" />
   </ItemGroup>
   
   <ItemGroup>
@@ -20,27 +20,27 @@
   </ItemGroup>
   
   <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.0\RpcServer.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\RpcServer.csproj.ResolveComReference.cache" />
   </ItemGroup>
   
   <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.0\RpcServer.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\RpcServer.dll" />
   </ItemGroup>
   
   <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.0\RpcServer.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\RpcServer.pdb" />
   </ItemGroup>
   
   <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.0\RpcServer.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\RpcServer.dll" />
   </ItemGroup>
   
   <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.0\Native.RpcServer.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.RpcServer.manifest" />
   </ItemGroup>
   
   <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.0\RpcServer.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.1\RpcServer.application" />
   </ItemGroup>
 
 </Project>

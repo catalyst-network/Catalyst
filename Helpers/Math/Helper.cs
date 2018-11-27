@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ADL.Helpers.Math
+namespace ADL.Math
 {
     public static class Helper
     {
