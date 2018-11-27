@@ -1,0 +1,27 @@
+# develop container
+FROM microsoft/dotnet:2.1-sdk-alpine AS develop
+WORKDIR /srv
+COPY . ./
+RUN dotnet build
+WORKDIR /srv/Cli
+
+# publish container
+FROM microsoft/dotnet:2.1-sdk-alpine AS publish
+WORKDIR /srv
+COPY . ./
+RUN dotnet restore
+WORKDIR /srv/Cli
+#RUN dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731 -s https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+RUN dotnet publish -c release -o out --self-contained --runtime alpine-x64 --framework netcoreapp2.1
+
+# test application
+FROM publish AS testrunner
+WORKDIR /srv
+ENTRYPOINT ["dotnet", "test", "--logger:trx"]
+
+# ADL runtime
+FROM microsoft/dotnet:2.1-runtime-alpine AS runtime
+WORKDIR /srv/Cli
+COPY --from=publish /srv/Cli/out ./
+RUN ls -la
+ENTRYPOINT ["./Cli"]

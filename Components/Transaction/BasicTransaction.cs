@@ -1,4 +1,4 @@
-﻿using ADL.Helpers.Math;
+﻿using ADL.Math;
 
 namespace ADL.Transaction
 {

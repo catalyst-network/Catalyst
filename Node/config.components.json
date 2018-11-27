@@ -1,0 +1,77 @@
+{
+  "defaultAssembly": "Node",
+  "components": [
+    {
+      "type": "ADL.Rpc.RpcService, RpcService",
+      "services": [
+        {
+          "type": "ADL.Rpc.IRpcService, RpcService"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Cryptography.ECCurve, Cryptography",
+      "services": [
+        {
+          "type": "ADL.Cryptography.ICryptography, Cryptography"
+        }
+      ]
+    },
+    {
+      "type": "ADL.DFS.IpfsConnector, DfsService",
+      "services": [
+        {
+          "type": "ADL.DFS.IDFS, DfsService"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Economics.DMF, Economics",
+      "services": [
+        {
+          "type": "ADL.Economics.IDMF, Economics"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Node.Ledger.ADLedger, Node",
+      "services": [
+        {
+          "type": "ADL.Node.Ledger.IADL, Node"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Mempool.MempoolService, MempoolService",
+      "services": [
+        {
+          "type": "ADL.Mempool.IMempool, MempoolService"
+        }
+      ]
+    },
+    {
+      "type": "ADL.P2P.P2PService, P2PService",
+      "services": [
+        {
+          "type": "ADL.P2P.IP2P, P2PService"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Token.ACL, Token",
+      "services": [
+        {
+          "type": "ADL.Token.IToken, Token"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Transaction.BasicTransaction, Transaction",
+      "services": [
+        {
+          "type": "ADL.Transaction.ITransaction, Transaction"
+        }
+      ]
+    }
+  ]
+}

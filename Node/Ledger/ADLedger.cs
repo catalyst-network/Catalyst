@@ -1,5 +1,5 @@
-﻿using ADL.Mempool;
-using Akka.Actor;
+﻿using Akka.Actor;
+using ADL.Mempool;
 
 namespace ADL.Node.Ledger
 {
@@ -8,20 +8,18 @@ namespace ADL.Node.Ledger
     /// </summary>
     internal class ADLedger : IADL
     {        
-        public IActorRef ConsensusService { get; set; }
-
-        public IMempool MempoolService { get; set; }
-        
         public IActorRef GossipService { get; set; }
-        
+        public IMempool MempoolService { get; set; }
+        public IActorRef ConsensusService { get; set; }
+               
         /// <summary>
         /// Ledger constructor.
         /// </summary>
         internal ADLedger(IActorRef consensusService, IMempool mempoolService, IActorRef gossipService)
         {
-            ConsensusService = consensusService;
-            MempoolService = mempoolService;
             GossipService = gossipService;
+            MempoolService = mempoolService;
+            ConsensusService = consensusService;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>ADL.Mempool</RootNamespace>
   </PropertyGroup>
 
@@ -15,27 +15,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\MempoolService.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\MempoolService.csproj.ResolveComReference.cache" />
   </ItemGroup>
 
   <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netstandard2.0\Mempool.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Mempool.dll" />
   </ItemGroup>
 
   <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\Mempool.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Mempool.pdb" />
   </ItemGroup>
 
   <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\Mempool.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Mempool.dll" />
   </ItemGroup>
 
   <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.Mempool.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Mempool.manifest" />
   </ItemGroup>
 
   <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netstandard2.0\Mempool.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Mempool.application" />
   </ItemGroup>
 
 </Project>

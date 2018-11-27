@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Security;
 using System.Security.Cryptography;
-using ADL.Helpers.Math;
+using ADL.Math;
 
 namespace ADL.Wallet
 {
