@@ -1,12 +1,10 @@
 using System.Threading.Tasks;
 using System;
-using System.Net.Sockets;
 using Ipfs.Api;
 using System.Threading;
 using ADL.DFS.Helpers;
 using ADL.Node.Interfaces;
 using System.Diagnostics;
-using Google.Protobuf;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
@@ -27,7 +25,7 @@ namespace ADL.DFS
         ///   Check if IPFS client can connect to IPFS daemon
         /// </summary>
         /// <returns>
-        ///   Boolen
+        ///   Boolean
         /// </returns>
         public bool IsClientConnected()
         {

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ADL.DFS
 {
     [TestClass]
-    public class FileSystemTest
+    public class UT_DFS
     {
         private static IpfsConnector _ipfs = new IpfsConnector();
 
