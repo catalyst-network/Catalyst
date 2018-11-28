@@ -5,7 +5,7 @@
       "type": "Koopa.Shell, Koopa",
       "services": [
         {
-          "type": "ADL.Shell.IShell, Koopa"
+          "type": "Koopa.IADS, Koopa"
         }
       ]
     }

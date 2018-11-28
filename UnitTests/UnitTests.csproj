@@ -24,7 +24,7 @@
     <ItemGroup>
         <DeployManifest Remove="obj\Debug\netcoreapp2.1\UnitTests.application" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\UnitTests.pdb" />
     </ItemGroup>
@@ -36,13 +36,13 @@
     <ItemGroup>
         <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.UnitTests.manifest" />
     </ItemGroup>
-    
+
     <ItemGroup>
-      <_UnmanagedRegistrationCache Remove="obj\UnitTests.csproj.UnmanagedRegistration.cache" />
+        <_UnmanagedRegistrationCache Remove="obj\UnitTests.csproj.UnmanagedRegistration.cache" />
     </ItemGroup>
 
     <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\UnitTests.csproj.ResolveComReference.cache" />
+        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\UnitTests.csproj.ResolveComReference.cache" />
     </ItemGroup>
 
 </Project>

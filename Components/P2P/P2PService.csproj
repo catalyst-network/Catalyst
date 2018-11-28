@@ -11,42 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\P2PService.csproj.UnmanagedRegistration.cache" />
-    <_UnmanagedRegistrationCache Remove="obj\P2PService.csproj.UnmanagedRegistration.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\P2PService.csproj.ResolveComReference.cache" />
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\P2PService.csproj.ResolveComReference.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\P2P.dll" />
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\P2P.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\P2P.pdb" />
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\P2P.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\P2P.dll" />
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\P2P.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.P2P.manifest" />
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.P2P.manifest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.1\P2P.application" />
-    <DeployManifest Remove="obj\Debug\netcoreapp2.1\P2P.application" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="WatsonTcp" Version="1.1.6" />
   </ItemGroup>
-
 </Project>

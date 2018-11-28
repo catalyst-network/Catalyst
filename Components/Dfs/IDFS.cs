@@ -9,6 +9,5 @@ namespace ADL.DFS
         void Stop();
         string AddFile(string filename);
         Task<string> ReadAllTextAsync(string filename);
-
     }
 }

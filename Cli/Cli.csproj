@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    
+
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -42,7 +42,7 @@
     <ItemGroup Condition="'$(Configuration)'=='Debug'">
         <ProjectReference Include="..\Node\Node.csproj" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\Helpers\Shell\Shell.csproj" />
         <ProjectReference Include="..\Helpers\Exceptions\Exceptions.csproj" />
@@ -52,9 +52,9 @@
     <ItemGroup>
         <ProjectReference Include="..\Utilities\Koopa\Koopa.csproj" />
     </ItemGroup>
-    
+
     <ItemGroup>
-      <Content Include="config.shell.json" />
+        <Content Include="config.shell.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -63,17 +63,17 @@
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
     </ItemGroup>
-    
+
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
         <DebugSymbols>False</DebugSymbols>
     </PropertyGroup>
-    
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <ItemGroup>
             <PluginAssembly Include="$(SolutionDir)\Cli\bin\$(ConfigurationName)\**\Cli.dll" />
         </ItemGroup>
         <Copy SourceFiles="@(PluginAssembly)" DestinationFolder="$(OutDir)" />
     </Target>
-    
+
 </Project>

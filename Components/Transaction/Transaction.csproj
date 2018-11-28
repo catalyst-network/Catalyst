@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RootNamespace>ADL.Transaction</RootNamespace>
     </PropertyGroup>
@@ -41,5 +40,5 @@
     <ItemGroup>
       <DeployManifest Remove="obj\Debug\netcoreapp2.1\Transaction.application" />
     </ItemGroup>
-
+    
 </Project>

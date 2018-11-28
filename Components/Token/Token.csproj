@@ -32,5 +32,4 @@
     <ItemGroup>
       <DeployManifest Remove="obj\Debug\netcoreapp2.1\Token.application" />
     </ItemGroup>
-
 </Project>
