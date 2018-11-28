@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace ADL.DFS.Helpers
+namespace ADL.Utilities
 {
     /// <summary>
     ///   Helper class to run shell script commands

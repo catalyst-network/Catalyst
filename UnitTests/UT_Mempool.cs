@@ -1,11 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using StackExchange.Redis;
 using ADL.Utilities;
 using ADL.Mempool.Proto;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Org.BouncyCastle.Crypto.Signers;
 
 namespace ADL.Mempool
 {
@@ -33,7 +33,7 @@ namespace ADL.Mempool
                         firstThreadId = id;
                     }
 
-                    _t.Amount = id;
+                    _t.Amount = (uint)id;
                 }
 
                 Memp.Save(_k, _t); // write same key but different tx amount, not under lock                
@@ -45,7 +45,7 @@ namespace ADL.Mempool
         {
             _k.HashedSignature = "hashed_signature";
 
-            _t.Amount = 0.5;
+            _t.Amount = 1;
             _t.Signature = "signature";
             _t.AddressDest = "address_dest";
             _t.AddressSource = "address_source"; 
@@ -56,15 +56,16 @@ namespace ADL.Mempool
             
             var server = Cm.GetServer(endpoint[0]);
             server.FlushDatabase(); // clean up Redis before each test
+            server.ConfigSet("save","1 1"); // save every seconds for each change to the dataset
         }
-                
+        
         [TestMethod]
         public void SaveAndGet()
         {   
             Memp.Save(_k,_t);
             var transaction = Memp.Get(_k);
             
-            Assert.AreEqual(0.5, transaction.Amount);
+            Assert.AreEqual((uint)1, transaction.Amount);
             Assert.AreEqual("signature", transaction.Signature);
             Assert.AreEqual("address_dest", transaction.AddressDest);
             Assert.AreEqual("address_source", transaction.AddressSource);
@@ -84,7 +85,7 @@ namespace ADL.Mempool
             for (var i = 0; i < numTx; i++)
             {
                 var transaction = Memp.Get(new Key{ HashedSignature = $"just_a_short_key_for_easy_search:{i}"});
-                Assert.AreEqual(0.5, transaction.Amount);
+                Assert.AreEqual((uint)1, transaction.Amount);
                 Assert.AreEqual("signature", transaction.Signature);
                 Assert.AreEqual("address_dest", transaction.AddressDest);
                 Assert.AreEqual("address_source", transaction.AddressSource);
@@ -105,7 +106,7 @@ namespace ADL.Mempool
             Memp.Save(key, _t);
             
             var transaction = Memp.Get(key);
-            Assert.AreEqual(0.5, transaction.Amount); // assert tx with same key not updated
+            Assert.AreEqual((uint)1, transaction.Amount); // assert tx with same key not updated
         }
 
         [TestMethod]
@@ -162,6 +163,67 @@ namespace ADL.Mempool
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
             Assert.AreEqual(pc.firstThreadId,(int)transaction.Amount);
+        }
+        
+        [TestMethod]
+        public void Reconnect()
+        {
+            var localByName = Process.GetProcessesByName("redis-server");
+            if (localByName.Length > 0)
+            {
+                localByName[0].Kill(); // kill daemon process
+            }
+            
+            // redis-server is down
+            Assert.AreEqual(0, Process.GetProcessesByName("redis-server").Length);
+
+            try
+            {
+                Memp.Save(_k, _t);
+                Assert.Fail("It should have thrown an exception if server is down");
+            }
+            catch (Exception)
+            {
+                "redis-server".BackgroundCmd(); // restart
+            }
+            
+            localByName = Process.GetProcessesByName("redis-server");
+            Assert.IsTrue(localByName.Length > 0);
+            
+            try
+            {
+                Memp.Save(_k, _t);
+                var transaction = Memp.Get(_k);
+                
+                Assert.AreEqual("signature", transaction.Signature);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Not expected exception. It should have reconnected automatically " + e);
+            }
+        }
+
+        [TestMethod]
+        public void KeysArePersistent()
+        {
+            Memp.Save(_k, _t);            
+            Thread.Sleep(1100); // after one second the changes is saved
+            
+            var transaction = Memp.Get(_k);
+            Assert.AreEqual("signature", transaction.Signature);
+                        
+            var localByName = Process.GetProcessesByName("redis-server");
+            if (localByName.Length > 0)
+            {
+                localByName[0].Kill(); // kill daemon process
+            }
+                          
+            "redis-server".BackgroundCmd(); // restart
+            localByName = Process.GetProcessesByName("redis-server");
+            Assert.IsTrue(localByName.Length > 0);
+
+            transaction = Memp.Get(_k);
+            Assert.AreEqual((uint)1, transaction.Amount);
         }
     }
 }

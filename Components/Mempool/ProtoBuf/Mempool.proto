@@ -7,8 +7,13 @@ message Tx {
     string addressSource = 1;
     string addressDest = 2;
     string signature = 3;
-    double amount = 4;
-    google.protobuf.Timestamp updated = 5;
+    fixed32 amount = 4;
+    fixed32 fee = 5;
+    fixed32 outputAmount = 6;
+    string inputAction = 7;
+    string unlockScript = 8;
+    string unlockingProgram = 9;
+    google.protobuf.Timestamp updated = 10;
 }
 
 message Key {

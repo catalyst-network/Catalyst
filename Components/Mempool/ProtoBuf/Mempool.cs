@@ -25,15 +25,17 @@ namespace ADL.Mempool.Proto {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChZQcm90b0J1Zi9NZW1wb29sLnByb3RvEhFBREwuTWVtcG9vbC5Qcm90bxof",
-            "Z29vZ2xlL3Byb3RvYnVmL3RpbWVzdGFtcC5wcm90byKAAQoCVHgSFQoNYWRk",
+            "Z29vZ2xlL3Byb3RvYnVmL3RpbWVzdGFtcC5wcm90byLoAQoCVHgSFQoNYWRk",
             "cmVzc1NvdXJjZRgBIAEoCRITCgthZGRyZXNzRGVzdBgCIAEoCRIRCglzaWdu",
-            "YXR1cmUYAyABKAkSDgoGYW1vdW50GAQgASgBEisKB3VwZGF0ZWQYBSABKAsy",
-            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIh8KA0tleRIYChBoYXNoZWRf",
-            "c2lnbmF0dXJlGAEgASgJYgZwcm90bzM="));
+            "YXR1cmUYAyABKAkSDgoGYW1vdW50GAQgASgHEgsKA2ZlZRgFIAEoBxIUCgxv",
+            "dXRwdXRBbW91bnQYBiABKAcSEwoLaW5wdXRBY3Rpb24YByABKAkSFAoMdW5s",
+            "b2NrU2NyaXB0GAggASgJEhgKEHVubG9ja2luZ1Byb2dyYW0YCSABKAkSKwoH",
+            "dXBkYXRlZBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiHwoD",
+            "S2V5EhgKEGhhc2hlZF9zaWduYXR1cmUYASABKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Mempool.Proto.Tx), global::ADL.Mempool.Proto.Tx.Parser, new[]{ "AddressSource", "AddressDest", "Signature", "Amount", "Updated" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Mempool.Proto.Tx), global::ADL.Mempool.Proto.Tx.Parser, new[]{ "AddressSource", "AddressDest", "Signature", "Amount", "Fee", "OutputAmount", "InputAction", "UnlockScript", "UnlockingProgram", "Updated" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Mempool.Proto.Key), global::ADL.Mempool.Proto.Key.Parser, new[]{ "HashedSignature" }, null, null, null)
           }));
     }
@@ -70,6 +72,11 @@ namespace ADL.Mempool.Proto {
       addressDest_ = other.addressDest_;
       signature_ = other.signature_;
       amount_ = other.amount_;
+      fee_ = other.fee_;
+      outputAmount_ = other.outputAmount_;
+      inputAction_ = other.inputAction_;
+      unlockScript_ = other.unlockScript_;
+      unlockingProgram_ = other.unlockingProgram_;
       updated_ = other.updated_ != null ? other.updated_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -114,17 +121,72 @@ namespace ADL.Mempool.Proto {
 
     /// <summary>Field number for the "amount" field.</summary>
     public const int AmountFieldNumber = 4;
-    private double amount_;
+    private uint amount_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public double Amount {
+    public uint Amount {
       get { return amount_; }
       set {
         amount_ = value;
       }
     }
 
+    /// <summary>Field number for the "fee" field.</summary>
+    public const int FeeFieldNumber = 5;
+    private uint fee_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Fee {
+      get { return fee_; }
+      set {
+        fee_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "outputAmount" field.</summary>
+    public const int OutputAmountFieldNumber = 6;
+    private uint outputAmount_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint OutputAmount {
+      get { return outputAmount_; }
+      set {
+        outputAmount_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "inputAction" field.</summary>
+    public const int InputActionFieldNumber = 7;
+    private string inputAction_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string InputAction {
+      get { return inputAction_; }
+      set {
+        inputAction_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "unlockScript" field.</summary>
+    public const int UnlockScriptFieldNumber = 8;
+    private string unlockScript_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string UnlockScript {
+      get { return unlockScript_; }
+      set {
+        unlockScript_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "unlockingProgram" field.</summary>
+    public const int UnlockingProgramFieldNumber = 9;
+    private string unlockingProgram_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string UnlockingProgram {
+      get { return unlockingProgram_; }
+      set {
+        unlockingProgram_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     /// <summary>Field number for the "updated" field.</summary>
-    public const int UpdatedFieldNumber = 5;
+    public const int UpdatedFieldNumber = 10;
     private global::Google.Protobuf.WellKnownTypes.Timestamp updated_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Protobuf.WellKnownTypes.Timestamp Updated {
@@ -150,7 +212,12 @@ namespace ADL.Mempool.Proto {
       if (AddressSource != other.AddressSource) return false;
       if (AddressDest != other.AddressDest) return false;
       if (Signature != other.Signature) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Amount, other.Amount)) return false;
+      if (Amount != other.Amount) return false;
+      if (Fee != other.Fee) return false;
+      if (OutputAmount != other.OutputAmount) return false;
+      if (InputAction != other.InputAction) return false;
+      if (UnlockScript != other.UnlockScript) return false;
+      if (UnlockingProgram != other.UnlockingProgram) return false;
       if (!object.Equals(Updated, other.Updated)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -161,7 +228,12 @@ namespace ADL.Mempool.Proto {
       if (AddressSource.Length != 0) hash ^= AddressSource.GetHashCode();
       if (AddressDest.Length != 0) hash ^= AddressDest.GetHashCode();
       if (Signature.Length != 0) hash ^= Signature.GetHashCode();
-      if (Amount != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Amount);
+      if (Amount != 0) hash ^= Amount.GetHashCode();
+      if (Fee != 0) hash ^= Fee.GetHashCode();
+      if (OutputAmount != 0) hash ^= OutputAmount.GetHashCode();
+      if (InputAction.Length != 0) hash ^= InputAction.GetHashCode();
+      if (UnlockScript.Length != 0) hash ^= UnlockScript.GetHashCode();
+      if (UnlockingProgram.Length != 0) hash ^= UnlockingProgram.GetHashCode();
       if (updated_ != null) hash ^= Updated.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -188,12 +260,32 @@ namespace ADL.Mempool.Proto {
         output.WriteRawTag(26);
         output.WriteString(Signature);
       }
-      if (Amount != 0D) {
-        output.WriteRawTag(33);
-        output.WriteDouble(Amount);
+      if (Amount != 0) {
+        output.WriteRawTag(37);
+        output.WriteFixed32(Amount);
+      }
+      if (Fee != 0) {
+        output.WriteRawTag(45);
+        output.WriteFixed32(Fee);
+      }
+      if (OutputAmount != 0) {
+        output.WriteRawTag(53);
+        output.WriteFixed32(OutputAmount);
+      }
+      if (InputAction.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(InputAction);
+      }
+      if (UnlockScript.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(UnlockScript);
+      }
+      if (UnlockingProgram.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(UnlockingProgram);
       }
       if (updated_ != null) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(82);
         output.WriteMessage(Updated);
       }
       if (_unknownFields != null) {
@@ -213,8 +305,23 @@ namespace ADL.Mempool.Proto {
       if (Signature.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Signature);
       }
-      if (Amount != 0D) {
-        size += 1 + 8;
+      if (Amount != 0) {
+        size += 1 + 4;
+      }
+      if (Fee != 0) {
+        size += 1 + 4;
+      }
+      if (OutputAmount != 0) {
+        size += 1 + 4;
+      }
+      if (InputAction.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(InputAction);
+      }
+      if (UnlockScript.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UnlockScript);
+      }
+      if (UnlockingProgram.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UnlockingProgram);
       }
       if (updated_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Updated);
@@ -239,8 +346,23 @@ namespace ADL.Mempool.Proto {
       if (other.Signature.Length != 0) {
         Signature = other.Signature;
       }
-      if (other.Amount != 0D) {
+      if (other.Amount != 0) {
         Amount = other.Amount;
+      }
+      if (other.Fee != 0) {
+        Fee = other.Fee;
+      }
+      if (other.OutputAmount != 0) {
+        OutputAmount = other.OutputAmount;
+      }
+      if (other.InputAction.Length != 0) {
+        InputAction = other.InputAction;
+      }
+      if (other.UnlockScript.Length != 0) {
+        UnlockScript = other.UnlockScript;
+      }
+      if (other.UnlockingProgram.Length != 0) {
+        UnlockingProgram = other.UnlockingProgram;
       }
       if (other.updated_ != null) {
         if (updated_ == null) {
@@ -271,11 +393,31 @@ namespace ADL.Mempool.Proto {
             Signature = input.ReadString();
             break;
           }
-          case 33: {
-            Amount = input.ReadDouble();
+          case 37: {
+            Amount = input.ReadFixed32();
             break;
           }
-          case 42: {
+          case 45: {
+            Fee = input.ReadFixed32();
+            break;
+          }
+          case 53: {
+            OutputAmount = input.ReadFixed32();
+            break;
+          }
+          case 58: {
+            InputAction = input.ReadString();
+            break;
+          }
+          case 66: {
+            UnlockScript = input.ReadString();
+            break;
+          }
+          case 74: {
+            UnlockingProgram = input.ReadString();
+            break;
+          }
+          case 82: {
             if (updated_ == null) {
               updated_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
             }

@@ -9,7 +9,7 @@ namespace ADL.Utilities
     public class UT_RedisConnector
     {
         private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance.Connection;
-        private static readonly IDatabase Db = Cm.GetDatabase();
+        private static readonly IDatabase Db = RedisConnector.Instance.GetDb;
 
         private static void Writer(int start, int end)
         {
