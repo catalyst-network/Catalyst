@@ -137,7 +137,6 @@ namespace ADL.Shell
         /// <returns></returns>
         abstract public bool OnGetVersion();
 
-
         /// <summary>
         /// 
         /// </summary>
