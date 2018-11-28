@@ -32,4 +32,4 @@ RUN cp /usr/lib/libnsl.so /usr/lib/libnsl.so.1
 RUN ldd /usr/lib/libnsl.so.1
 RUN ldd /usr/lib/libnsl.so.2
 RUN ldd libgrpc_csharp_ext.x64.so
-ENTRYPOINT ["./Node", "--public-key", "lol", "--payout-address", "kek", "--disable-dfs", "--disable-gossip", "--disable-consensus"]
+ENTRYPOINT ["./Node", "--public-key", "lol", "--payout-address", "kek", "--disable-dfs", "--disable-gossip", "--disable-consensus", "-d"]

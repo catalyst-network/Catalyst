@@ -103,11 +103,6 @@ namespace ADL.Node
                         }
                     }
                     
-                    if (daemonOption.HasValue())
-                    {
-                        options.Daemon = true;
-                    } 
-                    
                     if (p2POption.HasValue())
                     {
                         options.P2P = false;
@@ -153,18 +148,33 @@ namespace ADL.Node
                         options.PayoutAddress = payoutAddressOption.Value();
                     }
                     
-                    RunNode(options);
+                    if (daemonOption.HasValue())
+                    {
+                        RunNodeDemon(options);       
+                    }
+                    else
+                    {
+                        RunNodeInteractive(options);                        
+                    }
                 });
                 app.Execute(args); 
             });
             return 0;
         }
+
+        private static void RunNodeDemon(NodeOptions options)
+        {
+            AtlasSystem.GetInstance(options);
+			Console.WriteLine("daemon Mode");
+			while (true){}  
+        }
+
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="options"></param>
-        private static void RunNode(NodeOptions options)
+        private static void RunNodeInteractive(NodeOptions options)
         {
             if (!options.Daemon)
             {
