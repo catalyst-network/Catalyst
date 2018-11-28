@@ -35,12 +35,12 @@ namespace ADL.Node
             return _instance;
         }
         
-       /// <summary>
-       /// Private kernel constructor.
-       /// </summary>
-       /// <param name="resolver"></param>
-       /// <param name="settings"></param>
-       /// <param name="container"></param>
+        /// <summary>
+        /// Private kernel constructor.
+        /// </summary>
+        /// <param name="resolver"></param>
+        /// <param name="settings"></param>
+        /// <param name="container"></param>
         private Kernel(Settings settings, IDependencyResolver resolver, IContainer container)
         {
             Settings = settings;

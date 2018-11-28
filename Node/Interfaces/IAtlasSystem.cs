@@ -1,13 +1,13 @@
 namespace ADL.Node.Interfaces
 {
     public interface IAtlasSystem
-    {        
-        IKernel Kernel { get; set; }
-        void StartConsensus();
-        void StartGossip();
+    {   
+        void Dispose();
         void StartRpc();
         void StartDfs();
         void StartPeer();
-        void Dispose();
+        void StartGossip();
+        void StartConsensus();
+        IKernel Kernel { get; set; }        
     }
 }

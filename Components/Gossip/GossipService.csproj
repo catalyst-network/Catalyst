@@ -33,5 +33,4 @@
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.1\Gossip.application" />
   </ItemGroup>
-
 </Project>

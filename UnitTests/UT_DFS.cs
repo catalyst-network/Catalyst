@@ -75,7 +75,7 @@ namespace ADL.DFS
             {
                 _ipfs.Stop();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Assert.Fail("Expected no exception, but got: " + ex.Message);
             }
@@ -89,7 +89,7 @@ namespace ADL.DFS
                 _ipfs.Stop();
                 _ipfs.Start(_settings);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Assert.Fail("Expected no exception, but got: " + ex.Message);
             }
@@ -123,7 +123,7 @@ namespace ADL.DFS
                 _ipfs.Stop();
                 _ipfs.Stop();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Assert.Fail("Expected no exception, but got: " + ex.Message);
             }
@@ -137,7 +137,7 @@ namespace ADL.DFS
                 _ipfs.Start(_settings);
                 _ipfs.Start(_settings);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Assert.Fail("Expected no exception, but got: " + ex.Message);
             }

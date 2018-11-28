@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
-        <RootNamespace>ADL.MAth</RootNamespace>
+        <RootNamespace>ADL.Math</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
