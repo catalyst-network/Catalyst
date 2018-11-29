@@ -3,7 +3,7 @@ using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StackExchange.Redis;
 
-namespace ADL.Utilities
+namespace ADL.Redis
 {
     [TestClass]
     public class UT_RedisConnector

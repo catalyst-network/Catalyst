@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\..\Helpers\Redis\Redis.csproj" />
   </ItemGroup>
 
   <ItemGroup>

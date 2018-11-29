@@ -15,35 +15,6 @@
     <ItemGroup>
         <ProjectReference Include="..\Node\Node.csproj" />
         <ProjectReference Include="..\Components\Dfs\DfsService.csproj" />
-        <ProjectReference Include="..\Utilities\Utilities.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\UnitTests.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <DeployManifest Remove="obj\Debug\netcoreapp2.1\UnitTests.application" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\UnitTests.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\UnitTests.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.UnitTests.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_UnmanagedRegistrationCache Remove="obj\UnitTests.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\UnitTests.csproj.ResolveComReference.cache" />
     </ItemGroup>
 
 </Project>

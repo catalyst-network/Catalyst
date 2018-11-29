@@ -94,7 +94,7 @@ namespace ADL.Node
         {
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-                RcpService = scope.Resolve<IRpcService>(new ResolvedParameter());
+                RcpService = scope.Resolve<IRpcService>();
             }
             RcpService.StartService();
         }
@@ -159,7 +159,7 @@ namespace ADL.Node
         /// </summary>
         public void Dispose()
         {
-            RcpService?.StopServer();
+            RcpService?.StopService();
         }
     }
 }
