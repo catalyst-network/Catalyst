@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+        <PackageReference Include="Grpc" Version="1.16.0" />
+        <PackageReference Include="Grpc.Core" Version="1.16.0" />
+        <PackageReference Include="Grpc.Tools" Version="1.16.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Proto Include="*.proto" />
+        <Generated Include=".\Server\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'@(Server)' == ''">
+        <Generated Include=".\Service\Rpc.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_UnmanagedRegistrationCache Remove="obj\RpcProto.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\RpcProto.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\RpcProto.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\RpcProto.pdb" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\RpcProto.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.RpcProto.manifest" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <DeployManifest Remove="obj\Debug\netcoreapp2.1\RpcProto.application" />
+    </ItemGroup>
+
+    <!-- Generate the code from all of the proto files -->
+    <Target Name="GenProtos" BeforeTargets="BeforeBuild" Inputs="@(Proto)" Outputs="@(Service)">
+        <Message Text="Generating protos @(Proto)" Importance="High" />
+        <!-- TODO: Run different command lines per OS. -->
+        <Exec Command="$(ProjectDir)/../../Tools/gen_protos.sh" />
+        <!-- Ensure all of the generated files are compiled. -->
+        <ItemGroup Condition="'@(Compile)' == ''">
+            <Compile Include="Server\*.cs" />
+        </ItemGroup>
+    </Target>
+</Project>

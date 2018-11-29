@@ -8,7 +8,7 @@ readonly workspace=$(dirname $0)/..
 readonly proto_tools=${HOME}/.nuget/packages/grpc.tools/1.16.0/tools/linux_x86
 
 readonly greeter_protos_dir=${workspace}/Proto
-readonly generated_dir=${greeter_protos_dir}/Service
+readonly generated_dir=${greeter_protos_dir}/Server
 
 mkdir -p ${generated_dir}
 

@@ -1,0 +1,13 @@
+{
+  "defaultAssembly": "Cli",
+  "components": [
+    {
+      "type": "Koopa.Shell, Koopa",
+      "services": [
+        {
+          "type": "Koopa.IADS, Koopa"
+        }
+      ]
+    }
+  ]
+}

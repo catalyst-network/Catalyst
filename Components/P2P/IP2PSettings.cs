@@ -1,4 +1,4 @@
-namespace ADL.Node.Interfaces
+namespace ADL.P2P
 {
     public interface IP2PSettings
     {

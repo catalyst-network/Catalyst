@@ -1,77 +1,72 @@
 ﻿using System;
 using System.IO;
-using ADL.Cli.Shell;
-using ADL.Cli.Shell.Koopa;
+using System.Net;
+using System.Reflection;
+using System.Runtime.Loader;
+using ADL.Exceptions;
+using ADL.FileSystem;
+//using ADL.Shell;
+using Autofac;
+using Autofac.Configuration;
+using Microsoft.Extensions.Configuration;
+using Koopa;
 
 namespace ADL.Cli
 {
     public class Program
-    {                
+    {
+        private static uint Env { get; set; }
+        private static uint Port { get; set; }
+        private static string Network { get; set; }
+        private static IPAddress Host { get; set; }
+        private static string DataDir { get; set; }
+        private static uint MaxOutConnections { get; set; }       
 
         /// <summary>
         /// Main cli loop
         /// </summary>
         /// <param name="args"></param>
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += UnhandledException;
             const int bufferSize = 1024 * 67 + 128;
-            var inputStream = Console.OpenStandardInput(bufferSize);
-            Console.SetIn(new StreamReader(inputStream, Console.InputEncoding, false, bufferSize));
-            IShell shell = new KoopaShell();
-            shell.Run();
-        }
 
-        /// <summary>
-        /// Prints application errors
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="ex"></param>
-        private static void PrintErrorLogs(TextWriter writer, Exception ex)
-        {
-            while (true)
+            AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
+
+            // check if user home data dir has a shell config
+            if (!File.Exists(Fs.GetUserHomeDir() + "/.Atlas/config.shell.json"))
             {
-                writer.WriteLine(ex.GetType());
-                writer.WriteLine(ex.Message);
-                writer.WriteLine(ex.StackTrace);
-
-                if (ex is AggregateException ex2)
-                {
-                    foreach (var inner in ex2.InnerExceptions)
-                    {
-                        writer.WriteLine();
-                        PrintErrorLogs(writer, inner);
-                    }
-                }
-                else if (ex.InnerException != null)
-                {
-                    writer.WriteLine();
-                    ex = ex.InnerException;
-                    continue;
-                }
-                break;
+                // copy skeleton configs to default data dir
+                File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/config.shell.json", Fs.GetUserHomeDir()+"/.Atlas");
             }
-        }
 
-        /// <summary>
-        /// Catches unhandled exceptions and writes them to an error file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            using (var fs = new FileStream("error.log", FileMode.Create, FileAccess.Write, FileShare.None))
+            // resolve config from autofac
+            var builder = new ContainerBuilder();
+            
+            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
+                context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
+            
+            var shellConfig = new ConfigurationBuilder()
+                .AddJsonFile(Fs.GetUserHomeDir() + "/.Atlas/config.shell.json")
+                .Build();
+            
+            var shellModule = new ConfigurationModule(shellConfig);
 
-            using (var writer = new StreamWriter(fs))
-                if (e.ExceptionObject is Exception ex)
-                {
-                    PrintErrorLogs(writer, ex);
-                }
-                else
-                {
-                    writer.WriteLine(e.ExceptionObject.GetType());
-                    writer.WriteLine(e.ExceptionObject);
-                }
+            builder.RegisterModule(shellModule);
+            
+            var container = builder.Build();
+
+            Console.SetIn(
+                new StreamReader(
+                    Console.OpenStandardInput(bufferSize),
+                    Console.InputEncoding, false, bufferSize
+                )
+            );
+            
+            var shell = container.Resolve<IADS>();
+
+            Console.WriteLine(shell);
+
+            return 0;
         }
     }
 }

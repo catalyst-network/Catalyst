@@ -1,12 +1,12 @@
-using Akka.DI.Core;
 using Autofac;
+using Akka.DI.Core;
 
 namespace ADL.Node.Interfaces
 {
-    internal interface IKernel
+    public interface IKernel
     {
+        Settings Settings { get; set; }
         IContainer Container { get; set; }
-        INodeConfiguration Settings { get; set; }
         IDependencyResolver Resolver { get; set; }
     }
 }

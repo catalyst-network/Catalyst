@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RootNamespace>ADL.Math</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -13,27 +14,27 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\Math.csproj.ResolveComReference.cache" />
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Math.csproj.ResolveComReference.cache" />
     </ItemGroup>
 
     <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netstandard2.0\Math.dll" />
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Math.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\Math.pdb" />
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Math.pdb" />
     </ItemGroup>
 
     <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\Math.dll" />
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Math.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.Math.manifest" />
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Math.manifest" />
     </ItemGroup>
 
     <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netstandard2.0\Math.application" />
+      <DeployManifest Remove="obj\Debug\netcoreapp2.1\Math.application" />
     </ItemGroup>
 
 </Project>

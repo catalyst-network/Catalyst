@@ -1,67 +1,99 @@
 using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using ADL.Node.Interfaces;
 using ADL.Rpc;
-using Microsoft.Extensions.Configuration;
+using ADL.P2P;
+using System.IO;
+using System.Net;
+using System.Linq;
 using Newtonsoft.Json;
+using ADL.Node.Interfaces;
+using ADL.Cryptography.SSL;
+using Microsoft.Extensions.Configuration;
 
 namespace ADL.Node
 {
-   
-    public class Settings
+    public sealed class Settings
     {
-        internal INodeConfiguration Sections { get; private set; }
-        public static Settings Default { get; private set; }
-        private static string ConfigFileLocation { get; set; }
-        
-        static Settings()
-        {
-            var env = Environment.GetEnvironmentVariable("ATLASENV");
-            
-            switch (env)
-            {
-                case "devnet":
-                    ConfigFileLocation = "/Configs/config.devnet.json";
-                    break;
-                case "testnet":
-                    ConfigFileLocation = "/Configs/config.testnet.json";
-                    break;
-                case "mainnet":
-                    ConfigFileLocation = "/Configs/config.mainnet.json";
-                    break;
-                default:
-                    ConfigFileLocation = "/Configs/config.devnet.json";
-                    break;
+        private static Settings Instance { get; set; }
+        private static readonly object Mutex = new object();
+        public INodeConfiguration NodeConfiguration { get; set; }
+
+        /// <summary>
+        /// Get a thread safe settings singleton.
+        /// </summary>
+        /// <returns></returns>
+        public static Settings GetInstance(NodeOptions options)
+        { 
+            if (Instance == null) 
+            { 
+                lock (Mutex)
+                {
+                    if (Instance == null) 
+                    { 
+                        Instance = new Settings(options);
+                    }
+                } 
             }
-            
-            var section = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetCurrentDirectory()+"/../Node"+ConfigFileLocation)
-                .Build()
-                .GetSection("ApplicationConfiguration");
-            
-            Default = new Settings(section);
+            return Instance;
         }
         
         /// <summary>
         /// Settings constructor
         /// </summary>
-        /// <param name="section"></param>
-        private Settings(IConfiguration section)
+        /// <param name="options"></param>
+        private Settings(NodeOptions options)
         {
-            Sections = new ServiceSettings
+            var userConfig = LoadConfig(options.DataDir, options.Network);
+            
+            NodeConfiguration = new ServiceSettings
             {
-                Persistance =new LedgerSettings(section.GetSection("Ledger")),
-                Consensus = new ConsensusSettings(section.GetSection("Services").GetSection("Consensus")),
-                Contract = new ContractSettings(section.GetSection("Services").GetSection("Contract")),
-                Dfs = new DfsSettings(section.GetSection("Services").GetSection("Dfs")),
-                Gossip = new GossipSettings(section.GetSection("Services").GetSection("Gossip")),
-                Mempool = new MempoolSettings(section.GetSection("Services").GetSection("Mempool")),
-                P2P = new P2PSettings(section.GetSection("Services").GetSection("P2P")),
-                Rpc = new RpcSettings(section.GetSection("Services").GetSection("Rpc")),
-                Protocol = new ProtocolSettings(section.GetSection("Protocol")),
+                NodeOptions = options,
+                Ssl = new SslSettings(userConfig.GetSection("Ssl")),
+                Protocol = new ProtocolSettings(userConfig.GetSection("Protocol")),
+                Persistance = new LedgerSettings(userConfig.GetSection("Ledger")),
+                Dfs = new DfsSettings(userConfig.GetSection("Services").GetSection("Dfs")),
+                P2P = new P2PSettings(userConfig.GetSection("Services").GetSection("P2P")),
+                Rpc = new RpcSettings(userConfig.GetSection("Services").GetSection("Rpc")),
+                Gossip = new GossipSettings(userConfig.GetSection("Services").GetSection("Gossip")),
+                Mempool = new MempoolSettings(userConfig.GetSection("Services").GetSection("Mempool")),
+                Contract = new ContractSettings(userConfig.GetSection("Services").GetSection("Contract")),
+                Consensus = new ConsensusSettings(userConfig.GetSection("Services").GetSection("Consensus"))
             };            
+        }
+
+        /// <summary>
+        /// Loads config files from defined dataDir
+        /// </summary>
+        /// <param name="dataDir"></param>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        private static IConfiguration LoadConfig(string dataDir, string network)
+        {
+#if DEBUG
+            Console.WriteLine("Load Config parameters");
+            Console.WriteLine(dataDir);
+#endif
+            string networkConfigFile;
+            
+            switch (network)
+            {
+                case "devnet":
+                    networkConfigFile = "/config.devnet.json";
+                    break;
+                case "mainnet":
+                    networkConfigFile = "/config.mainnet.json";
+                    break;
+                case "testnet":
+                    networkConfigFile = "/config.testnet.json";
+                    break;
+                default:
+                    networkConfigFile = "/config.devnet.json";
+                    break;
+            }
+           
+            return new ConfigurationBuilder()
+                .AddJsonFile(dataDir+networkConfigFile)
+                .Build()
+                .GetSection("ApplicationConfiguration");
         }
 
         /// <summary>
@@ -69,15 +101,18 @@ namespace ADL.Node
         /// </summary>
         private struct ServiceSettings : INodeConfiguration
         {
-            public IConsensusSettings Consensus { get; set; }
-            public IContractSettings Contract { get; set; }
+            public IP2PSettings P2P { get; set; }
+            public ISslSettings Ssl { get; set; }
+            public IRpcSettings Rpc { get; set; }
             public IDfsSettings Dfs { get; set; }
             public IGossipSettings Gossip { get; set; }
             public IMempoolSettings Mempool { get; set; }
-            public IP2PSettings P2P { get; set; }
-            public IRpcSettings Rpc { get; set; }
+            public IContractSettings Contract { get; set; }
             public IProtocolSettings Protocol { get; set; }
+            public IConsensusSettings Consensus { get; set; }
+            public NodeOptions NodeOptions { get; set; }
             public IPersistanceSettings Persistance { get; set; }
+            
         }
         
         /// <summary>
@@ -91,7 +126,7 @@ namespace ADL.Node
                 Formatting = Formatting.Indented,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
-            return JsonConvert.SerializeObject(Sections, serializerSettings);
+            return JsonConvert.SerializeObject(NodeConfiguration, serializerSettings);
         }
 
         /// <summary>
@@ -110,10 +145,30 @@ namespace ADL.Node
             /// <param name="section"></param>
             protected internal LedgerSettings(IConfiguration section)
             {
-                Console.WriteLine(section.GetSection("Ledger"));
                 Type = section.GetSection("Persistence").Value;
                 Chain = section.GetSection("Paths").GetSection("Chain").Value;
                 Index = section.GetSection("Paths").GetSection("Index").Value;
+            }
+        }
+        
+        /// <summary>
+        /// Hold settings for ssl/tls
+        /// </summary>
+        private class SslSettings : ISslSettings
+        {
+            public string PfxFileName { get; set; }
+            public string SslCertPassword { get; set; }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="section"></param>
+            protected internal SslSettings(IConfiguration section)
+            {
+                Console.WriteLine(section.GetSection("PfxFileName").Value);
+                Console.WriteLine(section.GetSection("SslCertPassword").Value);
+                PfxFileName = section.GetSection("PfxFileName").Value;
+                SslCertPassword = section.GetSection("SslCertPassword").Value;
             }
         }
         
@@ -123,7 +178,7 @@ namespace ADL.Node
         /// </summary>
         private class ConsensusSettings : IConsensusSettings
         {
-            public string nDepth { get; set; }
+            public string NDepth { get; set; }
 
             /// <summary>
             /// Set attributes
@@ -131,7 +186,7 @@ namespace ADL.Node
             /// <param name="section"></param>
             protected internal ConsensusSettings(IConfiguration section)
             {
-                nDepth = section.GetSection("nDepth").Value;
+                NDepth = section.GetSection("nDepth").Value;
             }
         }
         
@@ -217,6 +272,10 @@ namespace ADL.Node
         private class P2PSettings : IP2PSettings
         {
             public ushort Port { get; set; }
+            public ushort MaxPeers { get; set; }
+            public ushort PeerPingInterval { get; set; }
+            public ushort PeerLifetimeInterval { get; set; }
+
 
             /// <summary>
             /// Set attributes
@@ -225,6 +284,9 @@ namespace ADL.Node
             protected internal P2PSettings(IConfiguration section)
             {
                 Port = ushort.Parse(section.GetSection("Port").Value);
+                MaxPeers = ushort.Parse(section.GetSection("MaxPeers").Value);
+                PeerPingInterval = ushort.Parse(section.GetSection("PeerPingInterval").Value);
+                PeerLifetimeInterval = ushort.Parse(section.GetSection("PeerLifetimeInterval").Value);
             }
         }
 
@@ -233,10 +295,8 @@ namespace ADL.Node
         /// </summary>
         private class RpcSettings : IRpcSettings
         {
-            public string BindAddress { get; set; }
             public ushort Port { get; set; }
-            public string SslCert { get; set; }
-            public string SslCertPassword { get; set; }
+            public string BindAddress { get; set; }
 
             /// <summary>
             /// Set attributes
@@ -244,10 +304,8 @@ namespace ADL.Node
             /// <param name="section"></param>
             protected internal RpcSettings(IConfiguration section)
             {
-                BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
                 Port = ushort.Parse(section.GetSection("Port").Value);
-                SslCert = section.GetSection("SslCert").Value;
-                SslCertPassword = section.GetSection("SslCertPassword").Value;
+                BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
             }
         }
         
@@ -257,9 +315,9 @@ namespace ADL.Node
         private class ProtocolSettings : IProtocolSettings
         {
             public uint Magic { get; set; }
-            public byte AddressVersion { get; set; }
             public string[] SeedList { get; set; }
-
+            public byte AddressVersion { get; set; }
+            
             /// <summary>
             /// Set attributes
             /// </summary>

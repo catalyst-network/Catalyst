@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
         <RootNamespace>ADL.Cryptography</RootNamespace>
     </PropertyGroup>
 
@@ -14,27 +14,27 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\Cryptography.csproj.ResolveComReference.cache" />
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Cryptography.csproj.ResolveComReference.cache" />
     </ItemGroup>
 
     <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netstandard2.0\Cryptography.dll" />
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Cryptography.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\Cryptography.pdb" />
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Cryptography.pdb" />
     </ItemGroup>
 
     <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\Cryptography.dll" />
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Cryptography.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.Cryptography.manifest" />
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Cryptography.manifest" />
     </ItemGroup>
 
     <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netstandard2.0\Cryptography.application" />
+      <DeployManifest Remove="obj\Debug\netcoreapp2.1\Cryptography.application" />
     </ItemGroup>
 
 </Project>

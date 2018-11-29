@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
         <RootNamespace>ADL.Transaction</RootNamespace>
     </PropertyGroup>
 
@@ -18,27 +18,27 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\Transaction.csproj.ResolveComReference.cache" />
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Transaction.csproj.ResolveComReference.cache" />
     </ItemGroup>
 
     <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netstandard2.0\Transaction.dll" />
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Transaction.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\Transaction.pdb" />
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Transaction.pdb" />
     </ItemGroup>
 
     <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\Transaction.dll" />
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Transaction.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.Transaction.manifest" />
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Transaction.manifest" />
     </ItemGroup>
 
     <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netstandard2.0\Transaction.application" />
+      <DeployManifest Remove="obj\Debug\netcoreapp2.1\Transaction.application" />
     </ItemGroup>
-
+    
 </Project>

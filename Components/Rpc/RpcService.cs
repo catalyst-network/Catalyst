@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using Grpc.Core;
 using System.Threading;
 using ADL.Rpc.Proto.Server;
@@ -10,7 +10,7 @@ namespace ADL.Rpc
     {
         private CancellationTokenSource TokenSource { get; set; }
         private Task ServerTask { get; set; }
-        private Grpc.Core.Server Server { get; set; }
+        private Server Server { get; set; }
         private IRpcSettings Settings { get; set; }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace ADL.Rpc
         public void StartServer(IRpcSettings settings )
         {
             Settings = settings;
-            Server = new Grpc.Core.Server
+            Server = new Server
             {
                 Services = { RpcServer.BindService(new RpcServerImpl()) },
                 Ports = { new ServerPort(Settings.BindAddress, Settings.Port, ServerCredentials.Insecure) }
@@ -66,7 +66,7 @@ namespace ADL.Rpc
         /// <param name="server"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task RunServiceAsync(Grpc.Core.Server server,
+        private static async Task RunServiceAsync(Server server,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             server.Start();

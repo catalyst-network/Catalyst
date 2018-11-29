@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>ADL.Economics</RootNamespace>
   </PropertyGroup>
 
@@ -10,27 +10,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\Economics.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Economics.csproj.ResolveComReference.cache" />
   </ItemGroup>
 
   <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netstandard2.0\Economics.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Economics.dll" />
   </ItemGroup>
 
   <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\Economics.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Economics.pdb" />
   </ItemGroup>
 
   <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\Economics.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Economics.dll" />
   </ItemGroup>
 
   <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.Economics.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Economics.manifest" />
   </ItemGroup>
 
   <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netstandard2.0\Economics.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Economics.application" />
   </ItemGroup>
-  
+
 </Project>

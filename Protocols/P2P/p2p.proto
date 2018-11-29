@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package ADL.P2P.Protocol;
+
+message PingRequest {
+    string ping = 1;
+}
+
+message PongResponse {
+    string pong = 2;
+}
+
+message PeerInfoRequest {
+    string ping = 1;
+}
+
+message PeerInfoResponse {
+    string pong = 2;
+}
+
+message PeerNeighborsRequest {
+    string ping = 1;
+}
+
+message PeerNeighborsResponse {
+    string pong = 2;
+}
+
+service Peer {
+    rpc Ping(PingRequest) returns (PongResponse);
+    rpc GetPeerInfo(PeerInfoRequest) returns (PeerInfoResponse);
+    rpc GetPeerNeighbors(PeerNeighborsRequest) returns (PeerNeighborsResponse);
+}
