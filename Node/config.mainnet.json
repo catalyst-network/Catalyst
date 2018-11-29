@@ -27,7 +27,10 @@
         "instances": 5
       },
       "Mempool": {
-        "Type" : "redis"
+        "Type" : "redis",
+        "AllowAdmin" : "yes",
+        "SaveAfterSeconds" : 1,
+        "SaveAfterChanges" : 1
       },
       "P2P": {
         "Port": 42069,

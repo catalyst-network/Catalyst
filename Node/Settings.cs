@@ -1,12 +1,12 @@
 using System;
 using ADL.Rpc;
 using ADL.P2P;
-using System.IO;
 using System.Net;
 using System.Linq;
 using Newtonsoft.Json;
 using ADL.Node.Interfaces;
 using ADL.Cryptography.SSL;
+using ADL.DFS;
 using Microsoft.Extensions.Configuration;
 
 namespace ADL.Node
@@ -255,6 +255,9 @@ namespace ADL.Node
         private class MempoolSettings : IMempoolSettings
         {
             public string Type { get; set; }
+            public string AllowAdmin { get; set; }
+            public ushort SaveAfterSeconds { get; set; }
+            public ushort SaveAfterChanges { get; set; }
 
             /// <summary>
             /// Set attributes
@@ -263,6 +266,9 @@ namespace ADL.Node
             protected internal MempoolSettings(IConfiguration section)
             {
                 Type = section.GetSection("Type").Value;
+                AllowAdmin = section.GetSection("AllowAdmin").Value;
+                SaveAfterSeconds = ushort.Parse(section.GetSection("SaveAfterSeconds").Value);
+                SaveAfterChanges = ushort.Parse(section.GetSection("SaveAfterChanges").Value);
             }
         }
 
