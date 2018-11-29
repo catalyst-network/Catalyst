@@ -1,4 +1,4 @@
-namespace ADL.Node.Interfaces
+namespace ADL.DFS
 {
     public interface IDfsSettings
     {
