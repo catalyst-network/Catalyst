@@ -3,36 +3,46 @@ using Grpc.Core;
 using System.Threading;
 using ADL.Rpc.Proto.Server;
 using System.Threading.Tasks;
+ using ADL.Services;
 
-namespace ADL.Rpc
+ namespace ADL.Rpc
 {
-    public class RpcService : IRpcService
+    public class RpcService : IService
     {
-        private CancellationTokenSource TokenSource { get; set; }
-        private Task ServerTask { get; set; }
         private Server Server { get; set; }
+        private Task ServerTask { get; set; }
         private IRpcSettings Settings { get; set; }
+        private CancellationTokenSource TokenSource { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settings"></param>
+        public RpcService(IRpcSettings settings)
+        {
+            Settings = settings;
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="settings"></param>
-        public void StartServer(IRpcSettings settings )
+        public bool StartService()
         {
-            Settings = settings;
             Server = new Server
             {
-                Services = { RpcServer.BindService(new RpcServerImpl()) },
+                Services = { RpcServer.BindService(new GRpcServer()) },
                 Ports = { new ServerPort(Settings.BindAddress, Settings.Port, ServerCredentials.Insecure) }
             };
             TokenSource = new CancellationTokenSource();
             ServerTask = RunServiceAsync(Server, TokenSource.Token);
+            return true;
         }
         
         /// <summary>
         /// 
         /// </summary>
-        public void StopServer()
+        public bool StopService()
         {
             Console.WriteLine("Dispose started ");
             AwaitCancellation(TokenSource.Token);
@@ -46,6 +56,33 @@ namespace ADL.Rpc
                 Console.WriteLine("RpcServer shutdown canceled");
             }
             Console.WriteLine("RpcServer shutdown");
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool RestartService()
+        {
+            if (StopService())
+            {
+                if (StartService())
+                {
+                    Console.WriteLine("RPC service restarted successfully");
+                }
+                else
+                {
+                    Console.WriteLine("Couldn't start rpc service");
+                    return false;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Couldn't stop rpc service");
+                return false;
+            }
+            return true;
         }
 
         /// <summary>

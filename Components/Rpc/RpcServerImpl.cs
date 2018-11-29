@@ -6,7 +6,7 @@ using ADL.Rpc.Proto.Server;
 
 namespace ADL.Rpc
 {
-    public class RpcServerImpl : RpcServer.RpcServerBase
+    public class GRpcServer : RpcServer.RpcServerBase, IRpcServer
     {
         /// <summary>
         /// 

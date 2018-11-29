@@ -1,8 +1,15 @@
+using Grpc.Core;
+using ADL.Rpc.Proto.Server;
+using System.Threading.Tasks;
+
 namespace ADL.Rpc
 {
-    public interface IRpcService
+    public interface IRpcServer
     {
-        void StartServer(IRpcSettings settings);
-        void StopServer();
+        Task<PongResponse> Ping(PingRequest request, ServerCallContext context);
+
+        Task<VersionResponse> Version(VersionRequest request, ServerCallContext context);
+        
+//        Task<GetInfoRequest> GetInfo();
     }
 }
