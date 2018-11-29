@@ -2,7 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using StackExchange.Redis;
-using ADL.Utilities;
+using ADL.Bash;
+using ADL.Redis;
 using ADL.Mempool.Proto;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,6 +57,8 @@ namespace ADL.Mempool
             
             var server = Cm.GetServer(endpoint[0]);
             server.FlushDatabase(); // clean up Redis before each test
+            //server.FlushAllDatabases();
+            
             server.ConfigSet("save","1 1"); // save every seconds for each change to the dataset
         }
         

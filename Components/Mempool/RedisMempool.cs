@@ -1,5 +1,5 @@
 ﻿using ADL.Mempool.Proto;
-using ADL.Utilities;
+using ADL.Redis;
 using Google.Protobuf;
 using StackExchange.Redis;
 
@@ -21,3 +21,4 @@ namespace ADL.Mempool
         }
     }
 }
+ 
