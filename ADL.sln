@@ -48,13 +48,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeRpcProto", "Protocols\R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletRpcProto", "Protocols\Rpc\Wallet\WalletRpcProto.csproj", "{145DD796-6E8A-4A3C-A328-2A7AC10E0EA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Koopa", "Utilities\Koopa\Koopa.csproj", "{9983C893-11FC-4E4A-A406-44D7D241FA53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Koopa", "Helpers\Koopa\Koopa.csproj", "{9983C893-11FC-4E4A-A406-44D7D241FA53}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Cli\Cli.csproj", "{0FB165D9-9CCA-48E0-AD54-CF4CC4240275}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math", "Helpers\Math\Math.csproj", "{718F8007-1E3A-4FA3-AEC4-D72BA0A055AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P2PService", "Components\P2P\P2PService.csproj", "{0A5CC6F2-1337-4FC8-98BE-CC579AF468BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Helpers\Services\Services.csproj", "{4CD1C7C9-B035-4C95-888E-7059920015DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -394,6 +398,30 @@ Global
 		{0A5CC6F2-1337-4FC8-98BE-CC579AF468BF}.Release|x64.Build.0 = Release|Any CPU
 		{0A5CC6F2-1337-4FC8-98BE-CC579AF468BF}.Release|x86.ActiveCfg = Release|Any CPU
 		{0A5CC6F2-1337-4FC8-98BE-CC579AF468BF}.Release|x86.Build.0 = Release|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Debug|x64.Build.0 = Debug|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Debug|x86.Build.0 = Debug|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Release|x64.ActiveCfg = Release|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Release|x64.Build.0 = Release|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Release|x86.ActiveCfg = Release|Any CPU
+		{13DBD285-FDB8-4CCF-B885-C9621FC70C2A}.Release|x86.Build.0 = Release|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Debug|x64.Build.0 = Debug|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Debug|x86.Build.0 = Debug|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Release|x64.ActiveCfg = Release|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Release|x64.Build.0 = Release|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Release|x86.ActiveCfg = Release|Any CPU
+		{4CD1C7C9-B035-4C95-888E-7059920015DC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 
 EndGlobal
