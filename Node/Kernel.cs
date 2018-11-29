@@ -4,23 +4,48 @@ using ADL.Node.Interfaces;
 
 namespace ADL.Node
 {
-    internal class Kernel : IKernel
-    {
-        public IContainer Container { get; set; }
-        public INodeConfiguration Settings { get; set; }
-        public IDependencyResolver Resolver { get; set; }
+    internal sealed  class Kernel : IKernel
+    {        
         
-       /// <summary>
-       /// Kernel constructor.
-       /// </summary>
-       /// <param name="resolver"></param>
-       /// <param name="settings"></param>
-       /// <param name="container"></param>
-        internal Kernel(IDependencyResolver resolver, INodeConfiguration settings, IContainer container)
+        private static Kernel _instance;
+        public Settings Settings { get; set; }
+        public IContainer Container { get; set; }
+        public IDependencyResolver Resolver { get; set; }
+        private static readonly object Mutex = new object();
+
+        /// <summary>
+        /// Get a thread safe kernel singleton.
+        /// </summary>
+        /// <param name="resolver"></param>
+        /// <param name="settings"></param>
+        /// <param name="container"></param>
+        /// <returns></returns>
+        public static Kernel GetInstance(Settings settings, IDependencyResolver resolver, IContainer container)
+        { 
+            if (_instance == null) 
+            { 
+                lock (Mutex)
+                {
+                    if (_instance == null) 
+                    { 
+                        _instance = new Kernel(settings, resolver, container);
+                    }
+                } 
+            }
+            return _instance;
+        }
+        
+        /// <summary>
+        /// Private kernel constructor.
+        /// </summary>
+        /// <param name="resolver"></param>
+        /// <param name="settings"></param>
+        /// <param name="container"></param>
+        private Kernel(Settings settings, IDependencyResolver resolver, IContainer container)
         {
-            Container = container;
-            Resolver = resolver;
             Settings = settings;
+            Resolver = resolver;
+            Container = container;
         }
     }
 }

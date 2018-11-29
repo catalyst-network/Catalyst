@@ -1,21 +1,15 @@
-﻿using ADL.Helpers.Math;
+﻿using ADL.Math;
 
 namespace ADL.Transaction
 {
     public class BasicTransaction : ITransaction
     {
         public bool BSending { get; set; }
-        
         private UInt160 InputAddress { get; set; }
-
         private byte[] InputAction { get; set; }
-
         private byte[] UnlockScript { get; set; }
-
         private UInt160 OutputAddress { get; set; }
-
         private Fixed8 OutputAmount { get; set; }
-
         private byte[] UnlockingProgram { get; set; }
 
         // Constructor taking all the values from a message
