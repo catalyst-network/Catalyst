@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using StackExchange.Redis;
 
-namespace ADL.Utilities
+namespace ADL.Redis
 {
     public class RedisConnector
     {
