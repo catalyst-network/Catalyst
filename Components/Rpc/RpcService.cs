@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
  namespace ADL.Rpc
 {
-    public interface IRpcService : IAsyncService
-    {
-        
-    }
-    public class RpcService : IRpcService
+
+    public class RpcService : IService
     {
         private Server Server { get; set; }
         private Task ServerTask { get; set; }
