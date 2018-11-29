@@ -1,19 +1,23 @@
-﻿using System;
-using Akka.Actor;
+﻿using ADL.Mempool.Proto;
+using ADL.Utilities;
+using Google.Protobuf;
+using StackExchange.Redis;
 
 namespace ADL.Mempool
 {
-    public class MempoolService : UntypedActor, IMempool
+    public class MempoolService : IMempool
     {
-        protected override void PreStart() => Console.WriteLine("Started Mempool actor");
-    
-        protected override void PostStop() => Console.WriteLine("Stopped Mempool actor");
-    
-        protected override void OnReceive(object message)
+        private readonly IDatabase _redisDb = RedisConnector.Instance.GetDb;
+        
+        public virtual void Save(Key k, Tx value)
         {
-            Console.WriteLine("Mempool OnReceive");
+            // value with same key not updated -- see param When.NotExists
+            _redisDb.StringSet(k.ToByteArray(), value.ToByteArray(),null,When.NotExists);
+        }
 
-            Console.WriteLine($"Message received {message}");
+        public virtual Tx Get(Key k)
+        {   
+            return Tx.Parser.ParseFrom(_redisDb.StringGet(k.ToByteArray()));
         }
     }
 }

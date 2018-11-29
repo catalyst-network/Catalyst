@@ -50,7 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Utilities\Koopa\Koopa.csproj" />
+        <ProjectReference Include="..\Helpers\Koopa\Koopa.csproj" />
     </ItemGroup>
 
     <ItemGroup>

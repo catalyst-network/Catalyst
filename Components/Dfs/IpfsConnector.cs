@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 using System;
-using System.Net.Sockets;
 using Ipfs.Api;
 using System.Threading;
-using ADL.DFS.Helpers;
+using ADL.Utilities;
 using ADL.Node.Interfaces;
 using System.Diagnostics;
 using ADL.DFS;
@@ -19,7 +18,7 @@ namespace ADL.DFS
     /// </summary>
     public class IpfsConnector : IDFS
     {
-        private IpfsClient _client; 
+        private static IpfsClient _client; 
         private string _defaultApiEndPoint;
         
         private IDfsSettings _settings { get; set; }
@@ -28,7 +27,7 @@ namespace ADL.DFS
         ///   Check if IPFS client can connect to IPFS daemon
         /// </summary>
         /// <returns>
-        ///   Boolen
+        ///   Boolean
         /// </returns>
         public bool IsClientConnected()
         {
@@ -76,7 +75,7 @@ namespace ADL.DFS
             }
             
            // If it could not connect after a few attempt then throw
-           // a socket exception and backup
+           // an invalid operation exception and backup
            throw new InvalidOperationException("Failed to connect with IPFS daemon");
         }
 
