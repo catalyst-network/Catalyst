@@ -43,4 +43,8 @@
     <ProjectReference Include="..\..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="ProtoBuf\Mempool.proto" />
+  </ItemGroup>
+
 </Project>

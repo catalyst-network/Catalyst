@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 
  namespace ADL.Rpc
 {
-    public class RpcService : IService
+    public interface IRpcService : IAsyncService
+    {
+        
+    }
+    public class RpcService : IRpcService
     {
         private Server Server { get; set; }
         private Task ServerTask { get; set; }
@@ -18,7 +22,7 @@ using System.Threading.Tasks;
         /// 
         /// </summary>
         /// <param name="settings"></param>
-        public RpcService(IRpcSettings settings)
+        public RpcService(IRpcServer rpcServer, IRpcSettings settings)
         {
             Settings = settings;
         }
@@ -90,7 +94,7 @@ using System.Threading.Tasks;
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        private static Task AwaitCancellation(CancellationToken token)
+        public Task AwaitCancellation(CancellationToken token)
         {
             var taskSource = new TaskCompletionSource<bool>();
             token.Register(() => taskSource.SetResult(true));
@@ -103,7 +107,7 @@ using System.Threading.Tasks;
         /// <param name="server"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task RunServiceAsync(Server server,
+        public async Task RunServiceAsync(Server server,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             server.Start();
