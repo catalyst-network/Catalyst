@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using ADL.Exceptions;
 using ADL.FileSystem;
-using ADL.Shell;
+//using ADL.Shell;
 using Autofac;
 using Autofac.Configuration;
 using Microsoft.Extensions.Configuration;

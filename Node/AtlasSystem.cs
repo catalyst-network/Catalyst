@@ -10,6 +10,7 @@ using ADL.Consensus;
 using ADL.Node.Ledger;
 using ADL.Node.Interfaces;
 using System.Threading.Tasks;
+using Autofac.Core;
 
 namespace ADL.Node
 {
@@ -93,9 +94,9 @@ namespace ADL.Node
         {
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-                RcpService = scope.Resolve<IRpcService>();
+                RcpService = scope.Resolve<IRpcService>(new ResolvedParameter());
             }
-            RcpService.StartServer(Kernel.Settings.NodeConfiguration.Rpc);
+            RcpService.StartService();
         }
 
         /// <summary>
@@ -103,7 +104,7 @@ namespace ADL.Node
         /// </summary>
         public void StopRpc()
         {
-            RcpService.StopServer();
+            RcpService.StopService();
         }
 
         /// <summary>
