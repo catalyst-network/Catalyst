@@ -1,6 +1,7 @@
 using ADL.P2P;
 using ADL.Rpc;
 using ADL.Cryptography.SSL;
+using ADL.DFS;
 
 namespace ADL.Node.Interfaces
 {
