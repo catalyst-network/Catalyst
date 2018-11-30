@@ -1,5 +1,5 @@
 using Grpc.Core;
-using ADL.Rpc.Proto.Server;
+using ADL.Protocol.Rpc.Node;
 using System.Threading.Tasks;
 
 namespace ADL.Rpc

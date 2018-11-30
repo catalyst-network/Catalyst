@@ -1,9 +1,10 @@
+using ADL.Rpc;
 using Grpc.Core;
 using System.Reflection;
-using ADL.Rpc.Proto.Server;
+using ADL.Protocol.Rpc.Node;
 using System.Threading.Tasks;
 
-namespace ADL.Rpc
+namespace ADL.NodeGrpc
 {
     public class NodeRpcServer : RpcServer.RpcServerBase, IRpcServer
     {
@@ -13,14 +14,14 @@ namespace ADL.Rpc
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<PongResponse> Ping(PingRequest request, ServerCallContext context)
+        public Task<PongResponse> Ping(PingRequest request, ServerCallContext context)
         {
             return Task.FromResult(new PongResponse
             {
                 Pong = "pong"
             });
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -31,7 +32,7 @@ namespace ADL.Rpc
         {
             return Task.FromResult(new VersionResponse
             {
-                Version =  Assembly.GetEntryAssembly().GetName().Version.ToString()
+                Version = Assembly.GetEntryAssembly().GetName().Version.ToString()
             });
         }
     }
