@@ -3,7 +3,7 @@ using ADL.Shell;
 using Grpc.Core;
 using System.Net;
 using System.Reflection;
-using ADL.Rpc.Proto.Server;
+//using ADL.Rpc.Proto.Server;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -15,7 +15,7 @@ namespace Koopa
         private uint sessionType => 0;
         public override string Prompt => "koopa";
         private Channel SessionHost { set; get; }
-        private static RpcServer.RpcServerClient _rpcClient;
+//        private static RpcServer.RpcServerClient _rpcClient;
         private static string ServiceName => "ADS Advanced Shell";
 
         /// <summary>
@@ -568,18 +568,18 @@ namespace Koopa
             try
             {
                 // Create a client with the channel
-                _rpcClient = new RpcServer.RpcServerClient(channel);
+//                _rpcClient = new RpcServer.RpcServerClient(channel);
 
                 // Create a request
 //                var request = new PingRequest{ Ping = "ping" };
-                var request = new VersionRequest{ Query = true };
+//                var request = new VersionRequest{ Query = true };
 
                 // Send the request
                 Console.WriteLine("GreeterClient sending request");
 //                var response = await client.PingAsync(request);
-                var response = await _rpcClient.VersionAsync(request);
+//                var response = await _rpcClient.VersionAsync(request);
                 
-                Console.WriteLine("GreeterClient received response: " + response);
+//                Console.WriteLine("GreeterClient received response: " + response);
             }
             finally
             {

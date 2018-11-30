@@ -22,6 +22,7 @@
     </ItemGroup>
     
     <ItemGroup>
+        <ProjectReference Include="..\Helpers\NodeGrpc\NodeGrpc.csproj" />
         <ProjectReference Include="..\Helpers\Shell\Shell.csproj" />
         <ProjectReference Include="..\Helpers\Platform\Platform.csproj" />
         <ProjectReference Include="..\Helpers\Exceptions\Exceptions.csproj" />
@@ -84,6 +85,7 @@
     
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <ItemGroup>
+            <PluginAssembly Include="$(SolutionDir)\Helpers\NodeGrpc\bin\$(ConfigurationName)\**\NodeGrpc.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcProto.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcService.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\ConsensusService.dll" />
