@@ -4,7 +4,7 @@ using ADL.Node.Interfaces;
 
 namespace ADL.Node
 {
-    internal sealed  class Kernel : IKernel
+    internal sealed  class ContainerBuilderKernel : IKernel
     {        
         
         private static Kernel _instance;

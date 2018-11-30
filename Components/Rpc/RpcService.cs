@@ -3,10 +3,11 @@ using Grpc.Core;
 using System.Threading;
 using ADL.Rpc.Proto.Server;
 using System.Threading.Tasks;
+ using ADL.Services;
 
  namespace ADL.Rpc
 {
-    public class RpcService : IRpcService
+    public class RpcService : AsyncServiceBase, IRpcService
     {
         private Server Server { get; set; }
         private Task ServerTask { get; set; }
@@ -85,29 +86,17 @@ using System.Threading.Tasks;
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public Task AwaitCancellation(CancellationToken token)
-        {
-            var taskSource = new TaskCompletionSource<bool>();
-            token.Register(() => taskSource.SetResult(true));
-            return taskSource.Task;
-        }
-
-        /// <summary>
         ///  Starts the RpcService
         /// </summary>
         /// <param name="server"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task RunServiceAsync(Server server,
+        private async Task RunServiceAsync(Server server,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             server.Start();
             Console.WriteLine("Rpc Server started, listening on " + server.Ports.ToString());
-            await AwaitCancellation(cancellationToken);
+            await AwaitCancellation(default(CancellationToken));
             await server.ShutdownAsync();
         }
     }
