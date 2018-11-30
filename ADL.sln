@@ -60,6 +60,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis", "Helpers\Redis\Redi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MempoolService", "Components\Mempool\MempoolService.csproj", "{AE1392D3-6359-40CD-8303-A2109766A413}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{C4D469FB-2D5D-41A9-A016-0E439CE2801D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -422,6 +424,18 @@ Global
 		{AE1392D3-6359-40CD-8303-A2109766A413}.Release|x64.Build.0 = Release|Any CPU
 		{AE1392D3-6359-40CD-8303-A2109766A413}.Release|x86.ActiveCfg = Release|Any CPU
 		{AE1392D3-6359-40CD-8303-A2109766A413}.Release|x86.Build.0 = Release|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Debug|x64.Build.0 = Debug|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Debug|x86.Build.0 = Debug|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Release|x64.ActiveCfg = Release|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Release|x64.Build.0 = Release|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Release|x86.ActiveCfg = Release|Any CPU
+		{C4D469FB-2D5D-41A9-A016-0E439CE2801D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 
 EndGlobal

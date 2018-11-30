@@ -2,6 +2,22 @@
   "defaultAssembly": "Node",
   "components": [
     {
+      "type": "ADL.Rpc.IRpcServer, RpcService",
+      "services": [
+        {
+          "type": "ADL.Rpc.IRpcService, RpcService"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Rpc.RpcService, RpcService",
+      "services": [
+        {
+          "type": "ADL.Rpc.IRpcService, RpcService"
+        }
+      ]
+    },
+    {
       "type": "ADL.Rpc.RpcService, RpcService",
       "services": [
         {
