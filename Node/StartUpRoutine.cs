@@ -142,7 +142,7 @@ namespace ADL.Node
         private static IKernel BuildKernel(ActorSystem actorSystem, Settings settings)
         {
             var builder = new ContainerBuilder();
-
+            
             AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
                 context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
             
