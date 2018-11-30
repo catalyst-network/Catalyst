@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
-        <RootNamespace>ADL.GRpc</RootNamespace>
+        <RootNamespace>ADL.PeerGrpc</RootNamespace>
     </PropertyGroup>
 
 </Project>
