@@ -8,8 +8,8 @@ namespace ADL.Redis
     [TestClass]
     public class UT_RedisConnector
     {
-        private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance.Connection;
-        private static readonly IDatabase Db = RedisConnector.Instance.GetDb;
+        private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance().Connection;
+        private static readonly IDatabase Db = RedisConnector.Instance().GetDb;
 
         private static void Writer(int start, int end)
         {
