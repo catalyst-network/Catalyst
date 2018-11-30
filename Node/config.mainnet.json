@@ -28,9 +28,7 @@
       },
       "Mempool": {
         "Type" : "redis",
-        "AllowAdmin" : "yes",
-        "SaveAfterSeconds" : 1,
-        "SaveAfterChanges" : 1
+        "When" : "NotExists"
       },
       "P2P": {
         "Port": 42069,

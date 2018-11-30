@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Helpers\Redis\Redis.csproj" />
+    <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
