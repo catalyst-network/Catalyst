@@ -1,14 +1,14 @@
 using System;
 using Autofac;
-using ADL.P2P;
+using ADL.Peer;
 using ADL.Rpc;
 using ADL.DFS;
 using System.IO;
 using ADL.Gossip;
 using Akka.Actor;
 using ADL.Consensus;
-using ADL.Node.Ledger;
-using ADL.Node.Interfaces;
+using ADL.Ledger;
+using ADL.Node;
 using System.Threading.Tasks;
 using Autofac.Core;
 
@@ -16,10 +16,10 @@ namespace ADL.Node
 {
     public class AtlasSystem : IDisposable, IAtlasSystem
     {
-        private IADL AdLedger { get; set; }
+        private IAdl Ledger { get; set; }
         public IKernel Kernel { get; set; }
         private IDFS DfsService { get; set; }
-        private IP2P P2PService { get; set; }
+        private IPeer PeerService { get; set; }
         private IRpcService RcpService { get; set; }
         public IActorRef ContractSystem { get; set; }
         private ActorSystem ActorSystem { get; set; }
@@ -55,7 +55,7 @@ namespace ADL.Node
             {
                 Kernel = StartUpRoutine.Boot(ActorSystem, options);
 
-                if (options.P2P)
+                if (options.Peer)
                 {
                     StartPeer();        
                 }
@@ -116,7 +116,7 @@ namespace ADL.Node
             {
                 DfsService = scope.Resolve<IDFS>();
             }
-            DfsService.Start(Kernel.Settings.NodeConfiguration.Dfs);
+            DfsService.Start(Kernel.Settings.Dfs);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace ADL.Node
         /// </summary>
         public void StartConsensus()
         {
-            AdLedger.ConsensusService = ActorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
+//            AdLedger.ConsensusService = ActorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace ADL.Node
         /// </summary>
         public void StartGossip()
         {
-            AdLedger.GossipService = ActorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
+//            AdLedger.GossipService = ActorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
         }
 
         /// <summary>
@@ -143,9 +143,9 @@ namespace ADL.Node
             Console.WriteLine("start p2p controller....");
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-                P2PService = scope.Resolve<IP2P>();
+                PeerService = scope.Resolve<IPeer>();
             }
-            P2PService.StartServer(Kernel.Settings.NodeConfiguration.P2P, Kernel.Settings.NodeConfiguration.Ssl, new DirectoryInfo(Kernel.Settings.NodeConfiguration.NodeOptions.DataDir));
+            PeerService.StartServer(Kernel.Settings.Peer, new DirectoryInfo(Kernel.Settings.NodeOptions.DataDir));
         }
         
         public Task Shutdown()

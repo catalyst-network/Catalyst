@@ -18,12 +18,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Components\NodeGrpc\NodeGrpc.csproj" />
         <ProjectReference Include="..\Protocols\Rpc\Node\NodeRpcProto.csproj" />
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\Helpers\NodeGrpc\NodeGrpc.csproj" />
-        <ProjectReference Include="..\Helpers\Shell\Shell.csproj" />
         <ProjectReference Include="..\Helpers\Platform\Platform.csproj" />
         <ProjectReference Include="..\Helpers\Exceptions\Exceptions.csproj" />
         <ProjectReference Include="..\Helpers\FileSystem\FileSystem.csproj" />
@@ -31,17 +30,22 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Components\NodeGrpc\NodeGrpc.csproj" />
+        <ProjectReference Include="..\Components\Shell\Shell.csproj" />
         <ProjectReference Include="..\Components\Token\Token.csproj" />
-        <ProjectReference Include="..\Components\Dfs\DfsService.csproj" />
-        <ProjectReference Include="..\Components\Rpc\RpcService.csproj" />
-        <ProjectReference Include="..\Components\P2P\P2PService.csproj" />
-        <ProjectReference Include="..\Components\Economics\Economics.csproj" />
-        <ProjectReference Include="..\Components\Gossip\GossipService.csproj" />
-        <ProjectReference Include="..\Components\Mempool\MempoolService.csproj" />
         <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
-        <ProjectReference Include="..\Components\Contract\ContractService.csproj" />
-        <ProjectReference Include="..\Components\Consensus\ConsensusService.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+    <ProjectReference Include="..\Modules\Dfs\DfsService.csproj" />
+    <ProjectReference Include="..\Modules\Rpc\RpcService.csproj" />
+    <ProjectReference Include="..\Modules\Peer\PeerService.csproj" />
+    <ProjectReference Include="..\Modules\Ledger\LedgerService.csproj" />
+    <ProjectReference Include="..\Modules\Gossip\GossipService.csproj" />
+    <ProjectReference Include="..\Modules\Mempool\MempoolService.csproj" />
+    <ProjectReference Include="..\Modules\Contract\ContractService.csproj" />
+    <ProjectReference Include="..\Modules\Consensus\ConsensusService.csproj" />
+</ItemGroup>
 
     <ItemGroup>
         <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
@@ -76,6 +80,10 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
+        <Content Include="Config\components.json" />
+        <Content Include="Config\devnet.json" />
+        <Content Include="Config\mainnet.json" />
+        <Content Include="Config\testnet.json" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -92,10 +100,9 @@
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\ContractService.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Cryptography.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\DfsService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Economics.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\GossipService.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\MempoolService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\P2PService.dll" />
+            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\PeerService.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Token.dll" />
             <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Transaction.dll" />
         </ItemGroup>

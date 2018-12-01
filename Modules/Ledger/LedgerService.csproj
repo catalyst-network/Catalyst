@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RootNamespace>ADL.Ledger</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_UnmanagedRegistrationCache Remove="obj\LedgerService.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\LedgerService.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Ledger.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Ledger.pdb" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Ledger.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Ledger.manifest" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <DeployManifest Remove="obj\Debug\netcoreapp2.1\Ledger.application" />
+    </ItemGroup>
+
+</Project>
