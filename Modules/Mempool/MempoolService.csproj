@@ -40,11 +40,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Components\Redis\Redis.csproj" />
+    <ProjectReference Include="..\..\Protocols\Mempool\MempoolProto.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ProtoBuf\Mempool.proto" />
+    <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Components\Redis\Redis.csproj" />
   </ItemGroup>
 
 </Project>

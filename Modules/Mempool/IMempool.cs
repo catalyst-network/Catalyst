@@ -1,4 +1,4 @@
-using ADL.Mempool.Proto;
+using ADL.Protocols.Mempool;
 
 namespace ADL.Mempool
 {

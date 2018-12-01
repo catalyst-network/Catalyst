@@ -16,11 +16,6 @@ mkdir -p ${greeter_protos_dir}/dist/csharp
 
 find ${greeter_protos_dir} -type f -name '*.proto' | \
     xargs -J{} ${proto_tools}/protoc {} \
-      --csharp_out ${greeter_protos_dir}/dist/csharp \
-      --proto_path ${greeter_protos_dir}
-
-find ${greeter_protos_dir} -type f -name '*.proto' | \
-    xargs -J{} ${proto_tools}/protoc {} \
       --proto_path ${greeter_protos_dir} \
       --grpc_out ${generated_dir} \
       --plugin=protoc-gen-grpc=${proto_tools}/grpc_csharp_plugin
