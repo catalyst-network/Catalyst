@@ -6,5 +6,6 @@ namespace ADL.Mempool
         ushort SaveAfterSeconds { get; set; }
         ushort SaveAfterChanges { get; set; }
         string AllowAdmin { get; set; }
+        string When { get; set; }
     }
 }

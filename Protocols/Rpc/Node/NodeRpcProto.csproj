@@ -46,6 +46,10 @@
         <DeployManifest Remove="obj\Debug\netcoreapp2.1\RpcProto.application" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="dist" />
+    </ItemGroup>
+
     <!-- Generate the code from all of the proto files -->
     <Target Name="GenProtos" BeforeTargets="BeforeBuild" Inputs="@(Proto)" Outputs="@(Service)">
         <Message Text="Generating protos @(Proto)" Importance="High" />

@@ -244,6 +244,7 @@ namespace ADL.Node
     public class MempoolSettings : IMempoolSettings
     {
         public string Type { get; set; }
+        public string When { get; set; }
         public string AllowAdmin { get; set; }
         public ushort SaveAfterSeconds { get; set; }
         public ushort SaveAfterChanges { get; set; }

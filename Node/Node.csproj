@@ -18,7 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Components\NodeGrpc\NodeGrpc.csproj" />
         <ProjectReference Include="..\Protocols\Rpc\Node\NodeRpcProto.csproj" />
     </ItemGroup>
     
@@ -30,9 +29,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Components\NodeGrpc\NodeGrpc.csproj" />
         <ProjectReference Include="..\Components\Shell\Shell.csproj" />
         <ProjectReference Include="..\Components\Token\Token.csproj" />
+        <ProjectReference Include="..\Components\NodeGrpc\NodeGrpc.csproj" />
         <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
     </ItemGroup>
     
@@ -76,37 +75,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include=".\config.components.json;.\config.devnet.json;.\config.testnet.json;.\config.mainnet.json;">
+        <Content Include=".\config\components.json;.\config\devnet.json;.\config\testnet.json;.\config\mainnet.json;">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
-        <Content Include="Config\components.json" />
-        <Content Include="Config\devnet.json" />
-        <Content Include="Config\mainnet.json" />
-        <Content Include="Config\testnet.json" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
         <DebugSymbols>False</DebugSymbols>
     </PropertyGroup>
-    
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <ItemGroup>
-            <PluginAssembly Include="$(SolutionDir)\Helpers\NodeGrpc\bin\$(ConfigurationName)\**\NodeGrpc.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcProto.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\ConsensusService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\ContractService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Cryptography.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\DfsService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\GossipService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\MempoolService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\PeerService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Token.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Transaction.dll" />
-        </ItemGroup>
-        <Copy SourceFiles="@(PluginAssembly)" DestinationFolder="$(OutDir)" />
-    </Target>
 
 </Project>
