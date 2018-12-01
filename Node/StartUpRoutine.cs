@@ -8,7 +8,7 @@ using ADL.Platform;
 using ADL.Consensus;
 using Akka.DI.AutoFac;
 using System.Reflection;
-using ADL.Node.Interfaces;
+using ADL.Node;
 using ADL.Cryptography.SSL;
 using System.Runtime.Loader;
 using Autofac.Configuration;
@@ -76,15 +76,15 @@ namespace ADL.Node
             }
             
             // check we have a pfx cert for watson server
-            if (File.Exists(settingsInstance.NodeConfiguration.NodeOptions.DataDir+"/"+settingsInstance.NodeConfiguration.Ssl.PfxFileName) == false)
-            {
-                X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.NodeConfiguration.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
-                SSLUtil.WriteCertificateFile(new DirectoryInfo(settingsInstance.NodeConfiguration.NodeOptions.DataDir),  settingsInstance.NodeConfiguration.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));
-            }
-            else
-            {
-                Console.WriteLine("got cert");                
-            }
+//            if (File.Exists(settingsInstance.NodeConfiguration.NodeOptions.DataDir+"/"+settingsInstance.NodeConfiguration.Ssl.PfxFileName) == false)
+//            {
+//                X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.NodeConfiguration.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
+//                SSLUtil.WriteCertificateFile(new DirectoryInfo(settingsInstance.NodeConfiguration.NodeOptions.DataDir),  settingsInstance.NodeConfiguration.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));
+//            }
+//            else
+//            {
+//                Console.WriteLine("got cert");                
+//            }
             
             //@TODO check we have pem format certs for grpc
             //@TODO do some check for redis databases exist we need
@@ -118,8 +118,8 @@ namespace ADL.Node
         /// <returns></returns>
         private static void CopySkeletonConfigs(string dataDir, string network)
         {
-            File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/config.components.json", dataDir);
-            File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/config."+network+".json", dataDir);
+            File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/config/components.json", dataDir);
+            File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/"+network+".json", dataDir);
         }
         
         /// <summary>
@@ -130,7 +130,7 @@ namespace ADL.Node
         /// <returns></returns>
         private static bool CheckConfigExists(string dataDir, string network)
         {
-            return File.Exists(dataDir + "/config."+network+".json");
+            return File.Exists(dataDir + "/"+network+".json");
         }
         
         /// <summary>
@@ -147,7 +147,7 @@ namespace ADL.Node
                 context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
             
             var iocConfig = new ConfigurationBuilder()
-                .AddJsonFile(settings.NodeConfiguration.NodeOptions.DataDir+"/config.components.json")
+                .AddJsonFile(settings.NodeOptions.DataDir+"/config/components.json")
                 .Build();
             var iocConfigModule = new ConfigurationModule(iocConfig);
 

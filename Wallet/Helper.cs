@@ -1,6 +1,6 @@
 ﻿//using Neo.Cryptography;
-//using Neo.Network.P2P;
-//using Neo.Network.P2P.Payloads;
+//using Neo.Network.Peer;
+//using Neo.Network.Peer.Payloads;
 using System;
 using System.Linq;
 

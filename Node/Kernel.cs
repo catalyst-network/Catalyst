@@ -1,6 +1,6 @@
 using Autofac;
 using Akka.DI.Core;
-using ADL.Node.Interfaces;
+using ADL.Node;
 
 namespace ADL.Node
 {

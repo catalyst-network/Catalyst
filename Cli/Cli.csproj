@@ -44,15 +44,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Helpers\Shell\Shell.csproj" />
+        <ProjectReference Include="..\Components\Shell\Shell.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <ProjectReference Include="..\Helpers\Exceptions\Exceptions.csproj" />
         <ProjectReference Include="..\Helpers\FileSystem\FileSystem.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Helpers\Koopa\Koopa.csproj" />
-    </ItemGroup>
-
+    
     <ItemGroup>
         <Content Include="config.shell.json" />
     </ItemGroup>

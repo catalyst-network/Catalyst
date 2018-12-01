@@ -105,7 +105,7 @@ namespace ADL.Node
                     
                     if (p2POption.HasValue())
                     {
-                        options.P2P = false;
+                        options.Peer = false;
                     }
                     
                     if (gossipOption.HasValue())

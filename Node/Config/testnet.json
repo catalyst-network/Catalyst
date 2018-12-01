@@ -1,0 +1,54 @@
+{
+  "ApplicationConfiguration": {
+    "Ledger": {
+      "Persistence": "LevelDB",
+      "Paths": {
+        "Chain": "Chain_{0}",
+        "Index": "Index_{0}"
+      }
+    },
+    "Ssl": {
+      "PfxFileName": "PeerCert.pfx",
+      "SslCertPassword": "WeNeedASaf3rPassword"
+    },
+    "Consensus": {
+      "nDepth": 100
+    },
+    "Contract": {
+      "StorageType": "Ipfs"
+    },
+    "Dfs": {
+      "StorageType": "Ipfs",
+      "ConnectRetries": 10,
+      "IpfsVersionApi": "api/v0/"
+    },
+    "Gossip": {
+      "instances": 5
+    },
+    "Mempool": {
+      "Type" : "redis",
+      "AllowAdmin" : "yes",
+      "SaveAfterSeconds" : 1,
+      "SaveAfterChanges" : 1
+    },
+    "Peer": {
+      "Port": 42069,
+      "MaxPeers": 10,
+      "PeerLifetimeInterval":  3600,
+      "PeerPingInterval": 600,
+      "AddressVersion": 23,
+      "Magic": 4206942,
+      "SeedList": [
+        "seed1.network.atlas.io:42069",
+        "seed2.network.atlas.io:42069",
+        "seed3.network.atlas.io:42069",
+        "seed4.network.atlas.io:42069",
+        "seed5.network.atlas.io:42069"
+      ]
+    },
+    "RPC": {
+      "BindAddress": "0.0.0.0",
+      "Port": 42042
+    }
+  }
+}

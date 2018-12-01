@@ -14,7 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Node\Node.csproj" />
-        <ProjectReference Include="..\Components\Dfs\DfsService.csproj" />
+        <ProjectReference Include="..\Modules\Dfs\DfsService.csproj" />
     </ItemGroup>
 
     <ItemGroup>

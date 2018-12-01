@@ -5,11 +5,10 @@ using System.Reflection;
 using System.Runtime.Loader;
 using ADL.Exceptions;
 using ADL.FileSystem;
-//using ADL.Shell;
 using Autofac;
 using Autofac.Configuration;
 using Microsoft.Extensions.Configuration;
-using Koopa;
+using ADL.Shell;
 
 namespace ADL.Cli
 {
@@ -62,7 +61,7 @@ namespace ADL.Cli
                 )
             );
             
-            var shell = container.Resolve<IADS>();
+            var shell = container.Resolve<IAds>();
 
             Console.WriteLine(shell);
 
