@@ -1,19 +1,25 @@
 ﻿using System;
+using ADL.Rpc;
 using Akka.Actor;
+using ADL.Services;
 
 namespace ADL.Consensus
 {
-    public class ConsensusService : UntypedActor, IConsensus
+    public class ConsensusService : IConsensusService
     {
-        protected override void PreStart() => Console.WriteLine("Started Consensus actor");
-    
-        protected override void PostStop() => Console.WriteLine("Stopped Consensus actor");
-    
-        protected override void OnReceive(object message)
+        public bool StartService()
         {
-            Console.WriteLine("Consensus Actor OnReceive");
+            throw new System.NotImplementedException();
+        }
 
-            Console.WriteLine($"Message received {message}");
+        public bool StopService()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool RestartService()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

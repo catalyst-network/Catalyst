@@ -8,6 +8,16 @@ namespace ADL.NodeGrpc
 {
     public class NodeRpcServer : RpcServer.RpcServerBase, IRpcServer
     {
+        private Server Server { get; set; }
+
+        public void CreateServer(string bindAddress, int port)
+        {
+            Server = new Server
+            {
+                Services = { RpcServer.BindService(this) },
+                Ports = { new ServerPort(bindAddress, port, ServerCredentials.Insecure) }
+            };
+        }
         
         /// <summary>
         /// 

@@ -1,8 +1,11 @@
+using Microsoft.Extensions.Configuration;
+
 namespace ADL.Rpc
 {
     public interface IRpcSettings
     {
-        ushort Port { get; set; }
+        int Port { get; set; }
         string BindAddress { get; set; }
+        void Populate(IConfiguration section);
     }
 }

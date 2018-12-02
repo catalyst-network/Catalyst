@@ -162,6 +162,10 @@ namespace ADL.Node
             return 0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         private static void RunNodeDemon(NodeOptions options)
         {
             AtlasSystem.GetInstance(options);
@@ -187,6 +191,9 @@ namespace ADL.Node
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         private class BasicShell : ShellBase
         {
             public bool Run()
@@ -204,11 +211,19 @@ namespace ADL.Node
                 return true;
             }
         
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override bool OnGetInfo()
             {
                 return true;
             }
         
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override bool OnGetVersion()
             {
                 return true;
@@ -232,21 +247,41 @@ namespace ADL.Node
                 return true;
             }
         
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public override bool OnStartNode(string[] args)
             {
                 return true;
             }
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public override bool OnStartWork(string[] args)
             {
                 return true;
             }
         
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public override bool OnStopNode(string[] args)
             {
                 return true;
             }
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public override bool OnStopWork(string[] args)
             {
                 return true;

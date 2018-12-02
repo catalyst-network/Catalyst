@@ -34,10 +34,10 @@
       ]
     },
     {
-      "type": "ADL.DFS.IpfsConnector, DfsService",
+      "type": "ADL.Dfs.IpfsConnector, DfsService",
       "services": [
         {
-          "type": "ADL.DFS.IDFS, DfsService"
+          "type": "ADL.Dfs.IDfs, DfsService"
         }
       ]
     },
@@ -53,7 +53,7 @@
       "type": "ADL.Mempool.MempoolService, MempoolService",
       "services": [
         {
-          "type": "ADL.Mempool.IMempool, MempoolService"
+          "type": "ADL.Mempool.IMempoolService, MempoolService"
         }
       ]
     },

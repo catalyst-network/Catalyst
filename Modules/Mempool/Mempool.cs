@@ -1,7 +1,7 @@
 ﻿using System;
-using ADL.Protocols.Mempool;
-using Google.Protobuf;
 using StackExchange.Redis;
+using ADL.Protocols.Mempool;
+using ADL.DataStore;
 
 namespace ADL.Mempool
 {
@@ -9,7 +9,7 @@ namespace ADL.Mempool
     {
         private When _when;
         
-        public Mempool(IMempoolSettings settings)
+        public Mempool(IMempoolSettings settings, IKeyStore keyStore)
         {            
 //            _redisDb = RedisConnector.Instance().GetDb;
 //            ParseSettings(settings);
@@ -32,6 +32,7 @@ namespace ADL.Mempool
         public Tx Get(Key k)
         {
 //            return Tx.Parser.ParseFrom(_redisDb.StringGet(k.ToByteArray()));
+            return new Tx();
         }
     }
 }

@@ -4,6 +4,7 @@
         <RootNamespace>ADL.Contract</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
+        <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
         <ProjectReference Include="..\..\Helpers\Math\Math.csproj" />
     </ItemGroup>
     <ItemGroup>
