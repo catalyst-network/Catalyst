@@ -12,8 +12,8 @@ namespace ADL.Node
         public uint Env { get; set; } = 1;
         public string SslCertPassword { get; set; }
         public bool Dfs { get; set; } = false;
-        public bool Rpc { get; set; } = false;
-        public bool Peer { get; set; } = false;
+        public bool Rpc { get; set; } = true;
+        public bool Peer { get; set; } = true;
         public uint Platform { get; set; } = 0;
         public bool Gossip { get; set; } = false;
         public bool Daemon { get; set; } = false;
