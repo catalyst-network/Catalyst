@@ -3,19 +3,19 @@ using Autofac;
 using System.IO;
 using ADL.Platform;
 using System.Reflection;
+using ADL.Cryptography.SSL;
 using System.Runtime.Loader;
-using ADL.DataStore;
-using ADL.Ipfs;
-using ADL.Node.Core.Modules.Consensus;
-using ADL.Node.Core.Modules.Contract;
+using Autofac.Configuration;
 using ADL.Node.Core.Modules.Dfs;
+using ADL.Node.Core.Modules.Rpc;
+using ADL.Node.Core.Modules.Peer;
 using ADL.Node.Core.Modules.Gossip;
 using ADL.Node.Core.Modules.Ledger;
 using ADL.Node.Core.Modules.Mempool;
-using ADL.Node.Core.Modules.Peer;
-using ADL.Node.Core.Modules.Rpc;
-using Autofac.Configuration;
+using ADL.Node.Core.Modules.Contract;
+using ADL.Node.Core.Modules.Consensus;
 using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ADL.Node
 {
@@ -85,16 +85,18 @@ namespace ADL.Node
                                 throw new Exception("Need a wallet to connect to or be supplied public key and payout addresses");   
                             }
                         }
+                        
                         // check we have a pfx cert for watson server
-//                        if (File.Exists(settingsInstance.NodeConfiguration.NodeOptions.DataDir+"/"+settingsInstance.NodeConfiguration.Ssl.PfxFileName) == false)
-//                        {
-//                            X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.NodeConfiguration.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
-//                            SSLUtil.WriteCertificateFile(new DirectoryInfo(settingsInstance.NodeConfiguration.NodeOptions.DataDir),  settingsInstance.NodeConfiguration.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));   
-//                        }
-//                        else
-//                        {
-//                            Console.WriteLine("got cert");                
-//                        }
+                        if (File.Exists(options.DataDir+"/"+settingsInstance.Ssl.PfxFileName) == false)
+                        {
+                            Console.WriteLine(options.ToString());
+                            X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
+                            SSLUtil.WriteCertificateFile(new DirectoryInfo(options.DataDir),  settingsInstance.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));   
+                        }
+                        else
+                        {
+                            Console.WriteLine("got cert");                
+                        }
                         var builder = new ContainerBuilder();
             
                         AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
@@ -107,39 +109,16 @@ namespace ADL.Node
                         var iocComponents = new ConfigurationModule(componentConfig);
 
                         builder.RegisterModule(iocComponents);
-                        
-                        builder.Register(c => new ConsensusService(c.Resolve<IConsensus>(), settingsInstance.Consensus))
-                            .As<IConsensusService>()
-                            .InstancePerLifetimeScope();
-                        
-                        builder.Register(c => new ContractService(c.Resolve<IContract>(), settingsInstance.Contract))
-                            .As<IContractService>()
-                            .InstancePerLifetimeScope();
-                        
-                        builder.Register(c => new DfsService(c.Resolve<IIpfs>(), settingsInstance.Dfs))
-                            .As<IDfsService>()
-                            .InstancePerLifetimeScope();
 
-                        builder.Register(c => new GossipService(settingsInstance.Gossip))
-                            .As<IGossipService>()
-                            .InstancePerLifetimeScope();
+                        new DfsModule().Load(builder, settingsInstance.Dfs);
+                        new RpcModule().Load(builder, settingsInstance.Rpc);
+                        new GossipModule().Load(builder, settingsInstance.Gossip);
+                        new LedgerModule().Load(builder, settingsInstance.Ledger);
+                        new MempoolModule().Load(builder, settingsInstance.Mempool);
+                        new ContractModule().Load(builder, settingsInstance.Contract);
+                        new ConsensusModule().Load(builder, settingsInstance.Consensus);
+                        new PeerModule().Load(builder, settingsInstance.Peer, settingsInstance.Ssl, options);
                         
-                        builder.Register(c => new LedgerService(c.Resolve<ILedger>(), settingsInstance.Ledger))
-                            .As<ILedgerService>()
-                            .InstancePerLifetimeScope();
-                        
-                        builder.Register(c => new MempoolService(c.Resolve<IMempool>(), settingsInstance.Mempool))
-                            .As<IMempoolService>()
-                            .InstancePerLifetimeScope();
-                        
-                        builder.Register(c => new PeerService(c.Resolve<IPeer>(), settingsInstance.Peer, options))
-                            .As<IPeerService>()
-                            .InstancePerLifetimeScope();
-                        
-                        builder.Register(c => new RpcService(c.Resolve<IRpcServer>(), settingsInstance.Rpc))
-                            .As<IRpcService>()
-                            .InstancePerLifetimeScope();
-            
                         var container = builder.Build();
                         
                         _instance = new Kernel(settingsInstance, container);

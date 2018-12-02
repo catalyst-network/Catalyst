@@ -29,9 +29,6 @@ using ADL.Node.Core.Helpers.Services;
         /// <param name="settings"></param>
         public bool StartService()
         {
-            Console.WriteLine(Settings.BindAddress);
-            Console.WriteLine(Settings.Port);
-
             RpcServer.CreateServer(Settings.BindAddress, Settings.Port);
             TokenSource = new CancellationTokenSource();
             ServerTask = RunServiceAsync(RpcServer.Server, TokenSource.Token);

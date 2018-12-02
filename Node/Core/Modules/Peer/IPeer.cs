@@ -8,11 +8,10 @@ namespace ADL.Node.Core.Modules.Peer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="p2PSettings"></param>
         /// <param name="sslSettings"></param>
-        /// <param name="dataDir"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        Task StartPeer();
+        Task StartPeer(ISslSettings sslSettings, string options);
 
         bool StopPeer();
     }
