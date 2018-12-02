@@ -4,14 +4,14 @@ namespace ADL.Node.Core.Helpers.Services
 {
     abstract public class ServiceBase
     {
-        public bool StartService()
+        public virtual bool StartService()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
-        public bool StopService()
+        public virtual bool StopService()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         /// <summary>

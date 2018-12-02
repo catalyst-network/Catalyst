@@ -1,11 +1,8 @@
-﻿﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using ADL.Node.Core.Helpers.Services;
+﻿using ADL.Node.Core.Helpers.Services;
  
  namespace ADL.Node.Core.Modules.Ledger
 {
-    public class LedgerService : AsyncServiceBase, ILedgerService
+    public class LedgerService : ServiceBase, ILedgerService
     {
             
         private ILedger Ledger;

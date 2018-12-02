@@ -1,8 +1,8 @@
-using ADL.DataStore;
+using ADL.Node.Core.Helpers.Services;
 
 namespace ADL.Node.Core.Modules.Mempool
 {
-    public class MempoolService : IMempoolService
+    public class MempoolService : ServiceBase, IMempoolService
     {
         private IMempool Mempool;
         private IMempoolSettings MempoolSettings;
@@ -14,21 +14,6 @@ namespace ADL.Node.Core.Modules.Mempool
         {
             Mempool = mempool;
             MempoolSettings = settings;
-        }
-        
-        public bool StartService()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool StopService()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool RestartService()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
