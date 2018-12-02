@@ -12,7 +12,13 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Protocols\Mempool\Mempool.csproj" />
+        <ProjectReference Include="..\Protocols\Mempool\MempoolProto.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Components\Redis\Redis.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Components\Ipfs\Ipfs.csproj" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Node\Node.csproj" />
