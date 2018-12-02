@@ -8,9 +8,9 @@ namespace ADL.Node
     /// </summary>
     public sealed class NodeOptions
     {
-        string PfxFileName { get; set; }
+        public string PfxFileName { get; set; }
         public uint Env { get; set; } = 1;
-        string SslCertPassword { get; set; }
+        public string SslCertPassword { get; set; }
         public bool Dfs { get; set; } = false;
         public bool Rpc { get; set; } = false;
         public bool Peer { get; set; } = false;

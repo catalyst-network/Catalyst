@@ -1,18 +1,14 @@
 using System;
 using Autofac;
-using ADL.Peer;
-using ADL.Rpc;
-using ADL.Dfs;
-using System.IO;
-using ADL.Gossip;
-using Akka.Actor;
-using ADL.Consensus;
-using ADL.Contract;
-using ADL.Ledger;
-using ADL.Node;
 using System.Threading.Tasks;
-using ADL.Mempool;
-using Autofac.Core;
+using ADL.Node.Core.Modules.Dfs;
+using ADL.Node.Core.Modules.Rpc;
+using ADL.Node.Core.Modules.Peer;
+using ADL.Node.Core.Modules.Gossip;
+using ADL.Node.Core.Modules.Ledger;
+using ADL.Node.Core.Modules.Mempool;
+using ADL.Node.Core.Modules.Contract;
+using ADL.Node.Core.Modules.Consensus;
 
 namespace ADL.Node
 {
@@ -55,7 +51,7 @@ namespace ADL.Node
         /// </summary>
         private AtlasSystem(NodeOptions options)
         {
-            Kernel = ADL.Node.Kernel.GetInstance(options);
+            Kernel = Kernel.GetInstance(options);
 
             if (options.Rpc)
             {
@@ -72,7 +68,7 @@ namespace ADL.Node
                 {
                     ConsensusService = scope.Resolve<IConsensusService>();
                 }
-                RcpService.StartService();  
+                ConsensusService.StartService();  
             }
             
             if (options.Contract)
@@ -81,7 +77,7 @@ namespace ADL.Node
                 {
                     ContractService = scope.Resolve<IContractService>();
                 }
-                RcpService.StartService();  
+                ContractService.StartService();  
             }
             
             if (options.Dfs)
@@ -90,7 +86,7 @@ namespace ADL.Node
                 {
                     DfsService = scope.Resolve<IDfsService>();
                 }
-                DfsService.StartService(Kernel.Settings.Dfs);                   
+//                DfsService.StartService(Kernel.Settings.Dfs);                   
             }
             
             if (options.Gossip)
@@ -99,7 +95,7 @@ namespace ADL.Node
                 {
                     GossipService = scope.Resolve<IGossipService>();
                 }
-                RcpService.StartService();  
+                GossipService.StartService();  
             }
 
             if (options.Ledger)
@@ -108,7 +104,7 @@ namespace ADL.Node
                 {
                     LedgerService = scope.Resolve<ILedgerService>();
                 }
-                RcpService.StartService();     
+                LedgerService.StartService();     
             }
             
             if (options.Mempool)
@@ -117,7 +113,7 @@ namespace ADL.Node
                 {
                     MempoolService = scope.Resolve<IMempoolService>();
                 }
-                RcpService.StartService();       
+                MempoolService.StartService();       
             }
             
             if (options.Peer)
@@ -127,7 +123,7 @@ namespace ADL.Node
                 {
                     PeerService = scope.Resolve<IPeerService>();
                 }
-                PeerService.StartServer(Kernel.Settings.Peer, new DirectoryInfo(Kernel.Settings.NodeOptions.DataDir));
+//                PeerService.StartService(Kernel.Settings.Peer, new DirectoryInfo(Kernel.Settings.NodeOptions.DataDir));
             }         
         }
 

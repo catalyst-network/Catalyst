@@ -2,66 +2,74 @@
   "defaultAssembly": "Node",
   "components": [
     {
-      "type": "ADL.Node.RpcSettings, Node",
+      "type": "ADL.Node.Core.Modules.Consensus.Consensus, Node",
       "services": [
         {
-          "type": "ADL.Rpc.IRpcSettings, RpcService"
+          "type": "ADL.Node.Core.Modules.Consensus.IConsensus, Node"
         }
       ]
     },
     {
-      "type": "ADL.NodeGrpc.NodeRpcServer, NodeGrpc",
+      "type": "ADL.Node.Core.Modules.Contract.Contract, Node",
       "services": [
         {
-          "type": "ADL.Rpc.IRpcServer, RpcService"
+          "type": "ADL.Node.Core.Modules.Contract.IContract, Node"
         }
       ]
     },
     {
-      "type": "ADL.Rpc.RpcService, RpcService",
+      "type": "ADL.Node.Core.Modules.Gossip.Gossip, Node",
       "services": [
         {
-          "type": "ADL.Rpc.IRpcService, RpcService"
+          "type": "ADL.Node.Core.Modules.Gossip.IGossip, Node"
         }
       ]
     },
     {
-      "type": "ADL.Cryptography.ECCurve, Cryptography",
+      "type": "ADL.Node.Core.Modules.Ledger.Ledger, Node",
       "services": [
         {
-          "type": "ADL.Cryptography.ICryptography, Cryptography"
+          "type": "ADL.Node.Core.Modules.Ledger.ILedger, Node"
         }
       ]
     },
     {
-      "type": "ADL.Dfs.IpfsConnector, DfsService",
+      "type": "ADL.Node.Core.Modules.Mempool.Mempool, Node",
       "services": [
         {
-          "type": "ADL.Dfs.IDfs, DfsService"
+          "type": "ADL.Node.Core.Modules.Mempool.IMempool, Node"
         }
       ]
     },
     {
-      "type": "ADL.Ledger.LedgerService, LedgerService",
+      "type": "ADL.Node.Core.Modules.Peer.Peer, Node",
       "services": [
         {
-          "type": "ADL.Ledger.ILedgerService, LedgerService"
+          "type": "ADL.Node.Core.Modules.Peer.IPeer, Node"
         }
       ]
     },
     {
-      "type": "ADL.Mempool.MempoolService, MempoolService",
+      "type": "ADL.Node.Core.Modules.Rpc.Rpc, Node",
       "services": [
         {
-          "type": "ADL.Mempool.IMempoolService, MempoolService"
+          "type": "ADL.Node.Core.Modules.Rpc.IRpcServer, Node"
         }
       ]
     },
     {
-      "type": "ADL.Peer.PeerService, PeerService",
+      "type": "ADL.Redis.Redis, Redis",
       "services": [
         {
-          "type": "ADL.Peer.IPeer, PeerService"
+          "type": "ADL.DataStore.IKeyStore, DataStore"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Ipfs.IpfsConnector, Ipfs",
+      "services": [
+        {
+          "type": "ADL.Ipfs.IIpfs, Ipfs"
         }
       ]
     }

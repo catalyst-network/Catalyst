@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ADL.NodeGrpc;
+package ADL.Node.Core.Modules.Rpc;
 
 import "Rpc.proto";
 

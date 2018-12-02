@@ -1,20 +1,20 @@
 using System;
-using ADL.Rpc;
-using ADL.Peer;
 using System.Net;
 using System.Linq;
 using Newtonsoft.Json;
-using ADL.Dfs;
-using ADL.Ledger;
-using ADL.Gossip;
-using ADL.Mempool;
-using ADL.Contract;
-using ADL.Consensus;
+using ADL.Node.Core.Modules.Dfs;
+using ADL.Node.Core.Modules.Rpc;
+using ADL.Node.Core.Modules.Peer;
+using ADL.Node.Core.Modules.Gossip;
+using ADL.Node.Core.Modules.Ledger;
+using ADL.Node.Core.Modules.Mempool;
+using ADL.Node.Core.Modules.Contract;
+using ADL.Node.Core.Modules.Consensus;
 using Microsoft.Extensions.Configuration;
 
 namespace ADL.Node
 {
-    public class Settings : ISettings
+    public sealed class Settings
     {
         public IRpcSettings Rpc { get; set; }
         public IDfsSettings Dfs { get; set; }
@@ -142,26 +142,6 @@ namespace ADL.Node
         }
     }
 
-//    /// <summary>
-//    /// Hold settings for ssl/tls
-//    /// </summary>
-//    public class SslSettings : ISslSettings
-//    {
-//        public string PfxFileName { get; set; }
-//        public string SslCertPassword { get; set; }
-//
-//        /// <summary>
-//        /// 
-//        /// </summary>
-//        /// <param name="section"></param>
-//        protected internal SslSettings(IConfiguration section)
-//        {
-//            Console.WriteLine(section.GetSection("PfxFileName").Value);
-//            Console.WriteLine(section.GetSection("SslCertPassword").Value);
-//            PfxFileName = section.GetSection("PfxFileName").Value;
-//            SslCertPassword = section.GetSection("SslCertPassword").Value;
-//        }
-//    }
 //        
     /// <summary>
     /// Consensus settings class.
@@ -283,12 +263,12 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal PeerSettings(IConfiguration section)
         {
+            Magic = uint.Parse(section.GetSection("Magic").Value);
             Port = ushort.Parse(section.GetSection("Port").Value);
             MaxPeers = ushort.Parse(section.GetSection("MaxPeers").Value);
+            AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
             PeerPingInterval = ushort.Parse(section.GetSection("PeerPingInterval").Value);
             PeerLifetimeInterval = ushort.Parse(section.GetSection("PeerLifetimeInterval").Value);
-            Magic = uint.Parse(section.GetSection("Magic").Value);
-            AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
             SeedList = section.GetSection("SeedList").GetChildren().Select(p => p.Value).ToArray();
         }
     }

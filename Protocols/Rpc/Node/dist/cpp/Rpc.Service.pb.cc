@@ -20,8 +20,14 @@
 // @@protoc_insertion_point(includes)
 
 namespace ADL {
-namespace NodeGrpc {
-}  // namespace NodeGrpc
+namespace Node {
+namespace Core {
+namespace Modules {
+namespace Rpc {
+}  // namespace Rpc
+}  // namespace Modules
+}  // namespace Core
+}  // namespace Node
 }  // namespace ADL
 namespace protobuf_Rpc_2eService_2eproto {
 void InitDefaults() {
@@ -51,82 +57,82 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\021Rpc.Service.proto\022\014ADL.NodeGrpc\032\tRpc.p"
-      "roto2\215\026\n\tRpcServer\022O\n\004Ping\022\".ADL.Protoco"
-      "l.Rpc.Node.PingRequest\032#.ADL.Protocol.Rp"
-      "c.Node.PongResponse\022X\n\007Version\022%.ADL.Pro"
-      "tocol.Rpc.Node.VersionRequest\032&.ADL.Prot"
-      "ocol.Rpc.Node.VersionResponse\022X\n\007GetInfo"
-      "\022%.ADL.Protocol.Rpc.Node.GetInfoRequest\032"
-      "&.ADL.Protocol.Rpc.Node.GetInfoResponse\022"
-      "g\n\014CreateWallet\022*.ADL.Protocol.Rpc.Node."
-      "CreateWalletRequest\032+.ADL.Protocol.Rpc.N"
-      "ode.CreateWalletResponse\022a\n\nListWallet\022("
-      ".ADL.Protocol.Rpc.Node.ListWalletRequest"
-      "\032).ADL.Protocol.Rpc.Node.ListWalletRespo"
-      "nse\022j\n\rCreateAddress\022+.ADL.Protocol.Rpc."
-      "Node.CreateAddressRequest\032,.ADL.Protocol"
-      ".Rpc.Node.CreateAddressResponse\022a\n\nGetAd"
-      "dress\022(.ADL.Protocol.Rpc.Node.GetAddress"
-      "Request\032).ADL.Protocol.Rpc.Node.GetAddre"
-      "ssResponse\022d\n\013ListAddress\022).ADL.Protocol"
-      ".Rpc.Node.ListAddressRequest\032*.ADL.Proto"
-      "col.Rpc.Node.ListAddressResponse\022p\n\017Vali"
-      "dateAddress\022-.ADL.Protocol.Rpc.Node.Vali"
-      "dateAddressRequest\032..ADL.Protocol.Rpc.No"
-      "de.ValidateAddressResponse\022a\n\nGetBalance"
-      "\022(.ADL.Protocol.Rpc.Node.GetBalanceReque"
-      "st\032).ADL.Protocol.Rpc.Node.GetBalanceRes"
-      "ponse\022\177\n\024CreateRawTransaction\0222.ADL.Prot"
-      "ocol.Rpc.Node.CreateRawTransactionReques"
-      "t\0323.ADL.Protocol.Rpc.Node.CreateRawTrans"
-      "actionResponse\022y\n\022SignRawTransaction\0220.A"
-      "DL.Protocol.Rpc.Node.SignRawTransactionR"
-      "equest\0321.ADL.Protocol.Rpc.Node.SignRawTr"
-      "ansactionResponse\022\177\n\024DecodeRawTransactio"
-      "n\0222.ADL.Protocol.Rpc.Node.DecodeRawTrans"
-      "actionRequest\0323.ADL.Protocol.Rpc.Node.De"
-      "codeRawTransactionResponse\022\210\001\n\027Broadcast"
-      "RawTransaction\0225.ADL.Protocol.Rpc.Node.B"
-      "roadcastRawTransactionRequest\0326.ADL.Prot"
-      "ocol.Rpc.Node.BroadcastRawTransactionRes"
-      "ponse\022U\n\006SendTo\022$.ADL.Protocol.Rpc.Node."
-      "SendToRequest\032%.ADL.Protocol.Rpc.Node.Se"
-      "ndToResponse\022a\n\nSendToFrom\022(.ADL.Protoco"
-      "l.Rpc.Node.SendToFromRequest\032).ADL.Proto"
-      "col.Rpc.Node.SendToFromResponse\022[\n\010SendM"
-      "any\022&.ADL.Protocol.Rpc.Node.SendManyRequ"
-      "est\032\'.ADL.Protocol.Rpc.Node.SendManyResp"
-      "onse\022g\n\014SendFromMany\022*.ADL.Protocol.Rpc."
-      "Node.SendFromManyRequest\032+.ADL.Protocol."
-      "Rpc.Node.SendFromManyResponse\022X\n\007AddNode"
-      "\022%.ADL.Protocol.Rpc.Node.AddNodeRequest\032"
-      "&.ADL.Protocol.Rpc.Node.AddNodeResponse\022"
-      "d\n\013GetPeerList\022).ADL.Protocol.Rpc.Node.G"
-      "etPeerListRequest\032*.ADL.Protocol.Rpc.Nod"
-      "e.GetPeerListResponse\022d\n\013GetPeerInfo\022).A"
-      "DL.Protocol.Rpc.Node.GetPeerInfoRequest\032"
-      "*.ADL.Protocol.Rpc.Node.GetPeerInfoRespo"
-      "nse\022y\n\022GetConnectionCount\0220.ADL.Protocol"
-      ".Rpc.Node.GetConnectionCountRequest\0321.AD"
-      "L.Protocol.Rpc.Node.GetConnectionCountRe"
-      "sponse\022[\n\010GetDelta\022&.ADL.Protocol.Rpc.No"
-      "de.GetDeltaRequest\032\'.ADL.Protocol.Rpc.No"
-      "de.GetDeltaResponse\022a\n\nGetMempool\022(.ADL."
-      "Protocol.Rpc.Node.GetMempoolRequest\032).AD"
-      "L.Protocol.Rpc.Node.GetMempoolResponse\022d"
-      "\n\013SignMessage\022).ADL.Protocol.Rpc.Node.Si"
-      "gnMessageRequest\032*.ADL.Protocol.Rpc.Node"
-      ".SignMessageResponse\022j\n\rVerifyMessage\022+."
-      "ADL.Protocol.Rpc.Node.VerifyMessageReque"
-      "st\032,.ADL.Protocol.Rpc.Node.VerifyMessage"
-      "Response\022j\n\rServiceStatus\022+.ADL.Protocol"
-      ".Rpc.Node.ServiceStatusRequest\032,.ADL.Pro"
-      "tocol.Rpc.Node.ServiceStatusResponseb\006pr"
-      "oto3"
+      "\n\021Rpc.Service.proto\022\031ADL.Node.Core.Modul"
+      "es.Rpc\032\tRpc.proto2\215\026\n\tRpcServer\022O\n\004Ping\022"
+      "\".ADL.Protocol.Rpc.Node.PingRequest\032#.AD"
+      "L.Protocol.Rpc.Node.PongResponse\022X\n\007Vers"
+      "ion\022%.ADL.Protocol.Rpc.Node.VersionReque"
+      "st\032&.ADL.Protocol.Rpc.Node.VersionRespon"
+      "se\022X\n\007GetInfo\022%.ADL.Protocol.Rpc.Node.Ge"
+      "tInfoRequest\032&.ADL.Protocol.Rpc.Node.Get"
+      "InfoResponse\022g\n\014CreateWallet\022*.ADL.Proto"
+      "col.Rpc.Node.CreateWalletRequest\032+.ADL.P"
+      "rotocol.Rpc.Node.CreateWalletResponse\022a\n"
+      "\nListWallet\022(.ADL.Protocol.Rpc.Node.List"
+      "WalletRequest\032).ADL.Protocol.Rpc.Node.Li"
+      "stWalletResponse\022j\n\rCreateAddress\022+.ADL."
+      "Protocol.Rpc.Node.CreateAddressRequest\032,"
+      ".ADL.Protocol.Rpc.Node.CreateAddressResp"
+      "onse\022a\n\nGetAddress\022(.ADL.Protocol.Rpc.No"
+      "de.GetAddressRequest\032).ADL.Protocol.Rpc."
+      "Node.GetAddressResponse\022d\n\013ListAddress\022)"
+      ".ADL.Protocol.Rpc.Node.ListAddressReques"
+      "t\032*.ADL.Protocol.Rpc.Node.ListAddressRes"
+      "ponse\022p\n\017ValidateAddress\022-.ADL.Protocol."
+      "Rpc.Node.ValidateAddressRequest\032..ADL.Pr"
+      "otocol.Rpc.Node.ValidateAddressResponse\022"
+      "a\n\nGetBalance\022(.ADL.Protocol.Rpc.Node.Ge"
+      "tBalanceRequest\032).ADL.Protocol.Rpc.Node."
+      "GetBalanceResponse\022\177\n\024CreateRawTransacti"
+      "on\0222.ADL.Protocol.Rpc.Node.CreateRawTran"
+      "sactionRequest\0323.ADL.Protocol.Rpc.Node.C"
+      "reateRawTransactionResponse\022y\n\022SignRawTr"
+      "ansaction\0220.ADL.Protocol.Rpc.Node.SignRa"
+      "wTransactionRequest\0321.ADL.Protocol.Rpc.N"
+      "ode.SignRawTransactionResponse\022\177\n\024Decode"
+      "RawTransaction\0222.ADL.Protocol.Rpc.Node.D"
+      "ecodeRawTransactionRequest\0323.ADL.Protoco"
+      "l.Rpc.Node.DecodeRawTransactionResponse\022"
+      "\210\001\n\027BroadcastRawTransaction\0225.ADL.Protoc"
+      "ol.Rpc.Node.BroadcastRawTransactionReque"
+      "st\0326.ADL.Protocol.Rpc.Node.BroadcastRawT"
+      "ransactionResponse\022U\n\006SendTo\022$.ADL.Proto"
+      "col.Rpc.Node.SendToRequest\032%.ADL.Protoco"
+      "l.Rpc.Node.SendToResponse\022a\n\nSendToFrom\022"
+      "(.ADL.Protocol.Rpc.Node.SendToFromReques"
+      "t\032).ADL.Protocol.Rpc.Node.SendToFromResp"
+      "onse\022[\n\010SendMany\022&.ADL.Protocol.Rpc.Node"
+      ".SendManyRequest\032\'.ADL.Protocol.Rpc.Node"
+      ".SendManyResponse\022g\n\014SendFromMany\022*.ADL."
+      "Protocol.Rpc.Node.SendFromManyRequest\032+."
+      "ADL.Protocol.Rpc.Node.SendFromManyRespon"
+      "se\022X\n\007AddNode\022%.ADL.Protocol.Rpc.Node.Ad"
+      "dNodeRequest\032&.ADL.Protocol.Rpc.Node.Add"
+      "NodeResponse\022d\n\013GetPeerList\022).ADL.Protoc"
+      "ol.Rpc.Node.GetPeerListRequest\032*.ADL.Pro"
+      "tocol.Rpc.Node.GetPeerListResponse\022d\n\013Ge"
+      "tPeerInfo\022).ADL.Protocol.Rpc.Node.GetPee"
+      "rInfoRequest\032*.ADL.Protocol.Rpc.Node.Get"
+      "PeerInfoResponse\022y\n\022GetConnectionCount\0220"
+      ".ADL.Protocol.Rpc.Node.GetConnectionCoun"
+      "tRequest\0321.ADL.Protocol.Rpc.Node.GetConn"
+      "ectionCountResponse\022[\n\010GetDelta\022&.ADL.Pr"
+      "otocol.Rpc.Node.GetDeltaRequest\032\'.ADL.Pr"
+      "otocol.Rpc.Node.GetDeltaResponse\022a\n\nGetM"
+      "empool\022(.ADL.Protocol.Rpc.Node.GetMempoo"
+      "lRequest\032).ADL.Protocol.Rpc.Node.GetMemp"
+      "oolResponse\022d\n\013SignMessage\022).ADL.Protoco"
+      "l.Rpc.Node.SignMessageRequest\032*.ADL.Prot"
+      "ocol.Rpc.Node.SignMessageResponse\022j\n\rVer"
+      "ifyMessage\022+.ADL.Protocol.Rpc.Node.Verif"
+      "yMessageRequest\032,.ADL.Protocol.Rpc.Node."
+      "VerifyMessageResponse\022j\n\rServiceStatus\022+"
+      ".ADL.Protocol.Rpc.Node.ServiceStatusRequ"
+      "est\032,.ADL.Protocol.Rpc.Node.ServiceStatu"
+      "sResponseb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2884);
+      descriptor, 2897);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Rpc.Service.proto", &protobuf_RegisterTypes);
   ::protobuf_Rpc_2eproto::AddDescriptors();
@@ -144,10 +150,16 @@ struct StaticDescriptorInitializer {
 } static_descriptor_initializer;
 }  // namespace protobuf_Rpc_2eService_2eproto
 namespace ADL {
-namespace NodeGrpc {
+namespace Node {
+namespace Core {
+namespace Modules {
+namespace Rpc {
 
 // @@protoc_insertion_point(namespace_scope)
-}  // namespace NodeGrpc
+}  // namespace Rpc
+}  // namespace Modules
+}  // namespace Core
+}  // namespace Node
 }  // namespace ADL
 namespace google {
 namespace protobuf {
