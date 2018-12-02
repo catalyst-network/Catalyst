@@ -6,6 +6,8 @@ namespace ADL.Node.Core.Modules.Rpc
 {
     public interface IRpcServer
     {
+        Server Server { get; set; }
+        
         void CreateServer(string bindAddress, int port);
         
         Task<PongResponse> Ping(PingRequest request, ServerCallContext context);

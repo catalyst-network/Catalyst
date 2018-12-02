@@ -7,7 +7,7 @@ namespace ADL.Node.Core.Modules.Rpc
 {
     public class Rpc : RpcServer.RpcServerBase, IRpcServer
     {
-        private Server Server { get; set; }
+        public Server Server { get; set; }
 
         public void CreateServer(string bindAddress, int port)
         {

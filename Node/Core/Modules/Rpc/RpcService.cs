@@ -8,7 +8,6 @@ using ADL.Node.Core.Helpers.Services;
 {
     public class RpcService : AsyncServiceBase, IRpcService
     {
-        private Server Server { get; set; }
         private Task ServerTask { get; set; }
         private IRpcServer RpcServer { get; set; }
         private IRpcSettings Settings { get; set; }
@@ -35,7 +34,7 @@ using ADL.Node.Core.Helpers.Services;
 
             RpcServer.CreateServer(Settings.BindAddress, Settings.Port);
             TokenSource = new CancellationTokenSource();
-            ServerTask = RunServiceAsync(Server, TokenSource.Token);
+            ServerTask = RunServiceAsync(RpcServer.Server, TokenSource.Token);
             return true;
         }
         
@@ -57,32 +56,6 @@ using ADL.Node.Core.Helpers.Services;
             }
             Console.WriteLine("RpcServer shutdown");
             return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool RestartService()
-        {
-            if (StopService())
-            {
-                if (StartService())
-                {
-                    Console.WriteLine("RPC service restarted successfully");
-                }
-                else
-                {
-                    Console.WriteLine("Couldn't start rpc service");
-                    return false;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Couldn't stop rpc service");
-                return false;
-            }
-            return true;
         }
 
         /// <summary>
