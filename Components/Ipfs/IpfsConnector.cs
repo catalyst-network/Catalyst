@@ -3,7 +3,6 @@ using System;
 using Ipfs.Api;
 using System.Threading;
 using ADL.Bash;
-using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
@@ -13,12 +12,18 @@ namespace ADL.Ipfs
     ///   Wrapper for some of the Ipfs methods.
     ///   It will try to connect the client to the IPFS daemon.
     /// </summary>
-    public class IpfsConnector : IDfs
+    public class IpfsConnector : IIpfs
     {
         private static IpfsClient _client; 
         private string _defaultApiEndPoint;
+        public int ConnectRetries { get; set; }
+
+        public IpfsConnector(int connectRetries)
+        {
+            ConnectRetries = connectRetries;
+        }
         
-        private IDfsSettings _settings { get; set; }
+//        private IDfsSettings _settings { get; set; }
         
         /// <summary>
         ///   Check if IPFS client can connect to IPFS daemon
@@ -56,7 +61,7 @@ namespace ADL.Ipfs
         {
             var retries = 1;
             
-            while (retries <= _settings.ConnectRetries)
+            while (retries <= ConnectRetries)
             {
                 if (!IsClientConnected())
                 {
@@ -74,48 +79,6 @@ namespace ADL.Ipfs
            // If it could not connect after a few attempt then throw
            // an invalid operation exception and backup
            throw new InvalidOperationException("Failed to connect with IPFS daemon");
-        }
-
-        /// <summary>
-        ///   Start IPFS daemon and set client and settings to null
-        /// </summary>
-        public void Start(IDfsSettings settings)
-        {
-            if (_client != null)
-            {
-                TryToConnectClient(); // just to validate that connection with daemon is alive too
-                return;
-            }
-
-            _client  = new IpfsClient();
-            
-            _settings = settings;            
-            _defaultApiEndPoint = IpfsClient.DefaultApiUri + _settings.IpfsVersionApi;
-            
-            TryToConnectClient();
-        }
-        
-        /// <summary>
-        ///   Stop IPFS daemon and set client and settings to null
-        /// </summary>
-        public void Stop()
-        {
-            var localByName = Process.GetProcessesByName("ipfs");
-            if (localByName.Length == 1)
-            {
-                localByName[0].Kill(); // kill daemon process
-            }
-
-            if (_client != null)
-            {
-                if (IsClientConnected()) // if still connected then operation failed
-                {
-                    throw new InvalidOperationException();
-                }
-            }
-
-            _client = null;
-            _settings = null;
         }
         
         /// <summary>

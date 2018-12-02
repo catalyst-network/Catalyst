@@ -1,7 +1,4 @@
 namespace ADL.Token
 {
-    public interface IToken
-    {
-        
-    }
+    public interface IToken {}
 }

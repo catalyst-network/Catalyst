@@ -1,13 +1,18 @@
-using Autofac;
 using System;
+using Autofac;
 using System.IO;
-using ADL.Gossip;
-using ADL.Contract;
 using ADL.Platform;
-using Akka.DI.Core;
-using ADL.Consensus;
 using System.Reflection;
 using System.Runtime.Loader;
+using ADL.DataStore;
+using ADL.Node.Core.Modules.Consensus;
+using ADL.Node.Core.Modules.Contract;
+using ADL.Node.Core.Modules.Dfs;
+using ADL.Node.Core.Modules.Gossip;
+using ADL.Node.Core.Modules.Ledger;
+using ADL.Node.Core.Modules.Mempool;
+using ADL.Node.Core.Modules.Peer;
+using ADL.Node.Core.Modules.Rpc;
 using Autofac.Configuration;
 using Microsoft.Extensions.Configuration;
 
@@ -16,17 +21,13 @@ namespace ADL.Node
     public sealed class Kernel
     {
         private static Kernel _instance;
-        public Settings Settings { get; set; }
         public IContainer Container { get; set; }
-        public IDependencyResolver Resolver { get; set; }
+        public static Settings Settings { get; set; }
         private static readonly object Mutex = new object();
 
         /// <summary>
         /// Get a thread safe kernel singleton.
         /// </summary>
-        /// <param name="resolver"></param>
-        /// <param name="settings"></param>
-        /// <param name="container"></param>
         /// <returns></returns>
         public static Kernel GetInstance(NodeOptions options)
         { 
@@ -98,18 +99,45 @@ namespace ADL.Node
                         AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
                             context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
             
-                        var iocConfig = new ConfigurationBuilder()
+                        var componentConfig = new ConfigurationBuilder()
                             .AddJsonFile(options.DataDir+"/components.json")
                             .Build();
-                        var iocConfigModule = new ConfigurationModule(iocConfig);
+                            
+                        var iocComponents = new ConfigurationModule(componentConfig);
 
-                        builder.RegisterModule(iocConfigModule);
+                        builder.RegisterModule(iocComponents);
+                        
+                        builder.Register(c => new ConsensusService(c.Resolve<IConsensus>(), settingsInstance.Consensus))
+                            .As<IConsensusService>()
+                            .InstancePerLifetimeScope();
+                        
+                        builder.Register(c => new ContractService(c.Resolve<IContract>(), settingsInstance.Contract))
+                            .As<IContractService>()
+                            .InstancePerLifetimeScope();
+                        
+//                        builder.Register(c => new DfsService(c.Resolve<IDfsService>(), settingsInstance.Dfs))
+//                            .As<IDfsService>()
+//                            .InstancePerLifetimeScope();
 
-                        // We can't resolve actors from config unless support added to underlying autofac library
-                        // @TODO future improvement to load from autofac config json
-                        builder.RegisterType<GossipService>().As<GossipService>();
-                        builder.RegisterType<ContractService>().As<ContractService>();
-                        builder.RegisterType<ConsensusService>().As<ConsensusService>();
+                        builder.Register(c => new GossipService(c.Resolve<IGossip>(), settingsInstance.Gossip))
+                            .As<IGossipService>()
+                            .InstancePerLifetimeScope();
+                        
+                        builder.Register(c => new LedgerService(c.Resolve<ILedger>(), settingsInstance.Ledger))
+                            .As<ILedgerService>()
+                            .InstancePerLifetimeScope();
+                        
+                        builder.Register(c => new MempoolService(c.Resolve<IMempool>(), settingsInstance.Mempool))
+                            .As<IMempoolService>()
+                            .InstancePerLifetimeScope();
+                        
+                        builder.Register(c => new PeerService(c.Resolve<IPeer>(), settingsInstance.Peer, options))
+                            .As<IPeerService>()
+                            .InstancePerLifetimeScope();
+                        
+                        builder.Register(c => new RpcService(c.Resolve<IRpcServer>(), settingsInstance.Rpc))
+                            .As<IRpcService>()
+                            .InstancePerLifetimeScope();
             
                         var container = builder.Build();
                         

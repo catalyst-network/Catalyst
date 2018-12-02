@@ -159,7 +159,7 @@ namespace ADL.Node
                 });
                 app.Execute(args); 
             });
-            return 0;
+            return 1;
         }
 
         /// <summary>

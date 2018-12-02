@@ -8,6 +8,11 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Helpers\Math\Math.csproj" />
     </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
+        <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    </ItemGroup>
 
     <ItemGroup>
       <_UnmanagedRegistrationCache Remove="obj\Cryptography.csproj.UnmanagedRegistration.cache" />
@@ -35,6 +40,10 @@
 
     <ItemGroup>
       <DeployManifest Remove="obj\Debug\netcoreapp2.1\Cryptography.application" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="UnitTests" />
     </ItemGroup>
 
 </Project>
