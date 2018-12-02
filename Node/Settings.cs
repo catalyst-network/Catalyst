@@ -18,6 +18,7 @@ namespace ADL.Node
     {
         public IRpcSettings Rpc { get; set; }
         public IDfsSettings Dfs { get; set; }
+        public ISslSettings Ssl  { get; set; }
         public IPeerSettings Peer { get; set; }
         public IGossipSettings Gossip { get; set; }
         public ILedgerSettings Ledger { get; set; }
@@ -57,10 +58,10 @@ namespace ADL.Node
             var userConfig = LoadConfig(options.DataDir, options.Network);
 
             NodeOptions = options;
+            Ssl = new SslSettings(userConfig.GetSection("Ssl"));
             Dfs = new DfsSettings(userConfig.GetSection("Dfs"));
+            Rpc = new RpcSettings(userConfig.GetSection("Rpc"));
             Peer = new PeerSettings(userConfig.GetSection("Peer"));
-            Rpc = new RpcSettings();
-            Rpc.Populate(userConfig.GetSection("Rpc"));
             Gossip = new GossipSettings(userConfig.GetSection("Gossip"));
             Ledger = new LedgerSettings(userConfig.GetSection("Ledger"));
             Mempool = new MempoolSettings(userConfig.GetSection("Mempool"));
@@ -273,6 +274,34 @@ namespace ADL.Node
         }
     }
 
+    public interface ISslSettings
+    {
+        string PfxFileName { get; set; }
+        string SslCertPassword { get; set; }  
+    }
+
+    /// <summary>
+    /// Hold settings for ssl/tls
+    /// </summary>
+    public class SslSettings : ISslSettings
+    {
+        public string PfxFileName { get; set; }
+        public string SslCertPassword { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="section"></param>
+        protected internal SslSettings(IConfiguration section)
+        {
+            Console.WriteLine(section.GetSection("PfxFileName").Value);
+            Console.WriteLine(section.GetSection("SslCertPassword").Value);
+            PfxFileName = section.GetSection("PfxFileName").Value;
+            SslCertPassword = section.GetSection("SslCertPassword").Value;
+        }
+    }
+
+
     /// <summary>
     /// RPC settings class.
     /// </summary>
@@ -285,7 +314,7 @@ namespace ADL.Node
         /// Set attributes
         /// </summary>
         /// <param name="section"></param>
-        public void Populate(IConfiguration section)
+        protected internal RpcSettings(IConfiguration section)
         {
             Port = int.Parse(section.GetSection("Port").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();

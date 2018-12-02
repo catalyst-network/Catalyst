@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Autofac;
 using System.Threading.Tasks;
 using ADL.Node.Core.Modules.Dfs;
@@ -123,7 +124,7 @@ namespace ADL.Node
                 {
                     PeerService = scope.Resolve<IPeerService>();
                 }
-//                PeerService.StartService(Kernel.Settings.Peer, new DirectoryInfo(Kernel.Settings.NodeOptions.DataDir));
+                PeerService.StartService();
             }         
         }
 

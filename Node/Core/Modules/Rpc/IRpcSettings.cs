@@ -6,6 +6,5 @@ namespace ADL.Node.Core.Modules.Rpc
     {
         int Port { get; set; }
         string BindAddress { get; set; }
-        void Populate(IConfiguration section);
     }
 }
