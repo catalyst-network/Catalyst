@@ -11,7 +11,7 @@ namespace ADL.Node
         public string PfxFileName { get; set; }
         public uint Env { get; set; } = 1;
         public string SslCertPassword { get; set; }
-        public bool Dfs { get; set; } = false;
+        public bool Dfs { get; set; } = true;
         public bool Rpc { get; set; } = true;
         public bool Peer { get; set; } = true;
         public uint Platform { get; set; } = 0;
