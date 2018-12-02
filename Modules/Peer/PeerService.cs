@@ -7,55 +7,44 @@ namespace ADL.Peer
     /// <summary>
     /// The Peer Service 
     /// </summary>
-    public class PeerService : IPeer
+    public class PeerService : IPeerService
     {
+        
         /// <summary>
-        /// PeerController constructor.
-        /// </summary>
-        public PeerService()
-        {
-            DateTime currentUTC = DateTime.UtcNow;
-        }
-
-        /// <summary>
-        /// Returns a UTC DateTime obj
-        /// </summary>
-        /// <returns></returns>
-        DateTime CurrentUTCTime()
-        {
-            return DateTime.UtcNow;
-        }
-
-        /// <inheritdoc />
-        /// <summary>
+        /// 
         /// </summary>
         /// <param name="p2PSettings"></param>
         /// <param name="sslSettings"></param>
         /// <param name="dataDir"></param>
         /// <returns></returns>
-        public Task StartServer(IPeerSettings peerSettings, DirectoryInfo dataDir)
+        public static async Task StartService(IPeerSettings p2PSettings, DirectoryInfo dataDir)
         {
-            return Peer.StartService(peerSettings, dataDir);
+#if DEBUG
+            Console.WriteLine("peer start service " + dataDir); 
+            Console.WriteLine("start service param " + dataDir);            
+#endif
+            DataDir = dataDir;
+            PeerSettings = p2PSettings;
+            await AsyncWrapper();
         }
+
             
-        public bool StopServer()
+        public bool StopService()
         {
             return Peer.ShutDown();
         }
-
-        void PingPeer()
-        {
-            
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private static Task AsyncWrapper()
+        {         
+            var task = Task.Factory.StartNew(RunWatson);
+            task.ConfigureAwait(false);
+            return task;
         }
 
-        void GetPeerInfo()
-        {
-            
-        }
-
-        void GetPeerNeighbors()
-        {
-            
-        }
     }
 }

@@ -4,7 +4,7 @@ using ADL.Peer;
 using System.Net;
 using System.Linq;
 using Newtonsoft.Json;
-using ADL.DFS;
+using ADL.Dfs;
 using ADL.Ledger;
 using ADL.Gossip;
 using ADL.Mempool;
@@ -59,12 +59,14 @@ namespace ADL.Node
             NodeOptions = options;
             Dfs = new DfsSettings(userConfig.GetSection("Dfs"));
             Peer = new PeerSettings(userConfig.GetSection("Peer"));
-            Rpc = RpcSettings.GetInstance(userConfig.GetSection("Rpc"));
+            Rpc = new RpcSettings();
+            Rpc.Populate(userConfig.GetSection("Rpc"));
             Gossip = new GossipSettings(userConfig.GetSection("Gossip"));
             Ledger = new LedgerSettings(userConfig.GetSection("Ledger"));
             Mempool = new MempoolSettings(userConfig.GetSection("Mempool"));
             Contract = new ContractSettings(userConfig.GetSection("Contract"));
             Consensus = new ConsensusSettings(userConfig.GetSection("Consensus"));
+
         }
 
         /// <summary>
@@ -84,16 +86,16 @@ namespace ADL.Node
             switch (network)
             {
                 case "devnet":
-                    networkConfigFile = "/config.devnet.json";
+                    networkConfigFile = "/devnet.json";
                     break;
                 case "mainnet":
-                    networkConfigFile = "/config.mainnet.json";
+                    networkConfigFile = "/mainnet.json";
                     break;
                 case "testnet":
-                    networkConfigFile = "/config.testnet.json";
+                    networkConfigFile = "/testnet.json";
                     break;
                 default:
-                    networkConfigFile = "/config.devnet.json";
+                    networkConfigFile = "/devnet.json";
                     break;
             }
            
@@ -274,6 +276,7 @@ namespace ADL.Node
         public uint Magic { get; set; }
         public string[] SeedList { get; set; }
         public byte AddressVersion { get; set; }
+        
         /// <summary>
         /// Set attributes
         /// </summary>
@@ -295,33 +298,16 @@ namespace ADL.Node
     /// </summary>
     public class RpcSettings : IRpcSettings
     {
-        public ushort Port { get; set; }
+        public int Port { get; set; }
         public string BindAddress { get; set; }
-        private static RpcSettings Instance { get; set; }
-        private static readonly object Mutex = new object();
-        
-        public static RpcSettings GetInstance(IConfiguration section)
-        { 
-            if (Instance == null) 
-            { 
-                lock (Mutex)
-                {
-                    if (Instance == null) 
-                    { 
-                        Instance = new RpcSettings(section);
-                    }
-                } 
-            }
-            return Instance;
-        }
         
         /// <summary>
         /// Set attributes
         /// </summary>
         /// <param name="section"></param>
-        private RpcSettings(IConfiguration section)
+        public void Populate(IConfiguration section)
         {
-            Port = ushort.Parse(section.GetSection("Port").Value);
+            Port = int.Parse(section.GetSection("Port").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
         }
     }

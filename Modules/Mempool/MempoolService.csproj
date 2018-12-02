@@ -12,6 +12,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Components\Redis\Redis.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
+    <ProjectReference Include="..\..\Helpers\DataStore\DataStore.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Protocols\Mempool\MempoolProto.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\MempoolService.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
@@ -38,17 +51,5 @@
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.1\Mempool.application" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Protocols\Mempool\MempoolProto.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
-  </ItemGroup>
   
-  <ItemGroup>
-    <ProjectReference Include="..\..\Components\Redis\Redis.csproj" />
-  </ItemGroup>
-
 </Project>

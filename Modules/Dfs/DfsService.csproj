@@ -6,11 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ipfs.Api" Version="0.23.2" />
-    <PackageReference Include="Ipfs.Core" Version="0.34.2" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
     <ProjectReference Include="..\..\Helpers\Bash\Bash.csproj" />
   </ItemGroup>
   

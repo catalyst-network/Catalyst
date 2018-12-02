@@ -1,7 +1,4 @@
 namespace ADL.Contract
 {
-    public interface IContractSettings
-    {
-
-    }
+    public interface IContractSettings {}
 }

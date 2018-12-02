@@ -17,22 +17,21 @@ namespace ADL.Peer
         private static DirectoryInfo DataDir { get; set; }
         private static IPeerSettings PeerSettings { get; set; }
 
-        /// <summary>
-        /// 
+                /// <summary>
+        /// PeerController constructor.
         /// </summary>
-        /// <param name="p2PSettings"></param>
-        /// <param name="sslSettings"></param>
-        /// <param name="dataDir"></param>
-        /// <returns></returns>
-        public static async Task StartService(IPeerSettings p2PSettings, DirectoryInfo dataDir)
+        public PeerService()
         {
-#if DEBUG
-            Console.WriteLine("peer start service " + dataDir); 
-            Console.WriteLine("start service param " + dataDir);            
-#endif
-            DataDir = dataDir;
-            PeerSettings = p2PSettings;
-            await AsyncWrapper();
+            DateTime currentUTC = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Returns a UTC DateTime obj
+        /// </summary>
+        /// <returns></returns>
+        DateTime CurrentUTCTime()
+        {
+            return DateTime.UtcNow;
         }
 
         /// <summary>

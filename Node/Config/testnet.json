@@ -46,7 +46,7 @@
         "seed5.network.atlas.io:42069"
       ]
     },
-    "RPC": {
+    "Rpc": {
       "BindAddress": "0.0.0.0",
       "Port": 42042
     }

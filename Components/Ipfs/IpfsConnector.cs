@@ -7,13 +7,13 @@ using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
-namespace ADL.DFS
+namespace ADL.Ipfs
 {
     /// <summary>
     ///   Wrapper for some of the Ipfs methods.
     ///   It will try to connect the client to the IPFS daemon.
     /// </summary>
-    public class IpfsConnector : IDFS
+    public class IpfsConnector : IDfs
     {
         private static IpfsClient _client; 
         private string _defaultApiEndPoint;

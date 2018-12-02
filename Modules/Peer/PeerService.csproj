@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
     <ProjectReference Include="..\..\Helpers\Network\Network.csproj" />
     <ProjectReference Include="..\..\Helpers\Cryptography\Cryptography.csproj" />
   </ItemGroup>

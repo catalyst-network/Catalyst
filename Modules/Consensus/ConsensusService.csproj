@@ -11,6 +11,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Helpers\Services\Services.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
       <_UnmanagedRegistrationCache Remove="obj\ConsensusService.csproj.UnmanagedRegistration.cache" />
     </ItemGroup>
 

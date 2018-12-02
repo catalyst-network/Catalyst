@@ -18,9 +18,8 @@ using ADL.Services;
         /// 
         /// </summary>
         /// <param name="settings"></param>
-        public RpcService(IRpcSettings settings, IRpcServer rpcServer)
+        public RpcService(IRpcServer rpcServer)
         {
-            Settings = settings;
             RpcServer = rpcServer;
         }
 
@@ -30,11 +29,10 @@ using ADL.Services;
         /// <param name="settings"></param>
         public bool StartService()
         {
-            Server = new Server
-            {
-//                Services = { RpcServer.BindService(new NodeRpcServer()) },
-                Ports = { new ServerPort(Settings.BindAddress, Settings.Port, ServerCredentials.Insecure) }
-            };
+            Console.WriteLine(Settings.BindAddress);
+            Console.WriteLine(Settings.Port);
+
+            RpcServer.CreateServer(Settings.BindAddress, Settings.Port);
             TokenSource = new CancellationTokenSource();
             ServerTask = RunServiceAsync(Server, TokenSource.Token);
             return true;

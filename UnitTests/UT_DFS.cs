@@ -4,10 +4,10 @@ using ADL.Node;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ADL.DFS
+namespace ADL.Dfs
 {
     [TestClass]
-    public class UT_DFS
+    public class UT_Dfs
     {
         private static IpfsConnector _ipfs = new IpfsConnector();
 
