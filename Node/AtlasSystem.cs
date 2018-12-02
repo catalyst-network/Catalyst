@@ -86,7 +86,7 @@ namespace ADL.Node
                 {
                     DfsService = scope.Resolve<IDfsService>();
                 }
-//                DfsService.StartService(Kernel.Settings.Dfs);                   
+                DfsService.StartService();                   
             }
             
             if (options.Gossip)

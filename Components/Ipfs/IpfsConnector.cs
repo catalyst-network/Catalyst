@@ -1,10 +1,11 @@
-using System.Threading.Tasks;
 using System;
-using Ipfs.Api;
-using System.Threading;
 using ADL.Bash;
-using Newtonsoft.Json.Linq;
+using Ipfs.Api;
 using Newtonsoft.Json;
+using System.Threading;
+using System.Diagnostics;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace ADL.Ipfs
 {
@@ -12,18 +13,58 @@ namespace ADL.Ipfs
     ///   Wrapper for some of the Ipfs methods.
     ///   It will try to connect the client to the IPFS daemon.
     /// </summary>
-    public class IpfsConnector : IIpfs
+    public class IpfsConnector : IDisposable, IIpfs
     {
         private static IpfsClient _client; 
         private string _defaultApiEndPoint;
         public int ConnectRetries { get; set; }
 
-        public IpfsConnector(int connectRetries)
+        // <summary>
+        //   Start IPFS daemon and set client and settings to null
+        // </summary>
+        public void CreateIpfsClient(string ipfsVersionApi, int connectRetries)
         {
-            ConnectRetries = connectRetries;
+            if (_client != null)
+            {
+                TryToConnectClient(connectRetries); // just to validate that connection with daemon is alive too
+                return;
+            }
+
+            _client  = new IpfsClient();
+            
+            _defaultApiEndPoint = IpfsClient.DefaultApiUri + ipfsVersionApi;
+            
+            TryToConnectClient(connectRetries);
         }
         
-//        private IDfsSettings _settings { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            DestroyIpfsClient();
+        }
+   
+        /// <summary>
+        ///   Stop IPFS daemon and set client and settings to null
+        /// </summary>
+        public void DestroyIpfsClient()
+        {
+            var localByName = Process.GetProcessesByName("ipfs");
+            if (localByName.Length == 1)
+            {
+                localByName[0].Kill(); // kill daemon process
+            }
+
+            if (_client != null)
+            {
+                if (IsClientConnected()) // if still connected then operation failed
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+            _client = null;
+        }
         
         /// <summary>
         ///   Check if IPFS client can connect to IPFS daemon
@@ -39,7 +80,7 @@ namespace ADL.Ipfs
                 // instance rather than connecting to the IPFS daemon
                 throw new ArgumentNullException(); 
             }
-
+            
             try
             {
                 // Try to get id of this peer. If the daemon is not running than
@@ -57,11 +98,15 @@ namespace ADL.Ipfs
             return true;
         }
 
-        private void TryToConnectClient()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
+        private void TryToConnectClient(int connectRetries)
         {
             var retries = 1;
             
-            while (retries <= ConnectRetries)
+            while (retries <= connectRetries)
             {
                 if (!IsClientConnected())
                 {

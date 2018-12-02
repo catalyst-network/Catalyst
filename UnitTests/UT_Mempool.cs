@@ -3,18 +3,19 @@ using System.Diagnostics;
 using System.Threading;
 using StackExchange.Redis;
 using ADL.Bash;
+using ADL.Node.Core.Modules.Mempool;
 using ADL.Redis;
-using ADL.Mempool.Proto;
+using ADL.Protocols.Mempool;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ADL.Node.UnitTests
+namespace ADL.UnitTests
 {
     [TestClass]
     public class UT_Mempool
     {
         private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance.Connection;
-        private static MempoolService Memp = new MempoolService();
+        private static Mempool Memp = new Mempool(new Redis.Redis());
         
         private static Key _k = new Key();
         private static Tx _t = new Tx();
@@ -37,7 +38,7 @@ namespace ADL.Node.UnitTests
                     _t.Amount = (uint)id;
                 }
 
-                Memp.Save(_k, _t); // write same key but different tx amount, not under lock                
+                Memp.SaveTx(_k, _t); // write same key but different tx amount, not under lock                
             }
         }
         
@@ -50,7 +51,7 @@ namespace ADL.Node.UnitTests
             _t.Signature = "signature";
             _t.AddressDest = "address_dest";
             _t.AddressSource = "address_source"; 
-            _t.Updated = new Timestamp {Nanos = 100, Seconds = 30};
+            _t.Updated = new Tx.Types.Timestamp{Nanos = 100, Seconds = 30};
             
             var endpoint = Cm.GetEndPoints();
             Assert.AreEqual(1,endpoint.Length);
@@ -65,8 +66,8 @@ namespace ADL.Node.UnitTests
         [TestMethod]
         public void SaveAndGet()
         {   
-            Memp.Save(_k,_t);
-            var transaction = Memp.Get(_k);
+            Memp.SaveTx(_k,_t);
+            var transaction = Memp.GetTx(_k);
             
             Assert.AreEqual((uint)1, transaction.Amount);
             Assert.AreEqual("signature", transaction.Signature);
@@ -82,12 +83,12 @@ namespace ADL.Node.UnitTests
             const int numTx = 15000;
             for (var i = 0; i < numTx; i++)
             {
-                Memp.Save(new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"}, _t);
+                Memp.SaveTx(new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"}, _t);
             }
             
             for (var i = 0; i < numTx; i++)
             {
-                var transaction = Memp.Get(new Key{ HashedSignature = $"just_a_short_key_for_easy_search:{i}"});
+                var transaction = Memp.GetTx(new Key{ HashedSignature = $"just_a_short_key_for_easy_search:{i}"});
                 Assert.AreEqual((uint)1, transaction.Amount);
                 Assert.AreEqual("signature", transaction.Signature);
                 Assert.AreEqual("address_dest", transaction.AddressDest);
@@ -102,13 +103,13 @@ namespace ADL.Node.UnitTests
         {
             var key = new Key {HashedSignature = "just_a_short_key_for_easy_search:0"};
             
-            Memp.Save(key, _t);
+            Memp.SaveTx(key, _t);
 
             _t.Amount = 100;
             
-            Memp.Save(key, _t);
+            Memp.SaveTx(key, _t);
             
-            var transaction = Memp.Get(key);
+            var transaction = Memp.GetTx(key);
             Assert.AreEqual((uint)1, transaction.Amount); // assert tx with same key not updated
         }
 
@@ -117,7 +118,7 @@ namespace ADL.Node.UnitTests
         public void SaveNullKey()
         {
             Key newKey = null;
-            Memp.Save(newKey, _t);
+            Memp.SaveTx(newKey, _t);
         }
         
         [TestMethod]
@@ -127,14 +128,14 @@ namespace ADL.Node.UnitTests
             var newKey = new Key {HashedSignature = "just_a_short_key_for_easy_search:0"};
             Tx newTx = null;
             
-            Memp.Save(newKey, newTx); // transaction is null so do not insert
+            Memp.SaveTx(newKey, newTx); // transaction is null so do not insert
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException), "Value cannot be null")]
         public void GetNonExistentKey()
         {
-            Memp.Get(new Key {HashedSignature = "just_a_short_key_for_easy_search:0"});
+            Memp.GetTx(new Key {HashedSignature = "just_a_short_key_for_easy_search:0"});
         }
 
         [TestMethod]
@@ -161,7 +162,7 @@ namespace ADL.Node.UnitTests
                 threadW[i].Join();
             }
            
-            var transaction = Memp.Get(_k);
+            var transaction = Memp.GetTx(_k);
             
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
@@ -182,7 +183,7 @@ namespace ADL.Node.UnitTests
 
             try
             {
-                Memp.Save(_k, _t);
+                Memp.SaveTx(_k, _t);
                 Assert.Fail("It should have thrown an exception if server is down");
             }
             catch (Exception)
@@ -195,8 +196,8 @@ namespace ADL.Node.UnitTests
             
             try
             {
-                Memp.Save(_k, _t);
-                var transaction = Memp.Get(_k);
+                Memp.SaveTx(_k, _t);
+                var transaction = Memp.GetTx(_k);
                 
                 Assert.AreEqual("signature", transaction.Signature);
             }
@@ -209,10 +210,10 @@ namespace ADL.Node.UnitTests
         [TestMethod]
         public void KeysArePersistent()
         {
-            Memp.Save(_k, _t);            
+            Memp.SaveTx(_k, _t);            
             Thread.Sleep(1100); // after one second the changes is saved
             
-            var transaction = Memp.Get(_k);
+            var transaction = Memp.GetTx(_k);
             Assert.AreEqual("signature", transaction.Signature);
                         
             var localByName = Process.GetProcessesByName("redis-server");
@@ -225,7 +226,7 @@ namespace ADL.Node.UnitTests
             localByName = Process.GetProcessesByName("redis-server");
             Assert.IsTrue(localByName.Length > 0);
 
-            transaction = Memp.Get(_k);
+            transaction = Memp.GetTx(_k);
             Assert.AreEqual((uint)1, transaction.Amount);
         }
     }

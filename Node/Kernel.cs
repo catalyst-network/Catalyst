@@ -5,6 +5,7 @@ using ADL.Platform;
 using System.Reflection;
 using System.Runtime.Loader;
 using ADL.DataStore;
+using ADL.Ipfs;
 using ADL.Node.Core.Modules.Consensus;
 using ADL.Node.Core.Modules.Contract;
 using ADL.Node.Core.Modules.Dfs;
@@ -115,9 +116,9 @@ namespace ADL.Node
                             .As<IContractService>()
                             .InstancePerLifetimeScope();
                         
-//                        builder.Register(c => new DfsService(c.Resolve<IDfsService>(), settingsInstance.Dfs))
-//                            .As<IDfsService>()
-//                            .InstancePerLifetimeScope();
+                        builder.Register(c => new DfsService(c.Resolve<IIpfs>(), settingsInstance.Dfs))
+                            .As<IDfsService>()
+                            .InstancePerLifetimeScope();
 
                         builder.Register(c => new GossipService(settingsInstance.Gossip))
                             .As<IGossipService>()
