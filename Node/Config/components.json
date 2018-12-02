@@ -18,14 +18,6 @@
       ]
     },
     {
-      "type": "ADL.Node.Core.Modules.Gossip.Gossip, Node",
-      "services": [
-        {
-          "type": "ADL.Node.Core.Modules.Gossip.IGossip, Node"
-        }
-      ]
-    },
-    {
       "type": "ADL.Node.Core.Modules.Ledger.Ledger, Node",
       "services": [
         {

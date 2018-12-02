@@ -119,7 +119,7 @@ namespace ADL.Node
 //                            .As<IDfsService>()
 //                            .InstancePerLifetimeScope();
 
-                        builder.Register(c => new GossipService(c.Resolve<IGossip>(), settingsInstance.Gossip))
+                        builder.Register(c => new GossipService(settingsInstance.Gossip))
                             .As<IGossipService>()
                             .InstancePerLifetimeScope();
                         

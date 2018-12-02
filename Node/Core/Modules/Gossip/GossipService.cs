@@ -1,19 +1,37 @@
-﻿using ADL.Node.Core.Helpers.Services;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using ADL.Node.Core.Helpers.Services;
+using ADL.Transaction;
+using Akka.Actor;
 
 namespace ADL.Node.Core.Modules.Gossip
-{   
-    public class GossipService : ServiceBase, IGossipService
+{
+
+    public class GossipService : AsyncServiceBase, IGossipService
     {
-        private IGossip Gossip;
+        private IActorRef Gossip;
         private IGossipSettings GossipSettings;
         
         /// <summary>
         /// 
         /// </summary>
-        public GossipService(IGossip gossip, IGossipSettings gossipSettings)
+        public GossipService(IGossipSettings gossipSettings)
         {
-            Gossip = gossip;
             GossipSettings = gossipSettings;
+        }
+        
+        public override bool StartService()
+        {
+            Task.Run(RunAsyncActors).Wait();
+            return true;
+        }
+
+        private async Task RunAsyncActors()
+        {
+            using (var gossipSystem = ActorSystem.Create("GossipSystem"))
+            {
+                Gossip = gossipSystem.ActorOf(Props.Create(() => new GossipActor()), "GossipActor");
+            }
         }
     }
 }
