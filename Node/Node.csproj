@@ -44,7 +44,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Content Include=".\config\components.json;.\config\devnet.json;.\config\testnet.json;.\config\mainnet.json;">
+        <Content Include=".\Config\components.json;.\Config\devnet.json;.\Config\testnet.json;.\Config\mainnet.json;">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
