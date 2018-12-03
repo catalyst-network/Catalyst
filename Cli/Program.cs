@@ -31,11 +31,16 @@ namespace ADL.Cli
 
             AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
 
+            if (!Directory.Exists(Fs.GetUserHomeDir() + "/.Atlas"))
+            {
+                Directory.CreateDirectory(Fs.GetUserHomeDir() + "/.Atlas");
+            }
+
             // check if user home data dir has a shell config
-            if (!File.Exists(Fs.GetUserHomeDir() + "/.Atlas/config/shell.json"))
+            if (!File.Exists(Fs.GetUserHomeDir() + "/.Atlas/shell.json"))
             {
                 // copy skeleton configs to default data dir
-                File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/config/shell.json", Fs.GetUserHomeDir()+"/.Atlas");
+                File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/config.shell.json", Fs.GetUserHomeDir()+"/.Atlas/shell.json");
             }
 
             // resolve config from autofac
@@ -44,9 +49,7 @@ namespace ADL.Cli
             AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
                 context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
             
-            var shellConfig = new ConfigurationBuilder()
-                .AddJsonFile(Fs.GetUserHomeDir() + "/.Atlas/config/shell.json")
-                .Build();
+            var shellConfig = new ConfigurationBuilder().AddJsonFile(Fs.GetUserHomeDir() + "/.Atlas/shell.json").Build();
             
             var shellModule = new ConfigurationModule(shellConfig);
 

@@ -2,10 +2,10 @@
   "defaultAssembly": "Cli",
   "components": [
     {
-      "type": "Koopa.Shell, Koopa",
+      "type": "ADL.Shell.Shell, Shell",
       "services": [
         {
-          "type": "Koopa.IADS, Koopa"
+          "type": "ADL.Shell.IAds, Shell"
         }
       ]
     }

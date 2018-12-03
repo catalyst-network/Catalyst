@@ -57,11 +57,7 @@
     <ItemGroup>
       <Folder Include="Core\Helpers" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="UnitTests\UT_Mempool.cs" />
-    </ItemGroup>
-
+    
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
         <DebugSymbols>False</DebugSymbols>

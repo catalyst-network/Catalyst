@@ -7,10 +7,10 @@
 
 using grpc = global::Grpc.Core;
 
-namespace ADL.Node.Core.Modules.Rpc {
+namespace ADL.Protocol.Rpc.Node {
   public static partial class RpcServer
   {
-    static readonly string __ServiceName = "ADL.Node.Core.Modules.Rpc.RpcServer";
+    static readonly string __ServiceName = "ADL.Protocol.Rpc.Node.RpcServer";
 
     static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.PingRequest> __Marshaller_ADL_Protocol_Rpc_Node_PingRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.PingRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.PongResponse> __Marshaller_ADL_Protocol_Rpc_Node_PongResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.PongResponse.Parser.ParseFrom);
@@ -259,7 +259,7 @@ namespace ADL.Node.Core.Modules.Rpc {
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::ADL.Node.Core.Modules.Rpc.RpcServiceReflection.Descriptor.Services[0]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcServiceReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Base class for server-side implementations of RpcServer</summary>

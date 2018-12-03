@@ -5,50 +5,17 @@
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RootNamespace>ADL.Cli</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-        <_UnmanagedRegistrationCache Remove="obj\Cli.csproj.UnmanagedRegistration.cache" />
-        <_UnmanagedRegistrationCache Remove="obj\Cli.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Cli.csproj.ResolveComReference.cache" />
-        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Cli.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Cli.dll" />
-        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Cli.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Cli.pdb" />
-        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Cli.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Cli.dll" />
-        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Cli.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Cli.manifest" />
-        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Cli.dll.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <DeployManifest Remove="obj\Debug\netcoreapp2.1\Cli.application" />
-        <DeployManifest Remove="obj\Debug\netcoreapp2.1\Cli.application" />
-    </ItemGroup>
+    
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
         <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)'=='Debug'">
-        <ProjectReference Include="..\Node\Node.csproj" />
-    </ItemGroup>
+    <!--<ItemGroup Condition="'$(Configuration)'=='Debug'">-->
+        <!--<ProjectReference Include="..\Node\Node.csproj" />-->
+    <!--</ItemGroup>-->
 
     <ItemGroup>
         <ProjectReference Include="..\Components\Shell\Shell.csproj" />
@@ -60,24 +27,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
-        <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+        <Content Include="config.shell.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="config/shell.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Content Include=".\config\shell.json">
+        <Content Include=".\config.shell.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="UnitTests" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Release'">

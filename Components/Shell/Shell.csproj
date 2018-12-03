@@ -45,11 +45,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UnitTests" />
+        <ProjectReference Include="..\..\Protocols\Rpc\Node\NodeRpcProto.csproj" />
     </ItemGroup>
-
-    <!--<ItemGroup Condition="'$(Configuration)'=='Debug'">-->
-        <!--<ProjectReference Include="..\..\Node\Node.csproj" />-->
-    <!--</ItemGroup>-->
     
 </Project>
