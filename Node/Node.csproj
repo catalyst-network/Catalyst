@@ -15,89 +15,52 @@
         <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+        <PackageReference Include="Serilog" Version="2.7.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801" />
+        <PackageReference Include="WatsonTcp" Version="1.1.6" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Protocols\Rpc\Node\NodeRpcProto.csproj" />
+        <ProjectReference Include="..\Protocols\Mempool\MempoolProto.csproj" />
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\Helpers\Shell\Shell.csproj" />
+        <ProjectReference Include="..\Helpers\Network\Network.csproj" />
         <ProjectReference Include="..\Helpers\Platform\Platform.csproj" />
+        <ProjectReference Include="..\Helpers\DataStore\DataStore.csproj" />
         <ProjectReference Include="..\Helpers\Exceptions\Exceptions.csproj" />
         <ProjectReference Include="..\Helpers\FileSystem\FileSystem.csproj" />
         <ProjectReference Include="..\Helpers\Cryptography\Cryptography.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Components\Redis\Redis.csproj" />
+        <ProjectReference Include="..\Components\Ipfs\Ipfs.csproj" />
+        <ProjectReference Include="..\Components\Shell\Shell.csproj" />
         <ProjectReference Include="..\Components\Token\Token.csproj" />
-        <ProjectReference Include="..\Components\Dfs\DfsService.csproj" />
-        <ProjectReference Include="..\Components\Rpc\RpcService.csproj" />
-        <ProjectReference Include="..\Components\P2P\P2PService.csproj" />
-        <ProjectReference Include="..\Components\Economics\Economics.csproj" />
-        <ProjectReference Include="..\Components\Gossip\GossipService.csproj" />
-        <ProjectReference Include="..\Components\Mempool\MempoolService.csproj" />
         <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
-        <ProjectReference Include="..\Components\Contract\ContractService.csproj" />
-        <ProjectReference Include="..\Components\Consensus\ConsensusService.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
-        <_UnmanagedRegistrationCache Remove="obj\Node.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Node.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Node.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Node.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Node.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Node.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <DeployManifest Remove="obj\Debug\netcoreapp2.1\Node.application" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Content Include=".\config.components.json;.\config.devnet.json;.\config.testnet.json;.\config.mainnet.json;">
+        <Content Include=".\Config\components.json;.\Config\devnet.json;.\Config\testnet.json;.\Config\mainnet.json;">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
+        <Content Include="Config\components.json" />
+        <Content Include="Config\devnet.json" />
+        <Content Include="Config\mainnet.json" />
+        <Content Include="Config\testnet.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Core\Helpers" />
+    </ItemGroup>
+    
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
         <DebugSymbols>False</DebugSymbols>
     </PropertyGroup>
-    
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <ItemGroup>
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcProto.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\RpcService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\ConsensusService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\ContractService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Cryptography.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\DfsService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Economics.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\GossipService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\MempoolService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\P2PService.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Token.dll" />
-            <PluginAssembly Include="$(SolutionDir)\Node\bin\$(ConfigurationName)\**\Transaction.dll" />
-        </ItemGroup>
-        <Copy SourceFiles="@(PluginAssembly)" DestinationFolder="$(OutDir)" />
-    </Target>
 
 </Project>

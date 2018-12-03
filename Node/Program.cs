@@ -103,14 +103,9 @@ namespace ADL.Node
                         }
                     }
                     
-                    if (daemonOption.HasValue())
-                    {
-                        options.Daemon = true;
-                    } 
-                    
                     if (p2POption.HasValue())
                     {
-                        options.P2P = false;
+                        options.Peer = false;
                     }
                     
                     if (gossipOption.HasValue())
@@ -153,18 +148,37 @@ namespace ADL.Node
                         options.PayoutAddress = payoutAddressOption.Value();
                     }
                     
-                    RunNode(options);
+                    if (daemonOption.HasValue())
+                    {
+                        RunNodeDemon(options);       
+                    }
+                    else
+                    {
+                        RunNodeInteractive(options);                        
+                    }
                 });
                 app.Execute(args); 
             });
-            return 0;
+            return 1;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
+        private static void RunNodeDemon(NodeOptions options)
+        {
+            AtlasSystem.GetInstance(options);
+			Console.WriteLine("daemon Mode");
+			while (true){}  
+        }
+
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="options"></param>
-        private static void RunNode(NodeOptions options)
+        private static void RunNodeInteractive(NodeOptions options)
         {
             if (!options.Daemon)
             {
@@ -177,6 +191,9 @@ namespace ADL.Node
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         private class BasicShell : ShellBase
         {
             public bool Run()
@@ -194,11 +211,19 @@ namespace ADL.Node
                 return true;
             }
         
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override bool OnGetInfo()
             {
                 return true;
             }
         
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override bool OnGetVersion()
             {
                 return true;
@@ -222,21 +247,41 @@ namespace ADL.Node
                 return true;
             }
         
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public override bool OnStartNode(string[] args)
             {
                 return true;
             }
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public override bool OnStartWork(string[] args)
             {
                 return true;
             }
         
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public override bool OnStopNode(string[] args)
             {
                 return true;
             }
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public override bool OnStopWork(string[] args)
             {
                 return true;

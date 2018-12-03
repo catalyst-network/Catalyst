@@ -3,12 +3,13 @@ using System.Diagnostics;
 using System.Threading;
 using StackExchange.Redis;
 using ADL.Bash;
+using ADL.Node.Core.Modules.Mempool;
 using ADL.Redis;
-using ADL.Mempool.Proto;
+using ADL.Protocols.Mempool;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ADL.Mempool
+namespace ADL.UnitTests
 {
     [TestClass]
     public class UT_Mempool
@@ -23,7 +24,7 @@ namespace ADL.Mempool
         }
 
         private static TestMempoolSettings _settings;
-        private static RedisMempool _memp; 
+        private static Mempool Memp = new Mempool(new Redis.Redis());
         
         private static Key _k = new Key();
         private static Tx _t = new Tx();
@@ -46,7 +47,7 @@ namespace ADL.Mempool
                     _t.Amount = (uint)id;
                 }
 
-                _memp.Save(_k, _t); // write same key but different tx amount, not under lock                
+                Memp.SaveTx(_k, _t); // write same key but different tx amount, not under lock                
             }
         }
         
@@ -54,7 +55,6 @@ namespace ADL.Mempool
         public static void SetUp(TestContext testContext)
         {
             _settings = new TestMempoolSettings {Type = "redis", When = "NotExists"};
-            _memp = new RedisMempool(_settings);
         }
         
         [TestInitialize]
@@ -66,7 +66,7 @@ namespace ADL.Mempool
             _t.Signature = "signature";
             _t.AddressDest = "address_dest";
             _t.AddressSource = "address_source"; 
-            _t.Updated = new Timestamp {Nanos = 100, Seconds = 30};
+            _t.Updated = new Tx.Types.Timestamp{Nanos = 100, Seconds = 30};
             
             var endpoint = Cm.GetEndPoints();
             Assert.AreEqual(1,endpoint.Length);
@@ -82,8 +82,8 @@ namespace ADL.Mempool
         [TestMethod]
         public void SaveAndGet()
         {   
-            _memp.Save(_k,_t);
-            var transaction = _memp.Get(_k);
+            Memp.SaveTx(_k,_t);
+            var transaction = Memp.GetTx(_k);
             
             Assert.AreEqual((uint)1, transaction.Amount);
             Assert.AreEqual("signature", transaction.Signature);
@@ -99,12 +99,12 @@ namespace ADL.Mempool
             const int numTx = 15000;
             for (var i = 0; i < numTx; i++)
             {
-                _memp.Save(new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"}, _t);
+                Memp.SaveTx(new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"}, _t);
             }
             
             for (var i = 0; i < numTx; i++)
             {
-                var transaction = _memp.Get(new Key{ HashedSignature = $"just_a_short_key_for_easy_search:{i}"});
+                var transaction = Memp.GetTx(new Key{ HashedSignature = $"just_a_short_key_for_easy_search:{i}"});
                 Assert.AreEqual((uint)1, transaction.Amount);
                 Assert.AreEqual("signature", transaction.Signature);
                 Assert.AreEqual("address_dest", transaction.AddressDest);
@@ -119,13 +119,13 @@ namespace ADL.Mempool
         {
             var key = new Key {HashedSignature = "just_a_short_key_for_easy_search:0"};
             
-            _memp.Save(key, _t);
+            Memp.SaveTx(key, _t);
 
             _t.Amount = 100;
             
-            _memp.Save(key, _t);
+            Memp.SaveTx(key, _t);
             
-            var transaction = _memp.Get(key);
+            var transaction = Memp.GetTx(key);
             Assert.AreEqual((uint)1, transaction.Amount); // assert tx with same key not updated
         }
 
@@ -134,7 +134,8 @@ namespace ADL.Mempool
         public void SaveNullKey()
         {
             Key newKey = null;
-            _memp.Save(newKey, _t);
+
+            Memp.SaveTx(newKey, _t);
         }
         
         [TestMethod]
@@ -144,14 +145,14 @@ namespace ADL.Mempool
             var newKey = new Key {HashedSignature = "just_a_short_key_for_easy_search:0"};
             Tx newTx = null;
             
-            _memp.Save(newKey, newTx); // transaction is null so do not insert
+            Memp.SaveTx(newKey, newTx); // transaction is null so do not insert
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException), "Value cannot be null")]
         public void GetNonExistentKey()
         {
-            _memp.Get(new Key {HashedSignature = "just_a_short_key_for_easy_search:0"});
+            Memp.GetTx(new Key {HashedSignature = "just_a_short_key_for_easy_search:0"});
         }
 
         [TestMethod]
@@ -178,7 +179,7 @@ namespace ADL.Mempool
                 threadW[i].Join();
             }
            
-            var transaction = _memp.Get(_k);
+            var transaction = Memp.GetTx(_k);
             
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
@@ -199,7 +200,8 @@ namespace ADL.Mempool
 
             try
             {
-                _memp.Save(_k, _t);
+                Memp.SaveTx(_k, _t);
+
                 Assert.Fail("It should have thrown an exception if server is down");
             }
             catch (Exception)
@@ -212,8 +214,8 @@ namespace ADL.Mempool
             
             try
             {
-                _memp.Save(_k, _t);
-                var transaction = _memp.Get(_k);
+                Memp.SaveTx(_k, _t);
+                var transaction = Memp.GetTx(_k);
                 
                 Assert.AreEqual("signature", transaction.Signature);
             }
@@ -226,10 +228,10 @@ namespace ADL.Mempool
         [TestMethod]
         public void KeysArePersistent()
         {
-            _memp.Save(_k, _t);            
+            Memp.SaveTx(_k, _t);            
             Thread.Sleep(1200); // after one second the changes is saved
             
-            var transaction = _memp.Get(_k);
+            var transaction = Memp.GetTx(_k);
             Assert.AreEqual("signature", transaction.Signature);
                         
             var localByName = Process.GetProcessesByName("redis-server");
@@ -242,7 +244,7 @@ namespace ADL.Mempool
             localByName = Process.GetProcessesByName("redis-server");
             Assert.IsTrue(localByName.Length > 0);
 
-            transaction = _memp.Get(_k);
+            transaction = Memp.GetTx(_k);
             Assert.AreEqual((uint)1, transaction.Amount);
         }
     }

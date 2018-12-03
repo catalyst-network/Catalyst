@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package ADL.Rpc.Proto.Server;
+//option java_multiple_files = true;
+
+package ADL.Protocol.Rpc.Node;
 
 message PingRequest {
     string ping = 1;
@@ -26,32 +28,194 @@ message GetInfoResponse {
     string query = 1;
 }
 
-service RpcServer {
-    rpc Ping(PingRequest) returns (PongResponse);
-    rpc Version(VersionRequest) returns (VersionResponse);
-    rpc GetInfo(GetInfoRequest) returns (GetInfoResponse);
-//    rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
-//    rpc ListWallet(ListWalletRequest) returns (ListWalletResponse);
-//    rpc CreateAddress(CreateAddressRequest) returns (CreateAddressResponse);
-//    rpc GetAddress(GetAddressRequest) returns (GetAddressResponse);
-//    rpc ListAddress(ListAddressRequest) returns (ListAddressResponse);
-//    rpc ValidateAddress(ValidateAddressRequest) returns (ValidateAddressResponse);
-//    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
-//    rpc CreateRawTransaction(CreateRawTransactionRequest) returns (CreateRawTransactionResponse);
-//    rpc SignRawTransaction(SignRawTransactionRequest) returns (SignRawTransactionResponse);
-//    rpc DecodeRawTransaction(DecodeRawTransactionRequest) returns (DecodeRawTransactionResponse);
-//    rpc BroadcastRawTransaction(BroadcastRawTransactionRequest) returns (BroadcastRawTransactionResponse);
-//    rpc SendTo(SendToRequest) returns (SendToResponse);
-//    rpc SendToFrom(SendToFromRequest) returns (SendToFromResponse);
-//    rpc SendMany(SendManyRequest) returns (SendManyResponse);
-//    rpc SendFromMany(SendFromManyRequest) returns (SendFromManyResponse);
-//    rpc AddNode(AddNodeRequest) returns (AddNodeResponse);
-//    rpc GetPeerList(GetPeerListRequest) returns (GetPeerListResponse);
-//    rpc GetPeerInfo(GetPeerInfoRequest) returns (GetPeerInfoResponse);
-//    rpc GetConnectionCount(GetConnectionCountRequest) returns (GetConnectionCountResponse);
-//    rpc GetDelta(GetDeltaRequest) returns (GetDeltaResponse);
-//    rpc GetMempool(GetMempoolRequest) returns (GetMempoolResponse);
-//    rpc SignMessage(SignMessageRequest) returns (SignMessageResponse);
-//    rpc VerifyMessage(VerifyMessageRequest) returns (VerifyMessageResponse);
-//    rpc ServiceStatus(ServiceStatusRequest) returns (ServiceStatusResponse);
+message CreateWalletRequest {
+    bool query = 1;
+}
+
+message CreateWalletResponse {
+    string query = 1;
+}
+
+message ListWalletRequest {
+    bool query = 1;
+}
+
+message ListWalletResponse {
+    string query = 1;
+}
+
+message CreateAddressRequest {
+    bool query = 1;
+}
+
+message CreateAddressResponse {
+    string query = 1;
+}
+
+message GetAddressRequest {
+    bool query = 1;
+}
+
+message GetAddressResponse {
+    string query = 1;
+}
+
+message ListAddressRequest {
+    bool query = 1;
+}
+
+message ListAddressResponse {
+    string query = 1;
+}
+
+message ValidateAddressRequest {
+    bool query = 1;
+}
+
+message ValidateAddressResponse {
+    string query = 1;
+}
+
+message GetBalanceRequest {
+    bool query = 1;
+}
+
+message GetBalanceResponse {
+    string query = 1;
+}
+
+message CreateRawTransactionRequest {
+    bool query = 1;
+}
+
+message CreateRawTransactionResponse {
+    string query = 1;
+}
+
+message SignRawTransactionRequest {
+    bool query = 1;
+}
+
+message SignRawTransactionResponse {
+    string query = 1;
+}
+
+message DecodeRawTransactionRequest {
+    bool query = 1;
+}
+
+message DecodeRawTransactionResponse {
+    string query = 1;
+}
+
+message BroadcastRawTransactionRequest {
+    bool query = 1;
+}
+
+message BroadcastRawTransactionResponse {
+    string query = 1;
+}
+
+message SendToRequest {
+    bool query = 1;
+}
+
+message SendToResponse {
+    string query = 1;
+}
+
+message SendToFromRequest {
+    bool query = 1;
+}
+
+message SendToFromResponse {
+    string query = 1;
+}
+
+message SendManyRequest {
+    bool query = 1;
+}
+
+message SendManyResponse {
+    string query = 1;
+}
+
+message SendFromManyRequest {
+    bool query = 1;
+}
+
+message SendFromManyResponse {
+    string query = 1;
+}
+
+message AddNodeRequest {
+    bool query = 1;
+}
+
+message AddNodeResponse {
+    string query = 1;
+}
+
+message GetPeerListRequest {
+    bool query = 1;
+}
+
+message GetPeerListResponse {
+    string query = 1;
+}
+
+message GetPeerInfoRequest {
+    bool query = 1;
+}
+
+message GetPeerInfoResponse {
+    string query = 1;
+}
+
+message GetConnectionCountRequest {
+    bool query = 1;
+}
+
+message GetConnectionCountResponse {
+    string query = 1;
+}
+
+message GetDeltaRequest {
+    bool query = 1;
+}
+
+message GetDeltaResponse {
+    string query = 1;
+}
+
+message GetMempoolRequest {
+    bool query = 1;
+}
+
+message GetMempoolResponse {
+    string query = 1;
+}
+
+message SignMessageRequest {
+    bool query = 1;
+}
+
+message SignMessageResponse {
+    string query = 1;
+}
+
+message VerifyMessageRequest {
+    bool query = 1;
+}
+
+message VerifyMessageResponse {
+    string query = 1;
+}
+
+message ServiceStatusRequest {
+    bool query = 1;
+}
+
+message ServiceStatusResponse {
+    string query = 1;
 }
