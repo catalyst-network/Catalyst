@@ -11,25 +11,26 @@ using WatsonTcp;
 
 namespace ADL.Node.Core.Modules.Peer
 {
-    public class Peer : IPeer
+    public static class Peer : IPeer
     {
         private static bool _Daemon { get; set; }
         private static List<string> _Clients { get; set; }
         private static DirectoryInfo _dataDir { get; set; }
         private static WatsonTcpSslServer _Server { get; set; }
         private static ISslSettings _SslSettings { get; set; }
+        private static IPeerSettings _PeerSettings { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public Task StartPeer(ISslSettings sslSettings, string dataDir)
+        public async Task StartPeer(IPeerSettings peerSettings, ISslSettings sslSettings, string dataDir)
         {
             _SslSettings = sslSettings;
+            _PeerSettings = peerSettings;
             _dataDir = new DirectoryInfo(dataDir);
             var task = Task.Factory.StartNew(StartTcpServer);
-            task.ConfigureAwait(false);
-            return task;
+            await task.ConfigureAwait(false);
         }
           
         /// <summary>
@@ -38,10 +39,14 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         private bool StartTcpServer()
         {
-            var serverIp = Ip.GetPublicIP();
-            var serverPort = 8989;
-
-            using (_Server = new WatsonTcpSslServer("127.0.0.1", serverPort, _dataDir+_SslSettings.PfxFileName, _dataDir+_SslSettings.SslCertPassword, true, false, ClientConnected, ClientDisconnected, MessageReceived, true))
+#if DEBUG
+            Console.WriteLine(_dataDir+_SslSettings.PfxFileName);
+            Console.WriteLine(_dataDir+_SslSettings.SslCertPassword);
+            Console.WriteLine(_PeerSettings.BindAddress);
+            Console.WriteLine(_PeerSettings.Port);      
+#endif
+            
+            using (_Server = new WatsonTcpSslServer(_PeerSettings.BindAddress, _PeerSettings.Port, _dataDir+_SslSettings.PfxFileName, _dataDir+_SslSettings.SslCertPassword, true, false, ClientConnected, ClientDisconnected, MessageReceived, true))
             {
                 _Daemon = true;
                 while (_Daemon)

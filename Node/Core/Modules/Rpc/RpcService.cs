@@ -27,7 +27,7 @@ namespace ADL.Node.Core.Modules.Rpc
         /// 
         /// </summary>
         /// <param name="settings"></param>
-        public bool StartService()
+        public override bool StartService()
         {
             Server = new Server
             {
