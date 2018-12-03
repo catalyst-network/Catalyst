@@ -7,7 +7,7 @@ namespace ADL.Node.Core.Modules.Rpc
     {
         public void Load(ContainerBuilder builder, IRpcSettings rpcSettings)
         {
-            builder.Register(c => new RpcService(c.Resolve<IRpcServer>(), rpcSettings))
+            builder.Register(c => new RpcService(rpcSettings))
                 .As<IRpcService>()
                 .InstancePerLifetimeScope();
         }

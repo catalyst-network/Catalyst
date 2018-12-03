@@ -1,12 +1,9 @@
 using System;
-using ADL.Shell;
 using Grpc.Core;
-using System.Net;
 using System.Reflection;
-//using ADL.Rpc.Proto.Server;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ADL.Protocol.Rpc.Node;
 
 namespace ADL.Shell
 {
@@ -15,7 +12,7 @@ namespace ADL.Shell
         private uint sessionType => 0;
         public override string Prompt => "koopa";
         private Channel SessionHost { set; get; }
-//        private static RpcServer.RpcServerClient _rpcClient;
+        private static RpcServer.RpcServerClient _rpcClient;
         private static string ServiceName => "ADS Advanced Shell";
 
         /// <summary>
@@ -567,19 +564,18 @@ namespace ADL.Shell
 
             try
             {
-                // Create a client with the channel
-//                _rpcClient = new RpcServer.RpcServerClient(channel);
+                _rpcClient = new RpcServer.RpcServerClient(channel);
 
-                // Create a request
-//                var request = new PingRequest{ Ping = "ping" };
-//                var request = new VersionRequest{ Query = true };
+                var pingRequest = new PingRequest{ Ping = "ping" };
+                var versionRequest = new VersionRequest{ Query = true };
 
-                // Send the request
                 Console.WriteLine("GreeterClient sending request");
-//                var response = await client.PingAsync(request);
-//                var response = await _rpcClient.VersionAsync(request);
-                
-//                Console.WriteLine("GreeterClient received response: " + response);
+                var pingResponse= await _rpcClient.PingAsync(pingRequest);
+                Console.WriteLine("GreeterClient received response: " + pingResponse);
+
+                var versionResponse = await _rpcClient.VersionAsync(versionRequest);          
+                Console.WriteLine("GreeterClient received response: " + versionResponse);
+
             }
             finally
             {

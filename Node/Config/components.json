@@ -42,7 +42,7 @@
       ]
     },
     {
-      "type": "ADL.Node.Core.Modules.Rpc.Rpc, Node",
+      "type": "ADL.Node.Core.Modules.Rpc.RpcServerImpl, Node",
       "services": [
         {
           "type": "ADL.Node.Core.Modules.Rpc.IRpcServer, Node"

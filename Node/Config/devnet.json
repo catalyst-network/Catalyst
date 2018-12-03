@@ -1,7 +1,7 @@
 {
   "ApplicationConfiguration": {
     "Ledger": {
-      "Persistence": "LevelDB",
+      "Persistence": "CouchDB",
       "Paths": {
         "Chain": "Chain_{0}",
         "Index": "Index_{0}"
@@ -47,7 +47,7 @@
       ]
     },
     "Rpc": {
-      "BindAddress": "0.0.0.0",
+      "BindAddress": "127.0.0.1",
       "Port": 42042
     }
   }

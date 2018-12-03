@@ -8,11 +8,9 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
 end
 
 module ADL
-  module Node
-    module Core
-      module Modules
-        module Rpc
-        end
+  module Protocol
+    module Rpc
+      module Node
       end
     end
   end

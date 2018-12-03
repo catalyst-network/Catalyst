@@ -45,20 +45,17 @@ struct TableStruct {
 void AddDescriptors();
 }  // namespace protobuf_Rpc_2eService_2eproto
 namespace ADL {
-namespace Node {
-namespace Core {
-namespace Modules {
+namespace Protocol {
 namespace Rpc {
-}  // namespace Rpc
-}  // namespace Modules
-}  // namespace Core
+namespace Node {
 }  // namespace Node
+}  // namespace Rpc
+}  // namespace Protocol
 }  // namespace ADL
 namespace ADL {
-namespace Node {
-namespace Core {
-namespace Modules {
+namespace Protocol {
 namespace Rpc {
+namespace Node {
 
 // ===================================================================
 
@@ -78,10 +75,9 @@ namespace Rpc {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace Rpc
-}  // namespace Modules
-}  // namespace Core
 }  // namespace Node
+}  // namespace Rpc
+}  // namespace Protocol
 }  // namespace ADL
 
 // @@protoc_insertion_point(global_scope)

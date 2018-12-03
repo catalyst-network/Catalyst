@@ -1,25 +1,25 @@
-﻿﻿using System;
+﻿using System;
 using Grpc.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using ADL.Node.Core.Helpers.Services;
- 
- namespace ADL.Node.Core.Modules.Rpc
+using ADL.Protocol.Rpc.Node;
+
+namespace ADL.Node.Core.Modules.Rpc
 {
-    public class RpcService : AsyncServiceBase, IRpcService
+    public class RpcService : ServiceBase, IRpcService
     {
-        private Task ServerTask { get; set; }
-        private IRpcServer RpcServer { get; set; }
-        private IRpcSettings Settings { get; set; }
         private CancellationTokenSource TokenSource { get; set; }
-        
+        private Task ServerTask { get; set; }
+        private Server Server { get; set; }
+        private IRpcSettings Settings { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="settings"></param>
-        public RpcService(IRpcServer rpcServer, IRpcSettings settings)
+        public RpcService(IRpcSettings settings)
         {
-            RpcServer = rpcServer;
             Settings = settings;
         }
 
@@ -29,30 +29,26 @@ using ADL.Node.Core.Helpers.Services;
         /// <param name="settings"></param>
         public bool StartService()
         {
-            RpcServer.CreateServer(Settings.BindAddress, Settings.Port);
+            Server = new Server
+            {
+                Services = { RpcServer.BindService(new RpcServerImpl()) },
+                Ports = { new ServerPort(Settings.BindAddress, Settings.Port, ServerCredentials.Insecure) }
+            };
             TokenSource = new CancellationTokenSource();
-            ServerTask = RunServiceAsync(RpcServer.Server, TokenSource.Token);
+            ServerTask = RunServiceAsync(Server, TokenSource.Token);
             return true;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
-        public bool StopService()
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private static Task AwaitCancellation(CancellationToken token)
         {
-            Console.WriteLine("Dispose started ");
-            AwaitCancellation(TokenSource.Token);
-            TokenSource.Cancel();
-            try
-            {
-                ServerTask.Wait();
-            }
-            catch (AggregateException)
-            {
-                Console.WriteLine("RpcServer shutdown canceled");
-            }
-            Console.WriteLine("RpcServer shutdown");
-            return false;
+            var taskSource = new TaskCompletionSource<bool>();
+            token.Register(() => taskSource.SetResult(true));
+            return taskSource.Task;
         }
 
         /// <summary>
@@ -66,7 +62,7 @@ using ADL.Node.Core.Helpers.Services;
         {
             server.Start();
             Console.WriteLine("Rpc Server started, listening on " + server.Ports.ToString());
-            await AwaitCancellation(default(CancellationToken));
+            await AwaitCancellation(cancellationToken);
             await server.ShutdownAsync();
         }
     }

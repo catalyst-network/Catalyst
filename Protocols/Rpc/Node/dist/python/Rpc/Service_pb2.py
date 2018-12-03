@@ -17,10 +17,10 @@ import Rpc_pb2 as Rpc__pb2
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='Rpc.Service.proto',
-  package='ADL.Node.Core.Modules.Rpc',
+  package='ADL.Protocol.Rpc.Node',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11Rpc.Service.proto\x12\x19\x41\x44L.Node.Core.Modules.Rpc\x1a\tRpc.proto2\x8d\x16\n\tRpcServer\x12O\n\x04Ping\x12\".ADL.Protocol.Rpc.Node.PingRequest\x1a#.ADL.Protocol.Rpc.Node.PongResponse\x12X\n\x07Version\x12%.ADL.Protocol.Rpc.Node.VersionRequest\x1a&.ADL.Protocol.Rpc.Node.VersionResponse\x12X\n\x07GetInfo\x12%.ADL.Protocol.Rpc.Node.GetInfoRequest\x1a&.ADL.Protocol.Rpc.Node.GetInfoResponse\x12g\n\x0c\x43reateWallet\x12*.ADL.Protocol.Rpc.Node.CreateWalletRequest\x1a+.ADL.Protocol.Rpc.Node.CreateWalletResponse\x12\x61\n\nListWallet\x12(.ADL.Protocol.Rpc.Node.ListWalletRequest\x1a).ADL.Protocol.Rpc.Node.ListWalletResponse\x12j\n\rCreateAddress\x12+.ADL.Protocol.Rpc.Node.CreateAddressRequest\x1a,.ADL.Protocol.Rpc.Node.CreateAddressResponse\x12\x61\n\nGetAddress\x12(.ADL.Protocol.Rpc.Node.GetAddressRequest\x1a).ADL.Protocol.Rpc.Node.GetAddressResponse\x12\x64\n\x0bListAddress\x12).ADL.Protocol.Rpc.Node.ListAddressRequest\x1a*.ADL.Protocol.Rpc.Node.ListAddressResponse\x12p\n\x0fValidateAddress\x12-.ADL.Protocol.Rpc.Node.ValidateAddressRequest\x1a..ADL.Protocol.Rpc.Node.ValidateAddressResponse\x12\x61\n\nGetBalance\x12(.ADL.Protocol.Rpc.Node.GetBalanceRequest\x1a).ADL.Protocol.Rpc.Node.GetBalanceResponse\x12\x7f\n\x14\x43reateRawTransaction\x12\x32.ADL.Protocol.Rpc.Node.CreateRawTransactionRequest\x1a\x33.ADL.Protocol.Rpc.Node.CreateRawTransactionResponse\x12y\n\x12SignRawTransaction\x12\x30.ADL.Protocol.Rpc.Node.SignRawTransactionRequest\x1a\x31.ADL.Protocol.Rpc.Node.SignRawTransactionResponse\x12\x7f\n\x14\x44\x65\x63odeRawTransaction\x12\x32.ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest\x1a\x33.ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse\x12\x88\x01\n\x17\x42roadcastRawTransaction\x12\x35.ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest\x1a\x36.ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse\x12U\n\x06SendTo\x12$.ADL.Protocol.Rpc.Node.SendToRequest\x1a%.ADL.Protocol.Rpc.Node.SendToResponse\x12\x61\n\nSendToFrom\x12(.ADL.Protocol.Rpc.Node.SendToFromRequest\x1a).ADL.Protocol.Rpc.Node.SendToFromResponse\x12[\n\x08SendMany\x12&.ADL.Protocol.Rpc.Node.SendManyRequest\x1a\'.ADL.Protocol.Rpc.Node.SendManyResponse\x12g\n\x0cSendFromMany\x12*.ADL.Protocol.Rpc.Node.SendFromManyRequest\x1a+.ADL.Protocol.Rpc.Node.SendFromManyResponse\x12X\n\x07\x41\x64\x64Node\x12%.ADL.Protocol.Rpc.Node.AddNodeRequest\x1a&.ADL.Protocol.Rpc.Node.AddNodeResponse\x12\x64\n\x0bGetPeerList\x12).ADL.Protocol.Rpc.Node.GetPeerListRequest\x1a*.ADL.Protocol.Rpc.Node.GetPeerListResponse\x12\x64\n\x0bGetPeerInfo\x12).ADL.Protocol.Rpc.Node.GetPeerInfoRequest\x1a*.ADL.Protocol.Rpc.Node.GetPeerInfoResponse\x12y\n\x12GetConnectionCount\x12\x30.ADL.Protocol.Rpc.Node.GetConnectionCountRequest\x1a\x31.ADL.Protocol.Rpc.Node.GetConnectionCountResponse\x12[\n\x08GetDelta\x12&.ADL.Protocol.Rpc.Node.GetDeltaRequest\x1a\'.ADL.Protocol.Rpc.Node.GetDeltaResponse\x12\x61\n\nGetMempool\x12(.ADL.Protocol.Rpc.Node.GetMempoolRequest\x1a).ADL.Protocol.Rpc.Node.GetMempoolResponse\x12\x64\n\x0bSignMessage\x12).ADL.Protocol.Rpc.Node.SignMessageRequest\x1a*.ADL.Protocol.Rpc.Node.SignMessageResponse\x12j\n\rVerifyMessage\x12+.ADL.Protocol.Rpc.Node.VerifyMessageRequest\x1a,.ADL.Protocol.Rpc.Node.VerifyMessageResponse\x12j\n\rServiceStatus\x12+.ADL.Protocol.Rpc.Node.ServiceStatusRequest\x1a,.ADL.Protocol.Rpc.Node.ServiceStatusResponseb\x06proto3')
+  serialized_pb=_b('\n\x11Rpc.Service.proto\x12\x15\x41\x44L.Protocol.Rpc.Node\x1a\tRpc.proto2\x8d\x16\n\tRpcServer\x12O\n\x04Ping\x12\".ADL.Protocol.Rpc.Node.PingRequest\x1a#.ADL.Protocol.Rpc.Node.PongResponse\x12X\n\x07Version\x12%.ADL.Protocol.Rpc.Node.VersionRequest\x1a&.ADL.Protocol.Rpc.Node.VersionResponse\x12X\n\x07GetInfo\x12%.ADL.Protocol.Rpc.Node.GetInfoRequest\x1a&.ADL.Protocol.Rpc.Node.GetInfoResponse\x12g\n\x0c\x43reateWallet\x12*.ADL.Protocol.Rpc.Node.CreateWalletRequest\x1a+.ADL.Protocol.Rpc.Node.CreateWalletResponse\x12\x61\n\nListWallet\x12(.ADL.Protocol.Rpc.Node.ListWalletRequest\x1a).ADL.Protocol.Rpc.Node.ListWalletResponse\x12j\n\rCreateAddress\x12+.ADL.Protocol.Rpc.Node.CreateAddressRequest\x1a,.ADL.Protocol.Rpc.Node.CreateAddressResponse\x12\x61\n\nGetAddress\x12(.ADL.Protocol.Rpc.Node.GetAddressRequest\x1a).ADL.Protocol.Rpc.Node.GetAddressResponse\x12\x64\n\x0bListAddress\x12).ADL.Protocol.Rpc.Node.ListAddressRequest\x1a*.ADL.Protocol.Rpc.Node.ListAddressResponse\x12p\n\x0fValidateAddress\x12-.ADL.Protocol.Rpc.Node.ValidateAddressRequest\x1a..ADL.Protocol.Rpc.Node.ValidateAddressResponse\x12\x61\n\nGetBalance\x12(.ADL.Protocol.Rpc.Node.GetBalanceRequest\x1a).ADL.Protocol.Rpc.Node.GetBalanceResponse\x12\x7f\n\x14\x43reateRawTransaction\x12\x32.ADL.Protocol.Rpc.Node.CreateRawTransactionRequest\x1a\x33.ADL.Protocol.Rpc.Node.CreateRawTransactionResponse\x12y\n\x12SignRawTransaction\x12\x30.ADL.Protocol.Rpc.Node.SignRawTransactionRequest\x1a\x31.ADL.Protocol.Rpc.Node.SignRawTransactionResponse\x12\x7f\n\x14\x44\x65\x63odeRawTransaction\x12\x32.ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest\x1a\x33.ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse\x12\x88\x01\n\x17\x42roadcastRawTransaction\x12\x35.ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest\x1a\x36.ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse\x12U\n\x06SendTo\x12$.ADL.Protocol.Rpc.Node.SendToRequest\x1a%.ADL.Protocol.Rpc.Node.SendToResponse\x12\x61\n\nSendToFrom\x12(.ADL.Protocol.Rpc.Node.SendToFromRequest\x1a).ADL.Protocol.Rpc.Node.SendToFromResponse\x12[\n\x08SendMany\x12&.ADL.Protocol.Rpc.Node.SendManyRequest\x1a\'.ADL.Protocol.Rpc.Node.SendManyResponse\x12g\n\x0cSendFromMany\x12*.ADL.Protocol.Rpc.Node.SendFromManyRequest\x1a+.ADL.Protocol.Rpc.Node.SendFromManyResponse\x12X\n\x07\x41\x64\x64Node\x12%.ADL.Protocol.Rpc.Node.AddNodeRequest\x1a&.ADL.Protocol.Rpc.Node.AddNodeResponse\x12\x64\n\x0bGetPeerList\x12).ADL.Protocol.Rpc.Node.GetPeerListRequest\x1a*.ADL.Protocol.Rpc.Node.GetPeerListResponse\x12\x64\n\x0bGetPeerInfo\x12).ADL.Protocol.Rpc.Node.GetPeerInfoRequest\x1a*.ADL.Protocol.Rpc.Node.GetPeerInfoResponse\x12y\n\x12GetConnectionCount\x12\x30.ADL.Protocol.Rpc.Node.GetConnectionCountRequest\x1a\x31.ADL.Protocol.Rpc.Node.GetConnectionCountResponse\x12[\n\x08GetDelta\x12&.ADL.Protocol.Rpc.Node.GetDeltaRequest\x1a\'.ADL.Protocol.Rpc.Node.GetDeltaResponse\x12\x61\n\nGetMempool\x12(.ADL.Protocol.Rpc.Node.GetMempoolRequest\x1a).ADL.Protocol.Rpc.Node.GetMempoolResponse\x12\x64\n\x0bSignMessage\x12).ADL.Protocol.Rpc.Node.SignMessageRequest\x1a*.ADL.Protocol.Rpc.Node.SignMessageResponse\x12j\n\rVerifyMessage\x12+.ADL.Protocol.Rpc.Node.VerifyMessageRequest\x1a,.ADL.Protocol.Rpc.Node.VerifyMessageResponse\x12j\n\rServiceStatus\x12+.ADL.Protocol.Rpc.Node.ServiceStatusRequest\x1a,.ADL.Protocol.Rpc.Node.ServiceStatusResponseb\x06proto3')
   ,
   dependencies=[Rpc__pb2.DESCRIPTOR,])
 
@@ -32,16 +32,16 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 _RPCSERVER = _descriptor.ServiceDescriptor(
   name='RpcServer',
-  full_name='ADL.Node.Core.Modules.Rpc.RpcServer',
+  full_name='ADL.Protocol.Rpc.Node.RpcServer',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=60,
-  serialized_end=2889,
+  serialized_start=56,
+  serialized_end=2885,
   methods=[
   _descriptor.MethodDescriptor(
     name='Ping',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.Ping',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.Ping',
     index=0,
     containing_service=None,
     input_type=Rpc__pb2._PINGREQUEST,
@@ -50,7 +50,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='Version',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.Version',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.Version',
     index=1,
     containing_service=None,
     input_type=Rpc__pb2._VERSIONREQUEST,
@@ -59,7 +59,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetInfo',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.GetInfo',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.GetInfo',
     index=2,
     containing_service=None,
     input_type=Rpc__pb2._GETINFOREQUEST,
@@ -68,7 +68,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='CreateWallet',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.CreateWallet',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.CreateWallet',
     index=3,
     containing_service=None,
     input_type=Rpc__pb2._CREATEWALLETREQUEST,
@@ -77,7 +77,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='ListWallet',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.ListWallet',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.ListWallet',
     index=4,
     containing_service=None,
     input_type=Rpc__pb2._LISTWALLETREQUEST,
@@ -86,7 +86,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='CreateAddress',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.CreateAddress',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.CreateAddress',
     index=5,
     containing_service=None,
     input_type=Rpc__pb2._CREATEADDRESSREQUEST,
@@ -95,7 +95,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetAddress',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.GetAddress',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.GetAddress',
     index=6,
     containing_service=None,
     input_type=Rpc__pb2._GETADDRESSREQUEST,
@@ -104,7 +104,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='ListAddress',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.ListAddress',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.ListAddress',
     index=7,
     containing_service=None,
     input_type=Rpc__pb2._LISTADDRESSREQUEST,
@@ -113,7 +113,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='ValidateAddress',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.ValidateAddress',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.ValidateAddress',
     index=8,
     containing_service=None,
     input_type=Rpc__pb2._VALIDATEADDRESSREQUEST,
@@ -122,7 +122,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetBalance',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.GetBalance',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.GetBalance',
     index=9,
     containing_service=None,
     input_type=Rpc__pb2._GETBALANCEREQUEST,
@@ -131,7 +131,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='CreateRawTransaction',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.CreateRawTransaction',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.CreateRawTransaction',
     index=10,
     containing_service=None,
     input_type=Rpc__pb2._CREATERAWTRANSACTIONREQUEST,
@@ -140,7 +140,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='SignRawTransaction',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.SignRawTransaction',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.SignRawTransaction',
     index=11,
     containing_service=None,
     input_type=Rpc__pb2._SIGNRAWTRANSACTIONREQUEST,
@@ -149,7 +149,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='DecodeRawTransaction',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.DecodeRawTransaction',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.DecodeRawTransaction',
     index=12,
     containing_service=None,
     input_type=Rpc__pb2._DECODERAWTRANSACTIONREQUEST,
@@ -158,7 +158,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='BroadcastRawTransaction',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.BroadcastRawTransaction',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.BroadcastRawTransaction',
     index=13,
     containing_service=None,
     input_type=Rpc__pb2._BROADCASTRAWTRANSACTIONREQUEST,
@@ -167,7 +167,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='SendTo',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.SendTo',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.SendTo',
     index=14,
     containing_service=None,
     input_type=Rpc__pb2._SENDTOREQUEST,
@@ -176,7 +176,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='SendToFrom',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.SendToFrom',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.SendToFrom',
     index=15,
     containing_service=None,
     input_type=Rpc__pb2._SENDTOFROMREQUEST,
@@ -185,7 +185,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='SendMany',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.SendMany',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.SendMany',
     index=16,
     containing_service=None,
     input_type=Rpc__pb2._SENDMANYREQUEST,
@@ -194,7 +194,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='SendFromMany',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.SendFromMany',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.SendFromMany',
     index=17,
     containing_service=None,
     input_type=Rpc__pb2._SENDFROMMANYREQUEST,
@@ -203,7 +203,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='AddNode',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.AddNode',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.AddNode',
     index=18,
     containing_service=None,
     input_type=Rpc__pb2._ADDNODEREQUEST,
@@ -212,7 +212,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetPeerList',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.GetPeerList',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.GetPeerList',
     index=19,
     containing_service=None,
     input_type=Rpc__pb2._GETPEERLISTREQUEST,
@@ -221,7 +221,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetPeerInfo',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.GetPeerInfo',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.GetPeerInfo',
     index=20,
     containing_service=None,
     input_type=Rpc__pb2._GETPEERINFOREQUEST,
@@ -230,7 +230,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetConnectionCount',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.GetConnectionCount',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.GetConnectionCount',
     index=21,
     containing_service=None,
     input_type=Rpc__pb2._GETCONNECTIONCOUNTREQUEST,
@@ -239,7 +239,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetDelta',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.GetDelta',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.GetDelta',
     index=22,
     containing_service=None,
     input_type=Rpc__pb2._GETDELTAREQUEST,
@@ -248,7 +248,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetMempool',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.GetMempool',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.GetMempool',
     index=23,
     containing_service=None,
     input_type=Rpc__pb2._GETMEMPOOLREQUEST,
@@ -257,7 +257,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='SignMessage',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.SignMessage',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.SignMessage',
     index=24,
     containing_service=None,
     input_type=Rpc__pb2._SIGNMESSAGEREQUEST,
@@ -266,7 +266,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='VerifyMessage',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.VerifyMessage',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.VerifyMessage',
     index=25,
     containing_service=None,
     input_type=Rpc__pb2._VERIFYMESSAGEREQUEST,
@@ -275,7 +275,7 @@ _RPCSERVER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='ServiceStatus',
-    full_name='ADL.Node.Core.Modules.Rpc.RpcServer.ServiceStatus',
+    full_name='ADL.Protocol.Rpc.Node.RpcServer.ServiceStatus',
     index=26,
     containing_service=None,
     input_type=Rpc__pb2._SERVICESTATUSREQUEST,
