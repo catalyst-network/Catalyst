@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using ADL.Node.Core.Helpers.Services;
 
@@ -6,7 +7,7 @@ namespace ADL.Node.Core.Modules.Peer
     /// <summary>
     /// The Peer Service 
     /// </summary>
-    public class PeerService : ServiceBase, IPeerService
+    public class PeerService : AsyncServiceBase, IPeerService
     {
         private IPeer Peer { get; set; }
         private string DataDir { get; set; }
@@ -35,12 +36,13 @@ namespace ADL.Node.Core.Modules.Peer
         /// <param name="sslSettings"></param>
         /// <param name="dataDir"></param>
         /// <returns></returns>
-        public async Task StartService()
+        public override bool StartService()
         {
-            await Peer.StartPeer(SslSettings, DataDir);
+            Peer.StartPeer(PeerSettings, SslSettings, DataDir);
+            return true;
         }
             
-        public bool StopService()
+        public override bool StopService()
         {
             return Peer.StopPeer();
         }

@@ -11,7 +11,7 @@ namespace ADL.Node.Core.Modules.Peer
         /// <param name="sslSettings"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        Task StartPeer(ISslSettings sslSettings, string options);
+        Task StartPeer(IPeerSettings peerSettings, ISslSettings sslSettings, string options);
 
         bool StopPeer();
     }

@@ -250,6 +250,7 @@ namespace ADL.Node
     /// </summary>
     public class PeerSettings : IPeerSettings
     {
+        public string BindAddress { get; set; }
         public ushort Port { get; set; }
         public ushort MaxPeers { get; set; }
         public ushort PeerPingInterval { get; set; }
@@ -264,6 +265,7 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal PeerSettings(IConfiguration section)
         {
+            BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
             Magic = uint.Parse(section.GetSection("Magic").Value);
             Port = ushort.Parse(section.GetSection("Port").Value);
             MaxPeers = ushort.Parse(section.GetSection("MaxPeers").Value);
