@@ -7,7 +7,7 @@ namespace ADL.Node.Core.Modules.Mempool
 {
     public class Mempool : IMempool
     {
-        private IKeyStore KeySore;
+        private IKeyStore KeyStore;
 
         /// <summary>
         /// 
@@ -16,7 +16,7 @@ namespace ADL.Node.Core.Modules.Mempool
         /// <param name="keyStore"></param>
         public Mempool(IKeyStore keyStore)
         {
-            KeySore = keyStore;
+            KeyStore = keyStore;
         }
         
         /// <summary>
@@ -27,7 +27,7 @@ namespace ADL.Node.Core.Modules.Mempool
         /// <returns></returns>
         public bool SaveTx(Key k, Tx value)
         {
-            return KeySore.Set(k.ToByteArray(), value.ToByteArray(), null);
+            return KeyStore.Set(k.ToByteArray(), value.ToByteArray(), null);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace ADL.Node.Core.Modules.Mempool
         /// <returns></returns>
         public Tx GetTx(Key k)
         {
-            return Tx.Parser.ParseFrom(KeySore.Get(k.ToByteArray()));
+            return Tx.Parser.ParseFrom(KeyStore.Get(k.ToByteArray()));
         }
     }
 }

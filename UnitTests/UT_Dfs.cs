@@ -151,7 +151,7 @@ namespace ADL.UnitTests
         {
             var x = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 0, IpfsVersionApi = "api/v0/"};
             _ipfs.DestroyIpfsClient();
-            _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
+            _ipfs.CreateIpfsClient(x.IpfsVersionApi, x.ConnectRetries);
         }
     }
 }

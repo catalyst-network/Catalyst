@@ -14,7 +14,7 @@ namespace ADL.Redis
         /// 
         /// </summary>
         /// <param name="when"></param>
-        public Redis(When when = When.Always)
+        public Redis(When when = When.NotExists)
         {
             _when = when;
         }
