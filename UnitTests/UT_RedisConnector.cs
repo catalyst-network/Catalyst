@@ -2,8 +2,9 @@ using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StackExchange.Redis;
+using ADL.Redis;
 
-namespace ADL.Redis
+namespace ADL.UnitTests
 {
     [TestClass]
     public class UT_RedisConnector

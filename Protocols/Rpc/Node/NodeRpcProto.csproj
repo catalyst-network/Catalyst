@@ -2,22 +2,22 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RootNamespace>ADL.Protocol.Rpc.Node</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.6.1" />
         <PackageReference Include="Grpc" Version="1.16.0" />
         <PackageReference Include="Grpc.Core" Version="1.16.0" />
-        <PackageReference Include="Grpc.Tools" Version="1.16.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.6.1" />
     </ItemGroup>
 
     <ItemGroup>
         <Proto Include="*.proto" />
-        <Generated Include=".\Server\*.cs" />
+        <Generated Include=".\dist\csharp\*.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'@(Server)' == ''">
-        <Generated Include=".\Service\Rpc.cs" />
+        <Generated Include=".\dist\csharp\Rpc.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -46,6 +46,10 @@
 
     <ItemGroup>
         <DeployManifest Remove="obj\Debug\netcoreapp2.1\RpcProto.application" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="dist" />
     </ItemGroup>
 
     <!-- Generate the code from all of the proto files -->

@@ -1,30 +1,32 @@
 using System;
-using Autofac;
-using ADL.P2P;
-using ADL.Rpc;
-using ADL.DFS;
 using System.IO;
-using ADL.Gossip;
-using Akka.Actor;
-using ADL.Consensus;
-using ADL.Node.Ledger;
-using ADL.Node.Interfaces;
+using Autofac;
 using System.Threading.Tasks;
+using ADL.Node.Core.Modules.Dfs;
+using ADL.Node.Core.Modules.Rpc;
+using ADL.Node.Core.Modules.Peer;
+using ADL.Node.Core.Modules.Gossip;
+using ADL.Node.Core.Modules.Ledger;
+using ADL.Node.Core.Modules.Mempool;
+using ADL.Node.Core.Modules.Contract;
+using ADL.Node.Core.Modules.Consensus;
 
 namespace ADL.Node
 {
-    public class AtlasSystem : IDisposable, IAtlasSystem
+    public class AtlasSystem : IDisposable
     {
-        private IADL AdLedger { get; set; }
-        public IKernel Kernel { get; set; }
-        private IDFS DfsService { get; set; }
-        private IP2P P2PService { get; set; }
+        private Kernel Kernel { get; set; }
         private IRpcService RcpService { get; set; }
-        public IActorRef ContractSystem { get; set; }
-        private ActorSystem ActorSystem { get; set; }
+        private IDfsService DfsService { get; set; }
+        private IPeerService PeerService { get; set; }
         private static AtlasSystem Instance { get; set; }
+        private IGossipService GossipService { get; set; }
+        private ILedgerService LedgerService { get; set; }
+        private IMempoolService MempoolService { get; set; }
         private static readonly object Mutex = new object();
-
+        private IContractService ContractService { get; set; }
+        private IConsensusService ConsensusService { get; set; }
+        
         /// <summary>
         /// Get a thread safe AtlasSystem singleton.
         /// </summary>
@@ -50,103 +52,82 @@ namespace ADL.Node
         /// </summary>
         private AtlasSystem(NodeOptions options)
         {
-            using (ActorSystem = ActorSystem.Create("AtlasSystem"))
+            Kernel = Kernel.GetInstance(options);
+
+            if (options.Rpc)
             {
-                Kernel = StartUpRoutine.Boot(ActorSystem, options);
-
-                if (options.P2P)
+                using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
-                    StartPeer();        
+                    RcpService = scope.Resolve<IRpcService>();
                 }
-
-                if (options.Rpc)
-                {
-                    StartRpc();       
-                }
-
-                if (options.Dfs)
-                {
-                    StartDfs();                    
-                }
-
-                if (options.Gossip)
-                {
-                    StartGossip();
-                }
-
-                if (options.Contract)
-                {
-                    //@TODO
-                }
-
-                if (options.Consensus)
-                {
-                    StartConsensus();
-                }
-            }            
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartRpc()
-        {
-            using (var scope = Kernel.Container.BeginLifetimeScope())
-            {
-                RcpService = scope.Resolve<IRpcService>();
+                RcpService.StartService();  
             }
-            RcpService.StartServer(Kernel.Settings.NodeConfiguration.Rpc);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StopRpc()
-        {
-            RcpService.StopServer();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartDfs()
-        {
-            using (var scope = Kernel.Container.BeginLifetimeScope())
+            
+            if (options.Consensus)
             {
-                DfsService = scope.Resolve<IDFS>();
+                using (var scope = Kernel.Container.BeginLifetimeScope())
+                {
+                    ConsensusService = scope.Resolve<IConsensusService>();
+                }
+                ConsensusService.StartService();  
             }
-            DfsService.Start(Kernel.Settings.NodeConfiguration.Dfs);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartConsensus()
-        {
-            AdLedger.ConsensusService = ActorSystem.ActorOf(Kernel.Resolver.Create<ConsensusService>(), "ConsensusService");
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartGossip()
-        {
-            AdLedger.GossipService = ActorSystem.ActorOf(Kernel.Resolver.Create<GossipService>(), "GossipService");
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartPeer()
-        {
-            Console.WriteLine("start p2p controller....");
-            using (var scope = Kernel.Container.BeginLifetimeScope())
+            
+            if (options.Contract)
             {
-                P2PService = scope.Resolve<IP2P>();
+                using (var scope = Kernel.Container.BeginLifetimeScope())
+                {
+                    ContractService = scope.Resolve<IContractService>();
+                }
+                ContractService.StartService();  
             }
-            P2PService.StartServer(Kernel.Settings.NodeConfiguration.P2P, Kernel.Settings.NodeConfiguration.Ssl, new DirectoryInfo(Kernel.Settings.NodeConfiguration.NodeOptions.DataDir));
+            
+            if (options.Dfs)
+            {
+                using (var scope = Kernel.Container.BeginLifetimeScope())
+                {
+                    DfsService = scope.Resolve<IDfsService>();
+                }
+                DfsService.StartService();                   
+            }
+            
+            if (options.Gossip)
+            {
+                using (var scope = Kernel.Container.BeginLifetimeScope())
+                {
+                    GossipService = scope.Resolve<IGossipService>();
+                }
+                GossipService.StartService();  
+            }
+
+            if (options.Ledger)
+            {
+                using (var scope = Kernel.Container.BeginLifetimeScope())
+                {
+                    LedgerService = scope.Resolve<ILedgerService>();
+                }
+                LedgerService.StartService();     
+            }
+            
+            if (options.Mempool)
+            {
+                using (var scope = Kernel.Container.BeginLifetimeScope())
+                {
+                    MempoolService = scope.Resolve<IMempoolService>();
+                }
+                MempoolService.StartService();       
+            }
+            
+            if (options.Peer)
+            {
+                Console.WriteLine("start p2p controller....");
+                using (var scope = Kernel.Container.BeginLifetimeScope())
+                {
+                    PeerService = scope.Resolve<IPeerService>();
+                }
+                PeerService.StartService();
+            }         
         }
-        
+
         public Task Shutdown()
         {
             var taskSource = new TaskCompletionSource<bool>();
@@ -158,7 +139,7 @@ namespace ADL.Node
         /// </summary>
         public void Dispose()
         {
-            RcpService?.StopServer();
+            RcpService?.StopService();
         }
     }
 }

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package ADL.Protocol.Rpc.Node;
+
+import "Rpc.proto";
+
+service RpcServer {
+    rpc Ping(ADL.Protocol.Rpc.Node.PingRequest) returns (ADL.Protocol.Rpc.Node.PongResponse);
+    rpc Version(ADL.Protocol.Rpc.Node.VersionRequest) returns (ADL.Protocol.Rpc.Node.VersionResponse);
+    rpc GetInfo(ADL.Protocol.Rpc.Node.GetInfoRequest) returns (ADL.Protocol.Rpc.Node.GetInfoResponse);
+    rpc CreateWallet(ADL.Protocol.Rpc.Node.CreateWalletRequest) returns (ADL.Protocol.Rpc.Node.CreateWalletResponse);
+    rpc ListWallet(ADL.Protocol.Rpc.Node.ListWalletRequest) returns (ADL.Protocol.Rpc.Node.ListWalletResponse);
+    rpc CreateAddress(ADL.Protocol.Rpc.Node.CreateAddressRequest) returns (ADL.Protocol.Rpc.Node.CreateAddressResponse);
+    rpc GetAddress(ADL.Protocol.Rpc.Node.GetAddressRequest) returns (ADL.Protocol.Rpc.Node.GetAddressResponse);
+    rpc ListAddress(ADL.Protocol.Rpc.Node.ListAddressRequest) returns (ADL.Protocol.Rpc.Node.ListAddressResponse);
+    rpc ValidateAddress(ADL.Protocol.Rpc.Node.ValidateAddressRequest) returns (ADL.Protocol.Rpc.Node.ValidateAddressResponse);
+    rpc GetBalance(ADL.Protocol.Rpc.Node.GetBalanceRequest) returns (ADL.Protocol.Rpc.Node.GetBalanceResponse);
+    rpc CreateRawTransaction(ADL.Protocol.Rpc.Node.CreateRawTransactionRequest) returns (ADL.Protocol.Rpc.Node.CreateRawTransactionResponse);
+    rpc SignRawTransaction(ADL.Protocol.Rpc.Node.SignRawTransactionRequest) returns (ADL.Protocol.Rpc.Node.SignRawTransactionResponse);
+    rpc DecodeRawTransaction(ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest) returns (ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse);
+    rpc BroadcastRawTransaction(ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest) returns (ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse);
+    rpc SendTo(ADL.Protocol.Rpc.Node.SendToRequest) returns (ADL.Protocol.Rpc.Node.SendToResponse);
+    rpc SendToFrom(ADL.Protocol.Rpc.Node.SendToFromRequest) returns (ADL.Protocol.Rpc.Node.SendToFromResponse);
+    rpc SendMany(ADL.Protocol.Rpc.Node.SendManyRequest) returns (ADL.Protocol.Rpc.Node.SendManyResponse);
+    rpc SendFromMany(ADL.Protocol.Rpc.Node.SendFromManyRequest) returns (ADL.Protocol.Rpc.Node.SendFromManyResponse);
+    rpc AddNode(ADL.Protocol.Rpc.Node.AddNodeRequest) returns (ADL.Protocol.Rpc.Node.AddNodeResponse);
+    rpc GetPeerList(ADL.Protocol.Rpc.Node.GetPeerListRequest) returns (ADL.Protocol.Rpc.Node.GetPeerListResponse);
+    rpc GetPeerInfo(ADL.Protocol.Rpc.Node.GetPeerInfoRequest) returns (ADL.Protocol.Rpc.Node.GetPeerInfoResponse);
+    rpc GetConnectionCount(ADL.Protocol.Rpc.Node.GetConnectionCountRequest) returns (ADL.Protocol.Rpc.Node.GetConnectionCountResponse);
+    rpc GetDelta(ADL.Protocol.Rpc.Node.GetDeltaRequest) returns (ADL.Protocol.Rpc.Node.GetDeltaResponse);
+    rpc GetMempool(ADL.Protocol.Rpc.Node.GetMempoolRequest) returns (ADL.Protocol.Rpc.Node.GetMempoolResponse);
+    rpc SignMessage(ADL.Protocol.Rpc.Node.SignMessageRequest) returns (ADL.Protocol.Rpc.Node.SignMessageResponse);
+    rpc VerifyMessage(ADL.Protocol.Rpc.Node.VerifyMessageRequest) returns (ADL.Protocol.Rpc.Node.VerifyMessageResponse);
+    rpc ServiceStatus(ADL.Protocol.Rpc.Node.ServiceStatusRequest) returns (ADL.Protocol.Rpc.Node.ServiceStatusResponse);
+}

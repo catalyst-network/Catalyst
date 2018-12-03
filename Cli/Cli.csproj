@@ -5,52 +5,25 @@
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RootNamespace>ADL.Cli</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-        <_UnmanagedRegistrationCache Remove="obj\Cli.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Cli.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Cli.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Cli.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Cli.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Cli.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <DeployManifest Remove="obj\Debug\netcoreapp2.1\Cli.application" />
-    </ItemGroup>
+    
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
         <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)'=='Debug'">
-        <ProjectReference Include="..\Node\Node.csproj" />
-    </ItemGroup>
+    <!--<ItemGroup Condition="'$(Configuration)'=='Debug'">-->
+        <!--<ProjectReference Include="..\Node\Node.csproj" />-->
+    <!--</ItemGroup>-->
 
     <ItemGroup>
-        <ProjectReference Include="..\Helpers\Shell\Shell.csproj" />
+        <ProjectReference Include="..\Components\Shell\Shell.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <ProjectReference Include="..\Helpers\Exceptions\Exceptions.csproj" />
         <ProjectReference Include="..\Helpers\FileSystem\FileSystem.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Helpers\Koopa\Koopa.csproj" />
     </ItemGroup>
 
     <ItemGroup>
