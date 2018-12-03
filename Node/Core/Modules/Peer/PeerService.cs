@@ -39,7 +39,6 @@ namespace ADL.Node.Core.Modules.Peer
         {
             await Peer.StartPeer(SslSettings, DataDir);
         }
-
             
         public bool StopService()
         {
