@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ADL.Node.Core.Helpers.Services;
@@ -27,6 +29,13 @@ namespace ADL.Node.Core.Modules.Peer
             PeerSettings = peerSettings;
         }
         
+
+        static bool MessageReceived(byte[] data)
+        {
+            Console.WriteLine("Message from server: " + Encoding.UTF8.GetString(data));
+            return true;
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -36,18 +45,33 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         public override bool StartService()
         {
-             StartPeerProtocol();
-             return true;
-        }
-
-        private async Task StartPeerProtocol()
-        {
-            await Peer.StartPeer(PeerSettings, SslSettings, DataDir);
+            Network.GetInstance(PeerSettings, SslSettings, DataDir);
+            new Client(
+                PeerSettings.BindAddress,
+                PeerSettings.Port,
+                DataDir + "/" + SslSettings.PfxFileName,
+                SslSettings.SslCertPassword,
+                true,
+                false,
+                () =>
+                {
+                    Console.WriteLine("client connected");
+                    return true;
+                },
+                () =>
+                {
+                    Console.WriteLine("client disconnected");
+                    return true;
+                },
+                MessageReceived,
+                true);
+            return true;
         }
             
         public override bool StopService()
         {
-            return Peer.StopPeer();
+//            return Peer.();
+            return false;
         }
     }
 }
