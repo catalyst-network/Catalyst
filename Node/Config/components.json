@@ -34,14 +34,6 @@
       ]
     },
     {
-      "type": "ADL.Node.Core.Modules.Peer.Peer, Node",
-      "services": [
-        {
-          "type": "ADL.Node.Core.Modules.Peer.IPeer, Node"
-        }
-      ]
-    },
-    {
       "type": "ADL.Node.Core.Modules.Rpc.RpcServerImpl, Node",
       "services": [
         {
