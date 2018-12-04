@@ -47,15 +47,15 @@ namespace ADL.Node.Core.Modules.Peer
         private static void StartTcpServer()
         {
 #if DEBUG
-            Console.WriteLine(_dataDir+_SslSettings.PfxFileName);
-            Console.WriteLine(_dataDir+_SslSettings.SslCertPassword);
+            Console.WriteLine(_dataDir+"/"+_SslSettings.PfxFileName);
+            Console.WriteLine(_SslSettings.SslCertPassword);
             Console.WriteLine(_PeerSettings.BindAddress);
             Console.WriteLine(_PeerSettings.Port);
 #endif
             Console.WriteLine("123");
             try
             {
-                WatsonTcpSslServer server = new WatsonTcpSslServer("127.0.0.1", 45521, "/Users/nsh/.Atlas/PeerCert.pfx", "WeNeedASaf3rPassword", true, false, ClientConnected, ClientDisconnected, MessageReceived, true);
+                WatsonTcpSslServer server = new WatsonTcpSslServer("127.0.0.1", 45521, _dataDir+"/"+_SslSettings.PfxFileName, _SslSettings.SslCertPassword, true, false, ClientConnected, ClientDisconnected, MessageReceived, true);
                          using (server)
             {
                 Console.WriteLine("456");
@@ -138,33 +138,8 @@ namespace ADL.Node.Core.Modules.Peer
             {
                 Console.WriteLine(ex.Message.ToString());
             }
-
-  
         }
-
-        static bool ClientConnected(string ipPort)
-        {
-            Console.WriteLine("Client connected: " + ipPort);
-            return true;
-        }
-
-        static bool ClientDisconnected(string ipPort)
-        {
-            Console.WriteLine("Client disconnected: " + ipPort);
-            return true;
-        }
-
-        static bool MessageReceived(string ipPort, byte[] data)
-        {
-            string msg = "";
-            if (data != null && data.Length > 0)
-            {
-                msg = Encoding.UTF8.GetString(data);
-            }
-
-            Console.WriteLine("Message received from " + ipPort + ": " + msg);
-            return true;
-        }     
+ 
         /// <summary>
         /// 
         /// </summary>
@@ -174,5 +149,10 @@ namespace ADL.Node.Core.Modules.Peer
             _Daemon = false;
             return _Daemon;
         }
+    }
+
+    internal class TcpServer
+    {
+        
     }
 }

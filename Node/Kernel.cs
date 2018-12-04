@@ -87,18 +87,18 @@ namespace ADL.Node
                         }
                         
                         // check we have a pfx cert for watson server
-                        if (File.Exists(options.DataDir+"/"+settingsInstance.Ssl.PfxFileName) == false)
-                        {
-                            Console.WriteLine("===============");
-                            Console.WriteLine(settingsInstance.Ssl.SslCertPassword);
-                            Console.WriteLine("===============");
-                            X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
-                            SSLUtil.WriteCertificateFile(new DirectoryInfo(options.DataDir),  settingsInstance.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));   
-                        }
-                        else
-                        {
-                            Console.WriteLine("got cert");                
-                        }
+//                        if (File.Exists(options.DataDir+"/"+settingsInstance.Ssl.PfxFileName) == false)
+//                        {
+//                            Console.WriteLine("===============");
+//                            Console.WriteLine(settingsInstance.Ssl.SslCertPassword);
+//                            Console.WriteLine("===============");
+//                            X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
+//                            SSLUtil.WriteCertificateFile(new DirectoryInfo(options.DataDir),  settingsInstance.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));   
+//                        }
+//                        else
+//                        {
+//                            Console.WriteLine("got cert");                
+//                        }
                         var builder = new ContainerBuilder();
             
                         AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
