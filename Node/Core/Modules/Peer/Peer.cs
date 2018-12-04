@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WatsonTcp;
 
 namespace ADL.Node.Core.Modules.Peer
 {
@@ -20,6 +21,7 @@ namespace ADL.Node.Core.Modules.Peer
     
     public class Peer
     {
+        new WatsonTcpSslServer
     }
     
     internal class Client : TcpBase, IDisposable
@@ -432,8 +434,7 @@ namespace ADL.Node.Core.Modules.Peer
 
         private async Task AcceptConnections()
         {
-            Server Server1 = this;
-            Server1._Listener.Start();
+            _Listener.Start();
             while (!Server1._Token.IsCancellationRequested)
             {
                 string clientIpPort = string.Empty;
@@ -577,28 +578,38 @@ namespace ADL.Node.Core.Modules.Peer
             return client.TcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <returns></returns>
         private async Task DataReceiver(ClientMetadata client)
         {
-            Server Server1 = this;
-            Server Server = Server1;
-            ClientMetadata client1 = client;
             try
             {
                 while (true)
                 {
                     try
                     {
-                        if (!Server1.IsConnected(client))
+                        if (!IsConnected(client))
+                        {
                             break;
-                        byte[] data;
-                        byte[] numArray = data;
-                        data = await Server1.MessageReadAsync(client);
+                        }
+
+                        byte[] data = await MessageReadAsync(client);
                         if (data == null)
+                        {
+                            // no message available
                             await Task.Delay(30);
-                        else if (Server1._MessageReceived != null)
-                            Task.Run<bool>((Func<bool>) (() => closure_5._MessageReceived(client.IpPort, data)));
+                            continue;
+                        }
+
+                        if (_MessageReceived != null)
+                        {
+                            Task<bool> unawaited = Task.Run(() => _MessageReceived(client.IpPort, data));
+                        }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         break;
                     }
@@ -606,13 +617,15 @@ namespace ADL.Node.Core.Modules.Peer
             }
             finally
             {
-                int num = Interlocked.Decrement(ref Server1._ActiveClients);
-                Server1.RemoveClient(client1);
-                if (Server1._ClientDisconnected != null)
-                    Task.Run<bool>((Func<bool>) (() => Server._ClientDisconnected(client1.IpPort)));
-                Server1.Log("*** DataReceiver client " + client1.IpPort + " disconnected (now " +
-                                        (object) num + " clients active)");
-                client1.Dispose();
+                int activeCount = Interlocked.Decrement(ref _ActiveClients);
+                RemoveClient(client);
+                if (_ClientDisconnected != null)
+                {
+                    Task<bool> unawaited = Task.Run(() => _ClientDisconnected(client.IpPort));
+                }
+                Log("*** DataReceiver client " + client.IpPort + " disconnected (now " + activeCount + " clients active)");
+
+                client.Dispose();
             }
         }
 
@@ -640,7 +653,7 @@ namespace ADL.Node.Core.Modules.Peer
 
     internal abstract class TcpBase
     {
-        private bool _Debug;
+        internal bool _Debug;
 
         public async Task<bool> SendAsync(string ipPort, byte[] data)
         {
