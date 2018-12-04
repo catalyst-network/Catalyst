@@ -9,7 +9,6 @@ namespace ADL.Node.Core.Modules.Peer
     /// </summary>
     public class PeerService : AsyncServiceBase, IPeerService
     {
-        private IPeer Peer { get; set; }
         private string DataDir { get; set; }
         private ISslSettings SslSettings { get; set; }
         private IPeerSettings PeerSettings { get; set; }
@@ -21,9 +20,8 @@ namespace ADL.Node.Core.Modules.Peer
         /// <param name="peerSettings"></param>
         /// <param name="sslSettings"></param>
         /// <param name="options"></param>
-        public PeerService(IPeer peer, IPeerSettings peerSettings, ISslSettings sslSettings, NodeOptions options)
+        public PeerService(IPeerSettings peerSettings, ISslSettings sslSettings, NodeOptions options)
         {
-            Peer = peer;
             SslSettings = sslSettings;
             DataDir = options.DataDir;
             PeerSettings = peerSettings;
@@ -38,8 +36,13 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         public override bool StartService()
         {
-            Peer.StartPeer(PeerSettings, SslSettings, DataDir);
-            return true;
+             StartPeerProtocol();
+             return true;
+        }
+
+        private async Task StartPeerProtocol()
+        {
+            await Peer.StartPeer(PeerSettings, SslSettings, DataDir);
         }
             
         public override bool StopService()
