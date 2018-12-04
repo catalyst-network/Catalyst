@@ -1,7 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using ADL.DataStore;
 using Google.Protobuf;
+using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
+using StackExchange.Redis.Extensions;
+using StackExchange.Redis.Extensions.Core;
+using StackExchange.Redis.Extensions.Core.Configuration;
+using StackExchange.Redis.Extensions.Newtonsoft;
 
 namespace ADL.Redis
 {
@@ -29,6 +36,7 @@ namespace ADL.Redis
         /// <returns></returns>
         public bool Set(byte[] key, byte[] value, TimeSpan? expiry)
         {
+            
             return _redisDb.StringSet(key, value, expiry, _when);
         }
         
@@ -40,6 +48,19 @@ namespace ADL.Redis
         public byte[] Get(byte[] value)
         {
             return _redisDb.StringGet(value);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Dictionary<string,string></returns>
+        /// <see>https://redis.io/commands/INFO</see>
+        public Dictionary<string, string> GetInfo()
+        {
+            var serializer = new NewtonsoftSerializer();
+            var sut = new StackExchangeRedisCacheClient(RedisConnector.Instance().Connection, serializer);
+            
+            return sut.GetInfo();
         }
         
         /// <summary>

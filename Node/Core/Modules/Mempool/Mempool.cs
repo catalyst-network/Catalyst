@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ADL.DataStore;
 using Google.Protobuf;
 using ADL.Protocols.Mempool;
@@ -33,11 +35,22 @@ namespace ADL.Node.Core.Modules.Mempool
         /// <summary>
         /// 
         /// </summary>
+        /// 
         /// <param name="k"></param>
         /// <returns></returns>
         public Tx GetTx(Key k)
         {
             return Tx.Parser.ParseFrom(KeyStore.Get(k.ToByteArray()));
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 
+        /// <returns></returns>
+        public Dictionary<string, string> GetInfo()
+        {
+            return KeyStore.GetInfo();
         }
     }
 }

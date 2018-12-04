@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using StackExchange.Redis;
 using ADL.Bash;
@@ -77,6 +79,21 @@ namespace ADL.UnitTests
             
             server.ConfigSet("save","1 1"); // save every seconds for each change to the dataset
             Thread.Sleep(500); //give it half a seconds to make changes affective
+        }
+        
+        
+        [TestMethod]
+        public void GetInfo()
+        {
+            Memp.SaveTx(_k,_t);
+            
+            var response = Memp.GetInfo();
+
+            Assert.IsNotNull(response);
+            Assert.IsTrue(response.Any());
+            Assert.AreEqual(response["tcp_port"], "6379");
+            Assert.IsTrue(int.Parse(response["used_memory"]) < 1000000);
+            Assert.AreEqual(response["db0"], "keys=1,expires=0,avg_ttl=0");            
         }
         
         [TestMethod]
