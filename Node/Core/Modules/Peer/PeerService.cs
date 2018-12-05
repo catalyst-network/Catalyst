@@ -76,11 +76,11 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         public override bool StartService()
         {
-            Network.GetInstance(PeerSettings, SslSettings, DataDir);
+//            Network.GetInstance(PeerSettings, SslSettings, DataDir);
             
             client = new Client(
-                PeerSettings.BindAddress,
-                PeerSettings.Port,
+                "127.0.0.1",
+                42069,
                 DataDir + "/" + SslSettings.PfxFileName,
                 SslSettings.SslCertPassword,
                 true,

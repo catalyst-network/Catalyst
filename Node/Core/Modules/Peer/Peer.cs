@@ -24,8 +24,8 @@ namespace ADL.Node.Core.Modules.Peer
         private bool _Disposed = false;
         private string _SourceIp;//should be same as bind ip peer setting
         private int _SourcePort;//should be same as bind port peer setting
-        private string _ServerIp;//target
-        private int _ServerPort;//target
+        private string Ip;
+        private int Port;
         private bool _Debug;
         private TcpClient _Tcp;
         private SslStream _Ssl;
@@ -38,8 +38,8 @@ namespace ADL.Node.Core.Modules.Peer
         private readonly SemaphoreSlim _SendLock;
         
         public Client (
-            string serverIp,
-            int serverPort,
+            string ip,
+            int port,
             string pfxCertFile,
             string pfxCertPass,
             bool acceptInvalidCerts,
@@ -49,18 +49,18 @@ namespace ADL.Node.Core.Modules.Peer
             Func<byte[], bool> messageReceived,
             bool debug)
         {
-            if (String.IsNullOrEmpty(serverIp))
+            if (String.IsNullOrEmpty(ip))
             {
-                throw new ArgumentNullException(nameof(serverIp));
+                throw new ArgumentNullException(nameof(ip));
             }
 
-            if (serverPort < 1)
+            if (port < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(serverPort));
+                throw new ArgumentOutOfRangeException(nameof(port));
             }
 
-            _ServerIp = serverIp;
-            _ServerPort = serverPort;
+            Ip = ip;
+            Port = port;
             AcceptInvalidCerts = acceptInvalidCerts;
 
             _ServerConnected = serverConnected;
@@ -87,7 +87,7 @@ namespace ADL.Node.Core.Modules.Peer
             };
 
             _Tcp = new TcpClient();
-            IAsyncResult ar = _Tcp.BeginConnect(_ServerIp, _ServerPort, null, null);
+            IAsyncResult ar = _Tcp.BeginConnect(Ip, Port, null, null);
             WaitHandle wh = ar.AsyncWaitHandle;
 
             try
@@ -95,7 +95,7 @@ namespace ADL.Node.Core.Modules.Peer
                 if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
                 {
                     _Tcp.Close();
-                    throw new TimeoutException("Timeout connecting to " + _ServerIp + ":" + _ServerPort);
+                    throw new TimeoutException("Timeout connecting to " + Ip + ":" + Port);
                 }
 
                 _Tcp.EndConnect(ar);
@@ -114,7 +114,7 @@ namespace ADL.Node.Core.Modules.Peer
                     _Ssl = new SslStream(_Tcp.GetStream(), false);
                 }
 
-                _Ssl.AuthenticateAsClient(_ServerIp, _SslCertificateCollection, SslProtocols.Tls12, !AcceptInvalidCerts);
+                _Ssl.AuthenticateAsClient(Ip, _SslCertificateCollection, SslProtocols.Tls12, !AcceptInvalidCerts);
 
                 if (!_Ssl.IsEncrypted)
                 {
@@ -168,7 +168,7 @@ namespace ADL.Node.Core.Modules.Peer
 
                     if (!_Tcp.Connected)
                     {
-                        Log("*** DataReceiver server " + _ServerIp + ":" + _ServerPort + " disconnected");
+                        Log("*** DataReceiver server " + Ip + ":" + Port + " disconnected");
                         break;
                     }
 
@@ -188,7 +188,7 @@ namespace ADL.Node.Core.Modules.Peer
             }
             catch (Exception)
             {
-                Log("*** DataReceiver server " + _ServerIp + ":" + _ServerPort + " disconnected");
+                Log("*** DataReceiver server " + Ip + ":" + Port + " disconnected");
             }
             finally
             {
@@ -535,7 +535,7 @@ namespace ADL.Node.Core.Modules.Peer
         private TcpListener _Listener;
         private X509Certificate2 _SslCertificate;
         private bool _MutuallyAuthenticate;
-        private int _ActiveClients;
+        internal int _ActiveClients;
         private ConcurrentDictionary<string, Peer> _Clients;
         private List<string> _PermittedIps;
         private Func<string, int, bool> _ClientConnected = null;
@@ -658,7 +658,7 @@ namespace ADL.Node.Core.Modules.Peer
         
         static bool ClientConnected(string ip, int port)
         {
-            Console.WriteLine("Client connected: " + ip+":"+port);
+            Console.WriteLine("Client connected: "+ip+":"+port);
             return true;
         }
 
@@ -717,7 +717,7 @@ namespace ADL.Node.Core.Modules.Peer
                     // inbound peer
                     Peer client = Peer.GetInstance(tcpClient);
 
-                    Log("*** AcceptConnections accepted connection from " + client.Ip + client.Port);
+                    Log("*** AcceptConnections accepted connection from " + client.Ip + client.Port + " count " + _ActiveClients);
 
                     if (AcceptInvalidCerts)
                     {
@@ -1355,8 +1355,8 @@ namespace ADL.Node.Core.Modules.Peer
         {
             TcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
             NetworkStream = tcp.GetStream();
-            int port = ((IPEndPoint)tcp.Client.RemoteEndPoint).Port;
-            string ip = ((IPEndPoint)tcp.Client.RemoteEndPoint).Address.ToString();
+            Port = ((IPEndPoint)tcp.Client.RemoteEndPoint).Port;
+            Ip = ((IPEndPoint)tcp.Client.RemoteEndPoint).Address.ToString();
         }
 
         /// <summary>
