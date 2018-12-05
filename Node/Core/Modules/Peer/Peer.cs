@@ -715,7 +715,7 @@ namespace ADL.Node.Core.Modules.Peer
                     }
                     
                     // inbound peer
-                    Peer client = Peer.GetInstance(tcpClient);
+                    Peer client = new Peer(tcpClient);
 
                     Log("*** AcceptConnections accepted connection from " + client.Ip + client.Port + " count " + _ActiveClients);
 
@@ -1326,26 +1326,6 @@ namespace ADL.Node.Core.Modules.Peer
         private static Peer _instance;
         internal NetworkStream NetworkStream;
         private static readonly object Mutex = new object();
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="tcp"></param>
-        /// <returns></returns>
-        public static Peer GetInstance(TcpClient tcp)
-        {
-            if (_instance == null)
-            {
-                lock (Mutex)
-                {
-                    if (_instance == null)
-                    {
-                        _instance = new Peer(tcp);
-                    }
-                }
-            }
-            return _instance;
-        }
         
         /// <summary>
         /// 
