@@ -47,8 +47,13 @@ namespace ADL.UnitTests
                     }
 
                     _t.Amount = (uint)id;
+                    
+                    Thread.Sleep(5); //milliseconds
                 }
-
+                
+                // here there could be a context switch so second thread might call SaveTx failing the test
+                // so a little sleep was needed in the locked section
+                                
                 Memp.SaveTx(_k, _t); // write same key but different tx amount, not under lock                
             }
         }
@@ -246,7 +251,7 @@ namespace ADL.UnitTests
         public void KeysArePersistent()
         {
             Memp.SaveTx(_k, _t);            
-            Thread.Sleep(1200); // after one second the changes is saved
+            Thread.Sleep(2000); // after one second the changes is saved
             
             var transaction = Memp.GetTx(_k);
             Assert.AreEqual("signature", transaction.Signature);

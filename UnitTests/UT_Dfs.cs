@@ -9,7 +9,7 @@ using ADL.Node.Core.Modules.Dfs;
 namespace ADL.UnitTests
 {
     [TestClass]
-    public class FileSystemTest
+    public class UT_Dfs
     {
         private static IpfsConnector _ipfs = new IpfsConnector();
 
