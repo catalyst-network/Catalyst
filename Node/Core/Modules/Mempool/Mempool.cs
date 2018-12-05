@@ -1,7 +1,7 @@
 ﻿using System;
 using ADL.DataStore;
+using ADL.Protocol.Mempool.dist.csharp;
 using Google.Protobuf;
-using ADL.Protocols.Mempool;
 
 namespace ADL.Node.Core.Modules.Mempool
 {

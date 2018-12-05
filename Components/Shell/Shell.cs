@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using ADL.Protocol.Rpc.Node;
+using ADL.Protocol.Rpc.Node.dist.csharp;
 
 namespace ADL.Shell
 {

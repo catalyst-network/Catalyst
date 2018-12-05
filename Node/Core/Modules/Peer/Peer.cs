@@ -11,7 +11,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WatsonTcp;
+using ADL.Cryptography;
+using Google.Protobuf;
+using Org.BouncyCastle.Asn1.Cmp;
+using Org.BouncyCastle.Asn1.Mozilla;
+using Org.BouncyCastle.Security;
 
 namespace ADL.Node.Core.Modules.Peer
 {
@@ -70,15 +74,25 @@ namespace ADL.Node.Core.Modules.Peer
             return true;
         }
 
-        static bool MessageReceived(string ipPort, byte[] data)
+        static bool MessageReceived(ClientMetadata client, byte[] data)
         {
+            Console.WriteLine("lgdflal");
+
             string msg = "";
             if (data != null && data.Length > 0)
             {
                 msg = Encoding.UTF8.GetString(data);
             }
+            Console.WriteLine("dfds");
 
-            Console.WriteLine("Message received from " + ipPort + ": " + msg);
+            var charResponse = ADL.Protocol.Peer.ChallengeResponse.Parser.ParseFrom(data);
+            Console.WriteLine("dfds");
+
+            var keyFactory = PrivateKeyFactory.CreateKey(System.Convert.FromBase64String(charResponse.PublicKey));
+            Console.WriteLine("llal");
+            Console.WriteLine(Ec.VerifySignature(keyFactory,charResponse.SignedNonce,client.nonce.ToString()));
+
+            Console.WriteLine("Message received from " + client.ipPort + ": " + ADL.Protocol.Peer.ChallengeResponse.Parser.ParseFrom(data));
             return true;
         }
     }
@@ -558,6 +572,10 @@ namespace ADL.Node.Core.Modules.Peer
             }
         }
 
+        public async Task<bool> SendAsync(byte[] data)
+        {
+            return await MessageWriteAsync(data);
+        }
         
         public void Dispose()
         {
@@ -609,7 +627,7 @@ namespace ADL.Node.Core.Modules.Peer
         private CancellationToken _Token;
         private Func<string, bool> _ClientConnected = null;
         private Func<string, bool> _ClientDisconnected = null;
-        private Func<string, byte[], bool> _MessageReceived = null;
+        private Func<ClientMetadata, byte[], bool> _MessageReceived = null;
         
         public Server(
             string listenerIp,
@@ -621,7 +639,7 @@ namespace ADL.Node.Core.Modules.Peer
             IEnumerable<string> permittedIps,
             Func<string, bool> clientConnected,
             Func<string, bool> clientDisconnected,
-            Func<string, byte[], bool> messageReceived,
+            Func<ClientMetadata, byte[], bool> messageReceived,
             bool debug)
         {
             if (listenerPort < 1)
@@ -738,6 +756,16 @@ namespace ADL.Node.Core.Modules.Peer
                             }
 
                             Task.Run(async () => await DataReceiver(client));
+
+                            var challengeRequest = new ADL.Protocol.Peer.ChallengeRequest();
+                            
+                            SecureRandom random = new SecureRandom();
+                            byte[] keyBytes = new byte[16];
+                            random.NextBytes(keyBytes);
+                            challengeRequest.Nonce = random.NextInt();
+                            challengeRequest.Type = 10;
+                            client.nonce = challengeRequest.Nonce;
+                            Task.Run(async () => await SendAsync(client.IpPort, challengeRequest.ToByteArray()));
                         }
                     }, _Token);
                 }
@@ -770,7 +798,6 @@ namespace ADL.Node.Core.Modules.Peer
             try
             {
                 // the two bools in this should really be contruction paramaters
-                // maybe re-use mutualAuthentication and acceptInvalidCerts ?
                 await client.SslStream.AuthenticateAsServerAsync(_SslCertificate, true, SslProtocols.Tls12, false);
 
                 if (!client.SslStream.IsEncrypted)
@@ -874,7 +901,7 @@ namespace ADL.Node.Core.Modules.Peer
 
                         if (_MessageReceived != null)
                         {
-                            Task<bool> unawaited = Task.Run(() => _MessageReceived(client.IpPort, data));
+                            Task<bool> unawaited = Task.Run(() => _MessageReceived(client, data));
                         }
                     }
                     catch (Exception)
@@ -1273,6 +1300,78 @@ namespace ADL.Node.Core.Modules.Peer
             Log(" = Exception Source: " + e.Source);
             Log(" = Exception StackTrace: " + e.StackTrace);
             Log("================================================================================");
+        }
+    }
+    
+    public class ClientMetadata : IDisposable
+    {
+        private bool disposed = false;
+        public int nonce = 0;
+        private TcpClient tcpClient;
+        private NetworkStream networkStream;
+        private SslStream sslStream;
+        public string ipPort;
+
+        public ClientMetadata(TcpClient tcp)
+        {
+            tcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
+            networkStream = tcp.GetStream();
+            ipPort = tcp.Client.RemoteEndPoint.ToString();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public TcpClient TcpClient
+        {
+            get { return tcpClient; }
+        }
+
+        public NetworkStream NetworkStream
+        {
+            get { return networkStream; }
+        }
+
+        public SslStream SslStream
+        {
+            get { return sslStream; }
+            set { sslStream = value; }
+        }
+
+        public string IpPort
+        {
+            get { return ipPort; }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                if (sslStream != null)
+                {
+                    sslStream.Close();
+                }
+
+                if (networkStream != null)
+                {
+                    networkStream.Close();
+                }
+
+                if (tcpClient != null)
+                {
+                    tcpClient.Close();
+                }
+            }
+
+            disposed = true;
         }
     }
 }

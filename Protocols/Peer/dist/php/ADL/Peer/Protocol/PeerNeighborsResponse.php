@@ -14,7 +14,7 @@ use Google\Protobuf\Internal\GPBUtil;
 class PeerNeighborsResponse extends \Google\Protobuf\Internal\Message
 {
     /**
-     * Generated from protobuf field <code>string pong = 2;</code>
+     * Generated from protobuf field <code>string pong = 1;</code>
      */
     private $pong = '';
 
@@ -33,7 +33,7 @@ class PeerNeighborsResponse extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string pong = 2;</code>
+     * Generated from protobuf field <code>string pong = 1;</code>
      * @return string
      */
     public function getPong()
@@ -42,7 +42,7 @@ class PeerNeighborsResponse extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string pong = 2;</code>
+     * Generated from protobuf field <code>string pong = 1;</code>
      * @param string $var
      * @return $this
      */

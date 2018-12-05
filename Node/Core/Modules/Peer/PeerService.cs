@@ -2,7 +2,14 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ADL.Cryptography;
+using ADL.Cryptography.SSL;
 using ADL.Node.Core.Helpers.Services;
+using ADL.Protocol.Peer;
+using Google.Protobuf;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
 
 namespace ADL.Node.Core.Modules.Peer
 {
@@ -14,6 +21,7 @@ namespace ADL.Node.Core.Modules.Peer
         private string DataDir { get; set; }
         private ISslSettings SslSettings { get; set; }
         private IPeerSettings PeerSettings { get; set; }
+        private Client client { get; set; }
 
         /// <summary>
         /// 
@@ -28,11 +36,34 @@ namespace ADL.Node.Core.Modules.Peer
             DataDir = options.DataDir;
             PeerSettings = peerSettings;
         }
-        
 
-        static bool MessageReceived(byte[] data)
+        private static string BytesToHex(byte[] data)
         {
-            Console.WriteLine("Message from server: " + Encoding.UTF8.GetString(data));
+            if (data == null || data.Length < 1)
+            {
+                return "(null)";
+            }
+
+            return BitConverter.ToString(data).Replace("-", "");
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        bool MessageReceived(byte[] data)
+        {
+            var challenge = ADL.Protocol.Peer.ChallengeRequest.Parser.ParseFrom(data);
+            Console.WriteLine("Message from server: " + BytesToHex(data) + challenge);
+            var charllengeResponse = new ChallengeResponse();
+            AsymmetricCipherKeyPair publicKeyPair = Ec.CreateKeyPair();
+            charllengeResponse.Type = 10;
+            Console.WriteLine(publicKeyPair.Public.ToString());
+            charllengeResponse.PublicKey = publicKeyPair.Public.ToString();
+            charllengeResponse.SignedNonce = Ec.SignData(challenge.Nonce.ToString(), publicKeyPair.Private);
+            client.SendAsync(charllengeResponse.ToByteArray());
+
             return true;
         }
         
@@ -46,7 +77,7 @@ namespace ADL.Node.Core.Modules.Peer
         public override bool StartService()
         {
             Network.GetInstance(PeerSettings, SslSettings, DataDir);
-            new Client(
+            client = new Client(
                 PeerSettings.BindAddress,
                 PeerSettings.Port,
                 DataDir + "/" + SslSettings.PfxFileName,
@@ -65,6 +96,7 @@ namespace ADL.Node.Core.Modules.Peer
                 },
                 MessageReceived,
                 true);
+                        
             return true;
         }
             

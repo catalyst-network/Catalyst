@@ -7,7 +7,7 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 
-goog.provide('proto.ADL.Peer.Protocol.PingRequest');
+goog.provide('proto.ADL.Protocol.Peer.PingRequest');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
@@ -24,12 +24,12 @@ goog.require('jspb.Message');
  * @extends {jspb.Message}
  * @constructor
  */
-proto.ADL.Peer.Protocol.PingRequest = function(opt_data) {
+proto.ADL.Protocol.Peer.PingRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.ADL.Peer.Protocol.PingRequest, jspb.Message);
+goog.inherits(proto.ADL.Protocol.Peer.PingRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.ADL.Peer.Protocol.PingRequest.displayName = 'proto.ADL.Peer.Protocol.PingRequest';
+  proto.ADL.Protocol.Peer.PingRequest.displayName = 'proto.ADL.Protocol.Peer.PingRequest';
 }
 
 
@@ -44,8 +44,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.ADL.Peer.Protocol.PingRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.ADL.Peer.Protocol.PingRequest.toObject(opt_includeInstance, this);
+proto.ADL.Protocol.Peer.PingRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.ADL.Protocol.Peer.PingRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -54,11 +54,11 @@ proto.ADL.Peer.Protocol.PingRequest.prototype.toObject = function(opt_includeIns
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.ADL.Peer.Protocol.PingRequest} msg The msg instance to transform.
+ * @param {!proto.ADL.Protocol.Peer.PingRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.ADL.Peer.Protocol.PingRequest.toObject = function(includeInstance, msg) {
+proto.ADL.Protocol.Peer.PingRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     ping: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
@@ -74,23 +74,23 @@ proto.ADL.Peer.Protocol.PingRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.ADL.Peer.Protocol.PingRequest}
+ * @return {!proto.ADL.Protocol.Peer.PingRequest}
  */
-proto.ADL.Peer.Protocol.PingRequest.deserializeBinary = function(bytes) {
+proto.ADL.Protocol.Peer.PingRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.ADL.Peer.Protocol.PingRequest;
-  return proto.ADL.Peer.Protocol.PingRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.ADL.Protocol.Peer.PingRequest;
+  return proto.ADL.Protocol.Peer.PingRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.ADL.Peer.Protocol.PingRequest} msg The message object to deserialize into.
+ * @param {!proto.ADL.Protocol.Peer.PingRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.ADL.Peer.Protocol.PingRequest}
+ * @return {!proto.ADL.Protocol.Peer.PingRequest}
  */
-proto.ADL.Peer.Protocol.PingRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.ADL.Protocol.Peer.PingRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -114,9 +114,9 @@ proto.ADL.Peer.Protocol.PingRequest.deserializeBinaryFromReader = function(msg, 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.ADL.Peer.Protocol.PingRequest.prototype.serializeBinary = function() {
+proto.ADL.Protocol.Peer.PingRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.ADL.Peer.Protocol.PingRequest.serializeBinaryToWriter(this, writer);
+  proto.ADL.Protocol.Peer.PingRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -124,11 +124,11 @@ proto.ADL.Peer.Protocol.PingRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.ADL.Peer.Protocol.PingRequest} message
+ * @param {!proto.ADL.Protocol.Peer.PingRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.ADL.Peer.Protocol.PingRequest.serializeBinaryToWriter = function(message, writer) {
+proto.ADL.Protocol.Peer.PingRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getPing();
   if (f.length > 0) {
@@ -144,13 +144,13 @@ proto.ADL.Peer.Protocol.PingRequest.serializeBinaryToWriter = function(message, 
  * optional string ping = 1;
  * @return {string}
  */
-proto.ADL.Peer.Protocol.PingRequest.prototype.getPing = function() {
+proto.ADL.Protocol.Peer.PingRequest.prototype.getPing = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.ADL.Peer.Protocol.PingRequest.prototype.setPing = function(value) {
+proto.ADL.Protocol.Peer.PingRequest.prototype.setPing = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 

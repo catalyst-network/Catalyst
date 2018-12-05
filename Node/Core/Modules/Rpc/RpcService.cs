@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ADL.Node.Core.Helpers.Services;
 using ADL.Protocol.Rpc.Node;
+using ADL.Protocol.Rpc.Node.dist.csharp;
 
 namespace ADL.Node.Core.Modules.Rpc
 {

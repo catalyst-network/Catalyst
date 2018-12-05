@@ -9,14 +9,14 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * Generated from protobuf message <code>ADL.Peer.Protocol.PeerInfoResponse</code>
+ * Generated from protobuf message <code>ADL.Peer.Protocol.ChallengeRequest</code>
  */
-class PeerInfoResponse extends \Google\Protobuf\Internal\Message
+class ChallengeRequest extends \Google\Protobuf\Internal\Message
 {
     /**
-     * Generated from protobuf field <code>string pong = 1;</code>
+     * Generated from protobuf field <code>int32 nonce = 1;</code>
      */
-    private $pong = '';
+    private $nonce = 0;
 
     /**
      * Constructor.
@@ -24,7 +24,7 @@ class PeerInfoResponse extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type string $pong
+     *     @type int $nonce
      * }
      */
     public function __construct($data = NULL) {
@@ -33,23 +33,23 @@ class PeerInfoResponse extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string pong = 1;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 nonce = 1;</code>
+     * @return int
      */
-    public function getPong()
+    public function getNonce()
     {
-        return $this->pong;
+        return $this->nonce;
     }
 
     /**
-     * Generated from protobuf field <code>string pong = 1;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 nonce = 1;</code>
+     * @param int $var
      * @return $this
      */
-    public function setPong($var)
+    public function setNonce($var)
     {
-        GPBUtil::checkString($var, True);
-        $this->pong = $var;
+        GPBUtil::checkInt32($var);
+        $this->nonce = $var;
 
         return $this;
     }
