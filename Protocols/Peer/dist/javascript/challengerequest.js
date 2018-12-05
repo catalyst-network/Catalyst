@@ -7,7 +7,7 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 
-goog.provide('proto.ADL.Protocol.Peer.PongResponse');
+goog.provide('proto.ADL.Protocol.Peer.ChallengeRequest');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
@@ -24,12 +24,12 @@ goog.require('jspb.Message');
  * @extends {jspb.Message}
  * @constructor
  */
-proto.ADL.Protocol.Peer.PongResponse = function(opt_data) {
+proto.ADL.Protocol.Peer.ChallengeRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.ADL.Protocol.Peer.PongResponse, jspb.Message);
+goog.inherits(proto.ADL.Protocol.Peer.ChallengeRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.ADL.Protocol.Peer.PongResponse.displayName = 'proto.ADL.Protocol.Peer.PongResponse';
+  proto.ADL.Protocol.Peer.ChallengeRequest.displayName = 'proto.ADL.Protocol.Peer.ChallengeRequest';
 }
 
 
@@ -44,8 +44,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.ADL.Protocol.Peer.PongResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.ADL.Protocol.Peer.PongResponse.toObject(opt_includeInstance, this);
+proto.ADL.Protocol.Peer.ChallengeRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.ADL.Protocol.Peer.ChallengeRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -54,13 +54,14 @@ proto.ADL.Protocol.Peer.PongResponse.prototype.toObject = function(opt_includeIn
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.ADL.Protocol.Peer.PongResponse} msg The msg instance to transform.
+ * @param {!proto.ADL.Protocol.Peer.ChallengeRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.ADL.Protocol.Peer.PongResponse.toObject = function(includeInstance, msg) {
+proto.ADL.Protocol.Peer.ChallengeRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pong: jspb.Message.getFieldWithDefault(msg, 1, "")
+    type: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    nonce: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -74,23 +75,23 @@ proto.ADL.Protocol.Peer.PongResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.ADL.Protocol.Peer.PongResponse}
+ * @return {!proto.ADL.Protocol.Peer.ChallengeRequest}
  */
-proto.ADL.Protocol.Peer.PongResponse.deserializeBinary = function(bytes) {
+proto.ADL.Protocol.Peer.ChallengeRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.ADL.Protocol.Peer.PongResponse;
-  return proto.ADL.Protocol.Peer.PongResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.ADL.Protocol.Peer.ChallengeRequest;
+  return proto.ADL.Protocol.Peer.ChallengeRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.ADL.Protocol.Peer.PongResponse} msg The message object to deserialize into.
+ * @param {!proto.ADL.Protocol.Peer.ChallengeRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.ADL.Protocol.Peer.PongResponse}
+ * @return {!proto.ADL.Protocol.Peer.ChallengeRequest}
  */
-proto.ADL.Protocol.Peer.PongResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.ADL.Protocol.Peer.ChallengeRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -98,8 +99,12 @@ proto.ADL.Protocol.Peer.PongResponse.deserializeBinaryFromReader = function(msg,
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setPong(value);
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setType(value);
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setNonce(value);
       break;
     default:
       reader.skipField();
@@ -114,9 +119,9 @@ proto.ADL.Protocol.Peer.PongResponse.deserializeBinaryFromReader = function(msg,
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.ADL.Protocol.Peer.PongResponse.prototype.serializeBinary = function() {
+proto.ADL.Protocol.Peer.ChallengeRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.ADL.Protocol.Peer.PongResponse.serializeBinaryToWriter(this, writer);
+  proto.ADL.Protocol.Peer.ChallengeRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -124,16 +129,23 @@ proto.ADL.Protocol.Peer.PongResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.ADL.Protocol.Peer.PongResponse} message
+ * @param {!proto.ADL.Protocol.Peer.ChallengeRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.ADL.Protocol.Peer.PongResponse.serializeBinaryToWriter = function(message, writer) {
+proto.ADL.Protocol.Peer.ChallengeRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getPong();
-  if (f.length > 0) {
-    writer.writeString(
+  f = message.getType();
+  if (f !== 0) {
+    writer.writeInt32(
       1,
+      f
+    );
+  }
+  f = message.getNonce();
+  if (f !== 0) {
+    writer.writeInt32(
+      2,
       f
     );
   }
@@ -141,17 +153,32 @@ proto.ADL.Protocol.Peer.PongResponse.serializeBinaryToWriter = function(message,
 
 
 /**
- * optional string pong = 1;
- * @return {string}
+ * optional int32 type = 1;
+ * @return {number}
  */
-proto.ADL.Protocol.Peer.PongResponse.prototype.getPong = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.ADL.Protocol.Peer.ChallengeRequest.prototype.getType = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
-/** @param {string} value */
-proto.ADL.Protocol.Peer.PongResponse.prototype.setPong = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+/** @param {number} value */
+proto.ADL.Protocol.Peer.ChallengeRequest.prototype.setType = function(value) {
+  jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional int32 nonce = 2;
+ * @return {number}
+ */
+proto.ADL.Protocol.Peer.ChallengeRequest.prototype.getNonce = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {number} value */
+proto.ADL.Protocol.Peer.ChallengeRequest.prototype.setNonce = function(value) {
+  jspb.Message.setProto3IntField(this, 2, value);
 };
 
 

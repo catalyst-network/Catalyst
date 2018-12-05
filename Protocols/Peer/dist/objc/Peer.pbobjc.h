@@ -59,7 +59,7 @@ typedef GPB_ENUM(PingRequest_FieldNumber) {
 #pragma mark - PongResponse
 
 typedef GPB_ENUM(PongResponse_FieldNumber) {
-  PongResponse_FieldNumber_Pong = 2,
+  PongResponse_FieldNumber_Pong = 1,
 };
 
 @interface PongResponse : GPBMessage
@@ -83,7 +83,7 @@ typedef GPB_ENUM(PeerInfoRequest_FieldNumber) {
 #pragma mark - PeerInfoResponse
 
 typedef GPB_ENUM(PeerInfoResponse_FieldNumber) {
-  PeerInfoResponse_FieldNumber_Pong = 2,
+  PeerInfoResponse_FieldNumber_Pong = 1,
 };
 
 @interface PeerInfoResponse : GPBMessage
@@ -107,12 +107,45 @@ typedef GPB_ENUM(PeerNeighborsRequest_FieldNumber) {
 #pragma mark - PeerNeighborsResponse
 
 typedef GPB_ENUM(PeerNeighborsResponse_FieldNumber) {
-  PeerNeighborsResponse_FieldNumber_Pong = 2,
+  PeerNeighborsResponse_FieldNumber_Pong = 1,
 };
 
 @interface PeerNeighborsResponse : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *pong;
+
+@end
+
+#pragma mark - ChallengeRequest
+
+typedef GPB_ENUM(ChallengeRequest_FieldNumber) {
+  ChallengeRequest_FieldNumber_Type = 1,
+  ChallengeRequest_FieldNumber_Nonce = 2,
+};
+
+@interface ChallengeRequest : GPBMessage
+
+@property(nonatomic, readwrite) int32_t type;
+
+@property(nonatomic, readwrite) int32_t nonce;
+
+@end
+
+#pragma mark - ChallengeResponse
+
+typedef GPB_ENUM(ChallengeResponse_FieldNumber) {
+  ChallengeResponse_FieldNumber_Type = 1,
+  ChallengeResponse_FieldNumber_SignedNonce = 2,
+  ChallengeResponse_FieldNumber_PublicKey = 3,
+};
+
+@interface ChallengeResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t type;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *signedNonce;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *publicKey;
 
 @end
 

@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace ADL.Peer.Protocol {
+namespace ADL.Protocol.Peer {
 
   /// <summary>Holder for reflection information generated from Peer.proto</summary>
   public static partial class PeerReflection {
@@ -24,27 +24,26 @@ namespace ADL.Peer.Protocol {
     static PeerReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgpQZWVyLnByb3RvEhFBREwuUGVlci5Qcm90b2NvbCIbCgtQaW5nUmVxdWVz",
-            "dBIMCgRwaW5nGAEgASgJIhwKDFBvbmdSZXNwb25zZRIMCgRwb25nGAIgASgJ",
+            "CgpQZWVyLnByb3RvEhFBREwuUHJvdG9jb2wuUGVlciIbCgtQaW5nUmVxdWVz",
+            "dBIMCgRwaW5nGAEgASgJIhwKDFBvbmdSZXNwb25zZRIMCgRwb25nGAEgASgJ",
             "Ih8KD1BlZXJJbmZvUmVxdWVzdBIMCgRwaW5nGAEgASgJIiAKEFBlZXJJbmZv",
-            "UmVzcG9uc2USDAoEcG9uZxgCIAEoCSIkChRQZWVyTmVpZ2hib3JzUmVxdWVz",
+            "UmVzcG9uc2USDAoEcG9uZxgBIAEoCSIkChRQZWVyTmVpZ2hib3JzUmVxdWVz",
             "dBIMCgRwaW5nGAEgASgJIiUKFVBlZXJOZWlnaGJvcnNSZXNwb25zZRIMCgRw",
-            "b25nGAIgASgJMo4CCgRQZWVyEkcKBFBpbmcSHi5BREwuUGVlci5Qcm90b2Nv",
-            "bC5QaW5nUmVxdWVzdBofLkFETC5QZWVyLlByb3RvY29sLlBvbmdSZXNwb25z",
-            "ZRJWCgtHZXRQZWVySW5mbxIiLkFETC5QZWVyLlByb3RvY29sLlBlZXJJbmZv",
-            "UmVxdWVzdBojLkFETC5QZWVyLlByb3RvY29sLlBlZXJJbmZvUmVzcG9uc2US",
-            "ZQoQR2V0UGVlck5laWdoYm9ycxInLkFETC5QZWVyLlByb3RvY29sLlBlZXJO",
-            "ZWlnaGJvcnNSZXF1ZXN0GiguQURMLlBlZXIuUHJvdG9jb2wuUGVlck5laWdo",
-            "Ym9yc1Jlc3BvbnNlYgZwcm90bzM="));
+            "b25nGAEgASgJIi8KEENoYWxsZW5nZVJlcXVlc3QSDAoEdHlwZRgBIAEoBRIN",
+            "CgVub25jZRgCIAEoBSJJChFDaGFsbGVuZ2VSZXNwb25zZRIMCgR0eXBlGAEg",
+            "ASgFEhMKC3NpZ25lZE5vbmNlGAIgASgJEhEKCXB1YmxpY0tleRgDIAEoCWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Peer.Protocol.PingRequest), global::ADL.Peer.Protocol.PingRequest.Parser, new[]{ "Ping" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Peer.Protocol.PongResponse), global::ADL.Peer.Protocol.PongResponse.Parser, new[]{ "Pong" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Peer.Protocol.PeerInfoRequest), global::ADL.Peer.Protocol.PeerInfoRequest.Parser, new[]{ "Ping" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Peer.Protocol.PeerInfoResponse), global::ADL.Peer.Protocol.PeerInfoResponse.Parser, new[]{ "Pong" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Peer.Protocol.PeerNeighborsRequest), global::ADL.Peer.Protocol.PeerNeighborsRequest.Parser, new[]{ "Ping" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Peer.Protocol.PeerNeighborsResponse), global::ADL.Peer.Protocol.PeerNeighborsResponse.Parser, new[]{ "Pong" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Peer.PingRequest), global::ADL.Protocol.Peer.PingRequest.Parser, new[]{ "Ping" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Peer.PongResponse), global::ADL.Protocol.Peer.PongResponse.Parser, new[]{ "Pong" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Peer.PeerInfoRequest), global::ADL.Protocol.Peer.PeerInfoRequest.Parser, new[]{ "Ping" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Peer.PeerInfoResponse), global::ADL.Protocol.Peer.PeerInfoResponse.Parser, new[]{ "Pong" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Peer.PeerNeighborsRequest), global::ADL.Protocol.Peer.PeerNeighborsRequest.Parser, new[]{ "Ping" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Peer.PeerNeighborsResponse), global::ADL.Protocol.Peer.PeerNeighborsResponse.Parser, new[]{ "Pong" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Peer.ChallengeRequest), global::ADL.Protocol.Peer.ChallengeRequest.Parser, new[]{ "Type", "Nonce" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Peer.ChallengeResponse), global::ADL.Protocol.Peer.ChallengeResponse.Parser, new[]{ "Type", "SignedNonce", "PublicKey" }, null, null, null)
           }));
     }
     #endregion
@@ -59,7 +58,7 @@ namespace ADL.Peer.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Peer.Protocol.PeerReflection.Descriptor.MessageTypes[0]; }
+      get { return global::ADL.Protocol.Peer.PeerReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -188,7 +187,7 @@ namespace ADL.Peer.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Peer.Protocol.PeerReflection.Descriptor.MessageTypes[1]; }
+      get { return global::ADL.Protocol.Peer.PeerReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -215,7 +214,7 @@ namespace ADL.Peer.Protocol {
     }
 
     /// <summary>Field number for the "pong" field.</summary>
-    public const int PongFieldNumber = 2;
+    public const int PongFieldNumber = 1;
     private string pong_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Pong {
@@ -260,7 +259,7 @@ namespace ADL.Peer.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
       if (Pong.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(Pong);
       }
       if (_unknownFields != null) {
@@ -299,7 +298,7 @@ namespace ADL.Peer.Protocol {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 18: {
+          case 10: {
             Pong = input.ReadString();
             break;
           }
@@ -317,7 +316,7 @@ namespace ADL.Peer.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Peer.Protocol.PeerReflection.Descriptor.MessageTypes[2]; }
+      get { return global::ADL.Protocol.Peer.PeerReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -446,7 +445,7 @@ namespace ADL.Peer.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Peer.Protocol.PeerReflection.Descriptor.MessageTypes[3]; }
+      get { return global::ADL.Protocol.Peer.PeerReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -473,7 +472,7 @@ namespace ADL.Peer.Protocol {
     }
 
     /// <summary>Field number for the "pong" field.</summary>
-    public const int PongFieldNumber = 2;
+    public const int PongFieldNumber = 1;
     private string pong_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Pong {
@@ -518,7 +517,7 @@ namespace ADL.Peer.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
       if (Pong.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(Pong);
       }
       if (_unknownFields != null) {
@@ -557,7 +556,7 @@ namespace ADL.Peer.Protocol {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 18: {
+          case 10: {
             Pong = input.ReadString();
             break;
           }
@@ -575,7 +574,7 @@ namespace ADL.Peer.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Peer.Protocol.PeerReflection.Descriptor.MessageTypes[4]; }
+      get { return global::ADL.Protocol.Peer.PeerReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -704,7 +703,7 @@ namespace ADL.Peer.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Peer.Protocol.PeerReflection.Descriptor.MessageTypes[5]; }
+      get { return global::ADL.Protocol.Peer.PeerReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -731,7 +730,7 @@ namespace ADL.Peer.Protocol {
     }
 
     /// <summary>Field number for the "pong" field.</summary>
-    public const int PongFieldNumber = 2;
+    public const int PongFieldNumber = 1;
     private string pong_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Pong {
@@ -776,7 +775,7 @@ namespace ADL.Peer.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
       if (Pong.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(Pong);
       }
       if (_unknownFields != null) {
@@ -815,8 +814,350 @@ namespace ADL.Peer.Protocol {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 18: {
+          case 10: {
             Pong = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class ChallengeRequest : pb::IMessage<ChallengeRequest> {
+    private static readonly pb::MessageParser<ChallengeRequest> _parser = new pb::MessageParser<ChallengeRequest>(() => new ChallengeRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ChallengeRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::ADL.Protocol.Peer.PeerReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ChallengeRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ChallengeRequest(ChallengeRequest other) : this() {
+      type_ = other.type_;
+      nonce_ = other.nonce_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ChallengeRequest Clone() {
+      return new ChallengeRequest(this);
+    }
+
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 1;
+    private int type_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Type {
+      get { return type_; }
+      set {
+        type_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "nonce" field.</summary>
+    public const int NonceFieldNumber = 2;
+    private int nonce_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Nonce {
+      get { return nonce_; }
+      set {
+        nonce_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ChallengeRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ChallengeRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Type != other.Type) return false;
+      if (Nonce != other.Nonce) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Type != 0) hash ^= Type.GetHashCode();
+      if (Nonce != 0) hash ^= Nonce.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Type != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Type);
+      }
+      if (Nonce != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Nonce);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Type != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Type);
+      }
+      if (Nonce != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Nonce);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ChallengeRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Type != 0) {
+        Type = other.Type;
+      }
+      if (other.Nonce != 0) {
+        Nonce = other.Nonce;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Type = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            Nonce = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class ChallengeResponse : pb::IMessage<ChallengeResponse> {
+    private static readonly pb::MessageParser<ChallengeResponse> _parser = new pb::MessageParser<ChallengeResponse>(() => new ChallengeResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ChallengeResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::ADL.Protocol.Peer.PeerReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ChallengeResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ChallengeResponse(ChallengeResponse other) : this() {
+      type_ = other.type_;
+      signedNonce_ = other.signedNonce_;
+      publicKey_ = other.publicKey_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ChallengeResponse Clone() {
+      return new ChallengeResponse(this);
+    }
+
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 1;
+    private int type_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Type {
+      get { return type_; }
+      set {
+        type_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "signedNonce" field.</summary>
+    public const int SignedNonceFieldNumber = 2;
+    private string signedNonce_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string SignedNonce {
+      get { return signedNonce_; }
+      set {
+        signedNonce_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "publicKey" field.</summary>
+    public const int PublicKeyFieldNumber = 3;
+    private string publicKey_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PublicKey {
+      get { return publicKey_; }
+      set {
+        publicKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ChallengeResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ChallengeResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Type != other.Type) return false;
+      if (SignedNonce != other.SignedNonce) return false;
+      if (PublicKey != other.PublicKey) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Type != 0) hash ^= Type.GetHashCode();
+      if (SignedNonce.Length != 0) hash ^= SignedNonce.GetHashCode();
+      if (PublicKey.Length != 0) hash ^= PublicKey.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Type != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Type);
+      }
+      if (SignedNonce.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(SignedNonce);
+      }
+      if (PublicKey.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(PublicKey);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Type != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Type);
+      }
+      if (SignedNonce.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SignedNonce);
+      }
+      if (PublicKey.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PublicKey);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ChallengeResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Type != 0) {
+        Type = other.Type;
+      }
+      if (other.SignedNonce.Length != 0) {
+        SignedNonce = other.SignedNonce;
+      }
+      if (other.PublicKey.Length != 0) {
+        PublicKey = other.PublicKey;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Type = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            SignedNonce = input.ReadString();
+            break;
+          }
+          case 26: {
+            PublicKey = input.ReadString();
             break;
           }
         }

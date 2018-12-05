@@ -7,7 +7,7 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 
-goog.provide('proto.ADL.Peer.Protocol.PeerInfoResponse');
+goog.provide('proto.ADL.Protocol.Peer.PeerInfoResponse');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
@@ -24,12 +24,12 @@ goog.require('jspb.Message');
  * @extends {jspb.Message}
  * @constructor
  */
-proto.ADL.Peer.Protocol.PeerInfoResponse = function(opt_data) {
+proto.ADL.Protocol.Peer.PeerInfoResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.ADL.Peer.Protocol.PeerInfoResponse, jspb.Message);
+goog.inherits(proto.ADL.Protocol.Peer.PeerInfoResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.ADL.Peer.Protocol.PeerInfoResponse.displayName = 'proto.ADL.Peer.Protocol.PeerInfoResponse';
+  proto.ADL.Protocol.Peer.PeerInfoResponse.displayName = 'proto.ADL.Protocol.Peer.PeerInfoResponse';
 }
 
 
@@ -44,8 +44,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.ADL.Peer.Protocol.PeerInfoResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.ADL.Peer.Protocol.PeerInfoResponse.toObject(opt_includeInstance, this);
+proto.ADL.Protocol.Peer.PeerInfoResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.ADL.Protocol.Peer.PeerInfoResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -54,13 +54,13 @@ proto.ADL.Peer.Protocol.PeerInfoResponse.prototype.toObject = function(opt_inclu
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.ADL.Peer.Protocol.PeerInfoResponse} msg The msg instance to transform.
+ * @param {!proto.ADL.Protocol.Peer.PeerInfoResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.ADL.Peer.Protocol.PeerInfoResponse.toObject = function(includeInstance, msg) {
+proto.ADL.Protocol.Peer.PeerInfoResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pong: jspb.Message.getFieldWithDefault(msg, 2, "")
+    pong: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -74,30 +74,30 @@ proto.ADL.Peer.Protocol.PeerInfoResponse.toObject = function(includeInstance, ms
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.ADL.Peer.Protocol.PeerInfoResponse}
+ * @return {!proto.ADL.Protocol.Peer.PeerInfoResponse}
  */
-proto.ADL.Peer.Protocol.PeerInfoResponse.deserializeBinary = function(bytes) {
+proto.ADL.Protocol.Peer.PeerInfoResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.ADL.Peer.Protocol.PeerInfoResponse;
-  return proto.ADL.Peer.Protocol.PeerInfoResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.ADL.Protocol.Peer.PeerInfoResponse;
+  return proto.ADL.Protocol.Peer.PeerInfoResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.ADL.Peer.Protocol.PeerInfoResponse} msg The message object to deserialize into.
+ * @param {!proto.ADL.Protocol.Peer.PeerInfoResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.ADL.Peer.Protocol.PeerInfoResponse}
+ * @return {!proto.ADL.Protocol.Peer.PeerInfoResponse}
  */
-proto.ADL.Peer.Protocol.PeerInfoResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.ADL.Protocol.Peer.PeerInfoResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 2:
+    case 1:
       var value = /** @type {string} */ (reader.readString());
       msg.setPong(value);
       break;
@@ -114,9 +114,9 @@ proto.ADL.Peer.Protocol.PeerInfoResponse.deserializeBinaryFromReader = function(
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.ADL.Peer.Protocol.PeerInfoResponse.prototype.serializeBinary = function() {
+proto.ADL.Protocol.Peer.PeerInfoResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.ADL.Peer.Protocol.PeerInfoResponse.serializeBinaryToWriter(this, writer);
+  proto.ADL.Protocol.Peer.PeerInfoResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -124,16 +124,16 @@ proto.ADL.Peer.Protocol.PeerInfoResponse.prototype.serializeBinary = function() 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.ADL.Peer.Protocol.PeerInfoResponse} message
+ * @param {!proto.ADL.Protocol.Peer.PeerInfoResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.ADL.Peer.Protocol.PeerInfoResponse.serializeBinaryToWriter = function(message, writer) {
+proto.ADL.Protocol.Peer.PeerInfoResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getPong();
   if (f.length > 0) {
     writer.writeString(
-      2,
+      1,
       f
     );
   }
@@ -141,17 +141,17 @@ proto.ADL.Peer.Protocol.PeerInfoResponse.serializeBinaryToWriter = function(mess
 
 
 /**
- * optional string pong = 2;
+ * optional string pong = 1;
  * @return {string}
  */
-proto.ADL.Peer.Protocol.PeerInfoResponse.prototype.getPong = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+proto.ADL.Protocol.Peer.PeerInfoResponse.prototype.getPong = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.ADL.Peer.Protocol.PeerInfoResponse.prototype.setPong = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+proto.ADL.Protocol.Peer.PeerInfoResponse.prototype.setPong = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 

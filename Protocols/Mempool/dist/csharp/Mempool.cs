@@ -6,10 +6,9 @@
 #region Designer generated code
 
 using pb = global::Google.Protobuf;
-using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
-using scg = global::System.Collections.Generic;
-namespace ADL.Protocols.Mempool {
+
+namespace ADL.Protocol.Mempool.dist.csharp {
 
   /// <summary>Holder for reflection information generated from Mempool.proto</summary>
   public static partial class MempoolReflection {
@@ -36,8 +35,8 @@ namespace ADL.Protocols.Mempool {
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocols.Mempool.Tx), global::ADL.Protocols.Mempool.Tx.Parser, new[]{ "AddressSource", "AddressDest", "Signature", "Amount", "Fee", "OutputAmount", "InputAction", "UnlockScript", "UnlockingProgram", "Updated" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocols.Mempool.Tx.Types.Timestamp), global::ADL.Protocols.Mempool.Tx.Types.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null)}),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocols.Mempool.Key), global::ADL.Protocols.Mempool.Key.Parser, new[]{ "HashedSignature" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Mempool.dist.csharp.Tx), global::ADL.Protocol.Mempool.dist.csharp.Tx.Parser, new[]{ "AddressSource", "AddressDest", "Signature", "Amount", "Fee", "OutputAmount", "InputAction", "UnlockScript", "UnlockingProgram", "Updated" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Mempool.dist.csharp.Tx.Types.Timestamp), global::ADL.Protocol.Mempool.dist.csharp.Tx.Types.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null)}),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Mempool.dist.csharp.Key), global::ADL.Protocol.Mempool.dist.csharp.Key.Parser, new[]{ "HashedSignature" }, null, null, null)
           }));
     }
     #endregion
@@ -52,7 +51,7 @@ namespace ADL.Protocols.Mempool {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocols.Mempool.MempoolReflection.Descriptor.MessageTypes[0]; }
+      get { return global::ADL.Protocol.Mempool.dist.csharp.MempoolReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -188,9 +187,9 @@ namespace ADL.Protocols.Mempool {
 
     /// <summary>Field number for the "updated" field.</summary>
     public const int UpdatedFieldNumber = 10;
-    private global::ADL.Protocols.Mempool.Tx.Types.Timestamp updated_;
+    private global::ADL.Protocol.Mempool.dist.csharp.Tx.Types.Timestamp updated_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::ADL.Protocols.Mempool.Tx.Types.Timestamp Updated {
+    public global::ADL.Protocol.Mempool.dist.csharp.Tx.Types.Timestamp Updated {
       get { return updated_; }
       set {
         updated_ = value;
@@ -367,7 +366,7 @@ namespace ADL.Protocols.Mempool {
       }
       if (other.updated_ != null) {
         if (updated_ == null) {
-          updated_ = new global::ADL.Protocols.Mempool.Tx.Types.Timestamp();
+          updated_ = new global::ADL.Protocol.Mempool.dist.csharp.Tx.Types.Timestamp();
         }
         Updated.MergeFrom(other.Updated);
       }
@@ -420,7 +419,7 @@ namespace ADL.Protocols.Mempool {
           }
           case 82: {
             if (updated_ == null) {
-              updated_ = new global::ADL.Protocols.Mempool.Tx.Types.Timestamp();
+              updated_ = new global::ADL.Protocol.Mempool.dist.csharp.Tx.Types.Timestamp();
             }
             input.ReadMessage(updated_);
             break;
@@ -441,7 +440,7 @@ namespace ADL.Protocols.Mempool {
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::ADL.Protocols.Mempool.Tx.Descriptor.NestedTypes[0]; }
+          get { return global::ADL.Protocol.Mempool.dist.csharp.Tx.Descriptor.NestedTypes[0]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -603,7 +602,7 @@ namespace ADL.Protocols.Mempool {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocols.Mempool.MempoolReflection.Descriptor.MessageTypes[1]; }
+      get { return global::ADL.Protocol.Mempool.dist.csharp.MempoolReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
