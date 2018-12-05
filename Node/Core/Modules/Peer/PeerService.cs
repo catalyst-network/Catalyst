@@ -77,6 +77,7 @@ namespace ADL.Node.Core.Modules.Peer
         public override bool StartService()
         {
             Network.GetInstance(PeerSettings, SslSettings, DataDir);
+            
             client = new Client(
                 PeerSettings.BindAddress,
                 PeerSettings.Port,
