@@ -47,6 +47,9 @@ namespace ADL.Node.Core.Modules.Peer
                 {
                     if (_instance == null)
                     {
+                        // ms x509 facility generates invalid x590 certs (ofc ms!!!) have to accept invalid certs for now.
+                        // @TODO revist this once we re-write the current ssl layer to use bouncy castle.
+                        // @TODO revist permitted ips
                         _instance = new Network(
                             peerSettings,
                             sslSettings,
@@ -86,20 +89,17 @@ namespace ADL.Node.Core.Modules.Peer
             bool acceptInvalidCerts,
             bool mutualAuthentication,
             IEnumerable<string> permittedIps,
-            Func<string, int, bool> peerConnected,
-            Func<string, int, bool> peerDisconnected,
-            Func<string, int, byte[], bool> messageReceived,
             bool debug)
         {
+            //@TODO maybe we need to extend this to stop it listening on privillaged ports up to 1023
             if (peerSettings.Port < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(peerSettings.Port));
             }
-
+            
+            _debug = debug;
             AcceptInvalidCerts = acceptInvalidCerts;
             _MutuallyAuthenticate = mutualAuthentication;
-
-            _debug = debug;
 
             if (permittedIps != null && permittedIps.Count() > 0)
             {
@@ -122,7 +122,7 @@ namespace ADL.Node.Core.Modules.Peer
             _SslCertificate = null;
             if (String.IsNullOrEmpty(sslSettings.SslCertPassword))
             {
-                _SslCertificate = new X509Certificate2(sslSettings.PfxFileName);
+                _SslCertificate = new X509Certificate2(dataDir+"/"+sslSettings.PfxFileName);
             }
             else
             {
@@ -137,9 +137,14 @@ namespace ADL.Node.Core.Modules.Peer
             _ActiveClients = 0;
             _Clients = new ConcurrentDictionary<string, Peer>();
 
+            // start our incoming connection data receiver thread.
             Task.Run(() => AcceptConnections(), _Token);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private async Task AcceptConnections()
         {
             _Listener.Start();
@@ -165,6 +170,8 @@ namespace ADL.Node.Core.Modules.Peer
                     }
                     
                     // inbound peer
+                    //do we want to elevate a new connection as peer immediatly?
+                    //@TODO change this so we dont instantiate a new peer until the new client has passed the auth challende
                     Peer client = new Peer(tcpClient);
 
                     Log("*** AcceptConnections accepted connection from " + client.Ip + client.Port + " count " + _ActiveClients);
@@ -238,6 +245,8 @@ namespace ADL.Node.Core.Modules.Peer
             }
         }
         
+        //@TODO change this so we dont need to pass peer but only the tcp.SslStream
+        // We shouldnt know they are a Peer until after Tls has been established
         private async Task<bool> StartTls(Peer client)
         {
             try
