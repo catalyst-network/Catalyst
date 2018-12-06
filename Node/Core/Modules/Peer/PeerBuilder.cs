@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
@@ -9,17 +10,17 @@ using ADL.Node.Core.Modules.Peer.IO;
 
 namespace ADL.Node.Core.Modules.Peer
 {
-    internal class PeerBuilder : ServerBase, IDisposable
+    internal class PeerBuilder : ServerBase
     {
-        private int Port;
-        private string Ip;
-        private bool _Debug;
-        private TcpClient TcpClient;
-        private SslStream SslStream;
-        private bool Disposed = false;
-        private readonly SemaphoreSlim _SendLock;
-        private X509Certificate2 _SslCertificate;
-        private X509Certificate2Collection _SslCertificateCollection;
+//        private int port;
+//        private string ip;
+//        private bool _Debug;
+//        private TcpClient TcpClient;
+//        private SslStream SslStream;
+//        private bool Disposed = false;
+//        private readonly SemaphoreSlim _SendLock;
+//        private X509Certificate2 _SslCertificate;
+//        private X509Certificate2Collection _SslCertificateCollection;
         
         public PeerBuilder (
             string ip,
@@ -40,69 +41,68 @@ namespace ADL.Node.Core.Modules.Peer
                 throw new ArgumentOutOfRangeException(nameof(port));
             }
 
-            Ip = ip;
-            Port = port;
-            _Debug = debug;
             AcceptInvalidCerts = acceptInvalidCerts;
 
-            _SendLock = new SemaphoreSlim(1);
+//            _SendLock = new SemaphoreSlim(1);
+            SemaphoreSlim _SendLock = new SemaphoreSlim(1);
 
-            _SslCertificate = null;
+            X509Certificate2 sslCertificate = null;
             if (String.IsNullOrEmpty(pfxCertPass))
             {
-                _SslCertificate = new X509Certificate2(pfxCertFile);
+                sslCertificate = new X509Certificate2(pfxCertFile);
             }
             else
             {
-                _SslCertificate = new X509Certificate2(pfxCertFile, pfxCertPass);
+                sslCertificate = new X509Certificate2(pfxCertFile, pfxCertPass);
             }
 
-            _SslCertificateCollection = new X509Certificate2Collection
+            X509Certificate2Collection _SslCertificateCollection = new X509Certificate2Collection
             {
-                _SslCertificate
+                sslCertificate
             };
 
-            TcpClient = new TcpClient();
-            IAsyncResult ar = TcpClient.BeginConnect(Ip, Port, null, null);
+            TcpClient tcpClient = new TcpClient();
+            IAsyncResult ar = tcpClient.BeginConnect(ip, port, null, null);
             WaitHandle wh = ar.AsyncWaitHandle;
 
             try
             {
                 if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
                 {
-                    TcpClient.Close();
-                    throw new TimeoutException("Timeout connecting to " + Ip + ":" + Port);
+                    tcpClient.Close();
+                    throw new TimeoutException("Timeout connecting to " + ip + ":" + port);
                 }
 
-                TcpClient.EndConnect(ar);
+                tcpClient.EndConnect(ar);
 
-//                _SourceIp = ((IPEndPoint)_Tcp.Client.LocalEndPoint).Address.ToString();
-//                _SourcePort = ((IPEndPoint)_Tcp.Client.LocalEndPoint).Port;
+//                _Sourceip = ((ipEndPoint)_Tcp.Client.LocalEndPoint).Address.ToString();
+//                _Sourceport = ((ipEndPoint)_Tcp.Client.LocalEndPoint).port;
 
+                SslStream ssl = null;
                 if (AcceptInvalidCerts)
                 {
                     // accept invalid certs
-                    SslStream = new SslStream(TcpClient.GetStream(), false, new RemoteCertificateValidationCallback(AcceptCertificate));
+                    ssl = new SslStream(tcpClient.GetStream(), false, new RemoteCertificateValidationCallback(AcceptCertificate));
                 }
                 else
                 {
                     // do not accept invalid SSL certificates
-                    SslStream = new SslStream(TcpClient.GetStream(), false);
+                    ssl = new SslStream(tcpClient.GetStream(), false);
                 }
 
-                SslStream.AuthenticateAsClient(Ip, _SslCertificateCollection, SslProtocols.Tls12, !AcceptInvalidCerts);
+                ssl.AuthenticateAsClient(ip, _SslCertificateCollection, SslProtocols.Tls12, !AcceptInvalidCerts);
 
-                if (!SslStream.IsEncrypted)
+                if (!ssl.IsEncrypted)
                 {
                     throw new AuthenticationException("Stream is not encrypted");
                 }
 
-                if (!SslStream.IsAuthenticated)
+                if (!ssl.IsAuthenticated)
                 {
                     throw new AuthenticationException("Stream is not authenticated");
                 }
 
-                if (mutualAuthentication && !SslStream.IsMutuallyAuthenticated)
+                if (mutualAuthentication && !ssl.IsMutuallyAuthenticated)
                 {
                     throw new AuthenticationException("Mutual authentication failed");
                 }
@@ -117,10 +117,10 @@ namespace ADL.Node.Core.Modules.Peer
 
             if (_PeerConnected != null)
             {
-                Task.Run(() => _PeerConnected(Ip, Port));
+                Task.Run(() => _PeerConnected(ip, port));
             }
 
-            Peer client = new Peer(TcpClient);
+            Peer client = new Peer(tcpClient);
 
             _TokenSource = new CancellationTokenSource();
             _Token = _TokenSource.Token;
@@ -135,6 +135,9 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         private async Task PeerDataReceiver(Peer client, CancellationToken? cancelToken=null)
         {
+            var port = ((IPEndPoint)client.TcpClient.Client.LocalEndPoint).Port;
+            var ip = ((IPEndPoint)client.TcpClient.Client.LocalEndPoint).Address.ToString();
+            
             try
             {
                 while (true)
@@ -149,7 +152,7 @@ namespace ADL.Node.Core.Modules.Peer
 
                     if (!client.TcpClient.Connected)
                     {
-                        Log("*** DataReceiver server " + Ip + ":" + Port + " disconnected");
+                        Log("*** DataReceiver server " + ip + ":" + port + " disconnected");
                         break;
                     }
 
@@ -160,7 +163,7 @@ namespace ADL.Node.Core.Modules.Peer
                         continue;
                     }
 
-                    Task<bool> unawaited = Task.Run(() => _MessageReceived(Ip, Port, data));
+                    Task<bool> unawaited = Task.Run(() => _MessageReceived(ip, port, data));
                 }
             }
             catch (OperationCanceledException)
@@ -169,12 +172,12 @@ namespace ADL.Node.Core.Modules.Peer
             }
             catch (Exception)
             {
-                Log("*** DataReceiver server " + Ip + ":" + Port + " disconnected");
+                Log("*** DataReceiver server " + ip + ":" + port + " disconnected");
             }
             finally
             {
                 _Connected = false;
-                _PeerDisconnected?.Invoke(Ip, Port);
+                _PeerDisconnected?.Invoke(ip, port);
             }
         }
 
@@ -184,32 +187,32 @@ namespace ADL.Node.Core.Modules.Peer
             {
                 return;
             }
-            else
-            {
-                if (TcpClient != null)
-                {
-                    if (TcpClient.Connected)
-                    {
-                        NetworkStream ns = TcpClient.GetStream();
-                        if (ns != null)
-                        {
-                            ns.Close();
-                        }
-                    }
-
-                    TcpClient.Close();
-                }
-
-                SslStream.Dispose();
-
-                _TokenSource.Cancel();
-                _TokenSource.Dispose();
-
-                _SendLock.Dispose();
+//            else
+//            {
+//                if (TcpClient != null)
+//                {
+//                    if (TcpClient.Connected)
+//                    {
+//                        NetworkStream ns = TcpClient.GetStream();
+//                        if (ns != null)
+//                        {
+//                            ns.Close();
+//                        }
+//                    }
+//
+//                    TcpClient.Close();
+//                }
+//
+//                SslStream.Dispose();
+//
+//                _TokenSource.Cancel();
+//                _TokenSource.Dispose();
+//
+//                _SendLock.Dispose();
 
                 _Connected = false;   
-            }
-            Disposed = true;
+//            }
+//            Disposed = true;
         }
     }
 

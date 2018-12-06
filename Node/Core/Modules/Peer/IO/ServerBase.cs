@@ -305,6 +305,7 @@ namespace ADL.Node.Core.Modules.Peer.IO
                     Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
                 }
 
+                // use semaphore to lock thread while we write to client
                 if (sendLock != null)
                 {
                     await sendLock.WaitAsync();

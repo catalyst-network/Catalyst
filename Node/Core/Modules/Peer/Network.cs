@@ -31,7 +31,7 @@ namespace ADL.Node.Core.Modules.Peer
         private List<string> _PermittedIps;
         private static Network _instance;
         private static readonly object Mutex = new object();
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -50,6 +50,7 @@ namespace ADL.Node.Core.Modules.Peer
                         // ms x509 facility generates invalid x590 certs (ofc ms!!!) have to accept invalid certs for now.
                         // @TODO revist this once we re-write the current ssl layer to use bouncy castle.
                         // @TODO revist permitted ips
+                        //@TODO get debug value from what pass in at initialisation of application.
                         _instance = new Network(
                             peerSettings,
                             sslSettings,
@@ -89,18 +90,24 @@ namespace ADL.Node.Core.Modules.Peer
             bool acceptInvalidCerts,
             bool mutualAuthentication,
             IEnumerable<string> permittedIps,
+            Func<string, int, bool> peerConnected,
+            Func<string, int, bool> peerDisconnected,
+            Func<string, int, byte[], bool> messageReceived,
             bool debug)
         {
-            //@TODO maybe we need to extend this to stop it listening on privillaged ports up to 1023
+            //@TODO maybe we need to extend this to stop it listening on privileged ports up to 1023
             if (peerSettings.Port < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(peerSettings.Port));
             }
             
             _debug = debug;
+            _PeerConnected = peerConnected;
+            _PeerDisconnected = peerDisconnected;
             AcceptInvalidCerts = acceptInvalidCerts;
             _MutuallyAuthenticate = mutualAuthentication;
-
+            _MessageReceived = messageReceived ?? throw new ArgumentNullException(nameof(messageReceived));
+            
             if (permittedIps != null && permittedIps.Count() > 0)
             {
                 _PermittedIps = new List<string>(permittedIps);
@@ -305,6 +312,11 @@ namespace ADL.Node.Core.Modules.Peer
             return true;
         }
         
+        /// <summary>
+        /// TODO 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <returns></returns>
         private bool AddClient(Peer client)
         {
             if (!_Clients.TryRemove(client.Ip+":"+client.Port, out Peer removedClient))
@@ -404,6 +416,10 @@ namespace ADL.Node.Core.Modules.Peer
             }
         }
                 
+        /// <summary>
+        /// disposes a client object.
+        /// </summary>
+        /// <param name="ipPort"></param>
         public void DisconnectClient(string ipPort)
         {
             if (!_Clients.TryGetValue(ipPort, out Peer client))
@@ -416,6 +432,10 @@ namespace ADL.Node.Core.Modules.Peer
             }
         }
         
+        /// <summary>
+        /// returns a list of our clients
+        /// </summary>
+        /// <returns></returns>
         public List<string> ListClients()
         {
             Dictionary<string, Peer> clients = _Clients.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -427,6 +447,7 @@ namespace ADL.Node.Core.Modules.Peer
             return ret;
         }
         
+        //
         public bool IsClientConnected(string ip, int port)
         {
             return (_Clients.TryGetValue(ip+":"+port, out Peer client));
@@ -464,5 +485,4 @@ namespace ADL.Node.Core.Modules.Peer
             GC.SuppressFinalize(this);
         }
     }
-
 }
