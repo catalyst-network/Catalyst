@@ -1,0 +1,1 @@
+{"virtualbox":{"/srv":{"guestpath":"/srv","hostpath":"/srv/Dev/ADL","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/srv/Dev/ADL","disabled":false,"__vagrantfile":true}}}

@@ -11,17 +11,15 @@ namespace ADL.Node.Core.Modules.Peer
 {
     internal class PeerBuilder : ServerBase, IDisposable
     {
-        private bool Disposed = false;
-//        private string _SourceIp;//should be same as bind ip peer setting
-//        private int _SourcePort;//should be same as bind port peer setting
-        private string Ip;
         private int Port;
+        private string Ip;
         private bool _Debug;
         private TcpClient TcpClient;
         private SslStream SslStream;
+        private bool Disposed = false;
+        private readonly SemaphoreSlim _SendLock;
         private X509Certificate2 _SslCertificate;
         private X509Certificate2Collection _SslCertificateCollection;
-        private readonly SemaphoreSlim _SendLock;
         
         public PeerBuilder (
             string ip,
@@ -44,9 +42,8 @@ namespace ADL.Node.Core.Modules.Peer
 
             Ip = ip;
             Port = port;
-            AcceptInvalidCerts = acceptInvalidCerts;
-
             _Debug = debug;
+            AcceptInvalidCerts = acceptInvalidCerts;
 
             _SendLock = new SemaphoreSlim(1);
 

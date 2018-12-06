@@ -64,10 +64,10 @@ namespace ADL.Node.Core.Modules.Peer
             Network.GetInstance(PeerSettings, SslSettings, DataDir);
             
             PeerBuilder = new PeerBuilder(
-                "127.0.0.1",
+                "192.168.1.170",
                 42069,
                 DataDir + "/" + SslSettings.PfxFileName,
-                SslSettings.SslCertPassword,
+               SslSettings.SslCertPassword,
                 true,
                 false,
                 true);
