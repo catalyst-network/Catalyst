@@ -57,20 +57,9 @@ namespace ADL.Node.Core.Modules.Peer
             if (disposing)
             {
                 Console.WriteLine("disposing peer class");
-                if (SslStream != null)
-                {
-                    SslStream.Close();
-                }
-
-                if (NetworkStream != null)
-                {
-                    NetworkStream.Close();
-                }
-
-                if (TcpClient != null)
-                {
-                    TcpClient.Close();
-                }
+                SslStream?.Dispose();
+                NetworkStream?.Dispose();
+                TcpClient?.Dispose();
             }
 
             _Connected = false;

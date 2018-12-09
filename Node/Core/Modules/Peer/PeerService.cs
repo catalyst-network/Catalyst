@@ -8,6 +8,7 @@ namespace ADL.Node.Core.Modules.Peer
     /// </summary>
     public class PeerService : AsyncServiceBase, IPeerService
     {
+        public Network Network { get; set; }
         private string DataDir { get; set; }
         private ISslSettings SslSettings { get; set; }
         private IPeerSettings PeerSettings { get; set; }
@@ -60,15 +61,15 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         public override bool StartService()
         {
-            Network network = Network.GetInstance(PeerSettings, SslSettings, DataDir);
+            Network = Network.GetInstance(PeerSettings, SslSettings, DataDir);
             
-            network.PeerBuilder("127.0.0.1",42069);            
+            Network.PeerBuilder("127.0.0.1",42069);            
             return true;
         }
             
         public override bool StopService()
         {
-//            return Peer.();
+            Network.Dispose();
             return false;
         }
     }

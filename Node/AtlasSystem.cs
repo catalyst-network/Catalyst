@@ -139,6 +139,7 @@ namespace ADL.Node
         /// </summary>
         public void Dispose()
         {
+            PeerService?.StopService();
             RcpService?.StopService();
         }
     }
