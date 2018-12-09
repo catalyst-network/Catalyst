@@ -36,10 +36,10 @@ namespace ADL.Node.Core.Modules.Peer
         private X509Certificate2 _SslCertificate = null;
         private ConcurrentDictionary<string, Peer> _Peers;
         private static readonly object Mutex = new object();
-        private Func<string, int, bool> _PeerConnected = null;
-        private Func<string, int, bool> _PeerDisconnected = null;
+//        private Func<string, int, bool> _PeerConnected = null;
+//        private Func<string, int, bool> _PeerDisconnected = null;
         private X509Certificate2Collection _SslCertificateCollection;
-        private Func<string, int, byte[], bool> _MessageReceived = null;
+//        private Func<string, int, byte[], bool> _MessageReceived = null;
         
         /// <summary>
         /// 
@@ -67,9 +67,6 @@ namespace ADL.Node.Core.Modules.Peer
                             true,
                             true,
                             null,
-                            PeerConnected,
-                            PeerDisconnected,
-                            MessageReceived,
                             true
                         );
                     }
@@ -99,9 +96,9 @@ namespace ADL.Node.Core.Modules.Peer
             bool acceptInvalidCerts,
             bool mutualAuthentication,
             IEnumerable<string> permittedIps,
-            Func<string, int, bool> peerConnected,
-            Func<string, int, bool> peerDisconnected,
-            Func<string, int, byte[], bool> messageReceived,
+//            Func<string, int, bool> peerConnected,
+//            Func<string, int, bool> peerDisconnected,
+//            Func<string, int, byte[], bool> messageReceived,
             bool debug)
         {
             //@TODO maybe we need to extend this to stop it listening on privileged ports up to 1023
@@ -111,26 +108,24 @@ namespace ADL.Node.Core.Modules.Peer
             }
             
             _debug = debug;
-            _PeerConnected = peerConnected;
-            _PeerDisconnected = peerDisconnected;
+//            _PeerConnected = peerConnected;
+//            _PeerDisconnected = peerDisconnected;
             AcceptInvalidCerts = acceptInvalidCerts;
             _MutuallyAuthenticate = mutualAuthentication;
-            _MessageReceived = messageReceived ?? throw new ArgumentNullException(nameof(messageReceived));
+//            _MessageReceived = messageReceived ?? throw new ArgumentNullException(nameof(messageReceived));
             
             if (permittedIps != null && permittedIps.Count() > 0)
             {
                 _PermittedIps = new List<string>(permittedIps);
             }
-
             if (String.IsNullOrEmpty(peerSettings.BindAddress))
             {
-                throw new ArgumentNullException(nameof(messageReceived));
+                throw new ArgumentNullException(nameof(MessageReceived));
             }
             else
             {
                 _ListenerIpAddress = IPAddress.Parse(peerSettings.BindAddress);
             }
-
             if (String.IsNullOrEmpty(sslSettings.SslCertPassword))
             {
                 _SslCertificate = new X509Certificate2(dataDir+"/"+sslSettings.PfxFileName);
@@ -138,8 +133,7 @@ namespace ADL.Node.Core.Modules.Peer
             else
             {
                 _SslCertificate = new X509Certificate2(dataDir+"/"+sslSettings.PfxFileName, sslSettings.SslCertPassword);
-            }
-            
+            }           
             _SslCertificateCollection = new X509Certificate2Collection
             {
                 _SslCertificate
@@ -153,8 +147,7 @@ namespace ADL.Node.Core.Modules.Peer
             _Token = _TokenSource.Token;
             _Peers = new ConcurrentDictionary<string, Peer>();
 
-            // start our incoming connection listner thread.
-            Task.Run(() => InboundConnectionListener(), _Token);
+            InboundConnectionListener();
         }
         
         /// <summary>
@@ -165,7 +158,7 @@ namespace ADL.Node.Core.Modules.Peer
         /// <param name="ip"></param>
         /// <returns></returns>
         /// <exception cref="AuthenticationException"></exception>
-        private async Task<bool> StartTlsStream(Peer peer, int direction, X509Certificate2Collection sslCertificateCollection = null)
+        private async Task<bool> StartTlsStream(Peer peer, int direction)
         {
             if (AcceptInvalidCerts)
             {
@@ -185,28 +178,23 @@ namespace ADL.Node.Core.Modules.Peer
                 } 
                 else if (direction == 2)
                 {
-                    if (sslCertificateCollection == null) throw new ArgumentNullException(nameof(sslCertificateCollection));
-                    peer.SslStream.AuthenticateAsClient(peer.Ip, sslCertificateCollection, SslProtocols.Tls12, !AcceptInvalidCerts);
+                    peer.SslStream.AuthenticateAsClient(peer.Ip, _SslCertificateCollection, SslProtocols.Tls12, !AcceptInvalidCerts);
                 }
-                
                 if (!peer.SslStream.IsEncrypted)
                 {
-                    Log("*** StartOutboundTls stream from " + peer.Ip + peer.Port + " not encrypted");
-                    peer.SslStream.Dispose();
+                    peer.Dispose();
                     throw new AuthenticationException();
                 }
-
                 if (!peer.SslStream.IsAuthenticated)
                 {
                     Log("*** StartOutboundTls stream from " + peer.Ip + peer.Port + " not authenticated");
-                    peer.SslStream.Dispose();
+                    peer.Dispose();
                     throw new AuthenticationException();
                 }
-
                 if (_MutuallyAuthenticate && !peer.SslStream.IsMutuallyAuthenticated)
                 {
                     Log("*** StartOutboundTls stream from " + peer.Ip + peer.Port + " failed mutual authentication");
-                    peer.SslStream.Dispose();
+                    peer.Dispose();
                     throw new AuthenticationException();
                 }
             }
@@ -227,13 +215,13 @@ namespace ADL.Node.Core.Modules.Peer
                         break;
                 }
 
-                peer.SslStream.Dispose();
+                peer.Dispose();
                 return false;
             }
             catch (Exception ex)
             {
                 Log("*** StartInboundTls Exception from " + peer.Ip + peer.Port +  Environment.NewLine + ex.ToString());
-                peer.SslStream.Dispose();
+                peer.Dispose();
                 return false;
             }
             return true;
@@ -251,8 +239,19 @@ namespace ADL.Node.Core.Modules.Peer
                 // do nothing, it probably did not exist anyway
             }
 
-            _Peers.TryAdd(peer.Ip+":"+peer.Port ,peer);
-            Log("*** AddPeer added peer " + peer.Ip + peer.Port);
+            if (_Peers.TryAdd(peer.Ip + ":" + peer.Port, peer))
+            {
+                int activeCount = Interlocked.Increment(ref _ActivePeers);
+                Log("*** FinalizeConnection starting data receiver for " + peer.Ip + peer.Port + " (now " + activeCount + " peers)");
+            }
+            else
+            {
+                peer.Dispose();
+                return false;
+            }
+            Task.Run(() => PeerConnected(peer.Ip, peer.Port));
+
+            Task.Run(async () => await DataReceiver(peer));
             return true;
         }
         
@@ -305,7 +304,7 @@ namespace ADL.Node.Core.Modules.Peer
                         continue;
                     }
 
-                    Task<bool> unawaited = Task.Run(() => _MessageReceived(ip, port, data));
+                    Task<bool> unawaited = Task.Run(() => MessageReceived(ip, port, data));
                 }
             }
             catch (OperationCanceledException)
@@ -321,10 +320,8 @@ namespace ADL.Node.Core.Modules.Peer
             {
                 int activeCount = Interlocked.Decrement(ref _ActivePeers);
                 RemovePeer(peer);
-                if (_PeerDisconnected != null)
-                {
-                    Task<bool> unawaited = Task.Run(() => _PeerDisconnected(peer.Ip, peer.Port));
-                }
+                Task<bool> unawaited = Task.Run(() => PeerDisconnected(peer.Ip, peer.Port));
+
                 Log("***** DataReceiver peer " + peer.Ip + peer.Port + " disconnected (now " + activeCount + " peers active)");
 
                 DisconnectPeer(peer.Ip, peer.Port);
@@ -338,6 +335,9 @@ namespace ADL.Node.Core.Modules.Peer
         private async Task InboundConnectionListener()
         {
             _Listener.Start();
+            Console.WriteLine(_Token.IsCancellationRequested);
+            Peer peer = null;
+            
             while (!_Token.IsCancellationRequested)
             {
                 string peerIpPort = String.Empty;
@@ -347,7 +347,7 @@ namespace ADL.Node.Core.Modules.Peer
                     TcpClient tcpPeer = await _Listener.AcceptTcpClientAsync();
                     tcpPeer.LingerState.Enabled = false;
 
-                    string peerIp = ((IPEndPoint)tcpPeer.Client.RemoteEndPoint).Address.ToString();
+                    string peerIp = ((IPEndPoint) tcpPeer.Client.RemoteEndPoint).Address.ToString();
 
                     if (_PermittedIps != null && _PermittedIps.Count > 0)
                     {
@@ -358,52 +358,33 @@ namespace ADL.Node.Core.Modules.Peer
                             continue;
                         }
                     }
-                    
+
                     // inbound peer
                     //do we want to elevate a new connection as peer immediatly?
                     //@TODO change this so we dont instantiate a new peer until the new peer has passed the auth challende
-                    Peer peer = new Peer(tcpPeer);
+                    peer = new Peer(tcpPeer);
 
-                    Log("*** AcceptConnections accepted connection from " + peer.Ip + peer.Port + " count " + _ActivePeers); 
+                    Log("*** AcceptConnections accepted connection from " + peer.Ip + peer.Port + " count " +
+                        _ActivePeers);
 
-                    Task unawaited = Task.Run(() => {
+                    Task unawaited = Task.Run(() =>
+                    {
                         Task<bool> success = StartTlsStream(peer, 1);
                         if (success.Result)
                         {
                             if (!AddPeer(peer))
                             {
                                 Log("*** FinalizeConnection unable to add peer " + peer.Ip + peer.Port);
-                                peer.Dispose();
                                 return;
                             }
-
-                            // Do not decrement in this block, decrement is done by the connection reader
-                            int activeCount = Interlocked.Increment(ref _ActivePeers);
-
-                            Log("*** FinalizeConnection starting data receiver for " + peer.Ip + peer.Port + " (now " + activeCount + " peers)");
-                            if (_PeerConnected != null)
-                            {
-                                Task.Run(() => _PeerConnected(peer.Ip, peer.Port));
-                            }
-
-                            Task.Run(async () => await DataReceiver(peer));
-
-                            var challengeRequest = new ADL.Protocol.Peer.ChallengeRequest();
-                            
-                            SecureRandom random = new SecureRandom();
-                            byte[] keyBytes = new byte[16];
-                            random.NextBytes(keyBytes);
-                            challengeRequest.Nonce = random.NextInt();
-                            challengeRequest.Type = 10;
-                            peer.nonce = challengeRequest.Nonce;
-                            Task.Run(async () => await SendAsync(peer.Ip, peer.Port, challengeRequest.ToByteArray()));
                         }
                     }, _Token);
                 }
                 catch (ObjectDisposedException ex)
                 {
                     // Listener stopped ? if so, peerIpPort will be empty
-                    Log("*** AcceptConnections ObjectDisposedException from " + peerIpPort + Environment.NewLine + ex.ToString());
+                    Log("*** AcceptConnections ObjectDisposedException from " + peerIpPort + Environment.NewLine +
+                        ex.ToString());
                 }
                 catch (SocketException ex)
                 {
@@ -413,13 +394,27 @@ namespace ADL.Node.Core.Modules.Peer
                             Log("*** AcceptConnections SocketException " + peerIpPort + " closed the connection.");
                             break;
                         default:
-                            Log("*** AcceptConnections SocketException from " + peerIpPort + Environment.NewLine + ex.ToString());
+                            Log("*** AcceptConnections SocketException from " + peerIpPort + Environment.NewLine +
+                                ex.ToString());
                             break;
                     }
                 }
                 catch (Exception ex)
                 {
                     Log("*** AcceptConnections Exception from " + peerIpPort + Environment.NewLine + ex.ToString());
+                }
+                
+                finally
+                {
+                    var challengeRequest = new ADL.Protocol.Peer.ChallengeRequest();
+                    SecureRandom random = new SecureRandom();
+                    byte[] keyBytes = new byte[16];
+                    random.NextBytes(keyBytes);
+                    challengeRequest.Nonce = random.NextInt();
+                    challengeRequest.Type = 10;
+                    peer.nonce = challengeRequest.Nonce;
+                    Console.WriteLine(peer.nonce.ToString());
+                    Task.Run(async () => await SendAsync(peer.Ip, peer.Port, challengeRequest.ToByteArray()));
                 }
             }
         }
@@ -469,24 +464,28 @@ namespace ADL.Node.Core.Modules.Peer
 
                 peer = new Peer(tcpClient);
 
-                Task<bool> success = StartTlsStream(peer, 2, _SslCertificateCollection);
-                //@TODO continue
+                Task<bool> success = StartTlsStream(peer, 2);
+                if (success.Result)
+                {
+                    if (!AddPeer(peer))
+                    {
+                        Log("*** FinalizeConnection unable to add peer " + peer.Ip + peer.Port);
+                        return;
+                    }
+                }
+
+                Task.Run(() => PeerConnected(ip, port));
+
+
+                _TokenSource = new CancellationTokenSource();
+                _Token = _TokenSource.Token;
+                Task.Run(async () => await DataReceiver(peer, _Token), _Token);
             }
             
             finally
             {
                 wh.Close();
             }
-
-            if (_PeerConnected != null)
-            {
-                Console.WriteLine("peer is being added");
-                Task.Run(() => _PeerConnected(ip, port));
-            }
-
-            _TokenSource = new CancellationTokenSource();
-            _Token = _TokenSource.Token;
-            Task.Run(async () => await DataReceiver(peer, _Token), _Token);
         }
 
         /// <summary>
@@ -534,7 +533,7 @@ namespace ADL.Node.Core.Modules.Peer
             else
             {
                 peer.Dispose();
-                _PeerDisconnected?.Invoke(ip, port);
+                PeerDisconnected(ip, port);
             }
         }
         
@@ -997,16 +996,23 @@ namespace ADL.Node.Core.Modules.Peer
             Log("================================================================================");
         }
         
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
         /// <summary>
         /// dispose server and background workers.
         /// </summary>
-        public void Dispose()
+        public void Dispose(bool disposing)
         {
             if (Disposed)
             {
                 return;
             }
-            else
+
+            if (disposing)
             {
                 _TokenSource.Cancel();
                 _TokenSource.Dispose();
@@ -1019,14 +1025,13 @@ namespace ADL.Node.Core.Modules.Peer
 
                 if (_Peers != null && _Peers.Count > 0)
                 {
-                    foreach (KeyValuePair<string, Peer> currMetadata in _Peers)
+                    foreach (KeyValuePair<string, Peer> peer in _Peers)
                     {
-                        currMetadata.Value.Dispose();
+                        peer.Value.Dispose();
                     }
                 }
-                Disposed = true;
             }
-            GC.SuppressFinalize(this);
+            Disposed = true;            
         }
     }
 }
