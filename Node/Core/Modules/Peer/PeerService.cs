@@ -11,7 +11,6 @@ namespace ADL.Node.Core.Modules.Peer
         private string DataDir { get; set; }
         private ISslSettings SslSettings { get; set; }
         private IPeerSettings PeerSettings { get; set; }
-        private PeerBuilder PeerBuilder { get; set; }
 
         /// <summary>
         /// 
@@ -61,17 +60,9 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         public override bool StartService()
         {
-            Network.GetInstance(PeerSettings, SslSettings, DataDir);
+            Network network = Network.GetInstance(PeerSettings, SslSettings, DataDir);
             
-            PeerBuilder = new PeerBuilder(
-                "192.168.1.3",
-                42069,
-                DataDir + "/" + SslSettings.PfxFileName,
-               SslSettings.SslCertPassword,
-                true,
-                false,
-                true);
-                        
+            network.PeerBuilder("127.0.0.1",42069);            
             return true;
         }
             
@@ -81,4 +72,4 @@ namespace ADL.Node.Core.Modules.Peer
             return false;
         }
     }
-}
+} 
