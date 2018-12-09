@@ -7,22 +7,16 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "node1" do |node1|
   	node1.vm.box = "ubuntu/xenial64"
-  end
-  config.vm.define "node2" do |node2|
-  	node2.vm.box = "ubuntu/xenial64"
-  end  
-  config.vm.define "node3" do |node3|
-  	node3.vm.box = "ubuntu/xenial64"
-  end  
+  end 
   
   config.vm.network "public_network",
   use_dhcp_assigned_default_route: true
    
-  config.vm.synced_folder "/srv/Dev/ADL", "/srv"
+  config.vm.synced_folder "/Users/nsh/RiderProjects/ADL", "/srv"
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
-    vb.memory = "2512"
+    vb.memory = "1024"
   end
 
   config.vm.provision "shell", inline: <<-SHELL
@@ -38,5 +32,4 @@ Vagrant.configure("2") do |config|
 	apt upgrade
   	apt install -f -y openssl dotnet-runtime-deps-2.1 htop lsof git dotnet-sdk-2.1.105
   SHELL
-  
 end
