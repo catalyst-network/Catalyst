@@ -10,6 +10,9 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\Helpers\RLP\RLP.csproj" />
+    </ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="..\Protocols\Mempool\MempoolProto.csproj" />
     </ItemGroup>
     <ItemGroup>
@@ -23,23 +26,30 @@
     </ItemGroup>
     <ItemGroup>
         <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\UnitTests.dll" />
+        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\UnitTest.dll" />
     </ItemGroup>
     <ItemGroup>
         <DeployManifest Remove="obj\Debug\netcoreapp2.1\UnitTests.application" />
+        <DeployManifest Remove="obj\Debug\netcoreapp2.1\UnitTest.application" />
     </ItemGroup>
     <ItemGroup>
         <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\UnitTests.pdb" />
+        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\UnitTest.pdb" />
     </ItemGroup>
     <ItemGroup>
         <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\UnitTests.dll" />
+        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\UnitTest.dll" />
     </ItemGroup>
     <ItemGroup>
         <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.UnitTests.manifest" />
+        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.UnitTest.manifest" />
     </ItemGroup>
     <ItemGroup>
         <_UnmanagedRegistrationCache Remove="obj\UnitTests.csproj.UnmanagedRegistration.cache" />
+        <_UnmanagedRegistrationCache Remove="obj\UnitTest.csproj.UnmanagedRegistration.cache" />
     </ItemGroup>
     <ItemGroup>
         <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\UnitTests.csproj.ResolveComReference.cache" />
+        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\UnitTest.csproj.ResolveComReference.cache" />
     </ItemGroup>
 </Project>

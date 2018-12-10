@@ -39,6 +39,7 @@ namespace ADL.Node.Core.Modules.Peer
         /// </summary>
         public void Dispose()
         {
+            Console.WriteLine("disposing peer class");
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -56,7 +57,6 @@ namespace ADL.Node.Core.Modules.Peer
 
             if (disposing)
             {
-                Console.WriteLine("disposing peer class");
                 SslStream?.Dispose();
                 NetworkStream?.Dispose();
                 TcpClient?.Dispose();
