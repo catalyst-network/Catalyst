@@ -37,10 +37,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Components\Redis\Redis.csproj" />
         <ProjectReference Include="..\Components\Ipfs\Ipfs.csproj" />
+        <ProjectReference Include="..\Components\Redis\Redis.csproj" />
         <ProjectReference Include="..\Components\Shell\Shell.csproj" />
-        <ProjectReference Include="..\Components\Token\Token.csproj" />
+        <ProjectReference Include="..\Components\KeySigner\KeySigner.csproj" />
         <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
     </ItemGroup>
     

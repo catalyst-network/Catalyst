@@ -27,16 +27,6 @@ namespace ADL.Node.Core.Modules.Peer
             PeerSettings = peerSettings;
         }
 
-        private static string BytesToHex(byte[] data)
-        {
-            if (data == null || data.Length < 1)
-            {
-                return "(null)";
-            }
-
-            return BitConverter.ToString(data).Replace("-", "");
-        }
-        
 //        bool MessageReceived(byte[] data)
 //        {
 //            var challenge = ADL.Protocol.Peer.ChallengeRequest.Parser.ParseFrom(data);
@@ -62,8 +52,9 @@ namespace ADL.Node.Core.Modules.Peer
         public override bool StartService()
         {
             Network = Network.GetInstance(PeerSettings, SslSettings, DataDir);
-            
-            Network.PeerBuilder("127.0.0.1",42069);            
+//            Console.WriteLine("Trace1");
+            Network.PeerBuilder("127.0.0.1",42069);
+//            Console.WriteLine("Trace2");
             return true;
         }
             

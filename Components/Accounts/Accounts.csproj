@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>ADL.Accounts</RootNamespace>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Helpers\Util\Util.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KeySigner\KeySigner.csproj" />
+    <ProjectReference Include="..\KeyStore\KeyStore.csproj" />
+  </ItemGroup>
+  
+</Project>
