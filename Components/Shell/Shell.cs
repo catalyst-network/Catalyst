@@ -359,8 +359,7 @@ namespace ADL.Shell
         public override bool OnGetMempool()
         {
             var response = _rpcClient.GetMempool(new GetMempoolRequest {Query = true});
-            var deserializedResponse = GetMempoolResponse.Parser.ParseFrom(response.ToByteArray());
-            Console.WriteLine(deserializedResponse);
+            Console.WriteLine(response);
             
             return true;
         }

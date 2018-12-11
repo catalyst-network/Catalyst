@@ -46,7 +46,7 @@ namespace ADL.Node.Core.Modules.Rpc
         /// <returns></returns>
         public override Task<GetMempoolResponse> GetMempool(GetMempoolRequest request, ServerCallContext context)
         {
-            return AtlasSystem.TaskHandlerActor.Ask<GetMempoolResponse>(request);
+            return AtlasSystem.TaskHandlerActor.Ask<GetMempoolResponse>(request);            
         }
     }
 }
