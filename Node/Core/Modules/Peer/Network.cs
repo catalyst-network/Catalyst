@@ -134,7 +134,7 @@ namespace ADL.Node.Core.Modules.Peer
                 _SslCertificate
             };
 
-            Log("Peer server starting on " + _ListenerIpAddress + ":" + peerSettings.Port);
+            Log.Log.Message("Peer server starting on " + _ListenerIpAddress + ":" + peerSettings.Port);
 
             _ActivePeers = 0;
             _Listener = new TcpListener(_ListenerIpAddress, peerSettings.Port);
@@ -182,13 +182,13 @@ namespace ADL.Node.Core.Modules.Peer
                 }
                 if (!peer.SslStream.IsAuthenticated)
                 {
-                    Log("*** StartOutboundTls stream from " + peer.Ip + peer.Port + " not authenticated");
+                    Log.Log.Message("*** StartOutboundTls stream from " + peer.Ip + peer.Port + " not authenticated");
                     peer.Dispose();
                     throw new AuthenticationException();
                 }
                 if (_MutuallyAuthenticate && !peer.SslStream.IsMutuallyAuthenticated)
                 {
-                    Log("*** StartOutboundTls stream from " + peer.Ip + peer.Port + " failed mutual authentication");
+                    Log.Log.Message("*** StartOutboundTls stream from " + peer.Ip + peer.Port + " failed mutual authentication");
                     peer.Dispose();
                     throw new AuthenticationException();
                 }
@@ -200,13 +200,13 @@ namespace ADL.Node.Core.Modules.Peer
                 {
                     case "Authentication failed because the remote party has closed the transport stream.":
                     case "Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host.":
-                        Log("*** StartTls IOException " + peer.Ip + peer.Port + " closed the connection.");
+                        Log.Log.Message("*** StartTls IOException " + peer.Ip + peer.Port + " closed the connection.");
                         break;
                     case "The handshake failed due to an unexpected packet format.":
-                        Log("*** StartTls IOException " + peer.Ip + peer.Port + " disconnected, invalid handshake.");
+                        Log.Log.Message("*** StartTls IOException " + peer.Ip + peer.Port + " disconnected, invalid handshake.");
                         break;
                     default:
-                        Log("*** StartTls IOException from " + peer.Ip + peer.Port + Environment.NewLine + ex.ToString());
+                        Log.Log.Message("*** StartTls IOException from " + peer.Ip + peer.Port + Environment.NewLine + ex.ToString());
                         break;
                 }
 
@@ -215,7 +215,7 @@ namespace ADL.Node.Core.Modules.Peer
             }
             catch (Exception ex)
             {
-                Log("*** StartInboundTls Exception from " + peer.Ip + peer.Port +  Environment.NewLine + ex.ToString());
+                Log.Log.Message("*** StartInboundTls Exception from " + peer.Ip + peer.Port +  Environment.NewLine + ex.ToString());
                 peer.Dispose();
                 return false;
             }
@@ -237,7 +237,7 @@ namespace ADL.Node.Core.Modules.Peer
             if (_Peers.TryAdd(peer.Ip+":"+peer.Port, peer))
             {
                 int activeCount = Interlocked.Increment(ref _ActivePeers);
-                Log("*** FinalizeConnection starting data receiver for " + peer.Ip + peer.Port + " (now " + activeCount + " peers)");
+                Log.Log.Message("*** FinalizeConnection starting data receiver for " + peer.Ip + peer.Port + " (now " + activeCount + " peers)");
             }
             else
             {
@@ -257,12 +257,12 @@ namespace ADL.Node.Core.Modules.Peer
         {
             if (!_Peers.TryRemove(peer.Ip+":"+peer.Port, out Peer removedPeer))
             {
-                Log("*** RemovePeer unable to remove peer " + peer.Ip + peer.Port);
+                Log.Log.Message("*** RemovePeer unable to remove peer " + peer.Ip + peer.Port);
                 return false;
             }
             else
             {
-                Log("*** RemovePeer removed peer " + peer.Ip + peer.Port);
+                Log.Log.Message("*** RemovePeer removed peer " + peer.Ip + peer.Port);
                 return true;
             }
         }
@@ -286,11 +286,11 @@ namespace ADL.Node.Core.Modules.Peer
 
                     if (!IsConnected(peer))
                     {
-                        Log("*** DataReceiver null TCP interface detected, disconnection or close assumed");
+                        Log.Log.Message("*** DataReceiver null TCP interface detected, disconnection or close assumed");
                         break;
                     }
 
-                    byte[] data = await MessageReadAsync(peer);
+                    byte[] data = await Stream.Reader.MessageReadAsync(peer);
                     if (data == null)
                     {
                         await Task.Delay(30);
@@ -299,11 +299,8 @@ namespace ADL.Node.Core.Modules.Peer
                     
                     Task<string> unawaited = Task.Run(() =>
                     {
-//                        var keyFactory = PrivateKeyFactory.CreateKey(System.Convert.FromBase64String(charResponse.PublicKey));
-//                        Console.WriteLine(Ec.VerifySignature(keyFactory,charResponse.SignedNonce,peer.nonce.ToString()));
-                        Console.WriteLine("Message received from " + ip+":"+port + ": " + PeerProtocol.Types.ChallengeRequest.Parser.ParseFrom(data));
-//                        Console.WriteLine(PeerProtocol.Types.ChallengeRequest.Parser.ParseFrom(data));   
-
+                        var challengeRequest = PeerProtocol.Types.ChallengeRequest.Parser.ParseFrom(data);
+                        Console.WriteLine("Message received from " + ip+":"+port + ": " + challengeRequest);
                         return "process message in this task";
                     });
                 }
@@ -314,8 +311,8 @@ namespace ADL.Node.Core.Modules.Peer
             }
             catch (Exception e)
             {
-                Log("*** OutboundChannelListener exception server " + ip + ":" + port + " disconnected");
-                LogException("OutboundChannelListener",e);
+                Log.Log.Message("*** OutboundChannelListener exception server " + ip + ":" + port + " disconnected");
+                Log.LogException.Message("OutboundChannelListener",e);
             }
             finally
             {
@@ -323,7 +320,7 @@ namespace ADL.Node.Core.Modules.Peer
                 RemovePeer(peer);
                 Task<bool> unawaited = Task.Run(() => PeerDisconnected(peer.Ip, peer.Port));
 
-                Log("***** DataReceiver peer " + peer.Ip + peer.Port + " disconnected (now " + activeCount + " peers active)");
+                Log.Log.Message("***** DataReceiver peer " + peer.Ip + peer.Port + " disconnected (now " + activeCount + " peers active)");
 
                 DisconnectPeer(peer.Ip, peer.Port);
             }
@@ -357,7 +354,7 @@ namespace ADL.Node.Core.Modules.Peer
                     {
                         if (!_PermittedIps.Contains(peerIp))
                         {
-                            Log("*** AcceptConnections rejecting connection from " + peerIp + " (not permitted)");
+                            Log.Log.Message("*** AcceptConnections rejecting connection from " + peerIp + " (not permitted)");
                             tcpPeer.Close();
                             continue;
                         }
@@ -368,7 +365,7 @@ namespace ADL.Node.Core.Modules.Peer
                     //@TODO change this so we dont instantiate a new peer until the new peer has passed the auth challende
                     peer = new Peer(tcpPeer);
 
-                    Log("*** AcceptConnections accepted connection from " + peer.Ip + peer.Port + " count " +
+                    Log.Log.Message("*** AcceptConnections accepted connection from " + peer.Ip + peer.Port + " count " +
                         _ActivePeers);
 
                     Task unawaited = Task.Run(() =>
@@ -378,7 +375,7 @@ namespace ADL.Node.Core.Modules.Peer
                         {
                             if (!AddPeer(peer))
                             {
-                                Log("*** FinalizeConnection unable to add peer " + peer.Ip + peer.Port);
+                                Log.Log.Message("*** FinalizeConnection unable to add peer " + peer.Ip + peer.Port);
                                 return;
                             }
                         }
@@ -387,7 +384,7 @@ namespace ADL.Node.Core.Modules.Peer
                 catch (ObjectDisposedException ex)
                 {
                     // Listener stopped ? if so, peerIpPort will be empty
-                    Log("*** AcceptConnections ObjectDisposedException from " + peerIpPort + Environment.NewLine +
+                    Log.Log.Message("*** AcceptConnections ObjectDisposedException from " + peerIpPort + Environment.NewLine +
                         ex.ToString());
                 }
                 catch (SocketException ex)
@@ -395,17 +392,17 @@ namespace ADL.Node.Core.Modules.Peer
                     switch (ex.Message)
                     {
                         case "An existing connection was forcibly closed by the remote host":
-                            Log("*** AcceptConnections SocketException " + peerIpPort + " closed the connection.");
+                            Log.Log.Message("*** AcceptConnections SocketException " + peerIpPort + " closed the connection.");
                             break;
                         default:
-                            Log("*** AcceptConnections SocketException from " + peerIpPort + Environment.NewLine +
+                            Log.Log.Message("*** AcceptConnections SocketException from " + peerIpPort + Environment.NewLine +
                                 ex.ToString());
                             break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Log("*** AcceptConnections Exception from " + peerIpPort + Environment.NewLine + ex.ToString());
+                    Log.Log.Message("*** AcceptConnections Exception from " + peerIpPort + Environment.NewLine + ex.ToString());
                 }
             }
         }
@@ -460,7 +457,7 @@ namespace ADL.Node.Core.Modules.Peer
                 {
                     if (!AddPeer(peer))
                     {
-                        Log("*** FinalizeConnection unable to add peer " + peer.Ip + peer.Port);
+                        Log.Log.Message("*** FinalizeConnection unable to add peer " + peer.Ip + peer.Port);
                         return;
                     }
                 }
@@ -481,7 +478,7 @@ namespace ADL.Node.Core.Modules.Peer
                 byte[] requestBytes = requestMessage.ToByteArray();
                 Console.WriteLine(requestMessage);
                 Console.WriteLine(HexByteConvertorExtensions.ToHex(requestBytes));             
-                await MessageWriteAsync(peer,requestBytes, 98);
+                await Stream.Writer.MessageWriteAsync(peer,requestBytes, 98, _SendLock);
                 wh.Close();
             }
         }
@@ -526,7 +523,7 @@ namespace ADL.Node.Core.Modules.Peer
         {
             if (!_Peers.TryGetValue(ip+":"+port, out Peer peer))
             {
-                Log("*** DisconnectPeer unable to find peer " + peer.Ip+":"+peer.Port);
+                Log.Log.Message("*** DisconnectPeer unable to find peer " + peer.Ip+":"+peer.Port);
             }
             else
             {
@@ -565,352 +562,6 @@ namespace ADL.Node.Core.Modules.Peer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="peer"></param>
-        /// <returns></returns>
-        private async Task<byte[]> MessageReadAsync(Peer peer)
-        {
-            int bytesRead = 0;
-            int sleepInterval = 25;
-            int maxTimeout = 500;
-            int currentTimeout = 0;
-            bool timeout = false;
-
-            byte[] headerBytes;
-            string header = "";
-            long contentLength;
-            byte[] contentBytes;
-
-            if (!peer.SslStream.CanRead)
-            {
-                return null;
-            }    
-
-            // start reading header
-            using (MemoryStream headerMs = new MemoryStream())
-            {
-                byte[] headerBuffer = new byte[1];//if we change header structure we need to up date this
-                timeout = false;
-                currentTimeout = 0;
-                Int32 read = 0;
-
-                /// start reading header
-                while ((read = await peer.SslStream.ReadAsync(headerBuffer, 0, headerBuffer.Length)) > 0)
-                {
-                    if (read > 0)
-                    {
-                        await headerMs.WriteAsync(headerBuffer, 0, read);
-                        bytesRead += read;
-
-                        // reset timeout since there was a successful read
-                        currentTimeout = 0;
-                    }
-                    else
-                    {
-                        if (currentTimeout >= maxTimeout)
-                        {
-                            timeout = true;
-                            break;
-                        }
-                        else
-                        {
-                            currentTimeout += sleepInterval;
-                            await Task.Delay(sleepInterval);
-                        }
-
-                        if (timeout)
-                        {
-                            break;
-                        }
-                    }
-
-                    if (bytesRead > 1)
-                    {
-                        // check if end of headers reached
-                        if (headerBuffer[0] == 58)
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        if (currentTimeout >= maxTimeout)
-                        {
-                            timeout = true;
-                            break;
-                        }
-                        else
-                        {
-                            currentTimeout += sleepInterval;
-                            await Task.Delay(sleepInterval);
-                        }
-
-                        if (timeout)
-                        {
-                            break;
-                        }
-                    }
-                }
-                /// end reading header
-
-                if (timeout)
-                {
-                    Log("*** MessageReadAsync timeout " + currentTimeout + "ms/" + maxTimeout + "ms exceeded while reading header after reading " + bytesRead + " bytes");
-                    return null;
-                }
-
-                headerBytes = headerMs.ToArray();
-                if (headerBytes == null || headerBytes.Length < 1)
-                {
-                    return null;
-                }
-
-                if (!Int64.TryParse(Encoding.UTF8.GetString(headerBytes).Replace(":", ""), out contentLength))
-                {
-                    Log("*** MessageReadAsync malformed message from " + peer.Ip + peer.Port + " (message header not an integer)");
-                    return null;
-                }
-            }
-            // endreading header
-            
-            // start reading descriptor chunk
-            
-            // stop reading descriptor chunk
-            
-            /// start reading content
-            using (MemoryStream dataMs = new MemoryStream())
-            {
-                long bytesRemaining = contentLength;
-                timeout = false;
-                currentTimeout = 0;
-
-                int read = 0;
-                byte[] buffer;
-                long bufferSize = 2048;
-                if (bufferSize > bytesRemaining)
-                {
-                    bufferSize = bytesRemaining;
-                }
-
-                buffer = new byte[bufferSize];
-
-                while ((read = await peer.SslStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
-                {
-                    if (read > 0)
-                    {
-                        dataMs.Write(buffer, 0, read);
-                        bytesRead = bytesRead + read;
-                        bytesRemaining = bytesRemaining - read;
-
-                        // reset timeout
-                        currentTimeout = 0;
-
-                        // reduce buffer size if number of bytes remaining is
-                        // less than the pre-defined buffer size of 2KB
-                        if (bytesRemaining < bufferSize)
-                        {
-                            bufferSize = bytesRemaining;
-                        }
-
-                        buffer = new byte[bufferSize];
-
-                        // check if read fully
-                        if (bytesRemaining == 0)
-                        {
-                            break;
-                        }
-
-                        if (bytesRead == contentLength)
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        if (currentTimeout >= maxTimeout)
-                        {
-                            timeout = true;
-                            break;
-                        }
-                        else
-                        {
-                            currentTimeout += sleepInterval;
-                            await Task.Delay(sleepInterval);
-                        }
-
-                        if (timeout)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                if (timeout)
-                {
-                    Log("*** MessageReadAsync timeout " + currentTimeout + "ms/" + maxTimeout + "ms exceeded while reading content after reading " + bytesRead + " bytes");
-                    return null;
-                }
-
-                contentBytes = dataMs.ToArray();
-            }
-            /// end reading content
-
-            if (contentBytes == null || contentBytes.Length < 1)
-            {
-                Log("*** MessageReadAsync " + peer.Ip + peer.Port + " no content read");
-                return null;
-            }
-
-            if (contentBytes.Length != contentLength)
-            {
-                Log("*** MessageReadAsync " + peer.Ip + peer.Port + " content length " + contentBytes.Length + " bytes does not match header value " + contentLength + ", discarding");
-                return null;
-            }
-
-            byte[] msgDescriptor = ByteUtil.Slice(contentBytes, 0, 3);
-            byte[] payload = ByteUtil.Slice(contentBytes, 3);
-            return payload;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="peer"></param>
-        /// <param name="data"></param>
-        /// <param name="sendLock"></param>
-        /// <returns></returns>
-        private async Task<bool> MessageWriteAsync(Peer peer, byte[] data, int messageType)
-        {
-            Console.WriteLine("Write started");
-            bool disconnectDetected = false;
-
-            int payloadLength=0;
-
-            try
-            {
-                if (peer == null)
-                {
-                    Log("MessageWriteAsync peer is null");
-                    disconnectDetected = true;
-                    return false;
-                }
-
-                if (peer.SslStream == null)
-                {
-                    Log("MessageWriteAsync SSL stream is null");
-                    disconnectDetected = true;
-                    return false;
-                }
-                
-                string header = "";
-                byte[] headerBytes;
-                byte[] messageDiscriptor = MessageDescriptor.BuildDiscriptor(2,22,42);//z
-                byte[] message;
-
-                foreach (int i in messageDiscriptor)
-                {
-                    Console.WriteLine(i);
-                }
-
-                if (data == null || data.Length < 1)
-                {
-                    header += "0:";
-                    header += messageDiscriptor.Length+":";
-                }
-                else
-                {
-                    payloadLength = messageDiscriptor.Length + data.Length;
-                    header += payloadLength+":";
-                }
-
-                headerBytes = header.ToBytesForRLPEncoding();
-
-                int messageLen = headerBytes.Length;
-                if (payloadLength > 0)
-                {
-                    messageLen += payloadLength;
-                }
-
-                message = new byte[messageLen];
-                
-                Console.WriteLine(BitConverter.ToString(messageDiscriptor));
-                Console.WriteLine(BitConverter.ToString(data));
-
-                data = ByteUtil.CombineByteArr(messageDiscriptor,data);
-                Console.WriteLine(BitConverter.ToString(data));
-          
-                Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
-
-                if (data != null && data.Length > 0)
-                {
-                    Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
-                }
-                
-                // use semaphore to lock thread while we write to peer
-                if (_SendLock != null)
-                {
-                    await _SendLock.WaitAsync();
-                    try
-                    {
-                        peer.SslStream.Write(message, 0, message.Length);
-                        peer.SslStream.Flush();
-                    }
-                    finally
-                    {
-                        _SendLock.Release();
-                    }
-                }
-                else
-                {
-                    await peer.SslStream.WriteAsync(message, 0, message.Length);
-                    await peer.SslStream.FlushAsync();
-                }
-
-                return true;
-            }
-            catch (ObjectDisposedException ObjDispInner)
-            {
-
-                Log("*** MessageWriteAsync server disconnected (obj disposed exception): " + peer.Ip + ":" + peer.Port +
-                    ObjDispInner.Message);
-                disconnectDetected = true;
-                return false;
-            }
-            catch (SocketException SockInner)
-            {
-                Log("*** MessageWriteAsync server disconnected (socket exception): " + SockInner.Message);
-                disconnectDetected = true;
-                return false;
-            }
-            catch (InvalidOperationException InvOpInner)
-            {
-                Log("*** MessageWriteAsync server disconnected (invalid operation exception): " + InvOpInner.Message);
-                disconnectDetected = true;
-                return false;
-            }
-            catch (IOException IOInner)
-            {
-                Log("*** MessageWriteAsync server disconnected (IO exception): " + IOInner.Message);
-                disconnectDetected = true;
-                return false;
-            }
-            catch (Exception e)
-            {
-                LogException("MessageWriteAsync", e);
-                disconnectDetected = true;
-                return false;
-            }
-            finally
-            {
-                if (disconnectDetected)
-                {
-                    peer.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="ip"></param>
         /// <param name="port"></param>
         /// <returns></returns>
@@ -932,36 +583,6 @@ namespace ADL.Node.Core.Modules.Peer
         {
             // return true; // Allow untrusted certificates.
             return AcceptInvalidCerts;
-        }
-                
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="msg"></param>
-        internal void Log(string msg)
-        {
-            if (_debug)
-            {
-                Console.WriteLine(msg);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="e"></param>
-        internal void LogException(string method, Exception e)
-        {
-            Log("================================================================================");
-            Log(" = Method: " + method);
-            Log(" = Exception Type: " + e.GetType().ToString());
-            Log(" = Exception Data: " + e.Data);
-            Log(" = Inner Exception: " + e.InnerException);
-            Log(" = Exception Message: " + e.Message);
-            Log(" = Exception Source: " + e.Source);
-            Log(" = Exception StackTrace: " + e.StackTrace);
-            Log("================================================================================");
         }
         
         public void Dispose()

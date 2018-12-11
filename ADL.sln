@@ -59,6 +59,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "Helpers\Util\Util.c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyStore", "Components\KeyStore\KeyStore.csproj", "{AE3C2770-749C-4B8E-9E70-5319E5B75386}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Log", "Helpers\Log\Log.csproj", "{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -409,6 +411,18 @@ Global
 		{AE3C2770-749C-4B8E-9E70-5319E5B75386}.Release|x64.Build.0 = Release|Any CPU
 		{AE3C2770-749C-4B8E-9E70-5319E5B75386}.Release|x86.ActiveCfg = Release|Any CPU
 		{AE3C2770-749C-4B8E-9E70-5319E5B75386}.Release|x86.Build.0 = Release|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Debug|x64.Build.0 = Debug|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Debug|x86.Build.0 = Debug|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Release|x64.ActiveCfg = Release|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Release|x64.Build.0 = Release|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Release|x86.ActiveCfg = Release|Any CPU
+		{398009BE-5D7D-4745-85F8-9C5C1B5D60E5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 
 EndGlobal
