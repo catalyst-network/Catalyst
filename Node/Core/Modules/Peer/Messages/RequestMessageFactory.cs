@@ -7,9 +7,9 @@ using Type = Google.Protobuf.WellKnownTypes.Type;
 
 namespace ADL.Node.Core.Modules.Peer.Messages
 {
-    public class RequestMessageFactory
+    public class MessageFactory
     {
-        public static dynamic GetMessage(int id)
+        public static dynamic Get(int id)
         {
             switch (id)
             {
@@ -21,6 +21,12 @@ namespace ADL.Node.Core.Modules.Peer.Messages
                     return new PeerProtocol.Types.PeerInfoRequest();
                 case 4:
                     return new PeerProtocol.Types.PeerNeighborsRequest();
+                case 5:
+                    return new PeerProtocol.Types.ChallengeResponse();
+                case 6:
+                    return new PeerProtocol.Types.PeerInfoResponse();
+                case 7:
+                    return new PeerProtocol.Types.PeerNeighborsResponse();
                 default:
                     return new PeerProtocol.Types.PingRequest();
             }            

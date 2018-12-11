@@ -142,7 +142,7 @@ namespace ADL.Node.Core.Modules.Peer
             _Token = _TokenSource.Token;
             _Peers = new ConcurrentDictionary<string, Peer>();
 
-            InboundConnectionListener();
+            Task.Run(async () => await InboundConnectionListener());
         }
         
         /// <summary>
@@ -252,25 +252,6 @@ namespace ADL.Node.Core.Modules.Peer
         /// 
         /// </summary>
         /// <param name="peer"></param>
-        /// <returns></returns>
-        private bool RemovePeer(Peer peer)
-        {
-            if (!_Peers.TryRemove(peer.Ip+":"+peer.Port, out Peer removedPeer))
-            {
-                Log.Log.Message("*** RemovePeer unable to remove peer " + peer.Ip + peer.Port);
-                return false;
-            }
-            else
-            {
-                Log.Log.Message("*** RemovePeer removed peer " + peer.Ip + peer.Port);
-                return true;
-            }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="peer"></param>
         /// <param name="cancelToken"></param>
         /// <returns></returns>
         private async Task DataReceiver(Peer peer, CancellationToken? cancelToken=null)
@@ -290,8 +271,8 @@ namespace ADL.Node.Core.Modules.Peer
                         break;
                     }
 
-                    byte[] data = await Stream.Reader.MessageReadAsync(peer);
-                    if (data == null)
+                    byte[] payload = await Stream.Reader.MessageReadAsync(peer);
+                    if (payload == null)
                     {
                         await Task.Delay(30);
                         continue;
@@ -299,8 +280,8 @@ namespace ADL.Node.Core.Modules.Peer
                     
                     Task<string> unawaited = Task.Run(() =>
                     {
-                        var challengeRequest = PeerProtocol.Types.ChallengeRequest.Parser.ParseFrom(data);
-                        Console.WriteLine("Message received from " + ip+":"+port + ": " + challengeRequest);
+                        byte[] msgDescriptor = ByteUtil.Slice(payload, 0, 3);
+                        byte[] message = ByteUtil.Slice(payload, 3);
                         return "process message in this task";
                     });
                 }
@@ -317,12 +298,13 @@ namespace ADL.Node.Core.Modules.Peer
             finally
             {
                 int activeCount = Interlocked.Decrement(ref _ActivePeers);
-                RemovePeer(peer);
-                Task<bool> unawaited = Task.Run(() => PeerDisconnected(peer.Ip, peer.Port));
-
-                Log.Log.Message("***** DataReceiver peer " + peer.Ip + peer.Port + " disconnected (now " + activeCount + " peers active)");
-
-                DisconnectPeer(peer.Ip, peer.Port);
+                
+                Task<bool> success = Task.Run(() => DisconnectPeer(peer.Ip, peer.Port));
+                
+                if (success.Result)
+                {
+                    Log.Log.Message("***** DataReceiver peer " + peer.Ip + peer.Port + " disconnected (now " + activeCount + " peers active)");                    
+                }
             }
         }
 
@@ -468,7 +450,7 @@ namespace ADL.Node.Core.Modules.Peer
             {
                 Console.WriteLine("Starting Challenge Request");
 
-                PeerProtocol.Types.ChallengeRequest requestMessage = RequestMessageFactory.GetMessage(2);
+                PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
 
                 SecureRandom random = new SecureRandom();
                 byte[] keyBytes = new byte[16];
@@ -519,17 +501,24 @@ namespace ADL.Node.Core.Modules.Peer
         /// disposes a peer object.
         /// </summary>
         /// <param name="ipPort"></param>
-        public void DisconnectPeer(string ip, int port)
+        public bool DisconnectPeer(string ip, int port)
         {
             if (!_Peers.TryGetValue(ip+":"+port, out Peer peer))
             {
                 Log.Log.Message("*** DisconnectPeer unable to find peer " + peer.Ip+":"+peer.Port);
+                return false;
             }
-            else
+  
+            
+            if (!_Peers.TryRemove(peer.Ip+":"+peer.Port, out Peer removedPeer))
             {
-                peer.Dispose();
-                PeerDisconnected(ip, port);
+                Log.Log.Message("*** RemovePeer unable to remove peer " + peer.Ip + peer.Port);
+                return false;
             }
+
+            peer.Dispose();
+            Log.Log.Message("*** RemovePeer removed peer " + peer.Ip + peer.Port);
+            return true;
         }
         
         /// <summary>
@@ -557,18 +546,6 @@ namespace ADL.Node.Core.Modules.Peer
         public bool IsPeerConnected(string ip, int port)
         {
             return (_Peers.TryGetValue(ip+":"+port, out Peer peer));
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
-        private static bool PeerDisconnected(string ip, int port)
-        {
-            Console.WriteLine("Peer disconnected: " + ip+":"+port);
-            return true;
         }
         
         /// <summary>
