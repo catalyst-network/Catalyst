@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,7 +14,12 @@ using System.Threading.Tasks;
 using Google.Protobuf;
 using Org.BouncyCastle.Security;
 using System.Text;
-using ADL.Cryptography;
+using ADL.Hex.HexConvertors.Extensions;
+using ADL.KeySigner;
+using ADL.Node.Core.Modules.Peer.Messages;
+using ADL.Protocol.Peer;
+using ADL.RLP;
+using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Peer
 {
@@ -122,6 +128,7 @@ namespace ADL.Node.Core.Modules.Peer
             {
                 _SslCertificate = new X509Certificate2(dataDir+"/"+sslSettings.PfxFileName, sslSettings.SslCertPassword);
             }           
+            
             _SslCertificateCollection = new X509Certificate2Collection
             {
                 _SslCertificate
@@ -292,18 +299,12 @@ namespace ADL.Node.Core.Modules.Peer
                     
                     Task<string> unawaited = Task.Run(() =>
                     {
-                        var charResponse = ADL.Protocol.Peer.ChallengeResponse.Parser.ParseFrom(data);
 //                        var keyFactory = PrivateKeyFactory.CreateKey(System.Convert.FromBase64String(charResponse.PublicKey));
 //                        Console.WriteLine(Ec.VerifySignature(keyFactory,charResponse.SignedNonce,peer.nonce.ToString()));
-                        Console.WriteLine("Message received from " + ip+":"+port + ": " + ADL.Protocol.Peer.ChallengeResponse.Parser.ParseFrom(data));
-                        
-                        string msg = "";
-                        if (data != null && data.Length > 0)
-                        {
-                            msg = Encoding.UTF8.GetString(data);
-                        }
-                        Console.WriteLine(msg);
-                        return msg;
+                        Console.WriteLine("Message received from " + ip+":"+port + ": " + HexByteConvertorExtensions.ToHex(data));
+//                        Console.WriteLine(PeerProtocol.Types.ChallengeRequest.Parser.ParseFrom(data));   
+
+                        return "process message in this task";
                     });
                 }
             }
@@ -468,16 +469,19 @@ namespace ADL.Node.Core.Modules.Peer
             
             finally
             {
-                Console.WriteLine("traceing");
-                var challengeRequest = new ADL.Protocol.Peer.ChallengeRequest();
+                Console.WriteLine("Starting Challenge Request");
+
+                PeerProtocol.Types.ChallengeRequest requestMessage = RequestMessageFactory.GetMessage(2);
+
                 SecureRandom random = new SecureRandom();
                 byte[] keyBytes = new byte[16];
                 random.NextBytes(keyBytes);
-                challengeRequest.Nonce = random.NextInt();
-                challengeRequest.Type = 10;
-                peer.nonce = challengeRequest.Nonce;
-                Log(challengeRequest.ToString());
-                await MessageWriteAsync(peer,challengeRequest.ToByteArray());
+                requestMessage.Nonce = random.NextInt();
+                peer.nonce = requestMessage.Nonce;
+                byte[] requestBytes = requestMessage.ToByteArray();
+                Console.WriteLine(requestMessage);
+                Console.WriteLine(HexByteConvertorExtensions.ToHex(requestBytes));             
+                await MessageWriteAsync(peer,requestBytes, 98);
                 wh.Close();
             }
         }
@@ -579,15 +583,17 @@ namespace ADL.Node.Core.Modules.Peer
             if (!peer.SslStream.CanRead)
             {
                 return null;
-            }
+            }    
 
+            // start reading header
             using (MemoryStream headerMs = new MemoryStream())
             {
-                byte[] headerBuffer = new byte[1];
+                byte[] headerBuffer = new byte[1];//if we change header structure we need to up date this
                 timeout = false;
                 currentTimeout = 0;
                 Int32 read = 0;
 
+                /// start reading header
                 while ((read = await peer.SslStream.ReadAsync(headerBuffer, 0, headerBuffer.Length)) > 0)
                 {
                     if (read > 0)
@@ -644,6 +650,7 @@ namespace ADL.Node.Core.Modules.Peer
                         }
                     }
                 }
+                /// end reading header
 
                 if (timeout)
                 {
@@ -657,16 +664,19 @@ namespace ADL.Node.Core.Modules.Peer
                     return null;
                 }
 
-                header = Encoding.UTF8.GetString(headerBytes);
-                header = header.Replace(":", "");
-
-                if (!Int64.TryParse(header, out contentLength))
+                if (!Int64.TryParse(Encoding.UTF8.GetString(headerBytes).Replace(":", ""), out contentLength))
                 {
                     Log("*** MessageReadAsync malformed message from " + peer.Ip + peer.Port + " (message header not an integer)");
                     return null;
                 }
             }
+            // endreading header
             
+            // start reading descriptor chunk
+            
+            // stop reading descriptor chunk
+            
+            /// start reading content
             using (MemoryStream dataMs = new MemoryStream())
             {
                 long bytesRemaining = contentLength;
@@ -742,6 +752,7 @@ namespace ADL.Node.Core.Modules.Peer
 
                 contentBytes = dataMs.ToArray();
             }
+            /// end reading content
 
             if (contentBytes == null || contentBytes.Length < 1)
             {
@@ -754,8 +765,13 @@ namespace ADL.Node.Core.Modules.Peer
                 Log("*** MessageReadAsync " + peer.Ip + peer.Port + " content length " + contentBytes.Length + " bytes does not match header value " + contentLength + ", discarding");
                 return null;
             }
-            Console.WriteLine("contentBytes");
-            Console.WriteLine(contentBytes);
+
+            byte[] msgDescriptor = ByteUtil.Slice(contentBytes, 0, 3);
+            Console.WriteLine(msgDescriptor[0]);
+            Console.WriteLine(msgDescriptor[1]);
+            Console.WriteLine(msgDescriptor[2]);
+            Log("Finished Read");
+
             return contentBytes;
         }
 
@@ -766,10 +782,12 @@ namespace ADL.Node.Core.Modules.Peer
         /// <param name="data"></param>
         /// <param name="sendLock"></param>
         /// <returns></returns>
-        private async Task<bool> MessageWriteAsync(Peer peer, byte[] data)
+        private async Task<bool> MessageWriteAsync(Peer peer, byte[] data, int messageType)
         {
             Console.WriteLine("Write started");
             bool disconnectDetected = false;
+
+            int payloadLength=0;
 
             try
             {
@@ -786,35 +804,51 @@ namespace ADL.Node.Core.Modules.Peer
                     disconnectDetected = true;
                     return false;
                 }
-
+                
                 string header = "";
                 byte[] headerBytes;
+                byte[] messageDiscriptor = MessageDescriptor.BuildDiscriptor(2,22,42);//z
                 byte[] message;
+
+                foreach (int i in messageDiscriptor)
+                {
+                    Console.WriteLine(i);
+                }
 
                 if (data == null || data.Length < 1)
                 {
                     header += "0:";
+                    header += messageDiscriptor.Length+":";
                 }
                 else
                 {
-                    header += data.Length + ":";
+                    payloadLength = messageDiscriptor.Length + data.Length;
+                    header += payloadLength+":";
                 }
 
-                headerBytes = Encoding.UTF8.GetBytes(header);
+                headerBytes = header.ToBytesForRLPEncoding();
+
                 int messageLen = headerBytes.Length;
-                if (data != null && data.Length > 0)
+                if (payloadLength > 0)
                 {
-                    messageLen += data.Length;
+                    messageLen += payloadLength;
                 }
 
                 message = new byte[messageLen];
+                
+                Console.WriteLine(BitConverter.ToString(messageDiscriptor));
+                Console.WriteLine(BitConverter.ToString(data));
+
+                data = ByteUtil.CombineByteArr(messageDiscriptor,data);
+                Console.WriteLine(BitConverter.ToString(data));
+          
                 Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
 
                 if (data != null && data.Length > 0)
                 {
                     Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
                 }
-
+                
                 // use semaphore to lock thread while we write to peer
                 if (_SendLock != null)
                 {

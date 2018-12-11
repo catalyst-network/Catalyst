@@ -44,86 +44,92 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PeerRoot : GPBRootObject
 @end
 
-#pragma mark - PingRequest
+#pragma mark - PeerProtocol
 
-typedef GPB_ENUM(PingRequest_FieldNumber) {
-  PingRequest_FieldNumber_Ping = 1,
+@interface PeerProtocol : GPBMessage
+
+@end
+
+#pragma mark - PeerProtocol_PingRequest
+
+typedef GPB_ENUM(PeerProtocol_PingRequest_FieldNumber) {
+  PeerProtocol_PingRequest_FieldNumber_Ping = 1,
 };
 
-@interface PingRequest : GPBMessage
+@interface PeerProtocol_PingRequest : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *ping;
 
 @end
 
-#pragma mark - PongResponse
+#pragma mark - PeerProtocol_PongResponse
 
-typedef GPB_ENUM(PongResponse_FieldNumber) {
-  PongResponse_FieldNumber_Pong = 1,
+typedef GPB_ENUM(PeerProtocol_PongResponse_FieldNumber) {
+  PeerProtocol_PongResponse_FieldNumber_Pong = 1,
 };
 
-@interface PongResponse : GPBMessage
+@interface PeerProtocol_PongResponse : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *pong;
 
 @end
 
-#pragma mark - PeerInfoRequest
+#pragma mark - PeerProtocol_PeerInfoRequest
 
-typedef GPB_ENUM(PeerInfoRequest_FieldNumber) {
-  PeerInfoRequest_FieldNumber_Ping = 1,
+typedef GPB_ENUM(PeerProtocol_PeerInfoRequest_FieldNumber) {
+  PeerProtocol_PeerInfoRequest_FieldNumber_Ping = 1,
 };
 
-@interface PeerInfoRequest : GPBMessage
+@interface PeerProtocol_PeerInfoRequest : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *ping;
 
 @end
 
-#pragma mark - PeerInfoResponse
+#pragma mark - PeerProtocol_PeerInfoResponse
 
-typedef GPB_ENUM(PeerInfoResponse_FieldNumber) {
-  PeerInfoResponse_FieldNumber_Pong = 1,
+typedef GPB_ENUM(PeerProtocol_PeerInfoResponse_FieldNumber) {
+  PeerProtocol_PeerInfoResponse_FieldNumber_Pong = 1,
 };
 
-@interface PeerInfoResponse : GPBMessage
+@interface PeerProtocol_PeerInfoResponse : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *pong;
 
 @end
 
-#pragma mark - PeerNeighborsRequest
+#pragma mark - PeerProtocol_PeerNeighborsRequest
 
-typedef GPB_ENUM(PeerNeighborsRequest_FieldNumber) {
-  PeerNeighborsRequest_FieldNumber_Ping = 1,
+typedef GPB_ENUM(PeerProtocol_PeerNeighborsRequest_FieldNumber) {
+  PeerProtocol_PeerNeighborsRequest_FieldNumber_Ping = 1,
 };
 
-@interface PeerNeighborsRequest : GPBMessage
+@interface PeerProtocol_PeerNeighborsRequest : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *ping;
 
 @end
 
-#pragma mark - PeerNeighborsResponse
+#pragma mark - PeerProtocol_PeerNeighborsResponse
 
-typedef GPB_ENUM(PeerNeighborsResponse_FieldNumber) {
-  PeerNeighborsResponse_FieldNumber_Pong = 1,
+typedef GPB_ENUM(PeerProtocol_PeerNeighborsResponse_FieldNumber) {
+  PeerProtocol_PeerNeighborsResponse_FieldNumber_Pong = 1,
 };
 
-@interface PeerNeighborsResponse : GPBMessage
+@interface PeerProtocol_PeerNeighborsResponse : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *pong;
 
 @end
 
-#pragma mark - ChallengeRequest
+#pragma mark - PeerProtocol_ChallengeRequest
 
-typedef GPB_ENUM(ChallengeRequest_FieldNumber) {
-  ChallengeRequest_FieldNumber_Type = 1,
-  ChallengeRequest_FieldNumber_Nonce = 2,
+typedef GPB_ENUM(PeerProtocol_ChallengeRequest_FieldNumber) {
+  PeerProtocol_ChallengeRequest_FieldNumber_Type = 2,
+  PeerProtocol_ChallengeRequest_FieldNumber_Nonce = 3,
 };
 
-@interface ChallengeRequest : GPBMessage
+@interface PeerProtocol_ChallengeRequest : GPBMessage
 
 @property(nonatomic, readwrite) int32_t type;
 
@@ -131,17 +137,14 @@ typedef GPB_ENUM(ChallengeRequest_FieldNumber) {
 
 @end
 
-#pragma mark - ChallengeResponse
+#pragma mark - PeerProtocol_ChallengeResponse
 
-typedef GPB_ENUM(ChallengeResponse_FieldNumber) {
-  ChallengeResponse_FieldNumber_Type = 1,
-  ChallengeResponse_FieldNumber_SignedNonce = 2,
-  ChallengeResponse_FieldNumber_PublicKey = 3,
+typedef GPB_ENUM(PeerProtocol_ChallengeResponse_FieldNumber) {
+  PeerProtocol_ChallengeResponse_FieldNumber_SignedNonce = 2,
+  PeerProtocol_ChallengeResponse_FieldNumber_PublicKey = 3,
 };
 
-@interface ChallengeResponse : GPBMessage
-
-@property(nonatomic, readwrite) int32_t type;
+@interface PeerProtocol_ChallengeResponse : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *signedNonce;
 

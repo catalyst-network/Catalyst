@@ -42,16 +42,46 @@ static GPBFileDescriptor *PeerRoot_FileDescriptor(void) {
   return descriptor;
 }
 
-#pragma mark - PingRequest
+#pragma mark - PeerProtocol
 
-@implementation PingRequest
+@implementation PeerProtocol
+
+
+typedef struct PeerProtocol__storage_ {
+  uint32_t _has_storage_[1];
+} PeerProtocol__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol class]
+                                     rootClass:[PeerRoot class]
+                                          file:PeerRoot_FileDescriptor()
+                                        fields:NULL
+                                    fieldCount:0
+                                   storageSize:sizeof(PeerProtocol__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - PeerProtocol_PingRequest
+
+@implementation PeerProtocol_PingRequest
 
 @dynamic ping;
 
-typedef struct PingRequest__storage_ {
+typedef struct PeerProtocol_PingRequest__storage_ {
   uint32_t _has_storage_[1];
   NSString *ping;
-} PingRequest__storage_;
+} PeerProtocol_PingRequest__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -62,21 +92,22 @@ typedef struct PingRequest__storage_ {
       {
         .name = "ping",
         .dataTypeSpecific.className = NULL,
-        .number = PingRequest_FieldNumber_Ping,
+        .number = PeerProtocol_PingRequest_FieldNumber_Ping,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(PingRequest__storage_, ping),
+        .offset = (uint32_t)offsetof(PeerProtocol_PingRequest__storage_, ping),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[PingRequest class]
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol_PingRequest class]
                                      rootClass:[PeerRoot class]
                                           file:PeerRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(PingRequest__storage_)
+                                   storageSize:sizeof(PeerProtocol_PingRequest__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(PeerProtocol)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -85,16 +116,16 @@ typedef struct PingRequest__storage_ {
 
 @end
 
-#pragma mark - PongResponse
+#pragma mark - PeerProtocol_PongResponse
 
-@implementation PongResponse
+@implementation PeerProtocol_PongResponse
 
 @dynamic pong;
 
-typedef struct PongResponse__storage_ {
+typedef struct PeerProtocol_PongResponse__storage_ {
   uint32_t _has_storage_[1];
   NSString *pong;
-} PongResponse__storage_;
+} PeerProtocol_PongResponse__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -105,21 +136,22 @@ typedef struct PongResponse__storage_ {
       {
         .name = "pong",
         .dataTypeSpecific.className = NULL,
-        .number = PongResponse_FieldNumber_Pong,
+        .number = PeerProtocol_PongResponse_FieldNumber_Pong,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(PongResponse__storage_, pong),
+        .offset = (uint32_t)offsetof(PeerProtocol_PongResponse__storage_, pong),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[PongResponse class]
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol_PongResponse class]
                                      rootClass:[PeerRoot class]
                                           file:PeerRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(PongResponse__storage_)
+                                   storageSize:sizeof(PeerProtocol_PongResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(PeerProtocol)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -128,16 +160,16 @@ typedef struct PongResponse__storage_ {
 
 @end
 
-#pragma mark - PeerInfoRequest
+#pragma mark - PeerProtocol_PeerInfoRequest
 
-@implementation PeerInfoRequest
+@implementation PeerProtocol_PeerInfoRequest
 
 @dynamic ping;
 
-typedef struct PeerInfoRequest__storage_ {
+typedef struct PeerProtocol_PeerInfoRequest__storage_ {
   uint32_t _has_storage_[1];
   NSString *ping;
-} PeerInfoRequest__storage_;
+} PeerProtocol_PeerInfoRequest__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -148,21 +180,22 @@ typedef struct PeerInfoRequest__storage_ {
       {
         .name = "ping",
         .dataTypeSpecific.className = NULL,
-        .number = PeerInfoRequest_FieldNumber_Ping,
+        .number = PeerProtocol_PeerInfoRequest_FieldNumber_Ping,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(PeerInfoRequest__storage_, ping),
+        .offset = (uint32_t)offsetof(PeerProtocol_PeerInfoRequest__storage_, ping),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[PeerInfoRequest class]
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol_PeerInfoRequest class]
                                      rootClass:[PeerRoot class]
                                           file:PeerRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(PeerInfoRequest__storage_)
+                                   storageSize:sizeof(PeerProtocol_PeerInfoRequest__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(PeerProtocol)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -171,16 +204,16 @@ typedef struct PeerInfoRequest__storage_ {
 
 @end
 
-#pragma mark - PeerInfoResponse
+#pragma mark - PeerProtocol_PeerInfoResponse
 
-@implementation PeerInfoResponse
+@implementation PeerProtocol_PeerInfoResponse
 
 @dynamic pong;
 
-typedef struct PeerInfoResponse__storage_ {
+typedef struct PeerProtocol_PeerInfoResponse__storage_ {
   uint32_t _has_storage_[1];
   NSString *pong;
-} PeerInfoResponse__storage_;
+} PeerProtocol_PeerInfoResponse__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -191,21 +224,22 @@ typedef struct PeerInfoResponse__storage_ {
       {
         .name = "pong",
         .dataTypeSpecific.className = NULL,
-        .number = PeerInfoResponse_FieldNumber_Pong,
+        .number = PeerProtocol_PeerInfoResponse_FieldNumber_Pong,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(PeerInfoResponse__storage_, pong),
+        .offset = (uint32_t)offsetof(PeerProtocol_PeerInfoResponse__storage_, pong),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[PeerInfoResponse class]
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol_PeerInfoResponse class]
                                      rootClass:[PeerRoot class]
                                           file:PeerRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(PeerInfoResponse__storage_)
+                                   storageSize:sizeof(PeerProtocol_PeerInfoResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(PeerProtocol)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -214,16 +248,16 @@ typedef struct PeerInfoResponse__storage_ {
 
 @end
 
-#pragma mark - PeerNeighborsRequest
+#pragma mark - PeerProtocol_PeerNeighborsRequest
 
-@implementation PeerNeighborsRequest
+@implementation PeerProtocol_PeerNeighborsRequest
 
 @dynamic ping;
 
-typedef struct PeerNeighborsRequest__storage_ {
+typedef struct PeerProtocol_PeerNeighborsRequest__storage_ {
   uint32_t _has_storage_[1];
   NSString *ping;
-} PeerNeighborsRequest__storage_;
+} PeerProtocol_PeerNeighborsRequest__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -234,21 +268,22 @@ typedef struct PeerNeighborsRequest__storage_ {
       {
         .name = "ping",
         .dataTypeSpecific.className = NULL,
-        .number = PeerNeighborsRequest_FieldNumber_Ping,
+        .number = PeerProtocol_PeerNeighborsRequest_FieldNumber_Ping,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(PeerNeighborsRequest__storage_, ping),
+        .offset = (uint32_t)offsetof(PeerProtocol_PeerNeighborsRequest__storage_, ping),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[PeerNeighborsRequest class]
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol_PeerNeighborsRequest class]
                                      rootClass:[PeerRoot class]
                                           file:PeerRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(PeerNeighborsRequest__storage_)
+                                   storageSize:sizeof(PeerProtocol_PeerNeighborsRequest__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(PeerProtocol)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -257,16 +292,16 @@ typedef struct PeerNeighborsRequest__storage_ {
 
 @end
 
-#pragma mark - PeerNeighborsResponse
+#pragma mark - PeerProtocol_PeerNeighborsResponse
 
-@implementation PeerNeighborsResponse
+@implementation PeerProtocol_PeerNeighborsResponse
 
 @dynamic pong;
 
-typedef struct PeerNeighborsResponse__storage_ {
+typedef struct PeerProtocol_PeerNeighborsResponse__storage_ {
   uint32_t _has_storage_[1];
   NSString *pong;
-} PeerNeighborsResponse__storage_;
+} PeerProtocol_PeerNeighborsResponse__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -277,21 +312,22 @@ typedef struct PeerNeighborsResponse__storage_ {
       {
         .name = "pong",
         .dataTypeSpecific.className = NULL,
-        .number = PeerNeighborsResponse_FieldNumber_Pong,
+        .number = PeerProtocol_PeerNeighborsResponse_FieldNumber_Pong,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(PeerNeighborsResponse__storage_, pong),
+        .offset = (uint32_t)offsetof(PeerProtocol_PeerNeighborsResponse__storage_, pong),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[PeerNeighborsResponse class]
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol_PeerNeighborsResponse class]
                                      rootClass:[PeerRoot class]
                                           file:PeerRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(PeerNeighborsResponse__storage_)
+                                   storageSize:sizeof(PeerProtocol_PeerNeighborsResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(PeerProtocol)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -300,18 +336,18 @@ typedef struct PeerNeighborsResponse__storage_ {
 
 @end
 
-#pragma mark - ChallengeRequest
+#pragma mark - PeerProtocol_ChallengeRequest
 
-@implementation ChallengeRequest
+@implementation PeerProtocol_ChallengeRequest
 
 @dynamic type;
 @dynamic nonce;
 
-typedef struct ChallengeRequest__storage_ {
+typedef struct PeerProtocol_ChallengeRequest__storage_ {
   uint32_t _has_storage_[1];
   int32_t type;
   int32_t nonce;
-} ChallengeRequest__storage_;
+} PeerProtocol_ChallengeRequest__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -322,30 +358,31 @@ typedef struct ChallengeRequest__storage_ {
       {
         .name = "type",
         .dataTypeSpecific.className = NULL,
-        .number = ChallengeRequest_FieldNumber_Type,
+        .number = PeerProtocol_ChallengeRequest_FieldNumber_Type,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(ChallengeRequest__storage_, type),
+        .offset = (uint32_t)offsetof(PeerProtocol_ChallengeRequest__storage_, type),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "nonce",
         .dataTypeSpecific.className = NULL,
-        .number = ChallengeRequest_FieldNumber_Nonce,
+        .number = PeerProtocol_ChallengeRequest_FieldNumber_Nonce,
         .hasIndex = 1,
-        .offset = (uint32_t)offsetof(ChallengeRequest__storage_, nonce),
+        .offset = (uint32_t)offsetof(PeerProtocol_ChallengeRequest__storage_, nonce),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[ChallengeRequest class]
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol_ChallengeRequest class]
                                      rootClass:[PeerRoot class]
                                           file:PeerRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(ChallengeRequest__storage_)
+                                   storageSize:sizeof(PeerProtocol_ChallengeRequest__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(PeerProtocol)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -354,20 +391,18 @@ typedef struct ChallengeRequest__storage_ {
 
 @end
 
-#pragma mark - ChallengeResponse
+#pragma mark - PeerProtocol_ChallengeResponse
 
-@implementation ChallengeResponse
+@implementation PeerProtocol_ChallengeResponse
 
-@dynamic type;
 @dynamic signedNonce;
 @dynamic publicKey;
 
-typedef struct ChallengeResponse__storage_ {
+typedef struct PeerProtocol_ChallengeResponse__storage_ {
   uint32_t _has_storage_[1];
-  int32_t type;
   NSString *signedNonce;
   NSString *publicKey;
-} ChallengeResponse__storage_;
+} PeerProtocol_ChallengeResponse__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -376,46 +411,38 @@ typedef struct ChallengeResponse__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "type",
-        .dataTypeSpecific.className = NULL,
-        .number = ChallengeResponse_FieldNumber_Type,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(ChallengeResponse__storage_, type),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
-      },
-      {
         .name = "signedNonce",
         .dataTypeSpecific.className = NULL,
-        .number = ChallengeResponse_FieldNumber_SignedNonce,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(ChallengeResponse__storage_, signedNonce),
+        .number = PeerProtocol_ChallengeResponse_FieldNumber_SignedNonce,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(PeerProtocol_ChallengeResponse__storage_, signedNonce),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
       {
         .name = "publicKey",
         .dataTypeSpecific.className = NULL,
-        .number = ChallengeResponse_FieldNumber_PublicKey,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(ChallengeResponse__storage_, publicKey),
+        .number = PeerProtocol_ChallengeResponse_FieldNumber_PublicKey,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(PeerProtocol_ChallengeResponse__storage_, publicKey),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[ChallengeResponse class]
+        [GPBDescriptor allocDescriptorForClass:[PeerProtocol_ChallengeResponse class]
                                      rootClass:[PeerRoot class]
                                           file:PeerRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(ChallengeResponse__storage_)
+                                   storageSize:sizeof(PeerProtocol_ChallengeResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\002\002\013\000\003\t\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(PeerProtocol)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }

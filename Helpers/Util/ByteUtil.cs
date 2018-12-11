@@ -10,6 +10,23 @@ namespace ADL.Util
         public static readonly byte[] ZERO_BYTE_ARRAY = {0};
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arrays"></param>
+        /// <returns></returns>
+        public static byte[] CombineByteArr(params byte[][] arrays)
+        {
+            byte[] rv = new byte[arrays.Sum(a => a.Length)];
+            int offset = 0;
+            foreach (byte[] array in arrays)
+            {
+                System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+                offset += array.Length;
+            }
+            return rv;
+        }
+        
+        /// <summary>
         ///     Creates a copy of bytes and appends b to the end of it
         /// </summary>
         public static byte[] AppendByte(byte[] bytes, byte b)
@@ -20,11 +37,19 @@ namespace ADL.Util
             return result;
         }
 
-        public static byte[] Slice(this byte[] org,
-            int start, int end = int.MaxValue)
+        /// <summary>
+        /// Slice a section from byte array
+        /// </summary>
+        /// <param name="org"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static byte[] Slice(this byte[] org, int start, int end = int.MaxValue)
         {
             if (end < 0)
-                end = org.Length + end;
+            {
+                end = org.Length + end;                
+            }
             start = Math.Max(0, start);
             end = Math.Max(start, end);
 
@@ -39,6 +64,11 @@ namespace ADL.Util
             return returnArray;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arrays"></param>
+        /// <returns></returns>
         public static IEnumerable<byte> MergeToEnum(params byte[][] arrays)
         {
             foreach (var a in arrays)
@@ -53,6 +83,12 @@ namespace ADL.Util
             return MergeToEnum(arrays).ToArray();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static byte[] XOR(this byte[] a, byte[] b)
         {
             var length = Math.Min(a.Length, b.Length);

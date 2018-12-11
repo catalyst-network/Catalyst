@@ -12,7 +12,7 @@ namespace ADL.Node.Core.Modules.Peer
     {
         public int Port;
         public string Ip;
-        public int nonce = 0;
+        public long nonce = 0;
         public string ipPort;
         public bool _Connected;
         internal TcpClient TcpClient;
