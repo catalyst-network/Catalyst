@@ -15,5 +15,14 @@ namespace ADL.Node.Core.Modules.Contract
             Contract = contract;
             ContractSettings = contractSettings;
         }
+
+        /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IContract GetImpl()
+        {
+            return Contract;
+        }
     }
 }

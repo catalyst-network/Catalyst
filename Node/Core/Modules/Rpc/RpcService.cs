@@ -40,6 +40,15 @@ namespace ADL.Node.Core.Modules.Rpc
         }
 
         /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IRpcServer GetImpl()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="token"></param>

@@ -115,6 +115,8 @@ namespace ADL.Shell
                     return OnGetConfig();
                 case "version":
                     return OnGetVersion();
+                case "mempool":
+                    return OnGetMempool();
                 default:
                     return CommandNotFound(args);
             }
@@ -137,6 +139,12 @@ namespace ADL.Shell
         /// <returns></returns>
         abstract public bool OnGetVersion();
 
+        /// <summary>
+        /// Prints stats about the mempool implementation.
+        /// </summary>
+        /// <returns></returns>
+        abstract public bool OnGetMempool();
+        
         /// <summary>
         /// 
         /// </summary>

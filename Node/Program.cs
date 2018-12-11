@@ -3,6 +3,7 @@ using System.Net;
 using ADL.Exceptions;
 using McMaster.Extensions.CommandLineUtils;
 using ADL.Shell;
+using Akka.Actor;
 
 namespace ADL.Node
 {
@@ -286,6 +287,15 @@ namespace ADL.Node
             {
                 return true;
             }
-        }       
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public override bool OnGetMempool()
+            {
+                return true;
+            }
+        }
     }
 }

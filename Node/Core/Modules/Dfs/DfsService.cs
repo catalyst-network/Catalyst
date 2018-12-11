@@ -38,5 +38,14 @@ namespace ADL.Node.Core.Modules.Dfs
             Dfs.DestroyIpfsClient();
             return true;
         }
+
+        /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IIpfs GetImpl()
+        {
+            return Dfs;
+        }
     }
 }
