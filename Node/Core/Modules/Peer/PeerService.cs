@@ -45,5 +45,14 @@ namespace ADL.Node.Core.Modules.Peer
         {
             return Peer.StopPeer();
         }
+
+        /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IPeer GetImpl()
+        {
+            return Peer;
+        }
     }
 }

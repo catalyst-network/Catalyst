@@ -64,13 +64,16 @@ namespace ADL.Protocol.Rpc.Node {
             "dBINCgVxdWVyeRgBIAEoCCIrChpHZXRDb25uZWN0aW9uQ291bnRSZXNwb25z",
             "ZRINCgVxdWVyeRgBIAEoCSIgCg9HZXREZWx0YVJlcXVlc3QSDQoFcXVlcnkY",
             "ASABKAgiIQoQR2V0RGVsdGFSZXNwb25zZRINCgVxdWVyeRgBIAEoCSIiChFH",
-            "ZXRNZW1wb29sUmVxdWVzdBINCgVxdWVyeRgBIAEoCCIjChJHZXRNZW1wb29s",
-            "UmVzcG9uc2USDQoFcXVlcnkYASABKAkiIwoSU2lnbk1lc3NhZ2VSZXF1ZXN0",
-            "Eg0KBXF1ZXJ5GAEgASgIIiQKE1NpZ25NZXNzYWdlUmVzcG9uc2USDQoFcXVl",
-            "cnkYASABKAkiJQoUVmVyaWZ5TWVzc2FnZVJlcXVlc3QSDQoFcXVlcnkYASAB",
-            "KAgiJgoVVmVyaWZ5TWVzc2FnZVJlc3BvbnNlEg0KBXF1ZXJ5GAEgASgJIiUK",
-            "FFNlcnZpY2VTdGF0dXNSZXF1ZXN0Eg0KBXF1ZXJ5GAEgASgIIiYKFVNlcnZp",
-            "Y2VTdGF0dXNSZXNwb25zZRINCgVxdWVyeRgBIAEoCWIGcHJvdG8z"));
+            "ZXRNZW1wb29sUmVxdWVzdBINCgVxdWVyeRgBIAEoCCKEAQoSR2V0TWVtcG9v",
+            "bFJlc3BvbnNlEkEKBGluZm8YASADKAsyMy5BREwuUHJvdG9jb2wuUnBjLk5v",
+            "ZGUuR2V0TWVtcG9vbFJlc3BvbnNlLkluZm9FbnRyeRorCglJbmZvRW50cnkS",
+            "CwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASIjChJTaWduTWVzc2Fn",
+            "ZVJlcXVlc3QSDQoFcXVlcnkYASABKAgiJAoTU2lnbk1lc3NhZ2VSZXNwb25z",
+            "ZRINCgVxdWVyeRgBIAEoCSIlChRWZXJpZnlNZXNzYWdlUmVxdWVzdBINCgVx",
+            "dWVyeRgBIAEoCCImChVWZXJpZnlNZXNzYWdlUmVzcG9uc2USDQoFcXVlcnkY",
+            "ASABKAkiJQoUU2VydmljZVN0YXR1c1JlcXVlc3QSDQoFcXVlcnkYASABKAgi",
+            "JgoVU2VydmljZVN0YXR1c1Jlc3BvbnNlEg0KBXF1ZXJ5GAEgASgJYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -121,7 +124,7 @@ namespace ADL.Protocol.Rpc.Node {
             new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetDeltaRequest), global::ADL.Protocol.Rpc.Node.GetDeltaRequest.Parser, new[]{ "Query" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetDeltaResponse), global::ADL.Protocol.Rpc.Node.GetDeltaResponse.Parser, new[]{ "Query" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetMempoolRequest), global::ADL.Protocol.Rpc.Node.GetMempoolRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetMempoolResponse), global::ADL.Protocol.Rpc.Node.GetMempoolResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetMempoolResponse), global::ADL.Protocol.Rpc.Node.GetMempoolResponse.Parser, new[]{ "Info" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SignMessageRequest), global::ADL.Protocol.Rpc.Node.SignMessageRequest.Parser, new[]{ "Query" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SignMessageResponse), global::ADL.Protocol.Rpc.Node.SignMessageResponse.Parser, new[]{ "Query" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.VerifyMessageRequest), global::ADL.Protocol.Rpc.Node.VerifyMessageRequest.Parser, new[]{ "Query" }, null, null, null),
@@ -6222,7 +6225,7 @@ namespace ADL.Protocol.Rpc.Node {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public GetMempoolResponse(GetMempoolResponse other) : this() {
-      query_ = other.query_;
+      info_ = other.info_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -6231,15 +6234,14 @@ namespace ADL.Protocol.Rpc.Node {
       return new GetMempoolResponse(this);
     }
 
-    /// <summary>Field number for the "query" field.</summary>
-    public const int QueryFieldNumber = 1;
-    private string query_ = "";
+    /// <summary>Field number for the "info" field.</summary>
+    public const int InfoFieldNumber = 1;
+    private static readonly pbc::MapField<string, string>.Codec _map_info_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 10);
+    private readonly pbc::MapField<string, string> info_ = new pbc::MapField<string, string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Query {
-      get { return query_; }
-      set {
-        query_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
+    public pbc::MapField<string, string> Info {
+      get { return info_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6255,14 +6257,14 @@ namespace ADL.Protocol.Rpc.Node {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Query != other.Query) return false;
+      if (!Info.Equals(other.Info)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Query.Length != 0) hash ^= Query.GetHashCode();
+      hash ^= Info.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6276,10 +6278,7 @@ namespace ADL.Protocol.Rpc.Node {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Query.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Query);
-      }
+      info_.WriteTo(output, _map_info_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6288,9 +6287,7 @@ namespace ADL.Protocol.Rpc.Node {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Query.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Query);
-      }
+      size += info_.CalculateSize(_map_info_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -6302,9 +6299,7 @@ namespace ADL.Protocol.Rpc.Node {
       if (other == null) {
         return;
       }
-      if (other.Query.Length != 0) {
-        Query = other.Query;
-      }
+      info_.Add(other.info_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -6317,7 +6312,7 @@ namespace ADL.Protocol.Rpc.Node {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            Query = input.ReadString();
+            info_.AddEntriesFrom(input, _map_info_codec);
             break;
           }
         }

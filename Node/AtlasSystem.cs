@@ -10,6 +10,7 @@ using ADL.Node.Core.Modules.Ledger;
 using ADL.Node.Core.Modules.Mempool;
 using ADL.Node.Core.Modules.Contract;
 using ADL.Node.Core.Modules.Consensus;
+using Akka.Actor;
 
 namespace ADL.Node
 {
@@ -21,12 +22,24 @@ namespace ADL.Node
         private IPeerService PeerService { get; set; }
         private static AtlasSystem Instance { get; set; }
         private IGossipService GossipService { get; set; }
-        private ILedgerService LedgerService { get; set; }
-        private IMempoolService MempoolService { get; set; }
+        private ILedgerService LedgerService { get; set; }        
         private static readonly object Mutex = new object();
         private IContractService ContractService { get; set; }
         private IConsensusService ConsensusService { get; set; }
+        private static ActorSystem MainActorSystem { get; set; }
         
+        /// <summary>
+        /// Get reference to actor (static)
+        /// </summary>
+        /// <returns>IActorRef</returns>
+        public static IActorRef TaskHandlerActor { get; private set; }
+        
+        /// <summary>
+        /// Get mempool implementation (static)
+        /// </summary>
+        /// <returns>IMempoolService</returns>
+        public static IMempoolService MempoolService { get; private set; }
+
         /// <summary>
         /// Get a thread safe AtlasSystem singleton.
         /// </summary>
@@ -52,6 +65,9 @@ namespace ADL.Node
         /// </summary>
         private AtlasSystem(NodeOptions options)
         {
+            MainActorSystem = ActorSystem.Create("AtlasActorSystem");
+            TaskHandlerActor = MainActorSystem.ActorOf<TaksHandlerActor>();
+            
             Kernel = Kernel.GetInstance(options);
 
             if (options.Rpc)
@@ -60,7 +76,7 @@ namespace ADL.Node
                 {
                     RcpService = scope.Resolve<IRpcService>();
                 }
-                RcpService.StartService();  
+                RcpService.StartService();
             }
             
             if (options.Consensus)
@@ -87,7 +103,7 @@ namespace ADL.Node
                 {
                     DfsService = scope.Resolve<IDfsService>();
                 }
-                DfsService.StartService();                   
+                DfsService.StartService();
             }
             
             if (options.Gossip)
