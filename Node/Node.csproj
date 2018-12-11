@@ -28,6 +28,7 @@
     </ItemGroup>
     
     <ItemGroup>
+        <ProjectReference Include="..\Helpers\Log\Log.csproj" />
         <ProjectReference Include="..\Helpers\RLP\RLP.csproj" />
         <ProjectReference Include="..\Helpers\Network\Network.csproj" />
         <ProjectReference Include="..\Helpers\Platform\Platform.csproj" />
