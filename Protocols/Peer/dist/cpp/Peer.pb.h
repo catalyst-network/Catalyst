@@ -38,7 +38,7 @@ namespace protobuf_Peer_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[8];
+  static const ::google::protobuf::internal::ParseTable schema[9];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -48,43 +48,47 @@ void AddDescriptors();
 namespace ADL {
 namespace Protocol {
 namespace Peer {
-class ChallengeRequest;
-class ChallengeRequestDefaultTypeInternal;
-extern ChallengeRequestDefaultTypeInternal _ChallengeRequest_default_instance_;
-class ChallengeResponse;
-class ChallengeResponseDefaultTypeInternal;
-extern ChallengeResponseDefaultTypeInternal _ChallengeResponse_default_instance_;
-class PeerInfoRequest;
-class PeerInfoRequestDefaultTypeInternal;
-extern PeerInfoRequestDefaultTypeInternal _PeerInfoRequest_default_instance_;
-class PeerInfoResponse;
-class PeerInfoResponseDefaultTypeInternal;
-extern PeerInfoResponseDefaultTypeInternal _PeerInfoResponse_default_instance_;
-class PeerNeighborsRequest;
-class PeerNeighborsRequestDefaultTypeInternal;
-extern PeerNeighborsRequestDefaultTypeInternal _PeerNeighborsRequest_default_instance_;
-class PeerNeighborsResponse;
-class PeerNeighborsResponseDefaultTypeInternal;
-extern PeerNeighborsResponseDefaultTypeInternal _PeerNeighborsResponse_default_instance_;
-class PingRequest;
-class PingRequestDefaultTypeInternal;
-extern PingRequestDefaultTypeInternal _PingRequest_default_instance_;
-class PongResponse;
-class PongResponseDefaultTypeInternal;
-extern PongResponseDefaultTypeInternal _PongResponse_default_instance_;
+class PeerProtocol;
+class PeerProtocolDefaultTypeInternal;
+extern PeerProtocolDefaultTypeInternal _PeerProtocol_default_instance_;
+class PeerProtocol_ChallengeRequest;
+class PeerProtocol_ChallengeRequestDefaultTypeInternal;
+extern PeerProtocol_ChallengeRequestDefaultTypeInternal _PeerProtocol_ChallengeRequest_default_instance_;
+class PeerProtocol_ChallengeResponse;
+class PeerProtocol_ChallengeResponseDefaultTypeInternal;
+extern PeerProtocol_ChallengeResponseDefaultTypeInternal _PeerProtocol_ChallengeResponse_default_instance_;
+class PeerProtocol_PeerInfoRequest;
+class PeerProtocol_PeerInfoRequestDefaultTypeInternal;
+extern PeerProtocol_PeerInfoRequestDefaultTypeInternal _PeerProtocol_PeerInfoRequest_default_instance_;
+class PeerProtocol_PeerInfoResponse;
+class PeerProtocol_PeerInfoResponseDefaultTypeInternal;
+extern PeerProtocol_PeerInfoResponseDefaultTypeInternal _PeerProtocol_PeerInfoResponse_default_instance_;
+class PeerProtocol_PeerNeighborsRequest;
+class PeerProtocol_PeerNeighborsRequestDefaultTypeInternal;
+extern PeerProtocol_PeerNeighborsRequestDefaultTypeInternal _PeerProtocol_PeerNeighborsRequest_default_instance_;
+class PeerProtocol_PeerNeighborsResponse;
+class PeerProtocol_PeerNeighborsResponseDefaultTypeInternal;
+extern PeerProtocol_PeerNeighborsResponseDefaultTypeInternal _PeerProtocol_PeerNeighborsResponse_default_instance_;
+class PeerProtocol_PingRequest;
+class PeerProtocol_PingRequestDefaultTypeInternal;
+extern PeerProtocol_PingRequestDefaultTypeInternal _PeerProtocol_PingRequest_default_instance_;
+class PeerProtocol_PongResponse;
+class PeerProtocol_PongResponseDefaultTypeInternal;
+extern PeerProtocol_PongResponseDefaultTypeInternal _PeerProtocol_PongResponse_default_instance_;
 }  // namespace Peer
 }  // namespace Protocol
 }  // namespace ADL
 namespace google {
 namespace protobuf {
-template<> ::ADL::Protocol::Peer::ChallengeRequest* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::ChallengeRequest>(Arena*);
-template<> ::ADL::Protocol::Peer::ChallengeResponse* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::ChallengeResponse>(Arena*);
-template<> ::ADL::Protocol::Peer::PeerInfoRequest* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerInfoRequest>(Arena*);
-template<> ::ADL::Protocol::Peer::PeerInfoResponse* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerInfoResponse>(Arena*);
-template<> ::ADL::Protocol::Peer::PeerNeighborsRequest* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerNeighborsRequest>(Arena*);
-template<> ::ADL::Protocol::Peer::PeerNeighborsResponse* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerNeighborsResponse>(Arena*);
-template<> ::ADL::Protocol::Peer::PingRequest* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PingRequest>(Arena*);
-template<> ::ADL::Protocol::Peer::PongResponse* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PongResponse>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol_PingRequest* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol_PingRequest>(Arena*);
+template<> ::ADL::Protocol::Peer::PeerProtocol_PongResponse* Arena::CreateMaybeMessage<::ADL::Protocol::Peer::PeerProtocol_PongResponse>(Arena*);
 }  // namespace protobuf
 }  // namespace google
 namespace ADL {
@@ -93,24 +97,24 @@ namespace Peer {
 
 // ===================================================================
 
-class PingRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PingRequest) */ {
+class PeerProtocol_PingRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol.PingRequest) */ {
  public:
-  PingRequest();
-  virtual ~PingRequest();
+  PeerProtocol_PingRequest();
+  virtual ~PeerProtocol_PingRequest();
 
-  PingRequest(const PingRequest& from);
+  PeerProtocol_PingRequest(const PeerProtocol_PingRequest& from);
 
-  inline PingRequest& operator=(const PingRequest& from) {
+  inline PeerProtocol_PingRequest& operator=(const PeerProtocol_PingRequest& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  PingRequest(PingRequest&& from) noexcept
-    : PingRequest() {
+  PeerProtocol_PingRequest(PeerProtocol_PingRequest&& from) noexcept
+    : PeerProtocol_PingRequest() {
     *this = ::std::move(from);
   }
 
-  inline PingRequest& operator=(PingRequest&& from) noexcept {
+  inline PeerProtocol_PingRequest& operator=(PeerProtocol_PingRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -120,34 +124,34 @@ class PingRequest : public ::google::protobuf::Message /* @@protoc_insertion_poi
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const PingRequest& default_instance();
+  static const PeerProtocol_PingRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const PingRequest* internal_default_instance() {
-    return reinterpret_cast<const PingRequest*>(
-               &_PingRequest_default_instance_);
+  static inline const PeerProtocol_PingRequest* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol_PingRequest*>(
+               &_PeerProtocol_PingRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     0;
 
-  void Swap(PingRequest* other);
-  friend void swap(PingRequest& a, PingRequest& b) {
+  void Swap(PeerProtocol_PingRequest* other);
+  friend void swap(PeerProtocol_PingRequest& a, PeerProtocol_PingRequest& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline PingRequest* New() const final {
-    return CreateMaybeMessage<PingRequest>(NULL);
+  inline PeerProtocol_PingRequest* New() const final {
+    return CreateMaybeMessage<PeerProtocol_PingRequest>(NULL);
   }
 
-  PingRequest* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<PingRequest>(arena);
+  PeerProtocol_PingRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol_PingRequest>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const PingRequest& from);
-  void MergeFrom(const PingRequest& from);
+  void CopyFrom(const PeerProtocol_PingRequest& from);
+  void MergeFrom(const PeerProtocol_PingRequest& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -164,7 +168,7 @@ class PingRequest : public ::google::protobuf::Message /* @@protoc_insertion_poi
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(PingRequest* other);
+  void InternalSwap(PeerProtocol_PingRequest* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -194,7 +198,7 @@ class PingRequest : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::std::string* release_ping();
   void set_allocated_ping(::std::string* ping);
 
-  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PingRequest)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -204,24 +208,24 @@ class PingRequest : public ::google::protobuf::Message /* @@protoc_insertion_poi
 };
 // -------------------------------------------------------------------
 
-class PongResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PongResponse) */ {
+class PeerProtocol_PongResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol.PongResponse) */ {
  public:
-  PongResponse();
-  virtual ~PongResponse();
+  PeerProtocol_PongResponse();
+  virtual ~PeerProtocol_PongResponse();
 
-  PongResponse(const PongResponse& from);
+  PeerProtocol_PongResponse(const PeerProtocol_PongResponse& from);
 
-  inline PongResponse& operator=(const PongResponse& from) {
+  inline PeerProtocol_PongResponse& operator=(const PeerProtocol_PongResponse& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  PongResponse(PongResponse&& from) noexcept
-    : PongResponse() {
+  PeerProtocol_PongResponse(PeerProtocol_PongResponse&& from) noexcept
+    : PeerProtocol_PongResponse() {
     *this = ::std::move(from);
   }
 
-  inline PongResponse& operator=(PongResponse&& from) noexcept {
+  inline PeerProtocol_PongResponse& operator=(PeerProtocol_PongResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -231,34 +235,34 @@ class PongResponse : public ::google::protobuf::Message /* @@protoc_insertion_po
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const PongResponse& default_instance();
+  static const PeerProtocol_PongResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const PongResponse* internal_default_instance() {
-    return reinterpret_cast<const PongResponse*>(
-               &_PongResponse_default_instance_);
+  static inline const PeerProtocol_PongResponse* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol_PongResponse*>(
+               &_PeerProtocol_PongResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     1;
 
-  void Swap(PongResponse* other);
-  friend void swap(PongResponse& a, PongResponse& b) {
+  void Swap(PeerProtocol_PongResponse* other);
+  friend void swap(PeerProtocol_PongResponse& a, PeerProtocol_PongResponse& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline PongResponse* New() const final {
-    return CreateMaybeMessage<PongResponse>(NULL);
+  inline PeerProtocol_PongResponse* New() const final {
+    return CreateMaybeMessage<PeerProtocol_PongResponse>(NULL);
   }
 
-  PongResponse* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<PongResponse>(arena);
+  PeerProtocol_PongResponse* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol_PongResponse>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const PongResponse& from);
-  void MergeFrom(const PongResponse& from);
+  void CopyFrom(const PeerProtocol_PongResponse& from);
+  void MergeFrom(const PeerProtocol_PongResponse& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -275,7 +279,7 @@ class PongResponse : public ::google::protobuf::Message /* @@protoc_insertion_po
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(PongResponse* other);
+  void InternalSwap(PeerProtocol_PongResponse* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -305,7 +309,7 @@ class PongResponse : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::std::string* release_pong();
   void set_allocated_pong(::std::string* pong);
 
-  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PongResponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -315,24 +319,24 @@ class PongResponse : public ::google::protobuf::Message /* @@protoc_insertion_po
 };
 // -------------------------------------------------------------------
 
-class PeerInfoRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerInfoRequest) */ {
+class PeerProtocol_PeerInfoRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest) */ {
  public:
-  PeerInfoRequest();
-  virtual ~PeerInfoRequest();
+  PeerProtocol_PeerInfoRequest();
+  virtual ~PeerProtocol_PeerInfoRequest();
 
-  PeerInfoRequest(const PeerInfoRequest& from);
+  PeerProtocol_PeerInfoRequest(const PeerProtocol_PeerInfoRequest& from);
 
-  inline PeerInfoRequest& operator=(const PeerInfoRequest& from) {
+  inline PeerProtocol_PeerInfoRequest& operator=(const PeerProtocol_PeerInfoRequest& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  PeerInfoRequest(PeerInfoRequest&& from) noexcept
-    : PeerInfoRequest() {
+  PeerProtocol_PeerInfoRequest(PeerProtocol_PeerInfoRequest&& from) noexcept
+    : PeerProtocol_PeerInfoRequest() {
     *this = ::std::move(from);
   }
 
-  inline PeerInfoRequest& operator=(PeerInfoRequest&& from) noexcept {
+  inline PeerProtocol_PeerInfoRequest& operator=(PeerProtocol_PeerInfoRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -342,34 +346,34 @@ class PeerInfoRequest : public ::google::protobuf::Message /* @@protoc_insertion
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const PeerInfoRequest& default_instance();
+  static const PeerProtocol_PeerInfoRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const PeerInfoRequest* internal_default_instance() {
-    return reinterpret_cast<const PeerInfoRequest*>(
-               &_PeerInfoRequest_default_instance_);
+  static inline const PeerProtocol_PeerInfoRequest* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol_PeerInfoRequest*>(
+               &_PeerProtocol_PeerInfoRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     2;
 
-  void Swap(PeerInfoRequest* other);
-  friend void swap(PeerInfoRequest& a, PeerInfoRequest& b) {
+  void Swap(PeerProtocol_PeerInfoRequest* other);
+  friend void swap(PeerProtocol_PeerInfoRequest& a, PeerProtocol_PeerInfoRequest& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline PeerInfoRequest* New() const final {
-    return CreateMaybeMessage<PeerInfoRequest>(NULL);
+  inline PeerProtocol_PeerInfoRequest* New() const final {
+    return CreateMaybeMessage<PeerProtocol_PeerInfoRequest>(NULL);
   }
 
-  PeerInfoRequest* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<PeerInfoRequest>(arena);
+  PeerProtocol_PeerInfoRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol_PeerInfoRequest>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const PeerInfoRequest& from);
-  void MergeFrom(const PeerInfoRequest& from);
+  void CopyFrom(const PeerProtocol_PeerInfoRequest& from);
+  void MergeFrom(const PeerProtocol_PeerInfoRequest& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -386,7 +390,7 @@ class PeerInfoRequest : public ::google::protobuf::Message /* @@protoc_insertion
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(PeerInfoRequest* other);
+  void InternalSwap(PeerProtocol_PeerInfoRequest* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -416,7 +420,7 @@ class PeerInfoRequest : public ::google::protobuf::Message /* @@protoc_insertion
   ::std::string* release_ping();
   void set_allocated_ping(::std::string* ping);
 
-  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -426,24 +430,24 @@ class PeerInfoRequest : public ::google::protobuf::Message /* @@protoc_insertion
 };
 // -------------------------------------------------------------------
 
-class PeerInfoResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerInfoResponse) */ {
+class PeerProtocol_PeerInfoResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse) */ {
  public:
-  PeerInfoResponse();
-  virtual ~PeerInfoResponse();
+  PeerProtocol_PeerInfoResponse();
+  virtual ~PeerProtocol_PeerInfoResponse();
 
-  PeerInfoResponse(const PeerInfoResponse& from);
+  PeerProtocol_PeerInfoResponse(const PeerProtocol_PeerInfoResponse& from);
 
-  inline PeerInfoResponse& operator=(const PeerInfoResponse& from) {
+  inline PeerProtocol_PeerInfoResponse& operator=(const PeerProtocol_PeerInfoResponse& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  PeerInfoResponse(PeerInfoResponse&& from) noexcept
-    : PeerInfoResponse() {
+  PeerProtocol_PeerInfoResponse(PeerProtocol_PeerInfoResponse&& from) noexcept
+    : PeerProtocol_PeerInfoResponse() {
     *this = ::std::move(from);
   }
 
-  inline PeerInfoResponse& operator=(PeerInfoResponse&& from) noexcept {
+  inline PeerProtocol_PeerInfoResponse& operator=(PeerProtocol_PeerInfoResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -453,34 +457,34 @@ class PeerInfoResponse : public ::google::protobuf::Message /* @@protoc_insertio
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const PeerInfoResponse& default_instance();
+  static const PeerProtocol_PeerInfoResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const PeerInfoResponse* internal_default_instance() {
-    return reinterpret_cast<const PeerInfoResponse*>(
-               &_PeerInfoResponse_default_instance_);
+  static inline const PeerProtocol_PeerInfoResponse* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol_PeerInfoResponse*>(
+               &_PeerProtocol_PeerInfoResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     3;
 
-  void Swap(PeerInfoResponse* other);
-  friend void swap(PeerInfoResponse& a, PeerInfoResponse& b) {
+  void Swap(PeerProtocol_PeerInfoResponse* other);
+  friend void swap(PeerProtocol_PeerInfoResponse& a, PeerProtocol_PeerInfoResponse& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline PeerInfoResponse* New() const final {
-    return CreateMaybeMessage<PeerInfoResponse>(NULL);
+  inline PeerProtocol_PeerInfoResponse* New() const final {
+    return CreateMaybeMessage<PeerProtocol_PeerInfoResponse>(NULL);
   }
 
-  PeerInfoResponse* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<PeerInfoResponse>(arena);
+  PeerProtocol_PeerInfoResponse* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol_PeerInfoResponse>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const PeerInfoResponse& from);
-  void MergeFrom(const PeerInfoResponse& from);
+  void CopyFrom(const PeerProtocol_PeerInfoResponse& from);
+  void MergeFrom(const PeerProtocol_PeerInfoResponse& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -497,7 +501,7 @@ class PeerInfoResponse : public ::google::protobuf::Message /* @@protoc_insertio
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(PeerInfoResponse* other);
+  void InternalSwap(PeerProtocol_PeerInfoResponse* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -527,7 +531,7 @@ class PeerInfoResponse : public ::google::protobuf::Message /* @@protoc_insertio
   ::std::string* release_pong();
   void set_allocated_pong(::std::string* pong);
 
-  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -537,24 +541,24 @@ class PeerInfoResponse : public ::google::protobuf::Message /* @@protoc_insertio
 };
 // -------------------------------------------------------------------
 
-class PeerNeighborsRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerNeighborsRequest) */ {
+class PeerProtocol_PeerNeighborsRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest) */ {
  public:
-  PeerNeighborsRequest();
-  virtual ~PeerNeighborsRequest();
+  PeerProtocol_PeerNeighborsRequest();
+  virtual ~PeerProtocol_PeerNeighborsRequest();
 
-  PeerNeighborsRequest(const PeerNeighborsRequest& from);
+  PeerProtocol_PeerNeighborsRequest(const PeerProtocol_PeerNeighborsRequest& from);
 
-  inline PeerNeighborsRequest& operator=(const PeerNeighborsRequest& from) {
+  inline PeerProtocol_PeerNeighborsRequest& operator=(const PeerProtocol_PeerNeighborsRequest& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  PeerNeighborsRequest(PeerNeighborsRequest&& from) noexcept
-    : PeerNeighborsRequest() {
+  PeerProtocol_PeerNeighborsRequest(PeerProtocol_PeerNeighborsRequest&& from) noexcept
+    : PeerProtocol_PeerNeighborsRequest() {
     *this = ::std::move(from);
   }
 
-  inline PeerNeighborsRequest& operator=(PeerNeighborsRequest&& from) noexcept {
+  inline PeerProtocol_PeerNeighborsRequest& operator=(PeerProtocol_PeerNeighborsRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -564,34 +568,34 @@ class PeerNeighborsRequest : public ::google::protobuf::Message /* @@protoc_inse
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const PeerNeighborsRequest& default_instance();
+  static const PeerProtocol_PeerNeighborsRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const PeerNeighborsRequest* internal_default_instance() {
-    return reinterpret_cast<const PeerNeighborsRequest*>(
-               &_PeerNeighborsRequest_default_instance_);
+  static inline const PeerProtocol_PeerNeighborsRequest* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol_PeerNeighborsRequest*>(
+               &_PeerProtocol_PeerNeighborsRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  void Swap(PeerNeighborsRequest* other);
-  friend void swap(PeerNeighborsRequest& a, PeerNeighborsRequest& b) {
+  void Swap(PeerProtocol_PeerNeighborsRequest* other);
+  friend void swap(PeerProtocol_PeerNeighborsRequest& a, PeerProtocol_PeerNeighborsRequest& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline PeerNeighborsRequest* New() const final {
-    return CreateMaybeMessage<PeerNeighborsRequest>(NULL);
+  inline PeerProtocol_PeerNeighborsRequest* New() const final {
+    return CreateMaybeMessage<PeerProtocol_PeerNeighborsRequest>(NULL);
   }
 
-  PeerNeighborsRequest* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<PeerNeighborsRequest>(arena);
+  PeerProtocol_PeerNeighborsRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol_PeerNeighborsRequest>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const PeerNeighborsRequest& from);
-  void MergeFrom(const PeerNeighborsRequest& from);
+  void CopyFrom(const PeerProtocol_PeerNeighborsRequest& from);
+  void MergeFrom(const PeerProtocol_PeerNeighborsRequest& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -608,7 +612,7 @@ class PeerNeighborsRequest : public ::google::protobuf::Message /* @@protoc_inse
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(PeerNeighborsRequest* other);
+  void InternalSwap(PeerProtocol_PeerNeighborsRequest* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -638,7 +642,7 @@ class PeerNeighborsRequest : public ::google::protobuf::Message /* @@protoc_inse
   ::std::string* release_ping();
   void set_allocated_ping(::std::string* ping);
 
-  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -648,24 +652,24 @@ class PeerNeighborsRequest : public ::google::protobuf::Message /* @@protoc_inse
 };
 // -------------------------------------------------------------------
 
-class PeerNeighborsResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerNeighborsResponse) */ {
+class PeerProtocol_PeerNeighborsResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse) */ {
  public:
-  PeerNeighborsResponse();
-  virtual ~PeerNeighborsResponse();
+  PeerProtocol_PeerNeighborsResponse();
+  virtual ~PeerProtocol_PeerNeighborsResponse();
 
-  PeerNeighborsResponse(const PeerNeighborsResponse& from);
+  PeerProtocol_PeerNeighborsResponse(const PeerProtocol_PeerNeighborsResponse& from);
 
-  inline PeerNeighborsResponse& operator=(const PeerNeighborsResponse& from) {
+  inline PeerProtocol_PeerNeighborsResponse& operator=(const PeerProtocol_PeerNeighborsResponse& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  PeerNeighborsResponse(PeerNeighborsResponse&& from) noexcept
-    : PeerNeighborsResponse() {
+  PeerProtocol_PeerNeighborsResponse(PeerProtocol_PeerNeighborsResponse&& from) noexcept
+    : PeerProtocol_PeerNeighborsResponse() {
     *this = ::std::move(from);
   }
 
-  inline PeerNeighborsResponse& operator=(PeerNeighborsResponse&& from) noexcept {
+  inline PeerProtocol_PeerNeighborsResponse& operator=(PeerProtocol_PeerNeighborsResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -675,34 +679,34 @@ class PeerNeighborsResponse : public ::google::protobuf::Message /* @@protoc_ins
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const PeerNeighborsResponse& default_instance();
+  static const PeerProtocol_PeerNeighborsResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const PeerNeighborsResponse* internal_default_instance() {
-    return reinterpret_cast<const PeerNeighborsResponse*>(
-               &_PeerNeighborsResponse_default_instance_);
+  static inline const PeerProtocol_PeerNeighborsResponse* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol_PeerNeighborsResponse*>(
+               &_PeerProtocol_PeerNeighborsResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     5;
 
-  void Swap(PeerNeighborsResponse* other);
-  friend void swap(PeerNeighborsResponse& a, PeerNeighborsResponse& b) {
+  void Swap(PeerProtocol_PeerNeighborsResponse* other);
+  friend void swap(PeerProtocol_PeerNeighborsResponse& a, PeerProtocol_PeerNeighborsResponse& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline PeerNeighborsResponse* New() const final {
-    return CreateMaybeMessage<PeerNeighborsResponse>(NULL);
+  inline PeerProtocol_PeerNeighborsResponse* New() const final {
+    return CreateMaybeMessage<PeerProtocol_PeerNeighborsResponse>(NULL);
   }
 
-  PeerNeighborsResponse* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<PeerNeighborsResponse>(arena);
+  PeerProtocol_PeerNeighborsResponse* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol_PeerNeighborsResponse>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const PeerNeighborsResponse& from);
-  void MergeFrom(const PeerNeighborsResponse& from);
+  void CopyFrom(const PeerProtocol_PeerNeighborsResponse& from);
+  void MergeFrom(const PeerProtocol_PeerNeighborsResponse& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -719,7 +723,7 @@ class PeerNeighborsResponse : public ::google::protobuf::Message /* @@protoc_ins
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(PeerNeighborsResponse* other);
+  void InternalSwap(PeerProtocol_PeerNeighborsResponse* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -749,7 +753,7 @@ class PeerNeighborsResponse : public ::google::protobuf::Message /* @@protoc_ins
   ::std::string* release_pong();
   void set_allocated_pong(::std::string* pong);
 
-  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -759,24 +763,24 @@ class PeerNeighborsResponse : public ::google::protobuf::Message /* @@protoc_ins
 };
 // -------------------------------------------------------------------
 
-class ChallengeRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.ChallengeRequest) */ {
+class PeerProtocol_ChallengeRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest) */ {
  public:
-  ChallengeRequest();
-  virtual ~ChallengeRequest();
+  PeerProtocol_ChallengeRequest();
+  virtual ~PeerProtocol_ChallengeRequest();
 
-  ChallengeRequest(const ChallengeRequest& from);
+  PeerProtocol_ChallengeRequest(const PeerProtocol_ChallengeRequest& from);
 
-  inline ChallengeRequest& operator=(const ChallengeRequest& from) {
+  inline PeerProtocol_ChallengeRequest& operator=(const PeerProtocol_ChallengeRequest& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  ChallengeRequest(ChallengeRequest&& from) noexcept
-    : ChallengeRequest() {
+  PeerProtocol_ChallengeRequest(PeerProtocol_ChallengeRequest&& from) noexcept
+    : PeerProtocol_ChallengeRequest() {
     *this = ::std::move(from);
   }
 
-  inline ChallengeRequest& operator=(ChallengeRequest&& from) noexcept {
+  inline PeerProtocol_ChallengeRequest& operator=(PeerProtocol_ChallengeRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -786,34 +790,34 @@ class ChallengeRequest : public ::google::protobuf::Message /* @@protoc_insertio
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ChallengeRequest& default_instance();
+  static const PeerProtocol_ChallengeRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const ChallengeRequest* internal_default_instance() {
-    return reinterpret_cast<const ChallengeRequest*>(
-               &_ChallengeRequest_default_instance_);
+  static inline const PeerProtocol_ChallengeRequest* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol_ChallengeRequest*>(
+               &_PeerProtocol_ChallengeRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     6;
 
-  void Swap(ChallengeRequest* other);
-  friend void swap(ChallengeRequest& a, ChallengeRequest& b) {
+  void Swap(PeerProtocol_ChallengeRequest* other);
+  friend void swap(PeerProtocol_ChallengeRequest& a, PeerProtocol_ChallengeRequest& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline ChallengeRequest* New() const final {
-    return CreateMaybeMessage<ChallengeRequest>(NULL);
+  inline PeerProtocol_ChallengeRequest* New() const final {
+    return CreateMaybeMessage<PeerProtocol_ChallengeRequest>(NULL);
   }
 
-  ChallengeRequest* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<ChallengeRequest>(arena);
+  PeerProtocol_ChallengeRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol_ChallengeRequest>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const ChallengeRequest& from);
-  void MergeFrom(const ChallengeRequest& from);
+  void CopyFrom(const PeerProtocol_ChallengeRequest& from);
+  void MergeFrom(const PeerProtocol_ChallengeRequest& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -830,7 +834,7 @@ class ChallengeRequest : public ::google::protobuf::Message /* @@protoc_insertio
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ChallengeRequest* other);
+  void InternalSwap(PeerProtocol_ChallengeRequest* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -846,19 +850,19 @@ class ChallengeRequest : public ::google::protobuf::Message /* @@protoc_insertio
 
   // accessors -------------------------------------------------------
 
-  // int32 type = 1;
+  // int32 type = 2;
   void clear_type();
-  static const int kTypeFieldNumber = 1;
+  static const int kTypeFieldNumber = 2;
   ::google::protobuf::int32 type() const;
   void set_type(::google::protobuf::int32 value);
 
-  // int32 nonce = 2;
+  // int32 nonce = 3;
   void clear_nonce();
-  static const int kNonceFieldNumber = 2;
+  static const int kNonceFieldNumber = 3;
   ::google::protobuf::int32 nonce() const;
   void set_nonce(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -869,24 +873,24 @@ class ChallengeRequest : public ::google::protobuf::Message /* @@protoc_insertio
 };
 // -------------------------------------------------------------------
 
-class ChallengeResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.ChallengeResponse) */ {
+class PeerProtocol_ChallengeResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse) */ {
  public:
-  ChallengeResponse();
-  virtual ~ChallengeResponse();
+  PeerProtocol_ChallengeResponse();
+  virtual ~PeerProtocol_ChallengeResponse();
 
-  ChallengeResponse(const ChallengeResponse& from);
+  PeerProtocol_ChallengeResponse(const PeerProtocol_ChallengeResponse& from);
 
-  inline ChallengeResponse& operator=(const ChallengeResponse& from) {
+  inline PeerProtocol_ChallengeResponse& operator=(const PeerProtocol_ChallengeResponse& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  ChallengeResponse(ChallengeResponse&& from) noexcept
-    : ChallengeResponse() {
+  PeerProtocol_ChallengeResponse(PeerProtocol_ChallengeResponse&& from) noexcept
+    : PeerProtocol_ChallengeResponse() {
     *this = ::std::move(from);
   }
 
-  inline ChallengeResponse& operator=(ChallengeResponse&& from) noexcept {
+  inline PeerProtocol_ChallengeResponse& operator=(PeerProtocol_ChallengeResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -896,34 +900,34 @@ class ChallengeResponse : public ::google::protobuf::Message /* @@protoc_inserti
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ChallengeResponse& default_instance();
+  static const PeerProtocol_ChallengeResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const ChallengeResponse* internal_default_instance() {
-    return reinterpret_cast<const ChallengeResponse*>(
-               &_ChallengeResponse_default_instance_);
+  static inline const PeerProtocol_ChallengeResponse* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol_ChallengeResponse*>(
+               &_PeerProtocol_ChallengeResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     7;
 
-  void Swap(ChallengeResponse* other);
-  friend void swap(ChallengeResponse& a, ChallengeResponse& b) {
+  void Swap(PeerProtocol_ChallengeResponse* other);
+  friend void swap(PeerProtocol_ChallengeResponse& a, PeerProtocol_ChallengeResponse& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline ChallengeResponse* New() const final {
-    return CreateMaybeMessage<ChallengeResponse>(NULL);
+  inline PeerProtocol_ChallengeResponse* New() const final {
+    return CreateMaybeMessage<PeerProtocol_ChallengeResponse>(NULL);
   }
 
-  ChallengeResponse* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<ChallengeResponse>(arena);
+  PeerProtocol_ChallengeResponse* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol_ChallengeResponse>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const ChallengeResponse& from);
-  void MergeFrom(const ChallengeResponse& from);
+  void CopyFrom(const PeerProtocol_ChallengeResponse& from);
+  void MergeFrom(const PeerProtocol_ChallengeResponse& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -940,7 +944,7 @@ class ChallengeResponse : public ::google::protobuf::Message /* @@protoc_inserti
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ChallengeResponse* other);
+  void InternalSwap(PeerProtocol_ChallengeResponse* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -984,19 +988,117 @@ class ChallengeResponse : public ::google::protobuf::Message /* @@protoc_inserti
   ::std::string* release_publickey();
   void set_allocated_publickey(::std::string* publickey);
 
-  // int32 type = 1;
-  void clear_type();
-  static const int kTypeFieldNumber = 1;
-  ::google::protobuf::int32 type() const;
-  void set_type(::google::protobuf::int32 value);
-
-  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr signednonce_;
   ::google::protobuf::internal::ArenaStringPtr publickey_;
-  ::google::protobuf::int32 type_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_Peer_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class PeerProtocol : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ADL.Protocol.Peer.PeerProtocol) */ {
+ public:
+  PeerProtocol();
+  virtual ~PeerProtocol();
+
+  PeerProtocol(const PeerProtocol& from);
+
+  inline PeerProtocol& operator=(const PeerProtocol& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  PeerProtocol(PeerProtocol&& from) noexcept
+    : PeerProtocol() {
+    *this = ::std::move(from);
+  }
+
+  inline PeerProtocol& operator=(PeerProtocol&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PeerProtocol& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const PeerProtocol* internal_default_instance() {
+    return reinterpret_cast<const PeerProtocol*>(
+               &_PeerProtocol_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    8;
+
+  void Swap(PeerProtocol* other);
+  friend void swap(PeerProtocol& a, PeerProtocol& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PeerProtocol* New() const final {
+    return CreateMaybeMessage<PeerProtocol>(NULL);
+  }
+
+  PeerProtocol* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PeerProtocol>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const PeerProtocol& from);
+  void MergeFrom(const PeerProtocol& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PeerProtocol* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef PeerProtocol_PingRequest PingRequest;
+  typedef PeerProtocol_PongResponse PongResponse;
+  typedef PeerProtocol_PeerInfoRequest PeerInfoRequest;
+  typedef PeerProtocol_PeerInfoResponse PeerInfoResponse;
+  typedef PeerProtocol_PeerNeighborsRequest PeerNeighborsRequest;
+  typedef PeerProtocol_PeerNeighborsResponse PeerNeighborsResponse;
+  typedef PeerProtocol_ChallengeRequest ChallengeRequest;
+  typedef PeerProtocol_ChallengeResponse ChallengeResponse;
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_Peer_2eproto::TableStruct;
 };
@@ -1009,505 +1111,497 @@ class ChallengeResponse : public ::google::protobuf::Message /* @@protoc_inserti
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// PingRequest
+// PeerProtocol_PingRequest
 
 // string ping = 1;
-inline void PingRequest::clear_ping() {
+inline void PeerProtocol_PingRequest::clear_ping() {
   ping_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& PingRequest::ping() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PingRequest.ping)
+inline const ::std::string& PeerProtocol_PingRequest::ping() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.PingRequest.ping)
   return ping_.GetNoArena();
 }
-inline void PingRequest::set_ping(const ::std::string& value) {
+inline void PeerProtocol_PingRequest::set_ping(const ::std::string& value) {
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PingRequest.ping)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.PingRequest.ping)
 }
 #if LANG_CXX11
-inline void PingRequest::set_ping(::std::string&& value) {
+inline void PeerProtocol_PingRequest::set_ping(::std::string&& value) {
   
   ping_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PingRequest.ping)
+  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerProtocol.PingRequest.ping)
 }
 #endif
-inline void PingRequest::set_ping(const char* value) {
+inline void PeerProtocol_PingRequest::set_ping(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PingRequest.ping)
+  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerProtocol.PingRequest.ping)
 }
-inline void PingRequest::set_ping(const char* value, size_t size) {
+inline void PeerProtocol_PingRequest::set_ping(const char* value, size_t size) {
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PingRequest.ping)
+  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerProtocol.PingRequest.ping)
 }
-inline ::std::string* PingRequest::mutable_ping() {
+inline ::std::string* PeerProtocol_PingRequest::mutable_ping() {
   
-  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PingRequest.ping)
+  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerProtocol.PingRequest.ping)
   return ping_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* PingRequest::release_ping() {
-  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PingRequest.ping)
+inline ::std::string* PeerProtocol_PingRequest::release_ping() {
+  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerProtocol.PingRequest.ping)
   
   return ping_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void PingRequest::set_allocated_ping(::std::string* ping) {
+inline void PeerProtocol_PingRequest::set_allocated_ping(::std::string* ping) {
   if (ping != NULL) {
     
   } else {
     
   }
   ping_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ping);
-  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PingRequest.ping)
+  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerProtocol.PingRequest.ping)
 }
 
 // -------------------------------------------------------------------
 
-// PongResponse
+// PeerProtocol_PongResponse
 
 // string pong = 1;
-inline void PongResponse::clear_pong() {
+inline void PeerProtocol_PongResponse::clear_pong() {
   pong_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& PongResponse::pong() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PongResponse.pong)
+inline const ::std::string& PeerProtocol_PongResponse::pong() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.PongResponse.pong)
   return pong_.GetNoArena();
 }
-inline void PongResponse::set_pong(const ::std::string& value) {
+inline void PeerProtocol_PongResponse::set_pong(const ::std::string& value) {
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PongResponse.pong)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.PongResponse.pong)
 }
 #if LANG_CXX11
-inline void PongResponse::set_pong(::std::string&& value) {
+inline void PeerProtocol_PongResponse::set_pong(::std::string&& value) {
   
   pong_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PongResponse.pong)
+  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerProtocol.PongResponse.pong)
 }
 #endif
-inline void PongResponse::set_pong(const char* value) {
+inline void PeerProtocol_PongResponse::set_pong(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PongResponse.pong)
+  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerProtocol.PongResponse.pong)
 }
-inline void PongResponse::set_pong(const char* value, size_t size) {
+inline void PeerProtocol_PongResponse::set_pong(const char* value, size_t size) {
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PongResponse.pong)
+  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerProtocol.PongResponse.pong)
 }
-inline ::std::string* PongResponse::mutable_pong() {
+inline ::std::string* PeerProtocol_PongResponse::mutable_pong() {
   
-  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PongResponse.pong)
+  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerProtocol.PongResponse.pong)
   return pong_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* PongResponse::release_pong() {
-  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PongResponse.pong)
+inline ::std::string* PeerProtocol_PongResponse::release_pong() {
+  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerProtocol.PongResponse.pong)
   
   return pong_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void PongResponse::set_allocated_pong(::std::string* pong) {
+inline void PeerProtocol_PongResponse::set_allocated_pong(::std::string* pong) {
   if (pong != NULL) {
     
   } else {
     
   }
   pong_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pong);
-  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PongResponse.pong)
+  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerProtocol.PongResponse.pong)
 }
 
 // -------------------------------------------------------------------
 
-// PeerInfoRequest
+// PeerProtocol_PeerInfoRequest
 
 // string ping = 1;
-inline void PeerInfoRequest::clear_ping() {
+inline void PeerProtocol_PeerInfoRequest::clear_ping() {
   ping_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& PeerInfoRequest::ping() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerInfoRequest.ping)
+inline const ::std::string& PeerProtocol_PeerInfoRequest::ping() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping)
   return ping_.GetNoArena();
 }
-inline void PeerInfoRequest::set_ping(const ::std::string& value) {
+inline void PeerProtocol_PeerInfoRequest::set_ping(const ::std::string& value) {
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerInfoRequest.ping)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping)
 }
 #if LANG_CXX11
-inline void PeerInfoRequest::set_ping(::std::string&& value) {
+inline void PeerProtocol_PeerInfoRequest::set_ping(::std::string&& value) {
   
   ping_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerInfoRequest.ping)
+  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping)
 }
 #endif
-inline void PeerInfoRequest::set_ping(const char* value) {
+inline void PeerProtocol_PeerInfoRequest::set_ping(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerInfoRequest.ping)
+  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping)
 }
-inline void PeerInfoRequest::set_ping(const char* value, size_t size) {
+inline void PeerProtocol_PeerInfoRequest::set_ping(const char* value, size_t size) {
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerInfoRequest.ping)
+  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping)
 }
-inline ::std::string* PeerInfoRequest::mutable_ping() {
+inline ::std::string* PeerProtocol_PeerInfoRequest::mutable_ping() {
   
-  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerInfoRequest.ping)
+  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping)
   return ping_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* PeerInfoRequest::release_ping() {
-  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerInfoRequest.ping)
+inline ::std::string* PeerProtocol_PeerInfoRequest::release_ping() {
+  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping)
   
   return ping_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void PeerInfoRequest::set_allocated_ping(::std::string* ping) {
+inline void PeerProtocol_PeerInfoRequest::set_allocated_ping(::std::string* ping) {
   if (ping != NULL) {
     
   } else {
     
   }
   ping_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ping);
-  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerInfoRequest.ping)
+  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping)
 }
 
 // -------------------------------------------------------------------
 
-// PeerInfoResponse
+// PeerProtocol_PeerInfoResponse
 
 // string pong = 1;
-inline void PeerInfoResponse::clear_pong() {
+inline void PeerProtocol_PeerInfoResponse::clear_pong() {
   pong_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& PeerInfoResponse::pong() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerInfoResponse.pong)
+inline const ::std::string& PeerProtocol_PeerInfoResponse::pong() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong)
   return pong_.GetNoArena();
 }
-inline void PeerInfoResponse::set_pong(const ::std::string& value) {
+inline void PeerProtocol_PeerInfoResponse::set_pong(const ::std::string& value) {
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerInfoResponse.pong)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong)
 }
 #if LANG_CXX11
-inline void PeerInfoResponse::set_pong(::std::string&& value) {
+inline void PeerProtocol_PeerInfoResponse::set_pong(::std::string&& value) {
   
   pong_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerInfoResponse.pong)
+  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong)
 }
 #endif
-inline void PeerInfoResponse::set_pong(const char* value) {
+inline void PeerProtocol_PeerInfoResponse::set_pong(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerInfoResponse.pong)
+  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong)
 }
-inline void PeerInfoResponse::set_pong(const char* value, size_t size) {
+inline void PeerProtocol_PeerInfoResponse::set_pong(const char* value, size_t size) {
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerInfoResponse.pong)
+  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong)
 }
-inline ::std::string* PeerInfoResponse::mutable_pong() {
+inline ::std::string* PeerProtocol_PeerInfoResponse::mutable_pong() {
   
-  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerInfoResponse.pong)
+  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong)
   return pong_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* PeerInfoResponse::release_pong() {
-  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerInfoResponse.pong)
+inline ::std::string* PeerProtocol_PeerInfoResponse::release_pong() {
+  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong)
   
   return pong_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void PeerInfoResponse::set_allocated_pong(::std::string* pong) {
+inline void PeerProtocol_PeerInfoResponse::set_allocated_pong(::std::string* pong) {
   if (pong != NULL) {
     
   } else {
     
   }
   pong_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pong);
-  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerInfoResponse.pong)
+  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong)
 }
 
 // -------------------------------------------------------------------
 
-// PeerNeighborsRequest
+// PeerProtocol_PeerNeighborsRequest
 
 // string ping = 1;
-inline void PeerNeighborsRequest::clear_ping() {
+inline void PeerProtocol_PeerNeighborsRequest::clear_ping() {
   ping_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& PeerNeighborsRequest::ping() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerNeighborsRequest.ping)
+inline const ::std::string& PeerProtocol_PeerNeighborsRequest::ping() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping)
   return ping_.GetNoArena();
 }
-inline void PeerNeighborsRequest::set_ping(const ::std::string& value) {
+inline void PeerProtocol_PeerNeighborsRequest::set_ping(const ::std::string& value) {
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerNeighborsRequest.ping)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping)
 }
 #if LANG_CXX11
-inline void PeerNeighborsRequest::set_ping(::std::string&& value) {
+inline void PeerProtocol_PeerNeighborsRequest::set_ping(::std::string&& value) {
   
   ping_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerNeighborsRequest.ping)
+  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping)
 }
 #endif
-inline void PeerNeighborsRequest::set_ping(const char* value) {
+inline void PeerProtocol_PeerNeighborsRequest::set_ping(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerNeighborsRequest.ping)
+  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping)
 }
-inline void PeerNeighborsRequest::set_ping(const char* value, size_t size) {
+inline void PeerProtocol_PeerNeighborsRequest::set_ping(const char* value, size_t size) {
   
   ping_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerNeighborsRequest.ping)
+  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping)
 }
-inline ::std::string* PeerNeighborsRequest::mutable_ping() {
+inline ::std::string* PeerProtocol_PeerNeighborsRequest::mutable_ping() {
   
-  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerNeighborsRequest.ping)
+  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping)
   return ping_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* PeerNeighborsRequest::release_ping() {
-  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerNeighborsRequest.ping)
+inline ::std::string* PeerProtocol_PeerNeighborsRequest::release_ping() {
+  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping)
   
   return ping_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void PeerNeighborsRequest::set_allocated_ping(::std::string* ping) {
+inline void PeerProtocol_PeerNeighborsRequest::set_allocated_ping(::std::string* ping) {
   if (ping != NULL) {
     
   } else {
     
   }
   ping_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ping);
-  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerNeighborsRequest.ping)
+  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping)
 }
 
 // -------------------------------------------------------------------
 
-// PeerNeighborsResponse
+// PeerProtocol_PeerNeighborsResponse
 
 // string pong = 1;
-inline void PeerNeighborsResponse::clear_pong() {
+inline void PeerProtocol_PeerNeighborsResponse::clear_pong() {
   pong_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& PeerNeighborsResponse::pong() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerNeighborsResponse.pong)
+inline const ::std::string& PeerProtocol_PeerNeighborsResponse::pong() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong)
   return pong_.GetNoArena();
 }
-inline void PeerNeighborsResponse::set_pong(const ::std::string& value) {
+inline void PeerProtocol_PeerNeighborsResponse::set_pong(const ::std::string& value) {
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerNeighborsResponse.pong)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong)
 }
 #if LANG_CXX11
-inline void PeerNeighborsResponse::set_pong(::std::string&& value) {
+inline void PeerProtocol_PeerNeighborsResponse::set_pong(::std::string&& value) {
   
   pong_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerNeighborsResponse.pong)
+  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong)
 }
 #endif
-inline void PeerNeighborsResponse::set_pong(const char* value) {
+inline void PeerProtocol_PeerNeighborsResponse::set_pong(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerNeighborsResponse.pong)
+  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong)
 }
-inline void PeerNeighborsResponse::set_pong(const char* value, size_t size) {
+inline void PeerProtocol_PeerNeighborsResponse::set_pong(const char* value, size_t size) {
   
   pong_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerNeighborsResponse.pong)
+  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong)
 }
-inline ::std::string* PeerNeighborsResponse::mutable_pong() {
+inline ::std::string* PeerProtocol_PeerNeighborsResponse::mutable_pong() {
   
-  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerNeighborsResponse.pong)
+  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong)
   return pong_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* PeerNeighborsResponse::release_pong() {
-  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerNeighborsResponse.pong)
+inline ::std::string* PeerProtocol_PeerNeighborsResponse::release_pong() {
+  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong)
   
   return pong_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void PeerNeighborsResponse::set_allocated_pong(::std::string* pong) {
+inline void PeerProtocol_PeerNeighborsResponse::set_allocated_pong(::std::string* pong) {
   if (pong != NULL) {
     
   } else {
     
   }
   pong_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pong);
-  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerNeighborsResponse.pong)
+  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong)
 }
 
 // -------------------------------------------------------------------
 
-// ChallengeRequest
+// PeerProtocol_ChallengeRequest
 
-// int32 type = 1;
-inline void ChallengeRequest::clear_type() {
+// int32 type = 2;
+inline void PeerProtocol_ChallengeRequest::clear_type() {
   type_ = 0;
 }
-inline ::google::protobuf::int32 ChallengeRequest::type() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.ChallengeRequest.type)
+inline ::google::protobuf::int32 PeerProtocol_ChallengeRequest::type() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest.type)
   return type_;
 }
-inline void ChallengeRequest::set_type(::google::protobuf::int32 value) {
+inline void PeerProtocol_ChallengeRequest::set_type(::google::protobuf::int32 value) {
   
   type_ = value;
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.ChallengeRequest.type)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest.type)
 }
 
-// int32 nonce = 2;
-inline void ChallengeRequest::clear_nonce() {
+// int32 nonce = 3;
+inline void PeerProtocol_ChallengeRequest::clear_nonce() {
   nonce_ = 0;
 }
-inline ::google::protobuf::int32 ChallengeRequest::nonce() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.ChallengeRequest.nonce)
+inline ::google::protobuf::int32 PeerProtocol_ChallengeRequest::nonce() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest.nonce)
   return nonce_;
 }
-inline void ChallengeRequest::set_nonce(::google::protobuf::int32 value) {
+inline void PeerProtocol_ChallengeRequest::set_nonce(::google::protobuf::int32 value) {
   
   nonce_ = value;
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.ChallengeRequest.nonce)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest.nonce)
 }
 
 // -------------------------------------------------------------------
 
-// ChallengeResponse
-
-// int32 type = 1;
-inline void ChallengeResponse::clear_type() {
-  type_ = 0;
-}
-inline ::google::protobuf::int32 ChallengeResponse::type() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.ChallengeResponse.type)
-  return type_;
-}
-inline void ChallengeResponse::set_type(::google::protobuf::int32 value) {
-  
-  type_ = value;
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.ChallengeResponse.type)
-}
+// PeerProtocol_ChallengeResponse
 
 // string signedNonce = 2;
-inline void ChallengeResponse::clear_signednonce() {
+inline void PeerProtocol_ChallengeResponse::clear_signednonce() {
   signednonce_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& ChallengeResponse::signednonce() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.ChallengeResponse.signedNonce)
+inline const ::std::string& PeerProtocol_ChallengeResponse::signednonce() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce)
   return signednonce_.GetNoArena();
 }
-inline void ChallengeResponse::set_signednonce(const ::std::string& value) {
+inline void PeerProtocol_ChallengeResponse::set_signednonce(const ::std::string& value) {
   
   signednonce_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.ChallengeResponse.signedNonce)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce)
 }
 #if LANG_CXX11
-inline void ChallengeResponse::set_signednonce(::std::string&& value) {
+inline void PeerProtocol_ChallengeResponse::set_signednonce(::std::string&& value) {
   
   signednonce_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.ChallengeResponse.signedNonce)
+  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce)
 }
 #endif
-inline void ChallengeResponse::set_signednonce(const char* value) {
+inline void PeerProtocol_ChallengeResponse::set_signednonce(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   signednonce_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.ChallengeResponse.signedNonce)
+  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce)
 }
-inline void ChallengeResponse::set_signednonce(const char* value, size_t size) {
+inline void PeerProtocol_ChallengeResponse::set_signednonce(const char* value, size_t size) {
   
   signednonce_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.ChallengeResponse.signedNonce)
+  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce)
 }
-inline ::std::string* ChallengeResponse::mutable_signednonce() {
+inline ::std::string* PeerProtocol_ChallengeResponse::mutable_signednonce() {
   
-  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.ChallengeResponse.signedNonce)
+  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce)
   return signednonce_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* ChallengeResponse::release_signednonce() {
-  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.ChallengeResponse.signedNonce)
+inline ::std::string* PeerProtocol_ChallengeResponse::release_signednonce() {
+  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce)
   
   return signednonce_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void ChallengeResponse::set_allocated_signednonce(::std::string* signednonce) {
+inline void PeerProtocol_ChallengeResponse::set_allocated_signednonce(::std::string* signednonce) {
   if (signednonce != NULL) {
     
   } else {
     
   }
   signednonce_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), signednonce);
-  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.ChallengeResponse.signedNonce)
+  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce)
 }
 
 // string publicKey = 3;
-inline void ChallengeResponse::clear_publickey() {
+inline void PeerProtocol_ChallengeResponse::clear_publickey() {
   publickey_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& ChallengeResponse::publickey() const {
-  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.ChallengeResponse.publicKey)
+inline const ::std::string& PeerProtocol_ChallengeResponse::publickey() const {
+  // @@protoc_insertion_point(field_get:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey)
   return publickey_.GetNoArena();
 }
-inline void ChallengeResponse::set_publickey(const ::std::string& value) {
+inline void PeerProtocol_ChallengeResponse::set_publickey(const ::std::string& value) {
   
   publickey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.ChallengeResponse.publicKey)
+  // @@protoc_insertion_point(field_set:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey)
 }
 #if LANG_CXX11
-inline void ChallengeResponse::set_publickey(::std::string&& value) {
+inline void PeerProtocol_ChallengeResponse::set_publickey(::std::string&& value) {
   
   publickey_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.ChallengeResponse.publicKey)
+  // @@protoc_insertion_point(field_set_rvalue:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey)
 }
 #endif
-inline void ChallengeResponse::set_publickey(const char* value) {
+inline void PeerProtocol_ChallengeResponse::set_publickey(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   publickey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.ChallengeResponse.publicKey)
+  // @@protoc_insertion_point(field_set_char:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey)
 }
-inline void ChallengeResponse::set_publickey(const char* value, size_t size) {
+inline void PeerProtocol_ChallengeResponse::set_publickey(const char* value, size_t size) {
   
   publickey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.ChallengeResponse.publicKey)
+  // @@protoc_insertion_point(field_set_pointer:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey)
 }
-inline ::std::string* ChallengeResponse::mutable_publickey() {
+inline ::std::string* PeerProtocol_ChallengeResponse::mutable_publickey() {
   
-  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.ChallengeResponse.publicKey)
+  // @@protoc_insertion_point(field_mutable:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey)
   return publickey_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* ChallengeResponse::release_publickey() {
-  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.ChallengeResponse.publicKey)
+inline ::std::string* PeerProtocol_ChallengeResponse::release_publickey() {
+  // @@protoc_insertion_point(field_release:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey)
   
   return publickey_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void ChallengeResponse::set_allocated_publickey(::std::string* publickey) {
+inline void PeerProtocol_ChallengeResponse::set_allocated_publickey(::std::string* publickey) {
   if (publickey != NULL) {
     
   } else {
     
   }
   publickey_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), publickey);
-  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.ChallengeResponse.publicKey)
+  // @@protoc_insertion_point(field_set_allocated:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey)
 }
+
+// -------------------------------------------------------------------
+
+// PeerProtocol
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

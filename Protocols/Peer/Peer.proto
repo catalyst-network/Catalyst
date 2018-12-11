@@ -5,60 +5,35 @@ package ADL.Protocol.Peer;
 message PeerProtocol {
     
     message PingRequest {
-        int32 type = 1 ;
-        message Payload {
-            string ping = 1;
-        }
+        string ping = 1;
     }
 
     message PongResponse {
-        int32 type = 2;
-        message Payload {
-            string pong = 1;
-        }
+        string pong = 1;
     }
 
     message PeerInfoRequest {
-        int32 type = 3;
-        message Payload {
-            string ping = 1;
-        }
+        string ping = 1;
     }
 
     message PeerInfoResponse {
-        int32 type = 4;
-        message Payload {
-            string pong = 1;
-        }
+        string pong = 1;
     }
 
     message PeerNeighborsRequest {
-        int32 type = 5;
-        message Payload {
-            string ping = 1;
-        }
+        string ping = 1;
     }
 
     message PeerNeighborsResponse {
-        int32 type = 6;
-        message Payload {
-            string pong = 1;
-        }
+        string pong = 1;
     }
 
     message ChallengeRequest {
-        int32 type = 5;
-        message Payload {
-            int32 type = 1;
-            int32 nonce = 2;
-        }
+        sint64 nonce = 1;
     }
 
     message ChallengeResponse {
-        int32 type = 6;
-        message Payload {
-            string signedNonce = 2;
-            string publicKey = 3;
-        }
+        string signedNonce = 1;
+        string publicKey = 2;
     }
 }

@@ -22,248 +22,274 @@
 namespace ADL {
 namespace Protocol {
 namespace Peer {
-class PingRequestDefaultTypeInternal {
+class PeerProtocol_PingRequestDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<PingRequest>
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol_PingRequest>
       _instance;
-} _PingRequest_default_instance_;
-class PongResponseDefaultTypeInternal {
+} _PeerProtocol_PingRequest_default_instance_;
+class PeerProtocol_PongResponseDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<PongResponse>
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol_PongResponse>
       _instance;
-} _PongResponse_default_instance_;
-class PeerInfoRequestDefaultTypeInternal {
+} _PeerProtocol_PongResponse_default_instance_;
+class PeerProtocol_PeerInfoRequestDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<PeerInfoRequest>
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol_PeerInfoRequest>
       _instance;
-} _PeerInfoRequest_default_instance_;
-class PeerInfoResponseDefaultTypeInternal {
+} _PeerProtocol_PeerInfoRequest_default_instance_;
+class PeerProtocol_PeerInfoResponseDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<PeerInfoResponse>
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol_PeerInfoResponse>
       _instance;
-} _PeerInfoResponse_default_instance_;
-class PeerNeighborsRequestDefaultTypeInternal {
+} _PeerProtocol_PeerInfoResponse_default_instance_;
+class PeerProtocol_PeerNeighborsRequestDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<PeerNeighborsRequest>
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol_PeerNeighborsRequest>
       _instance;
-} _PeerNeighborsRequest_default_instance_;
-class PeerNeighborsResponseDefaultTypeInternal {
+} _PeerProtocol_PeerNeighborsRequest_default_instance_;
+class PeerProtocol_PeerNeighborsResponseDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<PeerNeighborsResponse>
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol_PeerNeighborsResponse>
       _instance;
-} _PeerNeighborsResponse_default_instance_;
-class ChallengeRequestDefaultTypeInternal {
+} _PeerProtocol_PeerNeighborsResponse_default_instance_;
+class PeerProtocol_ChallengeRequestDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<ChallengeRequest>
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol_ChallengeRequest>
       _instance;
-} _ChallengeRequest_default_instance_;
-class ChallengeResponseDefaultTypeInternal {
+} _PeerProtocol_ChallengeRequest_default_instance_;
+class PeerProtocol_ChallengeResponseDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<ChallengeResponse>
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol_ChallengeResponse>
       _instance;
-} _ChallengeResponse_default_instance_;
+} _PeerProtocol_ChallengeResponse_default_instance_;
+class PeerProtocolDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<PeerProtocol>
+      _instance;
+} _PeerProtocol_default_instance_;
 }  // namespace Peer
 }  // namespace Protocol
 }  // namespace ADL
 namespace protobuf_Peer_2eproto {
-static void InitDefaultsPingRequest() {
+static void InitDefaultsPeerProtocol_PingRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::ADL::Protocol::Peer::_PingRequest_default_instance_;
-    new (ptr) ::ADL::Protocol::Peer::PingRequest();
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_PingRequest_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol_PingRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::ADL::Protocol::Peer::PingRequest::InitAsDefaultInstance();
+  ::ADL::Protocol::Peer::PeerProtocol_PingRequest::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_PingRequest =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPingRequest}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol_PingRequest =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol_PingRequest}, {}};
 
-static void InitDefaultsPongResponse() {
+static void InitDefaultsPeerProtocol_PongResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::ADL::Protocol::Peer::_PongResponse_default_instance_;
-    new (ptr) ::ADL::Protocol::Peer::PongResponse();
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_PongResponse_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol_PongResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::ADL::Protocol::Peer::PongResponse::InitAsDefaultInstance();
+  ::ADL::Protocol::Peer::PeerProtocol_PongResponse::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_PongResponse =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPongResponse}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol_PongResponse =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol_PongResponse}, {}};
 
-static void InitDefaultsPeerInfoRequest() {
+static void InitDefaultsPeerProtocol_PeerInfoRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::ADL::Protocol::Peer::_PeerInfoRequest_default_instance_;
-    new (ptr) ::ADL::Protocol::Peer::PeerInfoRequest();
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_PeerInfoRequest_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::ADL::Protocol::Peer::PeerInfoRequest::InitAsDefaultInstance();
+  ::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_PeerInfoRequest =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerInfoRequest}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol_PeerInfoRequest =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol_PeerInfoRequest}, {}};
 
-static void InitDefaultsPeerInfoResponse() {
+static void InitDefaultsPeerProtocol_PeerInfoResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::ADL::Protocol::Peer::_PeerInfoResponse_default_instance_;
-    new (ptr) ::ADL::Protocol::Peer::PeerInfoResponse();
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_PeerInfoResponse_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::ADL::Protocol::Peer::PeerInfoResponse::InitAsDefaultInstance();
+  ::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_PeerInfoResponse =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerInfoResponse}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol_PeerInfoResponse =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol_PeerInfoResponse}, {}};
 
-static void InitDefaultsPeerNeighborsRequest() {
+static void InitDefaultsPeerProtocol_PeerNeighborsRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::ADL::Protocol::Peer::_PeerNeighborsRequest_default_instance_;
-    new (ptr) ::ADL::Protocol::Peer::PeerNeighborsRequest();
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_PeerNeighborsRequest_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::ADL::Protocol::Peer::PeerNeighborsRequest::InitAsDefaultInstance();
+  ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_PeerNeighborsRequest =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerNeighborsRequest}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol_PeerNeighborsRequest =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol_PeerNeighborsRequest}, {}};
 
-static void InitDefaultsPeerNeighborsResponse() {
+static void InitDefaultsPeerProtocol_PeerNeighborsResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::ADL::Protocol::Peer::_PeerNeighborsResponse_default_instance_;
-    new (ptr) ::ADL::Protocol::Peer::PeerNeighborsResponse();
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_PeerNeighborsResponse_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::ADL::Protocol::Peer::PeerNeighborsResponse::InitAsDefaultInstance();
+  ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_PeerNeighborsResponse =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerNeighborsResponse}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol_PeerNeighborsResponse =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol_PeerNeighborsResponse}, {}};
 
-static void InitDefaultsChallengeRequest() {
+static void InitDefaultsPeerProtocol_ChallengeRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::ADL::Protocol::Peer::_ChallengeRequest_default_instance_;
-    new (ptr) ::ADL::Protocol::Peer::ChallengeRequest();
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_ChallengeRequest_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::ADL::Protocol::Peer::ChallengeRequest::InitAsDefaultInstance();
+  ::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_ChallengeRequest =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsChallengeRequest}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol_ChallengeRequest =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol_ChallengeRequest}, {}};
 
-static void InitDefaultsChallengeResponse() {
+static void InitDefaultsPeerProtocol_ChallengeResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::ADL::Protocol::Peer::_ChallengeResponse_default_instance_;
-    new (ptr) ::ADL::Protocol::Peer::ChallengeResponse();
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_ChallengeResponse_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::ADL::Protocol::Peer::ChallengeResponse::InitAsDefaultInstance();
+  ::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_ChallengeResponse =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsChallengeResponse}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol_ChallengeResponse =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol_ChallengeResponse}, {}};
+
+static void InitDefaultsPeerProtocol() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::ADL::Protocol::Peer::_PeerProtocol_default_instance_;
+    new (ptr) ::ADL::Protocol::Peer::PeerProtocol();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::ADL::Protocol::Peer::PeerProtocol::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_PeerProtocol =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPeerProtocol}, {}};
 
 void InitDefaults() {
-  ::google::protobuf::internal::InitSCC(&scc_info_PingRequest.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_PongResponse.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_PeerInfoRequest.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_PeerInfoResponse.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_PeerNeighborsRequest.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_PeerNeighborsResponse.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_ChallengeRequest.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_ChallengeResponse.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol_PingRequest.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol_PongResponse.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol_PeerInfoRequest.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol_PeerInfoResponse.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol_PeerNeighborsRequest.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol_PeerNeighborsResponse.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol_ChallengeRequest.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol_ChallengeResponse.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PeerProtocol.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[8];
+::google::protobuf::Metadata file_level_metadata[9];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PingRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PingRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PingRequest, ping_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PingRequest, ping_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PongResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PongResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PongResponse, pong_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PongResponse, pong_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerInfoRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerInfoRequest, ping_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest, ping_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerInfoResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerInfoResponse, pong_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse, pong_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerNeighborsRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerNeighborsRequest, ping_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest, ping_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerNeighborsResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerNeighborsResponse, pong_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse, pong_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::ChallengeRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::ChallengeRequest, type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::ChallengeRequest, nonce_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest, type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest, nonce_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::ChallengeResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::ChallengeResponse, type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::ChallengeResponse, signednonce_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::ChallengeResponse, publickey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse, signednonce_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse, publickey_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ADL::Protocol::Peer::PeerProtocol, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::ADL::Protocol::Peer::PingRequest)},
-  { 6, -1, sizeof(::ADL::Protocol::Peer::PongResponse)},
-  { 12, -1, sizeof(::ADL::Protocol::Peer::PeerInfoRequest)},
-  { 18, -1, sizeof(::ADL::Protocol::Peer::PeerInfoResponse)},
-  { 24, -1, sizeof(::ADL::Protocol::Peer::PeerNeighborsRequest)},
-  { 30, -1, sizeof(::ADL::Protocol::Peer::PeerNeighborsResponse)},
-  { 36, -1, sizeof(::ADL::Protocol::Peer::ChallengeRequest)},
-  { 43, -1, sizeof(::ADL::Protocol::Peer::ChallengeResponse)},
+  { 0, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol_PingRequest)},
+  { 6, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol_PongResponse)},
+  { 12, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest)},
+  { 18, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse)},
+  { 24, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest)},
+  { 30, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse)},
+  { 36, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest)},
+  { 43, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse)},
+  { 50, -1, sizeof(::ADL::Protocol::Peer::PeerProtocol)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PingRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PongResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerInfoRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerInfoResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerNeighborsRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerNeighborsResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_ChallengeRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_ChallengeResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_PingRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_PongResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_PeerInfoRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_PeerInfoResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_PeerNeighborsRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_PeerNeighborsResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_ChallengeRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_ChallengeResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::ADL::Protocol::Peer::_PeerProtocol_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -281,25 +307,25 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 8);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 9);
 }
 
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\nPeer.proto\022\021ADL.Protocol.Peer\"\033\n\013PingR"
-      "equest\022\014\n\004ping\030\001 \001(\t\"\034\n\014PongResponse\022\014\n\004"
-      "pong\030\001 \001(\t\"\037\n\017PeerInfoRequest\022\014\n\004ping\030\001 "
-      "\001(\t\" \n\020PeerInfoResponse\022\014\n\004pong\030\001 \001(\t\"$\n"
-      "\024PeerNeighborsRequest\022\014\n\004ping\030\001 \001(\t\"%\n\025P"
-      "eerNeighborsResponse\022\014\n\004pong\030\001 \001(\t\"/\n\020Ch"
-      "allengeRequest\022\014\n\004type\030\001 \001(\005\022\r\n\005nonce\030\002 "
-      "\001(\005\"I\n\021ChallengeResponse\022\014\n\004type\030\001 \001(\005\022\023"
-      "\n\013signedNonce\030\002 \001(\t\022\021\n\tpublicKey\030\003 \001(\tb\006"
-      "proto3"
+      "\n\nPeer.proto\022\021ADL.Protocol.Peer\"\307\002\n\014Peer"
+      "Protocol\032\033\n\013PingRequest\022\014\n\004ping\030\001 \001(\t\032\034\n"
+      "\014PongResponse\022\014\n\004pong\030\001 \001(\t\032\037\n\017PeerInfoR"
+      "equest\022\014\n\004ping\030\001 \001(\t\032 \n\020PeerInfoResponse"
+      "\022\014\n\004pong\030\001 \001(\t\032$\n\024PeerNeighborsRequest\022\014"
+      "\n\004ping\030\001 \001(\t\032%\n\025PeerNeighborsResponse\022\014\n"
+      "\004pong\030\001 \001(\t\032/\n\020ChallengeRequest\022\014\n\004type\030"
+      "\002 \001(\005\022\r\n\005nonce\030\003 \001(\005\032;\n\021ChallengeRespons"
+      "e\022\023\n\013signedNonce\030\002 \001(\t\022\021\n\tpublicKey\030\003 \001("
+      "\tb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 366);
+      descriptor, 369);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Peer.proto", &protobuf_RegisterTypes);
 }
@@ -321,20 +347,20 @@ namespace Peer {
 
 // ===================================================================
 
-void PingRequest::InitAsDefaultInstance() {
+void PeerProtocol_PingRequest::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PingRequest::kPingFieldNumber;
+const int PeerProtocol_PingRequest::kPingFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-PingRequest::PingRequest()
+PeerProtocol_PingRequest::PeerProtocol_PingRequest()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_Peer_2eproto::scc_info_PingRequest.base);
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol_PingRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol.PingRequest)
 }
-PingRequest::PingRequest(const PingRequest& from)
+PeerProtocol_PingRequest::PeerProtocol_PingRequest(const PeerProtocol_PingRequest& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -342,38 +368,38 @@ PingRequest::PingRequest(const PingRequest& from)
   if (from.ping().size() > 0) {
     ping_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.ping_);
   }
-  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol.PingRequest)
 }
 
-void PingRequest::SharedCtor() {
+void PeerProtocol_PingRequest::SharedCtor() {
   ping_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-PingRequest::~PingRequest() {
-  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PingRequest)
+PeerProtocol_PingRequest::~PeerProtocol_PingRequest() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   SharedDtor();
 }
 
-void PingRequest::SharedDtor() {
+void PeerProtocol_PingRequest::SharedDtor() {
   ping_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void PingRequest::SetCachedSize(int size) const {
+void PeerProtocol_PingRequest::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* PingRequest::descriptor() {
+const ::google::protobuf::Descriptor* PeerProtocol_PingRequest::descriptor() {
   ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const PingRequest& PingRequest::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PingRequest.base);
+const PeerProtocol_PingRequest& PeerProtocol_PingRequest::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol_PingRequest.base);
   return *internal_default_instance();
 }
 
 
-void PingRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PingRequest)
+void PeerProtocol_PingRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -382,11 +408,11 @@ void PingRequest::Clear() {
   _internal_metadata_.Clear();
 }
 
-bool PingRequest::MergePartialFromCodedStream(
+bool PeerProtocol_PingRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -401,7 +427,7 @@ bool PingRequest::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->ping().data(), static_cast<int>(this->ping().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "ADL.Protocol.Peer.PingRequest.ping"));
+            "ADL.Protocol.Peer.PeerProtocol.PingRequest.ping"));
         } else {
           goto handle_unusual;
         }
@@ -420,17 +446,17 @@ bool PingRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   return false;
 #undef DO_
 }
 
-void PingRequest::SerializeWithCachedSizes(
+void PeerProtocol_PingRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -439,7 +465,7 @@ void PingRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->ping().data(), static_cast<int>(this->ping().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PingRequest.ping");
+      "ADL.Protocol.Peer.PeerProtocol.PingRequest.ping");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->ping(), output);
   }
@@ -448,13 +474,13 @@ void PingRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol.PingRequest)
 }
 
-::google::protobuf::uint8* PingRequest::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PeerProtocol_PingRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -463,7 +489,7 @@ void PingRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->ping().data(), static_cast<int>(this->ping().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PingRequest.ping");
+      "ADL.Protocol.Peer.PeerProtocol.PingRequest.ping");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->ping(), target);
@@ -473,12 +499,12 @@ void PingRequest::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   return target;
 }
 
-size_t PingRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PingRequest)
+size_t PeerProtocol_PingRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -498,23 +524,23 @@ size_t PingRequest::ByteSizeLong() const {
   return total_size;
 }
 
-void PingRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PingRequest)
+void PeerProtocol_PingRequest::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   GOOGLE_DCHECK_NE(&from, this);
-  const PingRequest* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PingRequest>(
+  const PeerProtocol_PingRequest* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol_PingRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol.PingRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PingRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol.PingRequest)
     MergeFrom(*source);
   }
 }
 
-void PingRequest::MergeFrom(const PingRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PingRequest)
+void PeerProtocol_PingRequest::MergeFrom(const PeerProtocol_PingRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -526,36 +552,36 @@ void PingRequest::MergeFrom(const PingRequest& from) {
   }
 }
 
-void PingRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PingRequest)
+void PeerProtocol_PingRequest::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void PingRequest::CopyFrom(const PingRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PingRequest)
+void PeerProtocol_PingRequest::CopyFrom(const PeerProtocol_PingRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PingRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool PingRequest::IsInitialized() const {
+bool PeerProtocol_PingRequest::IsInitialized() const {
   return true;
 }
 
-void PingRequest::Swap(PingRequest* other) {
+void PeerProtocol_PingRequest::Swap(PeerProtocol_PingRequest* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void PingRequest::InternalSwap(PingRequest* other) {
+void PeerProtocol_PingRequest::InternalSwap(PeerProtocol_PingRequest* other) {
   using std::swap;
   ping_.Swap(&other->ping_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata PingRequest::GetMetadata() const {
+::google::protobuf::Metadata PeerProtocol_PingRequest::GetMetadata() const {
   protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -563,20 +589,20 @@ void PingRequest::InternalSwap(PingRequest* other) {
 
 // ===================================================================
 
-void PongResponse::InitAsDefaultInstance() {
+void PeerProtocol_PongResponse::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PongResponse::kPongFieldNumber;
+const int PeerProtocol_PongResponse::kPongFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-PongResponse::PongResponse()
+PeerProtocol_PongResponse::PeerProtocol_PongResponse()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_Peer_2eproto::scc_info_PongResponse.base);
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol_PongResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol.PongResponse)
 }
-PongResponse::PongResponse(const PongResponse& from)
+PeerProtocol_PongResponse::PeerProtocol_PongResponse(const PeerProtocol_PongResponse& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -584,38 +610,38 @@ PongResponse::PongResponse(const PongResponse& from)
   if (from.pong().size() > 0) {
     pong_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pong_);
   }
-  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol.PongResponse)
 }
 
-void PongResponse::SharedCtor() {
+void PeerProtocol_PongResponse::SharedCtor() {
   pong_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-PongResponse::~PongResponse() {
-  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PongResponse)
+PeerProtocol_PongResponse::~PeerProtocol_PongResponse() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   SharedDtor();
 }
 
-void PongResponse::SharedDtor() {
+void PeerProtocol_PongResponse::SharedDtor() {
   pong_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void PongResponse::SetCachedSize(int size) const {
+void PeerProtocol_PongResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* PongResponse::descriptor() {
+const ::google::protobuf::Descriptor* PeerProtocol_PongResponse::descriptor() {
   ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const PongResponse& PongResponse::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PongResponse.base);
+const PeerProtocol_PongResponse& PeerProtocol_PongResponse::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol_PongResponse.base);
   return *internal_default_instance();
 }
 
 
-void PongResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PongResponse)
+void PeerProtocol_PongResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -624,11 +650,11 @@ void PongResponse::Clear() {
   _internal_metadata_.Clear();
 }
 
-bool PongResponse::MergePartialFromCodedStream(
+bool PeerProtocol_PongResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -643,7 +669,7 @@ bool PongResponse::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->pong().data(), static_cast<int>(this->pong().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "ADL.Protocol.Peer.PongResponse.pong"));
+            "ADL.Protocol.Peer.PeerProtocol.PongResponse.pong"));
         } else {
           goto handle_unusual;
         }
@@ -662,17 +688,17 @@ bool PongResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   return false;
 #undef DO_
 }
 
-void PongResponse::SerializeWithCachedSizes(
+void PeerProtocol_PongResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -681,7 +707,7 @@ void PongResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->pong().data(), static_cast<int>(this->pong().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PongResponse.pong");
+      "ADL.Protocol.Peer.PeerProtocol.PongResponse.pong");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->pong(), output);
   }
@@ -690,13 +716,13 @@ void PongResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol.PongResponse)
 }
 
-::google::protobuf::uint8* PongResponse::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PeerProtocol_PongResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -705,7 +731,7 @@ void PongResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->pong().data(), static_cast<int>(this->pong().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PongResponse.pong");
+      "ADL.Protocol.Peer.PeerProtocol.PongResponse.pong");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->pong(), target);
@@ -715,12 +741,12 @@ void PongResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   return target;
 }
 
-size_t PongResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PongResponse)
+size_t PeerProtocol_PongResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -740,23 +766,23 @@ size_t PongResponse::ByteSizeLong() const {
   return total_size;
 }
 
-void PongResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PongResponse)
+void PeerProtocol_PongResponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   GOOGLE_DCHECK_NE(&from, this);
-  const PongResponse* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PongResponse>(
+  const PeerProtocol_PongResponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol_PongResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol.PongResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PongResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol.PongResponse)
     MergeFrom(*source);
   }
 }
 
-void PongResponse::MergeFrom(const PongResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PongResponse)
+void PeerProtocol_PongResponse::MergeFrom(const PeerProtocol_PongResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -768,36 +794,36 @@ void PongResponse::MergeFrom(const PongResponse& from) {
   }
 }
 
-void PongResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PongResponse)
+void PeerProtocol_PongResponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void PongResponse::CopyFrom(const PongResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PongResponse)
+void PeerProtocol_PongResponse::CopyFrom(const PeerProtocol_PongResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PongResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool PongResponse::IsInitialized() const {
+bool PeerProtocol_PongResponse::IsInitialized() const {
   return true;
 }
 
-void PongResponse::Swap(PongResponse* other) {
+void PeerProtocol_PongResponse::Swap(PeerProtocol_PongResponse* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void PongResponse::InternalSwap(PongResponse* other) {
+void PeerProtocol_PongResponse::InternalSwap(PeerProtocol_PongResponse* other) {
   using std::swap;
   pong_.Swap(&other->pong_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata PongResponse::GetMetadata() const {
+::google::protobuf::Metadata PeerProtocol_PongResponse::GetMetadata() const {
   protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -805,20 +831,20 @@ void PongResponse::InternalSwap(PongResponse* other) {
 
 // ===================================================================
 
-void PeerInfoRequest::InitAsDefaultInstance() {
+void PeerProtocol_PeerInfoRequest::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PeerInfoRequest::kPingFieldNumber;
+const int PeerProtocol_PeerInfoRequest::kPingFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-PeerInfoRequest::PeerInfoRequest()
+PeerProtocol_PeerInfoRequest::PeerProtocol_PeerInfoRequest()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_Peer_2eproto::scc_info_PeerInfoRequest.base);
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol_PeerInfoRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
 }
-PeerInfoRequest::PeerInfoRequest(const PeerInfoRequest& from)
+PeerProtocol_PeerInfoRequest::PeerProtocol_PeerInfoRequest(const PeerProtocol_PeerInfoRequest& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -826,38 +852,38 @@ PeerInfoRequest::PeerInfoRequest(const PeerInfoRequest& from)
   if (from.ping().size() > 0) {
     ping_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.ping_);
   }
-  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
 }
 
-void PeerInfoRequest::SharedCtor() {
+void PeerProtocol_PeerInfoRequest::SharedCtor() {
   ping_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-PeerInfoRequest::~PeerInfoRequest() {
-  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerInfoRequest)
+PeerProtocol_PeerInfoRequest::~PeerProtocol_PeerInfoRequest() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   SharedDtor();
 }
 
-void PeerInfoRequest::SharedDtor() {
+void PeerProtocol_PeerInfoRequest::SharedDtor() {
   ping_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void PeerInfoRequest::SetCachedSize(int size) const {
+void PeerProtocol_PeerInfoRequest::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* PeerInfoRequest::descriptor() {
+const ::google::protobuf::Descriptor* PeerProtocol_PeerInfoRequest::descriptor() {
   ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const PeerInfoRequest& PeerInfoRequest::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerInfoRequest.base);
+const PeerProtocol_PeerInfoRequest& PeerProtocol_PeerInfoRequest::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol_PeerInfoRequest.base);
   return *internal_default_instance();
 }
 
 
-void PeerInfoRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerInfoRequest)
+void PeerProtocol_PeerInfoRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -866,11 +892,11 @@ void PeerInfoRequest::Clear() {
   _internal_metadata_.Clear();
 }
 
-bool PeerInfoRequest::MergePartialFromCodedStream(
+bool PeerProtocol_PeerInfoRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -885,7 +911,7 @@ bool PeerInfoRequest::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->ping().data(), static_cast<int>(this->ping().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "ADL.Protocol.Peer.PeerInfoRequest.ping"));
+            "ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping"));
         } else {
           goto handle_unusual;
         }
@@ -904,17 +930,17 @@ bool PeerInfoRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   return false;
 #undef DO_
 }
 
-void PeerInfoRequest::SerializeWithCachedSizes(
+void PeerProtocol_PeerInfoRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -923,7 +949,7 @@ void PeerInfoRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->ping().data(), static_cast<int>(this->ping().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PeerInfoRequest.ping");
+      "ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->ping(), output);
   }
@@ -932,13 +958,13 @@ void PeerInfoRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
 }
 
-::google::protobuf::uint8* PeerInfoRequest::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PeerProtocol_PeerInfoRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -947,7 +973,7 @@ void PeerInfoRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->ping().data(), static_cast<int>(this->ping().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PeerInfoRequest.ping");
+      "ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->ping(), target);
@@ -957,12 +983,12 @@ void PeerInfoRequest::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   return target;
 }
 
-size_t PeerInfoRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerInfoRequest)
+size_t PeerProtocol_PeerInfoRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -982,23 +1008,23 @@ size_t PeerInfoRequest::ByteSizeLong() const {
   return total_size;
 }
 
-void PeerInfoRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerInfoRequest)
+void PeerProtocol_PeerInfoRequest::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   GOOGLE_DCHECK_NE(&from, this);
-  const PeerInfoRequest* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PeerInfoRequest>(
+  const PeerProtocol_PeerInfoRequest* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol_PeerInfoRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerInfoRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
     MergeFrom(*source);
   }
 }
 
-void PeerInfoRequest::MergeFrom(const PeerInfoRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerInfoRequest)
+void PeerProtocol_PeerInfoRequest::MergeFrom(const PeerProtocol_PeerInfoRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1010,36 +1036,36 @@ void PeerInfoRequest::MergeFrom(const PeerInfoRequest& from) {
   }
 }
 
-void PeerInfoRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerInfoRequest)
+void PeerProtocol_PeerInfoRequest::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void PeerInfoRequest::CopyFrom(const PeerInfoRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerInfoRequest)
+void PeerProtocol_PeerInfoRequest::CopyFrom(const PeerProtocol_PeerInfoRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool PeerInfoRequest::IsInitialized() const {
+bool PeerProtocol_PeerInfoRequest::IsInitialized() const {
   return true;
 }
 
-void PeerInfoRequest::Swap(PeerInfoRequest* other) {
+void PeerProtocol_PeerInfoRequest::Swap(PeerProtocol_PeerInfoRequest* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void PeerInfoRequest::InternalSwap(PeerInfoRequest* other) {
+void PeerProtocol_PeerInfoRequest::InternalSwap(PeerProtocol_PeerInfoRequest* other) {
   using std::swap;
   ping_.Swap(&other->ping_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata PeerInfoRequest::GetMetadata() const {
+::google::protobuf::Metadata PeerProtocol_PeerInfoRequest::GetMetadata() const {
   protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -1047,20 +1073,20 @@ void PeerInfoRequest::InternalSwap(PeerInfoRequest* other) {
 
 // ===================================================================
 
-void PeerInfoResponse::InitAsDefaultInstance() {
+void PeerProtocol_PeerInfoResponse::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PeerInfoResponse::kPongFieldNumber;
+const int PeerProtocol_PeerInfoResponse::kPongFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-PeerInfoResponse::PeerInfoResponse()
+PeerProtocol_PeerInfoResponse::PeerProtocol_PeerInfoResponse()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_Peer_2eproto::scc_info_PeerInfoResponse.base);
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol_PeerInfoResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
 }
-PeerInfoResponse::PeerInfoResponse(const PeerInfoResponse& from)
+PeerProtocol_PeerInfoResponse::PeerProtocol_PeerInfoResponse(const PeerProtocol_PeerInfoResponse& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -1068,38 +1094,38 @@ PeerInfoResponse::PeerInfoResponse(const PeerInfoResponse& from)
   if (from.pong().size() > 0) {
     pong_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pong_);
   }
-  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
 }
 
-void PeerInfoResponse::SharedCtor() {
+void PeerProtocol_PeerInfoResponse::SharedCtor() {
   pong_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-PeerInfoResponse::~PeerInfoResponse() {
-  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerInfoResponse)
+PeerProtocol_PeerInfoResponse::~PeerProtocol_PeerInfoResponse() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   SharedDtor();
 }
 
-void PeerInfoResponse::SharedDtor() {
+void PeerProtocol_PeerInfoResponse::SharedDtor() {
   pong_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void PeerInfoResponse::SetCachedSize(int size) const {
+void PeerProtocol_PeerInfoResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* PeerInfoResponse::descriptor() {
+const ::google::protobuf::Descriptor* PeerProtocol_PeerInfoResponse::descriptor() {
   ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const PeerInfoResponse& PeerInfoResponse::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerInfoResponse.base);
+const PeerProtocol_PeerInfoResponse& PeerProtocol_PeerInfoResponse::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol_PeerInfoResponse.base);
   return *internal_default_instance();
 }
 
 
-void PeerInfoResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerInfoResponse)
+void PeerProtocol_PeerInfoResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1108,11 +1134,11 @@ void PeerInfoResponse::Clear() {
   _internal_metadata_.Clear();
 }
 
-bool PeerInfoResponse::MergePartialFromCodedStream(
+bool PeerProtocol_PeerInfoResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -1127,7 +1153,7 @@ bool PeerInfoResponse::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->pong().data(), static_cast<int>(this->pong().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "ADL.Protocol.Peer.PeerInfoResponse.pong"));
+            "ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong"));
         } else {
           goto handle_unusual;
         }
@@ -1146,17 +1172,17 @@ bool PeerInfoResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   return false;
 #undef DO_
 }
 
-void PeerInfoResponse::SerializeWithCachedSizes(
+void PeerProtocol_PeerInfoResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1165,7 +1191,7 @@ void PeerInfoResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->pong().data(), static_cast<int>(this->pong().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PeerInfoResponse.pong");
+      "ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->pong(), output);
   }
@@ -1174,13 +1200,13 @@ void PeerInfoResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
 }
 
-::google::protobuf::uint8* PeerInfoResponse::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PeerProtocol_PeerInfoResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1189,7 +1215,7 @@ void PeerInfoResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->pong().data(), static_cast<int>(this->pong().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PeerInfoResponse.pong");
+      "ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->pong(), target);
@@ -1199,12 +1225,12 @@ void PeerInfoResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   return target;
 }
 
-size_t PeerInfoResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerInfoResponse)
+size_t PeerProtocol_PeerInfoResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1224,23 +1250,23 @@ size_t PeerInfoResponse::ByteSizeLong() const {
   return total_size;
 }
 
-void PeerInfoResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerInfoResponse)
+void PeerProtocol_PeerInfoResponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   GOOGLE_DCHECK_NE(&from, this);
-  const PeerInfoResponse* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PeerInfoResponse>(
+  const PeerProtocol_PeerInfoResponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol_PeerInfoResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerInfoResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
     MergeFrom(*source);
   }
 }
 
-void PeerInfoResponse::MergeFrom(const PeerInfoResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerInfoResponse)
+void PeerProtocol_PeerInfoResponse::MergeFrom(const PeerProtocol_PeerInfoResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1252,36 +1278,36 @@ void PeerInfoResponse::MergeFrom(const PeerInfoResponse& from) {
   }
 }
 
-void PeerInfoResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerInfoResponse)
+void PeerProtocol_PeerInfoResponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void PeerInfoResponse::CopyFrom(const PeerInfoResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerInfoResponse)
+void PeerProtocol_PeerInfoResponse::CopyFrom(const PeerProtocol_PeerInfoResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool PeerInfoResponse::IsInitialized() const {
+bool PeerProtocol_PeerInfoResponse::IsInitialized() const {
   return true;
 }
 
-void PeerInfoResponse::Swap(PeerInfoResponse* other) {
+void PeerProtocol_PeerInfoResponse::Swap(PeerProtocol_PeerInfoResponse* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void PeerInfoResponse::InternalSwap(PeerInfoResponse* other) {
+void PeerProtocol_PeerInfoResponse::InternalSwap(PeerProtocol_PeerInfoResponse* other) {
   using std::swap;
   pong_.Swap(&other->pong_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata PeerInfoResponse::GetMetadata() const {
+::google::protobuf::Metadata PeerProtocol_PeerInfoResponse::GetMetadata() const {
   protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -1289,20 +1315,20 @@ void PeerInfoResponse::InternalSwap(PeerInfoResponse* other) {
 
 // ===================================================================
 
-void PeerNeighborsRequest::InitAsDefaultInstance() {
+void PeerProtocol_PeerNeighborsRequest::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PeerNeighborsRequest::kPingFieldNumber;
+const int PeerProtocol_PeerNeighborsRequest::kPingFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-PeerNeighborsRequest::PeerNeighborsRequest()
+PeerProtocol_PeerNeighborsRequest::PeerProtocol_PeerNeighborsRequest()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_Peer_2eproto::scc_info_PeerNeighborsRequest.base);
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol_PeerNeighborsRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
 }
-PeerNeighborsRequest::PeerNeighborsRequest(const PeerNeighborsRequest& from)
+PeerProtocol_PeerNeighborsRequest::PeerProtocol_PeerNeighborsRequest(const PeerProtocol_PeerNeighborsRequest& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -1310,38 +1336,38 @@ PeerNeighborsRequest::PeerNeighborsRequest(const PeerNeighborsRequest& from)
   if (from.ping().size() > 0) {
     ping_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.ping_);
   }
-  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
 }
 
-void PeerNeighborsRequest::SharedCtor() {
+void PeerProtocol_PeerNeighborsRequest::SharedCtor() {
   ping_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-PeerNeighborsRequest::~PeerNeighborsRequest() {
-  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerNeighborsRequest)
+PeerProtocol_PeerNeighborsRequest::~PeerProtocol_PeerNeighborsRequest() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   SharedDtor();
 }
 
-void PeerNeighborsRequest::SharedDtor() {
+void PeerProtocol_PeerNeighborsRequest::SharedDtor() {
   ping_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void PeerNeighborsRequest::SetCachedSize(int size) const {
+void PeerProtocol_PeerNeighborsRequest::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* PeerNeighborsRequest::descriptor() {
+const ::google::protobuf::Descriptor* PeerProtocol_PeerNeighborsRequest::descriptor() {
   ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const PeerNeighborsRequest& PeerNeighborsRequest::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerNeighborsRequest.base);
+const PeerProtocol_PeerNeighborsRequest& PeerProtocol_PeerNeighborsRequest::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol_PeerNeighborsRequest.base);
   return *internal_default_instance();
 }
 
 
-void PeerNeighborsRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+void PeerProtocol_PeerNeighborsRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1350,11 +1376,11 @@ void PeerNeighborsRequest::Clear() {
   _internal_metadata_.Clear();
 }
 
-bool PeerNeighborsRequest::MergePartialFromCodedStream(
+bool PeerProtocol_PeerNeighborsRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -1369,7 +1395,7 @@ bool PeerNeighborsRequest::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->ping().data(), static_cast<int>(this->ping().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "ADL.Protocol.Peer.PeerNeighborsRequest.ping"));
+            "ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping"));
         } else {
           goto handle_unusual;
         }
@@ -1388,17 +1414,17 @@ bool PeerNeighborsRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   return false;
 #undef DO_
 }
 
-void PeerNeighborsRequest::SerializeWithCachedSizes(
+void PeerProtocol_PeerNeighborsRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1407,7 +1433,7 @@ void PeerNeighborsRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->ping().data(), static_cast<int>(this->ping().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PeerNeighborsRequest.ping");
+      "ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->ping(), output);
   }
@@ -1416,13 +1442,13 @@ void PeerNeighborsRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
 }
 
-::google::protobuf::uint8* PeerNeighborsRequest::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PeerProtocol_PeerNeighborsRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1431,7 +1457,7 @@ void PeerNeighborsRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->ping().data(), static_cast<int>(this->ping().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PeerNeighborsRequest.ping");
+      "ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->ping(), target);
@@ -1441,12 +1467,12 @@ void PeerNeighborsRequest::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   return target;
 }
 
-size_t PeerNeighborsRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+size_t PeerProtocol_PeerNeighborsRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1466,23 +1492,23 @@ size_t PeerNeighborsRequest::ByteSizeLong() const {
   return total_size;
 }
 
-void PeerNeighborsRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+void PeerProtocol_PeerNeighborsRequest::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   GOOGLE_DCHECK_NE(&from, this);
-  const PeerNeighborsRequest* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PeerNeighborsRequest>(
+  const PeerProtocol_PeerNeighborsRequest* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol_PeerNeighborsRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerNeighborsRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
     MergeFrom(*source);
   }
 }
 
-void PeerNeighborsRequest::MergeFrom(const PeerNeighborsRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+void PeerProtocol_PeerNeighborsRequest::MergeFrom(const PeerProtocol_PeerNeighborsRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1494,36 +1520,36 @@ void PeerNeighborsRequest::MergeFrom(const PeerNeighborsRequest& from) {
   }
 }
 
-void PeerNeighborsRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+void PeerProtocol_PeerNeighborsRequest::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void PeerNeighborsRequest::CopyFrom(const PeerNeighborsRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerNeighborsRequest)
+void PeerProtocol_PeerNeighborsRequest::CopyFrom(const PeerProtocol_PeerNeighborsRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool PeerNeighborsRequest::IsInitialized() const {
+bool PeerProtocol_PeerNeighborsRequest::IsInitialized() const {
   return true;
 }
 
-void PeerNeighborsRequest::Swap(PeerNeighborsRequest* other) {
+void PeerProtocol_PeerNeighborsRequest::Swap(PeerProtocol_PeerNeighborsRequest* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void PeerNeighborsRequest::InternalSwap(PeerNeighborsRequest* other) {
+void PeerProtocol_PeerNeighborsRequest::InternalSwap(PeerProtocol_PeerNeighborsRequest* other) {
   using std::swap;
   ping_.Swap(&other->ping_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata PeerNeighborsRequest::GetMetadata() const {
+::google::protobuf::Metadata PeerProtocol_PeerNeighborsRequest::GetMetadata() const {
   protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -1531,20 +1557,20 @@ void PeerNeighborsRequest::InternalSwap(PeerNeighborsRequest* other) {
 
 // ===================================================================
 
-void PeerNeighborsResponse::InitAsDefaultInstance() {
+void PeerProtocol_PeerNeighborsResponse::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PeerNeighborsResponse::kPongFieldNumber;
+const int PeerProtocol_PeerNeighborsResponse::kPongFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-PeerNeighborsResponse::PeerNeighborsResponse()
+PeerProtocol_PeerNeighborsResponse::PeerProtocol_PeerNeighborsResponse()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_Peer_2eproto::scc_info_PeerNeighborsResponse.base);
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol_PeerNeighborsResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
 }
-PeerNeighborsResponse::PeerNeighborsResponse(const PeerNeighborsResponse& from)
+PeerProtocol_PeerNeighborsResponse::PeerProtocol_PeerNeighborsResponse(const PeerProtocol_PeerNeighborsResponse& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -1552,38 +1578,38 @@ PeerNeighborsResponse::PeerNeighborsResponse(const PeerNeighborsResponse& from)
   if (from.pong().size() > 0) {
     pong_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pong_);
   }
-  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
 }
 
-void PeerNeighborsResponse::SharedCtor() {
+void PeerProtocol_PeerNeighborsResponse::SharedCtor() {
   pong_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-PeerNeighborsResponse::~PeerNeighborsResponse() {
-  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerNeighborsResponse)
+PeerProtocol_PeerNeighborsResponse::~PeerProtocol_PeerNeighborsResponse() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   SharedDtor();
 }
 
-void PeerNeighborsResponse::SharedDtor() {
+void PeerProtocol_PeerNeighborsResponse::SharedDtor() {
   pong_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void PeerNeighborsResponse::SetCachedSize(int size) const {
+void PeerProtocol_PeerNeighborsResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* PeerNeighborsResponse::descriptor() {
+const ::google::protobuf::Descriptor* PeerProtocol_PeerNeighborsResponse::descriptor() {
   ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const PeerNeighborsResponse& PeerNeighborsResponse::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerNeighborsResponse.base);
+const PeerProtocol_PeerNeighborsResponse& PeerProtocol_PeerNeighborsResponse::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol_PeerNeighborsResponse.base);
   return *internal_default_instance();
 }
 
 
-void PeerNeighborsResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+void PeerProtocol_PeerNeighborsResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1592,11 +1618,11 @@ void PeerNeighborsResponse::Clear() {
   _internal_metadata_.Clear();
 }
 
-bool PeerNeighborsResponse::MergePartialFromCodedStream(
+bool PeerProtocol_PeerNeighborsResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -1611,7 +1637,7 @@ bool PeerNeighborsResponse::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->pong().data(), static_cast<int>(this->pong().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "ADL.Protocol.Peer.PeerNeighborsResponse.pong"));
+            "ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong"));
         } else {
           goto handle_unusual;
         }
@@ -1630,17 +1656,17 @@ bool PeerNeighborsResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   return false;
 #undef DO_
 }
 
-void PeerNeighborsResponse::SerializeWithCachedSizes(
+void PeerProtocol_PeerNeighborsResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1649,7 +1675,7 @@ void PeerNeighborsResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->pong().data(), static_cast<int>(this->pong().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PeerNeighborsResponse.pong");
+      "ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->pong(), output);
   }
@@ -1658,13 +1684,13 @@ void PeerNeighborsResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
 }
 
-::google::protobuf::uint8* PeerNeighborsResponse::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PeerProtocol_PeerNeighborsResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1673,7 +1699,7 @@ void PeerNeighborsResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->pong().data(), static_cast<int>(this->pong().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.PeerNeighborsResponse.pong");
+      "ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->pong(), target);
@@ -1683,12 +1709,12 @@ void PeerNeighborsResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   return target;
 }
 
-size_t PeerNeighborsResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+size_t PeerProtocol_PeerNeighborsResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1708,23 +1734,23 @@ size_t PeerNeighborsResponse::ByteSizeLong() const {
   return total_size;
 }
 
-void PeerNeighborsResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+void PeerProtocol_PeerNeighborsResponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   GOOGLE_DCHECK_NE(&from, this);
-  const PeerNeighborsResponse* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PeerNeighborsResponse>(
+  const PeerProtocol_PeerNeighborsResponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol_PeerNeighborsResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerNeighborsResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
     MergeFrom(*source);
   }
 }
 
-void PeerNeighborsResponse::MergeFrom(const PeerNeighborsResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+void PeerProtocol_PeerNeighborsResponse::MergeFrom(const PeerProtocol_PeerNeighborsResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1736,36 +1762,36 @@ void PeerNeighborsResponse::MergeFrom(const PeerNeighborsResponse& from) {
   }
 }
 
-void PeerNeighborsResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+void PeerProtocol_PeerNeighborsResponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void PeerNeighborsResponse::CopyFrom(const PeerNeighborsResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerNeighborsResponse)
+void PeerProtocol_PeerNeighborsResponse::CopyFrom(const PeerProtocol_PeerNeighborsResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool PeerNeighborsResponse::IsInitialized() const {
+bool PeerProtocol_PeerNeighborsResponse::IsInitialized() const {
   return true;
 }
 
-void PeerNeighborsResponse::Swap(PeerNeighborsResponse* other) {
+void PeerProtocol_PeerNeighborsResponse::Swap(PeerProtocol_PeerNeighborsResponse* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void PeerNeighborsResponse::InternalSwap(PeerNeighborsResponse* other) {
+void PeerProtocol_PeerNeighborsResponse::InternalSwap(PeerProtocol_PeerNeighborsResponse* other) {
   using std::swap;
   pong_.Swap(&other->pong_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata PeerNeighborsResponse::GetMetadata() const {
+::google::protobuf::Metadata PeerProtocol_PeerNeighborsResponse::GetMetadata() const {
   protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -1773,60 +1799,60 @@ void PeerNeighborsResponse::InternalSwap(PeerNeighborsResponse* other) {
 
 // ===================================================================
 
-void ChallengeRequest::InitAsDefaultInstance() {
+void PeerProtocol_ChallengeRequest::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int ChallengeRequest::kTypeFieldNumber;
-const int ChallengeRequest::kNonceFieldNumber;
+const int PeerProtocol_ChallengeRequest::kTypeFieldNumber;
+const int PeerProtocol_ChallengeRequest::kNonceFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-ChallengeRequest::ChallengeRequest()
+PeerProtocol_ChallengeRequest::PeerProtocol_ChallengeRequest()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_Peer_2eproto::scc_info_ChallengeRequest.base);
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol_ChallengeRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
 }
-ChallengeRequest::ChallengeRequest(const ChallengeRequest& from)
+PeerProtocol_ChallengeRequest::PeerProtocol_ChallengeRequest(const PeerProtocol_ChallengeRequest& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&type_, &from.type_,
     static_cast<size_t>(reinterpret_cast<char*>(&nonce_) -
     reinterpret_cast<char*>(&type_)) + sizeof(nonce_));
-  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
 }
 
-void ChallengeRequest::SharedCtor() {
+void PeerProtocol_ChallengeRequest::SharedCtor() {
   ::memset(&type_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&nonce_) -
       reinterpret_cast<char*>(&type_)) + sizeof(nonce_));
 }
 
-ChallengeRequest::~ChallengeRequest() {
-  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.ChallengeRequest)
+PeerProtocol_ChallengeRequest::~PeerProtocol_ChallengeRequest() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   SharedDtor();
 }
 
-void ChallengeRequest::SharedDtor() {
+void PeerProtocol_ChallengeRequest::SharedDtor() {
 }
 
-void ChallengeRequest::SetCachedSize(int size) const {
+void PeerProtocol_ChallengeRequest::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* ChallengeRequest::descriptor() {
+const ::google::protobuf::Descriptor* PeerProtocol_ChallengeRequest::descriptor() {
   ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const ChallengeRequest& ChallengeRequest::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_ChallengeRequest.base);
+const PeerProtocol_ChallengeRequest& PeerProtocol_ChallengeRequest::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol_ChallengeRequest.base);
   return *internal_default_instance();
 }
 
 
-void ChallengeRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.ChallengeRequest)
+void PeerProtocol_ChallengeRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1837,20 +1863,20 @@ void ChallengeRequest::Clear() {
   _internal_metadata_.Clear();
 }
 
-bool ChallengeRequest::MergePartialFromCodedStream(
+bool PeerProtocol_ChallengeRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // int32 type = 1;
-      case 1: {
+      // int32 type = 2;
+      case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -1861,10 +1887,10 @@ bool ChallengeRequest::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 nonce = 2;
-      case 2: {
+      // int32 nonce = 3;
+      case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -1887,64 +1913,64 @@ bool ChallengeRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   return false;
 #undef DO_
 }
 
-void ChallengeRequest::SerializeWithCachedSizes(
+void PeerProtocol_ChallengeRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 type = 1;
+  // int32 type = 2;
   if (this->type() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->type(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->type(), output);
   }
 
-  // int32 nonce = 2;
+  // int32 nonce = 3;
   if (this->nonce() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->nonce(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->nonce(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
 }
 
-::google::protobuf::uint8* ChallengeRequest::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PeerProtocol_ChallengeRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 type = 1;
+  // int32 type = 2;
   if (this->type() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->type(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->type(), target);
   }
 
-  // int32 nonce = 2;
+  // int32 nonce = 3;
   if (this->nonce() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->nonce(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->nonce(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   return target;
 }
 
-size_t ChallengeRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.ChallengeRequest)
+size_t PeerProtocol_ChallengeRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1952,14 +1978,14 @@ size_t ChallengeRequest::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // int32 type = 1;
+  // int32 type = 2;
   if (this->type() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->type());
   }
 
-  // int32 nonce = 2;
+  // int32 nonce = 3;
   if (this->nonce() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -1971,23 +1997,23 @@ size_t ChallengeRequest::ByteSizeLong() const {
   return total_size;
 }
 
-void ChallengeRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.ChallengeRequest)
+void PeerProtocol_ChallengeRequest::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   GOOGLE_DCHECK_NE(&from, this);
-  const ChallengeRequest* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const ChallengeRequest>(
+  const PeerProtocol_ChallengeRequest* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol_ChallengeRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.ChallengeRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
     MergeFrom(*source);
   }
 }
 
-void ChallengeRequest::MergeFrom(const ChallengeRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.ChallengeRequest)
+void PeerProtocol_ChallengeRequest::MergeFrom(const PeerProtocol_ChallengeRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -2001,36 +2027,36 @@ void ChallengeRequest::MergeFrom(const ChallengeRequest& from) {
   }
 }
 
-void ChallengeRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.ChallengeRequest)
+void PeerProtocol_ChallengeRequest::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ChallengeRequest::CopyFrom(const ChallengeRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.ChallengeRequest)
+void PeerProtocol_ChallengeRequest::CopyFrom(const PeerProtocol_ChallengeRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ChallengeRequest::IsInitialized() const {
+bool PeerProtocol_ChallengeRequest::IsInitialized() const {
   return true;
 }
 
-void ChallengeRequest::Swap(ChallengeRequest* other) {
+void PeerProtocol_ChallengeRequest::Swap(PeerProtocol_ChallengeRequest* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void ChallengeRequest::InternalSwap(ChallengeRequest* other) {
+void PeerProtocol_ChallengeRequest::InternalSwap(PeerProtocol_ChallengeRequest* other) {
   using std::swap;
   swap(type_, other->type_);
   swap(nonce_, other->nonce_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata ChallengeRequest::GetMetadata() const {
+::google::protobuf::Metadata PeerProtocol_ChallengeRequest::GetMetadata() const {
   protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -2038,22 +2064,21 @@ void ChallengeRequest::InternalSwap(ChallengeRequest* other) {
 
 // ===================================================================
 
-void ChallengeResponse::InitAsDefaultInstance() {
+void PeerProtocol_ChallengeResponse::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int ChallengeResponse::kTypeFieldNumber;
-const int ChallengeResponse::kSignedNonceFieldNumber;
-const int ChallengeResponse::kPublicKeyFieldNumber;
+const int PeerProtocol_ChallengeResponse::kSignedNonceFieldNumber;
+const int PeerProtocol_ChallengeResponse::kPublicKeyFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-ChallengeResponse::ChallengeResponse()
+PeerProtocol_ChallengeResponse::PeerProtocol_ChallengeResponse()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_Peer_2eproto::scc_info_ChallengeResponse.base);
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol_ChallengeResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
 }
-ChallengeResponse::ChallengeResponse(const ChallengeResponse& from)
+PeerProtocol_ChallengeResponse::PeerProtocol_ChallengeResponse(const PeerProtocol_ChallengeResponse& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -2065,76 +2090,59 @@ ChallengeResponse::ChallengeResponse(const ChallengeResponse& from)
   if (from.publickey().size() > 0) {
     publickey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.publickey_);
   }
-  type_ = from.type_;
-  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
 }
 
-void ChallengeResponse::SharedCtor() {
+void PeerProtocol_ChallengeResponse::SharedCtor() {
   signednonce_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   publickey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  type_ = 0;
 }
 
-ChallengeResponse::~ChallengeResponse() {
-  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.ChallengeResponse)
+PeerProtocol_ChallengeResponse::~PeerProtocol_ChallengeResponse() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   SharedDtor();
 }
 
-void ChallengeResponse::SharedDtor() {
+void PeerProtocol_ChallengeResponse::SharedDtor() {
   signednonce_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   publickey_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void ChallengeResponse::SetCachedSize(int size) const {
+void PeerProtocol_ChallengeResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* ChallengeResponse::descriptor() {
+const ::google::protobuf::Descriptor* PeerProtocol_ChallengeResponse::descriptor() {
   ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const ChallengeResponse& ChallengeResponse::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_ChallengeResponse.base);
+const PeerProtocol_ChallengeResponse& PeerProtocol_ChallengeResponse::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol_ChallengeResponse.base);
   return *internal_default_instance();
 }
 
 
-void ChallengeResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.ChallengeResponse)
+void PeerProtocol_ChallengeResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   signednonce_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   publickey_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  type_ = 0;
   _internal_metadata_.Clear();
 }
 
-bool ChallengeResponse::MergePartialFromCodedStream(
+bool PeerProtocol_ChallengeResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // int32 type = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &type_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
       // string signedNonce = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
@@ -2144,7 +2152,7 @@ bool ChallengeResponse::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->signednonce().data(), static_cast<int>(this->signednonce().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "ADL.Protocol.Peer.ChallengeResponse.signedNonce"));
+            "ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce"));
         } else {
           goto handle_unusual;
         }
@@ -2160,7 +2168,7 @@ bool ChallengeResponse::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->publickey().data(), static_cast<int>(this->publickey().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "ADL.Protocol.Peer.ChallengeResponse.publicKey"));
+            "ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey"));
         } else {
           goto handle_unusual;
         }
@@ -2179,31 +2187,26 @@ bool ChallengeResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   return false;
 #undef DO_
 }
 
-void ChallengeResponse::SerializeWithCachedSizes(
+void PeerProtocol_ChallengeResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
-
-  // int32 type = 1;
-  if (this->type() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->type(), output);
-  }
 
   // string signedNonce = 2;
   if (this->signednonce().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->signednonce().data(), static_cast<int>(this->signednonce().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.ChallengeResponse.signedNonce");
+      "ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->signednonce(), output);
   }
@@ -2213,7 +2216,7 @@ void ChallengeResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->publickey().data(), static_cast<int>(this->publickey().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.ChallengeResponse.publicKey");
+      "ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       3, this->publickey(), output);
   }
@@ -2222,27 +2225,22 @@ void ChallengeResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
 }
 
-::google::protobuf::uint8* ChallengeResponse::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PeerProtocol_ChallengeResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
-
-  // int32 type = 1;
-  if (this->type() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->type(), target);
-  }
 
   // string signedNonce = 2;
   if (this->signednonce().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->signednonce().data(), static_cast<int>(this->signednonce().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.ChallengeResponse.signedNonce");
+      "ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->signednonce(), target);
@@ -2253,7 +2251,7 @@ void ChallengeResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->publickey().data(), static_cast<int>(this->publickey().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "ADL.Protocol.Peer.ChallengeResponse.publicKey");
+      "ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         3, this->publickey(), target);
@@ -2263,12 +2261,12 @@ void ChallengeResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   return target;
 }
 
-size_t ChallengeResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.ChallengeResponse)
+size_t PeerProtocol_ChallengeResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2290,35 +2288,28 @@ size_t ChallengeResponse::ByteSizeLong() const {
         this->publickey());
   }
 
-  // int32 type = 1;
-  if (this->type() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->type());
-  }
-
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
 }
 
-void ChallengeResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.ChallengeResponse)
+void PeerProtocol_ChallengeResponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   GOOGLE_DCHECK_NE(&from, this);
-  const ChallengeResponse* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const ChallengeResponse>(
+  const PeerProtocol_ChallengeResponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol_ChallengeResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.ChallengeResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
     MergeFrom(*source);
   }
 }
 
-void ChallengeResponse::MergeFrom(const ChallengeResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.ChallengeResponse)
+void PeerProtocol_ChallengeResponse::MergeFrom(const PeerProtocol_ChallengeResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -2332,44 +2323,219 @@ void ChallengeResponse::MergeFrom(const ChallengeResponse& from) {
 
     publickey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.publickey_);
   }
-  if (from.type() != 0) {
-    set_type(from.type());
-  }
 }
 
-void ChallengeResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.ChallengeResponse)
+void PeerProtocol_ChallengeResponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ChallengeResponse::CopyFrom(const ChallengeResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.ChallengeResponse)
+void PeerProtocol_ChallengeResponse::CopyFrom(const PeerProtocol_ChallengeResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ChallengeResponse::IsInitialized() const {
+bool PeerProtocol_ChallengeResponse::IsInitialized() const {
   return true;
 }
 
-void ChallengeResponse::Swap(ChallengeResponse* other) {
+void PeerProtocol_ChallengeResponse::Swap(PeerProtocol_ChallengeResponse* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void ChallengeResponse::InternalSwap(ChallengeResponse* other) {
+void PeerProtocol_ChallengeResponse::InternalSwap(PeerProtocol_ChallengeResponse* other) {
   using std::swap;
   signednonce_.Swap(&other->signednonce_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   publickey_.Swap(&other->publickey_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  swap(type_, other->type_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata ChallengeResponse::GetMetadata() const {
+::google::protobuf::Metadata PeerProtocol_ChallengeResponse::GetMetadata() const {
+  protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void PeerProtocol::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+PeerProtocol::PeerProtocol()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_Peer_2eproto::scc_info_PeerProtocol.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:ADL.Protocol.Peer.PeerProtocol)
+}
+PeerProtocol::PeerProtocol(const PeerProtocol& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:ADL.Protocol.Peer.PeerProtocol)
+}
+
+void PeerProtocol::SharedCtor() {
+}
+
+PeerProtocol::~PeerProtocol() {
+  // @@protoc_insertion_point(destructor:ADL.Protocol.Peer.PeerProtocol)
+  SharedDtor();
+}
+
+void PeerProtocol::SharedDtor() {
+}
+
+void PeerProtocol::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* PeerProtocol::descriptor() {
+  ::protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const PeerProtocol& PeerProtocol::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_Peer_2eproto::scc_info_PeerProtocol.base);
+  return *internal_default_instance();
+}
+
+
+void PeerProtocol::Clear() {
+// @@protoc_insertion_point(message_clear_start:ADL.Protocol.Peer.PeerProtocol)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _internal_metadata_.Clear();
+}
+
+bool PeerProtocol::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:ADL.Protocol.Peer.PeerProtocol)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+  handle_unusual:
+    if (tag == 0) {
+      goto success;
+    }
+    DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, _internal_metadata_.mutable_unknown_fields()));
+  }
+success:
+  // @@protoc_insertion_point(parse_success:ADL.Protocol.Peer.PeerProtocol)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:ADL.Protocol.Peer.PeerProtocol)
+  return false;
+#undef DO_
+}
+
+void PeerProtocol::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:ADL.Protocol.Peer.PeerProtocol)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:ADL.Protocol.Peer.PeerProtocol)
+}
+
+::google::protobuf::uint8* PeerProtocol::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:ADL.Protocol.Peer.PeerProtocol)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:ADL.Protocol.Peer.PeerProtocol)
+  return target;
+}
+
+size_t PeerProtocol::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ADL.Protocol.Peer.PeerProtocol)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void PeerProtocol::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ADL.Protocol.Peer.PeerProtocol)
+  GOOGLE_DCHECK_NE(&from, this);
+  const PeerProtocol* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PeerProtocol>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ADL.Protocol.Peer.PeerProtocol)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ADL.Protocol.Peer.PeerProtocol)
+    MergeFrom(*source);
+  }
+}
+
+void PeerProtocol::MergeFrom(const PeerProtocol& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ADL.Protocol.Peer.PeerProtocol)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+}
+
+void PeerProtocol::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ADL.Protocol.Peer.PeerProtocol)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void PeerProtocol::CopyFrom(const PeerProtocol& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ADL.Protocol.Peer.PeerProtocol)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool PeerProtocol::IsInitialized() const {
+  return true;
+}
+
+void PeerProtocol::Swap(PeerProtocol* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void PeerProtocol::InternalSwap(PeerProtocol* other) {
+  using std::swap;
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata PeerProtocol::GetMetadata() const {
   protobuf_Peer_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_Peer_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -2381,29 +2547,32 @@ void ChallengeResponse::InternalSwap(ChallengeResponse* other) {
 }  // namespace ADL
 namespace google {
 namespace protobuf {
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PingRequest* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PingRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::ADL::Protocol::Peer::PingRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol_PingRequest* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol_PingRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol_PingRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PongResponse* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PongResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::ADL::Protocol::Peer::PongResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol_PongResponse* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol_PongResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol_PongResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerInfoRequest* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerInfoRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerInfoRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol_PeerInfoRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerInfoResponse* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerInfoResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerInfoResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol_PeerInfoResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerNeighborsRequest* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerNeighborsRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerNeighborsRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerNeighborsResponse* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerNeighborsResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerNeighborsResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol_PeerNeighborsResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::ChallengeRequest* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::ChallengeRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::ADL::Protocol::Peer::ChallengeRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol_ChallengeRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::ChallengeResponse* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::ChallengeResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::ADL::Protocol::Peer::ChallengeResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol_ChallengeResponse >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::ADL::Protocol::Peer::PeerProtocol* Arena::CreateMaybeMessage< ::ADL::Protocol::Peer::PeerProtocol >(Arena* arena) {
+  return Arena::CreateInternal< ::ADL::Protocol::Peer::PeerProtocol >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

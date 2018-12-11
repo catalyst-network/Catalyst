@@ -4,30 +4,31 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
-  add_message "ADL.Protocol.Peer.PingRequest" do
+  add_message "ADL.Protocol.Peer.PeerProtocol" do
+  end
+  add_message "ADL.Protocol.Peer.PeerProtocol.PingRequest" do
     optional :ping, :string, 1
   end
-  add_message "ADL.Protocol.Peer.PongResponse" do
+  add_message "ADL.Protocol.Peer.PeerProtocol.PongResponse" do
     optional :pong, :string, 1
   end
-  add_message "ADL.Protocol.Peer.PeerInfoRequest" do
+  add_message "ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest" do
     optional :ping, :string, 1
   end
-  add_message "ADL.Protocol.Peer.PeerInfoResponse" do
+  add_message "ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse" do
     optional :pong, :string, 1
   end
-  add_message "ADL.Protocol.Peer.PeerNeighborsRequest" do
+  add_message "ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest" do
     optional :ping, :string, 1
   end
-  add_message "ADL.Protocol.Peer.PeerNeighborsResponse" do
+  add_message "ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse" do
     optional :pong, :string, 1
   end
-  add_message "ADL.Protocol.Peer.ChallengeRequest" do
-    optional :type, :int32, 1
-    optional :nonce, :int32, 2
+  add_message "ADL.Protocol.Peer.PeerProtocol.ChallengeRequest" do
+    optional :type, :int32, 2
+    optional :nonce, :int32, 3
   end
-  add_message "ADL.Protocol.Peer.ChallengeResponse" do
-    optional :type, :int32, 1
+  add_message "ADL.Protocol.Peer.PeerProtocol.ChallengeResponse" do
     optional :signedNonce, :string, 2
     optional :publicKey, :string, 3
   end
@@ -36,14 +37,15 @@ end
 module ADL
   module Protocol
     module Peer
-      PingRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PingRequest").msgclass
-      PongResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PongResponse").msgclass
-      PeerInfoRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerInfoRequest").msgclass
-      PeerInfoResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerInfoResponse").msgclass
-      PeerNeighborsRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerNeighborsRequest").msgclass
-      PeerNeighborsResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerNeighborsResponse").msgclass
-      ChallengeRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.ChallengeRequest").msgclass
-      ChallengeResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.ChallengeResponse").msgclass
+      PeerProtocol = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol").msgclass
+      PeerProtocol::PingRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol.PingRequest").msgclass
+      PeerProtocol::PongResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol.PongResponse").msgclass
+      PeerProtocol::PeerInfoRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest").msgclass
+      PeerProtocol::PeerInfoResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse").msgclass
+      PeerProtocol::PeerNeighborsRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest").msgclass
+      PeerProtocol::PeerNeighborsResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse").msgclass
+      PeerProtocol::ChallengeRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol.ChallengeRequest").msgclass
+      PeerProtocol::ChallengeResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerProtocol.ChallengeResponse").msgclass
     end
   end
 end
