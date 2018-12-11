@@ -212,9 +212,9 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 return null;
             }
 
-            byte[] msgDescriptor = ByteUtil.Slice(contentBytes, 0, 3);
-            byte[] payload = ByteUtil.Slice(contentBytes, 3);
-            return payload;
+//            byte[] msgDescriptor = ByteUtil.Slice(contentBytes, 0, 3);
+//            byte[] payload = ByteUtil.Slice(contentBytes, 3);
+            return contentBytes;
         }
     }
 }
