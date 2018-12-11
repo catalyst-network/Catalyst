@@ -301,7 +301,7 @@ namespace ADL.Node.Core.Modules.Peer
                     {
 //                        var keyFactory = PrivateKeyFactory.CreateKey(System.Convert.FromBase64String(charResponse.PublicKey));
 //                        Console.WriteLine(Ec.VerifySignature(keyFactory,charResponse.SignedNonce,peer.nonce.ToString()));
-                        Console.WriteLine("Message received from " + ip+":"+port + ": " + HexByteConvertorExtensions.ToHex(data));
+                        Console.WriteLine("Message received from " + ip+":"+port + ": " + PeerProtocol.Types.ChallengeRequest.Parser.ParseFrom(data));
 //                        Console.WriteLine(PeerProtocol.Types.ChallengeRequest.Parser.ParseFrom(data));   
 
                         return "process message in this task";
@@ -767,12 +767,8 @@ namespace ADL.Node.Core.Modules.Peer
             }
 
             byte[] msgDescriptor = ByteUtil.Slice(contentBytes, 0, 3);
-            Console.WriteLine(msgDescriptor[0]);
-            Console.WriteLine(msgDescriptor[1]);
-            Console.WriteLine(msgDescriptor[2]);
-            Log("Finished Read");
-
-            return contentBytes;
+            byte[] payload = ByteUtil.Slice(contentBytes, 3);
+            return payload;
         }
 
         /// <summary>
