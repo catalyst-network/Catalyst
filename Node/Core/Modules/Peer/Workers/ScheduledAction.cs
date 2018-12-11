@@ -20,9 +20,11 @@ namespace ADL.Node.Core.Modules.Peer.Workers
             Action();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-            "CA1062:Validate arguments of public methods",
-            Justification = "NextExecutionDate.CompareTo does the job")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(ScheduledAction other)
         {
             if (other == this) return 0;

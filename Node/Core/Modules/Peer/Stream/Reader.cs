@@ -9,11 +9,11 @@ namespace ADL.Node.Core.Modules.Peer.Stream
     public class Reader
     {
         /// <summary>
-        /// 
+        /// @TODO in here we need to collect stats of bytes reade, we can also have a counter for requests from a connection and if it is too much block them
         /// </summary>
-        /// <param name="peer"></param>
+        /// <param name="connectionMeta"></param>
         /// <returns></returns>
-        public static async Task<byte[]> MessageReadAsync(Peer peer)
+        public static async Task<byte[]> MessageReadAsync(ConnectionMeta connectionMeta)
         {
             int bytesRead = 0;
             int sleepInterval = 25;
@@ -26,7 +26,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             long contentLength;
             byte[] contentBytes;
 
-            if (!peer.SslStream.CanRead)
+            if (!connectionMeta.SslStream.CanRead)
             {
                 return null;
             }    
@@ -40,7 +40,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 Int32 read = 0;
 
                 /// start reading header
-                while ((read = await peer.SslStream.ReadAsync(headerBuffer, 0, headerBuffer.Length)) > 0)
+                while ((read = await connectionMeta.SslStream.ReadAsync(headerBuffer, 0, headerBuffer.Length)) > 0)
                 {
                     if (read > 0)
                     {
@@ -112,7 +112,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
 
                 if (!Int64.TryParse(Encoding.UTF8.GetString(headerBytes).Replace(":", ""), out contentLength))
                 {
-                    Log.Log.Message("*** MessageReadAsync malformed message from " + peer.Ip + peer.Port + " (message header not an integer)");
+                    Log.Log.Message("*** MessageReadAsync malformed message from " + connectionMeta.Ip + connectionMeta.Port + " (message header not an integer)");
                     return null;
                 }
             }
@@ -139,7 +139,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
 
                 buffer = new byte[bufferSize];
 
-                while ((read = await peer.SslStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                while ((read = await connectionMeta.SslStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                 {
                     if (read > 0)
                     {
@@ -202,13 +202,13 @@ namespace ADL.Node.Core.Modules.Peer.Stream
 
             if (contentBytes == null || contentBytes.Length < 1)
             {
-                Log.Log.Message("*** MessageReadAsync " + peer.Ip + peer.Port + " no content read");
+                Log.Log.Message("*** MessageReadAsync " + connectionMeta.Ip + connectionMeta.Port + " no content read");
                 return null;
             }
 
             if (contentBytes.Length != contentLength)
             {
-                Log.Log.Message("*** MessageReadAsync " + peer.Ip + peer.Port + " content length " + contentBytes.Length + " bytes does not match header value " + contentLength + ", discarding");
+                Log.Log.Message("*** MessageReadAsync " + connectionMeta.Ip + connectionMeta.Port + " content length " + contentBytes.Length + " bytes does not match header value " + contentLength + ", discarding");
                 return null;
             }
 
