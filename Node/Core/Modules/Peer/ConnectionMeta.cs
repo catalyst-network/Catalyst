@@ -8,7 +8,7 @@ namespace ADL.Node.Core.Modules.Peer
     /// <summary>
     /// 
     /// </summary>
-    public class Peer : IDisposable
+    public class ConnectionMeta : IDisposable
     {
         public int Port;
         public string Ip;
@@ -16,7 +16,7 @@ namespace ADL.Node.Core.Modules.Peer
         public string ipPort;
         public bool _Connected;
         internal TcpClient TcpClient;
-        internal SslStream SslStream;
+        public SslStream SslStream;
         private bool Disposed = false;
         internal NetworkStream NetworkStream;
         private static readonly object Mutex = new object();
@@ -25,7 +25,7 @@ namespace ADL.Node.Core.Modules.Peer
         /// 
         /// </summary>
         /// <param name="tcp"></param>
-        public Peer(TcpClient tcp)
+        public ConnectionMeta(TcpClient tcp)
         {
             TcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
             _Connected = true;
@@ -39,7 +39,7 @@ namespace ADL.Node.Core.Modules.Peer
         /// </summary>
         public void Dispose()
         {
-            Console.WriteLine("disposing peer class");
+            Log.Log.Message("disposing connection");
             Dispose(true);
             GC.SuppressFinalize(this);
         }

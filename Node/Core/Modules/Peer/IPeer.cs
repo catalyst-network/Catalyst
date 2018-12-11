@@ -5,14 +5,6 @@ namespace ADL.Node.Core.Modules.Peer
 {
     public interface IPeer
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sslSettings"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        Task StartPeer(IPeerSettings peerSettings, ISslSettings sslSettings, string options);
-
-        bool StopPeer();
+//        Task StartPeer(IPeerSettings peerSettings, ISslSettings sslSettings, string options);
     }
 }

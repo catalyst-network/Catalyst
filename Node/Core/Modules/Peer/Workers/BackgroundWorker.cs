@@ -9,7 +9,6 @@ namespace ADL.Node.Core.Modules.Peer.Workers
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly BlockingQueue<Action> _queue;
 
-
         public BackgroundWorker()
         {
             _queue = new BlockingQueue<Action>();
