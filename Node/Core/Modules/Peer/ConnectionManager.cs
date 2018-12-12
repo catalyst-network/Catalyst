@@ -189,11 +189,11 @@ namespace ADL.Node.Core.Modules.Peer
         /// <param name="connectionMeta"></param>
         /// <param name="cancelToken"></param>
         /// <returns></returns>
-        private async Task DataReceiver(ConnectionMeta connectionMeta, CancellationToken? cancelToken=null)
+        private async Task DataReceiver(TcpClient tcpClient, CancellationToken? cancelToken=null)
         {
             //@TODO connectionmetta to tcp client
-            var port = ((IPEndPoint)connectionMeta.TcpClient.Client.LocalEndPoint).Port;
-            var ip = ((IPEndPoint)connectionMeta.TcpClient.Client.LocalEndPoint).Address.ToString();
+            var port = ((IPEndPoint)tcpClient.Client.LocalEndPoint).Port;
+            var ip = ((IPEndPoint)tcpClient.Client.LocalEndPoint).Address.ToString();
             
             try
             {
@@ -201,16 +201,18 @@ namespace ADL.Node.Core.Modules.Peer
                 {
                     cancelToken?.ThrowIfCancellationRequested();
 
-                    if (!IsConnected(connectionMeta))
+                    if (!IsConnected(tcpClient))
                     {
                         Log.Log.Message("*** Data receiver can not attach to connection");
                         break;
                     }
 
                     byte[] payload = await Stream.Reader.MessageReadAsync(connectionMeta);
+                    // this causes dos
                     if (payload == null)
                     {
                         await Task.Delay(30);
+                        // add counter to stop loop
                         continue;
                     }
                     
@@ -235,7 +237,9 @@ namespace ADL.Node.Core.Modules.Peer
             }
             finally
             {                
-                Task<bool> success = Task.Run(() => DisconnectConnection(connectionMeta.Ip, connectionMeta.Port));
+                Task<int> activeCount = Task.Run(() => DisconnectConnection(connectionMeta.Ip, connectionMeta.Port));
+                Log.Log.Message("***** Successfully removed " + connectionMeta.Ip + connectionMeta.Port +
+                                " connected (now " + activeCount + " connections active)");
             }
         }
 
@@ -422,18 +426,18 @@ namespace ADL.Node.Core.Modules.Peer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="connectionMeta"></param>
+        /// <param name="tcpClient"></param>
         /// <returns></returns>
-        private bool IsConnected(ConnectionMeta connectionMeta)
+        private bool IsConnected(TcpClient tcpClient)
         {
-            if (connectionMeta == null) throw new ArgumentNullException(nameof(connectionMeta));
+            if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
             
-            if (connectionMeta.TcpClient.Connected)
+            if (tcpClient.Connected)
             {
-                if ((connectionMeta.TcpClient.Client.Poll(0, SelectMode.SelectWrite)) && (!connectionMeta.TcpClient.Client.Poll(0, SelectMode.SelectError)))
+                if ((tcpClient.Client.Poll(0, SelectMode.SelectWrite)) && (!tcpClient.Client.Poll(0, SelectMode.SelectError)))
                 {
                     byte[] buffer = new byte[1];
-                    if (connectionMeta.TcpClient.Client.Receive(buffer, SocketFlags.Peek) == 0)
+                    if (tcpClient.Client.Receive(buffer, SocketFlags.Peek) == 0)
                     {
                         return false;
                     }
@@ -452,12 +456,16 @@ namespace ADL.Node.Core.Modules.Peer
                 return false;
             }
         }
-                
+        
         /// <summary>
-        /// disposes a peer object.
+        /// Disconnects a connection
         /// </summary>
-        /// <param name="ipPort"></param>
-        public bool DisconnectConnection(string ip, int port)
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private int DisconnectConnection(string ip, int port)
         {
             if (ip == null) throw new ArgumentNullException(nameof(ip));
             if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
@@ -465,23 +473,19 @@ namespace ADL.Node.Core.Modules.Peer
             if (!_Connections.TryGetValue(ip+":"+port, out ConnectionMeta connection))
             {
                 Log.Log.Message("*** Disconnect unable to find connection " + connection.Ip+":"+connection.Port);
-                return false;
+                throw new Exception();
+//                return false;
             }
   
             if (!_Connections.TryRemove(connection.Ip+":"+connection.Port, out ConnectionMeta removedPeer))
             {
                 Log.Log.Message("*** RemovePeer unable to remove peer " + connection.Ip + connection.Port);
+                throw new Exception();
                 return false;
             }
 
-            removedPeer.Dispose();
-            Log.Log.Message("*** RemovePeer removed peer " + removedPeer.Ip + removedPeer.Port);
-            
-            int activeCount = Interlocked.Decrement(ref _ActiveConnections);
-            
-            Log.Log.Message("***** connection created to " + ip + port + " connected (now " + activeCount + " connections active)");                    
-
-            return true;
+            removedPeer.Dispose();            
+            return Interlocked.Decrement(ref _ActiveConnections);
         }
         
         /// <summary>

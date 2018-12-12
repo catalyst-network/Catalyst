@@ -10,16 +10,14 @@ namespace ADL.Node.Core.Modules.Peer
     /// </summary>
     public class ConnectionMeta : IDisposable
     {
-        public int Port;
-        public string Ip;
-        public long nonce = 0;
-        public string ipPort;
-        public bool _Connected;
-        internal TcpClient TcpClient;
-        public SslStream SslStream;
-        private bool Disposed = false;
-        internal NetworkStream NetworkStream;
-        private static readonly object Mutex = new object();
+        public int Port { set; get; }
+        public string Ip { set; get; }
+        public long nonce { set; get; }
+        private bool Disposed { get; set; }
+        public bool _Connected { set; get; }
+        public SslStream SslStream { set; get; }
+        internal TcpClient TcpClient { set; get; }
+        internal NetworkStream NetworkStream { set; get; }
 
         /// <summary>
         /// 
