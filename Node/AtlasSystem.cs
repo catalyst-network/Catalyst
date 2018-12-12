@@ -66,7 +66,7 @@ namespace ADL.Node
         private AtlasSystem(NodeOptions options)
         {
             MainActorSystem = ActorSystem.Create("AtlasActorSystem");
-            TaskHandlerActor = MainActorSystem.ActorOf<TaksHandlerActor>();
+            TaskHandlerActor = MainActorSystem.ActorOf<TaskHandlerActor>();
             
             Kernel = Kernel.GetInstance(options);
 
@@ -156,6 +156,8 @@ namespace ADL.Node
         public void Dispose()
         {
             RcpService?.StopService();
+            MainActorSystem.Stop(TaskHandlerActor);
+            MainActorSystem.Dispose();
         }
     }
 }

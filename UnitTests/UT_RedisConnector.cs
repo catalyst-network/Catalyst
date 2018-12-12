@@ -37,7 +37,7 @@ namespace ADL.UnitTests
             var server = Cm.GetServer(endpoint[0]);
             server.FlushDatabase(); // clean up before each test
         }
-        
+
         [TestMethod]
         public void OneWriteRead()
         {

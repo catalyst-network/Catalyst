@@ -7,6 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Akka.TestKit" Version="1.3.10" />
+        <PackageReference Include="Akka.TestKit.VsTest" Version="1.3.2" />
+        <PackageReference Include="Microsoft.UnitTestFramework.Extensions" Version="2.0.0" />
         <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
         <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />

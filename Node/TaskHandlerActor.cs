@@ -9,7 +9,7 @@ namespace ADL.Node
     /// <summary>
     /// Actor handling requests coming via RPC
     /// </summary>
-    public class TaksHandlerActor : UntypedActor
+    public class TaskHandlerActor : UntypedActor
     {           
         protected override void OnReceive(object message)
         {
