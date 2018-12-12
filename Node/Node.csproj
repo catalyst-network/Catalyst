@@ -59,6 +59,7 @@
 
     <ItemGroup>
       <Folder Include="Core\Helpers" />
+      <Folder Include="Core\Modules\Peer\Messages\Handlers" />
     </ItemGroup>
     
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
