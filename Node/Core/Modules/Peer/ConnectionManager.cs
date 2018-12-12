@@ -234,15 +234,8 @@ namespace ADL.Node.Core.Modules.Peer
                 Log.LogException.Message("DataReceiver",e);
             }
             finally
-            {
-                int activeCount = Interlocked.Decrement(ref _ActiveConnections);
-                
+            {                
                 Task<bool> success = Task.Run(() => DisconnectConnection(connectionMeta.Ip, connectionMeta.Port));
-                
-                if (success.Result)
-                {
-                    Log.Log.Message("***** connection created to " + connectionMeta.Ip + connectionMeta.Port + " connected (now " + activeCount + " connections active)");                    
-                }
             }
         }
 
@@ -483,6 +476,11 @@ namespace ADL.Node.Core.Modules.Peer
 
             removedPeer.Dispose();
             Log.Log.Message("*** RemovePeer removed peer " + removedPeer.Ip + removedPeer.Port);
+            
+            int activeCount = Interlocked.Decrement(ref _ActiveConnections);
+            
+            Log.Log.Message("***** connection created to " + ip + port + " connected (now " + activeCount + " connections active)");                    
+
             return true;
         }
         
