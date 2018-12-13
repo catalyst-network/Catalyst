@@ -86,7 +86,6 @@ namespace ADL.UnitTests
             Thread.Sleep(500); //give it half a seconds to make changes affective
         }
         
-        
         [TestMethod]
         public void GetInfo()
         {
