@@ -42,8 +42,4 @@
       <DeployManifest Remove="obj\Debug\netcoreapp2.1\Math.application" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="UnitTests" />
-    </ItemGroup>
-
 </Project>
