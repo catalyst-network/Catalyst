@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ADL.Ipfs;
@@ -19,9 +21,15 @@ namespace ADL.UnitTests
             public ushort ConnectRetries { get; set; }
             public string IpfsVersionApi { get; set; }
         }
-
         private static TestDfsSettings _settings;
         
+        private static Random random = new Random();
+        private static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+                
         [ClassInitialize]
         public static void SetUp(TestContext testContext)
         {
@@ -152,6 +160,23 @@ namespace ADL.UnitTests
             var x = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 0, IpfsVersionApi = "api/v0/"};
             _ipfs.DestroyIpfsClient();
             _ipfs.CreateIpfsClient(x.IpfsVersionApi, x.ConnectRetries);
+        }
+
+        [TestMethod]
+        public void SequentialAdd()
+        {
+            const int numIter = 50;
+
+            for (var i = 0; i < numIter; i++)
+            {
+                var tmpFile = Path.GetTempFileName();
+                File.WriteAllText(tmpFile, RandomString(32));
+
+                var hash1 = _ipfs.AddFile(tmpFile);
+                Assert.IsTrue(hash1.Length == 46); // just make sure was added
+                var hash2 = _ipfs.AddFile(tmpFile); // retrieve the hash back, does not add
+                Assert.AreEqual(hash1, hash2);
+            }
         }
     }
 }

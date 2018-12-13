@@ -26,7 +26,7 @@ namespace ADL.UnitTests
             options.PublicKey = "lol";
             options.PayoutAddress = "kek";
                         
-            AtlasSystem.GetInstance(options); // run node                                    
+            AtlasSystem.GetInstance(options); // run node
             var SessionHost = new Channel("127.0.0.1:42042", ChannelCredentials.Insecure);
             _rpcClient = new RpcServer.RpcServerClient(SessionHost);            
         }
