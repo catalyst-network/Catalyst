@@ -22,8 +22,4 @@
         <ProjectReference Include="..\..\Helpers\DataStore\DataStore.csproj" />
     </ItemGroup>
     
-    <ItemGroup>
-      <Folder Include="UnitTests" />
-    </ItemGroup>
-    
 </Project>
