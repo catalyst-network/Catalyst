@@ -14,7 +14,7 @@ namespace ADL.Node.Core.Modules.Peer
         public string Ip { set; get; }
         public long nonce { set; get; }
         private bool Disposed { get; set; }
-        public bool _Connected { set; get; }
+        public bool Connected { set; get; }
         public SslStream SslStream { set; get; }
         internal TcpClient TcpClient { set; get; }
         internal NetworkStream NetworkStream { set; get; }
@@ -26,7 +26,7 @@ namespace ADL.Node.Core.Modules.Peer
         public ConnectionMeta(TcpClient tcp)
         {
             TcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
-            _Connected = true;
+            Connected = true;
             NetworkStream = tcp.GetStream();
             Port = ((IPEndPoint)tcp.Client.RemoteEndPoint).Port;
             Ip = ((IPEndPoint)tcp.Client.RemoteEndPoint).Address.ToString();
@@ -60,7 +60,7 @@ namespace ADL.Node.Core.Modules.Peer
                 TcpClient?.Dispose();
             }
 
-            _Connected = false;
+            Connected = false;
             Disposed = true;
         }
     }

@@ -17,19 +17,18 @@ namespace ADL.Node.Core.Modules.Peer.Stream
         public static async Task<byte[]> MessageReadAsync(SslStream sslStream)
         {
             int bytesRead = 0;
-            int sleepInterval = 25;
-            int maxTimeout = 500;
             int currentTimeout;
-            bool timeout = false;
-
             byte[] headerBytes;
             string header = "";
             long contentLength;
             byte[] contentBytes;
+            int maxTimeout = 500;
+            bool timeout = false;
+            int sleepInterval = 25; 
 
             if (!sslStream.CanRead)
             {
-                return null;
+                throw new Exception("cant read stream");
             }    
 
             // start reading header
@@ -81,8 +80,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 }
                 if (timeout)
                 {
-                    Log.Log.Message("*** MessageReadAsync timeout " + currentTimeout + "ms/" + maxTimeout + "ms exceeded while reading header after reading " + bytesRead + " bytes");
-                    return null;
+                    throw new Exception("MessageReadAsync timeout exceeded while reading header after reading");
                 }
                 
                 headerBytes = headerMs.ToArray();
@@ -94,20 +92,19 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 }
                 if (!Int64.TryParse(Encoding.UTF8.GetString(headerBytes).Replace(":", ""), out contentLength))
                 {
-                    Log.Log.Message("*** MessageReadAsync malformed message from " + sslStream.Ip + sslStream.Port + " (message header not an integer)");
-                    return null;
+                    throw new Exception("MessageReadAsync malformed message, message header not an integer");
                 }
             }
             
             using (MemoryStream dataMs = new MemoryStream())
             {
-                long bytesRemaining = contentLength;
-                timeout = false;
-                currentTimeout = 0;
-
                 int read = 0;
                 byte[] buffer;
+                timeout = false;
+                currentTimeout = 0;
                 long bufferSize = 2048;
+                long bytesRemaining = contentLength;
+             
                 if (bufferSize > bytesRemaining)
                 {
                     bufferSize = bytesRemaining;
@@ -132,15 +129,13 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                         {
                             bufferSize = bytesRemaining;
                         }
-
                         buffer = new byte[bufferSize];
-
+                        
                         // check if read fully
                         if (bytesRemaining == 0)
                         {
                             break;
                         }
-
                         if (bytesRead == contentLength)
                         {
                             break;
@@ -159,21 +154,17 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 }
                 if (timeout)
                 {
-                    Log.Log.Message("*** MessageReadAsync timeout " + currentTimeout + "ms/" + maxTimeout + "ms exceeded while reading content after reading " + bytesRead + " bytes");
-                    return null;
+                    throw new Exception("MessageReadAsync timeout exceeded while reading header after reading");
                 }
-
                 contentBytes = dataMs.ToArray();
             }
             if (contentBytes == null || contentBytes.Length < 1)
             {
-                Log.Log.Message("*** MessageReadAsync " + sslStream.Ip + sslStream.Port + " no content read");
                 return null;
             }
             if (contentBytes.Length != contentLength)
             {
-                Log.Log.Message("*** MessageReadAsync " + sslStream.Ip + sslStream.Port + " content length " + contentBytes.Length + " bytes does not match header value " + contentLength + ", discarding");
-                return null;
+                throw new Exception("message descriptor error,  bytes does not match header value");
             }
             return contentBytes;
         }
