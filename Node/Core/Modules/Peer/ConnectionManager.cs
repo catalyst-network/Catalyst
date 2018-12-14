@@ -107,10 +107,10 @@ namespace ADL.Node.Core.Modules.Peer
             IEnumerable<string> permittedIps,
             bool debug)
         {
-            if (peerSettings == null) throw new ArgumentNullException(nameof(peerSettings));
-            if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
             if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
-
+            if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
+            if (peerSettings == null) throw new ArgumentNullException(nameof(peerSettings));
+            
             //@TODO maybe we need to extend this to stop it listening on privileged ports up to 1023
             if (peerSettings.Port < 1)
             {
@@ -118,9 +118,9 @@ namespace ADL.Node.Core.Modules.Peer
             }
             
             _debug = debug;
+            _ListenerPort = peerSettings.Port;
             AcceptInvalidCerts = acceptInvalidCerts;
             _MutuallyAuthenticate = mutualAuthentication;
-            _ListenerPort = peerSettings.Port;
             
             if (permittedIps != null && permittedIps.Count() > 0)
             {
@@ -150,8 +150,8 @@ namespace ADL.Node.Core.Modules.Peer
             _TokenSource = new CancellationTokenSource();
             _Token = _TokenSource.Token;
             _Connections = new ConcurrentDictionary<string, ConnectionMeta>();
-            InboundConnectionListener();
-//            Task.Run(async () => await InboundConnectionListener());
+//            InboundConnectionListener();
+            Task.Run(async () => await InboundConnectionListener());
         }
                 
         /// <summary>
@@ -189,11 +189,12 @@ namespace ADL.Node.Core.Modules.Peer
         /// <param name="connectionMeta"></param>
         /// <param name="cancelToken"></param>
         /// <returns></returns>
-        private async Task DataReceiver(TcpClient tcpClient, CancellationToken? cancelToken=null)
+        private async Task DataReceiver(ConnectionMeta connectionMeta, CancellationToken? cancelToken=null)
         {
             //@TODO connectionmetta to tcp client
-            var port = ((IPEndPoint)tcpClient.Client.LocalEndPoint).Port;
-            var ip = ((IPEndPoint)tcpClient.Client.LocalEndPoint).Address.ToString();
+            var streamReadCounter = 0;
+            var port = ((IPEndPoint)connectionMeta.TcpClient.Client.LocalEndPoint).Port;
+            var ip = ((IPEndPoint)connectionMeta.TcpClient.Client.LocalEndPoint).Address.ToString();
             
             try
             {
@@ -201,18 +202,24 @@ namespace ADL.Node.Core.Modules.Peer
                 {
                     cancelToken?.ThrowIfCancellationRequested();
 
-                    if (!IsConnected(tcpClient))
+                    if (!IsConnected(connectionMeta.TcpClient))
                     {
                         Log.Log.Message("*** Data receiver can not attach to connection");
                         break;
                     }
 
-                    byte[] payload = await Stream.Reader.MessageReadAsync(connectionMeta);
-                    // this causes dos
+                    byte[] payload = await Stream.Reader.MessageReadAsync(connectionMeta.SslStream);
+
                     if (payload == null)
                     {
                         await Task.Delay(30);
-                        // add counter to stop loop
+                        streamReadCounter += streamReadCounter;
+
+                        // count how many times we try reading header && content so we don't get stuck in here.
+                        if (streamReadCounter == 5)
+                        {
+                            break;
+                        }
                         continue;
                     }
                     
@@ -237,9 +244,7 @@ namespace ADL.Node.Core.Modules.Peer
             }
             finally
             {                
-                Task<int> activeCount = Task.Run(() => DisconnectConnection(connectionMeta.Ip, connectionMeta.Port));
-                Log.Log.Message("***** Successfully removed " + connectionMeta.Ip + connectionMeta.Port +
-                                " connected (now " + activeCount + " connections active)");
+                await Task.Run(() => DisconnectConnection(connectionMeta.Ip, connectionMeta.Port));
             }
         }
 
@@ -465,7 +470,7 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private int DisconnectConnection(string ip, int port)
+        private bool DisconnectConnection(string ip, int port)
         {
             if (ip == null) throw new ArgumentNullException(nameof(ip));
             if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
@@ -474,18 +479,18 @@ namespace ADL.Node.Core.Modules.Peer
             {
                 Log.Log.Message("*** Disconnect unable to find connection " + connection.Ip+":"+connection.Port);
                 throw new Exception();
-//                return false;
             }
-  
             if (!_Connections.TryRemove(connection.Ip+":"+connection.Port, out ConnectionMeta removedPeer))
             {
                 Log.Log.Message("*** RemovePeer unable to remove peer " + connection.Ip + connection.Port);
                 throw new Exception();
-                return false;
             }
 
             removedPeer.Dispose();            
-            return Interlocked.Decrement(ref _ActiveConnections);
+            var activeCount = Interlocked.Decrement(ref _ActiveConnections);
+            Log.Log.Message("***** Successfully removed " + ip + port +" connected (now " + activeCount + " connections active)");
+
+            return true;
         }
         
         /// <summary>
