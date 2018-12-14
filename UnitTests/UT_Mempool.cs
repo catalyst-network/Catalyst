@@ -6,8 +6,8 @@ using System.Threading;
 using StackExchange.Redis;
 using ADL.Bash;
 using ADL.Node.Core.Modules.Mempool;
-using ADL.Redis;
 using ADL.Protocols.Mempool;
+using ADL.Redis;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

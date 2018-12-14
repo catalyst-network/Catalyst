@@ -3,7 +3,6 @@ using Autofac;
 using System.IO;
 using ADL.Platform;
 using System.Reflection;
-using ADL.Cryptography.SSL;
 using System.Runtime.Loader;
 using Autofac.Configuration;
 using ADL.Node.Core.Modules.Dfs;
@@ -87,16 +86,18 @@ namespace ADL.Node
                         }
                         
                         // check we have a pfx cert for watson server
-                        if (File.Exists(options.DataDir+"/"+settingsInstance.Ssl.PfxFileName) == false)
-                        {
-                            Console.WriteLine(options.ToString());
-                            X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
-                            SSLUtil.WriteCertificateFile(new DirectoryInfo(options.DataDir),  settingsInstance.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));   
-                        }
-                        else
-                        {
-                            Console.WriteLine("got cert");                
-                        }
+//                        if (File.Exists(options.DataDir+"/"+settingsInstance.Ssl.PfxFileName) == false)
+//                        {
+//                            Console.WriteLine("===============");
+//                            Console.WriteLine(settingsInstance.Ssl.SslCertPassword);
+//                            Console.WriteLine("===============");
+//                            X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
+//                            SSLUtil.WriteCertificateFile(new DirectoryInfo(options.DataDir),  settingsInstance.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));   
+//                        }
+//                        else
+//                        {
+//                            Console.WriteLine("got cert");                
+//                        }
                         var builder = new ContainerBuilder();
             
                         AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) =>
@@ -167,8 +168,8 @@ namespace ADL.Node
         /// <returns></returns>
         private static void CopySkeletonConfigs(string dataDir, string network)
         {
-            File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/config/components.json", dataDir);
-            File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/config/"+network+".json", dataDir);
+            File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/Config/components.json", dataDir);
+            File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/Config/"+network+".json", dataDir);
         }
         
         /// <summary>

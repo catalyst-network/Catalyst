@@ -7,7 +7,7 @@ namespace ADL.Node.Core.Modules.Peer
     {
         public void Load(ContainerBuilder builder, IPeerSettings peerSettings, ISslSettings sslSettings, NodeOptions options)
         {
-            builder.Register(c => new PeerService(c.Resolve<IPeer>(), peerSettings, sslSettings, options))
+            builder.Register(c => new PeerService(peerSettings, sslSettings, options))
                 .As<IPeerService>()
                 .InstancePerLifetimeScope();
         }

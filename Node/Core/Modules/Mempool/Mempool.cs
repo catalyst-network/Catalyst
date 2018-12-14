@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ADL.DataStore;
-using Google.Protobuf;
 using ADL.Protocols.Mempool;
+using Google.Protobuf;
 
 namespace ADL.Node.Core.Modules.Mempool
 {
@@ -30,6 +30,11 @@ namespace ADL.Node.Core.Modules.Mempool
         public bool SaveTx(Key k, Tx value)
         {
             return KeyStore.Set(k.ToByteArray(), value.ToByteArray(), null);
+        }
+
+        Tx IMempool.GetTx(Key k)
+        {
+            return GetTx(k);
         }
 
         /// <summary>
