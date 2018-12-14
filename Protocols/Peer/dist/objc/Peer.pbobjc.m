@@ -36,7 +36,7 @@ static GPBFileDescriptor *PeerRoot_FileDescriptor(void) {
   static GPBFileDescriptor *descriptor = NULL;
   if (!descriptor) {
     GPB_DEBUG_CHECK_RUNTIME_VERSIONS();
-    descriptor = [[GPBFileDescriptor alloc] initWithPackage:@"ADL.Peer.Protocol"
+    descriptor = [[GPBFileDescriptor alloc] initWithPackage:@"ADL.Protocol.Peer"
                                                      syntax:GPBFileSyntaxProto3];
   }
   return descriptor;
@@ -292,6 +292,130 @@ typedef struct PeerNeighborsResponse__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(PeerNeighborsResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ChallengeRequest
+
+@implementation ChallengeRequest
+
+@dynamic type;
+@dynamic nonce;
+
+typedef struct ChallengeRequest__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t type;
+  int32_t nonce;
+} ChallengeRequest__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "type",
+        .dataTypeSpecific.className = NULL,
+        .number = ChallengeRequest_FieldNumber_Type,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ChallengeRequest__storage_, type),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "nonce",
+        .dataTypeSpecific.className = NULL,
+        .number = ChallengeRequest_FieldNumber_Nonce,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(ChallengeRequest__storage_, nonce),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ChallengeRequest class]
+                                     rootClass:[PeerRoot class]
+                                          file:PeerRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ChallengeRequest__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ChallengeResponse
+
+@implementation ChallengeResponse
+
+@dynamic type;
+@dynamic signedNonce;
+@dynamic publicKey;
+
+typedef struct ChallengeResponse__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t type;
+  NSString *signedNonce;
+  NSString *publicKey;
+} ChallengeResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "type",
+        .dataTypeSpecific.className = NULL,
+        .number = ChallengeResponse_FieldNumber_Type,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ChallengeResponse__storage_, type),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "signedNonce",
+        .dataTypeSpecific.className = NULL,
+        .number = ChallengeResponse_FieldNumber_SignedNonce,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(ChallengeResponse__storage_, signedNonce),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "publicKey",
+        .dataTypeSpecific.className = NULL,
+        .number = ChallengeResponse_FieldNumber_PublicKey,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(ChallengeResponse__storage_, publicKey),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ChallengeResponse class]
+                                     rootClass:[PeerRoot class]
+                                          file:PeerRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ChallengeResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\002\013\000\003\t\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }

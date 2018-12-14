@@ -1,33 +1,64 @@
 syntax = "proto3";
 
-package ADL.Peer.Protocol;
+package ADL.Protocol.Peer;
 
-message PingRequest {
-    string ping = 1;
-}
+message PeerProtocol {
+    
+    message PingRequest {
+        int32 type = 1 ;
+        message Payload {
+            string ping = 1;
+        }
+    }
 
-message PongResponse {
-    string pong = 2;
-}
+    message PongResponse {
+        int32 type = 2;
+        message Payload {
+            string pong = 1;
+        }
+    }
 
-message PeerInfoRequest {
-    string ping = 1;
-}
+    message PeerInfoRequest {
+        int32 type = 3;
+        message Payload {
+            string ping = 1;
+        }
+    }
 
-message PeerInfoResponse {
-    string pong = 2;
-}
+    message PeerInfoResponse {
+        int32 type = 4;
+        message Payload {
+            string pong = 1;
+        }
+    }
 
-message PeerNeighborsRequest {
-    string ping = 1;
-}
+    message PeerNeighborsRequest {
+        int32 type = 5;
+        message Payload {
+            string ping = 1;
+        }
+    }
 
-message PeerNeighborsResponse {
-    string pong = 2;
-}
+    message PeerNeighborsResponse {
+        int32 type = 6;
+        message Payload {
+            string pong = 1;
+        }
+    }
 
-service Peer {
-    rpc Ping(PingRequest) returns (PongResponse);
-    rpc GetPeerInfo(PeerInfoRequest) returns (PeerInfoResponse);
-    rpc GetPeerNeighbors(PeerNeighborsRequest) returns (PeerNeighborsResponse);
+    message ChallengeRequest {
+        int32 type = 5;
+        message Payload {
+            int32 type = 1;
+            int32 nonce = 2;
+        }
+    }
+
+    message ChallengeResponse {
+        int32 type = 6;
+        message Payload {
+            string signedNonce = 2;
+            string publicKey = 3;
+        }
+    }
 }

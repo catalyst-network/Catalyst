@@ -4,35 +4,46 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
-  add_message "ADL.Peer.Protocol.PingRequest" do
+  add_message "ADL.Protocol.Peer.PingRequest" do
     optional :ping, :string, 1
   end
-  add_message "ADL.Peer.Protocol.PongResponse" do
-    optional :pong, :string, 2
+  add_message "ADL.Protocol.Peer.PongResponse" do
+    optional :pong, :string, 1
   end
-  add_message "ADL.Peer.Protocol.PeerInfoRequest" do
+  add_message "ADL.Protocol.Peer.PeerInfoRequest" do
     optional :ping, :string, 1
   end
-  add_message "ADL.Peer.Protocol.PeerInfoResponse" do
-    optional :pong, :string, 2
+  add_message "ADL.Protocol.Peer.PeerInfoResponse" do
+    optional :pong, :string, 1
   end
-  add_message "ADL.Peer.Protocol.PeerNeighborsRequest" do
+  add_message "ADL.Protocol.Peer.PeerNeighborsRequest" do
     optional :ping, :string, 1
   end
-  add_message "ADL.Peer.Protocol.PeerNeighborsResponse" do
-    optional :pong, :string, 2
+  add_message "ADL.Protocol.Peer.PeerNeighborsResponse" do
+    optional :pong, :string, 1
+  end
+  add_message "ADL.Protocol.Peer.ChallengeRequest" do
+    optional :type, :int32, 1
+    optional :nonce, :int32, 2
+  end
+  add_message "ADL.Protocol.Peer.ChallengeResponse" do
+    optional :type, :int32, 1
+    optional :signedNonce, :string, 2
+    optional :publicKey, :string, 3
   end
 end
 
 module ADL
-  module Peer
-    module Protocol
-      PingRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Peer.Protocol.PingRequest").msgclass
-      PongResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Peer.Protocol.PongResponse").msgclass
-      PeerInfoRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Peer.Protocol.PeerInfoRequest").msgclass
-      PeerInfoResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Peer.Protocol.PeerInfoResponse").msgclass
-      PeerNeighborsRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Peer.Protocol.PeerNeighborsRequest").msgclass
-      PeerNeighborsResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Peer.Protocol.PeerNeighborsResponse").msgclass
+  module Protocol
+    module Peer
+      PingRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PingRequest").msgclass
+      PongResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PongResponse").msgclass
+      PeerInfoRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerInfoRequest").msgclass
+      PeerInfoResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerInfoResponse").msgclass
+      PeerNeighborsRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerNeighborsRequest").msgclass
+      PeerNeighborsResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.PeerNeighborsResponse").msgclass
+      ChallengeRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.ChallengeRequest").msgclass
+      ChallengeResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("ADL.Protocol.Peer.ChallengeResponse").msgclass
     end
   end
 end

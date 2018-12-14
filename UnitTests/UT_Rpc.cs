@@ -25,6 +25,7 @@ namespace ADL.UnitTests
             options.Network = "devnet";
             options.PublicKey = "lol";
             options.PayoutAddress = "kek";
+            options.WalletRpcPort = 0;
                         
             AtlasSystem.GetInstance(options); // run node
             var SessionHost = new Channel("127.0.0.1:42042", ChannelCredentials.Insecure);
