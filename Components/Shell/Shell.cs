@@ -1,10 +1,11 @@
 using System;
 using Grpc.Core;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using ADL.Protocol.Rpc.Node;
-using ADL.Protocol.Rpc.Node.dist.csharp;
+using Google.Protobuf;
 
 namespace ADL.Shell
 {
@@ -149,7 +150,8 @@ namespace ADL.Shell
             var channelTarget = ip+":"+port;
             
             SessionHost = new Channel(channelTarget, ChannelCredentials.Insecure);
-            CallNodeRpc(SessionHost);
+            _rpcClient = new RpcServer.RpcServerClient(SessionHost);            
+
             return true;
         }
         
@@ -268,7 +270,7 @@ namespace ADL.Shell
                 case "delta":
                     return OnGetDelta(args);
                 case "mempool":
-                    return OnGetMempool(args);
+                    return OnGetMempool();
                 default:
                     return base.OnCommand(args);
             }
@@ -351,13 +353,15 @@ namespace ADL.Shell
         }
         
         /// <summary>
-        /// 
+        /// Get stats about the underlying mempool implementation
         /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static bool OnGetMempool(string[] args)
+        /// <returns>Boolean</returns>
+        public override bool OnGetMempool()
         {
-            return false;
+            var response = _rpcClient.GetMempool(new GetMempoolRequest {Query = true});
+            Console.WriteLine(response);
+            
+            return true;
         }
 
         /// <summary>
@@ -553,36 +557,6 @@ namespace ADL.Shell
                 default:
                     return CommandNotFound(args);                
             }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static async Task CallNodeRpc(Channel channel)
-        {
-
-            try
-            {
-                _rpcClient = new RpcServer.RpcServerClient(channel);
-
-                var pingRequest = new PingRequest{ Ping = "ping" };
-                var versionRequest = new VersionRequest{ Query = true };
-
-                Console.WriteLine("GreeterClient sending request");
-                var pingResponse= await _rpcClient.PingAsync(pingRequest);
-                Console.WriteLine("GreeterClient received response: " + pingResponse);
-
-                var versionResponse = await _rpcClient.VersionAsync(versionRequest);          
-                Console.WriteLine("GreeterClient received response: " + versionResponse);
-
-            }
-            finally
-            {
-                // Shutdown
-                await channel.ShutdownAsync();
-            }
-        }
+        }        
     }
 }

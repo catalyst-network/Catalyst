@@ -9,8 +9,8 @@ namespace ADL.UnitTests
     [TestClass]
     public class UT_RedisConnector
     {
-        private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance.Connection;
-        private static readonly IDatabase Db = RedisConnector.Instance.GetDb;
+        private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance().Connection;
+        private static readonly IDatabase Db = RedisConnector.Instance().GetDb;
 
         private static void Writer(int start, int end)
         {
@@ -37,7 +37,7 @@ namespace ADL.UnitTests
             var server = Cm.GetServer(endpoint[0]);
             server.FlushDatabase(); // clean up before each test
         }
-        
+
         [TestMethod]
         public void OneWriteRead()
         {

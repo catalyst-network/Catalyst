@@ -7,249 +7,249 @@
 
 using grpc = global::Grpc.Core;
 
-namespace ADL.Protocol.Rpc.Node.dist.csharp {
+namespace ADL.Protocol.Rpc.Node {
   public static partial class RpcServer
   {
     static readonly string __ServiceName = "ADL.Protocol.Rpc.Node.RpcServer";
 
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest> __Marshaller_ADL_Protocol_Rpc_Node_PingRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse> __Marshaller_ADL_Protocol_Rpc_Node_PongResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest> __Marshaller_ADL_Protocol_Rpc_Node_VersionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse> __Marshaller_ADL_Protocol_Rpc_Node_VersionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetInfoRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest> __Marshaller_ADL_Protocol_Rpc_Node_CreateWalletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse> __Marshaller_ADL_Protocol_Rpc_Node_CreateWalletResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest> __Marshaller_ADL_Protocol_Rpc_Node_ListWalletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse> __Marshaller_ADL_Protocol_Rpc_Node_ListWalletResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest> __Marshaller_ADL_Protocol_Rpc_Node_CreateAddressRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse> __Marshaller_ADL_Protocol_Rpc_Node_CreateAddressResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetAddressRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetAddressResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest> __Marshaller_ADL_Protocol_Rpc_Node_ListAddressRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse> __Marshaller_ADL_Protocol_Rpc_Node_ListAddressResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest> __Marshaller_ADL_Protocol_Rpc_Node_ValidateAddressRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse> __Marshaller_ADL_Protocol_Rpc_Node_ValidateAddressResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetBalanceRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetBalanceResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest> __Marshaller_ADL_Protocol_Rpc_Node_CreateRawTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse> __Marshaller_ADL_Protocol_Rpc_Node_CreateRawTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest> __Marshaller_ADL_Protocol_Rpc_Node_SignRawTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse> __Marshaller_ADL_Protocol_Rpc_Node_SignRawTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest> __Marshaller_ADL_Protocol_Rpc_Node_DecodeRawTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse> __Marshaller_ADL_Protocol_Rpc_Node_DecodeRawTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest> __Marshaller_ADL_Protocol_Rpc_Node_BroadcastRawTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse> __Marshaller_ADL_Protocol_Rpc_Node_BroadcastRawTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest> __Marshaller_ADL_Protocol_Rpc_Node_SendToRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse> __Marshaller_ADL_Protocol_Rpc_Node_SendToResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest> __Marshaller_ADL_Protocol_Rpc_Node_SendToFromRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse> __Marshaller_ADL_Protocol_Rpc_Node_SendToFromResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest> __Marshaller_ADL_Protocol_Rpc_Node_SendManyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse> __Marshaller_ADL_Protocol_Rpc_Node_SendManyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest> __Marshaller_ADL_Protocol_Rpc_Node_SendFromManyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse> __Marshaller_ADL_Protocol_Rpc_Node_SendFromManyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest> __Marshaller_ADL_Protocol_Rpc_Node_AddNodeRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse> __Marshaller_ADL_Protocol_Rpc_Node_AddNodeResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetPeerListRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetPeerListResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetPeerInfoRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetPeerInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetConnectionCountRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetConnectionCountResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetDeltaRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetDeltaResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetMempoolRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetMempoolResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest> __Marshaller_ADL_Protocol_Rpc_Node_SignMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse> __Marshaller_ADL_Protocol_Rpc_Node_SignMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest> __Marshaller_ADL_Protocol_Rpc_Node_VerifyMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse> __Marshaller_ADL_Protocol_Rpc_Node_VerifyMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest> __Marshaller_ADL_Protocol_Rpc_Node_ServiceStatusRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse> __Marshaller_ADL_Protocol_Rpc_Node_ServiceStatusResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.PingRequest> __Marshaller_ADL_Protocol_Rpc_Node_PingRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.PingRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.PongResponse> __Marshaller_ADL_Protocol_Rpc_Node_PongResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.PongResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.VersionRequest> __Marshaller_ADL_Protocol_Rpc_Node_VersionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.VersionRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.VersionResponse> __Marshaller_ADL_Protocol_Rpc_Node_VersionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.VersionResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetInfoRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetInfoRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetInfoRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetInfoResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetInfoResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.CreateWalletRequest> __Marshaller_ADL_Protocol_Rpc_Node_CreateWalletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.CreateWalletRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.CreateWalletResponse> __Marshaller_ADL_Protocol_Rpc_Node_CreateWalletResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.CreateWalletResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.ListWalletRequest> __Marshaller_ADL_Protocol_Rpc_Node_ListWalletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.ListWalletRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.ListWalletResponse> __Marshaller_ADL_Protocol_Rpc_Node_ListWalletResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.ListWalletResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.CreateAddressRequest> __Marshaller_ADL_Protocol_Rpc_Node_CreateAddressRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.CreateAddressRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.CreateAddressResponse> __Marshaller_ADL_Protocol_Rpc_Node_CreateAddressResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.CreateAddressResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetAddressRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetAddressRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetAddressRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetAddressResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetAddressResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetAddressResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.ListAddressRequest> __Marshaller_ADL_Protocol_Rpc_Node_ListAddressRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.ListAddressRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.ListAddressResponse> __Marshaller_ADL_Protocol_Rpc_Node_ListAddressResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.ListAddressResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.ValidateAddressRequest> __Marshaller_ADL_Protocol_Rpc_Node_ValidateAddressRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.ValidateAddressRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.ValidateAddressResponse> __Marshaller_ADL_Protocol_Rpc_Node_ValidateAddressResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.ValidateAddressResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetBalanceRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetBalanceRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetBalanceRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetBalanceResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetBalanceResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetBalanceResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest> __Marshaller_ADL_Protocol_Rpc_Node_CreateRawTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse> __Marshaller_ADL_Protocol_Rpc_Node_CreateRawTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest> __Marshaller_ADL_Protocol_Rpc_Node_SignRawTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse> __Marshaller_ADL_Protocol_Rpc_Node_SignRawTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest> __Marshaller_ADL_Protocol_Rpc_Node_DecodeRawTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse> __Marshaller_ADL_Protocol_Rpc_Node_DecodeRawTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest> __Marshaller_ADL_Protocol_Rpc_Node_BroadcastRawTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse> __Marshaller_ADL_Protocol_Rpc_Node_BroadcastRawTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SendToRequest> __Marshaller_ADL_Protocol_Rpc_Node_SendToRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SendToRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SendToResponse> __Marshaller_ADL_Protocol_Rpc_Node_SendToResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SendToResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SendToFromRequest> __Marshaller_ADL_Protocol_Rpc_Node_SendToFromRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SendToFromRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SendToFromResponse> __Marshaller_ADL_Protocol_Rpc_Node_SendToFromResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SendToFromResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SendManyRequest> __Marshaller_ADL_Protocol_Rpc_Node_SendManyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SendManyRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SendManyResponse> __Marshaller_ADL_Protocol_Rpc_Node_SendManyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SendManyResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SendFromManyRequest> __Marshaller_ADL_Protocol_Rpc_Node_SendFromManyRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SendFromManyRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SendFromManyResponse> __Marshaller_ADL_Protocol_Rpc_Node_SendFromManyResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SendFromManyResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.AddNodeRequest> __Marshaller_ADL_Protocol_Rpc_Node_AddNodeRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.AddNodeRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.AddNodeResponse> __Marshaller_ADL_Protocol_Rpc_Node_AddNodeResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.AddNodeResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetPeerListRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetPeerListRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetPeerListRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetPeerListResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetPeerListResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetPeerListResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetPeerInfoRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetPeerInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetConnectionCountRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetConnectionCountResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetDeltaRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetDeltaRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetDeltaRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetDeltaResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetDeltaResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetDeltaResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetMempoolRequest> __Marshaller_ADL_Protocol_Rpc_Node_GetMempoolRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetMempoolRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.GetMempoolResponse> __Marshaller_ADL_Protocol_Rpc_Node_GetMempoolResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.GetMempoolResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SignMessageRequest> __Marshaller_ADL_Protocol_Rpc_Node_SignMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SignMessageRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.SignMessageResponse> __Marshaller_ADL_Protocol_Rpc_Node_SignMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.SignMessageResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.VerifyMessageRequest> __Marshaller_ADL_Protocol_Rpc_Node_VerifyMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.VerifyMessageRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.VerifyMessageResponse> __Marshaller_ADL_Protocol_Rpc_Node_VerifyMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.VerifyMessageResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.ServiceStatusRequest> __Marshaller_ADL_Protocol_Rpc_Node_ServiceStatusRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.ServiceStatusRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::ADL.Protocol.Rpc.Node.ServiceStatusResponse> __Marshaller_ADL_Protocol_Rpc_Node_ServiceStatusResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ADL.Protocol.Rpc.Node.ServiceStatusResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse> __Method_Ping = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.PingRequest, global::ADL.Protocol.Rpc.Node.PongResponse> __Method_Ping = new grpc::Method<global::ADL.Protocol.Rpc.Node.PingRequest, global::ADL.Protocol.Rpc.Node.PongResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "Ping",
         __Marshaller_ADL_Protocol_Rpc_Node_PingRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_PongResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse> __Method_Version = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.VersionRequest, global::ADL.Protocol.Rpc.Node.VersionResponse> __Method_Version = new grpc::Method<global::ADL.Protocol.Rpc.Node.VersionRequest, global::ADL.Protocol.Rpc.Node.VersionResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "Version",
         __Marshaller_ADL_Protocol_Rpc_Node_VersionRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_VersionResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse> __Method_GetInfo = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.GetInfoRequest, global::ADL.Protocol.Rpc.Node.GetInfoResponse> __Method_GetInfo = new grpc::Method<global::ADL.Protocol.Rpc.Node.GetInfoRequest, global::ADL.Protocol.Rpc.Node.GetInfoResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetInfo",
         __Marshaller_ADL_Protocol_Rpc_Node_GetInfoRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_GetInfoResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse> __Method_CreateWallet = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.CreateWalletRequest, global::ADL.Protocol.Rpc.Node.CreateWalletResponse> __Method_CreateWallet = new grpc::Method<global::ADL.Protocol.Rpc.Node.CreateWalletRequest, global::ADL.Protocol.Rpc.Node.CreateWalletResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "CreateWallet",
         __Marshaller_ADL_Protocol_Rpc_Node_CreateWalletRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_CreateWalletResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse> __Method_ListWallet = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.ListWalletRequest, global::ADL.Protocol.Rpc.Node.ListWalletResponse> __Method_ListWallet = new grpc::Method<global::ADL.Protocol.Rpc.Node.ListWalletRequest, global::ADL.Protocol.Rpc.Node.ListWalletResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "ListWallet",
         __Marshaller_ADL_Protocol_Rpc_Node_ListWalletRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_ListWalletResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse> __Method_CreateAddress = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.CreateAddressRequest, global::ADL.Protocol.Rpc.Node.CreateAddressResponse> __Method_CreateAddress = new grpc::Method<global::ADL.Protocol.Rpc.Node.CreateAddressRequest, global::ADL.Protocol.Rpc.Node.CreateAddressResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "CreateAddress",
         __Marshaller_ADL_Protocol_Rpc_Node_CreateAddressRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_CreateAddressResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse> __Method_GetAddress = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.GetAddressRequest, global::ADL.Protocol.Rpc.Node.GetAddressResponse> __Method_GetAddress = new grpc::Method<global::ADL.Protocol.Rpc.Node.GetAddressRequest, global::ADL.Protocol.Rpc.Node.GetAddressResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetAddress",
         __Marshaller_ADL_Protocol_Rpc_Node_GetAddressRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_GetAddressResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse> __Method_ListAddress = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.ListAddressRequest, global::ADL.Protocol.Rpc.Node.ListAddressResponse> __Method_ListAddress = new grpc::Method<global::ADL.Protocol.Rpc.Node.ListAddressRequest, global::ADL.Protocol.Rpc.Node.ListAddressResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "ListAddress",
         __Marshaller_ADL_Protocol_Rpc_Node_ListAddressRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_ListAddressResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse> __Method_ValidateAddress = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.ValidateAddressRequest, global::ADL.Protocol.Rpc.Node.ValidateAddressResponse> __Method_ValidateAddress = new grpc::Method<global::ADL.Protocol.Rpc.Node.ValidateAddressRequest, global::ADL.Protocol.Rpc.Node.ValidateAddressResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "ValidateAddress",
         __Marshaller_ADL_Protocol_Rpc_Node_ValidateAddressRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_ValidateAddressResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse> __Method_GetBalance = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.GetBalanceRequest, global::ADL.Protocol.Rpc.Node.GetBalanceResponse> __Method_GetBalance = new grpc::Method<global::ADL.Protocol.Rpc.Node.GetBalanceRequest, global::ADL.Protocol.Rpc.Node.GetBalanceResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetBalance",
         __Marshaller_ADL_Protocol_Rpc_Node_GetBalanceRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_GetBalanceResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse> __Method_CreateRawTransaction = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest, global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse> __Method_CreateRawTransaction = new grpc::Method<global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest, global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "CreateRawTransaction",
         __Marshaller_ADL_Protocol_Rpc_Node_CreateRawTransactionRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_CreateRawTransactionResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse> __Method_SignRawTransaction = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest, global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse> __Method_SignRawTransaction = new grpc::Method<global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest, global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "SignRawTransaction",
         __Marshaller_ADL_Protocol_Rpc_Node_SignRawTransactionRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_SignRawTransactionResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse> __Method_DecodeRawTransaction = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest, global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse> __Method_DecodeRawTransaction = new grpc::Method<global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest, global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "DecodeRawTransaction",
         __Marshaller_ADL_Protocol_Rpc_Node_DecodeRawTransactionRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_DecodeRawTransactionResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse> __Method_BroadcastRawTransaction = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest, global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse> __Method_BroadcastRawTransaction = new grpc::Method<global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest, global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "BroadcastRawTransaction",
         __Marshaller_ADL_Protocol_Rpc_Node_BroadcastRawTransactionRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_BroadcastRawTransactionResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse> __Method_SendTo = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.SendToRequest, global::ADL.Protocol.Rpc.Node.SendToResponse> __Method_SendTo = new grpc::Method<global::ADL.Protocol.Rpc.Node.SendToRequest, global::ADL.Protocol.Rpc.Node.SendToResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "SendTo",
         __Marshaller_ADL_Protocol_Rpc_Node_SendToRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_SendToResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse> __Method_SendToFrom = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.SendToFromRequest, global::ADL.Protocol.Rpc.Node.SendToFromResponse> __Method_SendToFrom = new grpc::Method<global::ADL.Protocol.Rpc.Node.SendToFromRequest, global::ADL.Protocol.Rpc.Node.SendToFromResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "SendToFrom",
         __Marshaller_ADL_Protocol_Rpc_Node_SendToFromRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_SendToFromResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse> __Method_SendMany = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.SendManyRequest, global::ADL.Protocol.Rpc.Node.SendManyResponse> __Method_SendMany = new grpc::Method<global::ADL.Protocol.Rpc.Node.SendManyRequest, global::ADL.Protocol.Rpc.Node.SendManyResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "SendMany",
         __Marshaller_ADL_Protocol_Rpc_Node_SendManyRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_SendManyResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse> __Method_SendFromMany = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.SendFromManyRequest, global::ADL.Protocol.Rpc.Node.SendFromManyResponse> __Method_SendFromMany = new grpc::Method<global::ADL.Protocol.Rpc.Node.SendFromManyRequest, global::ADL.Protocol.Rpc.Node.SendFromManyResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "SendFromMany",
         __Marshaller_ADL_Protocol_Rpc_Node_SendFromManyRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_SendFromManyResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse> __Method_AddNode = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.AddNodeRequest, global::ADL.Protocol.Rpc.Node.AddNodeResponse> __Method_AddNode = new grpc::Method<global::ADL.Protocol.Rpc.Node.AddNodeRequest, global::ADL.Protocol.Rpc.Node.AddNodeResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "AddNode",
         __Marshaller_ADL_Protocol_Rpc_Node_AddNodeRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_AddNodeResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse> __Method_GetPeerList = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.GetPeerListRequest, global::ADL.Protocol.Rpc.Node.GetPeerListResponse> __Method_GetPeerList = new grpc::Method<global::ADL.Protocol.Rpc.Node.GetPeerListRequest, global::ADL.Protocol.Rpc.Node.GetPeerListResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetPeerList",
         __Marshaller_ADL_Protocol_Rpc_Node_GetPeerListRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_GetPeerListResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse> __Method_GetPeerInfo = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest, global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse> __Method_GetPeerInfo = new grpc::Method<global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest, global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetPeerInfo",
         __Marshaller_ADL_Protocol_Rpc_Node_GetPeerInfoRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_GetPeerInfoResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse> __Method_GetConnectionCount = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest, global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse> __Method_GetConnectionCount = new grpc::Method<global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest, global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetConnectionCount",
         __Marshaller_ADL_Protocol_Rpc_Node_GetConnectionCountRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_GetConnectionCountResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse> __Method_GetDelta = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.GetDeltaRequest, global::ADL.Protocol.Rpc.Node.GetDeltaResponse> __Method_GetDelta = new grpc::Method<global::ADL.Protocol.Rpc.Node.GetDeltaRequest, global::ADL.Protocol.Rpc.Node.GetDeltaResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetDelta",
         __Marshaller_ADL_Protocol_Rpc_Node_GetDeltaRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_GetDeltaResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse> __Method_GetMempool = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.GetMempoolRequest, global::ADL.Protocol.Rpc.Node.GetMempoolResponse> __Method_GetMempool = new grpc::Method<global::ADL.Protocol.Rpc.Node.GetMempoolRequest, global::ADL.Protocol.Rpc.Node.GetMempoolResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetMempool",
         __Marshaller_ADL_Protocol_Rpc_Node_GetMempoolRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_GetMempoolResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse> __Method_SignMessage = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.SignMessageRequest, global::ADL.Protocol.Rpc.Node.SignMessageResponse> __Method_SignMessage = new grpc::Method<global::ADL.Protocol.Rpc.Node.SignMessageRequest, global::ADL.Protocol.Rpc.Node.SignMessageResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "SignMessage",
         __Marshaller_ADL_Protocol_Rpc_Node_SignMessageRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_SignMessageResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse> __Method_VerifyMessage = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.VerifyMessageRequest, global::ADL.Protocol.Rpc.Node.VerifyMessageResponse> __Method_VerifyMessage = new grpc::Method<global::ADL.Protocol.Rpc.Node.VerifyMessageRequest, global::ADL.Protocol.Rpc.Node.VerifyMessageResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "VerifyMessage",
         __Marshaller_ADL_Protocol_Rpc_Node_VerifyMessageRequest,
         __Marshaller_ADL_Protocol_Rpc_Node_VerifyMessageResponse);
 
-    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse> __Method_ServiceStatus = new grpc::Method<global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest, global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse>(
+    static readonly grpc::Method<global::ADL.Protocol.Rpc.Node.ServiceStatusRequest, global::ADL.Protocol.Rpc.Node.ServiceStatusResponse> __Method_ServiceStatus = new grpc::Method<global::ADL.Protocol.Rpc.Node.ServiceStatusRequest, global::ADL.Protocol.Rpc.Node.ServiceStatusResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "ServiceStatus",
@@ -259,143 +259,143 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcServiceReflection.Descriptor.Services[0]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcServiceReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Base class for server-side implementations of RpcServer</summary>
     public abstract partial class RpcServerBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse> Ping(global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.PongResponse> Ping(global::ADL.Protocol.Rpc.Node.PingRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse> Version(global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.VersionResponse> Version(global::ADL.Protocol.Rpc.Node.VersionRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse> GetInfo(global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.GetInfoResponse> GetInfo(global::ADL.Protocol.Rpc.Node.GetInfoRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse> CreateWallet(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.CreateWalletResponse> CreateWallet(global::ADL.Protocol.Rpc.Node.CreateWalletRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse> ListWallet(global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.ListWalletResponse> ListWallet(global::ADL.Protocol.Rpc.Node.ListWalletRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse> CreateAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.CreateAddressResponse> CreateAddress(global::ADL.Protocol.Rpc.Node.CreateAddressRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse> GetAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.GetAddressResponse> GetAddress(global::ADL.Protocol.Rpc.Node.GetAddressRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse> ListAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.ListAddressResponse> ListAddress(global::ADL.Protocol.Rpc.Node.ListAddressRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse> ValidateAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.ValidateAddressResponse> ValidateAddress(global::ADL.Protocol.Rpc.Node.ValidateAddressRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse> GetBalance(global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.GetBalanceResponse> GetBalance(global::ADL.Protocol.Rpc.Node.GetBalanceRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse> CreateRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse> CreateRawTransaction(global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse> SignRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse> SignRawTransaction(global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse> DecodeRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse> DecodeRawTransaction(global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse> BroadcastRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse> BroadcastRawTransaction(global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse> SendTo(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.SendToResponse> SendTo(global::ADL.Protocol.Rpc.Node.SendToRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse> SendToFrom(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.SendToFromResponse> SendToFrom(global::ADL.Protocol.Rpc.Node.SendToFromRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse> SendMany(global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.SendManyResponse> SendMany(global::ADL.Protocol.Rpc.Node.SendManyRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse> SendFromMany(global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.SendFromManyResponse> SendFromMany(global::ADL.Protocol.Rpc.Node.SendFromManyRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse> AddNode(global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.AddNodeResponse> AddNode(global::ADL.Protocol.Rpc.Node.AddNodeRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse> GetPeerList(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.GetPeerListResponse> GetPeerList(global::ADL.Protocol.Rpc.Node.GetPeerListRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse> GetPeerInfo(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse> GetPeerInfo(global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse> GetConnectionCount(global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse> GetConnectionCount(global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse> GetDelta(global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.GetDeltaResponse> GetDelta(global::ADL.Protocol.Rpc.Node.GetDeltaRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse> GetMempool(global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.GetMempoolResponse> GetMempool(global::ADL.Protocol.Rpc.Node.GetMempoolRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse> SignMessage(global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.SignMessageResponse> SignMessage(global::ADL.Protocol.Rpc.Node.SignMessageRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse> VerifyMessage(global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.VerifyMessageResponse> VerifyMessage(global::ADL.Protocol.Rpc.Node.VerifyMessageRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse> ServiceStatus(global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::ADL.Protocol.Rpc.Node.ServiceStatusResponse> ServiceStatus(global::ADL.Protocol.Rpc.Node.ServiceStatusRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -425,435 +425,435 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
       {
       }
 
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse Ping(global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.PongResponse Ping(global::ADL.Protocol.Rpc.Node.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Ping(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse Ping(global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.PongResponse Ping(global::ADL.Protocol.Rpc.Node.PingRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Ping, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse> PingAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.PongResponse> PingAsync(global::ADL.Protocol.Rpc.Node.PingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return PingAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse> PingAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.PongResponse> PingAsync(global::ADL.Protocol.Rpc.Node.PingRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_Ping, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse Version(global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.VersionResponse Version(global::ADL.Protocol.Rpc.Node.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Version(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse Version(global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.VersionResponse Version(global::ADL.Protocol.Rpc.Node.VersionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Version, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse> VersionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.VersionResponse> VersionAsync(global::ADL.Protocol.Rpc.Node.VersionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return VersionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse> VersionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.VersionResponse> VersionAsync(global::ADL.Protocol.Rpc.Node.VersionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_Version, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse GetInfo(global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.GetInfoResponse GetInfo(global::ADL.Protocol.Rpc.Node.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetInfo(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse GetInfo(global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.GetInfoResponse GetInfo(global::ADL.Protocol.Rpc.Node.GetInfoRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetInfo, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse> GetInfoAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetInfoResponse> GetInfoAsync(global::ADL.Protocol.Rpc.Node.GetInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetInfoAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse> GetInfoAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetInfoResponse> GetInfoAsync(global::ADL.Protocol.Rpc.Node.GetInfoRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetInfo, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse CreateWallet(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.CreateWalletResponse CreateWallet(global::ADL.Protocol.Rpc.Node.CreateWalletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateWallet(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse CreateWallet(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.CreateWalletResponse CreateWallet(global::ADL.Protocol.Rpc.Node.CreateWalletRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_CreateWallet, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse> CreateWalletAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.CreateWalletResponse> CreateWalletAsync(global::ADL.Protocol.Rpc.Node.CreateWalletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateWalletAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse> CreateWalletAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.CreateWalletResponse> CreateWalletAsync(global::ADL.Protocol.Rpc.Node.CreateWalletRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_CreateWallet, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse ListWallet(global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.ListWalletResponse ListWallet(global::ADL.Protocol.Rpc.Node.ListWalletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ListWallet(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse ListWallet(global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.ListWalletResponse ListWallet(global::ADL.Protocol.Rpc.Node.ListWalletRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_ListWallet, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse> ListWalletAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.ListWalletResponse> ListWalletAsync(global::ADL.Protocol.Rpc.Node.ListWalletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ListWalletAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse> ListWalletAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.ListWalletResponse> ListWalletAsync(global::ADL.Protocol.Rpc.Node.ListWalletRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_ListWallet, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse CreateAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.CreateAddressResponse CreateAddress(global::ADL.Protocol.Rpc.Node.CreateAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateAddress(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse CreateAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.CreateAddressResponse CreateAddress(global::ADL.Protocol.Rpc.Node.CreateAddressRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_CreateAddress, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse> CreateAddressAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.CreateAddressResponse> CreateAddressAsync(global::ADL.Protocol.Rpc.Node.CreateAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateAddressAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse> CreateAddressAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.CreateAddressResponse> CreateAddressAsync(global::ADL.Protocol.Rpc.Node.CreateAddressRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_CreateAddress, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse GetAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.GetAddressResponse GetAddress(global::ADL.Protocol.Rpc.Node.GetAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetAddress(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse GetAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.GetAddressResponse GetAddress(global::ADL.Protocol.Rpc.Node.GetAddressRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetAddress, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse> GetAddressAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetAddressResponse> GetAddressAsync(global::ADL.Protocol.Rpc.Node.GetAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetAddressAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse> GetAddressAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetAddressResponse> GetAddressAsync(global::ADL.Protocol.Rpc.Node.GetAddressRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetAddress, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse ListAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.ListAddressResponse ListAddress(global::ADL.Protocol.Rpc.Node.ListAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ListAddress(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse ListAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.ListAddressResponse ListAddress(global::ADL.Protocol.Rpc.Node.ListAddressRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_ListAddress, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse> ListAddressAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.ListAddressResponse> ListAddressAsync(global::ADL.Protocol.Rpc.Node.ListAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ListAddressAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse> ListAddressAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.ListAddressResponse> ListAddressAsync(global::ADL.Protocol.Rpc.Node.ListAddressRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_ListAddress, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse ValidateAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.ValidateAddressResponse ValidateAddress(global::ADL.Protocol.Rpc.Node.ValidateAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ValidateAddress(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse ValidateAddress(global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.ValidateAddressResponse ValidateAddress(global::ADL.Protocol.Rpc.Node.ValidateAddressRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_ValidateAddress, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse> ValidateAddressAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.ValidateAddressResponse> ValidateAddressAsync(global::ADL.Protocol.Rpc.Node.ValidateAddressRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ValidateAddressAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse> ValidateAddressAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.ValidateAddressResponse> ValidateAddressAsync(global::ADL.Protocol.Rpc.Node.ValidateAddressRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_ValidateAddress, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse GetBalance(global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.GetBalanceResponse GetBalance(global::ADL.Protocol.Rpc.Node.GetBalanceRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetBalance(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse GetBalance(global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.GetBalanceResponse GetBalance(global::ADL.Protocol.Rpc.Node.GetBalanceRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetBalance, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse> GetBalanceAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetBalanceResponse> GetBalanceAsync(global::ADL.Protocol.Rpc.Node.GetBalanceRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetBalanceAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse> GetBalanceAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetBalanceResponse> GetBalanceAsync(global::ADL.Protocol.Rpc.Node.GetBalanceRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetBalance, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse CreateRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse CreateRawTransaction(global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateRawTransaction(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse CreateRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse CreateRawTransaction(global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_CreateRawTransaction, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse> CreateRawTransactionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse> CreateRawTransactionAsync(global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CreateRawTransactionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse> CreateRawTransactionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse> CreateRawTransactionAsync(global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_CreateRawTransaction, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse SignRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse SignRawTransaction(global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SignRawTransaction(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse SignRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse SignRawTransaction(global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SignRawTransaction, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse> SignRawTransactionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse> SignRawTransactionAsync(global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SignRawTransactionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse> SignRawTransactionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse> SignRawTransactionAsync(global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SignRawTransaction, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse DecodeRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse DecodeRawTransaction(global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DecodeRawTransaction(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse DecodeRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse DecodeRawTransaction(global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_DecodeRawTransaction, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse> DecodeRawTransactionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse> DecodeRawTransactionAsync(global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DecodeRawTransactionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse> DecodeRawTransactionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse> DecodeRawTransactionAsync(global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_DecodeRawTransaction, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse BroadcastRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse BroadcastRawTransaction(global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return BroadcastRawTransaction(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse BroadcastRawTransaction(global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse BroadcastRawTransaction(global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_BroadcastRawTransaction, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse> BroadcastRawTransactionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse> BroadcastRawTransactionAsync(global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return BroadcastRawTransactionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse> BroadcastRawTransactionAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse> BroadcastRawTransactionAsync(global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_BroadcastRawTransaction, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse SendTo(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.SendToResponse SendTo(global::ADL.Protocol.Rpc.Node.SendToRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendTo(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse SendTo(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.SendToResponse SendTo(global::ADL.Protocol.Rpc.Node.SendToRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SendTo, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse> SendToAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SendToResponse> SendToAsync(global::ADL.Protocol.Rpc.Node.SendToRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendToAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse> SendToAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SendToResponse> SendToAsync(global::ADL.Protocol.Rpc.Node.SendToRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SendTo, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse SendToFrom(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.SendToFromResponse SendToFrom(global::ADL.Protocol.Rpc.Node.SendToFromRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendToFrom(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse SendToFrom(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.SendToFromResponse SendToFrom(global::ADL.Protocol.Rpc.Node.SendToFromRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SendToFrom, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse> SendToFromAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SendToFromResponse> SendToFromAsync(global::ADL.Protocol.Rpc.Node.SendToFromRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendToFromAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse> SendToFromAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SendToFromResponse> SendToFromAsync(global::ADL.Protocol.Rpc.Node.SendToFromRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SendToFrom, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse SendMany(global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.SendManyResponse SendMany(global::ADL.Protocol.Rpc.Node.SendManyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendMany(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse SendMany(global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.SendManyResponse SendMany(global::ADL.Protocol.Rpc.Node.SendManyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SendMany, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse> SendManyAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SendManyResponse> SendManyAsync(global::ADL.Protocol.Rpc.Node.SendManyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendManyAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse> SendManyAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SendManyResponse> SendManyAsync(global::ADL.Protocol.Rpc.Node.SendManyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SendMany, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse SendFromMany(global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.SendFromManyResponse SendFromMany(global::ADL.Protocol.Rpc.Node.SendFromManyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendFromMany(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse SendFromMany(global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.SendFromManyResponse SendFromMany(global::ADL.Protocol.Rpc.Node.SendFromManyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SendFromMany, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse> SendFromManyAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SendFromManyResponse> SendFromManyAsync(global::ADL.Protocol.Rpc.Node.SendFromManyRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendFromManyAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse> SendFromManyAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SendFromManyResponse> SendFromManyAsync(global::ADL.Protocol.Rpc.Node.SendFromManyRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SendFromMany, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse AddNode(global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.AddNodeResponse AddNode(global::ADL.Protocol.Rpc.Node.AddNodeRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return AddNode(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse AddNode(global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.AddNodeResponse AddNode(global::ADL.Protocol.Rpc.Node.AddNodeRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_AddNode, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse> AddNodeAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.AddNodeResponse> AddNodeAsync(global::ADL.Protocol.Rpc.Node.AddNodeRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return AddNodeAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse> AddNodeAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.AddNodeResponse> AddNodeAsync(global::ADL.Protocol.Rpc.Node.AddNodeRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_AddNode, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse GetPeerList(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.GetPeerListResponse GetPeerList(global::ADL.Protocol.Rpc.Node.GetPeerListRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetPeerList(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse GetPeerList(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.GetPeerListResponse GetPeerList(global::ADL.Protocol.Rpc.Node.GetPeerListRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetPeerList, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse> GetPeerListAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetPeerListResponse> GetPeerListAsync(global::ADL.Protocol.Rpc.Node.GetPeerListRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetPeerListAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse> GetPeerListAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetPeerListResponse> GetPeerListAsync(global::ADL.Protocol.Rpc.Node.GetPeerListRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetPeerList, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse GetPeerInfo(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse GetPeerInfo(global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetPeerInfo(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse GetPeerInfo(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse GetPeerInfo(global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetPeerInfo, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse> GetPeerInfoAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse> GetPeerInfoAsync(global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetPeerInfoAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse> GetPeerInfoAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse> GetPeerInfoAsync(global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetPeerInfo, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse GetConnectionCount(global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse GetConnectionCount(global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetConnectionCount(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse GetConnectionCount(global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse GetConnectionCount(global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetConnectionCount, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse> GetConnectionCountAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse> GetConnectionCountAsync(global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetConnectionCountAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse> GetConnectionCountAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse> GetConnectionCountAsync(global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetConnectionCount, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse GetDelta(global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.GetDeltaResponse GetDelta(global::ADL.Protocol.Rpc.Node.GetDeltaRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetDelta(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse GetDelta(global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.GetDeltaResponse GetDelta(global::ADL.Protocol.Rpc.Node.GetDeltaRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetDelta, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse> GetDeltaAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetDeltaResponse> GetDeltaAsync(global::ADL.Protocol.Rpc.Node.GetDeltaRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetDeltaAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse> GetDeltaAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetDeltaResponse> GetDeltaAsync(global::ADL.Protocol.Rpc.Node.GetDeltaRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetDelta, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse GetMempool(global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.GetMempoolResponse GetMempool(global::ADL.Protocol.Rpc.Node.GetMempoolRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetMempool(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse GetMempool(global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.GetMempoolResponse GetMempool(global::ADL.Protocol.Rpc.Node.GetMempoolRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetMempool, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse> GetMempoolAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetMempoolResponse> GetMempoolAsync(global::ADL.Protocol.Rpc.Node.GetMempoolRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetMempoolAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse> GetMempoolAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.GetMempoolResponse> GetMempoolAsync(global::ADL.Protocol.Rpc.Node.GetMempoolRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetMempool, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse SignMessage(global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.SignMessageResponse SignMessage(global::ADL.Protocol.Rpc.Node.SignMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SignMessage(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse SignMessage(global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.SignMessageResponse SignMessage(global::ADL.Protocol.Rpc.Node.SignMessageRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SignMessage, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse> SignMessageAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SignMessageResponse> SignMessageAsync(global::ADL.Protocol.Rpc.Node.SignMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SignMessageAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse> SignMessageAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.SignMessageResponse> SignMessageAsync(global::ADL.Protocol.Rpc.Node.SignMessageRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SignMessage, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse VerifyMessage(global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.VerifyMessageResponse VerifyMessage(global::ADL.Protocol.Rpc.Node.VerifyMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return VerifyMessage(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse VerifyMessage(global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.VerifyMessageResponse VerifyMessage(global::ADL.Protocol.Rpc.Node.VerifyMessageRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_VerifyMessage, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse> VerifyMessageAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.VerifyMessageResponse> VerifyMessageAsync(global::ADL.Protocol.Rpc.Node.VerifyMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return VerifyMessageAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse> VerifyMessageAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.VerifyMessageResponse> VerifyMessageAsync(global::ADL.Protocol.Rpc.Node.VerifyMessageRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_VerifyMessage, null, options, request);
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse ServiceStatus(global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::ADL.Protocol.Rpc.Node.ServiceStatusResponse ServiceStatus(global::ADL.Protocol.Rpc.Node.ServiceStatusRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ServiceStatus(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse ServiceStatus(global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest request, grpc::CallOptions options)
+      public virtual global::ADL.Protocol.Rpc.Node.ServiceStatusResponse ServiceStatus(global::ADL.Protocol.Rpc.Node.ServiceStatusRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_ServiceStatus, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse> ServiceStatusAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.ServiceStatusResponse> ServiceStatusAsync(global::ADL.Protocol.Rpc.Node.ServiceStatusRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ServiceStatusAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse> ServiceStatusAsync(global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::ADL.Protocol.Rpc.Node.ServiceStatusResponse> ServiceStatusAsync(global::ADL.Protocol.Rpc.Node.ServiceStatusRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_ServiceStatus, null, options, request);
       }

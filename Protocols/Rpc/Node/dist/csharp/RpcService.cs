@@ -5,9 +5,11 @@
 #pragma warning disable 1591, 0612, 3021
 #region Designer generated code
 
+using pb = global::Google.Protobuf;
+using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
-
-namespace ADL.Protocol.Rpc.Node.dist.csharp {
+using scg = global::System.Collections.Generic;
+namespace ADL.Protocol.Rpc.Node {
 
   /// <summary>Holder for reflection information generated from Rpc.Service.proto</summary>
   public static partial class RpcServiceReflection {
@@ -88,7 +90,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
             "dWVzdBosLkFETC5Qcm90b2NvbC5ScGMuTm9kZS5TZXJ2aWNlU3RhdHVzUmVz",
             "cG9uc2ViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null));
     }
     #endregion

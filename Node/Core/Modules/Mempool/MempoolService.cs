@@ -15,5 +15,14 @@ namespace ADL.Node.Core.Modules.Mempool
             Mempool = mempool;
             MempoolSettings = settings;
         }
+
+        /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IMempool GetImpl()
+        {
+            return Mempool;
+        }
     }
 }

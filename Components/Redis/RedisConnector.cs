@@ -7,14 +7,32 @@ namespace ADL.Redis
     {
         private static RedisConnector _instance;
         private static Lazy<ConnectionMultiplexer> _connection;
-
-        private RedisConnector()
+        
+        private RedisConnector(string connectionParam)
         {
-            _connection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect("localhost,allowAdmin=true"));
+            _connection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionParam));
+        }
+                
+        /// <summary>
+        /// Get the instance of this class (singleton)
+        /// </summary>
+        public static RedisConnector Instance()
+        {
+            return _instance ?? (_instance =
+                       new Lazy<RedisConnector>(() => 
+                           new RedisConnector("localhost,allowAdmin=true")).Value);
         }
 
-        public static RedisConnector Instance => _instance ?? (_instance = new RedisConnector());
+        /// <summary>
+        /// Get the connection multiplexer to Redis
+        /// </summary>
+        /// <returns>ConnectionMultiplexer</returns>
         public ConnectionMultiplexer Connection => _connection.Value;
+        
+        /// <summary>
+        /// Get the Redis database 
+        /// </summary>
+        /// <returns>IDatabase</returns>
         public IDatabase GetDb => _connection.Value.GetDatabase();
     }
 }
