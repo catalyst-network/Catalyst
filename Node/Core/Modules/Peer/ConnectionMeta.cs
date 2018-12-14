@@ -10,14 +10,14 @@ namespace ADL.Node.Core.Modules.Peer
     /// </summary>
     public class ConnectionMeta : IDisposable
     {
-        public int Port { set; get; }
-        public string Ip { set; get; }
+        public int Port { get; }
+        public string Ip { get; }
         public long nonce { set; get; }
         private bool Disposed { get; set; }
         public bool Connected { set; get; }
+        internal TcpClient TcpClient { get; }
         public SslStream SslStream { set; get; }
-        internal TcpClient TcpClient { set; get; }
-        internal NetworkStream NetworkStream { set; get; }
+        internal NetworkStream NetworkStream { get; }
 
         /// <summary>
         /// 
@@ -59,9 +59,9 @@ namespace ADL.Node.Core.Modules.Peer
                 NetworkStream?.Dispose();
                 TcpClient?.Dispose();
             }
-
             Connected = false;
             Disposed = true;
+            Log.Log.Message("connection disposed");
         }
     }
 }
