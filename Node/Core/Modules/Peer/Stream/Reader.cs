@@ -19,7 +19,6 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             int bytesRead = 0;
             int currentTimeout;
             byte[] headerBytes;
-            string header = "";
             long contentLength;
             byte[] contentBytes;
             int maxTimeout = 500;
@@ -98,9 +97,8 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             
             using (MemoryStream dataMs = new MemoryStream())
             {
-                int read = 0;
+                int read;
                 byte[] buffer;
-                timeout = false;
                 currentTimeout = 0;
                 long bufferSize = 2048;
                 long bytesRemaining = contentLength;
