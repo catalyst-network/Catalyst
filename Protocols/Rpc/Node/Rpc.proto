@@ -193,7 +193,7 @@ message GetMempoolRequest {
 }
 
 message GetMempoolResponse {
-    string query = 1;
+    map<string, string> info = 1;
 }
 
 message SignMessageRequest {

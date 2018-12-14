@@ -105,7 +105,7 @@ namespace ADL.Ipfs
         private void TryToConnectClient(int connectRetries)
         {
             var retries = 1;
-            
+            Console.WriteLine($"Connect retries {connectRetries}");
             while (retries <= connectRetries)
             {
                 if (!IsClientConnected())

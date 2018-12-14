@@ -20,10 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UnitTests" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="UnitTests\UT_DFS.cs" />
     </ItemGroup>
 

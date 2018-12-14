@@ -64,7 +64,7 @@ namespace ADL.Node.Core.Modules.Peer
             Network.GetInstance(PeerSettings, SslSettings, DataDir);
             
             PeerBuilder = new PeerBuilder(
-                "192.168.1.3",
+                "127.0.0.1",
                 42069,
                 DataDir + "/" + SslSettings.PfxFileName,
                SslSettings.SslCertPassword,
@@ -79,6 +79,15 @@ namespace ADL.Node.Core.Modules.Peer
         {
 //            return Peer.();
             return false;
+        }
+
+        /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IPeer GetImpl()
+        {
+            throw new NotImplementedException();
         }
     }
 }
