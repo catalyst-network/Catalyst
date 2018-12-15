@@ -14,24 +14,25 @@ namespace ADL.Node.Core.Modules.Peer.Stream
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="connectionMeta"></param>
+        /// <param name="peer"></param>
         /// <param name="data"></param>
+        /// <param name="messageType"></param>
         /// <param name="sendLock"></param>
         /// <returns></returns>
-        public static bool MessageWrite(ConnectionMeta connectionMeta, byte[] data, int messageType, SemaphoreSlim sendLock=null)
+        public static bool MessageWrite(Peer peer, byte[] data, int messageType)
         {
             int payloadLength=0;
             bool disconnectDetected = false;
             
             try
             {
-                if (connectionMeta == null)
+                if (peer == null)
                 {
                     Log.Log.Message("MessageWriteAsync peer is null");
                     disconnectDetected = true;
                     return false;
                 }
-                if (connectionMeta.SslStream == null)
+                if (peer.SslStream == null)
                 {
                     Log.Log.Message("MessageWriteAsync SSL stream is null");
                     disconnectDetected = true;
@@ -39,9 +40,9 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 }
                 
                 string header = "";
-                byte[] messageDiscriptor = MessageDescriptor.BuildDiscriptor(2,22,42);//z
+                byte[] messageDescriptor = MessageDescriptor.BuildDiscriptor(2,22,42);
 
-                foreach (int i in messageDiscriptor)
+                foreach (int i in messageDescriptor)
                 {
                     Console.WriteLine(i);
                 }
@@ -49,11 +50,11 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 if (data == null || data.Length < 1)
                 {
                     header += "0:";
-                    header += messageDiscriptor.Length+":";
+                    header += messageDescriptor.Length+":";
                 }
                 else
                 {
-                    payloadLength = messageDiscriptor.Length + data.Length;
+                    payloadLength = messageDescriptor.Length + data.Length;
                     header += payloadLength+":";
                 }
 
@@ -67,10 +68,10 @@ namespace ADL.Node.Core.Modules.Peer.Stream
 
                 var message = new byte[messageLen];
                 
-                Console.WriteLine(BitConverter.ToString(messageDiscriptor));
+                Console.WriteLine(BitConverter.ToString(messageDescriptor));
                 Console.WriteLine(BitConverter.ToString(data));
 
-                data = ByteUtil.CombineByteArr(messageDiscriptor,data);
+                data = ByteUtil.CombineByteArr(messageDescriptor,data);
                 Console.WriteLine(BitConverter.ToString(data));
           
                 Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
@@ -80,51 +81,32 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
                 }
                 
-                // use semaphore to lock thread while we write to peer
-                connectionMeta.SslStream.Write(message, 0, message.Length);
-                connectionMeta.SslStream.Flush();
-//                if (sendLock != null)
-//                {
-//                    await sendLock.WaitAsync();
-//                    try
-//                    {
-//                        connectionMeta.SslStream.Write(message, 0, message.Length);
-//                        connectionMeta.SslStream.Flush();
-//                    }
-//                    finally
-//                    {
-//                        sendLock.Release();
-//                    }
-//                }
-//                else
-//                {
-//                    await connectionMeta.SslStream.WriteAsync(message, 0, message.Length);
-//                    await connectionMeta.SslStream.FlushAsync();
-//                }
+                peer.SslStream.Write(message, 0, message.Length);
+                peer.SslStream.Flush();
                 return true;
             }
-            catch (ObjectDisposedException objDispInner)
+            catch (ObjectDisposedException objDipInner)
             {
-                Log.Log.Message("*** MessageWriteAsync server disconnected (obj disposed exception): " + connectionMeta.Ip + ":" + connectionMeta.Port +
-                    objDispInner.Message);
+                disconnectDetected = true;
+                if (peer != null)
+                    Log.LogException.Message("*** MessageWriteAsync server disconnected (obj disposed exception): " + peer.Ip + ":" + peer.Port, objDipInner);
+                return false;
+            }
+            catch (SocketException sockInner)
+            {
+                disconnectDetected = true;
+                Log.LogException.Message("*** MessageWriteAsync server disconnected (socket exception): " , sockInner);
+                return false;
+            }
+            catch (InvalidOperationException invOpInner)
+            {
+                Log.LogException.Message("*** MessageWriteAsync server disconnected (invalid operation exception): ", invOpInner);
                 disconnectDetected = true;
                 return false;
             }
-            catch (SocketException SockInner)
+            catch (IOException ioInner)
             {
-                Log.Log.Message("*** MessageWriteAsync server disconnected (socket exception): " + SockInner.Message);
-                disconnectDetected = true;
-                return false;
-            }
-            catch (InvalidOperationException InvOpInner)
-            {
-                Log.Log.Message("*** MessageWriteAsync server disconnected (invalid operation exception): " + InvOpInner.Message);
-                disconnectDetected = true;
-                return false;
-            }
-            catch (IOException IOInner)
-            {
-                Log.Log.Message("*** MessageWriteAsync server disconnected (IO exception): " + IOInner.Message);
+                Log.LogException.Message("*** MessageWriteAsync server disconnected (IO exception): ", ioInner);
                 disconnectDetected = true;
                 return false;
             }
@@ -138,7 +120,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             {
                 if (disconnectDetected)
                 {
-                    connectionMeta?.Dispose();
+                    peer?.Dispose();
                 }
             }
         }

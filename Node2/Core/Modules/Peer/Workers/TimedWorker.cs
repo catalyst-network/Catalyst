@@ -42,16 +42,13 @@ namespace ADL.Node.Core.Modules.Peer.Workers
 
         public void Start()
         {
-            Console.WriteLine("TimedWorker trace");
+            Console.WriteLine("TimedWorker start");
             Task.Factory.StartNew(() =>
                 {
-                    Console.WriteLine("TimedWorker trace 2");
                     ScheduledAction scheduledAction = null;
 
                     while (!_cancellationTokenSource.Token.IsCancellationRequested)
                     {
-                        Console.WriteLine("TimedWorker trace 3");
-
                         bool any;
                         lock (_actions)
                         {
@@ -63,7 +60,6 @@ namespace ADL.Node.Core.Modules.Peer.Workers
                         TimeSpan timeToWait;
                         if (any)
                         {
-                            Console.WriteLine(scheduledAction.NextExecutionDate);
 
                             DateTime runTime = scheduledAction.NextExecutionDate;
                             var dT = runTime - DateTime.UtcNow;
@@ -72,7 +68,6 @@ namespace ADL.Node.Core.Modules.Peer.Workers
                         else
                         {
                             timeToWait = TimeSpan.FromMilliseconds(-1);
-                            Console.WriteLine(timeToWait);
 
                         }
 

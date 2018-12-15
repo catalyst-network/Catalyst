@@ -4,11 +4,10 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace ADL.Node.Core.Modules.Peer.Stream
 {
-    public class StreamFactory
+    public static class StreamFactory
     {
         /// <summary>
         /// 
@@ -20,7 +19,6 @@ namespace ADL.Node.Core.Modules.Peer.Stream
         /// <returns></returns>
         private static bool AcceptCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            // return true; // Allow untrusted certificates.
             return true;
         }
         
@@ -32,7 +30,6 @@ namespace ADL.Node.Core.Modules.Peer.Stream
         /// <param name="sslCertificate"></param>
         /// <param name="acceptInvalidCerts"></param>
         /// <param name="mutuallyAuthenticate"></param>
-        /// <param name="certificateCollection"></param>
         /// <param name="ip"></param>
         /// <param name="port"></param>
         /// <returns></returns>
@@ -48,7 +45,6 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             int port = 0
         )
         {
-//            if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
             if (networkStream == null) throw new ArgumentNullException(nameof(networkStream));
             if (sslCertificate == null) throw new ArgumentNullException(nameof(sslCertificate));
             X509CertificateCollection certificateCollection = new X509CertificateCollection {sslCertificate};
@@ -99,7 +95,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                         Log.Log.Message("*** StartTls IOException " + ip + port + " disconnected, invalid handshake.");
                         break;
                     default:
-                        Log.Log.Message("*** StartTls IOException from " + ip + port + Environment.NewLine + ex.ToString());
+                        Log.Log.Message("*** StartTls IOException from " + ip + port + Environment.NewLine + ex);
                         break;
                 }
                 sslStream.Dispose();
@@ -107,7 +103,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             }
             catch (Exception ex)
             {
-                Log.Log.Message("*** StartInboundTls Exception from " + ip + port +  Environment.NewLine + ex.ToString());
+                Log.Log.Message("*** StartInboundTls Exception from " + ip + port +  Environment.NewLine + ex);
                 sslStream.Dispose();
                 return null;
             }

@@ -43,7 +43,7 @@ namespace ADL.Node.Core.Modules.Peer.Workers
 
         public void QueueForever(Action action, TimeSpan interval)
         {
-            Console.WriteLine("worker trace");
+            Console.WriteLine("QueueForever client worker trace");
             _timedWorker.QueueForever(() => _backgroundWorker.Queue(action), interval);
         }
 
@@ -60,7 +60,7 @@ namespace ADL.Node.Core.Modules.Peer.Workers
 
         public void Stop()
         {
-            Console.WriteLine("worker trace");
+            Console.WriteLine("client worker stop");
             _timedWorker.Stop();
             _backgroundWorker.Stop();
         }
