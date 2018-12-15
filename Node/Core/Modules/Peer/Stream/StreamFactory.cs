@@ -27,10 +27,15 @@ namespace ADL.Node.Core.Modules.Peer.Stream
         /// <summary>
         /// inbound connections = 1, outbound connections = 2
         /// </summary>
-        /// <param name="connectionMeta"></param>
+        /// <param name="networkStream"></param>
         /// <param name="direction"></param>
+        /// <param name="sslCertificate"></param>
+        /// <param name="acceptInvalidCerts"></param>
+        /// <param name="mutuallyAuthenticate"></param>
+        /// <param name="certificateCollection"></param>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="AuthenticationException"></exception>
         public static async Task<SslStream> GetTlsStream(
@@ -44,40 +49,20 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             int port = 0
         )
         {
-            Log.Log.Message("trace1");
-
 //            if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
             if (networkStream == null) throw new ArgumentNullException(nameof(networkStream));
             if (sslCertificate == null) throw new ArgumentNullException(nameof(sslCertificate));
-            Log.Log.Message("trace2");
 
-            SslStream sslStream = null;
-            
-            if (acceptInvalidCerts)
-            {
-                Log.Log.Message("trace3");
-
-                sslStream = new SslStream(networkStream, false, new RemoteCertificateValidationCallback(AcceptCertificate));
-            }
-            else
-            {
-                Log.Log.Message("trace4");
-
-                sslStream = new SslStream(networkStream, false);
-            }
-            Log.Log.Message("trace5");
+            var sslStream = acceptInvalidCerts ? new SslStream(networkStream, false, new RemoteCertificateValidationCallback(AcceptCertificate)) : new SslStream(networkStream, false);
 
             try
             {
                 if (direction == 1)
                 {
-                    Log.Log.Message("trace6");
-
                     await sslStream.AuthenticateAsServerAsync(sslCertificate, true, SslProtocols.Tls12, false);                    
                 } 
                 else if (direction == 2)
                 {
-                    Log.Log.Message("trace7");
                     Log.Log.Message(ip);
 
                     await sslStream.AuthenticateAsClientAsync(ip, certificateCollection, SslProtocols.Tls12, !acceptInvalidCerts);
@@ -99,9 +84,6 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     sslStream.Dispose();
                     throw new AuthenticationException();
                 }
-                Log.Log.Message("trace8");
-
-                return sslStream;
             }
             catch (IOException ex)
             {
@@ -128,6 +110,8 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 sslStream.Dispose();
                 return null;
             }
+            Log.Log.Message("Returning valid ssl stream");
+            return sslStream;
         }
     }
 }

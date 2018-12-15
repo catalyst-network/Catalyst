@@ -28,7 +28,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\Helpers\Log\Log.csproj" />
+        <ProjectReference Include="..\Helpers\Logger\Logger.csproj" />
         <ProjectReference Include="..\Helpers\RLP\RLP.csproj" />
         <ProjectReference Include="..\Helpers\Network\Network.csproj" />
         <ProjectReference Include="..\Helpers\Platform\Platform.csproj" />
@@ -60,6 +60,7 @@
     <ItemGroup>
       <Folder Include="Core\Helpers" />
       <Folder Include="Core\Modules\Peer\Messages\Handlers" />
+      <Folder Include="Core\Modules\Peer\Workers" />
     </ItemGroup>
     
     <PropertyGroup Condition="'$(Configuration)'=='Release'">

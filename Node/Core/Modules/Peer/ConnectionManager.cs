@@ -13,12 +13,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Google.Protobuf;
 using Org.BouncyCastle.Security;
-using System.Text;
 using ADL.Hex.HexConvertors.Extensions;
-using ADL.KeySigner;
 using ADL.Node.Core.Modules.Peer.Messages;
+using ADL.Node.Core.Modules.Peer.Workers;
 using ADL.Protocol.Peer;
-using ADL.RLP;
 using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Peer
@@ -28,7 +26,6 @@ namespace ADL.Node.Core.Modules.Peer
     /// </summary>
     public class ConnectionManager : IDisposable
     {
-        private int _ActiveConnections;
         private bool Debug { get; set; }
         private bool Disposed  { get; set; }
         private int ListenerPort { get; set; }
@@ -45,6 +42,10 @@ namespace ADL.Node.Core.Modules.Peer
         private X509Certificate2Collection SslCertificateCollection { get; set; }
         private ConcurrentDictionary<string, ConnectionMeta> Connections { get; set; }
 
+        internal IWorkScheduler Worker;
+        private int ActiveConnections;
+        private readonly Queue<byte[]> SendMessageQueue;
+        private readonly Queue<byte[]> ReceivedMessageQueue;
         private static readonly object Mutex = new object();
         
         /// <summary>
@@ -120,14 +121,13 @@ namespace ADL.Node.Core.Modules.Peer
             AcceptInvalidCerts = acceptInvalidCerts;
             MutuallyAuthenticate = mutualAuthentication;
 
-            if (PermittedIps != null && PermittedIps.Count > 0)
+            if (PermittedIps?.Count > 0)
             {
                 PermittedIps = new List<string>(PermittedIps);
             }
             else
             {
                 ListenerIpAddress = IPAddress.Parse(peerSettings.BindAddress);
-
             }
             if (String.IsNullOrEmpty(sslSettings.SslCertPassword))
             {
@@ -143,12 +143,40 @@ namespace ADL.Node.Core.Modules.Peer
                 SslCertificate
             };
 
-            _ActiveConnections = 0;
+            ActiveConnections = 0;
+            Worker = new ClientWorker();
+            SendMessageQueue = new Queue<byte[]>();
+            ReceivedMessageQueue = new Queue<byte[]>();
             TokenSource = new CancellationTokenSource();
             Token = TokenSource.Token;
             Listener = new TcpListener(ListenerIpAddress, ListenerPort);
             Connections = new ConcurrentDictionary<string, ConnectionMeta>();
             Task.Run(async () => await InboundConnectionListener());
+//            InboundConnectionListener();
+        }
+
+        private void ProcessMessageQueue()
+        {
+            Console.WriteLine("ProcessMessageQueue");
+            Console.WriteLine(ReceivedMessageQueue.Count);
+            Console.WriteLine(ReceivedMessageQueue.ToString());
+
+            lock (ReceivedMessageQueue)
+            {
+                byte[] msg = null;
+                var receivedCount = ReceivedMessageQueue.Count;
+                Log.Log.Message("Messages to process: " + receivedCount);
+                for (var i = 0; i < receivedCount; i++)
+                {
+                    Log.Log.Message("processing message: " + receivedCount);
+                    msg = ReceivedMessageQueue.Dequeue();
+                }
+                byte[] msgDescriptor = ByteUtil.Slice(msg, 0, 3);
+                byte[] message = ByteUtil.Slice(msg, 3);
+                Console.WriteLine(BitConverter.ToString(msgDescriptor));
+                Console.WriteLine(BitConverter.ToString(message));
+            }
+            Console.WriteLine("unlocked msg queue");
         }
                 
         /// <summary>
@@ -161,14 +189,15 @@ namespace ADL.Node.Core.Modules.Peer
             Log.Log.Message("attempting to add connection");
             if (connectionMeta == null) throw new ArgumentNullException(nameof(connectionMeta));
             
-            if (!Connections.TryRemove(connectionMeta.Ip+":"+connectionMeta.Port, out ConnectionMeta removedConnection))
+            if (Connections.TryRemove(connectionMeta.Ip+":"+connectionMeta.Port, out ConnectionMeta removedConnection))
             {
-                Log.Log.Message(removedConnection + "already removed");
+                Log.Log.Message(removedConnection + "Connection already exists");
+                return false;
             }
 
             if (Connections.TryAdd(connectionMeta.Ip+":"+connectionMeta.Port, connectionMeta))
             {
-                int activeCount = Interlocked.Increment(ref _ActiveConnections);
+                int activeCount = Interlocked.Increment(ref ActiveConnections);
                 Log.Log.Message("*** FinalizeConnection starting data receiver for " + connectionMeta.Ip + connectionMeta.Port + " (now " + activeCount + " connections)");
             }
             else
@@ -210,23 +239,21 @@ namespace ADL.Node.Core.Modules.Peer
                     {
                         await Task.Delay(30, Token);
                         streamReadCounter += streamReadCounter;
-
                         // count how many times we try reading header && content so we don't get stuck in here.
                         if (streamReadCounter == 5)
                         {
                             break;
                         }
+                    }
+                    else
+                    {
+                        lock (ReceivedMessageQueue)
+                        {
+                            ReceivedMessageQueue.Enqueue(payload);
+                            Log.Log.Message("messages in queue: " + ReceivedMessageQueue.Count);
+                        }
                         continue;
                     }
-                    
-                    Task<string> unawaited = Task.Run(() =>
-                    {
-                        byte[] msgDescriptor = ByteUtil.Slice(payload, 0, 3);
-                        byte[] message = ByteUtil.Slice(payload, 3);
-                        Console.WriteLine(BitConverter.ToString(msgDescriptor));
-                        Console.WriteLine(BitConverter.ToString(message));
-                        return "process message in this task";
-                    });
                 }
             }
             catch (OperationCanceledException)
@@ -251,6 +278,8 @@ namespace ADL.Node.Core.Modules.Peer
         private async Task InboundConnectionListener()
         {
             Listener.Start();
+//            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(200));
+//            Worker.Start();
             Console.WriteLine(Token.IsCancellationRequested);
             Log.Log.Message("Peer server starting on " + ListenerIpAddress + ":" );
    
@@ -267,7 +296,7 @@ namespace ADL.Node.Core.Modules.Peer
 
                     string peerIp = ((IPEndPoint) tcpPeer.Client.RemoteEndPoint).Address.ToString();
 
-                    if (PermittedIps != null && PermittedIps.Count > 0)
+                    if (PermittedIps?.Count > 0)
                     {
                         if (!PermittedIps.Contains(peerIp))
                         {
@@ -281,22 +310,23 @@ namespace ADL.Node.Core.Modules.Peer
                     //do we want to elevate a new connection as peer immediatly?
                     connectionMeta = new ConnectionMeta(tcpPeer);
 
-                    Log.Log.Message("*** AcceptConnections accepted connection from " + connectionMeta.Ip + connectionMeta.Port + " count " +
-                        _ActiveConnections);
-
+                    Log.Log.Message("*** AcceptConnections accepted connection from " + connectionMeta.Ip + connectionMeta.Port + " count " + ActiveConnections);
 
                     var meta = connectionMeta;
                     Task unawaited = Task.Run(async () =>
                     {
                         try
                         {
-
                             meta.SslStream = await Stream.StreamFactory.GetTlsStream(
                                 meta.NetworkStream,
                                 1,
                                 SslCertificate,
                                 AcceptInvalidCerts
-                            );                                
+                            );
+                            if (meta.SslStream == null || meta.SslStream.GetType() != typeof(SslStream))
+                            {
+                                throw new Exception("Peer ssl stream not set");
+                            }
                             if (!AddConnection(meta))
                             {
                                 Log.Log.Message("*** FinalizeConnection unable to add peer " + meta.Ip + meta.Port);
@@ -310,9 +340,7 @@ namespace ADL.Node.Core.Modules.Peer
                 }
                 catch (ObjectDisposedException ex)
                 {
-                    // Listener stopped ? if so, peerIpPort will be empty
-                    Log.Log.Message("*** AcceptConnections ObjectDisposedException from " + ListenerIpAddress + Environment.NewLine +
-                        ex);
+                    Log.Log.Message("*** AcceptConnections ObjectDisposedException from " + ListenerIpAddress + Environment.NewLine +ex);
                 }
                 catch (SocketException ex)
                 {
@@ -322,8 +350,7 @@ namespace ADL.Node.Core.Modules.Peer
                             Log.Log.Message("*** AcceptConnections SocketException " + ListenerIpAddress + " closed the connection.");
                             break;
                         default:
-                            Log.Log.Message("*** AcceptConnections SocketException from " + ListenerIpAddress + Environment.NewLine +
-                                ex);
+                            Log.Log.Message("*** AcceptConnections SocketException from " + ListenerIpAddress + Environment.NewLine + ex);
                             break;
                     }
                 }
@@ -352,8 +379,7 @@ namespace ADL.Node.Core.Modules.Peer
             {
                 throw new ArgumentNullException(nameof(ip));
             }
-
-            if (port < 1)
+            if (port < 1024)
             {
                 throw new ArgumentOutOfRangeException(nameof(port));
             }
@@ -387,13 +413,16 @@ namespace ADL.Node.Core.Modules.Peer
                     ip,
                     port
                 );
-                                
+                if (connectionMeta.SslStream == null || connectionMeta.SslStream.GetType() != typeof(SslStream))
+                {
+                    throw new Exception("Peer ssl stream not set");
+                }
                 if (!AddConnection(connectionMeta))
                 {
                     Log.Log.Message("*** FinalizeConnection unable to add peer " + connectionMeta.Ip + connectionMeta.Port);
                     return;
                 }
-                Task.Run(async () => await DataReceiver(connectionMeta, Token), Token);
+                Task unawaited = Task.Run(async () => await DataReceiver(connectionMeta, Token), Token);
             }
             
             finally
@@ -406,13 +435,17 @@ namespace ADL.Node.Core.Modules.Peer
                 byte[] keyBytes = new byte[16];
                 random.NextBytes(keyBytes);
                 requestMessage.Nonce = random.NextInt();
-                if (connectionMeta != null)
+                if (connectionMeta?.SslStream != null)
                 {
                     connectionMeta.nonce = requestMessage.Nonce;
                     byte[] requestBytes = requestMessage.ToByteArray();
                     Console.WriteLine(requestMessage);
                     Console.WriteLine(requestBytes.ToHex());
                     await Stream.Writer.MessageWriteAsync(connectionMeta, requestBytes, 98, SendLock);
+                }
+                else
+                {
+                    throw new Exception("invalid peer connection");
                 }
                 wh.Close();
             }
@@ -467,8 +500,8 @@ namespace ADL.Node.Core.Modules.Peer
                 throw new Exception();
             }
 
-            removedPeer.Dispose();            
-            var activeCount = Interlocked.Decrement(ref _ActiveConnections);
+            removedPeer.Dispose();
+            var activeCount = Interlocked.Decrement(ref ActiveConnections);
             Log.Log.Message("***** Successfully removed " + ip + port +" connected (now " + activeCount + " connections active)");
 
             return true;
@@ -504,6 +537,9 @@ namespace ADL.Node.Core.Modules.Peer
             return Connections.TryGetValue(ip+":"+port, out ConnectionMeta peer);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -514,7 +550,7 @@ namespace ADL.Node.Core.Modules.Peer
         /// <summary>
         /// dispose server and background workers.
         /// </summary>
-        public void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (Disposed)
             {
@@ -526,13 +562,12 @@ namespace ADL.Node.Core.Modules.Peer
                 TokenSource.Cancel();
                 TokenSource.Dispose();
 
-                if (Listener != null && Listener.Server != null)
+                if (Listener?.Server != null)
                 {
                     Listener.Server.Close();
                     Listener.Server.Dispose();
                 }
-
-                if (Connections != null && Connections.Count > 0)
+                if (Connections?.Count > 0)
                 {
                     foreach (KeyValuePair<string, ConnectionMeta> peer in Connections)
                     {
