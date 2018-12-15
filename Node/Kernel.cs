@@ -73,9 +73,20 @@ namespace ADL.Node
                             throw new Exception("Couldn't instantiate settings class");    
                         }
                         
-                        if (options.WalletRpcIp != null && options.WalletRpcPort == 0)
+                        if (options.WalletRpcIp != null)
                         {
-                            options.WalletRpcPort = 42444;
+                            if (options.WalletRpcPort == 0)
+                            {
+                                options.WalletRpcPort = 42444;
+                            }
+                            else
+                            {
+                                // if we're not supplied a wallet check we have payout address and public key
+                                if (options.WalletRpcIp == null && options.PayoutAddress == null || options.WalletRpcIp == null && options.PublicKey == null)
+                                {
+                                    throw new Exception("Need a wallet to connect to or be supplied public key and payout addresses");   
+                                }
+                            }
                         }
                         else {
                             // if we're not supplied a wallet check we have payout address and public key

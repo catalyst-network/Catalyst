@@ -9,22 +9,20 @@ using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Peer.Stream
 {
-    public class Writer
+    public static class Writer
     {
-                /// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="connectionMeta"></param>
         /// <param name="data"></param>
         /// <param name="sendLock"></param>
         /// <returns></returns>
-        public static async Task<bool> MessageWriteAsync(ConnectionMeta connectionMeta, byte[] data, int messageType, SemaphoreSlim _SendLock=null)
+        public static async Task<bool> MessageWriteAsync(ConnectionMeta connectionMeta, byte[] data, int messageType, SemaphoreSlim sendLock=null)
         {
-            Console.WriteLine("Write started");
-            bool disconnectDetected = false;
-
             int payloadLength=0;
-
+            bool disconnectDetected = false;
+            
             try
             {
                 if (connectionMeta == null)
@@ -33,7 +31,6 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     disconnectDetected = true;
                     return false;
                 }
-
                 if (connectionMeta.SslStream == null)
                 {
                     Log.Log.Message("MessageWriteAsync SSL stream is null");
@@ -42,9 +39,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 }
                 
                 string header = "";
-                byte[] headerBytes;
                 byte[] messageDiscriptor = MessageDescriptor.BuildDiscriptor(2,22,42);//z
-                byte[] message;
 
                 foreach (int i in messageDiscriptor)
                 {
@@ -62,7 +57,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     header += payloadLength+":";
                 }
 
-                headerBytes = header.ToBytesForRLPEncoding();
+                var headerBytes = header.ToBytesForRLPEncoding();
 
                 int messageLen = headerBytes.Length;
                 if (payloadLength > 0)
@@ -70,7 +65,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     messageLen += payloadLength;
                 }
 
-                message = new byte[messageLen];
+                var message = new byte[messageLen];
                 
                 Console.WriteLine(BitConverter.ToString(messageDiscriptor));
                 Console.WriteLine(BitConverter.ToString(data));
@@ -86,9 +81,9 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                 }
                 
                 // use semaphore to lock thread while we write to peer
-                if (_SendLock != null)
+                if (sendLock != null)
                 {
-                    await _SendLock.WaitAsync();
+                    await sendLock.WaitAsync();
                     try
                     {
                         connectionMeta.SslStream.Write(message, 0, message.Length);
@@ -96,7 +91,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     }
                     finally
                     {
-                        _SendLock.Release();
+                        sendLock.Release();
                     }
                 }
                 else
@@ -104,14 +99,12 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     await connectionMeta.SslStream.WriteAsync(message, 0, message.Length);
                     await connectionMeta.SslStream.FlushAsync();
                 }
-
                 return true;
             }
-            catch (ObjectDisposedException ObjDispInner)
+            catch (ObjectDisposedException objDispInner)
             {
-
                 Log.Log.Message("*** MessageWriteAsync server disconnected (obj disposed exception): " + connectionMeta.Ip + ":" + connectionMeta.Port +
-                    ObjDispInner.Message);
+                    objDispInner.Message);
                 disconnectDetected = true;
                 return false;
             }
@@ -143,7 +136,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             {
                 if (disconnectDetected)
                 {
-                    connectionMeta.Dispose();
+                    connectionMeta?.Dispose();
                 }
             }
         }

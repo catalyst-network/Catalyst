@@ -1,3 +1,26 @@
+//
+// - TimedWorker.cs
+// 
+// Author:
+//     Lucas Ontivero <lucasontivero@gmail.com>
+// 
+// Copyright 2013 Lucas E. Ontivero
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//  http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+
+// <summary></summary>
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +29,7 @@ using System.Threading.Tasks;
 
 namespace ADL.Node.Core.Modules.Peer.Workers
 {
-     internal class TimedWorker: IWorkScheduler
+    internal class TimedWorker: IWorkScheduler
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly List<ScheduledAction> _actions = new List<ScheduledAction>();
@@ -19,15 +42,20 @@ namespace ADL.Node.Core.Modules.Peer.Workers
 
         public void Start()
         {
+            Console.WriteLine("TimedWorker trace");
             Task.Factory.StartNew(() =>
                 {
+                    Console.WriteLine("TimedWorker trace 2");
                     ScheduledAction scheduledAction = null;
 
                     while (!_cancellationTokenSource.Token.IsCancellationRequested)
                     {
+                        Console.WriteLine("TimedWorker trace 3");
+
                         bool any;
                         lock (_actions)
                         {
+                            Console.WriteLine(_actions.Count);
                             any = _actions.Count > 0;
                             if (any) scheduledAction = _actions[0];
                         }
@@ -35,6 +63,8 @@ namespace ADL.Node.Core.Modules.Peer.Workers
                         TimeSpan timeToWait;
                         if (any)
                         {
+                            Console.WriteLine(scheduledAction.NextExecutionDate);
+
                             DateTime runTime = scheduledAction.NextExecutionDate;
                             var dT = runTime - DateTime.UtcNow;
                             timeToWait = dT > TimeSpan.Zero ? dT : TimeSpan.Zero;
@@ -42,6 +72,8 @@ namespace ADL.Node.Core.Modules.Peer.Workers
                         else
                         {
                             timeToWait = TimeSpan.FromMilliseconds(-1);
+                            Console.WriteLine(timeToWait);
+
                         }
 
                         if (_resetEvent.WaitOne(timeToWait, false)) continue;
@@ -57,6 +89,8 @@ namespace ADL.Node.Core.Modules.Peer.Workers
                             }
                         }
                     }
+                    Console.WriteLine("TimedWorker loop exit");
+
                 }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
