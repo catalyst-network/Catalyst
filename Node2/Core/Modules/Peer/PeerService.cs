@@ -52,7 +52,7 @@ namespace ADL.Node.Core.Modules.Peer
         public override bool StartService()
         {
             ConnectionManager = ConnectionManager.GetInstance(PeerSettings, SslSettings, DataDir);
-//            ConnectionManager.PeerBuilder("127.0.0.1",42069);
+            ConnectionManager.PeerBuilder("127.0.0.1",42069);
             return true;
         }
             

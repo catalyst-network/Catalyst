@@ -1,0 +1,61 @@
+{
+  "defaultAssembly": "Node",
+  "components": [
+    {
+      "type": "ADL.Node.Core.Modules.Consensus.Consensus, Node",
+      "services": [
+        {
+          "type": "ADL.Node.Core.Modules.Consensus.IConsensus, Node"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Node.Core.Modules.Contract.Contract, Node",
+      "services": [
+        {
+          "type": "ADL.Node.Core.Modules.Contract.IContract, Node"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Node.Core.Modules.Ledger.Ledger, Node",
+      "services": [
+        {
+          "type": "ADL.Node.Core.Modules.Ledger.ILedger, Node"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Node.Core.Modules.Mempool.Mempool, Node",
+      "services": [
+        {
+          "type": "ADL.Node.Core.Modules.Mempool.IMempool, Node"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Node.Core.Modules.Rpc.RpcServerImpl, Node",
+      "services": [
+        {
+          "type": "ADL.Node.Core.Modules.Rpc.IRpcServer, Node"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Redis.Redis, Redis",
+      "services": [
+        {
+          "type": "ADL.DataStore.IKeyStore, DataStore"
+        }
+      ]
+    },
+    {
+      "type": "ADL.Ipfs.IpfsConnector, Ipfs",
+      "services": [
+        {
+          "type": "ADL.Ipfs.IIpfs, Ipfs"
+        }
+      ]
+    }
+  ]
+}
