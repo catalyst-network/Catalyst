@@ -43,19 +43,16 @@ namespace ADL.Node.Core.Modules.Peer.Workers
 
         public void Start()
         {
-            Console.WriteLine("BackgroundWorker trace");
+            Console.WriteLine("BackgroundWorker start trace");
 
             Task.Factory.StartNew(() =>
                 {
-                    Console.WriteLine("BackgroundWorker trace2");
-
                     while (!_cancellationTokenSource.Token.IsCancellationRequested)
                     {
                         var action = _queue.Take();
                         action();
                     }
                 }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-            Console.WriteLine("BackgroundWorker trace3");
 
         }
 

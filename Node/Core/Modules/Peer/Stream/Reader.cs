@@ -7,7 +7,7 @@ using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Peer.Stream
 {
-    public class Reader
+    public static class Reader
     {
         /// <summary>
         /// @TODO in here we need to collect stats of bytes reade, we can also have a counter for requests from a connection and if it is too much block them
@@ -18,12 +18,11 @@ namespace ADL.Node.Core.Modules.Peer.Stream
         {
             int bytesRead = 0;
             int currentTimeout;
-            byte[] headerBytes;
             long contentLength;
             byte[] contentBytes;
-            int maxTimeout = 500;
+            const int maxTimeout = 500;
             bool timeout = false;
-            int sleepInterval = 25; 
+            const int sleepInterval = 25; 
 
             if (!sslStream.CanRead)
             {
@@ -82,7 +81,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     throw new Exception("MessageReadAsync timeout exceeded while reading header after reading");
                 }
                 
-                headerBytes = headerMs.ToArray();
+                var headerBytes = headerMs.ToArray();
                 
                 // if goes into null we return null and wait and go back in this causes a dos see connection manager DataReciever()
                 if (headerBytes == null || headerBytes.Length < 1)
@@ -98,7 +97,6 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             using (MemoryStream dataMs = new MemoryStream())
             {
                 int read;
-                byte[] buffer;
                 currentTimeout = 0;
                 long bufferSize = 2048;
                 long bytesRemaining = contentLength;
@@ -108,7 +106,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     bufferSize = bytesRemaining;
                 }
 
-                buffer = new byte[bufferSize];
+                var buffer = new byte[bufferSize];
 
                 while ((read = sslStream.Read(buffer, 0, buffer.Length)) > 0)
                 {

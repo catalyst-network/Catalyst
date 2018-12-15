@@ -278,17 +278,16 @@ namespace ADL.Node.Core.Modules.Peer
         private async Task InboundConnectionListener()
         {
             Listener.Start();
-//            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(200));
-//            Worker.Start();
+            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(2000));
+            Worker.Start();
             Console.WriteLine(Token.IsCancellationRequested);
             Log.Log.Message("Peer server starting on " + ListenerIpAddress + ":" );
    
             //@TODO we need to announce our node to trackers.
-            
-            ConnectionMeta connectionMeta;
-            
+
             while (!Token.IsCancellationRequested)
             {
+                ConnectionMeta connectionMeta = null;
                 try
                 {
                     TcpClient tcpPeer = await Listener.AcceptTcpClientAsync();
@@ -312,21 +311,38 @@ namespace ADL.Node.Core.Modules.Peer
 
                     Log.Log.Message("*** AcceptConnections accepted connection from " + connectionMeta.Ip + connectionMeta.Port + " count " + ActiveConnections);
 
-                    var meta = connectionMeta;
-                    meta.SslStream = Stream.StreamFactory.GetTlsStream(
-                            meta.NetworkStream,
+                    connectionMeta.SslStream = Stream.StreamFactory.GetTlsStream(
+                        connectionMeta.NetworkStream,
                             1,
                             SslCertificate,
                             AcceptInvalidCerts
                         );
                     
-                    if (meta.SslStream == null || meta.SslStream.GetType() != typeof(SslStream))
+                    if (connectionMeta.SslStream == null || connectionMeta.SslStream.GetType() != typeof(SslStream))
                     {
                         throw new Exception("Peer ssl stream not set");
                     }
 
-                    if (AddConnection(meta)) continue;
-                    Log.Log.Message("*** FinalizeConnection unable to add peer " + meta.Ip + meta.Port);
+                    if (AddConnection(connectionMeta))
+                    {
+                        Console.WriteLine("Starting Challenge Request");
+                        PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
+
+                        SecureRandom random = new SecureRandom();
+                        byte[] keyBytes = new byte[16];
+                        random.NextBytes(keyBytes);
+                        requestMessage.Nonce = random.NextInt();
+                        if (connectionMeta?.SslStream != null)
+                        {
+                            connectionMeta.Nonce = requestMessage.Nonce;
+                            byte[] requestBytes = requestMessage.ToByteArray();
+                            Console.WriteLine(requestMessage);
+                            Console.WriteLine(requestBytes.ToHex());
+                            Stream.Writer.MessageWrite(connectionMeta, requestBytes, 98, SendLock);
+                        }
+                        continue;
+                    }
+                    Log.Log.Message("*** FinalizeConnection unable to add peer " + connectionMeta.Ip + connectionMeta.Port);
                     throw new Exception("unable to add connection as peer");
                 }
                 catch (AuthenticationException e)
@@ -412,40 +428,16 @@ namespace ADL.Node.Core.Modules.Peer
                 {
                     throw new Exception("Peer ssl stream not set");
                 }
-                if (!AddConnection(connectionMeta))
-                {
-                    Log.Log.Message("*** FinalizeConnection unable to add peer " + connectionMeta.Ip + connectionMeta.Port);
-                    return;
-                }
-                Task unawaited = Task.Run(async () => await DataReceiver(connectionMeta, Token), Token);
+
+                if (AddConnection(connectionMeta)) return;
+                throw new Exception("*** FinalizeConnection unable to add peer " + connectionMeta.Ip + connectionMeta.Port);
             }
             catch (AuthenticationException e)
             {
                 Log.LogException.Message("Peer builder socket exception", e);
             }
-            
             finally
             {
-                Console.WriteLine("Starting Challenge Request");
-
-                PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
-
-                SecureRandom random = new SecureRandom();
-                byte[] keyBytes = new byte[16];
-                random.NextBytes(keyBytes);
-                requestMessage.Nonce = random.NextInt();
-                if (connectionMeta?.SslStream != null)
-                {
-                    connectionMeta.Nonce = requestMessage.Nonce;
-                    byte[] requestBytes = requestMessage.ToByteArray();
-                    Console.WriteLine(requestMessage);
-                    Console.WriteLine(requestBytes.ToHex());
-                    Stream.Writer.MessageWrite(connectionMeta, requestBytes, 98, SendLock);
-                }
-                else
-                {
-                    throw new Exception("invalid peer connection");
-                }
                 wh.Close();
             }
         }

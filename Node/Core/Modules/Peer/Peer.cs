@@ -8,22 +8,32 @@ namespace ADL.Node.Core.Modules.Peer
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ConnectionMeta : IDisposable
+    public sealed class Peer : IDisposable
     {
         public int Port { get; }
         public string Ip { get; }
-        public long Nonce { set; get; }
+        public long Nonce { set; get; } 
         private bool Disposed { get; set; }
         public bool Connected { set; get; }
+        public bool Handshaked { get; set; }
         internal TcpClient TcpClient { get; }
+        public DateTime LastSeen { get; set; }
         public SslStream SslStream { set; get; }
+        public short ClientVersion { get; set; }
+        public int Reputation { get; private set; }
         internal NetworkStream NetworkStream { get; }
+        public static byte[] PublicKey { get; private set; }
 
+        internal TimeSpan InactiveFor
+        {
+            get { return DateTimeProvider.UtcNow - LastSeen; }
+        }
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tcp"></param>
-        public ConnectionMeta(TcpClient tcp)
+        public Peer(TcpClient tcp)
         {
             TcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
             Connected = true;
