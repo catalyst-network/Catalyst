@@ -2,7 +2,7 @@ using System;
 
 namespace ADL.Log
 {
-    public class Log
+    public static class Log
     {
         /// <summary>
         /// 

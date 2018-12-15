@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>ADL.Node</RootNamespace>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Akka" Version="1.3.10" />
+        <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="Akka.Remote" Version="1.3.10" />
+        <PackageReference Include="Akka.DI.AutoFac" Version="1.3.9" />
+        <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+        <PackageReference Include="BouncyCastle" Version="1.8.4" />
+        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+        <PackageReference Include="Serilog" Version="2.7.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Protocols\Rpc\Node\NodeRpcProto.csproj" />
+        <ProjectReference Include="..\Protocols\Mempool\MempoolProto.csproj" />
+        <ProjectReference Include="..\Protocols\Peer\PeerProto.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Helpers\Logger\Logger.csproj" />
+        <ProjectReference Include="..\Helpers\RLP\RLP.csproj" />
+        <ProjectReference Include="..\Helpers\Network\Network.csproj" />
+        <ProjectReference Include="..\Helpers\Platform\Platform.csproj" />
+        <ProjectReference Include="..\Helpers\DataStore\DataStore.csproj" />
+        <ProjectReference Include="..\Helpers\Exceptions\Exceptions.csproj" />
+        <ProjectReference Include="..\Helpers\FileSystem\FileSystem.csproj" />
+        <ProjectReference Include="..\Helpers\Cryptography\Cryptography.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Components\Ipfs\Ipfs.csproj" />
+        <ProjectReference Include="..\Components\Redis\Redis.csproj" />
+        <ProjectReference Include="..\Components\Shell\Shell.csproj" />
+        <ProjectReference Include="..\Components\KeySigner\KeySigner.csproj" />
+        <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include=".\Config\components.json;.\Config\devnet.json;.\Config\testnet.json;.\Config\mainnet.json;">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+        </Content>
+        <Content Include="Config\components.json" />
+        <Content Include="Config\devnet.json" />
+        <Content Include="Config\mainnet.json" />
+        <Content Include="Config\testnet.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Core\Helpers" />
+      <Folder Include="Core\Modules\Peer\Messages\Handlers" />
+      <Folder Include="Core\Modules\Peer\Workers" />
+    </ItemGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>False</DebugSymbols>
+    </PropertyGroup>
+
+</Project>
