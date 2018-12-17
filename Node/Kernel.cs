@@ -7,14 +7,13 @@ using System.Runtime.Loader;
 using Autofac.Configuration;
 using ADL.Node.Core.Modules.Dfs;
 using ADL.Node.Core.Modules.Rpc;
-using ADL.Node.Core.Modules.Peer;
 using ADL.Node.Core.Modules.Gossip;
 using ADL.Node.Core.Modules.Ledger;
+using ADL.Node.Core.Modules.Network;
 using ADL.Node.Core.Modules.Mempool;
 using ADL.Node.Core.Modules.Contract;
 using ADL.Node.Core.Modules.Consensus;
 using Microsoft.Extensions.Configuration;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ADL.Node
 {
@@ -129,7 +128,7 @@ namespace ADL.Node
                         new MempoolModule().Load(builder, settingsInstance.Mempool);
                         new ContractModule().Load(builder, settingsInstance.Contract);
                         new ConsensusModule().Load(builder, settingsInstance.Consensus);
-                        new PeerModule().Load(builder, settingsInstance.Peer, settingsInstance.Ssl, options);
+                        new NetworkModule().Load(builder, settingsInstance.Peer, settingsInstance.Ssl, options);
                         
                         var container = builder.Build();
                         

@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ADL.Node.Core.Modules.Peer.Workers
+namespace ADL.Node.Core.Modules.Network.Workers
 {
     internal class BackgroundWorker : IWorker
     {

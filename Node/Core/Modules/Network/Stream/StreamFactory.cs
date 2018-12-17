@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
-namespace ADL.Node.Core.Modules.Peer.Stream
+namespace ADL.Node.Core.Modules.Network.Stream
 {
     public static class StreamFactory
     {
@@ -35,7 +35,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="AuthenticationException"></exception>
-        public static SslStream GetTlsStream(
+        public static SslStream CreateTlsStream(
             NetworkStream networkStream,
             int direction,
             X509Certificate sslCertificate,

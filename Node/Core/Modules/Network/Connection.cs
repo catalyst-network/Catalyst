@@ -2,13 +2,14 @@ using System;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using ADL.Util;
 
-namespace ADL.Node.Core.Modules.Peer
+namespace ADL.Node.Core.Modules.Network
 {    
     /// <summary>
     /// 
     /// </summary>
-    public sealed class Peer : IDisposable
+    public sealed class Connection : IDisposable
     {
         public int Port { get; }
         public string Ip { get; }
@@ -33,7 +34,7 @@ namespace ADL.Node.Core.Modules.Peer
         /// 
         /// </summary>
         /// <param name="tcp"></param>
-        public Peer(TcpClient tcp)
+        public Connection(TcpClient tcp)
         {
             TcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
             Connected = true;

@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Collections.Generic;
 
-namespace ADL.Node.Core.Modules.Peer.Workers
+namespace ADL.Node.Core.Modules.Network.Workers
 {
     class BlockingQueue<T>
     {

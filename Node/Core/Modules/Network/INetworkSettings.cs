@@ -1,6 +1,6 @@
-namespace ADL.Node.Core.Modules.Peer
+namespace ADL.Node.Core.Modules.Network
 {
-    public interface IPeerSettings
+    public interface INetworkSettings
     {
         string BindAddress { get; }
         ushort Port { get; set; }

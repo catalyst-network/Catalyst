@@ -18,7 +18,7 @@ namespace ADL.Node
         private Kernel Kernel { get; set; }
         private IRpcService RcpService { get; set; }
         private IDfsService DfsService { get; set; }
-        private IPeerService PeerService { get; set; }
+        private INetworkService PeerService { get; set; }
         private static AtlasSystem Instance { get; set; }
         private IGossipService GossipService { get; set; }
         private ILedgerService LedgerService { get; set; }
@@ -122,7 +122,7 @@ namespace ADL.Node
                 Console.WriteLine("start p2p controller....");
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
-                    PeerService = scope.Resolve<IPeerService>();
+                    PeerService = scope.Resolve<INetworkService>();
                 }
                 PeerService.StartService();
             }         

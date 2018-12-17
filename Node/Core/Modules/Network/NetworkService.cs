@@ -1,30 +1,32 @@
 using System;
+using System.Threading.Tasks;
 using ADL.Node.Core.Helpers.Services;
+using ADL.Node.Core.Modules.Network.Peer;
 
-namespace ADL.Node.Core.Modules.Peer
+namespace ADL.Node.Core.Modules.Network
 {
     /// <summary>
     /// The Peer Service 
     /// </summary>
-    public class PeerService : AsyncServiceBase, IPeerService
+    public class NetworkService : AsyncServiceBase, INetworkService
     {
         public PeerManager PeerManager { get; set; }
         private string DataDir { get; set; }
         private ISslSettings SslSettings { get; set; }
-        private IPeerSettings PeerSettings { get; set; }
+        private INetworkSettings NetworkSettings { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="peer"></param>
-        /// <param name="peerSettings"></param>
+        /// <param name="networkSettings"></param>
         /// <param name="sslSettings"></param>
         /// <param name="options"></param>
-        public PeerService(IPeerSettings peerSettings, ISslSettings sslSettings, NodeOptions options)
+        public NetworkService(INetworkSettings networkSettings, ISslSettings sslSettings, NodeOptions options)
         {
             SslSettings = sslSettings;
             DataDir = options.DataDir;
-            PeerSettings = peerSettings;
+            NetworkSettings = networkSettings;
         }
         
         /// <summary>
@@ -36,7 +38,8 @@ namespace ADL.Node.Core.Modules.Peer
         /// <returns></returns>
         public override bool StartService()
         {
-            PeerManager = PeerManager.GetInstance(PeerSettings, SslSettings, DataDir);
+            PeerManager = PeerManager.GetInstance(NetworkSettings, SslSettings, DataDir);
+            Task.Run(async () => await PeerManager.InboundConnectionListener());
             PeerManager.PeerBuilder("127.0.0.1",43069);
             return true;
         }

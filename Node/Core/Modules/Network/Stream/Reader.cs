@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Text;
 using ADL.Util;
 
-namespace ADL.Node.Core.Modules.Peer.Stream
+namespace ADL.Node.Core.Modules.Network.Stream
 {
     public static class Reader
     {
