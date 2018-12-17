@@ -1,63 +1,36 @@
 using System;
 using System.Net;
+using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
-    public class PeerInfo
-    {
-        public PeerInfo(BotIdentifier botId, IPEndPoint endpoint)
+    public class Peer
+    {   
+        private Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
         {
-            BotId = botId;
+            PeerIdentifier = peerIdentifier;
             EndPoint = endpoint;
             LastSeen = DateTimeProvider.UtcNow;
         }
-        public BotIdentifier BotId { get; internal set; }
-        public IPEndPoint EndPoint { get; set; }
-        public DateTime LastSeen { get; set; }
-        public int Reputation { get; private set; }
-        public byte[] EncryptionKey { get; internal set; }
+        
+        public PeerIdentifier PeerIdentifier { get; }
+
         public byte[] PublicKey { get; set; }
-        public short BotVersion { get; set; }
-        public short CfgVersion { get; set; }
-        public bool Handshaked { get; set; }
-        internal TimeSpan InactiveFor
-        {
-            get { return DateTimeProvider.UtcNow - LastSeen; }
-        }
-
-        public bool IsUnknownBot
-        {
-            get { return Reputation < -10; }
-        }
-
-        public bool IsLazyBot
-        {
-            get { return InactiveFor > TimeSpan.FromMinutes(30); }
-        }
-
+        public short NodeVersion { get; set; }
+        public DateTime LastSeen { get; set; }
+        public IPEndPoint EndPoint { get; set; }
+        public int Reputation { get; private set; }
+        public bool IsUnknownNode => Reputation < -10;
+        public bool IsAWOLBot => InactiveFor > TimeSpan.FromMinutes(30);
+        private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
         internal void Touch()
         {
             LastSeen = DateTimeProvider.UtcNow;
         }
 
-        public void DecreseReputation()
+        public void DecreaseReputation()
         {
             Reputation--;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0}@{1}", BotId, EndPoint);
-        }
-
-        public static PeerInfo Parse(string line)
-        {
-            var parts = line.Split('@', ':');
-            var id = BotIdentifier.Parse(parts[0]);
-            var ip = IPAddress.Parse(parts[1]);
-            var port = int.Parse(parts[2]);
-
-            return new PeerInfo(id, new IPEndPoint(ip, port));
         }
     }
 }

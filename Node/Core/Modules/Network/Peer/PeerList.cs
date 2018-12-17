@@ -5,47 +5,42 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
+using ADL.Node.Core.Modules.Network.Workers;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
-     public class PeerList : IEnumerable<PeerInfo>
+     public class PeerList : IEnumerable<Peer>
     {
-        private readonly IWorkScheduler _worker;
-        private readonly Dictionary<BotIdentifier, PeerInfo> _peers;
-        private static readonly Log Logger = new Log(new TraceSource("List-Manager", SourceLevels.Verbose));
-
-        public EventHandler<BrokenBotDetectedEventArgs> BrokenBotDetected;
-        public EventHandler<DesparateModeActivatedEventArgs> DesparadoModeActivated;
+        private readonly Dictionary<PeerIdentifier, Peer> _peerList;
   
-        public PeerList(IWorkScheduler worker)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="worker"></param>
+        internal PeerList(IWorkScheduler worker)
         {
-            _worker = worker;
-            _peers = new Dictionary<BotIdentifier, PeerInfo>();
+            var workScheduler = worker ?? throw new ArgumentNullException(nameof(worker));
+            _peerList = new Dictionary<PeerIdentifier, Peer>();
 
-            _worker.QueueForever(Check, TimeSpan.FromMinutes(5));
-            _worker.QueueForever(Purge, TimeSpan.FromSeconds(15));
-            _worker.QueueForever(Save, TimeSpan.FromMinutes(1));
+            workScheduler.QueueForever(Check, TimeSpan.FromMinutes(5));
+            workScheduler.QueueForever(Purge, TimeSpan.FromSeconds(15));
+            workScheduler.QueueForever(Save, TimeSpan.FromMinutes(1));
         }
 
         private void Check()
         {
-            Logger.Info("Checking peer list");
+            Log.Log.Message("Checking peer list");
             if (!IsCritical) return;
-
-            var bots = new List<PeerInfo>(_peers.Values).ConvertAll(pi => pi.BotId).ToArray();
-            Events.Raise(DesparadoModeActivated, this, new DesparateModeActivatedEventArgs(bots));
+            // go back to peer tracker and ask for more peers
         }
 
-        public bool IsCritical
-        {
-            get { return _peers.Count <= 25;  }
-        }
+        public bool IsCritical => _peerList.Count <= 25; // @TODO decide what counts an unhealthy number of peers
 
-        public bool TryRegister(PeerInfo peerInfo)
+        public bool TryRegister(Peer peerInfo)
         {
             var endpoint = peerInfo.EndPoint;
             var ip = endpoint.Address;
-            var botId = peerInfo.BotId;
+            var botId = peerInfo.PeerIdentifier;
 
             if (botId.Equals(BotIdentifier.Id))
             {
@@ -58,60 +53,50 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 Logger.Verbose("failed out-of-range port number ({0}). ", endpoint.Port);
                 return false;
             }
-#if !DEBUG
-            var ipMask = IPAddress.Parse("255.255.240.0");
-            foreach (var info in _peers.Values)
-            {
-                var inSameSubnet = IPAddressUtils.IsInSameSubnet(ip, info.EndPoint.Address, ipMask);
-                if(inSameSubnet)
-                {
-                    return false;
-                }
-            }
-#endif
-            if (_peers.ContainsKey(peerInfo.BotId))
+            
+            if (_peerList.ContainsKey(peerInfo.PeerIdentifier))
             {
                 Logger.Verbose("bot with same ID already exists. Touching it.");
-                var peer = _peers[botId];
+                var peer = _peerList[botId];
                 peer.EndPoint = endpoint;
                 peer.Touch();
                 return false;
             }
 
-            if (_peers.Count >= 256)
+            if (_peerList.Count >= 256)
             {
                 Purge();
             }
 
-            _peers.Add(botId, peerInfo);
+            _peerList.Add(botId, peerInfo);
             Logger.Verbose("{0} added", peerInfo);
 
             var unknown = BotIdentifier.Unknown;
             if (!Equals(botId, unknown) && IsRegisteredBot(unknown) && Equals(this[unknown].EndPoint, peerInfo.EndPoint))
             {
-                _peers.Remove(unknown);
+                _peerList.Remove(unknown);
             }
             return true;
         }
 
-        public List<PeerInfo> GetPeersEndPoint()
+        public List<Peer> GetPeersEndPoint()
         {
             return Recent();
         }
 
         public void UpdatePeer(BotIdentifier botId)
         {
-            if (_peers.ContainsKey(botId))
+            if (_peerList.ContainsKey(botId))
             {
-                _peers[botId].Touch();
+                _peerList[botId].Touch();
             }
         }
 
         public void Punish(BotIdentifier botId)
         {
-            if (_peers.ContainsKey(botId))
+            if (_peerList.ContainsKey(botId))
             {
-                _peers[botId].DecreseReputation();
+                _peerList[botId].DecreaseReputation();
             }
         }
 
@@ -120,7 +105,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             try
             {
                 var sb = new StringBuilder();
-                foreach (var peerInfo in _peers.Values)
+                foreach (var peerInfo in _peerList.Values)
                 {
                     sb.AppendLine(peerInfo.ToString());
                 }
@@ -131,7 +116,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 // ignore if something wrong happened
             }
-            //RegistryUtils.Write(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\list", list); 
         }
 
         public void Load()
@@ -144,7 +128,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
                 foreach (var line in lines)
                 {
-                    TryRegister(PeerInfo.Parse(line));
+                    TryRegister(Peer.Parse(line));
                 }
             }
             catch (FileNotFoundException)
@@ -155,37 +139,37 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         public void Purge()
         {
-            var peersInfo = new List<PeerInfo>(_peers.Values);
+            var peersInfo = new List<Peer>(_peerList.Values);
             foreach (var peerInfo in peersInfo)
             {
-                if (peerInfo.IsUnknownBot)
+                if (peerInfo.IsUnknownNode)
                 {
                     Events.Raise(BrokenBotDetected, this, new BrokenBotDetectedEventArgs(peerInfo));
                 }
 
-                if (peerInfo.IsLazyBot || peerInfo.IsUnknownBot)
+                if (peerInfo.IsLazyBot || peerInfo.IsUnknownNode)
                 {
-                    _peers.Remove(peerInfo.BotId);
+                    _peerList.Remove(peerInfo.PeerIdentifier);
                 }
             }
         }
 
-        public List<PeerInfo> Recent()
+        public List<Peer> Recent()
         {
             var sortedBy = SortedPeers();
             return sortedBy.GetRange(0, Math.Min((int) 8, (int) sortedBy.Count));
         }
 
-        private List<PeerInfo> SortedPeers()
+        private List<Peer> SortedPeers()
         {
-            var all = new List<PeerInfo>(_peers.Values);
+            var all = new List<Peer>(_peerList.Values);
             all.Sort((s1, s2) => (int)(s1.LastSeen - s2.LastSeen).TotalSeconds);
             return all;
         }
 
-        public IEnumerator<PeerInfo> GetEnumerator()
+        public IEnumerator<Peer> GetEnumerator()
         {
-            return _peers.Values.GetEnumerator();
+            return _peerList.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -195,17 +179,17 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         internal bool IsRegisteredBot(BotIdentifier botId)
         {
-            return _peers.ContainsKey(botId);
+            return _peerList.ContainsKey(botId);
         }
 
-        public PeerInfo this[BotIdentifier botId]
+        public Peer this[BotIdentifier botId]
         {
-            get { return _peers[botId]; }
+            get { return _peerList[botId]; }
         }
 
-        public bool TryGet(IPEndPoint endpoint, out PeerInfo peerInfo)
+        public bool TryGet(IPEndPoint endpoint, out Peer peerInfo)
         {
-            foreach (var pi in _peers.Values)
+            foreach (var pi in _peerList.Values)
             {
                 if (Equals(pi.EndPoint, endpoint))
                 {
@@ -219,22 +203,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         public void Clear()
         {
-            _peers.Clear();
-        }
-    }
-
-    public class BrokenBotDetectedEventArgs : EventArgs
-    {
-        private readonly PeerInfo _peerInfo;
-
-        public BrokenBotDetectedEventArgs(PeerInfo peerInfo)
-        {
-            _peerInfo = peerInfo;
-        }
-
-        public PeerInfo PeerInfo
-        {
-            get { return _peerInfo; }
+            _peerList.Clear();
         }
     }
 }
