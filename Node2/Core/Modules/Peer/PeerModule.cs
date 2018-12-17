@@ -14,7 +14,7 @@ namespace ADL.Node.Core.Modules.Peer
             if (peerSettings == null) throw new ArgumentNullException(nameof(peerSettings));
 
             builder.Register(c => new PeerService(peerSettings, sslSettings, options))
-                .As<IPeerService>()
+                .As<INetworkService>()
                 .InstancePerLifetimeScope();
         }
     }

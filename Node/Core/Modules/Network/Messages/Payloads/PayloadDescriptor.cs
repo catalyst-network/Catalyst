@@ -1,4 +1,4 @@
-namespace ADL.Node.Core.Modules.Peer.Messages
+namespace ADL.Node.Core.Modules.Network.Messages
 {
     public class MessageDescriptor
     {

@@ -3,36 +3,36 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using ADL.Node.Core.Modules.Peer.Messages;
+using ADL.Node.Core.Modules.Network.Messages;
 using ADL.RLP;
 using ADL.Util;
 
-namespace ADL.Node.Core.Modules.Peer.Stream
+namespace ADL.Node.Core.Modules.Network.Stream
 {
     public static class Writer
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="peer"></param>
+        /// <param name="connection"></param>
         /// <param name="data"></param>
         /// <param name="messageType"></param>
         /// <param name="sendLock"></param>
         /// <returns></returns>
-        public static bool MessageWrite(Peer peer, byte[] data, int messageType)
+        public static bool MessageWrite(Connection connection, byte[] data, int messageType)
         {
             int payloadLength=0;
             bool disconnectDetected = false;
             
             try
             {
-                if (peer == null)
+                if (connection == null)
                 {
                     Log.Log.Message("MessageWriteAsync peer is null");
                     disconnectDetected = true;
                     return false;
                 }
-                if (peer.SslStream == null)
+                if (connection.SslStream == null)
                 {
                     Log.Log.Message("MessageWriteAsync SSL stream is null");
                     disconnectDetected = true;
@@ -81,15 +81,15 @@ namespace ADL.Node.Core.Modules.Peer.Stream
                     Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
                 }
                 
-                peer.SslStream.Write(message, 0, message.Length);
-                peer.SslStream.Flush();
+                connection.SslStream.Write(message, 0, message.Length);
+                connection.SslStream.Flush();
                 return true;
             }
             catch (ObjectDisposedException objDipInner)
             {
                 disconnectDetected = true;
-                if (peer != null)
-                    Log.LogException.Message("*** MessageWriteAsync server disconnected (obj disposed exception): " + peer.Ip + ":" + peer.Port, objDipInner);
+                if (connection != null)
+                    Log.LogException.Message("*** MessageWriteAsync server disconnected (obj disposed exception): " + connection.Ip + ":" + connection.Port, objDipInner);
                 return false;
             }
             catch (SocketException sockInner)
@@ -120,7 +120,7 @@ namespace ADL.Node.Core.Modules.Peer.Stream
             {
                 if (disconnectDetected)
                 {
-                    peer?.Dispose();
+                    connection?.Dispose();
                 }
             }
         }

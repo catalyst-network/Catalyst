@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ADL.Node.Core.Modules.Peer.Workers
+namespace ADL.Node.Core.Modules.Network.Workers
 {
     internal class ScheduledAction : IComparable<ScheduledAction>
     {

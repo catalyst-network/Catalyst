@@ -6,7 +6,7 @@ namespace ADL.Node.Core.Modules.Peer
     /// <summary>
     /// The Peer Service 
     /// </summary>
-    public class PeerService : AsyncServiceBase, IPeerService
+    public class PeerService : AsyncServiceBase, INetworkService
     {
         public ConnectionManager ConnectionManager { get; set; }
         private string DataDir { get; set; }

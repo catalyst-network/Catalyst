@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADL.Node.Core.Modules.Peer.Workers
+namespace ADL.Node.Core.Modules.Network.Workers
 {
     class ClientWorker : IWorker, IWorkScheduler
     {

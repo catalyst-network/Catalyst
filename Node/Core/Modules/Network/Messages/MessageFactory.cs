@@ -1,6 +1,6 @@
 using ADL.Protocol.Peer;
 
-namespace ADL.Node.Core.Modules.Peer.Messages
+namespace ADL.Node.Core.Modules.Network.Messages
 {
     public class MessageFactory
     {
