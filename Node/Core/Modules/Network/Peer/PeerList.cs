@@ -120,8 +120,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         public void Load()
         {
-            //var text = RegistryUtils.Read(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\list");
-            //var lines = text.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
             try
             {
                 var lines = File.ReadAllLines("peerlist_" + BotIdentifier.Id + ".txt");
@@ -142,12 +140,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             var peersInfo = new List<Peer>(_peerList.Values);
             foreach (var peerInfo in peersInfo)
             {
-                if (peerInfo.IsUnknownNode)
-                {
-                    Events.Raise(BrokenBotDetected, this, new BrokenBotDetectedEventArgs(peerInfo));
-                }
-
-                if (peerInfo.IsLazyBot || peerInfo.IsUnknownNode)
+                if (peerInfo.IsAwolBot)
                 {
                     _peerList.Remove(peerInfo.PeerIdentifier);
                 }

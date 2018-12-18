@@ -24,150 +24,42 @@ namespace ADL.Node.Core.Modules.Network.Peer
     /// </summary>
     public class PeerManager : IDisposable
     {
-        private bool Debug { get; set; }
         private bool Disposed  { get; set; }
-        private int ListenerPort { get; set; }
         private CancellationToken Token { get; }
         private TcpListener Listener { get; set; }
         private IPAddress ListenerIpAddress { get; }
         private bool AcceptInvalidCerts { get; set; }
-        private bool MutuallyAuthenticate { get; set; }
-        private List<string> PermittedIps { get; set; }
+        private List<string> BannedIps { get; set; } //@TODO revist this
         private X509Certificate2 SslCertificate { get; }
-        private static PeerManager Instance { get; set; }
-        private CancellationTokenSource TokenSource { get; set; }
-        private X509Certificate2Collection SslCertificateCollection { get; set; }
-        private ConcurrentDictionary<string, Connection> Connections { get; set; }
+        private CancellationTokenSource CancellationToken { get; set; }
+        private ConcurrentDictionary<string, Connection> UnIdentifiedConnections { get; set; }
 
-        internal IWorkScheduler Worker;
         private int ActiveConnections;
+        internal IWorkScheduler Worker;
         private readonly Queue<byte[]> SendMessageQueue;
         private readonly Queue<byte[]> ReceivedMessageQueue;
-        private static readonly object Mutex = new object();
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="networkSettings"></param>
-        /// <param name="sslSettings"></param>
-        /// <param name="dataDir"></param>
-        /// <returns></returns>
-        public static PeerManager GetInstance(INetworkSettings networkSettings, ISslSettings sslSettings, string dataDir)
-        {
-            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
-            if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
-            if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
-            
-            if (Instance == null)
-            {
-                lock (Mutex)
-                {
-                    if (Instance == null)
-                    {
-                        // ms x509 facility generates invalid x590 certs (ofc ms!!!) have to accept invalid certs for now.
-                        // @TODO revist this once we re-write the current ssl layer to use bouncy castle.
-                        // @TODO revist permitted ips
-                        //@TODO get debug value from what pass in at initialisation of application.
-                        Instance = new PeerManager(
-                            networkSettings,
-                            sslSettings,
-                            dataDir,
-                            true,
-                            false,
-                            null,
-                            true
-                        );
-                    }
-                }
-            }
-            return Instance;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="networkSettings"></param>
-        /// <param name="sslSettings"></param>
-        /// <param name="dataDir"></param>
-        /// <param name="acceptInvalidCerts"></param>
-        /// <param name="mutualAuthentication"></param>
-        /// <param name="permittedIps"></param>
-        /// <param name="debug"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private PeerManager (
-            INetworkSettings networkSettings,
-            ISslSettings sslSettings,
-            string dataDir,
-            bool acceptInvalidCerts,
-            bool mutualAuthentication,
-            IEnumerable<string> permittedIps,
-            bool debug)
-        {
-            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
-            if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
-            if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
-            
-            //dont let it run on privileged ports
-            if (networkSettings.Port < 1024)
-            {
-                throw new ArgumentOutOfRangeException(nameof(networkSettings.Port));
-            }
-            
-            Debug = debug;
-            ListenerPort = networkSettings.Port;
-            AcceptInvalidCerts = acceptInvalidCerts;
-            MutuallyAuthenticate = mutualAuthentication;
 
-            if (PermittedIps?.Count > 0)
-            {
-                PermittedIps = new List<string>(PermittedIps);
-            }
-            else
-            {
-                ListenerIpAddress = IPAddress.Parse(networkSettings.BindAddress);
-            }
-            if (String.IsNullOrEmpty(sslSettings.SslCertPassword))
-            {
-                SslCertificate = new X509Certificate2(dataDir+"/"+sslSettings.PfxFileName);
-            }
-            else
-            {
-                SslCertificate = new X509Certificate2(dataDir+"/"+sslSettings.PfxFileName, sslSettings.SslCertPassword);
-            }           
-            
-            SslCertificateCollection = new X509Certificate2Collection
-            {
-                SslCertificate
-            };
-
+        public PeerManager(X509Certificate2 sslCertificate)
+        {
             ActiveConnections = 0;
-            Worker = new ClientWorker();
-            SendMessageQueue = new Queue<byte[]>();
-            ReceivedMessageQueue = new Queue<byte[]>();
-            TokenSource = new CancellationTokenSource();
-            Token = TokenSource.Token;
-            Listener = new TcpListener(ListenerIpAddress, ListenerPort);
-            Connections = new ConcurrentDictionary<string, Connection>();
+            SslCertificate = sslCertificate;
         }
 
         private void ProcessMessageQueue()
         {
             Console.WriteLine("ProcessMessageQueue");
-            Console.WriteLine(ReceivedMessageQueue.Count);
-            Console.WriteLine(ReceivedMessageQueue.ToString());
-
             lock (ReceivedMessageQueue)
             {
+                Log.Log.Message("Messages to process: " + ReceivedMessageQueue.Count);
                 byte[] msg = null;
                 var receivedCount = ReceivedMessageQueue.Count;
-                Log.Log.Message("Messages to process: " + receivedCount);
                 for (var i = 0; i < receivedCount; i++)
                 {
                     Log.Log.Message("processing message: " + receivedCount);
                     msg = ReceivedMessageQueue.Dequeue();
                 }
-                byte[] msgDescriptor = ByteUtil.Slice(msg, 0, 3);
-                byte[] message = ByteUtil.Slice(msg, 3);
+                byte[] msgDescriptor = msg.Slice(0, 3);
+                byte[] message = msg.Slice(3);
                 Console.WriteLine(BitConverter.ToString(msgDescriptor));
                 Console.WriteLine(BitConverter.ToString(message));
             }
@@ -189,13 +81,13 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
             if (connection == null) throw new ArgumentNullException(nameof(connection));
             
-            if (Connections.TryRemove(ip+":"+port, out Connection removedConnection))
+            if (UnIdentifiedConnections.TryRemove(ip+":"+port, out Connection removedConnection))
             {
                 Log.Log.Message(removedConnection + "Connection already exists");
                 return false;
             }
 
-            if (Connections.TryAdd(ip+":"+port, connection))
+            if (UnIdentifiedConnections.TryAdd(ip+":"+port, connection))
             {
                 int activeCount = Interlocked.Increment(ref ActiveConnections);
                 Log.Log.Message("*** FinalizeConnection starting data receiver for " + ip + port + " (now " + activeCount + " connections)");
@@ -280,15 +172,16 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
                     string peerIp = ((IPEndPoint) tcpPeer.Client.RemoteEndPoint).Address.ToString();
 
-                    if (PermittedIps?.Count > 0)
-                    {
-                        if (!PermittedIps.Contains(peerIp))
-                        {
-                            Log.Log.Message("*** AcceptConnections rejecting connection from " + peerIp + " (not permitted)");
-                            tcpPeer.Close();
-                            continue;
-                        }
-                    }
+                    //@TODO revist this
+//                    if (BannedIps?.Count > 0)
+//                    {
+//                        if (!BannedIps.Contains(peerIp))
+//                        {
+//                            Log.Log.Message("*** AcceptConnections rejecting connection from " + peerIp + " (not permitted)");
+//                            tcpPeer.Close();
+//                            continue;
+//                        }
+//                    }
 
                     // inbound peer
                     //do we want to elevate a new connection as peer immediatly?
@@ -379,6 +272,17 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 throw new ArgumentOutOfRangeException(nameof(port));
             }
+            
+            //@TODO revist this
+//            if (BannedIps?.Count > 0)
+//            {
+//                if (!BannedIps.Contains(peerIp))
+//                {
+//                    Log.Log.Message("*** AcceptConnections rejecting connection from " + peerIp + " (not permitted)");
+//                    tcpPeer.Close();
+//                    continue;
+//                }
+//            }
 
             TcpClient tcpClient = new TcpClient();
             IAsyncResult ar = tcpClient.BeginConnect(ip, port, null, null);
@@ -453,12 +357,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             if (ip == null) throw new ArgumentNullException(nameof(ip));
             if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
             
-            if (!Connections.TryGetValue(ip+":"+port, out Connection connection))
+            if (!UnIdentifiedConnections.TryGetValue(ip+":"+port, out Connection connection))
             {
                 Log.Log.Message("*** Disconnect unable to find connection " + connection.Ip+":"+connection.Port);
                 throw new Exception();
             }
-            if (!Connections.TryRemove(connection.Ip+":"+connection.Port, out Connection removedPeer))
+            if (!UnIdentifiedConnections.TryRemove(connection.Ip+":"+connection.Port, out Connection removedPeer))
             {
                 Log.Log.Message("*** RemovePeer unable to remove peer " + connection.Ip + connection.Port);
                 throw new Exception();
@@ -477,7 +381,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         public List<string> ListPeers()
         {
-            Dictionary<string, Connection> peers = Connections.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            Dictionary<string, Connection> peers = UnIdentifiedConnections.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             List<string> ret = new List<string>();
             foreach (KeyValuePair<string, Connection> curr in peers)
             {
@@ -498,7 +402,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             if (ip == null) throw new ArgumentNullException(nameof(ip));
             if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
             
-            return Connections.TryGetValue(ip+":"+port, out Connection peer);
+            return UnIdentifiedConnections.TryGetValue(ip+":"+port, out Connection peer);
         }
         
         /// <summary>
@@ -523,17 +427,17 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
             if (disposing)
             {
-                TokenSource.Cancel();
-                TokenSource.Dispose();
+                CancellationToken.Cancel();
+                CancellationToken.Dispose();
 
                 if (Listener?.Server != null)
                 {
                     Listener.Server.Close();
                     Listener.Server.Dispose();
                 }
-                if (Connections?.Count > 0)
+                if (UnIdentifiedConnections?.Count > 0)
                 {
-                    foreach (KeyValuePair<string, Connection> peer in Connections)
+                    foreach (KeyValuePair<string, Connection> peer in UnIdentifiedConnections)
                     {
                         peer.Value.Dispose();
                     }
