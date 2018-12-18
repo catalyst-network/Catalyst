@@ -7,9 +7,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
     /// </summary>
     public class PeerIdentifier
     {
-        private static IPEndPoint EndPoint { get; set; }   
-        private static byte[] PublicKey { get; set; }
-
+        internal byte[] PublicKey { get; set; }
+        internal IPEndPoint EndPoint { get; set; }   
         /// <summary>
         /// 
         /// </summary>

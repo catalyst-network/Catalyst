@@ -12,22 +12,26 @@ namespace ADL.Node.Core.Modules.Network.Peer
             EndPoint = endpoint;
             LastSeen = DateTimeProvider.UtcNow;
         }
-        
-        public PeerIdentifier PeerIdentifier { get; }
 
-        public byte[] PublicKey { get; set; }
+        public long Nonce { set; get; }
         public short NodeVersion { get; set; }
         public DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
         public int Reputation { get; private set; }
-        public bool IsUnknownNode => Reputation < -10;
-        public bool IsAWOLBot => InactiveFor > TimeSpan.FromMinutes(30);
+        public PeerIdentifier PeerIdentifier { get; }
+        public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
+        
         internal void Touch()
         {
             LastSeen = DateTimeProvider.UtcNow;
         }
-
+        
+        public void IncreaseReputation()
+        {
+            Reputation++;
+        }
+        
         public void DecreaseReputation()
         {
             Reputation--;
