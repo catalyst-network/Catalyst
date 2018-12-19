@@ -11,7 +11,7 @@ using ADL.Node.Core.Modules.Network.Peer;
 
 namespace ADL.Node.Core.Modules.Network
 {
-    public class Network : IKademlia
+    public class Network : IDHT
     {
         private bool Debug { get; set; }
         private CancellationToken Token { get; }
@@ -87,7 +87,7 @@ namespace ADL.Node.Core.Modules.Network
             if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
             if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
             
-            //dont let me run on privileged ports, I shouldn't be started as root!!!!
+            // don't let me run on privileged ports, I shouldn't be started as root!!!!
             if (networkSettings.Port < 1024)
             {
                 throw new ArgumentOutOfRangeException(nameof(networkSettings.Port));
@@ -132,6 +132,46 @@ namespace ADL.Node.Core.Modules.Network
         public void ActivateNode()
         {
             Listener = TcpListenerFactory.CreateListener(NodeIdentity.EndPoint);
+        }
+
+        /// <summary>
+        /// @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        bool IDHT.Ping()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        bool IDHT.Store(string k, byte[] v)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        List<PeerIdentifier> IDHT.FindNode()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        void IDHT.Announce(PeerIdentifier peerIdentifier)
+        {
+            throw new NotImplementedException();
         }
     }
 }

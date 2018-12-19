@@ -6,9 +6,13 @@ namespace ADL.Node.Core.Modules.Network.Peer
     /// 
     /// </summary>
     public class PeerIdentifier
-    {
-        internal byte[] PublicKey { get; set; }
-        internal IPEndPoint EndPoint { get; set; }   
+    { 
+        public long Nonce { set; get; }
+        public string ClientId { set; get; }
+        public short NodeVersion { get; set; }
+        private byte[] PublicKey { get; set; }
+        private IPEndPoint EndPoint { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -18,6 +22,16 @@ namespace ADL.Node.Core.Modules.Network.Peer
         {
             PublicKey = publicKey;
             EndPoint = endPoint;
+        }
+
+        /// <summary>
+        /// Node ID's should return a unsigned 32 byte array in the following format, to produce a 256 bit key space
+        /// clientID [2] + clientVersion[4] + Ip[4] + Port[2] + publicKeyHash[20]
+        /// </summary>
+        /// <returns></returns>
+        private byte[] GenerateNodeId()
+        {
+            
         }
     }
 }
