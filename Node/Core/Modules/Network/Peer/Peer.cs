@@ -4,7 +4,7 @@ using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
-    public class Peer
+    public abstract class Peer
     {   
         private Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
         {

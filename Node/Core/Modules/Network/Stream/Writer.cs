@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using ADL.Node.Core.Modules.Network.Messages;
+using ADL.Node.Core.Modules.Network.Messages.Payloads;
 using ADL.RLP;
 using ADL.Util;
 
@@ -40,7 +41,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
                 }
                 
                 string header = "";
-                byte[] messageDescriptor = MessageDescriptor.BuildDiscriptor(2,22,42);
+                byte[] messageDescriptor = MessageDescriptor.BuildDescriptor(2,22,42);
 
                 foreach (int i in messageDescriptor)
                 {

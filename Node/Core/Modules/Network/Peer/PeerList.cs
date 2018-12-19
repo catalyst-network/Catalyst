@@ -92,7 +92,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
         }
 
-        public void Punish(BotIdentifier botId)
+        public void Punish(PeerIdentifier peerId)
         {
             if (_peerList.ContainsKey(botId))
             {
