@@ -2,7 +2,7 @@ using ADL.Protocol.Peer;
 
 namespace ADL.Node.Core.Modules.Network.Messages
 {
-    public class MessageFactory
+    public static class MessageFactory
     {
         public static dynamic Get(int id)
         {

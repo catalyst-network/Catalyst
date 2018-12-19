@@ -5,19 +5,17 @@ using System.Net;
 
 namespace ADL.Node.Core.Modules.Network.Messages
 {
-     public class CommunicationManager : IMessageSender
+     public class MessageQueueManager : IMessageSender
     {
-        private readonly IMessageListener _listener;
         private readonly IWorkScheduler _worker;
-        private readonly Queue<Package> _receivedMessageQueue;
+        private readonly IMessageListener _listener;
+        private readonly List<IPAddress> _blackList;
         private readonly Queue<Package> _sendMessageQueue;
-        private readonly List<IPAddress> _blackList; 
+        private readonly Queue<Package> _receivedMessageQueue;
         private readonly Dictionary<IPAddress, int> _requestsByIp;
-        private static readonly Log Logger = new Log(new TraceSource("Comm-Manager", SourceLevels.Verbose));
-
         public EventHandler<PackageReceivedEventArgs<IPEndPoint>> PackageReceivedEventArgs;
 
-        public CommunicationManager(IMessageListener listener, IWorkScheduler worker)
+        public MessageQueueManager(IMessageListener listener, IWorkScheduler worker)
         {
             _listener = listener;
             _worker = worker;
@@ -67,7 +65,6 @@ namespace ADL.Node.Core.Modules.Network.Messages
         {
             lock (_requestsByIp)
             {
-
                 var ips = new IPAddress[_requestsByIp.Count];
                 _requestsByIp.Keys.CopyTo(ips, 0);
                 foreach (var ip in ips)

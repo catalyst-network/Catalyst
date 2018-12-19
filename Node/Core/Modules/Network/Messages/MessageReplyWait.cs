@@ -5,19 +5,16 @@ namespace ADL.Node.Core.Modules.Network.Messages
 {
     public class MessageReplyWait
     {
-        public Package Package { get; private set; }
-        public DateTime Sent { get; set; }
-        public ulong CorrelationId { get; private set; }
         public int Attempts { get; set; }
-        public bool IsTimeout
-        {
-            get { return (DateTimeProvider.UtcNow - Sent).TotalSeconds > 20; }
-        }
-        
-        public ReplyWait(Package package, ulong correlationId)
+        public DateTime Sent { get; set; }
+        public Package Package { get; private set; }
+        public ulong MagicCookie { get; private set; }
+        public bool IsTimeout => (DateTimeProvider.UtcNow - Sent).TotalSeconds > 20;
+
+        public ReplyWait(Package package, ulong magicCookie)
         {
             Package = package;
-            CorrelationId = correlationId;
+            MagicCookie = magicCookie;
             Sent = DateTimeProvider.UtcNow;
             Attempts = 0;
         }

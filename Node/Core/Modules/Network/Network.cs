@@ -11,11 +11,11 @@ using ADL.Node.Core.Modules.Network.Peer;
 
 namespace ADL.Node.Core.Modules.Network
 {
-    public class Network
+    public class Network : IKademlia
     {
         private bool Debug { get; set; }
         private CancellationToken Token { get; }
-        internal List<string> BannedIps { get; set; } //@TODO revist this
+        private List<string> BannedIps { get; set; } //@TODO revist this
         private bool AcceptInvalidCerts { get; set; }
         private static Network Instance { get; set; }
         private bool MutuallyAuthenticate { get; set; }
@@ -24,7 +24,6 @@ namespace ADL.Node.Core.Modules.Network
         private static readonly object Mutex = new object();        
         private CancellationTokenSource CancellationToken { get; set; }
         private X509Certificate2Collection SslCertificateCollection { get; set; }
-
 
         /// <summary>
         /// 
