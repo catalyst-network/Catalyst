@@ -13,8 +13,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
             LastSeen = DateTimeProvider.UtcNow;
         }
 
-        public long Nonce { set; get; }
-        public short NodeVersion { get; set; }
         public DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
         public int Reputation { get; private set; }
