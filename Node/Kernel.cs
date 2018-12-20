@@ -167,8 +167,8 @@ namespace ADL.Node
         /// <returns></returns>
         private static void CopySkeletonConfigs(string dataDir, string network)
         {
-            File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/config/components.json", dataDir);
-            File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/config/"+network+".json", dataDir);
+            File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/Config/components.json", dataDir);
+            File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/Config/"+network+".json", dataDir);
         }
         
         /// <summary>
