@@ -42,16 +42,12 @@
         <ProjectReference Include="..\Components\Token\Token.csproj" />
         <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
     </ItemGroup>
-    
-    <ItemGroup>
-        <Content Include=".\config\components.json;.\config\devnet.json;.\config\testnet.json;.\config\mainnet.json;">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-        </Content>
-        <Content Include="Config\components.json" />
-        <Content Include="Config\devnet.json" />
-        <Content Include="Config\mainnet.json" />
-        <Content Include="Config\testnet.json" />
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <None Update="Config\components.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Config\devnet.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Config\mainnet.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Config\testnet.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <ItemGroup>
