@@ -43,7 +43,7 @@
         <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <None Update="Config\components.json" CopyToOutputDirectory="PreserveNewest" />
         <None Update="Config\devnet.json" CopyToOutputDirectory="PreserveNewest" />
         <None Update="Config\mainnet.json" CopyToOutputDirectory="PreserveNewest" />
