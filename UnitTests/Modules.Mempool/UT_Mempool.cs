@@ -68,7 +68,7 @@ namespace ADL.UnitTests
         {   
             Memp.SaveTx(_k,_t);
             var transaction = Memp.GetTx(_k);
-            
+            j
             Assert.AreEqual((uint)1, transaction.Amount);
             Assert.AreEqual("signature", transaction.Signature);
             Assert.AreEqual("address_dest", transaction.AddressDest);
