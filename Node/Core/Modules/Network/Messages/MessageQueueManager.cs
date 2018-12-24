@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using ADL.Node.Core.Modules.Network.Workers;
 
 namespace ADL.Node.Core.Modules.Network.Messages
 {
      public class MessageQueueManager : IMessageSender
     {
-        private readonly IWorkScheduler _worker;
         private readonly IMessageListener _listener;
         private readonly List<IPAddress> _blackList;
         private readonly Queue<Package> _sendMessageQueue;
@@ -15,18 +15,17 @@ namespace ADL.Node.Core.Modules.Network.Messages
         private readonly Dictionary<IPAddress, int> _requestsByIp;
         public EventHandler<PackageReceivedEventArgs<IPEndPoint>> PackageReceivedEventArgs;
 
-        public MessageQueueManager(IMessageListener listener, IWorkScheduler worker)
+        internal MessageQueueManager(IMessageListener listener, IWorkScheduler worker)
         {
             _listener = listener;
-            _worker = worker;
 
             _receivedMessageQueue = new Queue<Package>();
             _sendMessageQueue = new Queue<Package>();
             _blackList = new List<IPAddress>();
             _requestsByIp = new Dictionary<IPAddress, int>();
 
-            _worker.QueueForever(SendReceive, TimeSpan.FromMilliseconds(200));
-            _worker.QueueForever(AnalyzeRequestList, TimeSpan.FromMinutes(1));
+            worker.QueueForever(SendReceive, TimeSpan.FromMilliseconds(200));
+            worker.QueueForever(AnalyzeRequestList, TimeSpan.FromMinutes(1));
         }
 
         private void SendReceive()

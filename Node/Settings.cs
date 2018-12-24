@@ -251,7 +251,7 @@ namespace ADL.Node
     public class NetworkSettings : INetworkSettings
     {
         public string BindAddress { get; set; }
-        public ushort Port { get; set; }
+        public int Port { get; set; }
         public ushort MaxPeers { get; set; }
         public ushort PeerPingInterval { get; set; }
         public ushort PeerLifetimeInterval { get; set; }
@@ -267,7 +267,7 @@ namespace ADL.Node
         {
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
             Magic = uint.Parse(section.GetSection("Magic").Value);
-            Port = ushort.Parse(section.GetSection("Port").Value);
+            Port = int.Parse(section.GetSection("Port").Value);
             MaxPeers = ushort.Parse(section.GetSection("MaxPeers").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
             PeerPingInterval = ushort.Parse(section.GetSection("PeerPingInterval").Value);

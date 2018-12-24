@@ -10,6 +10,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using ADL.Hex.HexConvertors.Extensions;
+using ADL.Network;
+using ADL.Node.Core.Modules.Network.Listeners;
 using ADL.Node.Core.Modules.Network.Messages;
 using ADL.Node.Core.Modules.Network.Workers;
 using ADL.Protocol.Peer;
@@ -45,7 +47,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             SslCertificate = sslCertificate;
         }
 
-        private void ProcessMessageQueue()
+        private void ProcessMessageQueue()//@TODO this is duplicated in message queue manager
         {
             Console.WriteLine("ProcessMessageQueue");
             lock (ReceivedMessageQueue)
@@ -72,12 +74,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <param name="connection"></param>
         /// <param name="cancelToken"></param>
         /// <returns></returns>
-        private async Task<bool> DataReceiver(Connection connection, CancellationToken? cancelToken=null)
+        private async Task<bool> DataReceiver(Connection connection, CancellationToken cancelToken)
         {
             var streamReadCounter = 0;
             Log.Log.Message("attempting to add connection");
-            var port = ((IPEndPoint)connection.TcpClient.Client.LocalEndPoint).Port;
-            var ip = ((IPEndPoint)connection.TcpClient.Client.LocalEndPoint).Address.ToString();
+            var port = ((IPEndPoint) connection.TcpClient.Client.LocalEndPoint).Port;
+            var ip = ((IPEndPoint) connection.TcpClient.Client.LocalEndPoint).Address.ToString();
 
             if (connection == null) throw new ArgumentNullException(nameof(connection));
             
@@ -87,6 +89,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 return false;
             }
 
+            // @TODO we need to get this active connections incrementer out this method, then this DataReceiver method needs to go somewhere related to messages.
             if (UnIdentifiedConnections.TryAdd(ip+":"+port, connection))
             {
                 int activeCount = Interlocked.Increment(ref ActiveConnections);
@@ -102,7 +105,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 while (true)
                 {
-                    cancelToken?.ThrowIfCancellationRequested();
+                    cancelToken.ThrowIfCancellationRequested();
 
                     if (!IsConnected(connection.TcpClient))
                     {
@@ -134,12 +137,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
             catch (OperationCanceledException e)
             {
-                Log.LogException.Message("*** Data receiver cancelled " + ip + ":" + port + " disconnected",e);
+                Log.LogException.Message("*** Data receiver cancelled " + ip + ":" + port + " disconnected", e);
                 throw;
             }
             catch (Exception e)
             {
-                Log.LogException.Message("*** Data receiver exception " + ip + ":" + port + " disconnected",e);
+                Log.LogException.Message("*** Data receiver exception " + ip + ":" + port + " disconnected", e);
                 throw;
             }
             finally
@@ -156,8 +159,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
         internal async Task InboundConnectionListener()
         {
             Listener.Start();
-            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(2000));
-            Worker.Start();
+//            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(2000));
+//            Worker.Start();
             Console.WriteLine(Token.IsCancellationRequested);
             Log.Log.Message("Peer server starting on " + ListenerIpAddress + ":" );
    
@@ -210,9 +213,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
                         byte[] keyBytes = new byte[16];
                         random.NextBytes(keyBytes);
                         requestMessage.Nonce = random.NextInt();
-                        if (connection?.SslStream != null)
+                        if (connection.SslStream != null)
                         {
-                            connection.Nonce = requestMessage.Nonce;
+//                            connection.Nonce = requestMessage.Nonce;
                             byte[] requestBytes = requestMessage.ToByteArray();
                             Console.WriteLine(requestMessage);
                             Console.WriteLine(requestBytes.ToHex());
@@ -261,70 +264,65 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="AuthenticationException"></exception>
         public async void PeerBuilder (string ip, int port)
         {
-            if (ip == null) throw new ArgumentNullException(nameof(ip));
-            if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
+            if (port < 1024) throw new ArgumentOutOfRangeException(nameof(port));
+            if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
 
-            if (string.IsNullOrEmpty(ip))
-            {
-                throw new ArgumentNullException(nameof(ip));
-            }
-            if (port < 1024)
-            {
-                throw new ArgumentOutOfRangeException(nameof(port));
-            }
-            
-            //@TODO revist this
-//            if (BannedIps?.Count > 0)
-//            {
-//                if (!BannedIps.Contains(peerIp))
-//                {
-//                    Log.Log.Message("*** AcceptConnections rejecting connection from " + peerIp + " (not permitted)");
-//                    tcpPeer.Close();
-//                    continue;
-//                }
-//            }
-
-            TcpClient tcpClient = new TcpClient();
-            IAsyncResult ar = tcpClient.BeginConnect(ip, port, null, null);
-            WaitHandle wh = ar.AsyncWaitHandle;
-            
             try
             {
-                if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
-                {
-                    tcpClient.Close();
-                    throw new TimeoutException("Timeout connecting to " + ip + ":" + port);
-                }
+                using (TcpClient tcpClient = new TcpClient())
+                { 
+                    try
+                    {
+                        IPEndPoint targetEndpoint = EndpointBuilder.BuildNewEndPoint(ip, port);
+                        IAsyncResult asyncClient = tcpClient.BeginConnect(targetEndpoint.Address, targetEndpoint.Port, null, null);
+                        WaitHandle asyncClientWaitHandle = asyncClient.AsyncWaitHandle;
+                        try
+                        {
+                            if (!asyncClient.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
+                            {
+                                tcpClient.Close();
+                                throw new TimeoutException("Timeout connecting to " +  targetEndpoint.Address + ":" + targetEndpoint.Port);
+                            }
 
-                tcpClient.EndConnect(ar);
+                            tcpClient.EndConnect(asyncClient);
 
-                var connection = new Connection(tcpClient);
+                            var connection = new Connection(tcpClient);
 
-                connection.SslStream = Stream.StreamFactory.CreateTlsStream(
-                    connection.NetworkStream,
-                    2,
-                    SslCertificate,
-                    AcceptInvalidCerts,
-                    false,
-                    ip,
-                    port
-                );
+                            connection.SslStream = Stream.StreamFactory.CreateTlsStream(
+                                connection.NetworkStream,
+                                2,
+                                SslCertificate,
+                                AcceptInvalidCerts,
+                                false,
+                                targetEndpoint
+                            );
                 
-                if (connection.SslStream == null || connection.SslStream.GetType() != typeof(SslStream))
-                {
-                    throw new Exception("Peer ssl stream not set");
-                }
+                            if (connection.SslStream == null || connection.SslStream.GetType() != typeof(SslStream))
+                            {
+                                throw new Exception("Peer ssl stream not set");
+                            }
 
-                if (await DataReceiver(connection, Token)) return;
-                throw new Exception("*** FinalizeConnection unable to add peer " + connection.Ip + connection.Port);
+                            if (await DataReceiver(connection, Token)) return;
+                            throw new Exception("*** FinalizeConnection unable to add peer " + connection.Ip + connection.Port);
+                        }
+                        catch (AuthenticationException e)
+                        {
+                            Log.LogException.Message("Peer builder socket exception", e);
+                        }
+                        finally
+                        {
+                            asyncClientWaitHandle.Close();
+                        }
+                    }
+                    catch (ArgumentNullException e)
+                    {
+                        Log.LogException.Message("ADL.Node.Core.Modules.Network.Peer.PeerManager.PeerBuilder", e);
+                    }
+                }
             }
-            catch (AuthenticationException e)
+            catch (ArgumentException e)
             {
-                Log.LogException.Message("Peer builder socket exception", e);
-            }
-            finally
-            {
-                wh.Close();
+                Log.LogException.Message("ADL.Node.Core.Modules.Network.Peer.PeerManager.PeerBuilder", e);
             }
         }
 
@@ -336,7 +334,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private bool IsConnected(TcpClient tcpClient)
         {
             if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
-
             if (!tcpClient.Connected) return false;
             if (!tcpClient.Client.Poll(0, SelectMode.SelectWrite) ||
                 tcpClient.Client.Poll(0, SelectMode.SelectError)) return false;
@@ -355,11 +352,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private bool DisconnectConnection(string ip, int port)
         {
             if (ip == null) throw new ArgumentNullException(nameof(ip));
-            if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
+            if (port < 1024) throw new ArgumentOutOfRangeException(nameof(port));
             
             if (!UnIdentifiedConnections.TryGetValue(ip+":"+port, out Connection connection))
             {
-                Log.Log.Message("*** Disconnect unable to find connection " + connection.Ip+":"+connection.Port);
+                Log.Log.Message("*** Disconnect unable to find connection " + ip+":"+port);
                 throw new Exception();
             }
             if (!UnIdentifiedConnections.TryRemove(connection.Ip+":"+connection.Port, out Connection removedPeer))
