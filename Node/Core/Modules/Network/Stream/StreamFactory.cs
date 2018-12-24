@@ -1,7 +1,8 @@
 using System;
 using System.IO;
-using System.Net.Security;
+using System.Net;
 using System.Net.Sockets;
+using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -21,7 +22,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
         {
             return true;
         }
-        
+
         /// <summary>
         /// inbound connections = 1, outbound connections = 2
         /// </summary>
@@ -30,10 +31,10 @@ namespace ADL.Node.Core.Modules.Network.Stream
         /// <param name="sslCertificate"></param>
         /// <param name="acceptInvalidCerts"></param>
         /// <param name="mutuallyAuthenticate"></param>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
+        /// <param name="endPoint"></param>
+        /// <returns> SslStream </returns>
         /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Exception"></exception>
         /// <exception cref="AuthenticationException"></exception>
         public static SslStream CreateTlsStream(
             NetworkStream networkStream,
@@ -41,8 +42,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
             X509Certificate sslCertificate,
             bool acceptInvalidCerts,
             bool mutuallyAuthenticate = false,
-            string ip = null,
-            int port = 0
+            IPEndPoint endPoint = null
         )
         {
             if (networkStream == null) throw new ArgumentNullException(nameof(networkStream));
@@ -53,33 +53,38 @@ namespace ADL.Node.Core.Modules.Network.Stream
 
             try
             {
-                if (direction == 1)
+                switch (direction)
                 {
-                    sslStream.AuthenticateAsServer(sslCertificate, true, SslProtocols.Tls12, false);                    
-                } 
-                else if (direction == 2)
-                {
-                    sslStream.AuthenticateAsClient(
-                        ip ?? throw new ArgumentNullException(nameof(ip)),
-                        certificateCollection,
-                        SslProtocols.Tls12,
-                        !acceptInvalidCerts
-                    );
+                    case 1:
+                        sslStream.AuthenticateAsServer(sslCertificate, true, SslProtocols.Tls12, false);
+                        break;
+                    case 2 when endPoint != null:
+                        sslStream.AuthenticateAsClient(
+                            endPoint.Address.ToString() ?? throw new ArgumentNullException(nameof(endPoint.Address)),
+                            certificateCollection,
+                            SslProtocols.Tls12,
+                            !acceptInvalidCerts
+                        );
+                        break;
+                    case 2:
+                        throw new Exception("need endpoint for outbound connections");
+                    default:
+                        throw new Exception("logically you should never get here, so here is a un-useful error message");
                 }
                 if (!sslStream.IsEncrypted)
                 {
                     sslStream.Dispose();
-                    throw new AuthenticationException("*** ssl stream from " + ip + port + " not encrypted");
+                    throw new AuthenticationException("*** ssl stream not encrypted");
                 }
                 if (!sslStream.IsAuthenticated)
                 {
                     sslStream.Dispose();
-                    throw new AuthenticationException("*** ssl stream from " + ip + port + " not authenticated");
+                    throw new AuthenticationException("*** ssl stream not authenticated");
                 }
                 if (mutuallyAuthenticate && !sslStream.IsMutuallyAuthenticated)
                 {
                     sslStream.Dispose();
-                    throw new AuthenticationException("*** ssl stream from " + ip + port + " failed mutual authentication");
+                    throw new AuthenticationException("*** ssl stream failed mutual authentication");
                 }
             }
             catch (IOException ex)
@@ -89,13 +94,13 @@ namespace ADL.Node.Core.Modules.Network.Stream
                 {
                     case "Authentication failed because the remote party has closed the transport stream.":
                     case "Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host.":
-                        Log.Log.Message("*** StartTls IOException " + ip + port + " closed the connection.");
+                        Log.Log.Message("*** ssl stream IOException closed the connection.");
                         break;
                     case "The handshake failed due to an unexpected packet format.":
-                        Log.Log.Message("*** StartTls IOException " + ip + port + " disconnected, invalid handshake.");
+                        Log.Log.Message("*** ssl stream IOException disconnected, invalid handshake.");
                         break;
                     default:
-                        Log.Log.Message("*** StartTls IOException from " + ip + port + Environment.NewLine + ex);
+                        Log.Log.Message("*** ssl stream IOException from " + Environment.NewLine + ex);
                         break;
                 }
                 sslStream.Dispose();
@@ -103,7 +108,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
             }
             catch (Exception ex)
             {
-                Log.Log.Message("*** StartInboundTls Exception from " + ip + port +  Environment.NewLine + ex);
+                Log.Log.Message("*** StartInboundTls Exception from " + Environment.NewLine + ex);
                 sslStream.Dispose();
                 return null;
             }

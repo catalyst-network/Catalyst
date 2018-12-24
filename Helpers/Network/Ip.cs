@@ -1,19 +1,57 @@
+using System;
+using System.Net;
+using System.Net.Sockets;
+using ADL.Log;
+
 namespace ADL.Network
 {
-    public class Ip
+    public static class Ip
     {
         public static string GetPublicIP()
         {
             string url = "http://checkip.dyndns.org";
-            System.Net.WebRequest req = System.Net.WebRequest.Create(url);
-            System.Net.WebResponse resp = req.GetResponse();
-            System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
+            WebRequest req = WebRequest.Create(url);
+            WebResponse resp = req.GetResponse();
+            System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream() ?? throw new Exception());
             string response = sr.ReadToEnd().Trim();
             string[] a = response.Split(':');
             string a2 = a[1].Substring(1);
             string[] a3 = a2.Split('<');
             string a4 = a3[0];
             return a4;
+        }
+
+        /// <summary>
+        /// given an ip in a string format should validate and return a IPAddress object.
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static IPAddress ValidateIp(string ip)
+        {
+            IPAddress validIp = null;
+            try
+            {
+                validIp = IPAddress.Parse(ip);
+            }
+            catch (ArgumentNullException e)
+            {
+                LogException.Message("ADL.Network.Ip.ValidateIp", e);
+            }
+            catch (FormatException e)
+            {
+                LogException.Message("ADL.Network.Ip.ValidateIp", e);
+            }
+            catch (SocketException e)
+            {
+                LogException.Message("ADL.Network.Ip.ValidateIp", e);
+            }
+            catch (Exception e)
+            {
+                LogException.Message("ADL.Network.Ip.ValidateIp", e);
+            }
+            if (validIp == null) throw new ArgumentNullException(nameof(ip));
+            return validIp;
         }
     }
 }

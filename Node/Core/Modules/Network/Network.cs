@@ -87,7 +87,7 @@ namespace ADL.Node.Core.Modules.Network
             if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
             if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
             
-            //dont let me run on privileged ports, I shouldn't be started as root!!!!
+            //don't let me run on privileged ports, I shouldn't be started as root!!!!
             if (networkSettings.Port < 1024)
             {
                 throw new ArgumentOutOfRangeException(nameof(networkSettings.Port));
@@ -97,8 +97,8 @@ namespace ADL.Node.Core.Modules.Network
             
             try
             {
-                byte[] publickey = new byte[1];
-                NodeIdentity = new PeerIdentifier(publickey, new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
+                byte[] publicKey = new byte[1];
+                NodeIdentity = new PeerIdentifier(publicKey, new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
             }
             catch (ArgumentNullException e)
             {
@@ -124,14 +124,27 @@ namespace ADL.Node.Core.Modules.Network
 //            SendMessageQueue = new Queue<byte[]>();
 //            ReceivedMessageQueue = new Queue<byte[]>();
             CancellationToken = new CancellationTokenSource();
-            Token = CancellationToken.Token;
-            
-            UnIdentifiedConnections = new ConcurrentDictionary<string, Connection>();
+            Token = CancellationToken.Token;            
         }
 
         public void ActivateNode()
         {
             Listener = TcpListenerFactory.CreateListener(NodeIdentity.EndPoint);
+        }
+
+        public bool Ping()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Store(string k, byte[] v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<PeerIdentifier> FindNode()
+        {
+            throw new NotImplementedException();
         }
     }
 }
