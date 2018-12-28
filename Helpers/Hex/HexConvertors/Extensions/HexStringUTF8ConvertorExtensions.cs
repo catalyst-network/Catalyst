@@ -13,7 +13,7 @@ namespace ADL.Hex.HexConvertors.Extensions
         public static string HexToUTF8String(this string hex)
         {
             var bytes = hex.HexToByteArray();
-            return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            return ByteUtil.ByteToString(bytes, 0, bytes.Length);
         }
     }
 }

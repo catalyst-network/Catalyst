@@ -20,7 +20,7 @@ namespace ADL.Util
             int offset = 0;
             foreach (byte[] array in arrays)
             {
-                System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+                Buffer.BlockCopy(array, 0, rv, offset, array.Length);
                 offset += array.Length;
             }
             return rv;
@@ -81,6 +81,11 @@ namespace ADL.Util
         public static byte[] Merge(params byte[][] arrays)
         {
             return MergeToEnum(arrays).ToArray();
+        }
+        
+        public static string ByteToString(byte[] array)
+        {
+            return System.Text.Encoding.UTF8.GetString(array);
         }
 
         /// <summary>

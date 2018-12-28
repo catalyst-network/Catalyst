@@ -98,8 +98,8 @@ namespace ADL.Node.Core.Modules.Network
             
             try
             {
-                byte[] publicKey = new byte[1];//@TODO get our public key passed in at start or from connected wallet
-                NodeIdentity = new PeerIdentifier(publicKey, new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
+                byte[] publicKey = new byte[20];//@TODO get our public key passed in at start or from connected wallet
+                NodeIdentity = PeerIdentifier.BuildPeerId(publicKey, new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
             }
             catch (ArgumentNullException e)
             {
