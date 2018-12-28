@@ -167,55 +167,10 @@ namespace ADL.Math
             return sb.ToString();
         }
 
-//        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-//        unsafe public static int ToInt32(this byte[] value, int startIndex)
-//        {
-//            fixed (byte* pbyte = &value[startIndex])
-//            {
-//                return *((int*)pbyte);
-//            }
-//        }
-//
-//        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-//        unsafe public static long ToInt64(this byte[] value, int startIndex)
-//        {
-//            fixed (byte* pbyte = &value[startIndex])
-//            {
-//                return *((long*)pbyte);
-//            }
-//        }
-
         public static uint ToTimestamp(this DateTime time)
         {
             return (uint)(time.ToUniversalTime() - unixEpoch).TotalSeconds;
         }
-
-//        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-//        unsafe public static ushort ToUInt16(this byte[] value, int startIndex)
-//        {
-//            fixed (byte* pbyte = &value[startIndex])
-//            {
-//                return *((ushort*)pbyte);
-//            }
-//        }
-//
-//        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-//        unsafe public static uint ToUInt32(this byte[] value, int startIndex)
-//        {
-//            fixed (byte* pbyte = &value[startIndex])
-//            {
-//                return *((uint*)pbyte);
-//            }
-//        }
-//
-//        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-//        unsafe public static ulong ToUInt64(this byte[] value, int startIndex)
-//        {
-//            fixed (byte* pbyte = &value[startIndex])
-//            {
-//                return *((ulong*)pbyte);
-//            }
-//        }
 
         public static IPAddress Unmap(this IPAddress address)
         {

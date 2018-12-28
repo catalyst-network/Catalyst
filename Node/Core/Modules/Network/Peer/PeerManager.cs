@@ -27,15 +27,14 @@ namespace ADL.Node.Core.Modules.Network.Peer
     public class PeerManager : IDisposable
     {
         private bool Disposed  { get; set; }
-        private CancellationToken Token { get; }
         private TcpListener Listener { get; set; }
+        private int ActiveConnections  { get; set; }
+        internal IWorkScheduler Worker  { get; set; }
+        private CancellationToken Token { get; set; }
         private bool AcceptInvalidCerts { get; set; }
-        private X509Certificate2 SslCertificate { get; }
+        private X509Certificate2 SslCertificate { get; set; }
         private CancellationTokenSource CancellationToken { get; set; }
         private ConcurrentDictionary<string, Connection> UnIdentifiedConnections { get; set; }
-
-        private int ActiveConnections;
-        internal IWorkScheduler Worker;
         private readonly Queue<byte[]> SendMessageQueue;
         private readonly Queue<byte[]> ReceivedMessageQueue;
 
