@@ -9,40 +9,26 @@ namespace ADL.Node.Core.Modules.Network.Peer
     /// <summary>
     /// 
     /// </summary>
-    public class PeerIdentifier
+    public static class PeerIdentifier
     { 
-        public long Nonce { set; get; }
-        public byte[] PeerId { set; get; }
-        private byte[] PublicKey { get; set; }
-        private IPEndPoint EndPoint { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="publicKey"></param>
-        /// <param name="endPoint"></param>
-        public PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
-        {
-            // we need a public key with at least 20 bytes anything else wont do.
-            if (publicKey.Length < 20)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-            
-            PublicKey = publicKey;
-            EndPoint = endPoint;
-            PeerId = BuildPeerId();
-        }
-
         /// <summary>
         /// Peer ID's should return a unsigned 42 byte array in the following format, to produce a 336 bit key space
         /// the ip chunk is 16 bytes long to account for ipv6 addresses, ipv4 addresses are only 4bytes long, in case of ipv4 the leading 12 bytes should be padded 0x0 
         /// clientID [2] + clientVersion[2] + Ip[16] + Port[2] + pub[20]
         /// The client ID for this implementation is "AC" or hexadecimal 4143
         /// </summary>
+        /// <param name="publicKey"></param>
+        /// <param name="endPoint"></param>
         /// <returns></returns>
-        private byte[] BuildPeerId()
+        /// <exception cref="ArgumentException"></exception>
+        private static byte[] BuildPeerId(byte[] publicKey, IPEndPoint endPoint)
         {
+            // we need a public key with at least 20 bytes anything else wont do.
+            if (publicKey.Length < 20)
+            {
+                throw new ArgumentException("public key must be 20 bytes long");
+            }
+            
             // init blank nodeId
             byte[] peerId = new byte[42];
             
@@ -53,21 +39,29 @@ namespace ADL.Node.Core.Modules.Network.Peer
             Buffer.BlockCopy(BuildClientVersionChunk(), 0, peerId, 2, 2);
             
             // copy client ip chunk
-            Buffer.BlockCopy(BuildClientIpChunk(), 0, peerId, 4, 16);
+            Buffer.BlockCopy(BuildClientIpChunk(endPoint), 0, peerId, 4, 16);
 
             // copy client port chunk
-            Buffer.BlockCopy(BuildClientPortChunk(), 0, peerId, 20, 2);
+            Buffer.BlockCopy(BuildClientPortChunk(endPoint), 0, peerId, 20, 2);
       
             // copy client public key chunk
-            Buffer.BlockCopy(PublicKey, 0, peerId, 22, 20);
+            Buffer.BlockCopy(publicKey, 0, peerId, 22, 20);
             
-            // log if we are debugging
             Log.Log.Message(BitConverter.ToString(peerId));
+
+            if (peerId.Length != 42)
+            {
+                throw new ArgumentException("peerId must be 42 bytes");
+            }
             
             return peerId;
         }
 
-        private byte[] BuildClientIdChunk()
+        /// <summary>
+        /// Get hex of this client
+        /// </summary>
+        /// <returns></returns>
+        private static byte[] BuildClientIdChunk()
         {
             return Encoding.ASCII.GetBytes("AC");
         }
@@ -76,12 +70,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// We only care about the major ass string! 🍑 🍑 🍑 
         /// </summary>
         /// <returns></returns>
-        private byte[] BuildClientVersionChunk()
+        private static byte[] BuildClientVersionChunk()
         {
             Version assVersion = Assembly.GetExecutingAssembly().GetName().Version;
             string majorAssString = assVersion.Major.ToString();
             
-            if (majorAssString.Length < 2)
+            while (majorAssString.Length < 2)
             {
                 majorAssString = majorAssString.PadLeft(2, '0');
             }
@@ -89,10 +83,15 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return Encoding.ASCII.GetBytes(majorAssString);
         }
 
-        private byte[] BuildClientIpChunk()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="endPoint"></param>
+        /// <returns></returns>
+        private static byte[] BuildClientIpChunk(IPEndPoint endPoint)
         {
             byte[] ipChunk = new byte[16];
-            IPAddress address = IPAddress.Parse(ADL.Network.Ip.GetPublicIP());
+            IPAddress address = IPAddress.Parse(endPoint.Address.ToString());
             byte[] ipBytes = address.GetAddressBytes();
             
             if(ipBytes.Length == 4)
@@ -104,20 +103,17 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 ipChunk = ipBytes;
             }
-
             return ipChunk;
         }
 
-        private byte[] BuildClientPortChunk()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="endPoint"></param>
+        /// <returns></returns>
+        private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
-            int port = 65535; //@TODO get this from our bind endpoint
-            byte[] portBytes = Encoding.ASCII.GetBytes(port.ToString("X"));
-            byte[] portChunk = new byte[2];
-            if (portBytes.Length > 4)
-            {
-               //@TODO pad with 0x0 so we always have same length.
-            }
-            return Encoding.ASCII.GetBytes(port.ToString("X"));
+            return Encoding.ASCII.GetBytes(endPoint.Port.ToString("X"));
         }
     }
 }
