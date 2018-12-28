@@ -155,13 +155,13 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         internal async Task InboundConnectionListener()
         {
-            Listener = TcpListenerFactory.CreateListener(NodeIdentity.EndPoint);
+            TcpListener Listener = TcpListenerFactory.CreateListener(NodeIdentity.EndPoint);
 
             Listener.Start();
 //            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(2000));
 //            Worker.Start();
             Console.WriteLine(Token.IsCancellationRequested);
-            Log.Log.Message("Peer server starting on " + ListenerIpAddress + ":" );
+//            Log.Log.Message("Peer server starting on " + ListenerIpAddress + ":" );
    
             //@TODO we need to announce our node to trackers.
 
@@ -231,17 +231,17 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 }
                 catch (ObjectDisposedException ex)
                 {
-                    Log.Log.Message("*** AcceptConnections ObjectDisposedException from " + ListenerIpAddress + Environment.NewLine +ex);
+//                    Log.Log.Message("*** AcceptConnections ObjectDisposedException from " + ListenerIpAddress + Environment.NewLine +ex);
                 }
                 catch (SocketException ex)
                 {
                     switch (ex.Message)
                     {
                         case "An existing connection was forcibly closed by the remote host":
-                            Log.Log.Message("*** AcceptConnections SocketException " + ListenerIpAddress + " closed the connection.");
+//                            Log.Log.Message("*** AcceptConnections SocketException " + ListenerIpAddress + " closed the connection.");
                             break;
                         default:
-                            Log.Log.Message("*** AcceptConnections SocketException from " + ListenerIpAddress + Environment.NewLine + ex);
+//                            Log.Log.Message("*** AcceptConnections SocketException from " + ListenerIpAddress + Environment.NewLine + ex);
                             break;
                     }
                 }

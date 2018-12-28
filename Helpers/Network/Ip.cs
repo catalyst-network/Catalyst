@@ -22,6 +22,22 @@ namespace ADL.Network
         }
 
         /// <summary>
+        /// Defines a valid range of ports clients can operate on
+        /// We shouldn't let clients run on privileged ports and ofc cant operate over the highest post
+        /// </summary>
+        /// <param name="port"></param>
+        /// <returns></returns>
+        public static bool ValidPortRange(int port)
+        {
+            if ( port > 1025 || port < 65535)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// given an ip in a string format should validate and return a IPAddress object.
         /// </summary>
         /// <param name="ip"></param>

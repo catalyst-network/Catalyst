@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using ADL.Network;
 using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Network.Peer
@@ -8,8 +9,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
     {   
         private Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
         {
-            PeerIdentifier = peerIdentifier;
+            if (!Ip.ValidPortRange(EndPoint.Port)) throw new ArgumentException("Peer Endpoint port range invalid");
+            
             EndPoint = endpoint;
+            PeerIdentifier = peerIdentifier;
             LastSeen = DateTimeProvider.UtcNow;
         }
 
@@ -34,5 +37,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
         {
             Reputation--;
         }
+        
     }
 }

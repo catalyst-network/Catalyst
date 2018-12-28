@@ -39,25 +39,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
         public bool TryRegister(Peer peerInfo)
         {
             var endpoint = peerInfo.EndPoint;
-            var ip = endpoint.Address;
-            var botId = peerInfo.PeerIdentifier;
+            var peerId = peerInfo.PeerIdentifier;
 
-            if (botId.Equals(BotIdentifier.Id))
-            {
-                Logger.Verbose("failed attempt for auto-adding");
-                return false;
-            }
-
-            if (endpoint.Port <= 30000 || endpoint.Port >= 50000)
-            {
-                Logger.Verbose("failed out-of-range port number ({0}). ", endpoint.Port);
-                return false;
-            }
-            
             if (_peerList.ContainsKey(peerInfo.PeerIdentifier))
             {
-                Logger.Verbose("bot with same ID already exists. Touching it.");
-                var peer = _peerList[botId];
+                Log.Log.Message("bot with same ID already exists. Touching it.");
+                var peer = _peerList[peerId];
                 peer.EndPoint = endpoint;
                 peer.Touch();
                 return false;
@@ -68,13 +55,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 Purge();
             }
 
-            _peerList.Add(botId, peerInfo);
-            Logger.Verbose("{0} added", peerInfo);
+            _peerList.Add(peerId, peerInfo);
+            Log.Log.Message("{0} added" + peerInfo);
 
-            var unknown = BotIdentifier.Unknown;
-            if (!Equals(botId, unknown) && IsRegisteredBot(unknown) && Equals(this[unknown].EndPoint, peerInfo.EndPoint))
+            if (!Equals(peerId.Known, false) && IsRegisteredBot(peerId))
             {
-                _peerList.Remove(unknown);
+                _peerList.Remove(peerId);
             }
             return true;
         }
@@ -84,7 +70,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return Recent();
         }
 
-        public void UpdatePeer(BotIdentifier botId)
+        public void UpdatePeer(PeerIdentifier botId)
         {
             if (_peerList.ContainsKey(botId))
             {
@@ -94,9 +80,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         public void Punish(PeerIdentifier peerId)
         {
-            if (_peerList.ContainsKey(botId))
+            if (_peerList.ContainsKey(peerId))
             {
-                _peerList[botId].DecreaseReputation();
+                _peerList[peerId].DecreaseReputation();
             }
         }
 
@@ -110,7 +96,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     sb.AppendLine(peerInfo.ToString());
                 }
                 var list = sb.ToString();
-                File.WriteAllText("peerlist_" + BotIdentifier.Id + ".txt", list);
+                File.WriteAllText("peerlist_" + PeerIdentifier.Id + ".txt", list);
             }
             catch
             {
@@ -122,11 +108,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
         {
             try
             {
-                var lines = File.ReadAllLines("peerlist_" + BotIdentifier.Id + ".txt");
+                var lines = File.ReadAllLines("peerlist_" + PeerIdentifier.Id + ".txt");
 
                 foreach (var line in lines)
                 {
-                    TryRegister(Peer.Parse(line));
+//                    TryRegister(Peer.Parse(line));
                 }
             }
             catch (FileNotFoundException)
@@ -150,7 +136,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         public List<Peer> Recent()
         {
             var sortedBy = SortedPeers();
-            return sortedBy.GetRange(0, Math.Min((int) 8, (int) sortedBy.Count));
+            return sortedBy.GetRange(0, System.Math.Min((int) 8, (int) sortedBy.Count));
         }
 
         private List<Peer> SortedPeers()
@@ -170,15 +156,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return GetEnumerator();
         }
 
-        internal bool IsRegisteredBot(BotIdentifier botId)
+        internal bool IsRegisteredBot(PeerIdentifier peerId)
         {
-            return _peerList.ContainsKey(botId);
+            return _peerList.ContainsKey(peerId);
         }
 
-        public Peer this[BotIdentifier botId]
-        {
-            get { return _peerList[botId]; }
-        }
+        public Peer this[PeerIdentifier peerId] => _peerList[peerId];
 
         public bool TryGet(IPEndPoint endpoint, out Peer peerInfo)
         {
