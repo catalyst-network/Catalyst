@@ -16,20 +16,22 @@ namespace ADL.Node.Core.Modules.Network.Peer
     /// </summary>
     public class PeerIdentifier
     { 
+        public bool Known { get; set; }
+        public byte[] Id { set; get; }
         
-        public byte[] PeerId { set; get; }
-
+        
         /// <summary>
         /// </summary>
-        /// <param name="peerId"></param>
-        public PeerIdentifier(byte[] peerId)
+        /// <param name="id"></param>
+        public PeerIdentifier(byte[] id)
         {
-            if (!ValidatePeerId(peerId))
+            if (!ValidatePeerId(id))
             {
                 throw new ArgumentException("Peer identifier is invalid.");
             }
             
-            PeerId = peerId;
+            Id = id;
+            Known = false;
         }
         
         /// <summary>
@@ -128,6 +130,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return Encoding.ASCII.GetBytes(endPoint.Port.ToString("X"));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public bool ValidatePeerId(byte[] peerId)
         {
             if (peerId == null) throw new ArgumentNullException(nameof(peerId));
@@ -195,6 +203,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return true;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ValidatePeerIdLength(byte[] peerId)
         {
             if (peerId.Length != 42)
@@ -203,6 +216,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ValidateClientId(byte[] peerId)
         {
             if (!Regex.IsMatch(ByteUtil.ByteToString(peerId.Slice(0, 2)), @"^[a-zA-Z]+$"))
@@ -211,6 +229,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ValidateClientVersion(byte[] peerId)
         {
             if (BitConverter.ToInt16(peerId.Slice(2, 4)) != Assembly.GetExecutingAssembly().GetName().Version.Major)
@@ -220,6 +243,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ValidateClientIp(byte[] peerId)
         {
             if (Ip.ValidateIp(ByteUtil.ByteToString(peerId.Slice(4, 20))).GetType() != typeof(IPAddress))
@@ -229,15 +257,24 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ValidateClientPort(byte[] peerId)
         {
-            int port = BitConverter.ToInt16(peerId.Slice(20, 2));
-            if ( port > 1025 || port < 65535)
+            if (!Ip.ValidPortRange(BitConverter.ToInt16(peerId.Slice(20, 2))))
             {
                 throw new ArgumentException("clientPort not valid"); 
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ValidateClientPubKey(byte[] peerId)
         {
             if (peerId.Slice(22, 42).Length != 20)
