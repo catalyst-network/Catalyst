@@ -29,9 +29,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private bool Disposed  { get; set; }
         private CancellationToken Token { get; }
         private TcpListener Listener { get; set; }
-        private IPAddress ListenerIpAddress { get; }
         private bool AcceptInvalidCerts { get; set; }
-        private List<string> BannedIps { get; set; } //@TODO revist this
         private X509Certificate2 SslCertificate { get; }
         private CancellationTokenSource CancellationToken { get; set; }
         private ConcurrentDictionary<string, Connection> UnIdentifiedConnections { get; set; }
@@ -158,6 +156,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         internal async Task InboundConnectionListener()
         {
+            Listener = TcpListenerFactory.CreateListener(NodeIdentity.EndPoint);
+
             Listener.Start();
 //            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(2000));
 //            Worker.Start();

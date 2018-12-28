@@ -17,6 +17,7 @@ namespace ADL.Node.Core.Modules.Network
         private CancellationToken Token { get; }
         private List<string> BannedIps { get; set; } //@TODO revist this
         private bool AcceptInvalidCerts { get; set; }
+        private PeerManager peerManager { get; set; }
         private static Network Instance { get; set; }
         private bool MutuallyAuthenticate { get; set; }
         private X509Certificate2 SslCertificate { get; }
@@ -97,7 +98,7 @@ namespace ADL.Node.Core.Modules.Network
             
             try
             {
-                byte[] publicKey = new byte[1];
+                byte[] publicKey = new byte[1];//@TODO get our public key passed in at start or from connected wallet
                 NodeIdentity = new PeerIdentifier(publicKey, new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
             }
             catch (ArgumentNullException e)
@@ -119,12 +120,12 @@ namespace ADL.Node.Core.Modules.Network
             Debug = debug;
             AcceptInvalidCerts = acceptInvalidCerts;
             MutuallyAuthenticate = mutualAuthentication;
-            
 //            Worker = new ClientWorker();
 //            SendMessageQueue = new Queue<byte[]>();
 //            ReceivedMessageQueue = new Queue<byte[]>();
             CancellationToken = new CancellationTokenSource();
-            Token = CancellationToken.Token;            
+            Token = CancellationToken.Token;
+            peerManager = new PeerManager();
         }
 
         public void ActivateNode()
