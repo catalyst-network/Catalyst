@@ -88,7 +88,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
                 {
                     return null;
                 }
-                if (!Int64.TryParse(Encoding.UTF8.GetString(headerBytes).Replace(":", ""), out contentLength))
+                if (!Int64.TryParse(ByteUtil.ByteToString(headerBytes).Replace(":", ""), out contentLength))
                 {
                     throw new Exception("MessageReadAsync malformed message, message header not an integer");
                 }

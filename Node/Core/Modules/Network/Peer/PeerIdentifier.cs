@@ -1,27 +1,45 @@
 using System;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using ADL.Network;
+using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
     /// <summary>
-    /// 
+    /// Peer ID's should return a unsigned 42 byte array in the following format, to produce a 336 bit key space
+    /// the ip chunk is 16 bytes long to account for ipv6 addresses, ipv4 addresses are only 4bytes long, in case of ipv4 the leading 12 bytes should be padded 0x0 
+    /// clientID [2] + clientVersion[2] + Ip[16] + Port[2] + pub[20]
+    /// The client ID for this implementation is "AC" or hexadecimal 4143
     /// </summary>
-    public static class PeerIdentifier
+    public class PeerIdentifier
     { 
+        
+        public byte[] PeerId { set; get; }
+
         /// <summary>
-        /// Peer ID's should return a unsigned 42 byte array in the following format, to produce a 336 bit key space
-        /// the ip chunk is 16 bytes long to account for ipv6 addresses, ipv4 addresses are only 4bytes long, in case of ipv4 the leading 12 bytes should be padded 0x0 
-        /// clientID [2] + clientVersion[2] + Ip[16] + Port[2] + pub[20]
-        /// The client ID for this implementation is "AC" or hexadecimal 4143
+        /// </summary>
+        /// <param name="peerId"></param>
+        public PeerIdentifier(byte[] peerId)
+        {
+            if (!ValidatePeerId(peerId))
+            {
+                throw new ArgumentException("Peer identifier is invalid.");
+            }
+            
+            PeerId = peerId;
+        }
+        
+        /// <summary>
+        /// method to build our peerId
         /// </summary>
         /// <param name="publicKey"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        private static byte[] BuildPeerId(byte[] publicKey, IPEndPoint endPoint)
+        public static PeerIdentifier BuildPeerId(byte[] publicKey, IPEndPoint endPoint)
         {
             // we need a public key with at least 20 bytes anything else wont do.
             if (publicKey.Length < 20)
@@ -49,12 +67,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             
             Log.Log.Message(BitConverter.ToString(peerId));
 
-            if (peerId.Length != 42)
-            {
-                throw new ArgumentException("peerId must be 42 bytes");
-            }
-            
-            return peerId;
+            return new PeerIdentifier(peerId);
         }
 
         /// <summary>
@@ -72,8 +85,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private static byte[] BuildClientVersionChunk()
         {
-            Version assVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            string majorAssString = assVersion.Major.ToString();
+            string majorAssString = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
             
             while (majorAssString.Length < 2)
             {
@@ -114,6 +126,125 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
             return Encoding.ASCII.GetBytes(endPoint.Port.ToString("X"));
+        }
+
+        public bool ValidatePeerId(byte[] peerId)
+        {
+            if (peerId == null) throw new ArgumentNullException(nameof(peerId));
+
+            try
+            {
+                ValidatePeerIdLength(peerId);
+            }
+            catch (ArgumentException e)
+            {
+                Log.LogException.Message("ValidatePeerIdLength", e);
+                return false;
+            }
+            
+            try
+            {
+                ValidateClientId(peerId);
+            }
+            catch (ArgumentException e)
+            {
+                Log.LogException.Message("ValidateClientId", e);
+                return false;
+            }
+            
+            try
+            {
+                ValidateClientVersion(peerId);
+            }
+            catch (ArgumentException e)
+            {
+                Log.LogException.Message("ValidateClientVersion", e);
+                return false;
+            }
+            
+            try
+            {
+                ValidateClientIp(peerId);
+            }
+            catch (ArgumentException e)
+            {
+                Log.LogException.Message("ValidateClientIp", e);
+                return false;
+            }
+            
+            try
+            {
+                ValidateClientPort(peerId);
+            }
+            catch (ArgumentException e)
+            {
+                Log.LogException.Message("ValidateClientPort", e);
+                return false;
+            }
+            
+            try
+            {
+                ValidateClientPubKey(peerId);
+            }
+            catch (ArgumentException e)
+            {
+                Log.LogException.Message("ValidateClientPubKey", e);
+                return false;
+            }
+
+            return true;
+        }
+        
+        private void ValidatePeerIdLength(byte[] peerId)
+        {
+            if (peerId.Length != 42)
+            {
+                throw new ArgumentException("peerId must be 42 bytes");
+            }
+        }
+        
+        private void ValidateClientId(byte[] peerId)
+        {
+            if (!Regex.IsMatch(ByteUtil.ByteToString(peerId.Slice(0, 2)), @"^[a-zA-Z]+$"))
+            {
+                throw new ArgumentException("ClientID not valid");
+            }
+        }
+        
+        private void ValidateClientVersion(byte[] peerId)
+        {
+            if (BitConverter.ToInt16(peerId.Slice(2, 4)) != Assembly.GetExecutingAssembly().GetName().Version.Major)
+            {
+                throw new ArgumentException("clientVersion not valid");
+                //@TODO we need to discuss how major version updates will be rolled out as we could potentially partition the network here!!!!
+            }
+        }
+        
+        private void ValidateClientIp(byte[] peerId)
+        {
+            if (Ip.ValidateIp(ByteUtil.ByteToString(peerId.Slice(4, 20))).GetType() != typeof(IPAddress))
+            {
+                //@TODO we need to validate the proclaimed ip in the identifier is the actual same ip from the client endpoint.
+                throw new ArgumentException("clientIp not valid"); 
+            }
+        }
+        
+        private void ValidateClientPort(byte[] peerId)
+        {
+            int port = BitConverter.ToInt16(peerId.Slice(20, 2));
+            if ( port > 1025 || port < 65535)
+            {
+                throw new ArgumentException("clientPort not valid"); 
+            }
+        }
+        
+        private void ValidateClientPubKey(byte[] peerId)
+        {
+            if (peerId.Slice(22, 42).Length != 20)
+            {
+                //@TODO this feels stupid as you define the length as 20 while calling the Slice method, should hook into a global pubkey validation method but we need to define a valid address format
+                throw new ArgumentException("clientPubKey not valid"); 
+            }
         }
     }
 }

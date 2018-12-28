@@ -62,7 +62,7 @@ namespace ADL.RLP
         public static string ToStringFromRLPDecoded(this byte[] bytes)
         {
             if (bytes == null) return "";
-            return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            return ByteUtil.ByteToString(bytes, 0, bytes.Length);
         }
 
         private static byte[] ToBytesFromNumber(byte[] bytes)
