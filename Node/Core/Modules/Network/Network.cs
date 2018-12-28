@@ -11,16 +11,16 @@ using ADL.Node.Core.Modules.Network.Peer;
 
 namespace ADL.Node.Core.Modules.Network
 {
-    public class Network : IKademlia
+    public class Network : IDHT, IDisposable
     {
         private bool Debug { get; set; }
         private CancellationToken Token { get; }
         private List<string> BannedIps { get; set; } //@TODO revist this
         private bool AcceptInvalidCerts { get; set; }
-        private PeerManager peerManager { get; set; }
+        internal PeerManager PeerManager { get; set; }
         private static Network Instance { get; set; }
         private bool MutuallyAuthenticate { get; set; }
-        private X509Certificate2 SslCertificate { get; }
+        internal X509Certificate2 SslCertificate { get; }
         private PeerIdentifier NodeIdentity { get; set; }
         private static readonly object Mutex = new object();        
         private CancellationTokenSource CancellationToken { get; set; }
@@ -88,7 +88,7 @@ namespace ADL.Node.Core.Modules.Network
             if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
             if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
             
-            //don't let me run on privileged ports, I shouldn't be started as root!!!!
+            // don't let me run on privileged ports, I shouldn't be started as root!!!!
             if (networkSettings.Port < 1024)
             {
                 throw new ArgumentOutOfRangeException(nameof(networkSettings.Port));
@@ -125,27 +125,53 @@ namespace ADL.Node.Core.Modules.Network
 //            ReceivedMessageQueue = new Queue<byte[]>();
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
-            peerManager = new PeerManager();
+            PeerManager = new PeerManager(SslCertificate);
         }
 
-        public void ActivateNode()
+        /// <summary>
+        /// @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        bool IDHT.Ping()
         {
-            Listener = TcpListenerFactory.CreateListener(NodeIdentity.EndPoint);
+            throw new NotImplementedException();
         }
-
-        public bool Ping()
+        
+        /// <summary>
+        /// @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        bool IDHT.Store(string k, byte[] v)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        List<PeerIdentifier> IDHT.FindNode()
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>cl
+        /// @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        void IDHT.Announce(PeerIdentifier peerIdentifier)
         {
             throw new NotImplementedException();
         }
 
-        public bool Store(string k, byte[] v)
+        public void Dispose()
         {
-            throw new NotImplementedException();
-        }
-
-        public List<PeerIdentifier> FindNode()
-        {
-            throw new NotImplementedException();
+            CancellationToken.Cancel();
+            PeerManager.Dispose();
         }
     }
 }

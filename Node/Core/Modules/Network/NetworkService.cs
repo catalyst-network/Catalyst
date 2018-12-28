@@ -39,14 +39,14 @@ namespace ADL.Node.Core.Modules.Network
         public override bool StartService()
         {
             Network = Network.GetInstance(NetworkSettings, SslSettings, DataDir);
-            Task.Run(async () => await PeerManager.InboundConnectionListener());
-            PeerManager.PeerBuilder("127.0.0.1",43069);
+            Task.Run(async () => await Network.PeerManager.InboundConnectionListener());
+//            PeerManager.PeerBuilder("127.0.0.1",43069);
             return true;
         }
             
         public override bool StopService()
         {
-            PeerManager.Dispose();
+            Network.Dispose();
             return false;
         }
     }
