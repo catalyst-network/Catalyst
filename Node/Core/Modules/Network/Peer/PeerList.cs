@@ -1,18 +1,19 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Net;
-using System.Text;
 using ADL.Node.Core.Modules.Network.Workers;
+using System.Linq;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
      public class PeerList : IEnumerable<Peer>
     {
-        private readonly Dictionary<PeerIdentifier, Peer> _peerList;
-  
+        public bool IsCritical => _peerList.Count <= 25; // @TODO decide what counts an unhealthy number of peers
+        internal readonly Dictionary<PeerIdentifier, Peer> _peerList;
+        internal ConcurrentDictionary<string, Connection> UnIdentifiedPeers { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -23,19 +24,56 @@ namespace ADL.Node.Core.Modules.Network.Peer
             _peerList = new Dictionary<PeerIdentifier, Peer>();
 
             workScheduler.QueueForever(Check, TimeSpan.FromMinutes(5));
-            workScheduler.QueueForever(Purge, TimeSpan.FromSeconds(15));
+            workScheduler.QueueForever(PurgePeers, TimeSpan.FromSeconds(15));
             workScheduler.QueueForever(Save, TimeSpan.FromMinutes(1));
+            workScheduler.Start();
         }
 
+        /// <summary>
+        /// returns a list of our peers
+        /// </summary>
+        /// <returns></returns>
+        public List<string> ListPeers()
+        {
+            Dictionary<string, Connection> peers = UnIdentifiedPeers.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            List<string> ret = new List<string>();
+            foreach (KeyValuePair<string, Connection> curr in peers)
+            {
+                Console.WriteLine(curr.Key);
+                ret.Add(curr.Key);
+            }
+            return ret;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        /// <returns></returns>
+        public bool IsPeerConnected(string ip, int port)
+        {
+            if (ip == null) throw new ArgumentNullException(nameof(ip));
+            if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
+            
+            return UnIdentifiedPeers.TryGetValue(ip+":"+port, out Connection peer);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private void Check()
         {
             Log.Log.Message("Checking peer list");
             if (!IsCritical) return;
             // go back to peer tracker and ask for more peers
         }
-
-        public bool IsCritical => _peerList.Count <= 25; // @TODO decide what counts an unhealthy number of peers
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peerInfo"></param>
+        /// <returns></returns>
         public bool TryRegister(Peer peerInfo)
         {
             var endpoint = peerInfo.EndPoint;
@@ -52,7 +90,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
             if (_peerList.Count >= 256)
             {
-                Purge();
+                PurgePeers();
             }
 
             _peerList.Add(peerId, peerInfo);
@@ -98,12 +136,17 @@ namespace ADL.Node.Core.Modules.Network.Peer
             throw new NotImplementedException();
         }
 
-        public void Purge()
+        public void PurgeConnections()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PurgePeers()
         {
             var peersInfo = new List<Peer>(_peerList.Values);
             foreach (var peerInfo in peersInfo)
             {
-                if (peerInfo.IsAwolBot)
+                if (peerInfo.IsAwolBot) //@TODO check if connected
                 {
                     _peerList.Remove(peerInfo.PeerIdentifier);
                 }
@@ -138,7 +181,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return _peerList.ContainsKey(peerId);
         }
 
-        public Peer this[PeerIdentifier peerId] => _peerList[peerId];
+//        public Peer this[PeerIdentifier peerId] => _peerList[peerId];
 
         public bool TryGet(IPEndPoint endpoint, out Peer peerInfo)
         {

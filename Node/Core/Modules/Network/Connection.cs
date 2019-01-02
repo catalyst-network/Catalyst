@@ -18,6 +18,7 @@ namespace ADL.Node.Core.Modules.Network
         internal TcpClient TcpClient { get; }
         public SslStream SslStream { set; get; }
         internal NetworkStream NetworkStream { get; }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -25,10 +26,39 @@ namespace ADL.Node.Core.Modules.Network
         public Connection(TcpClient tcp)
         {
             TcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
-            Connected = true;
-            NetworkStream = tcp.GetStream();
+
+            try
+            {
+                NetworkStream = tcp.GetStream();
+            }
+            catch (ObjectDisposedException e)
+            {
+                Log.LogException.Message("Connection Constructor", e);
+                throw new Exception("Connection Constructor: could not get tcp stream");
+            }
+            catch (InvalidOperationException e)
+            {
+                Log.LogException.Message("Connection Constructor", e);
+                throw new Exception("Connection Constructor: could not get tcp stream");
+            }
+
             Port = ((IPEndPoint)tcp.Client.RemoteEndPoint).Port;
             Ip = ((IPEndPoint)tcp.Client.RemoteEndPoint).Address.ToString();
+            Connected = true;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal bool IsConnected()
+        {
+            if (TcpClient == null) throw new ArgumentNullException(nameof(TcpClient));
+            if (!TcpClient.Connected) return false;
+            if (!TcpClient.Client.Poll(0, SelectMode.SelectWrite) ||
+                TcpClient.Client.Poll(0, SelectMode.SelectError)) return false;
+            byte[] buffer = new byte[1];
+            return TcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
         }
 
         /// <summary>
@@ -58,8 +88,9 @@ namespace ADL.Node.Core.Modules.Network
                 NetworkStream?.Dispose();
                 TcpClient?.Dispose();
             }
-            Connected = false;
+            
             Disposed = true;
+            Connected = false;
             Log.Log.Message("connection disposed");
         }
     }

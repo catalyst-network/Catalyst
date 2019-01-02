@@ -1,14 +1,13 @@
 using System;
 using System.Net;
+using ADL.Network;
 using System.Threading;
-using System.Net.Sockets;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using ADL.Node.Core.Modules.Network.Workers;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using ADL.Node.Core.Modules.Network.Listeners;
+using System.Collections.Generic;
 using ADL.Node.Core.Modules.Network.Peer;
+using ADL.Node.Core.Modules.Network.Workers;
+using ADL.Node.Core.Modules.Network.Messages;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ADL.Node.Core.Modules.Network
 {
@@ -90,7 +89,7 @@ namespace ADL.Node.Core.Modules.Network
             if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
             
             // don't let me run on privileged ports, I shouldn't be started as root!!!!
-            if (networkSettings.Port < 1024)
+            if (!Ip.ValidPortRange(networkSettings.Port))
             {
                 throw new ArgumentOutOfRangeException(nameof(networkSettings.Port));
             }
@@ -121,12 +120,10 @@ namespace ADL.Node.Core.Modules.Network
             Debug = debug;
             AcceptInvalidCerts = acceptInvalidCerts;
             MutuallyAuthenticate = mutualAuthentication;
-//            Worker = new ClientWorker();
-//            SendMessageQueue = new Queue<byte[]>();
-//            ReceivedMessageQueue = new Queue<byte[]>();
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
-            PeerManager = new PeerManager(SslCertificate);
+            
+            PeerManager = new PeerManager(SslCertificate,new PeerList(new ClientWorker()),new MessageQueueManager());
 
             Task.Run(async () => 
                 await PeerManager.InboundConnectionListener(
