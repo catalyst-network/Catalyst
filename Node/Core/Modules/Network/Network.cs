@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using ADL.Node.Core.Modules.Network.Workers;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using ADL.Node.Core.Modules.Network.Listeners;
 using ADL.Node.Core.Modules.Network.Peer;
 
@@ -126,6 +127,14 @@ namespace ADL.Node.Core.Modules.Network
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
             PeerManager = new PeerManager(SslCertificate);
+
+            Task.Run(async () => 
+                await PeerManager.InboundConnectionListener(
+                    new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress),
+                        networkSettings.Port
+                    )
+                )
+            );
         }
 
         /// <summary>

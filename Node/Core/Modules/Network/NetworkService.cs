@@ -1,7 +1,4 @@
-using System;
-using System.Threading.Tasks;
 using ADL.Node.Core.Helpers.Services;
-using ADL.Node.Core.Modules.Network.Peer;
 
 namespace ADL.Node.Core.Modules.Network
 {
@@ -36,7 +33,6 @@ namespace ADL.Node.Core.Modules.Network
         public override bool StartService()
         {
             Network = Network.GetInstance(NetworkSettings, SslSettings, DataDir);
-            Task.Run(async () => await Network.PeerManager.InboundConnectionListener());
 //            PeerManager.PeerBuilder("127.0.0.1",43069);
             return true;
         }
