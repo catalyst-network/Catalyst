@@ -1,12 +1,11 @@
 using System;
+using ADL.Util;
 using System.Net;
 using System.Text;
+using ADL.Network;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using ADL.Network;
-using ADL.Hex.HexConvertors;
 using ADL.Hex.HexConvertors.Extensions;
-using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
@@ -18,9 +17,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
     /// </summary>
     public class PeerIdentifier
     { 
-        public bool Known { get; set; }
         public byte[] Id { set; get; }
-        
+        public bool Known { get; set; }        
         
         /// <summary>
         /// </summary>
@@ -110,7 +108,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private static byte[] BuildClientIpChunk(IPEndPoint endPoint)
         {
             byte[] ipChunk = new byte[16];
-            IPAddress address = IPAddress.Parse(endPoint.Address.ToString());
+            IPAddress address = Ip.GetPublicIP();
             byte[] ipBytes = address.GetAddressBytes();
             
             if (ipBytes.Length == 4)
@@ -240,11 +238,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientVersion(byte[] peerId)
-        {
-            var peerClientVersionHex = peerId.Slice(2, 4).ToHex();
-            var nodeHex = PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()).ToHexUTF8();
-            
-            if (!peerClientVersionHex.IsTheSameHex(nodeHex))
+        {            
+            if (!peerId.Slice(2, 4).ToHex().IsTheSameHex(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()).ToHexUTF8()))
             {
                 throw new ArgumentException("clientVersion not valid");
                 //@TODO we need to discuss how major version updates will be rolled out as we could potentially partition the network here!!!!
@@ -258,7 +253,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientIp(byte[] peerId)
         {
-            if (Ip.ValidateIp(ByteUtil.ByteToString(peerId.Slice(4, 20))).GetType() != typeof(IPAddress))
+            if (Ip.ValidateIp(new IPAddress(peerId.Slice(4, 20)).ToString()).GetType() != typeof(IPAddress))
             {
                 //@TODO we need to validate the proclaimed ip in the identifier is the actual same ip from the client endpoint.
                 throw new ArgumentException("clientIp not valid"); 

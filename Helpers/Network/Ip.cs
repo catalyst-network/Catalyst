@@ -7,7 +7,7 @@ namespace ADL.Network
 {
     public static class Ip
     {
-        public static string GetPublicIP()
+        public static IPAddress GetPublicIP()
         {
             string url = "http://checkip.dyndns.org";
             WebRequest req = WebRequest.Create(url);
@@ -18,7 +18,7 @@ namespace ADL.Network
             string a2 = a[1].Substring(1);
             string[] a3 = a2.Split('<');
             string a4 = a3[0];
-            return a4;
+            return IPAddress.Parse(a4);
         }
 
         /// <summary>
@@ -45,6 +45,8 @@ namespace ADL.Network
         /// <exception cref="ArgumentNullException"></exception>
         public static IPAddress ValidateIp(string ip)
         {
+            if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
+
             IPAddress validIp = null;
             try
             {
