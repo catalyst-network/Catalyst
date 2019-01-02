@@ -158,7 +158,7 @@ namespace ADL.Node.Core.Modules.Network
             throw new NotImplementedException();
         }
         
-        /// <summary>cl
+        /// <summary>
         /// @TODO just to satisfy the DHT interface, need to implement
         /// </summary>
         /// <returns></returns>
@@ -168,6 +168,9 @@ namespace ADL.Node.Core.Modules.Network
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             CancellationToken.Cancel();

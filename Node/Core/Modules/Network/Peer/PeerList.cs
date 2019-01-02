@@ -88,37 +88,14 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         public void Save()
         {
-            try
-            {
-                var sb = new StringBuilder();
-                foreach (var peerInfo in _peerList.Values)
-                {
-                    sb.AppendLine(peerInfo.ToString());
-                }
-                var list = sb.ToString();
-                File.WriteAllText("peerlist_" + PeerIdentifier.Id + ".txt", list);
-            }
-            catch
-            {
-                // ignore if something wrong happened
-            }
+            // save peer list from DB
+            throw new NotImplementedException();
         }
 
         public void Load()
         {
-            try
-            {
-                var lines = File.ReadAllLines("peerlist_" + PeerIdentifier.Id + ".txt");
-
-                foreach (var line in lines)
-                {
-//                    TryRegister(Peer.Parse(line));
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                // ignored
-            }
+            // load peer list from DB
+            throw new NotImplementedException();
         }
 
         public void Purge()
