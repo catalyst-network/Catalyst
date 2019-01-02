@@ -6,6 +6,7 @@ using ADL.Network;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using ADL.Hex.HexConvertors.Extensions;
+using ADL.RLP;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
@@ -130,7 +131,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
-            return Encoding.UTF8.GetBytes(endPoint.Port.ToString("X"));
+            return endPoint.Port.ToBytesForRLPEncoding();
         }
 
         /// <summary>
@@ -267,7 +268,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientPort(byte[] peerId)
         {
-            if (!Ip.ValidPortRange(BitConverter.ToUInt16(peerId.Slice(20, 2))))
+            if (!Ip.ValidPortRange( peerId.Slice(20, 22).ToIntFromRLPDecoded()))
             {
                 throw new ArgumentException("clientPort not valid"); 
             }

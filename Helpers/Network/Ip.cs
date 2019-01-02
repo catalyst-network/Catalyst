@@ -29,7 +29,7 @@ namespace ADL.Network
         /// <returns></returns>
         public static bool ValidPortRange(int port)
         {
-            if ( port > 1025 || port < 65535)
+            if ( port < 1025 || port > 65535)
             {
                 return false;
             }
