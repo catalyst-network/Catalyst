@@ -18,10 +18,10 @@ namespace ADL.Node.Core.Modules.Network
         private CancellationToken Token { get; }
         private List<string> BannedIps { get; set; } //@TODO revist this
         private bool AcceptInvalidCerts { get; set; }
-        internal PeerManager PeerManager { get; set; }
+        private PeerManager PeerManager { get; set; }
         private static Network Instance { get; set; }
         private bool MutuallyAuthenticate { get; set; }
-        internal X509Certificate2 SslCertificate { get; }
+        private X509Certificate2 SslCertificate { get; }
         private PeerIdentifier NodeIdentity { get; set; }
         private static readonly object Mutex = new object();        
         private CancellationTokenSource CancellationToken { get; set; }

@@ -119,7 +119,6 @@ namespace ADL.Node
             
             if (options.Peer)
             {
-                Console.WriteLine("start p2p controller....");
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
                     PeerService = scope.Resolve<INetworkService>();

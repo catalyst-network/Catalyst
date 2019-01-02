@@ -28,7 +28,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
         /// <returns></returns>
         public static byte[] BuildMsgDescriptor(byte network, byte version, byte type)
         {
-            return new []{network, version, type};
+            return new [] { network, version, type };
         }
     }
 }

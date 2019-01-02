@@ -1,4 +1,5 @@
 using System;
+using ADL.RLP;
 using ADL.Util;
 using System.Net;
 using System.Text;
@@ -6,7 +7,6 @@ using ADL.Network;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using ADL.Hex.HexConvertors.Extensions;
-using ADL.RLP;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
@@ -60,7 +60,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             Buffer.BlockCopy(BuildClientVersionChunk(), 0, peerId, 2, 2);
             
             // copy client ip chunk
-            Buffer.BlockCopy(BuildClientIpChunk(endPoint), 0, peerId, 4, 16);
+            Buffer.BlockCopy(BuildClientIpChunk(), 0, peerId, 4, 16);
 
             // copy client port chunk
             Buffer.BlockCopy(BuildClientPortChunk(endPoint), 0, peerId, 20, 2);
@@ -91,6 +91,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return Encoding.ASCII.GetBytes(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
         private static string PadVersionString(string version)
         {
             while (version.Length < 2)
@@ -106,16 +111,15 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// </summary>
         /// <param name="endPoint"></param>
         /// <returns></returns>
-        private static byte[] BuildClientIpChunk(IPEndPoint endPoint)
+        private static byte[] BuildClientIpChunk()
         {
             byte[] ipChunk = new byte[16];
-            IPAddress address = Ip.GetPublicIP();
+            IPAddress address = Ip.GetPublicIp();
             byte[] ipBytes = address.GetAddressBytes();
             
             if (ipBytes.Length == 4)
             {
                 Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
-                Console.WriteLine(BitConverter.ToString(ipChunk));
             }
             else
             {
