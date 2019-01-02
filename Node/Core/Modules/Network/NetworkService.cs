@@ -32,9 +32,6 @@ namespace ADL.Node.Core.Modules.Network
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="p2PSettings"></param>
-        /// <param name="sslSettings"></param>
-        /// <param name="dataDir"></param>
         /// <returns></returns>
         public override bool StartService()
         {

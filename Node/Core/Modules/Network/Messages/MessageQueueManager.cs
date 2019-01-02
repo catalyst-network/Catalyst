@@ -8,25 +8,25 @@ namespace ADL.Node.Core.Modules.Network.Messages
 {
      public class MessageQueueManager : IMessageSender
     {
-        private readonly IMessageListener _listener;
+//        private readonly IMessageListener _listener;
         private readonly List<IPAddress> _blackList;
-        private readonly Queue<Package> _sendMessageQueue;
-        private readonly Queue<Package> _receivedMessageQueue;
+        private readonly Queue<Message> _sendMessageQueue;
+        private readonly Queue<Message> _receivedMessageQueue;
         private readonly Dictionary<IPAddress, int> _requestsByIp;
-        public EventHandler<PackageReceivedEventArgs<IPEndPoint>> PackageReceivedEventArgs;
+//        public EventHandler<PackageReceivedEventArgs<IPEndPoint>> PackageReceivedEventArgs;
 
-        internal MessageQueueManager(IMessageListener listener, IWorkScheduler worker)
-        {
-            _listener = listener;
+//        internal MessageQueueManager(IMessageListener listener, IWorkScheduler worker)
+//        {
+//            _listener = listener;
 
-            _receivedMessageQueue = new Queue<Package>();
-            _sendMessageQueue = new Queue<Package>();
-            _blackList = new List<IPAddress>();
-            _requestsByIp = new Dictionary<IPAddress, int>();
+//            _receivedMessageQueue = new Queue<Message>();
+//            _sendMessageQueue = new Queue<Message>();
+//            _blackList = new List<IPAddress>();
+//            _requestsByIp = new Dictionary<IPAddress, int>();
 
-            worker.QueueForever(SendReceive, TimeSpan.FromMilliseconds(200));
-            worker.QueueForever(AnalyzeRequestList, TimeSpan.FromMinutes(1));
-        }
+//            worker.QueueForever(SendReceive, TimeSpan.FromMilliseconds(200));
+//            worker.QueueForever(AnalyzeRequestList, TimeSpan.FromMinutes(1));
+//        }
 
         private void SendReceive()
         {
@@ -42,7 +42,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
                 for (var i = 0; i < receivedCount; i++)
                 {
                     var package = _receivedMessageQueue.Dequeue();
-                    Events.Raise(PackageReceivedEventArgs, this, new PackageReceivedEventArgs<IPEndPoint>(package.EndPoint, package.Data, package.Count));
+//                    Events.Raise(PackageReceivedEventArgs, this, new PackageReceivedEventArgs<IPEndPoint>(package.EndPoint, package.Data, package.Count));
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
                 for (var i = 0; i < sendCount; i++)
                 {
                     var pkg = _sendMessageQueue.Dequeue();
-                    _listener.Send(pkg);
+//                    _listener.Send(pkg);
                 }
             }
         }
@@ -84,8 +84,8 @@ namespace ADL.Node.Core.Modules.Network.Messages
         {
             lock (_sendMessageQueue)
             {
-                var package = new Package(endPoint, message, message.Length); 
-                _sendMessageQueue.Enqueue(package);
+//                var package = new Message(endPoint, message, message.Length); 
+//                _sendMessageQueue.Enqueue(package);
             }
         }
 
@@ -95,10 +95,10 @@ namespace ADL.Node.Core.Modules.Network.Messages
             if (IsBlocked(ip)) return;
             IncrementRequestByIp(ip);
 
-            var package = new Package(endPoint, message, count);
+//            var package = new Message(endPoint, message, count);
             lock (_receivedMessageQueue)
             {
-                _receivedMessageQueue.Enqueue(package);
+//                _receivedMessageQueue.Enqueue(package);
             }
         }
 
@@ -122,7 +122,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
 
         public void BlockIp(IPAddress ip)
         {
-            Logger.Verbose("Blocking IP {0}", ip);
+            Log.Log.Message("Blocking IP {0}" + ip);
             _blackList.Add(ip);
         }
     }

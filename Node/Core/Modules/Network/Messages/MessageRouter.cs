@@ -1,4 +1,4 @@
-namespace ADL.Node.Core.Modules.NEtwork.Messages
+namespace ADL.Node.Core.Modules.Network.Messages
 {
     public class MessageRouter
     {
