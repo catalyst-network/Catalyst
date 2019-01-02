@@ -7,7 +7,11 @@ namespace ADL.Network
 {
     public static class Ip
     {
-        public static IPAddress GetPublicIP()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static IPAddress GetPublicIp()
         {
             string url = "http://checkip.dyndns.org";
             WebRequest req = WebRequest.Create(url);

@@ -46,7 +46,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         private void ProcessMessageQueue()//@TODO this is duplicated in message queue manager
         {
-            Console.WriteLine("ProcessMessageQueue");
+            Log.Log.Message("ProcessMessageQueue");
             lock (ReceivedMessageQueue)
             {
                 Log.Log.Message("Messages to process: " + ReceivedMessageQueue.Count);
@@ -59,10 +59,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 }
                 byte[] msgDescriptor = msg.Slice(0, 3);
                 byte[] message = msg.Slice(3);
-                Console.WriteLine(BitConverter.ToString(msgDescriptor));
-                Console.WriteLine(BitConverter.ToString(message));
+                Log.Log.Message(BitConverter.ToString(msgDescriptor));
+                Log.Log.Message(BitConverter.ToString(message));
             }
-            Console.WriteLine("unlocked msg queue");
+            Log.Log.Message("unlocked msg queue");
         }
 
         /// <summary>
@@ -74,7 +74,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private async Task<bool> DataReceiver(Connection connection, CancellationToken cancelToken)
         {
             var streamReadCounter = 0;
-            Log.Log.Message("attempting to add connection");
             var port = ((IPEndPoint) connection.TcpClient.Client.LocalEndPoint).Port;
             var ip = ((IPEndPoint) connection.TcpClient.Client.LocalEndPoint).Address.ToString();
 
@@ -86,7 +85,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 return false;
             }
 
-            // @TODO we need to get this active connections incrementer out this method, then this DataReceiver method needs to go somewhere related to messages.
             if (UnIdentifiedConnections.TryAdd(ip+":"+port, connection))
             {
                 int activeCount = Interlocked.Increment(ref ActiveConnections);
@@ -160,7 +158,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
             Listener.Start();
 //            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(2000));
 //            Worker.Start();
-            Console.WriteLine(Token.IsCancellationRequested);
 //            Log.Log.Message("Peer server starting on " + ListenerIpAddress + ":" );
    
             //@TODO we need to announce our node to trackers.
@@ -172,9 +169,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     TcpClient tcpPeer = await Listener.AcceptTcpClientAsync();
                     tcpPeer.LingerState.Enabled = false;
 
-                    string peerIp = ((IPEndPoint) tcpPeer.Client.RemoteEndPoint).Address.ToString();
-
                     //@TODO revist this
+//                    string peerIp = ((IPEndPoint) tcpPeer.Client.RemoteEndPoint).Address.ToString();
+//
 //                    if (BannedIps?.Count > 0)
 //                    {
 //                        if (!BannedIps.Contains(peerIp))
@@ -198,14 +195,14 @@ namespace ADL.Node.Core.Modules.Network.Peer
                             AcceptInvalidCerts
                         );
                     
-                    if (connection.SslStream == null || connection.SslStream.GetType() != typeof(SslStream))
+                    if (connection.SslStream == null || connection.SslStream.GetType() != typeof (SslStream))
                     {
                         throw new Exception("Peer ssl stream not set");
                     }
 
                     if (await DataReceiver(connection, Token))
                     {
-                        Console.WriteLine("Starting Challenge Request");
+                        Log.Log.Message("Starting Challenge Request");
                         PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
 
                         SecureRandom random = new SecureRandom();
@@ -241,7 +238,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
 //                            Log.Log.Message("*** AcceptConnections SocketException " + ListenerIpAddress + " closed the connection.");
                             break;
                         default:
-//                            Log.Log.Message("*** AcceptConnections SocketException from " + ListenerIpAddress + Environment.NewLine + ex);
+//                            Log.Log.Message("*** AcceptConnections SocketException from " + peerIp.Ip + Environment.NewLine + ex);
                             break;
                     }
                 }
@@ -407,7 +404,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         public void Dispose()
         {
             Dispose(true);
-            Console.WriteLine("disposing network class");
+            Log.Log.Message("disposing network class");
             GC.SuppressFinalize(this);
         }
         
