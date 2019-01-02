@@ -4,6 +4,8 @@ using System.Text;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using ADL.Network;
+using ADL.Hex.HexConvertors;
+using ADL.Hex.HexConvertors.Extensions;
 using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Network.Peer
@@ -78,7 +80,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private static byte[] BuildClientIdChunk()
         {
-            return Encoding.ASCII.GetBytes("AC");
+            return Encoding.UTF8.GetBytes("AC");
         }
 
         /// <summary>
@@ -87,14 +89,17 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private static byte[] BuildClientVersionChunk()
         {
-            string majorAssString = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
-            
-            while (majorAssString.Length < 2)
+            return Encoding.ASCII.GetBytes(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()));
+        }
+
+        private static string PadVersionString(string version)
+        {
+            while (version.Length < 2)
             {
-                majorAssString = majorAssString.PadLeft(2, '0');
+                version = version.PadLeft(2, '0');
             }
-                            
-            return Encoding.ASCII.GetBytes(majorAssString);
+
+            return version;
         }
 
         /// <summary>
@@ -108,7 +113,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             IPAddress address = IPAddress.Parse(endPoint.Address.ToString());
             byte[] ipBytes = address.GetAddressBytes();
             
-            if(ipBytes.Length == 4)
+            if (ipBytes.Length == 4)
             {
                 Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
                 Console.WriteLine(BitConverter.ToString(ipChunk));
@@ -127,7 +132,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
-            return Encoding.ASCII.GetBytes(endPoint.Port.ToString("X"));
+            return Encoding.UTF8.GetBytes(endPoint.Port.ToString("X"));
         }
 
         /// <summary>
@@ -236,7 +241,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientVersion(byte[] peerId)
         {
-            if (BitConverter.ToInt16(peerId.Slice(2, 4)) != Assembly.GetExecutingAssembly().GetName().Version.Major)
+            var peerClientVersionHex = peerId.Slice(2, 4).ToHex();
+            var nodeHex = PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()).ToHexUTF8();
+            
+            if (!peerClientVersionHex.IsTheSameHex(nodeHex))
             {
                 throw new ArgumentException("clientVersion not valid");
                 //@TODO we need to discuss how major version updates will be rolled out as we could potentially partition the network here!!!!
@@ -264,7 +272,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientPort(byte[] peerId)
         {
-            if (!Ip.ValidPortRange(BitConverter.ToInt16(peerId.Slice(20, 2))))
+            if (!Ip.ValidPortRange(BitConverter.ToUInt16(peerId.Slice(20, 2))))
             {
                 throw new ArgumentException("clientPort not valid"); 
             }

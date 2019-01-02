@@ -26,9 +26,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
     /// </summary>
     public class PeerManager : IDisposable
     {
+        private int ActiveConnections;
         private bool Disposed  { get; set; }
         private TcpListener Listener { get; set; }
-        private int ActiveConnections  { get; set; }
         internal IWorkScheduler Worker  { get; set; }
         private CancellationToken Token { get; set; }
         private bool AcceptInvalidCerts { get; set; }
@@ -153,9 +153,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// 
         /// </summary>
         /// <returns></returns>
-        internal async Task InboundConnectionListener()
+        internal async Task InboundConnectionListener(IPEndPoint ipEndPoint)
         {
-            TcpListener Listener = TcpListenerFactory.CreateListener(NodeIdentity.EndPoint);
+            TcpListener Listener = TcpListenerFactory.CreateListener(ipEndPoint);
 
             Listener.Start();
 //            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(2000));
