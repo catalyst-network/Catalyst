@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,9 +12,7 @@ using ADL.Hex.HexConvertors.Extensions;
 using ADL.Network;
 using ADL.Node.Core.Modules.Network.Listeners;
 using ADL.Node.Core.Modules.Network.Messages;
-using ADL.Node.Core.Modules.Network.Workers;
 using ADL.Protocol.Peer;
-using ADL.Util;
 using Google.Protobuf;
 using Org.BouncyCastle.Security;
 
@@ -28,41 +25,20 @@ namespace ADL.Node.Core.Modules.Network.Peer
     {
         private int ActiveConnections;
         private bool Disposed  { get; set; }
+        private PeerList PeerList  { get; set; }
         private TcpListener Listener { get; set; }
-        internal IWorkScheduler Worker  { get; set; }
         private CancellationToken Token { get; set; }
         private bool AcceptInvalidCerts { get; set; }
         private X509Certificate2 SslCertificate { get; set; }
+        private MessageQueueManager MessageQueueManager { get; set; }
         private CancellationTokenSource CancellationToken { get; set; }
-        private ConcurrentDictionary<string, Connection> UnIdentifiedConnections { get; set; }
-        private readonly Queue<byte[]> SendMessageQueue;
-        private readonly Queue<byte[]> ReceivedMessageQueue;
 
-        public PeerManager(X509Certificate2 sslCertificate)
+        public PeerManager(X509Certificate2 sslCertificate, PeerList peerList, MessageQueueManager messageQueueManager)
         {
+            PeerList = peerList;
             ActiveConnections = 0;
             SslCertificate = sslCertificate;
-        }
-
-        private void ProcessMessageQueue()//@TODO this is duplicated in message queue manager
-        {
-            Log.Log.Message("ProcessMessageQueue");
-            lock (ReceivedMessageQueue)
-            {
-                Log.Log.Message("Messages to process: " + ReceivedMessageQueue.Count);
-                byte[] msg = null;
-                var receivedCount = ReceivedMessageQueue.Count;
-                for (var i = 0; i < receivedCount; i++)
-                {
-                    Log.Log.Message("processing message: " + receivedCount);
-                    msg = ReceivedMessageQueue.Dequeue();
-                }
-                byte[] msgDescriptor = msg.Slice(0, 3);
-                byte[] message = msg.Slice(3);
-                Log.Log.Message(BitConverter.ToString(msgDescriptor));
-                Log.Log.Message(BitConverter.ToString(message));
-            }
-            Log.Log.Message("unlocked msg queue");
+            MessageQueueManager = messageQueueManager;
         }
 
         /// <summary>
@@ -79,13 +55,13 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
             if (connection == null) throw new ArgumentNullException(nameof(connection));
             
-            if (UnIdentifiedConnections.TryRemove(ip+":"+port, out Connection removedConnection))
+            if (PeerList.UnIdentifiedPeers.TryRemove(ip+":"+port, out Connection removedConnection))
             {
                 Log.Log.Message(removedConnection + "Connection already exists");
                 return false;
             }
 
-            if (UnIdentifiedConnections.TryAdd(ip+":"+port, connection))
+            if (PeerList.UnIdentifiedPeers.TryAdd(ip+":"+port, connection))
             {
                 int activeCount = Interlocked.Increment(ref ActiveConnections);
                 Log.Log.Message("*** FinalizeConnection starting data receiver for " + ip + port + " (now " + activeCount + " connections)");
@@ -102,7 +78,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 {
                     cancelToken.ThrowIfCancellationRequested();
 
-                    if (!IsConnected(connection.TcpClient))
+                    if (!connection.IsConnected())
                     {
                         Log.Log.Message("*** Data receiver can not attach to connection");
                         break;
@@ -122,10 +98,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     }
                     else
                     {
-                        lock (ReceivedMessageQueue)
+                        lock (MessageQueueManager._receivedMessageQueue)
                         {
-                            ReceivedMessageQueue.Enqueue(payload);
-                            Log.Log.Message("messages in queue: " + ReceivedMessageQueue.Count);
+                            MessageQueueManager._receivedMessageQueue.Enqueue(payload);
+                            Log.Log.Message("messages in queue: " + MessageQueueManager._receivedMessageQueue.Count);
                         }
                     }
                 }
@@ -153,11 +129,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         internal async Task InboundConnectionListener(IPEndPoint ipEndPoint)
         {
-            TcpListener Listener = TcpListenerFactory.CreateListener(ipEndPoint);
+            TcpListener Listener = ListenerFactory.CreateTcpListener(ipEndPoint);
 
             Listener.Start();
-//            Worker.QueueForever(ProcessMessageQueue, TimeSpan.FromMilliseconds(2000));
-//            Worker.Start();
 //            Log.Log.Message("Peer server starting on " + ListenerIpAddress + ":" );
    
             //@TODO we need to announce our node to trackers.
@@ -182,11 +156,16 @@ namespace ADL.Node.Core.Modules.Network.Peer
 //                        }
 //                    }
 
-                    // inbound peer
-                    //do we want to elevate a new connection as peer immediatly?
-                    var connection = new Connection(tcpPeer);
-
-                    Log.Log.Message("*** AcceptConnections accepted connection from " + connection.Ip + connection.Port + " count " + ActiveConnections);
+                    Connection connection;
+                    try
+                    {
+                        connection = new Connection(tcpPeer);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.LogException.Message("InboundConnectionListener", e);
+                        return;
+                    }
 
                     connection.SslStream = Stream.StreamFactory.CreateTlsStream(
                         connection.NetworkStream,
@@ -202,6 +181,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
                     if (await DataReceiver(connection, Token))
                     {
+                        Log.Log.Message("*** AcceptConnections accepted connection from " + connection.Ip + connection.Port + " count " + ActiveConnections);
                         Log.Log.Message("Starting Challenge Request");
                         PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
 
@@ -260,8 +240,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="AuthenticationException"></exception>
         public async void PeerBuilder (string ip, int port)
         {
-            if (port < 1024) throw new ArgumentOutOfRangeException(nameof(port));
             if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
+            if (Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
 
             try
             {
@@ -348,14 +328,14 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private bool DisconnectConnection(string ip, int port)
         {
             if (ip == null) throw new ArgumentNullException(nameof(ip));
-            if (port < 1024) throw new ArgumentOutOfRangeException(nameof(port));
+            if (Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
             
-            if (!UnIdentifiedConnections.TryGetValue(ip+":"+port, out Connection connection))
+            if (!PeerList.UnIdentifiedPeers.TryGetValue(ip+":"+port, out Connection connection))
             {
                 Log.Log.Message("*** Disconnect unable to find connection " + ip+":"+port);
                 throw new Exception();
             }
-            if (!UnIdentifiedConnections.TryRemove(connection.Ip+":"+connection.Port, out Connection removedPeer))
+            if (!PeerList.UnIdentifiedPeers.TryRemove(connection.Ip+":"+connection.Port, out Connection removedPeer))
             {
                 Log.Log.Message("*** RemovePeer unable to remove peer " + connection.Ip + connection.Port);
                 throw new Exception();
@@ -366,36 +346,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
             Log.Log.Message("***** Successfully removed " + ip + port +" connected (now " + activeCount + " connections active)");
 
             return true;
-        }
-        
-        /// <summary>
-        /// returns a list of our peers
-        /// </summary>
-        /// <returns></returns>
-        public List<string> ListPeers()
-        {
-            Dictionary<string, Connection> peers = UnIdentifiedConnections.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            List<string> ret = new List<string>();
-            foreach (KeyValuePair<string, Connection> curr in peers)
-            {
-                Console.WriteLine(curr.Key);
-                ret.Add(curr.Key);
-            }
-            return ret;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
-        public bool IsPeerConnected(string ip, int port)
-        {
-            if (ip == null) throw new ArgumentNullException(nameof(ip));
-            if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
-            
-            return UnIdentifiedConnections.TryGetValue(ip+":"+port, out Connection peer);
         }
         
         /// <summary>
@@ -428,14 +378,24 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     Listener.Server.Close();
                     Listener.Server.Dispose();
                 }
-                if (UnIdentifiedConnections?.Count > 0)
+                
+                if (PeerList.UnIdentifiedPeers?.Count > 0)
                 {
-                    foreach (KeyValuePair<string, Connection> peer in UnIdentifiedConnections)
+                    foreach (KeyValuePair<string, Connection> peer in PeerList.UnIdentifiedPeers)
+                    {
+                        peer.Value.Dispose();
+                    }
+                }
+                
+                if (PeerList._peerList?.Count > 0)
+                {
+                    foreach (KeyValuePair<PeerIdentifier, Peer> peer in PeerList._peerList)
                     {
                         peer.Value.Dispose();
                     }
                 }
             }
+            
             Disposed = true;    
             Log.Log.Message("Network class disposed");
         }

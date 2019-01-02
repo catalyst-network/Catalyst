@@ -11,7 +11,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
 //        private readonly IMessageListener _listener;
         private readonly List<IPAddress> _blackList;
         private readonly Queue<Message> _sendMessageQueue;
-        private readonly Queue<Message> _receivedMessageQueue;
+        internal readonly Queue<Message> _receivedMessageQueue;
         private readonly Dictionary<IPAddress, int> _requestsByIp;
 //        public EventHandler<PackageReceivedEventArgs<IPEndPoint>> PackageReceivedEventArgs;
 
@@ -26,6 +26,28 @@ namespace ADL.Node.Core.Modules.Network.Messages
 
 //            worker.QueueForever(SendReceive, TimeSpan.FromMilliseconds(200));
 //            worker.QueueForever(AnalyzeRequestList, TimeSpan.FromMinutes(1));
+//start worker?
+//        }
+
+//        private void ProcessMessageQueue()//@TODO this is duplicated in message queue manager
+//        {
+//            Log.Log.Message("ProcessMessageQueue");
+//            lock (MessageQueueManager.ReceivedMessageQueue)
+//            {
+//                Log.Log.Message("Messages to process: " + ReceivedMessageQueue.Count);
+//                byte[] msg = null;
+//                var receivedCount = ReceivedMessageQueue.Count;
+//                for (var i = 0; i < receivedCount; i++)
+//                {
+//                    Log.Log.Message("processing message: " + receivedCount);
+//                    msg = ReceivedMessageQueue.Dequeue();
+//                }
+//                byte[] msgDescriptor = msg.Slice(0, 3);
+//                byte[] message = msg.Slice(3);
+//                Log.Log.Message(BitConverter.ToString(msgDescriptor));
+//                Log.Log.Message(BitConverter.ToString(message));
+//            }
+//            Log.Log.Message("unlocked msg queue");
 //        }
 
         private void SendReceive()

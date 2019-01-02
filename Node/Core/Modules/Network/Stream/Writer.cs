@@ -40,7 +40,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
                 }
                 
                 string header = "";
-                byte[] messageDescriptor = Message.BuildMsgDescriptor(2,22,42);
+                byte[] messageDescriptor = Message.BuildMsgDescriptor(2,42);
 
                 foreach (int i in messageDescriptor)
                 {
@@ -67,12 +67,8 @@ namespace ADL.Node.Core.Modules.Network.Stream
                 }
 
                 var message = new byte[messageLen];
-                
-                Console.WriteLine(BitConverter.ToString(messageDescriptor));
-                Console.WriteLine(BitConverter.ToString(data));
 
                 data = ByteUtil.CombineByteArr(messageDescriptor,data);
-                Console.WriteLine(BitConverter.ToString(data));
           
                 Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
 
@@ -124,6 +120,5 @@ namespace ADL.Node.Core.Modules.Network.Stream
                 }
             }
         }
-
     }
 }

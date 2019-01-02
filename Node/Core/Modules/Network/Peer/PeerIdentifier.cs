@@ -88,7 +88,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private static byte[] BuildClientVersionChunk()
         {
-            return Encoding.ASCII.GetBytes(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()));
+            return Encoding.UTF8.GetBytes(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()));
         }
 
         /// <summary>
