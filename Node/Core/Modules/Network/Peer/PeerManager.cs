@@ -142,23 +142,19 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 {
                     TcpClient tcpClient = await Listener.AcceptTcpClientAsync();
                     tcpClient.LingerState.Enabled = false;
-
-                    //@TODO revist this
-//                    string peerIp = ((IPEndPoint) tcpPeer.Client.RemoteEndPoint).Address.ToString();
-//
-//                    if (BannedIps?.Count > 0)
-//                    {
-//                        if (!BannedIps.Contains(peerIp))
-//                        {
-//                            Log.Log.Message("*** AcceptConnections rejecting connection from " + peerIp + " (not permitted)");
-//                            tcpPeer.Close();
-//                            continue;
-//                        }
-//                    }
+                    
+                    PeerList.CheckIfIpBanned(TcpClient)
 
                     Connection connection = StartPeerConnection(tcpClient);
 
-                    connection.SslStream = GetPeerConnectionTlsStream(connection);
+                    try
+                    {
+                        connection.SslStream = GetPeerConnectionTlsStream(connection);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.LogException.Message("InboundConnectionListener: GetPeerConnectionTlsStream", e);
+                    }
 
                     if (await DataReceiver(connection, Token))
                     {
@@ -290,8 +286,16 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return connection;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private SslStream GetPeerConnectionTlsStream(Connection connection)
         {
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            
             SslStream sslStream = Stream.StreamFactory.CreateTlsStream(
                 connection.NetworkStream,
                 1,
@@ -304,15 +308,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 throw new Exception("Peer ssl stream not set");
             }
 
-            //try remove
             if (!PeerList.AddUnidentifiedConnectionToList(connection))
             {
                 connection.Dispose();
                 throw new Exception("Connection already established");
-                
             }
-            
-            //try add
             
             return sslStream;
         }
