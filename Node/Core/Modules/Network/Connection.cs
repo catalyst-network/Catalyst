@@ -11,6 +11,7 @@ namespace ADL.Node.Core.Modules.Network
     /// </summary>
     public sealed class Connection : IDisposable
     {
+        public bool Known { get; set; }
         internal bool Disposed { get; set; }
         public bool Connected { set; get; }
         internal TcpClient TcpClient { get; }
@@ -44,6 +45,7 @@ namespace ADL.Node.Core.Modules.Network
             EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
             
             Connected = true;
+            Known = false;
         }
         
         /// <summary>

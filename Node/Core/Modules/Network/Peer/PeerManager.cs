@@ -124,60 +124,91 @@ namespace ADL.Node.Core.Modules.Network.Peer
         }
 
         /// <summary>
-        /// 
+        /// @TODO we need to announce our node to trackers.
         /// </summary>
+        /// <param name="ipEndPoint"></param>
         /// <returns></returns>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="Exception"></exception>
         internal async Task InboundConnectionListener(IPEndPoint ipEndPoint)
         {
-            TcpListener Listener = ListenerFactory.CreateTcpListener(ipEndPoint);
+            Listener = ListenerFactory.CreateTcpListener(ipEndPoint);
 
             Listener.Start();
-//            Log.Log.Message("Peer server starting on " + ListenerIpAddress + ":" );
+            Log.Log.Message("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port );
    
-            //@TODO we need to announce our node to trackers.
-
             while (!Token.IsCancellationRequested)
             {
                 try
                 {
                     TcpClient tcpClient = await Listener.AcceptTcpClientAsync();
                     tcpClient.LingerState.Enabled = false;
-                    
-                    PeerList.CheckIfIpBanned(TcpClient)
-
-                    Connection connection = StartPeerConnection(tcpClient);
 
                     try
                     {
-                        connection.SslStream = GetPeerConnectionTlsStream(connection);
+                        if (PeerList.CheckIfIpBanned(tcpClient))
+                        {
+                            // incoming endpoint is in banned list so peace out bro! ☮ ☮ ☮ ☮ 
+                            tcpClient.Dispose();
+                            continue;
+                        }
+                    }
+                    catch (ArgumentNullException e)
+                    {
+                        tcpClient.Dispose();
+                        Log.LogException.Message("InboundConnectionListener: CheckIfIpBanned", e);
+                        continue;
+                    }
+
+                    Connection connection;
+                    try
+                    {
+                        connection = StartPeerConnection(tcpClient);
+                        if (connection == null) continue;
                     }
                     catch (Exception e)
                     {
-                        Log.LogException.Message("InboundConnectionListener: GetPeerConnectionTlsStream", e);
-                    }
-
-                    if (await DataReceiver(connection, Token))
-                    {
-                        Log.Log.Message("*** AcceptConnections accepted connection from " + connection.EndPoint.Address + connection.EndPoint.Port + " count " + ActiveConnections);
-                        Log.Log.Message("Starting Challenge Request");
-                        PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
-
-                        SecureRandom random = new SecureRandom();
-                        byte[] keyBytes = new byte[16];
-                        random.NextBytes(keyBytes);
-                        requestMessage.Nonce = random.NextInt();
-                        if (connection.SslStream != null)
-                        {
-//                            connection.Nonce = requestMessage.Nonce;
-                            byte[] requestBytes = requestMessage.ToByteArray();
-                            Console.WriteLine(requestMessage);
-                            Console.WriteLine(requestBytes.ToHex());
-                            Stream.Writer.MessageWrite(connection, requestBytes, 98);
-                        }
+                        Log.LogException.Message("InboundConnectionListener: StartPeerConnection", e);
                         continue;
                     }
-                    Log.Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
-                    throw new Exception("unable to add connection as peer");
+
+                    using (connection)
+                    {
+                        try
+                        {
+                            connection.SslStream = GetPeerConnectionTlsStream(connection);
+                        }
+                        catch (Exception e)
+                        {
+                            DisconnectConnection(connection);
+                            Log.LogException.Message("InboundConnectionListener: GetPeerConnectionTlsStream", e);
+                            continue;
+                        }
+
+                        if (await DataReceiver(connection, Token))
+                        {
+                            Log.Log.Message("*** AcceptConnections accepted connection from " + connection.EndPoint.Address + connection.EndPoint.Port + " count " + ActiveConnections);
+                            Log.Log.Message("Starting Challenge Request");
+                            PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
+
+                            SecureRandom random = new SecureRandom();
+                            byte[] keyBytes = new byte[16];
+                            random.NextBytes(keyBytes);
+                            requestMessage.Nonce = random.NextInt();
+                            if (connection.SslStream != null)
+                            {
+//                            connection.Nonce = requestMessage.Nonce;
+                                byte[] requestBytes = requestMessage.ToByteArray();
+                                Console.WriteLine(requestMessage);
+                                Console.WriteLine(requestBytes.ToHex());
+                                Stream.Writer.MessageWrite(connection, requestBytes, 98);
+                            }
+                            continue;
+                        }
+                        Log.Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
+                        throw new Exception("unable to add connection as peer");                        
+                    }
+
                 }
                 catch (AuthenticationException e)
                 {
@@ -268,6 +299,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tcpClient"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private Connection StartPeerConnection(TcpClient tcpClient)
         {
             Connection connection;
@@ -327,24 +364,40 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="Exception"></exception>
         private bool DisconnectConnection(Connection connection)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
-            
-            if (!PeerList.UnIdentifiedPeers.TryGetValue(connection.EndPoint.Address+":"+connection.EndPoint.Port, out Connection notFound))
-            {
-                Log.Log.Message("*** Disconnect unable to find connection " + notFound.EndPoint.Address+":"+notFound.EndPoint.Port);
-                throw new Exception();
-            }
-            if (!PeerList.UnIdentifiedPeers.TryRemove(connection.EndPoint.Address+":"+connection.EndPoint.Port, out Connection removedPeer))
-            {
-                Log.Log.Message("*** RemovePeer unable to remove peer " + connection.EndPoint.Address + connection.EndPoint.Port);
-                throw new Exception();
-            }
+            if (connection == null) throw new ArgumentNullException(nameof (connection));
 
-            removedPeer.Dispose();
-            var activeCount = Interlocked.Decrement(ref ActiveConnections);
-            Log.Log.Message("***** Successfully removed " + connection.EndPoint.Address + connection.EndPoint.Port +" connected (now " + activeCount + " connections active)");
+            try
+            {
+                // first check our unidentified connections
+                if (!PeerList.RemoveUnidentifiedConnectionFromList(connection))
+                {
+                    // its not in our unidentified list so now check the peer bucket
+                    Peer peer = PeerList.FindPeerFromConnection(connection);
+                    if (peer == null) throw new ArgumentNullException(nameof(peer));
+                    if (PeerList.RemovePeerFromBucket(peer))
+                    {
+                        peer.Dispose();
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    connection.Dispose();    
+                }
 
-            return true;
+                var activeCount = Interlocked.Decrement(ref ActiveConnections);
+                Log.Log.Message("***** Successfully disconnected " + connection.EndPoint.Address + connection.EndPoint.Port + " connected (now " + activeCount + " connections active)");
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogException.Message("DisconnectConnection: RemoveUnidentifiedConnectionFromList", e);
+                return false;
+            }
         }
         
         /// <summary>
@@ -386,9 +439,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     }
                 }
                 
-                if (PeerList._peerList?.Count > 0)
+                if (PeerList.PeerBucket?.Count > 0)
                 {
-                    foreach (KeyValuePair<PeerIdentifier, Peer> peer in PeerList._peerList)
+                    foreach (KeyValuePair<PeerIdentifier, Peer> peer in PeerList.PeerBucket)
                     {
                         peer.Value.Dispose();
                     }

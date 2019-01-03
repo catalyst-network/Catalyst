@@ -11,7 +11,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         public bool Connected { get; set; }
         public DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
-        public Connection Connection{ get; set; }
+        public Connection Connection { get; set; }
         public int Reputation { get; private set; }
         public PeerIdentifier PeerIdentifier { get; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
@@ -38,7 +38,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <param name="connection"></param>
         public void AddConnection(Connection connection)
         {
-            Connection = connection;
+            Connection = connection ?? throw new ArgumentNullException(nameof(connection));
             Connected = true;
         }
         

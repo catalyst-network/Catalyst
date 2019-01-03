@@ -19,7 +19,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
     public class PeerIdentifier
     { 
         public byte[] Id { set; get; }
-        public bool Known { get; set; }        
         
         /// <summary>
         /// </summary>
@@ -32,7 +31,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
             
             Id = id;
-            Known = false;
         }
         
         /// <summary>

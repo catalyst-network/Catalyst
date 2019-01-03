@@ -10,10 +10,11 @@ using System.Net.Sockets;
 namespace ADL.Node.Core.Modules.Network.Peer
 {
      public class PeerList : IEnumerable<Peer>
-    {
+     {
+        private uint k { get; }
         internal List<IPAddress> BannedIps { get; set; }
-        public bool IsCritical => _peerList.Count <= 25;
-        internal readonly Dictionary<PeerIdentifier, Peer> _peerList;
+        public bool IsCritical => PeerBucket.Count <= 25;
+        internal readonly Dictionary<PeerIdentifier, Peer> PeerBucket;
         internal ConcurrentDictionary<string, Connection> UnIdentifiedPeers { get; set; }
 
         /// <summary>
@@ -23,7 +24,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
         internal PeerList(IWorkScheduler worker)
         {
             var workScheduler = worker ?? throw new ArgumentNullException(nameof(worker));
-            _peerList = new Dictionary<PeerIdentifier, Peer>();
+            
+            k = 42;
+            PeerBucket = new Dictionary<PeerIdentifier, Peer>();
 
             workScheduler.QueueForever(Check, TimeSpan.FromMinutes(5));
             workScheduler.QueueForever(PurgePeers, TimeSpan.FromSeconds(15));
@@ -91,7 +94,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 throw new Exception(e.Message);
             }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -99,24 +102,49 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        private bool RemoveUnidentifiedConnectionFromList(Connection connection)
+        internal bool RemoveUnidentifiedConnectionFromList(Connection connection)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (connection == null) throw new ArgumentNullException(nameof (connection));
             try
             {
                 if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.EndPoint.Port, out Connection removedConnection))
                 {
-                    removedConnection.Dispose();
-                    Log.Log.Message(removedConnection + "Connection removed");
+                    Log.Log.Message("***** Successfully removed " + removedConnection.EndPoint.Address + removedConnection.EndPoint.Port);
                     return true;
                 }
+                Log.Log.Message("*** unable to find connection " + connection.EndPoint.Address+":"+connection.EndPoint.Port);
+                return false;
             }
             catch (ArgumentNullException e)
             {
                 Log.LogException.Message("RemoveUnidentifiedConnectionToList", e);
                 throw new Exception(e.Message);
             }
-            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peer"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        internal bool RemovePeerFromBucket(Peer peer)
+        {
+            if (peer == null) throw new ArgumentNullException(nameof (peer));
+            try
+            {
+                if (!PeerBucket.Remove(peer.PeerIdentifier))
+                {
+                    return false;
+                }
+                Log.Log.Message("***** Successfully removed " + peer.PeerIdentifier.Id + " from peer bucket");
+                return true;
+            }
+            catch (ArgumentNullException e)
+            {
+                Log.LogException.Message("RemovePeerFromBucket", e);
+                return false;
+            }
         }
         
         /// <summary>
@@ -126,19 +154,25 @@ namespace ADL.Node.Core.Modules.Network.Peer
         {
             Log.Log.Message("Checking peer list");
             if (!IsCritical) return;
-            // go back to peer tracker and ask for more peers
+            // @TODO go back to peer tracker and ask for more peers
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tcpClient"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         internal bool CheckIfIpBanned(TcpClient tcpClient)
         {
             if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
-            var ipAddress = ((IPEndPoint) tcpClient.Client.RemoteEndPoint).Address;
+            IPAddress ipAddress = ((IPEndPoint) tcpClient.Client.RemoteEndPoint).Address;
 
             if (BannedIps?.Count > 0)
             {
                 if (!BannedIps.Contains(ipAddress))
                 {
-                    Log.Log.Message("*** AcceptConnections rejecting connection from " + ipAddress + " (not permitted)");
+                    Log.Log.Message("*** Rejecting connection from " + ipAddress + " (not permitted)");
                     tcpClient.Dispose();
                     return true;
                 }
@@ -154,30 +188,32 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         public bool TryRegister(Peer peerInfo)
         {
-            var endpoint = peerInfo.EndPoint;
-            var peerId = peerInfo.PeerIdentifier;
+            // we also need to look in our unidentified list
+            //@TODO we should pass in connection as we need to establish a relationship between the connection and the peer
+            
+            if (peerInfo == null) throw new ArgumentNullException(nameof (peerInfo));
 
-            if (_peerList.ContainsKey(peerInfo.PeerIdentifier))
+            if (PeerBucket.ContainsKey(peerInfo.PeerIdentifier))
             {
                 Log.Log.Message("peer with same ID already exists. Touching it.");
-                var peer = _peerList[peerId];
-                peer.EndPoint = endpoint;
+                var peer = PeerBucket[peerInfo.PeerIdentifier];
+                peer.EndPoint = peerInfo.EndPoint;
                 peer.Touch();
                 return false;
             }
 
-            if (_peerList.Count >= 256)
+            if (PeerBucket.Count >= 256)
             {
                 PurgePeers();
             }
 
-            _peerList.Add(peerId, peerInfo);
+            PeerBucket.Add(peerInfo.PeerIdentifier, peerInfo);
             Log.Log.Message("{0} added" + peerInfo);
 
-            if (!Equals(peerId.Known, false) && IsRegisteredConnection(peerId))
-            {
-                _peerList.Remove(peerId);
-            }
+//            if (!Equals(peerInfo.Known, false) && IsRegisteredConnection(peerId))
+//            {
+//                PeerBucket.Remove(peerId);
+//            }
             return true;
         }
 
@@ -186,19 +222,20 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return Recent();
         }
 
-        public void UpdatePeer(PeerIdentifier botId)
+        public void UpdatePeer(PeerIdentifier peerId)
         {
-            if (_peerList.ContainsKey(botId))
+            if (peerId == null) throw new ArgumentNullException(nameof(peerId));
+            if (PeerBucket.ContainsKey(peerId))
             {
-                _peerList[botId].Touch();
+                PeerBucket[peerId].Touch();
             }
         }
 
         public void Punish(PeerIdentifier peerId)
         {
-            if (_peerList.ContainsKey(peerId))
+            if (PeerBucket.ContainsKey(peerId))
             {
-                _peerList[peerId].DecreaseReputation();
+                PeerBucket[peerId].DecreaseReputation();
             }
         }
 
@@ -221,12 +258,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         public void PurgePeers()
         {
-            var peersInfo = new List<Peer>(_peerList.Values);
+            var peersInfo = new List<Peer>(PeerBucket.Values);
             foreach (var peerInfo in peersInfo)
             {
                 if (peerInfo.IsAwolBot) //@TODO check if connected
                 {
-                    _peerList.Remove(peerInfo.PeerIdentifier);
+                    PeerBucket.Remove(peerInfo.PeerIdentifier);
                 }
             }
         }
@@ -239,14 +276,14 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         private List<Peer> SortedPeers()
         {
-            var all = new List<Peer>(_peerList.Values);
+            var all = new List<Peer>(PeerBucket.Values);
             all.Sort((s1, s2) => (int)(s1.LastSeen - s2.LastSeen).TotalSeconds);
             return all;
         }
 
         public IEnumerator<Peer> GetEnumerator()
         {
-            return _peerList.Values.GetEnumerator();
+            return PeerBucket.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -256,26 +293,30 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
         internal bool IsRegisteredConnection(PeerIdentifier peerId)
         {
-            return _peerList.ContainsKey(peerId);
+            return PeerBucket.ContainsKey(peerId);
         }
 
-        public bool FindByEndpoint(IPEndPoint endpoint, out Peer peerInfo)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        internal Peer FindPeerFromConnection(Connection connection)
         {
-            foreach (var pi in _peerList.Values)
+            // iterate peer bucket to find a peer with connection value matches connection param
+            foreach (Peer peer in PeerBucket.Values)
             {
-                if (Equals(pi.EndPoint, endpoint))
+                if (Equals(peer.Connection.EndPoint, connection.EndPoint))
                 {
-                    peerInfo = pi;
-                    return true;
+                    return peer;
                 }
             }
-            peerInfo = null;
-            return false;
+            return null;
         }
 
         public void Clear()
         {
-            _peerList.Clear();
+            PeerBucket.Clear();
         }
     }
 }
