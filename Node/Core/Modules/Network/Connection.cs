@@ -11,11 +11,10 @@ namespace ADL.Node.Core.Modules.Network
     /// </summary>
     public sealed class Connection : IDisposable
     {
-        public int Port { get; }
-        public string Ip { get; }
         private bool Disposed { get; set; }
         public bool Connected { set; get; }
         internal TcpClient TcpClient { get; }
+        public IPEndPoint EndPoint { get; set; }
         public SslStream SslStream { set; get; }
         internal NetworkStream NetworkStream { get; }
         
@@ -42,8 +41,8 @@ namespace ADL.Node.Core.Modules.Network
                 throw new Exception("Connection Constructor: could not get tcp stream");
             }
 
-            Port = ((IPEndPoint)tcp.Client.RemoteEndPoint).Port;
-            Ip = ((IPEndPoint)tcp.Client.RemoteEndPoint).Address.ToString();
+            EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
+            
             Connected = true;
         }
         
@@ -54,9 +53,17 @@ namespace ADL.Node.Core.Modules.Network
         internal bool IsConnected()
         {
             if (TcpClient == null) throw new ArgumentNullException(nameof(TcpClient));
-            if (!TcpClient.Connected) return false;
-            if (!TcpClient.Client.Poll(0, SelectMode.SelectWrite) ||
-                TcpClient.Client.Poll(0, SelectMode.SelectError)) return false;
+            
+            if (!TcpClient.Connected)
+            {
+                return false;
+            }
+            
+            if (!TcpClient.Client.Poll(0, SelectMode.SelectWrite) || TcpClient.Client.Poll(0, SelectMode.SelectError))
+            {
+                return false;
+            }
+            
             byte[] buffer = new byte[1];
             return TcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
         }
@@ -87,6 +94,7 @@ namespace ADL.Node.Core.Modules.Network
                 SslStream?.Dispose();
                 NetworkStream?.Dispose();
                 TcpClient?.Dispose();
+                EndPoint = null;
             }
             
             Disposed = true;
