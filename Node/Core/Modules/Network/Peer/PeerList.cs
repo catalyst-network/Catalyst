@@ -10,7 +10,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
 {
      public class PeerList : IEnumerable<Peer>
     {
-        public bool IsCritical => _peerList.Count <= 25; // @TODO decide what counts an unhealthy number of peers
+        public bool IsCritical => _peerList.Count <= 25;
         internal readonly Dictionary<PeerIdentifier, Peer> _peerList;
         internal ConcurrentDictionary<string, Connection> UnIdentifiedPeers { get; set; }
 
@@ -30,16 +30,16 @@ namespace ADL.Node.Core.Modules.Network.Peer
         }
 
         /// <summary>
-        /// returns a list of our peers
+        /// returns a list of unidentified connections
         /// </summary>
         /// <returns></returns>
-        public List<string> ListPeers()
+        public List<string> ListUnidentifiedConnections()
         {
             Dictionary<string, Connection> peers = UnIdentifiedPeers.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             List<string> ret = new List<string>();
             foreach (KeyValuePair<string, Connection> curr in peers)
             {
-                Console.WriteLine(curr.Key);
+                Log.Log.Message(curr.Key);
                 ret.Add(curr.Key);
             }
             return ret;
@@ -48,15 +48,66 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
+        /// <param name="needle"></param>
         /// <returns></returns>
-        public bool IsPeerConnected(string ip, int port)
+        internal bool AddUnidentifiedConnectionToList(Connection needle)
         {
-            if (ip == null) throw new ArgumentNullException(nameof(ip));
-            if (port <= 0) throw new ArgumentOutOfRangeException(nameof(port));
+            if (needle == null) throw new ArgumentNullException(nameof(needle));
+            try
+            {
+                if (!UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.EndPoint.Port, out Connection connection))
+                {
+                    if (connection.IsConnected())
+                    {
+                        needle.Dispose();
+                        Log.Log.Message("*** Active connection already exists for " + connection.EndPoint.Address + connection.EndPoint.Port);
+                        return false;                        
+                    }
+                    else
+                    {
+                        RemoveUnidentifiedConnectionFromList(connection);
+                        
+                    }
+
+
+
+                    return true;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                Log.LogException.Message("TryAddConnectionToList", e);
+                needle.Dispose();
+                throw new Exception(e.Message);
+            }
             
-            return UnIdentifiedPeers.TryGetValue(ip+":"+port, out Connection peer);
+            Log.Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port + " added to unidentified peer list)");
+            return true;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        private bool RemoveUnidentifiedConnectionFromList(Connection connection)
+        {
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            try
+            {
+                if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.EndPoint.Port, out Connection removedConnection))
+                {
+                    removedConnection.Dispose();
+                    Log.Log.Message(removedConnection + "Connection removed");
+                    return true;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                Log.LogException.Message("RemoveUnidentifiedConnectionToList", e);
+                throw new Exception(e.Message);
+            }
+
+            return false;
         }
         
         /// <summary>
@@ -96,7 +147,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             _peerList.Add(peerId, peerInfo);
             Log.Log.Message("{0} added" + peerInfo);
 
-            if (!Equals(peerId.Known, false) && IsRegisteredBot(peerId))
+            if (!Equals(peerId.Known, false) && IsRegisteredConnection(peerId))
             {
                 _peerList.Remove(peerId);
             }
@@ -136,7 +187,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             throw new NotImplementedException();
         }
 
-        public void PurgeConnections()
+        public void PurgeUnidentified()
         {
             throw new NotImplementedException();
         }
@@ -156,7 +207,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         public List<Peer> Recent()
         {
             var sortedBy = SortedPeers();
-            return sortedBy.GetRange(0, System.Math.Min((int) 8, (int) sortedBy.Count));
+            return sortedBy.GetRange(0, System.Math.Min(8, sortedBy.Count));
         }
 
         private List<Peer> SortedPeers()
@@ -176,14 +227,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return GetEnumerator();
         }
 
-        internal bool IsRegisteredBot(PeerIdentifier peerId)
+        internal bool IsRegisteredConnection(PeerIdentifier peerId)
         {
             return _peerList.ContainsKey(peerId);
         }
 
-//        public Peer this[PeerIdentifier peerId] => _peerList[peerId];
-
-        public bool TryGet(IPEndPoint endpoint, out Peer peerInfo)
+        public bool FindByEndpoint(IPEndPoint endpoint, out Peer peerInfo)
         {
             foreach (var pi in _peerList.Values)
             {

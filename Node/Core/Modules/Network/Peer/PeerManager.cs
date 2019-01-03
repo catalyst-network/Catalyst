@@ -118,7 +118,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
             finally
             {                
-                await Task.Run(() => DisconnectConnection(connection.Ip, connection.Port), Token);
+                await Task.Run(() => DisconnectConnection(connection), Token);
             }
             return true;
         }
@@ -140,8 +140,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 try
                 {
-                    TcpClient tcpPeer = await Listener.AcceptTcpClientAsync();
-                    tcpPeer.LingerState.Enabled = false;
+                    TcpClient tcpClient = await Listener.AcceptTcpClientAsync();
+                    tcpClient.LingerState.Enabled = false;
 
                     //@TODO revist this
 //                    string peerIp = ((IPEndPoint) tcpPeer.Client.RemoteEndPoint).Address.ToString();
@@ -156,32 +156,13 @@ namespace ADL.Node.Core.Modules.Network.Peer
 //                        }
 //                    }
 
-                    Connection connection;
-                    try
-                    {
-                        connection = new Connection(tcpPeer);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.LogException.Message("InboundConnectionListener", e);
-                        return;
-                    }
+                    Connection connection = StartPeerConnection(tcpClient);
 
-                    connection.SslStream = Stream.StreamFactory.CreateTlsStream(
-                        connection.NetworkStream,
-                            1,
-                            SslCertificate,
-                            AcceptInvalidCerts
-                        );
-                    
-                    if (connection.SslStream == null || connection.SslStream.GetType() != typeof (SslStream))
-                    {
-                        throw new Exception("Peer ssl stream not set");
-                    }
+                    connection.SslStream = GetPeerConnectionTlsStream(connection);
 
                     if (await DataReceiver(connection, Token))
                     {
-                        Log.Log.Message("*** AcceptConnections accepted connection from " + connection.Ip + connection.Port + " count " + ActiveConnections);
+                        Log.Log.Message("*** AcceptConnections accepted connection from " + connection.EndPoint.Address + connection.EndPoint.Port + " count " + ActiveConnections);
                         Log.Log.Message("Starting Challenge Request");
                         PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
 
@@ -199,7 +180,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                         }
                         continue;
                     }
-                    Log.Log.Message("*** FinalizeConnection unable to add peer " + connection.Ip + connection.Port);
+                    Log.Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
                     throw new Exception("unable to add connection as peer");
                 }
                 catch (AuthenticationException e)
@@ -238,7 +219,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="TimeoutException"></exception>
         /// <exception cref="AuthenticationException"></exception>
-        public async void PeerBuilder (string ip, int port)
+        public async void BuildOutBoundConnection (string ip, int port)
         {
             if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
             if (Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
@@ -252,6 +233,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                         IPEndPoint targetEndpoint = EndpointBuilder.BuildNewEndPoint(ip, port);
                         IAsyncResult asyncClient = tcpClient.BeginConnect(targetEndpoint.Address, targetEndpoint.Port, null, null);
                         WaitHandle asyncClientWaitHandle = asyncClient.AsyncWaitHandle;
+                        
                         try
                         {
                             if (!asyncClient.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
@@ -262,24 +244,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
                             tcpClient.EndConnect(asyncClient);
 
-                            var connection = new Connection(tcpClient);
+                            Connection connection = StartPeerConnection(tcpClient);
 
-                            connection.SslStream = Stream.StreamFactory.CreateTlsStream(
-                                connection.NetworkStream,
-                                2,
-                                SslCertificate,
-                                AcceptInvalidCerts,
-                                false,
-                                targetEndpoint
-                            );
-                
-                            if (connection.SslStream == null || connection.SslStream.GetType() != typeof(SslStream))
-                            {
-                                throw new Exception("Peer ssl stream not set");
-                            }
+                            connection.SslStream = GetPeerConnectionTlsStream(connection);
 
                             if (await DataReceiver(connection, Token)) return;
-                            throw new Exception("*** FinalizeConnection unable to add peer " + connection.Ip + connection.Port);
+                            throw new Exception("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
                         }
                         catch (AuthenticationException e)
                         {
@@ -302,48 +272,77 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tcpClient"></param>
-        /// <returns></returns>
-        private bool IsConnected(TcpClient tcpClient)
+        private Connection StartPeerConnection(TcpClient tcpClient)
         {
-            if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
-            if (!tcpClient.Connected) return false;
-            if (!tcpClient.Client.Poll(0, SelectMode.SelectWrite) ||
-                tcpClient.Client.Poll(0, SelectMode.SelectError)) return false;
-            byte[] buffer = new byte[1];
-            return tcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
+            Connection connection;
+            try
+            {
+                connection = new Connection(tcpClient);
+            }
+            catch (Exception e)
+            {
+                Log.LogException.Message("InboundConnectionListener", e);
+                throw new Exception(e.Message);
+            }
+
+            int activeCount = Interlocked.Increment(ref ActiveConnections);
+            Log.Log.Message("*** Connection created for " + connection.EndPoint.Address + connection.EndPoint.Port + " (now " + activeCount + " connections)");
+            return connection;
         }
+
+        private SslStream GetPeerConnectionTlsStream(Connection connection)
+        {
+            SslStream sslStream = Stream.StreamFactory.CreateTlsStream(
+                connection.NetworkStream,
+                1,
+                SslCertificate,
+                AcceptInvalidCerts
+            );
+                    
+            if (connection.SslStream == null || connection.SslStream.GetType() != typeof (SslStream))
+            {
+                throw new Exception("Peer ssl stream not set");
+            }
+
+            //try remove
+            if (!PeerList.AddUnidentifiedConnectionToList(connection))
+            {
+                connection.Dispose();
+                throw new Exception("Connection already established");
+                
+            }
+            
+            //try add
+            
+            return sslStream;
+        }
+        
         
         /// <summary>
         /// Disconnects a connection
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
+        /// <param name="connection"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private bool DisconnectConnection(string ip, int port)
+        /// <exception cref="Exception"></exception>
+        private bool DisconnectConnection(Connection connection)
         {
-            if (ip == null) throw new ArgumentNullException(nameof(ip));
-            if (Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
             
-            if (!PeerList.UnIdentifiedPeers.TryGetValue(ip+":"+port, out Connection connection))
+            if (!PeerList.UnIdentifiedPeers.TryGetValue(connection.EndPoint.Address+":"+connection.EndPoint.Port, out Connection notFound))
             {
-                Log.Log.Message("*** Disconnect unable to find connection " + ip+":"+port);
+                Log.Log.Message("*** Disconnect unable to find connection " + notFound.EndPoint.Address+":"+notFound.EndPoint.Port);
                 throw new Exception();
             }
-            if (!PeerList.UnIdentifiedPeers.TryRemove(connection.Ip+":"+connection.Port, out Connection removedPeer))
+            if (!PeerList.UnIdentifiedPeers.TryRemove(connection.EndPoint.Address+":"+connection.EndPoint.Port, out Connection removedPeer))
             {
-                Log.Log.Message("*** RemovePeer unable to remove peer " + connection.Ip + connection.Port);
+                Log.Log.Message("*** RemovePeer unable to remove peer " + connection.EndPoint.Address + connection.EndPoint.Port);
                 throw new Exception();
             }
 
             removedPeer.Dispose();
             var activeCount = Interlocked.Decrement(ref ActiveConnections);
-            Log.Log.Message("***** Successfully removed " + ip + port +" connected (now " + activeCount + " connections active)");
+            Log.Log.Message("***** Successfully removed " + connection.EndPoint.Address + connection.EndPoint.Port +" connected (now " + activeCount + " connections active)");
 
             return true;
         }
