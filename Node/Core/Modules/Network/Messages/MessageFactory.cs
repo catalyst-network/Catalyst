@@ -4,26 +4,26 @@ namespace ADL.Node.Core.Modules.Network.Messages
 {
     public static class MessageFactory
     {
-        public static dynamic Get(int id)
+        public static Message Get(byte network, byte messageId, byte[] message, Connection connection)
         {
-            switch (id)
+            switch (messageId)
             {
                 case 1:
-                    return new PeerProtocol.Types.PingRequest();
+                    return new Message(connection, new PeerProtocol.Types.PingRequest(), network, messageId);
                 case 2:
-                    return new PeerProtocol.Types.ChallengeRequest();
+                    return new Message(connection, new PeerProtocol.Types.ChallengeRequest(), network, messageId);
                 case 3:
-                    return new PeerProtocol.Types.PeerInfoRequest();
+                    return new Message(connection, new PeerProtocol.Types.PeerInfoRequest(), network, messageId);
                 case 4:
-                    return new PeerProtocol.Types.PeerNeighborsRequest();
+                    return new Message(connection, new PeerProtocol.Types.PeerNeighborsRequest(), network, messageId);
                 case 5:
-                    return new PeerProtocol.Types.ChallengeResponse();
+                    return new Message(connection, new PeerProtocol.Types.ChallengeResponse(), network, messageId);
                 case 6:
-                    return new PeerProtocol.Types.PeerInfoResponse();
+                    return new Message(connection, new PeerProtocol.Types.PeerInfoResponse(), network, messageId);
                 case 7:
-                    return new PeerProtocol.Types.PeerNeighborsResponse();
+                    return new Message(connection, new PeerProtocol.Types.PeerNeighborsResponse(), network, messageId);
                 default:
-                    return new PeerProtocol.Types.PingRequest();
+                    return new Message(connection, new PeerProtocol.Types.PingRequest(), network, messageId);
             }            
         }
     }
