@@ -59,8 +59,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="Exception"></exception>
         internal bool AddUnidentifiedConnectionToList(Connection needle)
         {
-            Console.WriteLine("AddUnidentifiedConnectionToList");
-            if (needle == null) throw new ArgumentNullException(nameof (needle));
+            if (needle?.EndPoint?.Address == null) throw new ArgumentNullException(nameof (needle));
+
             try
             {
                 if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.EndPoint.Port, out Connection connection))
@@ -88,7 +88,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 Log.Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port + " added to unidentified peer list)");
                 return true;
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
                 Log.LogException.Message("TryAddConnectionToList", e);
                 needle.Dispose();
