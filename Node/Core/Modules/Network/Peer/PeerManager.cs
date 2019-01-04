@@ -366,6 +366,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 throw new Exception("Peer ssl stream not set");
             }
+// not handled null refereance exception
 
             if (!PeerList.AddUnidentifiedConnectionToList(connection))
             {
