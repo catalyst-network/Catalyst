@@ -54,15 +54,10 @@ namespace ADL.Node.Core.Modules.Network.Stream
 
             try
             {
-                Console.WriteLine(123);
-                Console.WriteLine(direction);
-                Console.WriteLine(endPoint);
-
                 switch (direction)
                 {
                     case 1:
                         sslStream.AuthenticateAsServer(sslCertificate, true, SslProtocols.Tls12, false);
-                        Console.WriteLine(456);
                         break;
                     case 2 when endPoint != null:
                         sslStream.AuthenticateAsClient(
@@ -71,32 +66,30 @@ namespace ADL.Node.Core.Modules.Network.Stream
                             SslProtocols.Tls12,
                             acceptInvalidCerts
                         );
-                        Console.WriteLine(789);
                         break;
                     case 2:
                         throw new Exception("need endpoint for outbound connections");
                     default:
                         throw new Exception("logically you should never get here, so here is a un-useful error message");
                 }
-                Console.WriteLine(101112);
+
                 if (!sslStream.IsEncrypted)
                 {
                     sslStream.Dispose();
                     throw new AuthenticationException("*** ssl stream not encrypted");
                 }
-                Console.WriteLine(111213);
+
                 if (!sslStream.IsAuthenticated)
                 {
                     sslStream.Dispose();
                     throw new AuthenticationException("*** ssl stream not authenticated");
                 }
-                Console.WriteLine(121314);
+                
                 if (mutuallyAuthenticate && !sslStream.IsMutuallyAuthenticated)
                 {
                     sslStream.Dispose();
                     throw new AuthenticationException("*** ssl stream failed mutual authentication");
                 }
-                Log.Log.Message("Returning valid ssl stream");
                 return sslStream;
             }
             catch (IOException e)

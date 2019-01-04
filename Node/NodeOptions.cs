@@ -20,11 +20,11 @@ namespace ADL.Node
         public bool Contract { get; set; } = true;
         public bool Consensus { get; set; } = true;
         public uint WalletRpcPort { get; set; } = 0;
-        public string PublicKey{ get; set; } = null;
-        public string Network { get; set; } = "devnet";
+        public string PublicKey { get; set; } = null;
+        public string Network { get; set; } = "devnet"; //@TODO hardcoded network
         public string PayoutAddress{ get; set; } = null;
         public IPAddress WalletRpcIp { get; set; } = null;
-        public IPAddress Host { get; set; } = IPAddress.Parse("127.0.0.1");
-        public string DataDir { get; set; } = Fs.GetUserHomeDir()+"/.Atlas";
+        public IPAddress Host { get; set; } = IPAddress.Parse("127.0.0.1"); //@TODO hardcoded network
+        public string DataDir { get; set; } = Fs.GetUserHomeDir()+"/.Atlas"; //@TODO hardcoded network
     }
 }

@@ -9,6 +9,7 @@ namespace ADL.Node.Core.Modules.Network
     {
         public Network Network { get; set; }
         private string DataDir { get; set; }
+        private string PublicKey { get; set; }
         private ISslSettings SslSettings { get; set; }
         private INetworkSettings NetworkSettings { get; set; }
 
@@ -23,6 +24,7 @@ namespace ADL.Node.Core.Modules.Network
         {
             SslSettings = sslSettings;
             DataDir = options.DataDir;
+            PublicKey = options.PublicKey;
             NetworkSettings = networkSettings;
         }
         
@@ -32,7 +34,7 @@ namespace ADL.Node.Core.Modules.Network
         /// <returns></returns>
         public override bool StartService()
         {
-            Network = Network.GetInstance(NetworkSettings, SslSettings, DataDir);
+            Network = Network.GetInstance(NetworkSettings, SslSettings, DataDir, PublicKey);
 //            Network.PeerManager.BuildOutBoundConnection("127.0.0.1", 42069);
             return true;
         }
