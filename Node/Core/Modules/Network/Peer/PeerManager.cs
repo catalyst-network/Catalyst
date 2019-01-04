@@ -13,6 +13,7 @@ using ADL.Network;
 using ADL.Node.Core.Modules.Network.Listeners;
 using ADL.Node.Core.Modules.Network.Messages;
 using ADL.Protocol.Peer;
+using ADL.Util;
 using Google.Protobuf;
 using Org.BouncyCastle.Security;
 
@@ -98,9 +99,13 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     }
                     else
                     {
+                        // we need to learn the message type here
+                        byte[] msgDescriptor = payload.Slice(0, 2);
+                        byte[] messageBytes = payload.Slice(2);
+                        Message message = MessageFactory.Get(msgDescriptor[0], msgDescriptor[1], messageBytes, connection);
                         lock (MessageQueueManager._receivedMessageQueue)
                         {
-                            MessageQueueManager._receivedMessageQueue.Enqueue(payload);
+                            MessageQueueManager._receivedMessageQueue.Enqueue(message);
                             Log.Log.Message("messages in queue: " + MessageQueueManager._receivedMessageQueue.Count);
                         }
                     }
@@ -144,9 +149,21 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     TcpClient tcpClient = await Listener.AcceptTcpClientAsync();
                     tcpClient.LingerState.Enabled = false;
 
+                    Connection connection;
                     try
                     {
-                        if (PeerList.CheckIfIpBanned(tcpClient))
+                        connection = StartPeerConnection(tcpClient);
+                        if (connection == null) continue;
+                    }
+                    catch (Exception e)
+                    {
+                        Log.LogException.Message("InboundConnectionListener: StartPeerConnection", e);
+                        continue;
+                    }
+                    
+                    try
+                    {
+                        if (PeerList.CheckIfIpBanned(connection.TcpClient))
                         {
                             // incoming endpoint is in banned list so peace out bro! ☮ ☮ ☮ ☮ 
                             tcpClient.Dispose();
@@ -157,18 +174,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     {
                         tcpClient.Dispose();
                         Log.LogException.Message("InboundConnectionListener: CheckIfIpBanned", e);
-                        continue;
-                    }
-
-                    Connection connection;
-                    try
-                    {
-                        connection = StartPeerConnection(tcpClient);
-                        if (connection == null) continue;
-                    }
-                    catch (Exception e)
-                    {
-                        Log.LogException.Message("InboundConnectionListener: StartPeerConnection", e);
                         continue;
                     }
 
@@ -189,20 +194,20 @@ namespace ADL.Node.Core.Modules.Network.Peer
                         {
                             Log.Log.Message("*** AcceptConnections accepted connection from " + connection.EndPoint.Address + connection.EndPoint.Port + " count " + ActiveConnections);
                             Log.Log.Message("Starting Challenge Request");
-                            PeerProtocol.Types.ChallengeRequest requestMessage = MessageFactory.Get(2);
-
-                            SecureRandom random = new SecureRandom();
-                            byte[] keyBytes = new byte[16];
-                            random.NextBytes(keyBytes);
-                            requestMessage.Nonce = random.NextInt();
-                            if (connection.SslStream != null)
-                            {
-//                            connection.Nonce = requestMessage.Nonce;
-                                byte[] requestBytes = requestMessage.ToByteArray();
-                                Console.WriteLine(requestMessage);
-                                Console.WriteLine(requestBytes.ToHex());
-                                Stream.Writer.MessageWrite(connection, requestBytes, 98);
-                            }
+//                            Message requestMessage = MessageFactory.Get(2);
+//
+//                            SecureRandom random = new SecureRandom();
+//                            byte[] keyBytes = new byte[16];
+//                            random.NextBytes(keyBytes);
+//                            requestMessage.Nonce = random.NextInt();
+//                            if (connection.SslStream != null)
+//                            {
+////                            connection.Nonce = requestMessage.Nonce;
+//                                byte[] requestBytes = requestMessage.ToByteArray();
+//                                Console.WriteLine(requestMessage);
+//                                Console.WriteLine(requestBytes.ToHex());
+//                                Stream.Writer.MessageWrite(connection, requestBytes, 98);
+//                            }
                             continue;
                         }
                         Log.Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);

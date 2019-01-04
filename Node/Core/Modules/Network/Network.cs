@@ -17,7 +17,7 @@ namespace ADL.Node.Core.Modules.Network
         private CancellationToken Token { get; }
         private List<string> BannedIps { get; set; } //@TODO revist this
         private bool AcceptInvalidCerts { get; set; }
-        private PeerManager PeerManager { get; set; }
+        internal PeerManager PeerManager { get; set; }
         private static Network Instance { get; set; }
         private bool MutuallyAuthenticate { get; set; }
         private X509Certificate2 SslCertificate { get; }
