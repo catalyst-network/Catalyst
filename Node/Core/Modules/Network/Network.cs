@@ -8,6 +8,7 @@ using ADL.Node.Core.Modules.Network.Peer;
 using ADL.Node.Core.Modules.Network.Workers;
 using ADL.Node.Core.Modules.Network.Messages;
 using System.Security.Cryptography.X509Certificates;
+using ADL.RLP;
 
 namespace ADL.Node.Core.Modules.Network
 {
@@ -33,7 +34,7 @@ namespace ADL.Node.Core.Modules.Network
         /// <param name="sslSettings"></param>
         /// <param name="dataDir"></param>
         /// <returns></returns>
-        public static Network GetInstance(INetworkSettings networkSettings, ISslSettings sslSettings, string dataDir)
+        public static Network GetInstance(INetworkSettings networkSettings, ISslSettings sslSettings, string dataDir, string publicKey)
         {
             if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
             if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
@@ -53,6 +54,7 @@ namespace ADL.Node.Core.Modules.Network
                             networkSettings,
                             sslSettings,
                             dataDir,
+                            publicKey,
                             true,
                             false,
                             null,
@@ -79,27 +81,28 @@ namespace ADL.Node.Core.Modules.Network
             INetworkSettings networkSettings,
             ISslSettings sslSettings,
             string dataDir,
+            string PublicKey,
             bool acceptInvalidCerts,
             bool mutualAuthentication,
-            IEnumerable<string> bannedIps, // do we want this as a parameter can we not pull it once obj is instantiated
-            bool debug)
+            IEnumerable<string> bannedIps, // @TODO do we want this as a parameter can we not pull it once obj is instantiated
+            bool debug
+        )
         {
-            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
-            if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
-            if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
+            if (dataDir == null) throw new ArgumentNullException(nameof (dataDir));
+            if (sslSettings == null) throw new ArgumentNullException(nameof (sslSettings));
+            if (networkSettings == null) throw new ArgumentNullException(nameof (networkSettings));
             
             // don't let me run on privileged ports, I shouldn't be started as root!!!!
             if (!Ip.ValidPortRange(networkSettings.Port))
             {
-                throw new ArgumentOutOfRangeException(nameof(networkSettings.Port));
+                throw new ArgumentOutOfRangeException(nameof (networkSettings.Port));
             }
             
             SslCertificate = String.IsNullOrEmpty(sslSettings.SslCertPassword) ? new X509Certificate2(dataDir+"/"+sslSettings.PfxFileName) : new X509Certificate2(dataDir+"/"+sslSettings.PfxFileName, sslSettings.SslCertPassword);           
             
             try
             {
-                byte[] publicKey = new byte[20];//@TODO get our public key passed in at start or from connected wallet
-                NodeIdentity = PeerIdentifier.BuildPeerId(publicKey, new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
+                NodeIdentity = PeerIdentifier.BuildPeerId(PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
             }
             catch (ArgumentNullException e)
             {
@@ -124,18 +127,14 @@ namespace ADL.Node.Core.Modules.Network
             Token = CancellationToken.Token;
             
             PeerManager = new PeerManager(SslCertificate,new PeerList(new ClientWorker()),new MessageQueueManager());
-            PeerManager.InboundConnectionListener(
-                new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress),
-                    networkSettings.Port
+
+            Task.Run(async () => 
+                await PeerManager.InboundConnectionListener(
+                    new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress),
+                        networkSettings.Port
+                    )
                 )
             );
-//            Task.Run(async () => 
-//                await PeerManager.InboundConnectionListener(
-//                    new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress),
-//                        networkSettings.Port
-//                    )
-//                )
-//            );
         }
 
         /// <summary>
