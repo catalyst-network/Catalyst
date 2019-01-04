@@ -34,10 +34,17 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private MessageQueueManager MessageQueueManager { get; set; }
         private CancellationTokenSource CancellationToken { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sslCertificate"></param>
+        /// <param name="peerList"></param>
+        /// <param name="messageQueueManager"></param>
         public PeerManager(X509Certificate2 sslCertificate, PeerList peerList, MessageQueueManager messageQueueManager)
         {
             PeerList = peerList;
             ActiveConnections = 0;
+            AcceptInvalidCerts = true;
             SslCertificate = sslCertificate;
             MessageQueueManager = messageQueueManager;
         }
@@ -50,32 +57,32 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private async Task<bool> DataReceiver(Connection connection, CancellationToken cancelToken)
         {
+            Console.WriteLine("trace DataReceiver");
             var streamReadCounter = 0;
-            var port = ((IPEndPoint) connection.TcpClient.Client.LocalEndPoint).Port;
-            var ip = ((IPEndPoint) connection.TcpClient.Client.LocalEndPoint).Address.ToString();
 
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (connection == null) throw new ArgumentNullException(nameof (connection));
             
-            if (PeerList.UnIdentifiedPeers.TryRemove(ip+":"+port, out Connection removedConnection))
-            {
-                Log.Log.Message(removedConnection + "Connection already exists");
-                return false;
-            }
-
-            if (PeerList.UnIdentifiedPeers.TryAdd(ip+":"+port, connection))
-            {
-                int activeCount = Interlocked.Increment(ref ActiveConnections);
-                Log.Log.Message("*** FinalizeConnection starting data receiver for " + ip + port + " (now " + activeCount + " connections)");
-            }
-            else
-            {
-                connection.Dispose();
-                return false;
-            }
+//            if (PeerList.UnIdentifiedPeers.TryRemove(ip+":"+port, out Connection removedConnection))
+//            {
+//                Log.Log.Message(removedConnection + "Connection already exists");
+//                return false;
+//            }
+//
+//            if (PeerList.UnIdentifiedPeers.TryAdd(ip+":"+port, connection))
+//            {    
+//                int activeCount = Interlocked.Increment(ref ActiveConnections);
+//                Log.Log.Message("*** FinalizeConnection starting data receiver for " + ip + port + " (now " + activeCount + " connections)");
+//            }
+//            else
+//            {
+//                Log.Log.Message("unable to add connection to unidentified list");
+//                connection.Dispose();
+//                return false;
+//            }
             
             try
             {
-                while (true)
+                while (!Token.IsCancellationRequested)
                 {
                     cancelToken.ThrowIfCancellationRequested();
 
@@ -113,12 +120,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
             catch (OperationCanceledException e)
             {
-                Log.LogException.Message("*** Data receiver cancelled " + ip + ":" + port + " disconnected", e);
+                Log.LogException.Message("*** Data receiver cancelled " + connection.EndPoint.Address + ":" + connection.EndPoint.Port + " disconnected", e);
                 throw;
             }
             catch (Exception e)
             {
-                Log.LogException.Message("*** Data receiver exception " + ip + ":" + port + " disconnected", e);
+                Log.LogException.Message("*** Data receiver exception " + connection.EndPoint.Address + ":" + connection.EndPoint.Port + " disconnected", e);
                 throw;
             }
             finally
@@ -181,7 +188,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     {
                         try
                         {
-                            connection.SslStream = GetPeerConnectionTlsStream(connection);
+                            Console.WriteLine("trace 160344524");
+                            connection = GetPeerConnectionTlsStream(connection, 1);
+                            Console.WriteLine("trace 160344524");
                         }
                         catch (Exception e)
                         {
@@ -190,30 +199,31 @@ namespace ADL.Node.Core.Modules.Network.Peer
                             continue;
                         }
 
-                        if (await DataReceiver(connection, Token))
-                        {
-                            Log.Log.Message("*** AcceptConnections accepted connection from " + connection.EndPoint.Address + connection.EndPoint.Port + " count " + ActiveConnections);
-                            Log.Log.Message("Starting Challenge Request");
-//                            Message requestMessage = MessageFactory.Get(2);
-//
-//                            SecureRandom random = new SecureRandom();
-//                            byte[] keyBytes = new byte[16];
-//                            random.NextBytes(keyBytes);
-//                            requestMessage.Nonce = random.NextInt();
-//                            if (connection.SslStream != null)
-//                            {
-////                            connection.Nonce = requestMessage.Nonce;
-//                                byte[] requestBytes = requestMessage.ToByteArray();
-//                                Console.WriteLine(requestMessage);
-//                                Console.WriteLine(requestBytes.ToHex());
-//                                Stream.Writer.MessageWrite(connection, requestBytes, 98);
-//                            }
-                            continue;
-                        }
-                        Log.Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
-                        throw new Exception("unable to add connection as peer");                        
+                        await DataReceiver(connection, Token);
+//                        Task.Run(async () => await DataReceiver(connection, Token), Token);
+//                        if (await DataReceiver(connection, Token))
+//                        {
+//                            Log.Log.Message("*** AcceptConnections accepted connection from " + connection.EndPoint.Address + connection.EndPoint.Port + " count " + ActiveConnections);
+//                            Log.Log.Message("Starting Challenge Request");
+////                            Message requestMessage = MessageFactory.Get(2);
+////
+////                            SecureRandom random = new SecureRandom();
+////                            byte[] keyBytes = new byte[16];
+////                            random.NextBytes(keyBytes);
+////                            requestMessage.Nonce = random.NextInt();
+////                            if (connection.SslStream != null)
+////                            {
+//////                            connection.Nonce = requestMessage.Nonce;
+////                                byte[] requestBytes = requestMessage.ToByteArray();
+////                                Console.WriteLine(requestMessage);
+////                                Console.WriteLine(requestBytes.ToHex());
+////                                Stream.Writer.MessageWrite(connection, requestBytes, 98);
+////                            }
+//                            continue;
+//                        }
+//                        Log.Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
+//                        throw new Exception("unable to add connection as peer");                        
                     }
-
                 }
                 catch (AuthenticationException e)
                 {
@@ -254,7 +264,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         public async void BuildOutBoundConnection (string ip, int port)
         {
             if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
-            if (Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
+            if (!Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
 
             try
             {
@@ -278,7 +288,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
                             Connection connection = StartPeerConnection(tcpClient);
 
-                            connection.SslStream = GetPeerConnectionTlsStream(connection);
+                            Console.WriteLine("trace 9873564");
+                            connection = GetPeerConnectionTlsStream(connection, 2, targetEndpoint);
 
                             if (await DataReceiver(connection, Token)) return;
                             throw new Exception("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
@@ -332,19 +343,25 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// 
         /// </summary>
         /// <param name="connection"></param>
+        /// <param name="direction"></param>
+        /// <param name="endPoint"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        private SslStream GetPeerConnectionTlsStream(Connection connection)
+        private Connection GetPeerConnectionTlsStream(Connection connection, int direction, IPEndPoint endPoint=null)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
-            
-            SslStream sslStream = Stream.StreamFactory.CreateTlsStream(
+            Console.WriteLine("trace 1648924");
+            if (connection == null) throw new ArgumentNullException(nameof (connection));
+
+            connection.SslStream = Stream.StreamFactory.CreateTlsStream(
                 connection.NetworkStream,
-                1,
+                direction,
                 SslCertificate,
-                AcceptInvalidCerts
+                AcceptInvalidCerts,
+                false,
+                endPoint
             );
-                    
+            Console.WriteLine("trace 1648924444444");
+        
             if (connection.SslStream == null || connection.SslStream.GetType() != typeof (SslStream))
             {
                 throw new Exception("Peer ssl stream not set");
@@ -355,8 +372,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 connection.Dispose();
                 throw new Exception("Connection already established");
             }
-            
-            return sslStream;
+            Console.WriteLine("trace 1648924");
+            return connection;
         }
         
         
@@ -390,11 +407,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 }
                 else
                 {
-                    connection.Dispose();    
+                    connection.Dispose();
                 }
-
-                var activeCount = Interlocked.Decrement(ref ActiveConnections);
-                Log.Log.Message("***** Successfully disconnected " + connection.EndPoint.Address + connection.EndPoint.Port + " connected (now " + activeCount + " connections active)");
 
                 return true;
             }
@@ -402,6 +416,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 Log.LogException.Message("DisconnectConnection: RemoveUnidentifiedConnectionFromList", e);
                 return false;
+            }
+            finally
+            {
+                var activeCount = Interlocked.Decrement(ref ActiveConnections);
+                Log.Log.Message("***** Successfully disconnected " + connection.EndPoint.Address +
+                                connection.EndPoint.Port + " connected (now " + activeCount + " connections active)");
             }
         }
         

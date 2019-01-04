@@ -59,6 +59,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="Exception"></exception>
         internal bool AddUnidentifiedConnectionToList(Connection needle)
         {
+            Console.WriteLine("AddUnidentifiedConnectionToList");
             if (needle == null) throw new ArgumentNullException(nameof (needle));
             try
             {

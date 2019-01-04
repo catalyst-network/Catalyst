@@ -124,14 +124,18 @@ namespace ADL.Node.Core.Modules.Network
             Token = CancellationToken.Token;
             
             PeerManager = new PeerManager(SslCertificate,new PeerList(new ClientWorker()),new MessageQueueManager());
-
-            Task.Run(async () => 
-                await PeerManager.InboundConnectionListener(
-                    new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress),
-                        networkSettings.Port
-                    )
+            PeerManager.InboundConnectionListener(
+                new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress),
+                    networkSettings.Port
                 )
             );
+//            Task.Run(async () => 
+//                await PeerManager.InboundConnectionListener(
+//                    new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress),
+//                        networkSettings.Port
+//                    )
+//                )
+//            );
         }
 
         /// <summary>
