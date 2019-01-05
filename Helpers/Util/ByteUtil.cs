@@ -27,7 +27,7 @@ namespace ADL.Util
         }
         
         /// <summary>
-        ///     Creates a copy of bytes and appends b to the end of it
+        /// Creates a copy of bytes and appends b to the end of it
         /// </summary>
         public static byte[] AppendByte(byte[] bytes, byte b)
         {
@@ -56,6 +56,11 @@ namespace ADL.Util
             return org.Skip(start).Take(end - start).ToArray();
         }
 
+        /// <summary>
+        /// @TODO replace all new byte with this method
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public static byte[] InitialiseEmptyByteArray(int length)
         {
             var returnArray = new byte[length];
@@ -83,6 +88,11 @@ namespace ADL.Util
             return MergeToEnum(arrays).ToArray();
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
         public static string ByteToString(byte[] array)
         {
             return System.Text.Encoding.UTF8.GetString(array);

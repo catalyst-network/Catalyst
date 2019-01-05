@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
@@ -120,12 +121,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
             catch (OperationCanceledException e)
             {
-                Log.LogException.Message("*** Data receiver cancelled " + connection.EndPoint.Address + ":" + connection.EndPoint.Port + " disconnected", e);
+                Log.LogException.Message("*** Data receiver cancelled " + connection.EndPoint.Address + ":" + connection.Port + " disconnected", e);
                 throw;
             }
             catch (Exception e)
             {
-                Log.LogException.Message("*** Data receiver exception " + connection.EndPoint.Address + ":" + connection.EndPoint.Port + " disconnected", e);
+                Log.LogException.Message("*** Data receiver exception " + connection.EndPoint.Address + ":" + connection.Port + " disconnected", e);
                 throw;
             }
             finally
@@ -266,57 +267,174 @@ namespace ADL.Node.Core.Modules.Network.Peer
             if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
             if (!Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
 
+            WaitHandle asyncClientWaitHandle = null;
+
             try
             {
                 using (TcpClient tcpClient = new TcpClient())
-                { 
+                {
+                    IPEndPoint targetEndpoint;
                     try
                     {
-                        IPEndPoint targetEndpoint = EndpointBuilder.BuildNewEndPoint(ip, port);
-                        IAsyncResult asyncClient = tcpClient.BeginConnect(targetEndpoint.Address, targetEndpoint.Port, null, null);
-                        WaitHandle asyncClientWaitHandle = asyncClient.AsyncWaitHandle;
-                        
-                        try
-                        {
-                            if (!asyncClient.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
-                            {
-                                tcpClient.Close();
-                                throw new TimeoutException("Timeout connecting to " +  targetEndpoint.Address + ":" + targetEndpoint.Port);
-                            }
-
-                            tcpClient.EndConnect(asyncClient);
-
-                            Connection connection = StartPeerConnection(tcpClient);
-
-                            Console.WriteLine("trace 9873564");
-                            connection = GetPeerConnectionTlsStream(connection, 2, targetEndpoint);
-
-                            if (await DataReceiver(connection, Token)) return;
-                            throw new Exception("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
-                        }
-                        catch (AuthenticationException e)
-                        {
-                            Log.LogException.Message("BuildOutBoundConnection", e);
-                        }
-                        catch (Exception e)
-                        {
-                            Log.LogException.Message("BuildOutBoundConnection: GetPeerConnectionTlsStream", e);
-                        }
-                        finally
-                        {
-                            asyncClientWaitHandle.Close();
-                        }
+                        targetEndpoint = EndpointBuilder.BuildNewEndPoint(ip, port);
                     }
                     catch (ArgumentNullException e)
                     {
-                        Log.LogException.Message("ADL.Node.Core.Modules.Network.Peer.PeerManager.PeerBuilder", e);
+                        Log.LogException.Message("BuildOutBoundConnection: BuildNewEndPoint",e);
+                        return;
                     }
+                    catch (ArgumentOutOfRangeException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: BuildNewEndPoint",e);
+                        return;
+                    }
+
+                    IAsyncResult asyncClient;
+                    try
+                    {
+
+                        asyncClient = tcpClient.BeginConnect(targetEndpoint.Address, targetEndpoint.Port, null, null);
+                        asyncClientWaitHandle = asyncClient.AsyncWaitHandle;
+                    } 
+                    catch (ArgumentNullException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: BeginConnect",e);
+                        return;
+                    }
+                    catch (SocketException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: BeginConnect",e);
+                        return;
+                    }
+                    catch (ObjectDisposedException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: BeginConnect",e);
+                        return;
+                    }
+                    catch (SecurityException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: BeginConnect",e);
+                        return;
+                    }
+
+                    try
+                    {
+                        if (!asyncClient.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
+                        {
+                            tcpClient.Close();
+                            throw new TimeoutException("Timeout connecting to " + targetEndpoint.Address + ":" +
+                                                       targetEndpoint.Port);
+                        }
+                    }
+                    catch (ArgumentOutOfRangeException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: WaitOne",e);
+                        return;
+                    }
+                    catch (ObjectDisposedException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: WaitOne",e);
+                        return;
+                    }
+                    catch (AbandonedMutexException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: WaitOne",e);
+                        return;
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: WaitOne",e);
+                        return;
+                    }
+                    catch (OverflowException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: FromSeconds",e);
+                        return;
+                    }
+                    catch (ArgumentException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: FromSeconds",e);
+                        return;
+                    }
+
+                    try
+                    {
+                        tcpClient.EndConnect(asyncClient);
+                    }
+                    catch (ArgumentNullException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+                    catch (ArgumentException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+                    catch (SocketException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+                    catch (ObjectDisposedException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+
+                    Connection connection;
+                    try
+                    {
+                        connection = StartPeerConnection(tcpClient);    
+                    }
+                    catch (ArgumentNullException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+                    catch (ObjectDisposedException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+
+                    try
+                    {
+                        connection = GetPeerConnectionTlsStream(connection, 2, targetEndpoint);                        
+                    }
+                    catch (ArgumentNullException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        Log.LogException.Message("BuildOutBoundConnection: EndConnect",e);
+                        return;
+                    }
+                    
+                    if (await DataReceiver(connection, Token)) return;
+                    throw new Exception("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.Port);
                 }
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
-                Log.LogException.Message("ADL.Node.Core.Modules.Network.Peer.PeerManager.PeerBuilder", e);
+                Log.LogException.Message("BuildOutBoundConnection: GetPeerConnectionTlsStream", e);
             }
+            finally
+            {
+                if (asyncClientWaitHandle != null) asyncClientWaitHandle.Close();
+            } 
         }
 
         /// <summary>
@@ -327,19 +445,39 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="Exception"></exception>
         private Connection StartPeerConnection(TcpClient tcpClient)
         {
+            if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
             Connection connection;
             try
             {
                 connection = new Connection(tcpClient);
             }
-            catch (Exception e)
+            catch (ArgumentNullException e)
             {
-                Log.LogException.Message("InboundConnectionListener", e);
-                throw new Exception(e.Message);
+                Log.LogException.Message("StartPeerConnection: Connection", e);
+                throw;
+            }
+            catch (ObjectDisposedException e)
+            {
+                Log.LogException.Message("StartPeerConnection: Connection", e);
+                throw;
+            }
+            catch (InvalidOperationException e)
+            {
+                Log.LogException.Message("StartPeerConnection: Connection", e);
+                throw;
             }
 
-            int activeCount = Interlocked.Increment(ref ActiveConnections);
-            Log.Log.Message("*** Connection created for " + connection.EndPoint.Address + connection.EndPoint.Port + " (now " + activeCount + " connections)");
+            int activeCount;
+            try
+            {
+                activeCount = Interlocked.Increment(ref ActiveConnections);
+            }
+            catch (NullReferenceException e)
+            {
+                Log.LogException.Message("StartPeerConnection: Interlocked.Increment", e);
+                throw;
+            }
+            Log.Log.Message("*** Connection created for " + connection.EndPoint.Address + connection.Port + " (now " + activeCount + " connections)");
             return connection;
         }
 
@@ -350,10 +488,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <param name="direction"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
         private Connection GetPeerConnectionTlsStream(Connection connection, int direction, IPEndPoint endPoint=null)
         {
-            Console.WriteLine("trace 1648924");
             if (connection == null) throw new ArgumentNullException(nameof (connection));
 
             connection.SslStream = Stream.StreamFactory.CreateTlsStream(
@@ -364,19 +502,18 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 false,
                 endPoint
             );
-            Console.WriteLine("trace 1648924444444");
         
             if (connection.SslStream == null || connection.SslStream.GetType() != typeof (SslStream))
             {
-                throw new Exception("Peer ssl stream not set");
+                throw new ArgumentNullException(nameof(SslStream));
             }
 
             if (!PeerList.AddUnidentifiedConnectionToList(connection))
             {
                 connection.Dispose();
-                throw new Exception("unable to add connection to unidentified list");
+                throw new InvalidOperationException("unable to add connection to unidentified list");
             }
-            Console.WriteLine("trace 1648924");
+
             return connection;
         }
         
@@ -424,8 +561,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             finally
             {
                 var activeCount = Interlocked.Decrement(ref ActiveConnections);
-                Log.Log.Message("***** Successfully disconnected " + connection.EndPoint.Address +
-                                connection.EndPoint.Port + " connected (now " + activeCount + " connections active)");
+                Log.Log.Message("***** Successfully disconnected " + connection.EndPoint.Address + connection.Port + " connected (now " + activeCount + " connections active)");
             }
         }
         

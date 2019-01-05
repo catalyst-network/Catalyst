@@ -85,7 +85,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
             {
                 disconnectDetected = true;
                 if (connection != null)
-                    Log.LogException.Message("*** MessageWriteAsync server disconnected (obj disposed exception): " + connection.EndPoint.Address + ":" + connection.EndPoint.Port, objDipInner);
+                    Log.LogException.Message("*** MessageWriteAsync server disconnected (obj disposed exception): " + connection.EndPoint.Address + ":" + connection.Port, objDipInner);
                 return false;
             }
             catch (SocketException sockInner)

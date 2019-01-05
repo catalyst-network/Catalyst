@@ -13,6 +13,7 @@ namespace ADL.Node.Core.Modules.Network.Listeners
         /// <returns></returns>
         public static TcpListener CreateTcpListener(IPEndPoint ipEndPoint)
         {
+            Console.WriteLine(ipEndPoint.Port);//@TODO check we get port
             return new TcpListener(ipEndPoint.Address, ipEndPoint.Port);
         }
         

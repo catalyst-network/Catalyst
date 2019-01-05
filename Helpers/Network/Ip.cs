@@ -50,7 +50,7 @@ namespace ADL.Network
         {
             if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
 
-            IPAddress validIp = null;
+            IPAddress validIp;
             try
             {
                 validIp = IPAddress.Parse(ip);
@@ -58,18 +58,22 @@ namespace ADL.Network
             catch (ArgumentNullException e)
             {
                 LogException.Message("ADL.Network.Ip.ValidateIp", e);
+                throw;
             }
             catch (FormatException e)
             {
                 LogException.Message("ADL.Network.Ip.ValidateIp", e);
+                throw;
             }
             catch (SocketException e)
             {
                 LogException.Message("ADL.Network.Ip.ValidateIp", e);
+                throw;
             }
             catch (Exception e)
             {
                 LogException.Message("ADL.Network.Ip.ValidateIp", e);
+                throw;
             }
             if (validIp == null) throw new ArgumentNullException(nameof(ip));
             return validIp;
