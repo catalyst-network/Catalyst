@@ -127,7 +127,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         }
 
         /// <summary>
-        /// 
+        /// //@TODO cant get correct port like this, create helper method to get port from endpoint
         /// </summary>
         /// <param name="endPoint"></param>
         /// <returns></returns>

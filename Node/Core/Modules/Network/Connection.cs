@@ -12,13 +12,14 @@ namespace ADL.Node.Core.Modules.Network
     public sealed class Connection : IDisposable
     {
         public bool Known { get; set; }
-        internal bool Disposed { get; set; }
+        internal string Port { get; set; }
         public bool Connected { set; get; }
+        internal bool Disposed { get; set; }
         internal TcpClient TcpClient { get; }
         public IPEndPoint EndPoint { get; set; }
         public SslStream SslStream { set; get; }
         internal NetworkStream NetworkStream { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -33,16 +34,17 @@ namespace ADL.Node.Core.Modules.Network
             }
             catch (ObjectDisposedException e)
             {
-                Log.LogException.Message("Connection Constructor", e);
-                throw new Exception("Connection Constructor: could not get tcp stream");
+                Log.LogException.Message("Connection Constructor: tcp stream object disposed", e);
+                throw;
             }
             catch (InvalidOperationException e)
             {
-                Log.LogException.Message("Connection Constructor", e);
-                throw new Exception("Connection Constructor: could not get tcp stream");
+                Log.LogException.Message("Connection Constructor: tcp stream invalid operation", e);
+                throw;
             }
 
             EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
+            Port = ((IPEndPoint) tcp.Client.RemoteEndPoint).Port.ToString();
             
             Connected = true;
             Known = false;

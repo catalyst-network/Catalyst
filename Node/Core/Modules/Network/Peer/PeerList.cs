@@ -15,7 +15,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         internal List<IPAddress> BannedIps { get; set; }
         public bool IsCritical => PeerBucket.Count <= 25;
         internal readonly Dictionary<PeerIdentifier, Peer> PeerBucket;
-        internal ConcurrentDictionary<string, Connection> UnIdentifiedPeers { get; set; }
+        internal readonly ConcurrentDictionary<string, Connection> UnIdentifiedPeers;
 
         /// <summary>
         /// 
@@ -27,6 +27,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             
             k = 42;
             PeerBucket = new Dictionary<PeerIdentifier, Peer>();
+            UnIdentifiedPeers = new ConcurrentDictionary<string, Connection>();
 
             workScheduler.QueueForever(Check, TimeSpan.FromMinutes(5));
             workScheduler.QueueForever(PurgePeers, TimeSpan.FromSeconds(15));
@@ -63,34 +64,55 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
             try
             {
-                if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.EndPoint.Port, out Connection connection))
+                Console.WriteLine("trace ==========");
+                Console.WriteLine(needle.EndPoint.Address);
+                Console.WriteLine(needle.Port);
+                if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.Port, out var connection))
                 {
+                    if (connection == null) throw new ArgumentNullException(nameof(connection));
                     // already have a connection in our unidentified list, check if result is actually connected
                     if (connection.IsConnected())
                     {
-                        Log.Log.Message("*** Active connection already exists for " + connection.EndPoint.Address + connection.EndPoint.Port);
-                        return false;                        
+                        Log.Log.Message("*** Active connection already exists for " + connection.EndPoint.Address + connection.Port);
+                        return false;
                     }
-                    
-                    // connection is stale so remove it
-                    if (!RemoveUnidentifiedConnectionFromList(connection))
+                    try
                     {
-                        throw new Exception("Cant remove stale connection");
-                    }
-                    Log.Log.Message("Removed stale connection for  " + connection.EndPoint.Address + connection.EndPoint.Port);
-                }
+                        // connection is stale so remove it
+                        if (!RemoveUnidentifiedConnectionFromList(connection))
+                        {
+                            throw new Exception("Cant remove stale connection");
+                        }
 
+                        Log.Log.Message("Removed stale connection for  " + connection.EndPoint.Address +
+                                        connection.Port);
+                        return true;
+                    }
+                    catch (ArgumentNullException e)
+                    {
+                        Log.LogException.Message("AddUnidentifiedConnectionToList: RemoveUnidentifiedConnectionFromList", e);
+                        needle.Dispose();
+                        return false;
+                    }
+                }
+            }
+            catch (ArgumentException e)
+            {
+                Log.LogException.Message("AddUnidentifiedConnectionToList: TryGetValue", e);
+                needle.Dispose();
+                return false;
+            }
+            try
+            {
                 if (!UnIdentifiedPeers.TryAdd(needle.EndPoint.Address + ":" + needle.EndPoint.Port, needle))
                 {
                     throw new Exception("Can not add unidentified connection to the list");
                 }
-                
                 Log.Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port + " added to unidentified peer list)");
-                return true;
-            }
-            catch (Exception e)
+                return true;    
+            } catch (Exception e)
             {
-                Log.LogException.Message("TryAddConnectionToList", e);
+                Log.LogException.Message("AddUnidentifiedConnectionToList: TryAdd", e);
                 needle.Dispose();
                 return false;
             }
@@ -108,18 +130,18 @@ namespace ADL.Node.Core.Modules.Network.Peer
             if (connection == null) throw new ArgumentNullException(nameof (connection));
             try
             {
-                if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.EndPoint.Port, out Connection removedConnection))
+                if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.Port, out Connection removedConnection))
                 {
-                    Log.Log.Message("***** Successfully removed " + removedConnection.EndPoint.Address + removedConnection.EndPoint.Port);
+                    Log.Log.Message("***** Successfully removed " + removedConnection.EndPoint.Address + removedConnection.Port);
                     return true;
                 }
-                Log.Log.Message("*** unable to find connection " + connection.EndPoint.Address+":"+connection.EndPoint.Port);
+                Log.Log.Message("*** unable to find connection " + connection.EndPoint.Address+":"+connection.Port);
                 return false;
             }
             catch (ArgumentNullException e)
             {
                 Log.LogException.Message("RemoveUnidentifiedConnectionToList", e);
-                throw new Exception(e.Message);
+                return false;
             }
         }
 
