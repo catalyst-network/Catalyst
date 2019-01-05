@@ -296,7 +296,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
                         }
                         catch (AuthenticationException e)
                         {
-                            Log.LogException.Message("Peer builder socket exception", e);
+                            Log.LogException.Message("BuildOutBoundConnection", e);
+                        }
+                        catch (Exception e)
+                        {
+                            Log.LogException.Message("BuildOutBoundConnection: GetPeerConnectionTlsStream", e);
                         }
                         finally
                         {
@@ -366,12 +370,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 throw new Exception("Peer ssl stream not set");
             }
-// not handled null refereance exception
 
             if (!PeerList.AddUnidentifiedConnectionToList(connection))
             {
                 connection.Dispose();
-                throw new Exception("Connection already established");
+                throw new Exception("unable to add connection to unidentified list");
             }
             Console.WriteLine("trace 1648924");
             return connection;

@@ -92,7 +92,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 Log.LogException.Message("TryAddConnectionToList", e);
                 needle.Dispose();
-                throw new Exception(e.Message);
+                return false;
             }
         }
 
