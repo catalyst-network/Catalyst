@@ -8,7 +8,7 @@
 using grpc = global::Grpc.Core;
 
 namespace ADL.Protocol.Rpc.Node {
-  public static partial class RpcServer
+  public static class RpcServer
   {
     static readonly string __ServiceName = "ADL.Protocol.Rpc.Node.RpcServer";
 

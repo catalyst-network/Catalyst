@@ -45,7 +45,7 @@ namespace ADL.Node.Core.Modules.Rpc
         /// <returns></returns>
         public IRpcServer GetImpl()
         {
-            throw new NotImplementedException();
+            return (IRpcServer) Server; // not great but grpc is partially sealed so we cant assign it a iface
         }
 
         /// <summary>
