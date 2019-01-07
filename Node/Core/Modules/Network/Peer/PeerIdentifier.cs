@@ -49,7 +49,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
             
             // init blank nodeId
-            byte[] peerId = new byte[42];
+            byte[] peerId = new byte[42]; //@TODO hook into new byte method
             
             // copy client id chunk
             Buffer.BlockCopy(BuildClientIdChunk(), 0, peerId, 0, 2);
@@ -111,7 +111,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private static byte[] BuildClientIpChunk()
         {
-            byte[] ipChunk = new byte[16];
+            byte[] ipChunk = new byte[16]; // @TODO hook into new byte method
             IPAddress address = Ip.GetPublicIp();
             byte[] ipBytes = address.GetAddressBytes();
             
@@ -127,7 +127,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         }
 
         /// <summary>
-        /// //@TODO cant get correct port like this, create helper method to get port from endpoint
+        ///
         /// </summary>
         /// <param name="endPoint"></param>
         /// <returns></returns>

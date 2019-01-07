@@ -25,7 +25,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentException"></exception>
         private Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
         {
-            //@TODO fix getting correct port
             if (!Ip.ValidPortRange(EndPoint.Port)) throw new ArgumentException("Peer Endpoint port range invalid");
             
             EndPoint = endpoint;

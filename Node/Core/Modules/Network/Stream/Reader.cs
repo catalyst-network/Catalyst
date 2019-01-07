@@ -32,7 +32,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
             // start reading header
             using (MemoryStream headerMs = new MemoryStream())
             {
-                byte[] headerBuffer = new byte[1];//if we change header structure we need to up date this
+                byte[] headerBuffer = new byte[1];//if we change header structure we need to up date this //@TODO hook into new byte method
                 currentTimeout = 0;
                 Int32 read;
 
@@ -106,7 +106,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
                     bufferSize = bytesRemaining;
                 }
 
-                var buffer = new byte[bufferSize];
+                var buffer = new byte[bufferSize]; // @TODO hook into new byte method
 
                 while ((read = sslStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
@@ -125,7 +125,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
                         {
                             bufferSize = bytesRemaining;
                         }
-                        buffer = new byte[bufferSize];
+                        buffer = new byte[bufferSize]; // @TODO hook into new byte method
                         
                         // check if read fully
                         if (bytesRemaining == 0)

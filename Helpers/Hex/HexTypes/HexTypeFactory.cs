@@ -12,7 +12,7 @@ namespace ADL.Hex.HexTypes
 
             if (typeof(string) == typeof(T))
                 return HexUTF8String.CreateFromHex(hex);
-            throw new NotImplementedException();
+            throw new ArgumentOutOfRangeException();
         }
     }
 }

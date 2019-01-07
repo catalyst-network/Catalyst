@@ -12,7 +12,6 @@ namespace ADL.Node.Core.Modules.Network
     public sealed class Connection : IDisposable
     {
         public bool Known { get; set; }
-        internal string Port { get; set; }
         public bool Connected { set; get; }
         internal bool Disposed { get; set; }
         internal TcpClient TcpClient { get; }
@@ -44,7 +43,6 @@ namespace ADL.Node.Core.Modules.Network
             }
 
             EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
-            Port = ((IPEndPoint) tcp.Client.RemoteEndPoint).Port.ToString();
             
             Connected = true;
             Known = false;
@@ -68,7 +66,7 @@ namespace ADL.Node.Core.Modules.Network
                 return false;
             }
             
-            byte[] buffer = new byte[1];
+            byte[] buffer = new byte[1];// @TODO hook into new byte array method
             return TcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
         }
 
