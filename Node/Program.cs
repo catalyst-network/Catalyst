@@ -169,6 +169,7 @@ namespace ADL.Node
         /// <param name="options"></param>
         private static void RunNodeDemon(NodeOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
             AtlasSystem.GetInstance(options);
 			Console.WriteLine("daemon Mode");
 			while (true){}  
@@ -181,6 +182,7 @@ namespace ADL.Node
         /// <param name="options"></param>
         private static void RunNodeInteractive(NodeOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
             if (!options.Daemon)
             {
                 AtlasSystem.GetInstance(options);

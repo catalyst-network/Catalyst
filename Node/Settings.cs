@@ -35,7 +35,8 @@ namespace ADL.Node
         /// </summary>
         /// <returns></returns>
         public static Settings GetInstance(NodeOptions options)
-        { 
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
             if (Instance == null) 
             { 
                 lock (Mutex)
@@ -55,6 +56,7 @@ namespace ADL.Node
         /// <param name="options"></param>
         private Settings(NodeOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
             var userConfig = LoadConfig(options.DataDir, options.Network);
 
             NodeOptions = options;
@@ -78,10 +80,9 @@ namespace ADL.Node
         /// <returns></returns>
         private static IConfiguration LoadConfig(string dataDir, string network)
         {
-#if DEBUG
-            Console.WriteLine("Load Config parameters");
-            Console.WriteLine(dataDir);
-#endif
+            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
+            if (network == null) throw new ArgumentNullException(nameof(network));
+
             string networkConfigFile;
             
             switch (network)
@@ -127,6 +128,7 @@ namespace ADL.Node
     /// </summary>
     public class LedgerSettings : ILedgerSettings
     {
+        private readonly IConfiguration Section;
         public string Type { get; set; }
         public string Chain { get; set; }
         public string Index { get; set; }
@@ -137,6 +139,8 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal LedgerSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             Type = section.GetSection("Persistence").Value;
             Chain = section.GetSection("Paths").GetSection("Chain").Value;
             Index = section.GetSection("Paths").GetSection("Index").Value;
@@ -150,6 +154,7 @@ namespace ADL.Node
     /// </summary>
     public class ConsensusSettings : IConsensusSettings
     {
+        private readonly IConfiguration Section;
         public string NDepth { get; set; }
 
         /// <summary>
@@ -158,6 +163,8 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal ConsensusSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             NDepth = section.GetSection("nDepth").Value;
         }
     }
@@ -168,6 +175,7 @@ namespace ADL.Node
     /// </summary>
     public class ContractSettings : IContractSettings
     {
+        private readonly IConfiguration Section;
         public string StorageType { get; set; }
 
         /// <summary>
@@ -176,6 +184,8 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal ContractSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             StorageType = section.GetSection("StorageType").Value;
         }
     }
@@ -186,6 +196,7 @@ namespace ADL.Node
     /// </summary>
     public class DfsSettings : IDfsSettings
     {
+        private readonly IConfiguration Section;
         public string StorageType { get; set; }
         public ushort ConnectRetries { get; set; }
         public string IpfsVersionApi { get; set; }
@@ -196,6 +207,8 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal DfsSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             StorageType = section.GetSection("StorageType").Value;
             ConnectRetries = ushort.Parse(section.GetSection("ConnectRetries").Value);
             IpfsVersionApi = section.GetSection("IpfsVersionApi").Value;
@@ -208,6 +221,7 @@ namespace ADL.Node
     /// </summary>
     public class GossipSettings : IGossipSettings
     {
+        private readonly IConfiguration Section;
         public string Instances { get; set; }
 
         /// <summary>
@@ -216,6 +230,8 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal GossipSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             Instances = section.GetSection("instances").Value;
         }
     }        
@@ -226,6 +242,7 @@ namespace ADL.Node
     /// </summary>
     public class MempoolSettings : IMempoolSettings
     {
+        private readonly IConfiguration Section;
         public string Type { get; set; }
         public string When { get; set; }
 
@@ -235,6 +252,8 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal MempoolSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             Type = section.GetSection("Type").Value;
             When = section.GetSection("When").Value;
         }
@@ -245,6 +264,7 @@ namespace ADL.Node
     /// </summary>
     public class NetworkSettings : INetworkSettings
     {
+        private readonly IConfiguration Section;
         public string BindAddress { get; set; }
         public int Port { get; set; }
         public ushort MaxPeers { get; set; }
@@ -260,6 +280,8 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal NetworkSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
             Magic = uint.Parse(section.GetSection("Magic").Value);
             Port = int.Parse(section.GetSection("Port").Value);
@@ -282,6 +304,7 @@ namespace ADL.Node
     /// </summary>
     public class SslSettings : ISslSettings
     {
+        private readonly IConfiguration Section;
         public string PfxFileName { get; set; }
         public string SslCertPassword { get; set; }
 
@@ -291,6 +314,8 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal SslSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             Console.WriteLine(section.GetSection("PfxFileName").Value);
             Console.WriteLine(section.GetSection("SslCertPassword").Value);
             PfxFileName = section.GetSection("PfxFileName").Value;
@@ -304,6 +329,7 @@ namespace ADL.Node
     /// </summary>
     public class RpcSettings : IRpcSettings
     {
+        private readonly IConfiguration Section;
         public int Port { get; set; }
         public string BindAddress { get; set; }
         
@@ -313,9 +339,10 @@ namespace ADL.Node
         /// <param name="section"></param>
         protected internal RpcSettings(IConfiguration section)
         {
+            if (section == null) throw new ArgumentNullException(nameof(section));
+            Section = section;
             Port = int.Parse(section.GetSection("Port").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
         }
     }
 }
-

@@ -1,3 +1,4 @@
+using System;
 using Grpc.Core;
 using Akka.Actor;
 using System.Reflection;
@@ -16,6 +17,8 @@ namespace ADL.Node.Core.Modules.Rpc
         /// <returns></returns>
         public override Task<PongResponse> Ping(PingRequest request, ServerCallContext context)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (context == null) throw new ArgumentNullException(nameof(context));
             return Task.FromResult(new PongResponse
             {
                 Pong = "pong"
@@ -30,6 +33,8 @@ namespace ADL.Node.Core.Modules.Rpc
         /// <returns></returns>
         public override Task<VersionResponse> Version(VersionRequest request, ServerCallContext context)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (context == null) throw new ArgumentNullException(nameof(context));
             return Task.FromResult(new VersionResponse
             {
                 Version = Assembly.GetEntryAssembly().GetName().Version.ToString()
@@ -44,7 +49,9 @@ namespace ADL.Node.Core.Modules.Rpc
         /// <returns></returns>
         public override Task<GetMempoolResponse> GetMempool(GetMempoolRequest request, ServerCallContext context)
         {
-            return AtlasSystem.TaskHandlerActor.Ask<GetMempoolResponse>(request);            
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            return AtlasSystem.TaskHandlerActor.Ask<GetMempoolResponse>(request);
         }
     }
 }
