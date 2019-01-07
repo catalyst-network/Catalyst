@@ -6,6 +6,7 @@ using System.Net;
 using ADL.Node.Core.Modules.Network.Workers;
 using System.Linq;
 using System.Net.Sockets;
+using ADL.Node.Core.Modules.Network.Connections;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
@@ -16,7 +17,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         public bool IsCritical => PeerBucket.Count <= 25;
         internal readonly Dictionary<PeerIdentifier, Peer> PeerBucket;
         internal readonly ConcurrentDictionary<string, Connection> UnIdentifiedPeers;
-        public event EventHandler<SocksAuthenticationEventArgs> OnClientAuthenticating;
+        public event EventHandler<NewUnIdentifiedConnectionEventArgs> OnAddedUnIdentifiedConnection;
 
         /// <summary>
         /// 
@@ -62,13 +63,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
         internal bool AddUnidentifiedConnectionToList(Connection needle)
         {
             if (needle?.EndPoint?.Address == null) throw new ArgumentNullException(nameof (needle));
-
+            
             try
             {
-                Console.WriteLine("trace ==========");
-                Console.WriteLine(needle.EndPoint.Address);
-                Console.WriteLine(needle.EndPoint.Port);
-                if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.EndPoint.Port, out var connection))
+                if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.EndPoint.Port, out Connection connection))
                 {
                     if (connection == null) throw new ArgumentNullException(nameof(connection));
                     // already have a connection in our unidentified list, check if result is actually connected
@@ -87,7 +85,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
                         Log.Log.Message("Removed stale connection for  " + connection.EndPoint.Address +
                                         connection.EndPoint.Port);
-                        return true;
                     }
                     catch (ArgumentNullException e)
                     {
@@ -109,15 +106,24 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 {
                     throw new Exception("Can not add unidentified connection to the list");
                 }
-                //@TODO raise event for added un-identified peers.
-                Log.Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port + " added to unidentified peer list)");
-                return true;    
             } catch (Exception e)
             {
                 Log.LogException.Message("AddUnidentifiedConnectionToList: TryAdd", e);
                 needle.Dispose();
                 return false;
             }
+
+            try
+            {
+                Log.Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port + " added to unidentified peer list)");
+                Util.Events.Raise(OnAddedUnIdentifiedConnection, this, new NewUnIdentifiedConnectionEventArgs(needle));
+            }
+            catch (ArgumentNullException e)
+            {
+                Log.LogException.Message("AddUnidentifiedConnectionToList: Events.Raise(OnAddedUnIdentifiedConnection)", e);
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
