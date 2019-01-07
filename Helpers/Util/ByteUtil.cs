@@ -121,8 +121,8 @@ namespace ADL.Util
         {
             if (a == null) throw new ArgumentNullException(nameof(a));
             if (b == null) throw new ArgumentNullException(nameof(b));
-            if (a.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(a));
-            if (b.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(b));
+            if (a.Length == 0) throw new ArgumentException("Value a cannot be an empty collection.", nameof(a));
+            if (b.Length == 0) throw new ArgumentException("Value b cannot be an empty collection.", nameof(b));
 
             var length = Math.Min(a.Length, b.Length);
             var result = new byte[length];
