@@ -19,21 +19,21 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='ADL.Protocol.Peer',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\nPeer.proto\x12\x11\x41\x44L.Protocol.Peer\"\x1b\n\x0bPingRequest\x12\x0c\n\x04ping\x18\x01 \x01(\t\"\x1c\n\x0cPongResponse\x12\x0c\n\x04pong\x18\x01 \x01(\t\"\x1f\n\x0fPeerInfoRequest\x12\x0c\n\x04ping\x18\x01 \x01(\t\" \n\x10PeerInfoResponse\x12\x0c\n\x04pong\x18\x01 \x01(\t\"$\n\x14PeerNeighborsRequest\x12\x0c\n\x04ping\x18\x01 \x01(\t\"%\n\x15PeerNeighborsResponse\x12\x0c\n\x04pong\x18\x01 \x01(\t\"/\n\x10\x43hallengeRequest\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\r\n\x05nonce\x18\x02 \x01(\x05\"I\n\x11\x43hallengeResponse\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x13\n\x0bsignedNonce\x18\x02 \x01(\t\x12\x11\n\tpublicKey\x18\x03 \x01(\tb\x06proto3')
+  serialized_pb=_b('\n\nPeer.proto\x12\x11\x41\x44L.Protocol.Peer\"\xc7\x02\n\x0cPeerProtocol\x1a\x1b\n\x0bPingRequest\x12\x0c\n\x04ping\x18\x01 \x01(\t\x1a\x1c\n\x0cPongResponse\x12\x0c\n\x04pong\x18\x01 \x01(\t\x1a\x1f\n\x0fPeerInfoRequest\x12\x0c\n\x04ping\x18\x01 \x01(\t\x1a \n\x10PeerInfoResponse\x12\x0c\n\x04pong\x18\x01 \x01(\t\x1a$\n\x14PeerNeighborsRequest\x12\x0c\n\x04ping\x18\x01 \x01(\t\x1a%\n\x15PeerNeighborsResponse\x12\x0c\n\x04pong\x18\x01 \x01(\t\x1a/\n\x10\x43hallengeRequest\x12\x0c\n\x04type\x18\x02 \x01(\x05\x12\r\n\x05nonce\x18\x03 \x01(\x05\x1a;\n\x11\x43hallengeResponse\x12\x13\n\x0bsignedNonce\x18\x02 \x01(\t\x12\x11\n\tpublicKey\x18\x03 \x01(\tb\x06proto3')
 )
 
 
 
 
-_PINGREQUEST = _descriptor.Descriptor(
+_PEERPROTOCOL_PINGREQUEST = _descriptor.Descriptor(
   name='PingRequest',
-  full_name='ADL.Protocol.Peer.PingRequest',
+  full_name='ADL.Protocol.Peer.PeerProtocol.PingRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ping', full_name='ADL.Protocol.Peer.PingRequest.ping', index=0,
+      name='ping', full_name='ADL.Protocol.Peer.PeerProtocol.PingRequest.ping', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -51,20 +51,19 @@ _PINGREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=33,
-  serialized_end=60,
+  serialized_start=50,
+  serialized_end=77,
 )
 
-
-_PONGRESPONSE = _descriptor.Descriptor(
+_PEERPROTOCOL_PONGRESPONSE = _descriptor.Descriptor(
   name='PongResponse',
-  full_name='ADL.Protocol.Peer.PongResponse',
+  full_name='ADL.Protocol.Peer.PeerProtocol.PongResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='pong', full_name='ADL.Protocol.Peer.PongResponse.pong', index=0,
+      name='pong', full_name='ADL.Protocol.Peer.PeerProtocol.PongResponse.pong', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -82,20 +81,19 @@ _PONGRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=62,
-  serialized_end=90,
+  serialized_start=79,
+  serialized_end=107,
 )
 
-
-_PEERINFOREQUEST = _descriptor.Descriptor(
+_PEERPROTOCOL_PEERINFOREQUEST = _descriptor.Descriptor(
   name='PeerInfoRequest',
-  full_name='ADL.Protocol.Peer.PeerInfoRequest',
+  full_name='ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ping', full_name='ADL.Protocol.Peer.PeerInfoRequest.ping', index=0,
+      name='ping', full_name='ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest.ping', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -113,20 +111,19 @@ _PEERINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=92,
-  serialized_end=123,
+  serialized_start=109,
+  serialized_end=140,
 )
 
-
-_PEERINFORESPONSE = _descriptor.Descriptor(
+_PEERPROTOCOL_PEERINFORESPONSE = _descriptor.Descriptor(
   name='PeerInfoResponse',
-  full_name='ADL.Protocol.Peer.PeerInfoResponse',
+  full_name='ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='pong', full_name='ADL.Protocol.Peer.PeerInfoResponse.pong', index=0,
+      name='pong', full_name='ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse.pong', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -144,20 +141,19 @@ _PEERINFORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=125,
-  serialized_end=157,
+  serialized_start=142,
+  serialized_end=174,
 )
 
-
-_PEERNEIGHBORSREQUEST = _descriptor.Descriptor(
+_PEERPROTOCOL_PEERNEIGHBORSREQUEST = _descriptor.Descriptor(
   name='PeerNeighborsRequest',
-  full_name='ADL.Protocol.Peer.PeerNeighborsRequest',
+  full_name='ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ping', full_name='ADL.Protocol.Peer.PeerNeighborsRequest.ping', index=0,
+      name='ping', full_name='ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest.ping', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -175,20 +171,19 @@ _PEERNEIGHBORSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=159,
-  serialized_end=195,
+  serialized_start=176,
+  serialized_end=212,
 )
 
-
-_PEERNEIGHBORSRESPONSE = _descriptor.Descriptor(
+_PEERPROTOCOL_PEERNEIGHBORSRESPONSE = _descriptor.Descriptor(
   name='PeerNeighborsResponse',
-  full_name='ADL.Protocol.Peer.PeerNeighborsResponse',
+  full_name='ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='pong', full_name='ADL.Protocol.Peer.PeerNeighborsResponse.pong', index=0,
+      name='pong', full_name='ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse.pong', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -206,32 +201,31 @@ _PEERNEIGHBORSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=197,
-  serialized_end=234,
+  serialized_start=214,
+  serialized_end=251,
 )
 
-
-_CHALLENGEREQUEST = _descriptor.Descriptor(
+_PEERPROTOCOL_CHALLENGEREQUEST = _descriptor.Descriptor(
   name='ChallengeRequest',
-  full_name='ADL.Protocol.Peer.ChallengeRequest',
+  full_name='ADL.Protocol.Peer.PeerProtocol.ChallengeRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='ADL.Protocol.Peer.ChallengeRequest.type', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='nonce', full_name='ADL.Protocol.Peer.ChallengeRequest.nonce', index=1,
+      name='type', full_name='ADL.Protocol.Peer.PeerProtocol.ChallengeRequest.type', index=0,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='nonce', full_name='ADL.Protocol.Peer.PeerProtocol.ChallengeRequest.nonce', index=1,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -244,34 +238,26 @@ _CHALLENGEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=236,
-  serialized_end=283,
+  serialized_start=253,
+  serialized_end=300,
 )
 
-
-_CHALLENGERESPONSE = _descriptor.Descriptor(
+_PEERPROTOCOL_CHALLENGERESPONSE = _descriptor.Descriptor(
   name='ChallengeResponse',
-  full_name='ADL.Protocol.Peer.ChallengeResponse',
+  full_name='ADL.Protocol.Peer.PeerProtocol.ChallengeResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='ADL.Protocol.Peer.ChallengeResponse.type', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='signedNonce', full_name='ADL.Protocol.Peer.ChallengeResponse.signedNonce', index=1,
+      name='signedNonce', full_name='ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.signedNonce', index=0,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='publicKey', full_name='ADL.Protocol.Peer.ChallengeResponse.publicKey', index=2,
+      name='publicKey', full_name='ADL.Protocol.Peer.PeerProtocol.ChallengeResponse.publicKey', index=1,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -289,75 +275,114 @@ _CHALLENGERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=285,
-  serialized_end=358,
+  serialized_start=302,
+  serialized_end=361,
 )
 
-DESCRIPTOR.message_types_by_name['PingRequest'] = _PINGREQUEST
-DESCRIPTOR.message_types_by_name['PongResponse'] = _PONGRESPONSE
-DESCRIPTOR.message_types_by_name['PeerInfoRequest'] = _PEERINFOREQUEST
-DESCRIPTOR.message_types_by_name['PeerInfoResponse'] = _PEERINFORESPONSE
-DESCRIPTOR.message_types_by_name['PeerNeighborsRequest'] = _PEERNEIGHBORSREQUEST
-DESCRIPTOR.message_types_by_name['PeerNeighborsResponse'] = _PEERNEIGHBORSRESPONSE
-DESCRIPTOR.message_types_by_name['ChallengeRequest'] = _CHALLENGEREQUEST
-DESCRIPTOR.message_types_by_name['ChallengeResponse'] = _CHALLENGERESPONSE
+_PEERPROTOCOL = _descriptor.Descriptor(
+  name='PeerProtocol',
+  full_name='ADL.Protocol.Peer.PeerProtocol',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[_PEERPROTOCOL_PINGREQUEST, _PEERPROTOCOL_PONGRESPONSE, _PEERPROTOCOL_PEERINFOREQUEST, _PEERPROTOCOL_PEERINFORESPONSE, _PEERPROTOCOL_PEERNEIGHBORSREQUEST, _PEERPROTOCOL_PEERNEIGHBORSRESPONSE, _PEERPROTOCOL_CHALLENGEREQUEST, _PEERPROTOCOL_CHALLENGERESPONSE, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=34,
+  serialized_end=361,
+)
+
+_PEERPROTOCOL_PINGREQUEST.containing_type = _PEERPROTOCOL
+_PEERPROTOCOL_PONGRESPONSE.containing_type = _PEERPROTOCOL
+_PEERPROTOCOL_PEERINFOREQUEST.containing_type = _PEERPROTOCOL
+_PEERPROTOCOL_PEERINFORESPONSE.containing_type = _PEERPROTOCOL
+_PEERPROTOCOL_PEERNEIGHBORSREQUEST.containing_type = _PEERPROTOCOL
+_PEERPROTOCOL_PEERNEIGHBORSRESPONSE.containing_type = _PEERPROTOCOL
+_PEERPROTOCOL_CHALLENGEREQUEST.containing_type = _PEERPROTOCOL
+_PEERPROTOCOL_CHALLENGERESPONSE.containing_type = _PEERPROTOCOL
+DESCRIPTOR.message_types_by_name['PeerProtocol'] = _PEERPROTOCOL
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-PingRequest = _reflection.GeneratedProtocolMessageType('PingRequest', (_message.Message,), dict(
-  DESCRIPTOR = _PINGREQUEST,
-  __module__ = 'Peer_pb2'
-  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PingRequest)
-  ))
-_sym_db.RegisterMessage(PingRequest)
+PeerProtocol = _reflection.GeneratedProtocolMessageType('PeerProtocol', (_message.Message,), dict(
 
-PongResponse = _reflection.GeneratedProtocolMessageType('PongResponse', (_message.Message,), dict(
-  DESCRIPTOR = _PONGRESPONSE,
-  __module__ = 'Peer_pb2'
-  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PongResponse)
-  ))
-_sym_db.RegisterMessage(PongResponse)
+  PingRequest = _reflection.GeneratedProtocolMessageType('PingRequest', (_message.Message,), dict(
+    DESCRIPTOR = _PEERPROTOCOL_PINGREQUEST,
+    __module__ = 'Peer_pb2'
+    # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PingRequest)
+    ))
+  ,
 
-PeerInfoRequest = _reflection.GeneratedProtocolMessageType('PeerInfoRequest', (_message.Message,), dict(
-  DESCRIPTOR = _PEERINFOREQUEST,
-  __module__ = 'Peer_pb2'
-  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerInfoRequest)
-  ))
-_sym_db.RegisterMessage(PeerInfoRequest)
+  PongResponse = _reflection.GeneratedProtocolMessageType('PongResponse', (_message.Message,), dict(
+    DESCRIPTOR = _PEERPROTOCOL_PONGRESPONSE,
+    __module__ = 'Peer_pb2'
+    # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PongResponse)
+    ))
+  ,
 
-PeerInfoResponse = _reflection.GeneratedProtocolMessageType('PeerInfoResponse', (_message.Message,), dict(
-  DESCRIPTOR = _PEERINFORESPONSE,
-  __module__ = 'Peer_pb2'
-  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerInfoResponse)
-  ))
-_sym_db.RegisterMessage(PeerInfoResponse)
+  PeerInfoRequest = _reflection.GeneratedProtocolMessageType('PeerInfoRequest', (_message.Message,), dict(
+    DESCRIPTOR = _PEERPROTOCOL_PEERINFOREQUEST,
+    __module__ = 'Peer_pb2'
+    # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
+    ))
+  ,
 
-PeerNeighborsRequest = _reflection.GeneratedProtocolMessageType('PeerNeighborsRequest', (_message.Message,), dict(
-  DESCRIPTOR = _PEERNEIGHBORSREQUEST,
-  __module__ = 'Peer_pb2'
-  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerNeighborsRequest)
-  ))
-_sym_db.RegisterMessage(PeerNeighborsRequest)
+  PeerInfoResponse = _reflection.GeneratedProtocolMessageType('PeerInfoResponse', (_message.Message,), dict(
+    DESCRIPTOR = _PEERPROTOCOL_PEERINFORESPONSE,
+    __module__ = 'Peer_pb2'
+    # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
+    ))
+  ,
 
-PeerNeighborsResponse = _reflection.GeneratedProtocolMessageType('PeerNeighborsResponse', (_message.Message,), dict(
-  DESCRIPTOR = _PEERNEIGHBORSRESPONSE,
-  __module__ = 'Peer_pb2'
-  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerNeighborsResponse)
-  ))
-_sym_db.RegisterMessage(PeerNeighborsResponse)
+  PeerNeighborsRequest = _reflection.GeneratedProtocolMessageType('PeerNeighborsRequest', (_message.Message,), dict(
+    DESCRIPTOR = _PEERPROTOCOL_PEERNEIGHBORSREQUEST,
+    __module__ = 'Peer_pb2'
+    # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
+    ))
+  ,
 
-ChallengeRequest = _reflection.GeneratedProtocolMessageType('ChallengeRequest', (_message.Message,), dict(
-  DESCRIPTOR = _CHALLENGEREQUEST,
-  __module__ = 'Peer_pb2'
-  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.ChallengeRequest)
-  ))
-_sym_db.RegisterMessage(ChallengeRequest)
+  PeerNeighborsResponse = _reflection.GeneratedProtocolMessageType('PeerNeighborsResponse', (_message.Message,), dict(
+    DESCRIPTOR = _PEERPROTOCOL_PEERNEIGHBORSRESPONSE,
+    __module__ = 'Peer_pb2'
+    # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
+    ))
+  ,
 
-ChallengeResponse = _reflection.GeneratedProtocolMessageType('ChallengeResponse', (_message.Message,), dict(
-  DESCRIPTOR = _CHALLENGERESPONSE,
+  ChallengeRequest = _reflection.GeneratedProtocolMessageType('ChallengeRequest', (_message.Message,), dict(
+    DESCRIPTOR = _PEERPROTOCOL_CHALLENGEREQUEST,
+    __module__ = 'Peer_pb2'
+    # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
+    ))
+  ,
+
+  ChallengeResponse = _reflection.GeneratedProtocolMessageType('ChallengeResponse', (_message.Message,), dict(
+    DESCRIPTOR = _PEERPROTOCOL_CHALLENGERESPONSE,
+    __module__ = 'Peer_pb2'
+    # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
+    ))
+  ,
+  DESCRIPTOR = _PEERPROTOCOL,
   __module__ = 'Peer_pb2'
-  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.ChallengeResponse)
+  # @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol)
   ))
-_sym_db.RegisterMessage(ChallengeResponse)
+_sym_db.RegisterMessage(PeerProtocol)
+_sym_db.RegisterMessage(PeerProtocol.PingRequest)
+_sym_db.RegisterMessage(PeerProtocol.PongResponse)
+_sym_db.RegisterMessage(PeerProtocol.PeerInfoRequest)
+_sym_db.RegisterMessage(PeerProtocol.PeerInfoResponse)
+_sym_db.RegisterMessage(PeerProtocol.PeerNeighborsRequest)
+_sym_db.RegisterMessage(PeerProtocol.PeerNeighborsResponse)
+_sym_db.RegisterMessage(PeerProtocol.ChallengeRequest)
+_sym_db.RegisterMessage(PeerProtocol.ChallengeResponse)
 
 
 # @@protoc_insertion_point(module_scope)

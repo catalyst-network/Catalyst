@@ -7,14 +7,13 @@ using System.Runtime.Loader;
 using Autofac.Configuration;
 using ADL.Node.Core.Modules.Dfs;
 using ADL.Node.Core.Modules.Rpc;
-using ADL.Node.Core.Modules.Peer;
 using ADL.Node.Core.Modules.Gossip;
 using ADL.Node.Core.Modules.Ledger;
+using ADL.Node.Core.Modules.Network;
 using ADL.Node.Core.Modules.Mempool;
 using ADL.Node.Core.Modules.Contract;
 using ADL.Node.Core.Modules.Consensus;
 using Microsoft.Extensions.Configuration;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ADL.Node
 {
@@ -73,9 +72,20 @@ namespace ADL.Node
                             throw new Exception("Couldn't instantiate settings class");    
                         }
                         
-                        if (options.WalletRpcIp != null && options.WalletRpcPort == 0)
+                        if (options.WalletRpcIp != null)
                         {
-                            options.WalletRpcPort = 42444;
+                            if (options.WalletRpcPort == 0)
+                            {
+                                options.WalletRpcPort = 42444;
+                            }
+                            else
+                            {
+                                // if we're not supplied a wallet check we have payout address and public key
+                                if (options.WalletRpcIp == null && options.PayoutAddress == null || options.WalletRpcIp == null && options.PublicKey == null)
+                                {
+                                    throw new Exception("Need a wallet to connect to or be supplied public key and payout addresses");   
+                                }
+                            }
                         }
                         else {
                             // if we're not supplied a wallet check we have payout address and public key
@@ -118,7 +128,7 @@ namespace ADL.Node
                         new MempoolModule().Load(builder, settingsInstance.Mempool);
                         new ContractModule().Load(builder, settingsInstance.Contract);
                         new ConsensusModule().Load(builder, settingsInstance.Consensus);
-                        new PeerModule().Load(builder, settingsInstance.Peer, settingsInstance.Ssl, options);
+                        new NetworkModule().Load(builder, settingsInstance.Peer, settingsInstance.Ssl, options);
                         
                         var container = builder.Build();
                         

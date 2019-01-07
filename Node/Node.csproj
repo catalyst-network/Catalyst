@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <RootNamespace>ADL.Node</RootNamespace>
         <TargetFramework>netcoreapp2.1</TargetFramework>
+        <Version>1.1.1</Version>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +29,8 @@
     </ItemGroup>
     
     <ItemGroup>
+        <ProjectReference Include="..\Helpers\Logger\Logger.csproj" />
+        <ProjectReference Include="..\Helpers\RLP\RLP.csproj" />
         <ProjectReference Include="..\Helpers\Network\Network.csproj" />
         <ProjectReference Include="..\Helpers\Platform\Platform.csproj" />
         <ProjectReference Include="..\Helpers\DataStore\DataStore.csproj" />
@@ -37,10 +40,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Components\Redis\Redis.csproj" />
         <ProjectReference Include="..\Components\Ipfs\Ipfs.csproj" />
+        <ProjectReference Include="..\Components\Redis\Redis.csproj" />
         <ProjectReference Include="..\Components\Shell\Shell.csproj" />
-        <ProjectReference Include="..\Components\Token\Token.csproj" />
+        <ProjectReference Include="..\Components\KeySigner\KeySigner.csproj" />
         <ProjectReference Include="..\Components\Transaction\Transaction.csproj" />
     </ItemGroup>
     
@@ -57,6 +60,8 @@
 
     <ItemGroup>
       <Folder Include="Core\Helpers" />
+      <Folder Include="Core\Modules\Network\Messages\Handlers" />
+      <Folder Include="Core\Modules\Network\Workers" />
     </ItemGroup>
     
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
