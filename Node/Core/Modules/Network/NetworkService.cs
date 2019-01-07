@@ -35,7 +35,7 @@ namespace ADL.Node.Core.Modules.Network
         public override bool StartService()
         {
             Network = Network.GetInstance(NetworkSettings, SslSettings, DataDir, PublicKey);
-//            Network.PeerManager.BuildOutBoundConnection("127.0.0.1", 42069);
+//            Network.PeerManager.BuildOutBoundConnection("127.0.0.1", 44069);
             return true;
         }
             
