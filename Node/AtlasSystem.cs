@@ -16,6 +16,7 @@ namespace ADL.Node
 {
     public class AtlasSystem : IDisposable
     {
+        private readonly NodeOptions Options;
         private Kernel Kernel { get; set; }
         private IRpcService RcpService { get; set; }
         private IDfsService DfsService { get; set; }
@@ -47,6 +48,7 @@ namespace ADL.Node
         /// <returns></returns>
         public static AtlasSystem GetInstance(NodeOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
             if (Instance == null) 
             { 
                 lock (Mutex)
@@ -65,6 +67,8 @@ namespace ADL.Node
         /// </summary>
         private AtlasSystem(NodeOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            Options = options;
             MainActorSystem = ActorSystem.Create("AtlasActorSystem");
             TaskHandlerActor = MainActorSystem.ActorOf<TaskHandlerActor>();
             

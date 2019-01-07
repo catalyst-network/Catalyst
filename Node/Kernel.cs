@@ -29,7 +29,8 @@ namespace ADL.Node
         /// </summary>
         /// <returns></returns>
         public static Kernel GetInstance(NodeOptions options)
-        { 
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
             if (_instance == null) 
             { 
                 lock (Mutex)
@@ -64,7 +65,7 @@ namespace ADL.Node
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine("Boot process failed: {0}", e.ToString());
+                            Console.WriteLine("Boot process failed: {0}", e);
                         }
                         
                         if (settingsInstance == null)
@@ -147,6 +148,8 @@ namespace ADL.Node
         /// <param name="container"></param>
         private Kernel(Settings settings, IContainer container)
         {
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             Settings = settings;
             Container = container;
         }
@@ -158,6 +161,7 @@ namespace ADL.Node
         /// <returns></returns>
         private static bool DataDirCheck(string dataDir)
         {
+            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
             return Directory.Exists(dataDir);
         }
 
@@ -167,6 +171,7 @@ namespace ADL.Node
         /// <param name="dataDir"></param>
         private static void CreateSystemFolder(string dataDir)
         {
+            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
             Directory.CreateDirectory(dataDir);
         }
 
@@ -178,6 +183,8 @@ namespace ADL.Node
         /// <returns></returns>
         private static void CopySkeletonConfigs(string dataDir, string network)
         {
+            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
+            if (network == null) throw new ArgumentNullException(nameof(network));
             File.Copy(AppDomain.CurrentDomain.BaseDirectory +"/Config/components.json", dataDir);
             File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/Config/"+network+".json", dataDir);
         }
@@ -190,6 +197,8 @@ namespace ADL.Node
         /// <returns></returns>
         private static bool CheckConfigExists(string dataDir, string network)
         {
+            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
+            if (network == null) throw new ArgumentNullException(nameof(network));
             return File.Exists(dataDir + "/"+network+".json");
         }
     }

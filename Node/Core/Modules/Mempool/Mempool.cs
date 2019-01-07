@@ -9,16 +9,15 @@ namespace ADL.Node.Core.Modules.Mempool
 {
     public class Mempool : IMempool
     {
-        private IKeyStore KeyStore;
+        private readonly IKeyStore KeyStore;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="settings"></param>
         /// <param name="keyStore"></param>
         public Mempool(IKeyStore keyStore)
         {
-            KeyStore = keyStore;
+            KeyStore = keyStore ?? throw new ArgumentNullException(nameof(keyStore));
         }
         
         /// <summary>
@@ -29,11 +28,14 @@ namespace ADL.Node.Core.Modules.Mempool
         /// <returns></returns>
         public bool SaveTx(Key k, Tx value)
         {
+            if (k == null) throw new ArgumentNullException(nameof(k));
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return KeyStore.Set(k.ToByteArray(), value.ToByteArray(), null);
         }
 
         Tx IMempool.GetTx(Key k)
         {
+            if (k == null) throw new ArgumentNullException(nameof(k));
             return GetTx(k);
         }
 
@@ -43,8 +45,9 @@ namespace ADL.Node.Core.Modules.Mempool
         /// 
         /// <param name="k"></param>
         /// <returns></returns>
-        public Tx GetTx(Key k)
+        private Tx GetTx(Key k)
         {
+            if (k == null) throw new ArgumentNullException(nameof(k));
             return Tx.Parser.ParseFrom(KeyStore.Get(k.ToByteArray()));
         }
         
