@@ -33,16 +33,9 @@ namespace ADL.Util
             Tether
         }
 
-        private static UnitConversion convert;
+        private static UnitConversion _convert;
 
-        public static UnitConversion Convert
-        {
-            get
-            {
-                if (convert == null) convert = new UnitConversion();
-                return convert;
-            }
-        }
+        public static UnitConversion Convert => _convert ?? (_convert = new UnitConversion());
 
         /// <summary>
         ///     Converts from wei to a unit, NOTE: When the total number of digits is bigger than 29 they will be rounded the less
@@ -91,7 +84,7 @@ namespace ADL.Util
             return unitValue.ToString().Length - 1;
         }
 
-        public BigInteger GetAtlasUnitValue(AtlasUnit ethUnit)
+        private BigInteger GetAtlasUnitValue(AtlasUnit ethUnit)
         {
             switch (ethUnit)
             {
@@ -145,7 +138,6 @@ namespace ADL.Util
             throw new NotImplementedException();
         }
 
-
         public bool TryValidateUnitValue(BigInteger ethUnit)
         {
             if (ethUnit.ToString().Trim('0') == "1") return true;
@@ -182,12 +174,10 @@ namespace ADL.Util
             return ToWeiFromUnit(amount, BigInteger.Pow(10, decimalPlacesFromUnit));
         }
 
-
         public BigInteger ToWei(decimal amount, AtlasUnit fromUnit = AtlasUnit.Atlaser)
         {
             return ToWeiFromUnit(amount, GetAtlasUnitValue(fromUnit));
         }
-
 
         public BigInteger ToWei(BigInteger value, AtlasUnit fromUnit = AtlasUnit.Atlaser)
         {
