@@ -12,13 +12,13 @@ using ADL.RLP;
 
 namespace ADL.Node.Core.Modules.Network
 {
-    public class Network : IDHT, IDisposable
+    public class Network : IDht, IDisposable
     {
         private bool Debug { get; set; }
         private CancellationToken Token { get; }
         private List<string> BannedIps { get; set; } //@TODO revist this
         private bool AcceptInvalidCerts { get; set; }
-        internal PeerManager PeerManager { get; set; }
+        private PeerManager PeerManager { get; set; }
         private static Network Instance { get; set; }
         private bool MutuallyAuthenticate { get; set; }
         private X509Certificate2 SslCertificate { get; }
@@ -33,6 +33,7 @@ namespace ADL.Node.Core.Modules.Network
         /// <param name="networkSettings"></param>
         /// <param name="sslSettings"></param>
         /// <param name="dataDir"></param>
+        /// <param name="publicKey"></param>
         /// <returns></returns>
         public static Network GetInstance(INetworkSettings networkSettings, ISslSettings sslSettings, string dataDir, string publicKey)
         {
@@ -72,6 +73,7 @@ namespace ADL.Node.Core.Modules.Network
         /// <param name="networkSettings"></param>
         /// <param name="sslSettings"></param>
         /// <param name="dataDir"></param>
+        /// <param name="publicKey"></param>
         /// <param name="acceptInvalidCerts"></param>
         /// <param name="mutualAuthentication"></param>
         /// <param name="bannedIps"></param>
@@ -81,7 +83,7 @@ namespace ADL.Node.Core.Modules.Network
             INetworkSettings networkSettings,
             ISslSettings sslSettings,
             string dataDir,
-            string PublicKey,
+            string publicKey,
             bool acceptInvalidCerts,
             bool mutualAuthentication,
             IEnumerable<string> bannedIps, // @TODO do we want this as a parameter can we not pull it once obj is instantiated
@@ -102,7 +104,7 @@ namespace ADL.Node.Core.Modules.Network
             
             try
             {
-                NodeIdentity = PeerIdentifier.BuildPeerId(PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
+                NodeIdentity = PeerIdentifier.BuildPeerId(publicKey.ToBytesForRLPEncoding(), new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
             }
             catch (ArgumentNullException e)
             {
@@ -142,7 +144,7 @@ namespace ADL.Node.Core.Modules.Network
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IDHT.Ping()
+        bool IDht.Ping()
         {
             throw new NotImplementedException();
         }
@@ -152,7 +154,7 @@ namespace ADL.Node.Core.Modules.Network
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IDHT.Store(string k, byte[] v)
+        bool IDht.Store(string k, byte[] v)
         {
             throw new NotImplementedException();
         }
@@ -162,7 +164,7 @@ namespace ADL.Node.Core.Modules.Network
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        List<PeerIdentifier> IDHT.FindNode()
+        List<PeerIdentifier> IDht.FindNode()
         {
             throw new NotImplementedException();
         }
@@ -172,7 +174,7 @@ namespace ADL.Node.Core.Modules.Network
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        void IDHT.Announce(PeerIdentifier peerIdentifier)
+        void IDht.Announce(PeerIdentifier peerIdentifier)
         {
             throw new NotImplementedException();
         }

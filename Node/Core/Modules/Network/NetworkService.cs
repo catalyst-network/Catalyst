@@ -44,5 +44,10 @@ namespace ADL.Node.Core.Modules.Network
             Network.Dispose();
             return false;
         }
+        
+        public IDht GetImpl()
+        {
+            return Network;
+        }
     }
 } 

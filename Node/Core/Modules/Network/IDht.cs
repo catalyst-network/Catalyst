@@ -4,7 +4,7 @@ using ADL.Node.Core.Modules.Network.Peer;
 
 namespace ADL.Node.Core.Modules.Network
 {
-    internal interface IDHT
+    public interface IDht
     {
         /// <summary>
         /// 
