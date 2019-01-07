@@ -14,34 +14,23 @@ public final class Peer {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface PingRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PingRequest)
+  public interface PeerProtocolOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol)
       com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string ping = 1;</code>
-     */
-    java.lang.String getPing();
-    /**
-     * <code>string ping = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getPingBytes();
   }
   /**
-   * Protobuf type {@code ADL.Protocol.Peer.PingRequest}
+   * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol}
    */
-  public  static final class PingRequest extends
+  public  static final class PeerProtocol extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PingRequest)
-      PingRequestOrBuilder {
+      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol)
+      PeerProtocolOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use PingRequest.newBuilder() to construct.
-    private PingRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use PeerProtocol.newBuilder() to construct.
+    private PeerProtocol(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private PingRequest() {
-      ping_ = "";
+    private PeerProtocol() {
     }
 
     @java.lang.Override
@@ -49,7 +38,7 @@ public final class Peer {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private PingRequest(
+    private PeerProtocol(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -57,7 +46,6 @@ public final class Peer {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -68,12 +56,6 @@ public final class Peer {
             case 0:
               done = true;
               break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              ping_ = s;
-              break;
-            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -95,368 +77,124 @@ public final class Peer {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PingRequest_descriptor;
+      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PingRequest_fieldAccessorTable
+      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ADL.Protocol.Peer.Peer.PingRequest.class, ADL.Protocol.Peer.Peer.PingRequest.Builder.class);
+              ADL.Protocol.Peer.Peer.PeerProtocol.class, ADL.Protocol.Peer.Peer.PeerProtocol.Builder.class);
     }
 
-    public static final int PING_FIELD_NUMBER = 1;
-    private volatile java.lang.Object ping_;
-    /**
-     * <code>string ping = 1;</code>
-     */
-    public java.lang.String getPing() {
-      java.lang.Object ref = ping_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        ping_ = s;
-        return s;
-      }
+    public interface PingRequestOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol.PingRequest)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>string ping = 1;</code>
+       */
+      java.lang.String getPing();
+      /**
+       * <code>string ping = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getPingBytes();
     }
     /**
-     * <code>string ping = 1;</code>
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PingRequest}
      */
-    public com.google.protobuf.ByteString
-        getPingBytes() {
-      java.lang.Object ref = ping_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        ping_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
+    public  static final class PingRequest extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol.PingRequest)
+        PingRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use PingRequest.newBuilder() to construct.
+      private PingRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
       }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getPingBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ping_);
+      private PingRequest() {
+        ping_ = "";
       }
-      unknownFields.writeTo(output);
-    }
 
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getPingBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ping_);
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
+      private PingRequest(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
+                ping_ = s;
+                break;
+              }
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
       }
-      if (!(obj instanceof ADL.Protocol.Peer.Peer.PingRequest)) {
-        return super.equals(obj);
-      }
-      ADL.Protocol.Peer.Peer.PingRequest other = (ADL.Protocol.Peer.Peer.PingRequest) obj;
-
-      boolean result = true;
-      result = result && getPing()
-          .equals(other.getPing());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PING_FIELD_NUMBER;
-      hash = (53 * hash) + getPing().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PingRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ADL.Protocol.Peer.Peer.PingRequest prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ADL.Protocol.Peer.PingRequest}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PingRequest)
-        ADL.Protocol.Peer.Peer.PingRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PingRequest_descriptor;
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PingRequest_fieldAccessorTable
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ADL.Protocol.Peer.Peer.PingRequest.class, ADL.Protocol.Peer.Peer.PingRequest.Builder.class);
+                ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest.class, ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest.Builder.class);
       }
 
-      // Construct using ADL.Protocol.Peer.Peer.PingRequest.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        ping_ = "";
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PingRequest_descriptor;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PingRequest getDefaultInstanceForType() {
-        return ADL.Protocol.Peer.Peer.PingRequest.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PingRequest build() {
-        ADL.Protocol.Peer.Peer.PingRequest result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PingRequest buildPartial() {
-        ADL.Protocol.Peer.Peer.PingRequest result = new ADL.Protocol.Peer.Peer.PingRequest(this);
-        result.ping_ = ping_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ADL.Protocol.Peer.Peer.PingRequest) {
-          return mergeFrom((ADL.Protocol.Peer.Peer.PingRequest)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ADL.Protocol.Peer.Peer.PingRequest other) {
-        if (other == ADL.Protocol.Peer.Peer.PingRequest.getDefaultInstance()) return this;
-        if (!other.getPing().isEmpty()) {
-          ping_ = other.ping_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ADL.Protocol.Peer.Peer.PingRequest parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ADL.Protocol.Peer.Peer.PingRequest) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object ping_ = "";
+      public static final int PING_FIELD_NUMBER = 1;
+      private volatile java.lang.Object ping_;
       /**
        * <code>string ping = 1;</code>
        */
       public java.lang.String getPing() {
         java.lang.Object ref = ping_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           ping_ = s;
           return s;
-        } else {
-          return (java.lang.String) ref;
         }
       }
       /**
@@ -465,7 +203,7 @@ public final class Peer {
       public com.google.protobuf.ByteString
           getPingBytes() {
         java.lang.Object ref = ping_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
@@ -475,538 +213,538 @@ public final class Peer {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!getPingBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ping_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getPingBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ping_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest)) {
+          return super.equals(obj);
+        }
+        ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest other = (ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest) obj;
+
+        boolean result = true;
+        result = result && getPing()
+            .equals(other.getPing());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + PING_FIELD_NUMBER;
+        hash = (53 * hash) + getPing().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
       /**
-       * <code>string ping = 1;</code>
+       * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PingRequest}
        */
-      public Builder setPing(
-          java.lang.String value) {
-        if (value == null) {
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol.PingRequest)
+          ADL.Protocol.Peer.Peer.PeerProtocol.PingRequestOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest.class, ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest.Builder.class);
+        }
+
+        // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          ping_ = "";
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_descriptor;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest getDefaultInstanceForType() {
+          return ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest build() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest buildPartial() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest result = new ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest(this);
+          result.ping_ = ping_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest) {
+            return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest other) {
+          if (other == ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest.getDefaultInstance()) return this;
+          if (!other.getPing().isEmpty()) {
+            ping_ = other.ping_;
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private java.lang.Object ping_ = "";
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public java.lang.String getPing() {
+          java.lang.Object ref = ping_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            ping_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getPingBytes() {
+          java.lang.Object ref = ping_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            ping_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder setPing(
+            java.lang.String value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   
-        ping_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string ping = 1;</code>
-       */
-      public Builder clearPing() {
-        
-        ping_ = getDefaultInstance().getPing();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string ping = 1;</code>
-       */
-      public Builder setPingBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
+          ping_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder clearPing() {
+          
+          ping_ = getDefaultInstance().getPing();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder setPingBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
-        ping_ = value;
-        onChanged();
-        return this;
+          
+          ping_ = value;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol.PingRequest)
       }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+
+      // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PingRequest)
+      private static final ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest();
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<PingRequest>
+          PARSER = new com.google.protobuf.AbstractParser<PingRequest>() {
+        @java.lang.Override
+        public PingRequest parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PingRequest(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<PingRequest> parser() {
+        return PARSER;
       }
 
       @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
+      public com.google.protobuf.Parser<PingRequest> getParserForType() {
+        return PARSER;
       }
 
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol.PingRequest getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
 
-      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PingRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PingRequest)
-    private static final ADL.Protocol.Peer.Peer.PingRequest DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PingRequest();
-    }
+    public interface PongResponseOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol.PongResponse)
+        com.google.protobuf.MessageOrBuilder {
 
-    public static ADL.Protocol.Peer.Peer.PingRequest getDefaultInstance() {
-      return DEFAULT_INSTANCE;
+      /**
+       * <code>string pong = 1;</code>
+       */
+      java.lang.String getPong();
+      /**
+       * <code>string pong = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getPongBytes();
     }
+    /**
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PongResponse}
+     */
+    public  static final class PongResponse extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol.PongResponse)
+        PongResponseOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use PongResponse.newBuilder() to construct.
+      private PongResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private PongResponse() {
+        pong_ = "";
+      }
 
-    private static final com.google.protobuf.Parser<PingRequest>
-        PARSER = new com.google.protobuf.AbstractParser<PingRequest>() {
       @java.lang.Override
-      public PingRequest parsePartialFrom(
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private PongResponse(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new PingRequest(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PingRequest> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PingRequest> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public ADL.Protocol.Peer.Peer.PingRequest getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface PongResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PongResponse)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string pong = 1;</code>
-     */
-    java.lang.String getPong();
-    /**
-     * <code>string pong = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getPongBytes();
-  }
-  /**
-   * Protobuf type {@code ADL.Protocol.Peer.PongResponse}
-   */
-  public  static final class PongResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PongResponse)
-      PongResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use PongResponse.newBuilder() to construct.
-    private PongResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private PongResponse() {
-      pong_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private PongResponse(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              pong_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
                 done = true;
+                break;
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                pong_ = s;
+                break;
               }
-              break;
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
             }
           }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
       }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PongResponse_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PongResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ADL.Protocol.Peer.Peer.PongResponse.class, ADL.Protocol.Peer.Peer.PongResponse.Builder.class);
-    }
-
-    public static final int PONG_FIELD_NUMBER = 1;
-    private volatile java.lang.Object pong_;
-    /**
-     * <code>string pong = 1;</code>
-     */
-    public java.lang.String getPong() {
-      java.lang.Object ref = pong_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        pong_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string pong = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPongBytes() {
-      java.lang.Object ref = pong_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        pong_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getPongBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, pong_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getPongBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, pong_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof ADL.Protocol.Peer.Peer.PongResponse)) {
-        return super.equals(obj);
-      }
-      ADL.Protocol.Peer.Peer.PongResponse other = (ADL.Protocol.Peer.Peer.PongResponse) obj;
-
-      boolean result = true;
-      result = result && getPong()
-          .equals(other.getPong());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PONG_FIELD_NUMBER;
-      hash = (53 * hash) + getPong().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PongResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ADL.Protocol.Peer.Peer.PongResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ADL.Protocol.Peer.PongResponse}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PongResponse)
-        ADL.Protocol.Peer.Peer.PongResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PongResponse_descriptor;
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PongResponse_fieldAccessorTable
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ADL.Protocol.Peer.Peer.PongResponse.class, ADL.Protocol.Peer.Peer.PongResponse.Builder.class);
+                ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse.class, ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse.Builder.class);
       }
 
-      // Construct using ADL.Protocol.Peer.Peer.PongResponse.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        pong_ = "";
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PongResponse_descriptor;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PongResponse getDefaultInstanceForType() {
-        return ADL.Protocol.Peer.Peer.PongResponse.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PongResponse build() {
-        ADL.Protocol.Peer.Peer.PongResponse result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PongResponse buildPartial() {
-        ADL.Protocol.Peer.Peer.PongResponse result = new ADL.Protocol.Peer.Peer.PongResponse(this);
-        result.pong_ = pong_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ADL.Protocol.Peer.Peer.PongResponse) {
-          return mergeFrom((ADL.Protocol.Peer.Peer.PongResponse)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ADL.Protocol.Peer.Peer.PongResponse other) {
-        if (other == ADL.Protocol.Peer.Peer.PongResponse.getDefaultInstance()) return this;
-        if (!other.getPong().isEmpty()) {
-          pong_ = other.pong_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ADL.Protocol.Peer.Peer.PongResponse parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ADL.Protocol.Peer.Peer.PongResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object pong_ = "";
+      public static final int PONG_FIELD_NUMBER = 1;
+      private volatile java.lang.Object pong_;
       /**
        * <code>string pong = 1;</code>
        */
       public java.lang.String getPong() {
         java.lang.Object ref = pong_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           pong_ = s;
           return s;
-        } else {
-          return (java.lang.String) ref;
         }
       }
       /**
@@ -1015,7 +753,7 @@ public final class Peer {
       public com.google.protobuf.ByteString
           getPongBytes() {
         java.lang.Object ref = pong_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
@@ -1025,538 +763,538 @@ public final class Peer {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!getPongBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, pong_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getPongBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, pong_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse)) {
+          return super.equals(obj);
+        }
+        ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse other = (ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse) obj;
+
+        boolean result = true;
+        result = result && getPong()
+            .equals(other.getPong());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + PONG_FIELD_NUMBER;
+        hash = (53 * hash) + getPong().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
       /**
-       * <code>string pong = 1;</code>
+       * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PongResponse}
        */
-      public Builder setPong(
-          java.lang.String value) {
-        if (value == null) {
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol.PongResponse)
+          ADL.Protocol.Peer.Peer.PeerProtocol.PongResponseOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse.class, ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse.Builder.class);
+        }
+
+        // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          pong_ = "";
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_descriptor;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse getDefaultInstanceForType() {
+          return ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse build() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse buildPartial() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse result = new ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse(this);
+          result.pong_ = pong_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse) {
+            return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse other) {
+          if (other == ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse.getDefaultInstance()) return this;
+          if (!other.getPong().isEmpty()) {
+            pong_ = other.pong_;
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private java.lang.Object pong_ = "";
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public java.lang.String getPong() {
+          java.lang.Object ref = pong_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            pong_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getPongBytes() {
+          java.lang.Object ref = pong_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            pong_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder setPong(
+            java.lang.String value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   
-        pong_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string pong = 1;</code>
-       */
-      public Builder clearPong() {
-        
-        pong_ = getDefaultInstance().getPong();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string pong = 1;</code>
-       */
-      public Builder setPongBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
+          pong_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder clearPong() {
+          
+          pong_ = getDefaultInstance().getPong();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder setPongBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
-        pong_ = value;
-        onChanged();
-        return this;
+          
+          pong_ = value;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol.PongResponse)
       }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+
+      // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PongResponse)
+      private static final ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse();
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<PongResponse>
+          PARSER = new com.google.protobuf.AbstractParser<PongResponse>() {
+        @java.lang.Override
+        public PongResponse parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PongResponse(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<PongResponse> parser() {
+        return PARSER;
       }
 
       @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
+      public com.google.protobuf.Parser<PongResponse> getParserForType() {
+        return PARSER;
       }
 
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol.PongResponse getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
 
-      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PongResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PongResponse)
-    private static final ADL.Protocol.Peer.Peer.PongResponse DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PongResponse();
-    }
+    public interface PeerInfoRequestOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-    public static ADL.Protocol.Peer.Peer.PongResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
+      /**
+       * <code>string ping = 1;</code>
+       */
+      java.lang.String getPing();
+      /**
+       * <code>string ping = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getPingBytes();
     }
+    /**
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest}
+     */
+    public  static final class PeerInfoRequest extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
+        PeerInfoRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use PeerInfoRequest.newBuilder() to construct.
+      private PeerInfoRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private PeerInfoRequest() {
+        ping_ = "";
+      }
 
-    private static final com.google.protobuf.Parser<PongResponse>
-        PARSER = new com.google.protobuf.AbstractParser<PongResponse>() {
       @java.lang.Override
-      public PongResponse parsePartialFrom(
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private PeerInfoRequest(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new PongResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PongResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PongResponse> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public ADL.Protocol.Peer.Peer.PongResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface PeerInfoRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerInfoRequest)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string ping = 1;</code>
-     */
-    java.lang.String getPing();
-    /**
-     * <code>string ping = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getPingBytes();
-  }
-  /**
-   * Protobuf type {@code ADL.Protocol.Peer.PeerInfoRequest}
-   */
-  public  static final class PeerInfoRequest extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerInfoRequest)
-      PeerInfoRequestOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use PeerInfoRequest.newBuilder() to construct.
-    private PeerInfoRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private PeerInfoRequest() {
-      ping_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private PeerInfoRequest(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              ping_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
                 done = true;
+                break;
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                ping_ = s;
+                break;
               }
-              break;
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
             }
           }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
       }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoRequest_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ADL.Protocol.Peer.Peer.PeerInfoRequest.class, ADL.Protocol.Peer.Peer.PeerInfoRequest.Builder.class);
-    }
-
-    public static final int PING_FIELD_NUMBER = 1;
-    private volatile java.lang.Object ping_;
-    /**
-     * <code>string ping = 1;</code>
-     */
-    public java.lang.String getPing() {
-      java.lang.Object ref = ping_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        ping_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string ping = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPingBytes() {
-      java.lang.Object ref = ping_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        ping_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getPingBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ping_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getPingBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ping_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerInfoRequest)) {
-        return super.equals(obj);
-      }
-      ADL.Protocol.Peer.Peer.PeerInfoRequest other = (ADL.Protocol.Peer.Peer.PeerInfoRequest) obj;
-
-      boolean result = true;
-      result = result && getPing()
-          .equals(other.getPing());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PING_FIELD_NUMBER;
-      hash = (53 * hash) + getPing().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerInfoRequest prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ADL.Protocol.Peer.PeerInfoRequest}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerInfoRequest)
-        ADL.Protocol.Peer.Peer.PeerInfoRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoRequest_descriptor;
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoRequest_fieldAccessorTable
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ADL.Protocol.Peer.Peer.PeerInfoRequest.class, ADL.Protocol.Peer.Peer.PeerInfoRequest.Builder.class);
+                ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest.class, ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest.Builder.class);
       }
 
-      // Construct using ADL.Protocol.Peer.Peer.PeerInfoRequest.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        ping_ = "";
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoRequest_descriptor;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerInfoRequest getDefaultInstanceForType() {
-        return ADL.Protocol.Peer.Peer.PeerInfoRequest.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerInfoRequest build() {
-        ADL.Protocol.Peer.Peer.PeerInfoRequest result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerInfoRequest buildPartial() {
-        ADL.Protocol.Peer.Peer.PeerInfoRequest result = new ADL.Protocol.Peer.Peer.PeerInfoRequest(this);
-        result.ping_ = ping_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ADL.Protocol.Peer.Peer.PeerInfoRequest) {
-          return mergeFrom((ADL.Protocol.Peer.Peer.PeerInfoRequest)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerInfoRequest other) {
-        if (other == ADL.Protocol.Peer.Peer.PeerInfoRequest.getDefaultInstance()) return this;
-        if (!other.getPing().isEmpty()) {
-          ping_ = other.ping_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ADL.Protocol.Peer.Peer.PeerInfoRequest parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ADL.Protocol.Peer.Peer.PeerInfoRequest) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object ping_ = "";
+      public static final int PING_FIELD_NUMBER = 1;
+      private volatile java.lang.Object ping_;
       /**
        * <code>string ping = 1;</code>
        */
       public java.lang.String getPing() {
         java.lang.Object ref = ping_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           ping_ = s;
           return s;
-        } else {
-          return (java.lang.String) ref;
         }
       }
       /**
@@ -1565,7 +1303,7 @@ public final class Peer {
       public com.google.protobuf.ByteString
           getPingBytes() {
         java.lang.Object ref = ping_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
@@ -1575,538 +1313,538 @@ public final class Peer {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!getPingBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ping_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getPingBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ping_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest)) {
+          return super.equals(obj);
+        }
+        ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest other = (ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest) obj;
+
+        boolean result = true;
+        result = result && getPing()
+            .equals(other.getPing());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + PING_FIELD_NUMBER;
+        hash = (53 * hash) + getPing().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
       /**
-       * <code>string ping = 1;</code>
+       * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest}
        */
-      public Builder setPing(
-          java.lang.String value) {
-        if (value == null) {
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequestOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest.class, ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest.Builder.class);
+        }
+
+        // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          ping_ = "";
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_descriptor;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest getDefaultInstanceForType() {
+          return ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest build() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest buildPartial() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest result = new ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest(this);
+          result.ping_ = ping_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest) {
+            return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest other) {
+          if (other == ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest.getDefaultInstance()) return this;
+          if (!other.getPing().isEmpty()) {
+            ping_ = other.ping_;
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private java.lang.Object ping_ = "";
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public java.lang.String getPing() {
+          java.lang.Object ref = ping_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            ping_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getPingBytes() {
+          java.lang.Object ref = ping_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            ping_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder setPing(
+            java.lang.String value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   
-        ping_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string ping = 1;</code>
-       */
-      public Builder clearPing() {
-        
-        ping_ = getDefaultInstance().getPing();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string ping = 1;</code>
-       */
-      public Builder setPingBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
+          ping_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder clearPing() {
+          
+          ping_ = getDefaultInstance().getPing();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder setPingBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
-        ping_ = value;
-        onChanged();
-        return this;
+          
+          ping_ = value;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
       }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+
+      // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerInfoRequest)
+      private static final ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest();
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<PeerInfoRequest>
+          PARSER = new com.google.protobuf.AbstractParser<PeerInfoRequest>() {
+        @java.lang.Override
+        public PeerInfoRequest parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PeerInfoRequest(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<PeerInfoRequest> parser() {
+        return PARSER;
       }
 
       @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
+      public com.google.protobuf.Parser<PeerInfoRequest> getParserForType() {
+        return PARSER;
       }
 
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoRequest getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
 
-      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerInfoRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerInfoRequest)
-    private static final ADL.Protocol.Peer.Peer.PeerInfoRequest DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerInfoRequest();
-    }
+    public interface PeerInfoResponseOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
+        com.google.protobuf.MessageOrBuilder {
 
-    public static ADL.Protocol.Peer.Peer.PeerInfoRequest getDefaultInstance() {
-      return DEFAULT_INSTANCE;
+      /**
+       * <code>string pong = 1;</code>
+       */
+      java.lang.String getPong();
+      /**
+       * <code>string pong = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getPongBytes();
     }
+    /**
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse}
+     */
+    public  static final class PeerInfoResponse extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
+        PeerInfoResponseOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use PeerInfoResponse.newBuilder() to construct.
+      private PeerInfoResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private PeerInfoResponse() {
+        pong_ = "";
+      }
 
-    private static final com.google.protobuf.Parser<PeerInfoRequest>
-        PARSER = new com.google.protobuf.AbstractParser<PeerInfoRequest>() {
       @java.lang.Override
-      public PeerInfoRequest parsePartialFrom(
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private PeerInfoResponse(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new PeerInfoRequest(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PeerInfoRequest> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PeerInfoRequest> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public ADL.Protocol.Peer.Peer.PeerInfoRequest getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface PeerInfoResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerInfoResponse)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string pong = 1;</code>
-     */
-    java.lang.String getPong();
-    /**
-     * <code>string pong = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getPongBytes();
-  }
-  /**
-   * Protobuf type {@code ADL.Protocol.Peer.PeerInfoResponse}
-   */
-  public  static final class PeerInfoResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerInfoResponse)
-      PeerInfoResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use PeerInfoResponse.newBuilder() to construct.
-    private PeerInfoResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private PeerInfoResponse() {
-      pong_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private PeerInfoResponse(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              pong_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
                 done = true;
+                break;
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                pong_ = s;
+                break;
               }
-              break;
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
             }
           }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
       }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoResponse_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ADL.Protocol.Peer.Peer.PeerInfoResponse.class, ADL.Protocol.Peer.Peer.PeerInfoResponse.Builder.class);
-    }
-
-    public static final int PONG_FIELD_NUMBER = 1;
-    private volatile java.lang.Object pong_;
-    /**
-     * <code>string pong = 1;</code>
-     */
-    public java.lang.String getPong() {
-      java.lang.Object ref = pong_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        pong_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string pong = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPongBytes() {
-      java.lang.Object ref = pong_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        pong_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getPongBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, pong_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getPongBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, pong_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerInfoResponse)) {
-        return super.equals(obj);
-      }
-      ADL.Protocol.Peer.Peer.PeerInfoResponse other = (ADL.Protocol.Peer.Peer.PeerInfoResponse) obj;
-
-      boolean result = true;
-      result = result && getPong()
-          .equals(other.getPong());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PONG_FIELD_NUMBER;
-      hash = (53 * hash) + getPong().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerInfoResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ADL.Protocol.Peer.PeerInfoResponse}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerInfoResponse)
-        ADL.Protocol.Peer.Peer.PeerInfoResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoResponse_descriptor;
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoResponse_fieldAccessorTable
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ADL.Protocol.Peer.Peer.PeerInfoResponse.class, ADL.Protocol.Peer.Peer.PeerInfoResponse.Builder.class);
+                ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse.class, ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse.Builder.class);
       }
 
-      // Construct using ADL.Protocol.Peer.Peer.PeerInfoResponse.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        pong_ = "";
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerInfoResponse_descriptor;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerInfoResponse getDefaultInstanceForType() {
-        return ADL.Protocol.Peer.Peer.PeerInfoResponse.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerInfoResponse build() {
-        ADL.Protocol.Peer.Peer.PeerInfoResponse result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerInfoResponse buildPartial() {
-        ADL.Protocol.Peer.Peer.PeerInfoResponse result = new ADL.Protocol.Peer.Peer.PeerInfoResponse(this);
-        result.pong_ = pong_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ADL.Protocol.Peer.Peer.PeerInfoResponse) {
-          return mergeFrom((ADL.Protocol.Peer.Peer.PeerInfoResponse)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerInfoResponse other) {
-        if (other == ADL.Protocol.Peer.Peer.PeerInfoResponse.getDefaultInstance()) return this;
-        if (!other.getPong().isEmpty()) {
-          pong_ = other.pong_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ADL.Protocol.Peer.Peer.PeerInfoResponse parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ADL.Protocol.Peer.Peer.PeerInfoResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object pong_ = "";
+      public static final int PONG_FIELD_NUMBER = 1;
+      private volatile java.lang.Object pong_;
       /**
        * <code>string pong = 1;</code>
        */
       public java.lang.String getPong() {
         java.lang.Object ref = pong_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           pong_ = s;
           return s;
-        } else {
-          return (java.lang.String) ref;
         }
       }
       /**
@@ -2115,7 +1853,7 @@ public final class Peer {
       public com.google.protobuf.ByteString
           getPongBytes() {
         java.lang.Object ref = pong_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
@@ -2125,538 +1863,538 @@ public final class Peer {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!getPongBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, pong_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getPongBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, pong_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse)) {
+          return super.equals(obj);
+        }
+        ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse other = (ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse) obj;
+
+        boolean result = true;
+        result = result && getPong()
+            .equals(other.getPong());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + PONG_FIELD_NUMBER;
+        hash = (53 * hash) + getPong().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
       /**
-       * <code>string pong = 1;</code>
+       * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse}
        */
-      public Builder setPong(
-          java.lang.String value) {
-        if (value == null) {
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponseOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse.class, ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse.Builder.class);
+        }
+
+        // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          pong_ = "";
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_descriptor;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse getDefaultInstanceForType() {
+          return ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse build() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse buildPartial() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse result = new ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse(this);
+          result.pong_ = pong_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse) {
+            return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse other) {
+          if (other == ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse.getDefaultInstance()) return this;
+          if (!other.getPong().isEmpty()) {
+            pong_ = other.pong_;
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private java.lang.Object pong_ = "";
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public java.lang.String getPong() {
+          java.lang.Object ref = pong_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            pong_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getPongBytes() {
+          java.lang.Object ref = pong_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            pong_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder setPong(
+            java.lang.String value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   
-        pong_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string pong = 1;</code>
-       */
-      public Builder clearPong() {
-        
-        pong_ = getDefaultInstance().getPong();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string pong = 1;</code>
-       */
-      public Builder setPongBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
+          pong_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder clearPong() {
+          
+          pong_ = getDefaultInstance().getPong();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder setPongBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
-        pong_ = value;
-        onChanged();
-        return this;
+          
+          pong_ = value;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
       }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+
+      // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerInfoResponse)
+      private static final ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse();
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<PeerInfoResponse>
+          PARSER = new com.google.protobuf.AbstractParser<PeerInfoResponse>() {
+        @java.lang.Override
+        public PeerInfoResponse parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PeerInfoResponse(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<PeerInfoResponse> parser() {
+        return PARSER;
       }
 
       @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
+      public com.google.protobuf.Parser<PeerInfoResponse> getParserForType() {
+        return PARSER;
       }
 
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol.PeerInfoResponse getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
 
-      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerInfoResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerInfoResponse)
-    private static final ADL.Protocol.Peer.Peer.PeerInfoResponse DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerInfoResponse();
-    }
+    public interface PeerNeighborsRequestOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-    public static ADL.Protocol.Peer.Peer.PeerInfoResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
+      /**
+       * <code>string ping = 1;</code>
+       */
+      java.lang.String getPing();
+      /**
+       * <code>string ping = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getPingBytes();
     }
+    /**
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest}
+     */
+    public  static final class PeerNeighborsRequest extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
+        PeerNeighborsRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use PeerNeighborsRequest.newBuilder() to construct.
+      private PeerNeighborsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private PeerNeighborsRequest() {
+        ping_ = "";
+      }
 
-    private static final com.google.protobuf.Parser<PeerInfoResponse>
-        PARSER = new com.google.protobuf.AbstractParser<PeerInfoResponse>() {
       @java.lang.Override
-      public PeerInfoResponse parsePartialFrom(
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private PeerNeighborsRequest(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new PeerInfoResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PeerInfoResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PeerInfoResponse> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public ADL.Protocol.Peer.Peer.PeerInfoResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface PeerNeighborsRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerNeighborsRequest)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string ping = 1;</code>
-     */
-    java.lang.String getPing();
-    /**
-     * <code>string ping = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getPingBytes();
-  }
-  /**
-   * Protobuf type {@code ADL.Protocol.Peer.PeerNeighborsRequest}
-   */
-  public  static final class PeerNeighborsRequest extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerNeighborsRequest)
-      PeerNeighborsRequestOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use PeerNeighborsRequest.newBuilder() to construct.
-    private PeerNeighborsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private PeerNeighborsRequest() {
-      ping_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private PeerNeighborsRequest(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              ping_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
                 done = true;
+                break;
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                ping_ = s;
+                break;
               }
-              break;
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
             }
           }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
       }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ADL.Protocol.Peer.Peer.PeerNeighborsRequest.class, ADL.Protocol.Peer.Peer.PeerNeighborsRequest.Builder.class);
-    }
-
-    public static final int PING_FIELD_NUMBER = 1;
-    private volatile java.lang.Object ping_;
-    /**
-     * <code>string ping = 1;</code>
-     */
-    public java.lang.String getPing() {
-      java.lang.Object ref = ping_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        ping_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string ping = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPingBytes() {
-      java.lang.Object ref = ping_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        ping_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getPingBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ping_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getPingBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ping_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerNeighborsRequest)) {
-        return super.equals(obj);
-      }
-      ADL.Protocol.Peer.Peer.PeerNeighborsRequest other = (ADL.Protocol.Peer.Peer.PeerNeighborsRequest) obj;
-
-      boolean result = true;
-      result = result && getPing()
-          .equals(other.getPing());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PING_FIELD_NUMBER;
-      hash = (53 * hash) + getPing().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerNeighborsRequest prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ADL.Protocol.Peer.PeerNeighborsRequest}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerNeighborsRequest)
-        ADL.Protocol.Peer.Peer.PeerNeighborsRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_descriptor;
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_fieldAccessorTable
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ADL.Protocol.Peer.Peer.PeerNeighborsRequest.class, ADL.Protocol.Peer.Peer.PeerNeighborsRequest.Builder.class);
+                ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest.class, ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest.Builder.class);
       }
 
-      // Construct using ADL.Protocol.Peer.Peer.PeerNeighborsRequest.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        ping_ = "";
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_descriptor;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerNeighborsRequest getDefaultInstanceForType() {
-        return ADL.Protocol.Peer.Peer.PeerNeighborsRequest.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerNeighborsRequest build() {
-        ADL.Protocol.Peer.Peer.PeerNeighborsRequest result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerNeighborsRequest buildPartial() {
-        ADL.Protocol.Peer.Peer.PeerNeighborsRequest result = new ADL.Protocol.Peer.Peer.PeerNeighborsRequest(this);
-        result.ping_ = ping_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ADL.Protocol.Peer.Peer.PeerNeighborsRequest) {
-          return mergeFrom((ADL.Protocol.Peer.Peer.PeerNeighborsRequest)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerNeighborsRequest other) {
-        if (other == ADL.Protocol.Peer.Peer.PeerNeighborsRequest.getDefaultInstance()) return this;
-        if (!other.getPing().isEmpty()) {
-          ping_ = other.ping_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ADL.Protocol.Peer.Peer.PeerNeighborsRequest parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ADL.Protocol.Peer.Peer.PeerNeighborsRequest) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object ping_ = "";
+      public static final int PING_FIELD_NUMBER = 1;
+      private volatile java.lang.Object ping_;
       /**
        * <code>string ping = 1;</code>
        */
       public java.lang.String getPing() {
         java.lang.Object ref = ping_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           ping_ = s;
           return s;
-        } else {
-          return (java.lang.String) ref;
         }
       }
       /**
@@ -2665,7 +2403,7 @@ public final class Peer {
       public com.google.protobuf.ByteString
           getPingBytes() {
         java.lang.Object ref = ping_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
@@ -2675,538 +2413,538 @@ public final class Peer {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!getPingBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ping_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getPingBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ping_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest)) {
+          return super.equals(obj);
+        }
+        ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest other = (ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest) obj;
+
+        boolean result = true;
+        result = result && getPing()
+            .equals(other.getPing());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + PING_FIELD_NUMBER;
+        hash = (53 * hash) + getPing().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
       /**
-       * <code>string ping = 1;</code>
+       * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest}
        */
-      public Builder setPing(
-          java.lang.String value) {
-        if (value == null) {
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequestOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest.class, ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest.Builder.class);
+        }
+
+        // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          ping_ = "";
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_descriptor;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest getDefaultInstanceForType() {
+          return ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest build() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest buildPartial() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest result = new ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest(this);
+          result.ping_ = ping_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest) {
+            return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest other) {
+          if (other == ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest.getDefaultInstance()) return this;
+          if (!other.getPing().isEmpty()) {
+            ping_ = other.ping_;
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private java.lang.Object ping_ = "";
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public java.lang.String getPing() {
+          java.lang.Object ref = ping_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            ping_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getPingBytes() {
+          java.lang.Object ref = ping_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            ping_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder setPing(
+            java.lang.String value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   
-        ping_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string ping = 1;</code>
-       */
-      public Builder clearPing() {
-        
-        ping_ = getDefaultInstance().getPing();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string ping = 1;</code>
-       */
-      public Builder setPingBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
+          ping_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder clearPing() {
+          
+          ping_ = getDefaultInstance().getPing();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string ping = 1;</code>
+         */
+        public Builder setPingBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
-        ping_ = value;
-        onChanged();
-        return this;
+          
+          ping_ = value;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
       }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+
+      // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsRequest)
+      private static final ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest();
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<PeerNeighborsRequest>
+          PARSER = new com.google.protobuf.AbstractParser<PeerNeighborsRequest>() {
+        @java.lang.Override
+        public PeerNeighborsRequest parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PeerNeighborsRequest(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<PeerNeighborsRequest> parser() {
+        return PARSER;
       }
 
       @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
+      public com.google.protobuf.Parser<PeerNeighborsRequest> getParserForType() {
+        return PARSER;
       }
 
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsRequest getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
 
-      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerNeighborsRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerNeighborsRequest)
-    private static final ADL.Protocol.Peer.Peer.PeerNeighborsRequest DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerNeighborsRequest();
-    }
+    public interface PeerNeighborsResponseOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
+        com.google.protobuf.MessageOrBuilder {
 
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsRequest getDefaultInstance() {
-      return DEFAULT_INSTANCE;
+      /**
+       * <code>string pong = 1;</code>
+       */
+      java.lang.String getPong();
+      /**
+       * <code>string pong = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getPongBytes();
     }
+    /**
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse}
+     */
+    public  static final class PeerNeighborsResponse extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
+        PeerNeighborsResponseOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use PeerNeighborsResponse.newBuilder() to construct.
+      private PeerNeighborsResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private PeerNeighborsResponse() {
+        pong_ = "";
+      }
 
-    private static final com.google.protobuf.Parser<PeerNeighborsRequest>
-        PARSER = new com.google.protobuf.AbstractParser<PeerNeighborsRequest>() {
       @java.lang.Override
-      public PeerNeighborsRequest parsePartialFrom(
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private PeerNeighborsResponse(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new PeerNeighborsRequest(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PeerNeighborsRequest> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PeerNeighborsRequest> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public ADL.Protocol.Peer.Peer.PeerNeighborsRequest getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface PeerNeighborsResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerNeighborsResponse)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string pong = 1;</code>
-     */
-    java.lang.String getPong();
-    /**
-     * <code>string pong = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getPongBytes();
-  }
-  /**
-   * Protobuf type {@code ADL.Protocol.Peer.PeerNeighborsResponse}
-   */
-  public  static final class PeerNeighborsResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerNeighborsResponse)
-      PeerNeighborsResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use PeerNeighborsResponse.newBuilder() to construct.
-    private PeerNeighborsResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private PeerNeighborsResponse() {
-      pong_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private PeerNeighborsResponse(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              pong_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
                 done = true;
+                break;
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                pong_ = s;
+                break;
               }
-              break;
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
             }
           }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
       }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ADL.Protocol.Peer.Peer.PeerNeighborsResponse.class, ADL.Protocol.Peer.Peer.PeerNeighborsResponse.Builder.class);
-    }
-
-    public static final int PONG_FIELD_NUMBER = 1;
-    private volatile java.lang.Object pong_;
-    /**
-     * <code>string pong = 1;</code>
-     */
-    public java.lang.String getPong() {
-      java.lang.Object ref = pong_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        pong_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string pong = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPongBytes() {
-      java.lang.Object ref = pong_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        pong_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getPongBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, pong_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getPongBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, pong_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerNeighborsResponse)) {
-        return super.equals(obj);
-      }
-      ADL.Protocol.Peer.Peer.PeerNeighborsResponse other = (ADL.Protocol.Peer.Peer.PeerNeighborsResponse) obj;
-
-      boolean result = true;
-      result = result && getPong()
-          .equals(other.getPong());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PONG_FIELD_NUMBER;
-      hash = (53 * hash) + getPong().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerNeighborsResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ADL.Protocol.Peer.PeerNeighborsResponse}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerNeighborsResponse)
-        ADL.Protocol.Peer.Peer.PeerNeighborsResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_descriptor;
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_fieldAccessorTable
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ADL.Protocol.Peer.Peer.PeerNeighborsResponse.class, ADL.Protocol.Peer.Peer.PeerNeighborsResponse.Builder.class);
+                ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse.class, ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse.Builder.class);
       }
 
-      // Construct using ADL.Protocol.Peer.Peer.PeerNeighborsResponse.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        pong_ = "";
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_descriptor;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerNeighborsResponse getDefaultInstanceForType() {
-        return ADL.Protocol.Peer.Peer.PeerNeighborsResponse.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerNeighborsResponse build() {
-        ADL.Protocol.Peer.Peer.PeerNeighborsResponse result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.PeerNeighborsResponse buildPartial() {
-        ADL.Protocol.Peer.Peer.PeerNeighborsResponse result = new ADL.Protocol.Peer.Peer.PeerNeighborsResponse(this);
-        result.pong_ = pong_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ADL.Protocol.Peer.Peer.PeerNeighborsResponse) {
-          return mergeFrom((ADL.Protocol.Peer.Peer.PeerNeighborsResponse)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerNeighborsResponse other) {
-        if (other == ADL.Protocol.Peer.Peer.PeerNeighborsResponse.getDefaultInstance()) return this;
-        if (!other.getPong().isEmpty()) {
-          pong_ = other.pong_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ADL.Protocol.Peer.Peer.PeerNeighborsResponse parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ADL.Protocol.Peer.Peer.PeerNeighborsResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object pong_ = "";
+      public static final int PONG_FIELD_NUMBER = 1;
+      private volatile java.lang.Object pong_;
       /**
        * <code>string pong = 1;</code>
        */
       public java.lang.String getPong() {
         java.lang.Object ref = pong_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           pong_ = s;
           return s;
-        } else {
-          return (java.lang.String) ref;
         }
       }
       /**
@@ -3215,7 +2953,7 @@ public final class Peer {
       public com.google.protobuf.ByteString
           getPongBytes() {
         java.lang.Object ref = pong_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
@@ -3225,1208 +2963,1094 @@ public final class Peer {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!getPongBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, pong_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getPongBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, pong_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse)) {
+          return super.equals(obj);
+        }
+        ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse other = (ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse) obj;
+
+        boolean result = true;
+        result = result && getPong()
+            .equals(other.getPong());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + PONG_FIELD_NUMBER;
+        hash = (53 * hash) + getPong().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
       /**
-       * <code>string pong = 1;</code>
+       * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse}
        */
-      public Builder setPong(
-          java.lang.String value) {
-        if (value == null) {
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponseOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse.class, ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse.Builder.class);
+        }
+
+        // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          pong_ = "";
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_descriptor;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse getDefaultInstanceForType() {
+          return ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse build() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse buildPartial() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse result = new ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse(this);
+          result.pong_ = pong_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse) {
+            return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse other) {
+          if (other == ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse.getDefaultInstance()) return this;
+          if (!other.getPong().isEmpty()) {
+            pong_ = other.pong_;
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private java.lang.Object pong_ = "";
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public java.lang.String getPong() {
+          java.lang.Object ref = pong_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            pong_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getPongBytes() {
+          java.lang.Object ref = pong_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            pong_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder setPong(
+            java.lang.String value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   
-        pong_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string pong = 1;</code>
-       */
-      public Builder clearPong() {
-        
-        pong_ = getDefaultInstance().getPong();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string pong = 1;</code>
-       */
-      public Builder setPongBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
+          pong_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder clearPong() {
+          
+          pong_ = getDefaultInstance().getPong();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string pong = 1;</code>
+         */
+        public Builder setPongBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
-        pong_ = value;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerNeighborsResponse)
-    }
-
-    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerNeighborsResponse)
-    private static final ADL.Protocol.Peer.Peer.PeerNeighborsResponse DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerNeighborsResponse();
-    }
-
-    public static ADL.Protocol.Peer.Peer.PeerNeighborsResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<PeerNeighborsResponse>
-        PARSER = new com.google.protobuf.AbstractParser<PeerNeighborsResponse>() {
-      @java.lang.Override
-      public PeerNeighborsResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new PeerNeighborsResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PeerNeighborsResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PeerNeighborsResponse> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public ADL.Protocol.Peer.Peer.PeerNeighborsResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface ChallengeRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.ChallengeRequest)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>int32 type = 1;</code>
-     */
-    int getType();
-
-    /**
-     * <code>int32 nonce = 2;</code>
-     */
-    int getNonce();
-  }
-  /**
-   * Protobuf type {@code ADL.Protocol.Peer.ChallengeRequest}
-   */
-  public  static final class ChallengeRequest extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.ChallengeRequest)
-      ChallengeRequestOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use ChallengeRequest.newBuilder() to construct.
-    private ChallengeRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private ChallengeRequest() {
-      type_ = 0;
-      nonce_ = 0;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ChallengeRequest(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              type_ = input.readInt32();
-              break;
-            }
-            case 16: {
-
-              nonce_ = input.readInt32();
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
+          
+          pong_ = value;
+          onChanged();
+          return this;
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeRequest_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ADL.Protocol.Peer.Peer.ChallengeRequest.class, ADL.Protocol.Peer.Peer.ChallengeRequest.Builder.class);
-    }
-
-    public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_;
-    /**
-     * <code>int32 type = 1;</code>
-     */
-    public int getType() {
-      return type_;
-    }
-
-    public static final int NONCE_FIELD_NUMBER = 2;
-    private int nonce_;
-    /**
-     * <code>int32 nonce = 2;</code>
-     */
-    public int getNonce() {
-      return nonce_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (type_ != 0) {
-        output.writeInt32(1, type_);
-      }
-      if (nonce_ != 0) {
-        output.writeInt32(2, nonce_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (type_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, type_);
-      }
-      if (nonce_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, nonce_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof ADL.Protocol.Peer.Peer.ChallengeRequest)) {
-        return super.equals(obj);
-      }
-      ADL.Protocol.Peer.Peer.ChallengeRequest other = (ADL.Protocol.Peer.Peer.ChallengeRequest) obj;
-
-      boolean result = true;
-      result = result && (getType()
-          == other.getType());
-      result = result && (getNonce()
-          == other.getNonce());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getType();
-      hash = (37 * hash) + NONCE_FIELD_NUMBER;
-      hash = (53 * hash) + getNonce();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ADL.Protocol.Peer.Peer.ChallengeRequest prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ADL.Protocol.Peer.ChallengeRequest}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.ChallengeRequest)
-        ADL.Protocol.Peer.Peer.ChallengeRequestOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeRequest_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeRequest_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ADL.Protocol.Peer.Peer.ChallengeRequest.class, ADL.Protocol.Peer.Peer.ChallengeRequest.Builder.class);
-      }
-
-      // Construct using ADL.Protocol.Peer.Peer.ChallengeRequest.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
         }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
       }
+
+      // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.PeerNeighborsResponse)
+      private static final ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse();
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<PeerNeighborsResponse>
+          PARSER = new com.google.protobuf.AbstractParser<PeerNeighborsResponse>() {
+        @java.lang.Override
+        public PeerNeighborsResponse parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PeerNeighborsResponse(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<PeerNeighborsResponse> parser() {
+        return PARSER;
+      }
+
       @java.lang.Override
-      public Builder clear() {
-        super.clear();
+      public com.google.protobuf.Parser<PeerNeighborsResponse> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol.PeerNeighborsResponse getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    public interface ChallengeRequestOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>int32 type = 2;</code>
+       */
+      int getType();
+
+      /**
+       * <code>int32 nonce = 3;</code>
+       */
+      int getNonce();
+    }
+    /**
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.ChallengeRequest}
+     */
+    public  static final class ChallengeRequest extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
+        ChallengeRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use ChallengeRequest.newBuilder() to construct.
+      private ChallengeRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private ChallengeRequest() {
         type_ = 0;
-
         nonce_ = 0;
-
-        return this;
       }
 
       @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeRequest_descriptor;
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
       }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.ChallengeRequest getDefaultInstanceForType() {
-        return ADL.Protocol.Peer.Peer.ChallengeRequest.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.ChallengeRequest build() {
-        ADL.Protocol.Peer.Peer.ChallengeRequest result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.ChallengeRequest buildPartial() {
-        ADL.Protocol.Peer.Peer.ChallengeRequest result = new ADL.Protocol.Peer.Peer.ChallengeRequest(this);
-        result.type_ = type_;
-        result.nonce_ = nonce_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ADL.Protocol.Peer.Peer.ChallengeRequest) {
-          return mergeFrom((ADL.Protocol.Peer.Peer.ChallengeRequest)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ADL.Protocol.Peer.Peer.ChallengeRequest other) {
-        if (other == ADL.Protocol.Peer.Peer.ChallengeRequest.getDefaultInstance()) return this;
-        if (other.getType() != 0) {
-          setType(other.getType());
-        }
-        if (other.getNonce() != 0) {
-          setNonce(other.getNonce());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
+      private ChallengeRequest(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ADL.Protocol.Peer.Peer.ChallengeRequest parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ADL.Protocol.Peer.Peer.ChallengeRequest) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
         }
-        return this;
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 16: {
+
+                type_ = input.readInt32();
+                break;
+              }
+              case 24: {
+
+                nonce_ = input.readInt32();
+                break;
+              }
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_descriptor;
       }
 
-      private int type_ ;
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest.class, ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest.Builder.class);
+      }
+
+      public static final int TYPE_FIELD_NUMBER = 2;
+      private int type_;
       /**
-       * <code>int32 type = 1;</code>
+       * <code>int32 type = 2;</code>
        */
       public int getType() {
         return type_;
       }
-      /**
-       * <code>int32 type = 1;</code>
-       */
-      public Builder setType(int value) {
-        
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 type = 1;</code>
-       */
-      public Builder clearType() {
-        
-        type_ = 0;
-        onChanged();
-        return this;
-      }
 
-      private int nonce_ ;
+      public static final int NONCE_FIELD_NUMBER = 3;
+      private int nonce_;
       /**
-       * <code>int32 nonce = 2;</code>
+       * <code>int32 nonce = 3;</code>
        */
       public int getNonce() {
         return nonce_;
       }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (type_ != 0) {
+          output.writeInt32(2, type_);
+        }
+        if (nonce_ != 0) {
+          output.writeInt32(3, nonce_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (type_ != 0) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt32Size(2, type_);
+        }
+        if (nonce_ != 0) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt32Size(3, nonce_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest)) {
+          return super.equals(obj);
+        }
+        ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest other = (ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest) obj;
+
+        boolean result = true;
+        result = result && (getType()
+            == other.getType());
+        result = result && (getNonce()
+            == other.getNonce());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getType();
+        hash = (37 * hash) + NONCE_FIELD_NUMBER;
+        hash = (53 * hash) + getNonce();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
       /**
-       * <code>int32 nonce = 2;</code>
+       * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.ChallengeRequest}
        */
-      public Builder setNonce(int value) {
-        
-        nonce_ = value;
-        onChanged();
-        return this;
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
+          ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequestOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest.class, ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest.Builder.class);
+        }
+
+        // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          type_ = 0;
+
+          nonce_ = 0;
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_descriptor;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest getDefaultInstanceForType() {
+          return ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest build() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest buildPartial() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest result = new ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest(this);
+          result.type_ = type_;
+          result.nonce_ = nonce_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest) {
+            return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest other) {
+          if (other == ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest.getDefaultInstance()) return this;
+          if (other.getType() != 0) {
+            setType(other.getType());
+          }
+          if (other.getNonce() != 0) {
+            setNonce(other.getNonce());
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private int type_ ;
+        /**
+         * <code>int32 type = 2;</code>
+         */
+        public int getType() {
+          return type_;
+        }
+        /**
+         * <code>int32 type = 2;</code>
+         */
+        public Builder setType(int value) {
+          
+          type_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>int32 type = 2;</code>
+         */
+        public Builder clearType() {
+          
+          type_ = 0;
+          onChanged();
+          return this;
+        }
+
+        private int nonce_ ;
+        /**
+         * <code>int32 nonce = 3;</code>
+         */
+        public int getNonce() {
+          return nonce_;
+        }
+        /**
+         * <code>int32 nonce = 3;</code>
+         */
+        public Builder setNonce(int value) {
+          
+          nonce_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>int32 nonce = 3;</code>
+         */
+        public Builder clearNonce() {
+          
+          nonce_ = 0;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
       }
+
+      // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.ChallengeRequest)
+      private static final ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest();
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<ChallengeRequest>
+          PARSER = new com.google.protobuf.AbstractParser<ChallengeRequest>() {
+        @java.lang.Override
+        public ChallengeRequest parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ChallengeRequest(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<ChallengeRequest> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<ChallengeRequest> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeRequest getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    public interface ChallengeResponseOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
+        com.google.protobuf.MessageOrBuilder {
+
       /**
-       * <code>int32 nonce = 2;</code>
+       * <code>string signedNonce = 2;</code>
        */
-      public Builder clearNonce() {
-        
-        nonce_ = 0;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
+      java.lang.String getSignedNonce();
+      /**
+       * <code>string signedNonce = 2;</code>
+       */
+      com.google.protobuf.ByteString
+          getSignedNonceBytes();
 
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.ChallengeRequest)
+      /**
+       * <code>string publicKey = 3;</code>
+       */
+      java.lang.String getPublicKey();
+      /**
+       * <code>string publicKey = 3;</code>
+       */
+      com.google.protobuf.ByteString
+          getPublicKeyBytes();
     }
+    /**
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.ChallengeResponse}
+     */
+    public  static final class ChallengeResponse extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
+        ChallengeResponseOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use ChallengeResponse.newBuilder() to construct.
+      private ChallengeResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private ChallengeResponse() {
+        signedNonce_ = "";
+        publicKey_ = "";
+      }
 
-    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.ChallengeRequest)
-    private static final ADL.Protocol.Peer.Peer.ChallengeRequest DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.ChallengeRequest();
-    }
-
-    public static ADL.Protocol.Peer.Peer.ChallengeRequest getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<ChallengeRequest>
-        PARSER = new com.google.protobuf.AbstractParser<ChallengeRequest>() {
       @java.lang.Override
-      public ChallengeRequest parsePartialFrom(
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private ChallengeResponse(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ChallengeRequest(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<ChallengeRequest> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ChallengeRequest> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public ADL.Protocol.Peer.Peer.ChallengeRequest getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface ChallengeResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ADL.Protocol.Peer.ChallengeResponse)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>int32 type = 1;</code>
-     */
-    int getType();
-
-    /**
-     * <code>string signedNonce = 2;</code>
-     */
-    java.lang.String getSignedNonce();
-    /**
-     * <code>string signedNonce = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getSignedNonceBytes();
-
-    /**
-     * <code>string publicKey = 3;</code>
-     */
-    java.lang.String getPublicKey();
-    /**
-     * <code>string publicKey = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getPublicKeyBytes();
-  }
-  /**
-   * Protobuf type {@code ADL.Protocol.Peer.ChallengeResponse}
-   */
-  public  static final class ChallengeResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ADL.Protocol.Peer.ChallengeResponse)
-      ChallengeResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use ChallengeResponse.newBuilder() to construct.
-    private ChallengeResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private ChallengeResponse() {
-      type_ = 0;
-      signedNonce_ = "";
-      publicKey_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ChallengeResponse(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              type_ = input.readInt32();
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              signedNonce_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              publicKey_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
                 done = true;
+                break;
+              case 18: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                signedNonce_ = s;
+                break;
               }
-              break;
+              case 26: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                publicKey_ = s;
+                break;
+              }
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
             }
           }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
       }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeResponse_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ADL.Protocol.Peer.Peer.ChallengeResponse.class, ADL.Protocol.Peer.Peer.ChallengeResponse.Builder.class);
-    }
-
-    public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_;
-    /**
-     * <code>int32 type = 1;</code>
-     */
-    public int getType() {
-      return type_;
-    }
-
-    public static final int SIGNEDNONCE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object signedNonce_;
-    /**
-     * <code>string signedNonce = 2;</code>
-     */
-    public java.lang.String getSignedNonce() {
-      java.lang.Object ref = signedNonce_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        signedNonce_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string signedNonce = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSignedNonceBytes() {
-      java.lang.Object ref = signedNonce_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        signedNonce_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int PUBLICKEY_FIELD_NUMBER = 3;
-    private volatile java.lang.Object publicKey_;
-    /**
-     * <code>string publicKey = 3;</code>
-     */
-    public java.lang.String getPublicKey() {
-      java.lang.Object ref = publicKey_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        publicKey_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string publicKey = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPublicKeyBytes() {
-      java.lang.Object ref = publicKey_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        publicKey_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (type_ != 0) {
-        output.writeInt32(1, type_);
-      }
-      if (!getSignedNonceBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, signedNonce_);
-      }
-      if (!getPublicKeyBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, publicKey_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (type_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, type_);
-      }
-      if (!getSignedNonceBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, signedNonce_);
-      }
-      if (!getPublicKeyBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, publicKey_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof ADL.Protocol.Peer.Peer.ChallengeResponse)) {
-        return super.equals(obj);
-      }
-      ADL.Protocol.Peer.Peer.ChallengeResponse other = (ADL.Protocol.Peer.Peer.ChallengeResponse) obj;
-
-      boolean result = true;
-      result = result && (getType()
-          == other.getType());
-      result = result && getSignedNonce()
-          .equals(other.getSignedNonce());
-      result = result && getPublicKey()
-          .equals(other.getPublicKey());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getType();
-      hash = (37 * hash) + SIGNEDNONCE_FIELD_NUMBER;
-      hash = (53 * hash) + getSignedNonce().hashCode();
-      hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
-      hash = (53 * hash) + getPublicKey().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ADL.Protocol.Peer.Peer.ChallengeResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ADL.Protocol.Peer.ChallengeResponse}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.ChallengeResponse)
-        ADL.Protocol.Peer.Peer.ChallengeResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeResponse_descriptor;
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeResponse_fieldAccessorTable
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ADL.Protocol.Peer.Peer.ChallengeResponse.class, ADL.Protocol.Peer.Peer.ChallengeResponse.Builder.class);
+                ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse.class, ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse.Builder.class);
       }
 
-      // Construct using ADL.Protocol.Peer.Peer.ChallengeResponse.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        type_ = 0;
-
-        signedNonce_ = "";
-
-        publicKey_ = "";
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_ChallengeResponse_descriptor;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.ChallengeResponse getDefaultInstanceForType() {
-        return ADL.Protocol.Peer.Peer.ChallengeResponse.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.ChallengeResponse build() {
-        ADL.Protocol.Peer.Peer.ChallengeResponse result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public ADL.Protocol.Peer.Peer.ChallengeResponse buildPartial() {
-        ADL.Protocol.Peer.Peer.ChallengeResponse result = new ADL.Protocol.Peer.Peer.ChallengeResponse(this);
-        result.type_ = type_;
-        result.signedNonce_ = signedNonce_;
-        result.publicKey_ = publicKey_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ADL.Protocol.Peer.Peer.ChallengeResponse) {
-          return mergeFrom((ADL.Protocol.Peer.Peer.ChallengeResponse)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ADL.Protocol.Peer.Peer.ChallengeResponse other) {
-        if (other == ADL.Protocol.Peer.Peer.ChallengeResponse.getDefaultInstance()) return this;
-        if (other.getType() != 0) {
-          setType(other.getType());
-        }
-        if (!other.getSignedNonce().isEmpty()) {
-          signedNonce_ = other.signedNonce_;
-          onChanged();
-        }
-        if (!other.getPublicKey().isEmpty()) {
-          publicKey_ = other.publicKey_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ADL.Protocol.Peer.Peer.ChallengeResponse parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ADL.Protocol.Peer.Peer.ChallengeResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private int type_ ;
-      /**
-       * <code>int32 type = 1;</code>
-       */
-      public int getType() {
-        return type_;
-      }
-      /**
-       * <code>int32 type = 1;</code>
-       */
-      public Builder setType(int value) {
-        
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 type = 1;</code>
-       */
-      public Builder clearType() {
-        
-        type_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object signedNonce_ = "";
+      public static final int SIGNEDNONCE_FIELD_NUMBER = 2;
+      private volatile java.lang.Object signedNonce_;
       /**
        * <code>string signedNonce = 2;</code>
        */
       public java.lang.String getSignedNonce() {
         java.lang.Object ref = signedNonce_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           signedNonce_ = s;
           return s;
-        } else {
-          return (java.lang.String) ref;
         }
       }
       /**
@@ -4435,7 +4059,7 @@ public final class Peer {
       public com.google.protobuf.ByteString
           getSignedNonceBytes() {
         java.lang.Object ref = signedNonce_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
@@ -4445,57 +4069,22 @@ public final class Peer {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-      /**
-       * <code>string signedNonce = 2;</code>
-       */
-      public Builder setSignedNonce(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        signedNonce_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string signedNonce = 2;</code>
-       */
-      public Builder clearSignedNonce() {
-        
-        signedNonce_ = getDefaultInstance().getSignedNonce();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string signedNonce = 2;</code>
-       */
-      public Builder setSignedNonceBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        signedNonce_ = value;
-        onChanged();
-        return this;
-      }
 
-      private java.lang.Object publicKey_ = "";
+      public static final int PUBLICKEY_FIELD_NUMBER = 3;
+      private volatile java.lang.Object publicKey_;
       /**
        * <code>string publicKey = 3;</code>
        */
       public java.lang.String getPublicKey() {
         java.lang.Object ref = publicKey_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           publicKey_ = s;
           return s;
-        } else {
-          return (java.lang.String) ref;
         }
       }
       /**
@@ -4504,7 +4093,7 @@ public final class Peer {
       public com.google.protobuf.ByteString
           getPublicKeyBytes() {
         java.lang.Object ref = publicKey_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
@@ -4514,40 +4103,800 @@ public final class Peer {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!getSignedNonceBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, signedNonce_);
+        }
+        if (!getPublicKeyBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, publicKey_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getSignedNonceBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, signedNonce_);
+        }
+        if (!getPublicKeyBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, publicKey_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse)) {
+          return super.equals(obj);
+        }
+        ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse other = (ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse) obj;
+
+        boolean result = true;
+        result = result && getSignedNonce()
+            .equals(other.getSignedNonce());
+        result = result && getPublicKey()
+            .equals(other.getPublicKey());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + SIGNEDNONCE_FIELD_NUMBER;
+        hash = (53 * hash) + getSignedNonce().hashCode();
+        hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
+        hash = (53 * hash) + getPublicKey().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
       /**
-       * <code>string publicKey = 3;</code>
+       * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol.ChallengeResponse}
        */
-      public Builder setPublicKey(
-          java.lang.String value) {
-        if (value == null) {
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
+          ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponseOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse.class, ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse.Builder.class);
+        }
+
+        // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          signedNonce_ = "";
+
+          publicKey_ = "";
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_descriptor;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse getDefaultInstanceForType() {
+          return ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse build() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse buildPartial() {
+          ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse result = new ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse(this);
+          result.signedNonce_ = signedNonce_;
+          result.publicKey_ = publicKey_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse) {
+            return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse other) {
+          if (other == ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse.getDefaultInstance()) return this;
+          if (!other.getSignedNonce().isEmpty()) {
+            signedNonce_ = other.signedNonce_;
+            onChanged();
+          }
+          if (!other.getPublicKey().isEmpty()) {
+            publicKey_ = other.publicKey_;
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private java.lang.Object signedNonce_ = "";
+        /**
+         * <code>string signedNonce = 2;</code>
+         */
+        public java.lang.String getSignedNonce() {
+          java.lang.Object ref = signedNonce_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            signedNonce_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string signedNonce = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+            getSignedNonceBytes() {
+          java.lang.Object ref = signedNonce_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            signedNonce_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string signedNonce = 2;</code>
+         */
+        public Builder setSignedNonce(
+            java.lang.String value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   
-        publicKey_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string publicKey = 3;</code>
-       */
-      public Builder clearPublicKey() {
-        
-        publicKey_ = getDefaultInstance().getPublicKey();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string publicKey = 3;</code>
-       */
-      public Builder setPublicKeyBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
+          signedNonce_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string signedNonce = 2;</code>
+         */
+        public Builder clearSignedNonce() {
+          
+          signedNonce_ = getDefaultInstance().getSignedNonce();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string signedNonce = 2;</code>
+         */
+        public Builder setSignedNonceBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
-        publicKey_ = value;
+          
+          signedNonce_ = value;
+          onChanged();
+          return this;
+        }
+
+        private java.lang.Object publicKey_ = "";
+        /**
+         * <code>string publicKey = 3;</code>
+         */
+        public java.lang.String getPublicKey() {
+          java.lang.Object ref = publicKey_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            publicKey_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string publicKey = 3;</code>
+         */
+        public com.google.protobuf.ByteString
+            getPublicKeyBytes() {
+          java.lang.Object ref = publicKey_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            publicKey_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string publicKey = 3;</code>
+         */
+        public Builder setPublicKey(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  
+          publicKey_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string publicKey = 3;</code>
+         */
+        public Builder clearPublicKey() {
+          
+          publicKey_ = getDefaultInstance().getPublicKey();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string publicKey = 3;</code>
+         */
+        public Builder setPublicKeyBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+          
+          publicKey_ = value;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
+      }
+
+      // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol.ChallengeResponse)
+      private static final ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse();
+      }
+
+      public static ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<ChallengeResponse>
+          PARSER = new com.google.protobuf.AbstractParser<ChallengeResponse>() {
+        @java.lang.Override
+        public ChallengeResponse parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ChallengeResponse(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<ChallengeResponse> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<ChallengeResponse> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol.ChallengeResponse getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ADL.Protocol.Peer.Peer.PeerProtocol)) {
+        return super.equals(obj);
+      }
+      ADL.Protocol.Peer.Peer.PeerProtocol other = (ADL.Protocol.Peer.Peer.PeerProtocol) obj;
+
+      boolean result = true;
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ADL.Protocol.Peer.Peer.PeerProtocol parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ADL.Protocol.Peer.Peer.PeerProtocol prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ADL.Protocol.Peer.PeerProtocol}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ADL.Protocol.Peer.PeerProtocol)
+        ADL.Protocol.Peer.Peer.PeerProtocolOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ADL.Protocol.Peer.Peer.PeerProtocol.class, ADL.Protocol.Peer.Peer.PeerProtocol.Builder.class);
+      }
+
+      // Construct using ADL.Protocol.Peer.Peer.PeerProtocol.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ADL.Protocol.Peer.Peer.internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor;
+      }
+
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol getDefaultInstanceForType() {
+        return ADL.Protocol.Peer.Peer.PeerProtocol.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol build() {
+        ADL.Protocol.Peer.Peer.PeerProtocol result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public ADL.Protocol.Peer.Peer.PeerProtocol buildPartial() {
+        ADL.Protocol.Peer.Peer.PeerProtocol result = new ADL.Protocol.Peer.Peer.PeerProtocol(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ADL.Protocol.Peer.Peer.PeerProtocol) {
+          return mergeFrom((ADL.Protocol.Peer.Peer.PeerProtocol)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ADL.Protocol.Peer.Peer.PeerProtocol other) {
+        if (other == ADL.Protocol.Peer.Peer.PeerProtocol.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
         onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ADL.Protocol.Peer.Peer.PeerProtocol parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ADL.Protocol.Peer.Peer.PeerProtocol) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
         return this;
       }
       @java.lang.Override
@@ -4563,86 +4912,91 @@ public final class Peer {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.ChallengeResponse)
+      // @@protoc_insertion_point(builder_scope:ADL.Protocol.Peer.PeerProtocol)
     }
 
-    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.ChallengeResponse)
-    private static final ADL.Protocol.Peer.Peer.ChallengeResponse DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:ADL.Protocol.Peer.PeerProtocol)
+    private static final ADL.Protocol.Peer.Peer.PeerProtocol DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.ChallengeResponse();
+      DEFAULT_INSTANCE = new ADL.Protocol.Peer.Peer.PeerProtocol();
     }
 
-    public static ADL.Protocol.Peer.Peer.ChallengeResponse getDefaultInstance() {
+    public static ADL.Protocol.Peer.Peer.PeerProtocol getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<ChallengeResponse>
-        PARSER = new com.google.protobuf.AbstractParser<ChallengeResponse>() {
+    private static final com.google.protobuf.Parser<PeerProtocol>
+        PARSER = new com.google.protobuf.AbstractParser<PeerProtocol>() {
       @java.lang.Override
-      public ChallengeResponse parsePartialFrom(
+      public PeerProtocol parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ChallengeResponse(input, extensionRegistry);
+        return new PeerProtocol(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<ChallengeResponse> parser() {
+    public static com.google.protobuf.Parser<PeerProtocol> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ChallengeResponse> getParserForType() {
+    public com.google.protobuf.Parser<PeerProtocol> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public ADL.Protocol.Peer.Peer.ChallengeResponse getDefaultInstanceForType() {
+    public ADL.Protocol.Peer.Peer.PeerProtocol getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ADL_Protocol_Peer_PingRequest_descriptor;
+    internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ADL_Protocol_Peer_PingRequest_fieldAccessorTable;
+      internal_static_ADL_Protocol_Peer_PeerProtocol_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ADL_Protocol_Peer_PongResponse_descriptor;
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ADL_Protocol_Peer_PongResponse_fieldAccessorTable;
+      internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ADL_Protocol_Peer_PeerInfoRequest_descriptor;
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ADL_Protocol_Peer_PeerInfoRequest_fieldAccessorTable;
+      internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ADL_Protocol_Peer_PeerInfoResponse_descriptor;
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ADL_Protocol_Peer_PeerInfoResponse_fieldAccessorTable;
+      internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_descriptor;
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_fieldAccessorTable;
+      internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_descriptor;
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_fieldAccessorTable;
+      internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ADL_Protocol_Peer_ChallengeRequest_descriptor;
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ADL_Protocol_Peer_ChallengeRequest_fieldAccessorTable;
+      internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ADL_Protocol_Peer_ChallengeResponse_descriptor;
+    internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ADL_Protocol_Peer_ChallengeResponse_fieldAccessorTable;
+      internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -4652,16 +5006,16 @@ public final class Peer {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nPeer.proto\022\021ADL.Protocol.Peer\"\033\n\013PingR" +
-      "equest\022\014\n\004ping\030\001 \001(\t\"\034\n\014PongResponse\022\014\n\004" +
-      "pong\030\001 \001(\t\"\037\n\017PeerInfoRequest\022\014\n\004ping\030\001 " +
-      "\001(\t\" \n\020PeerInfoResponse\022\014\n\004pong\030\001 \001(\t\"$\n" +
-      "\024PeerNeighborsRequest\022\014\n\004ping\030\001 \001(\t\"%\n\025P" +
-      "eerNeighborsResponse\022\014\n\004pong\030\001 \001(\t\"/\n\020Ch" +
-      "allengeRequest\022\014\n\004type\030\001 \001(\005\022\r\n\005nonce\030\002 " +
-      "\001(\005\"I\n\021ChallengeResponse\022\014\n\004type\030\001 \001(\005\022\023" +
-      "\n\013signedNonce\030\002 \001(\t\022\021\n\tpublicKey\030\003 \001(\tb\006" +
-      "proto3"
+      "\n\nPeer.proto\022\021ADL.Protocol.Peer\"\307\002\n\014Peer" +
+      "Protocol\032\033\n\013PingRequest\022\014\n\004ping\030\001 \001(\t\032\034\n" +
+      "\014PongResponse\022\014\n\004pong\030\001 \001(\t\032\037\n\017PeerInfoR" +
+      "equest\022\014\n\004ping\030\001 \001(\t\032 \n\020PeerInfoResponse" +
+      "\022\014\n\004pong\030\001 \001(\t\032$\n\024PeerNeighborsRequest\022\014" +
+      "\n\004ping\030\001 \001(\t\032%\n\025PeerNeighborsResponse\022\014\n" +
+      "\004pong\030\001 \001(\t\032/\n\020ChallengeRequest\022\014\n\004type\030" +
+      "\002 \001(\005\022\r\n\005nonce\030\003 \001(\005\032;\n\021ChallengeRespons" +
+      "e\022\023\n\013signedNonce\030\002 \001(\t\022\021\n\tpublicKey\030\003 \001(" +
+      "\tb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4675,54 +5029,60 @@ public final class Peer {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_ADL_Protocol_Peer_PingRequest_descriptor =
+    internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_ADL_Protocol_Peer_PingRequest_fieldAccessorTable = new
+    internal_static_ADL_Protocol_Peer_PeerProtocol_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ADL_Protocol_Peer_PingRequest_descriptor,
+        internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor,
+        new java.lang.String[] { });
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_descriptor =
+      internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor.getNestedTypes().get(0);
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ADL_Protocol_Peer_PeerProtocol_PingRequest_descriptor,
         new java.lang.String[] { "Ping", });
-    internal_static_ADL_Protocol_Peer_PongResponse_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_ADL_Protocol_Peer_PongResponse_fieldAccessorTable = new
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_descriptor =
+      internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor.getNestedTypes().get(1);
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ADL_Protocol_Peer_PongResponse_descriptor,
+        internal_static_ADL_Protocol_Peer_PeerProtocol_PongResponse_descriptor,
         new java.lang.String[] { "Pong", });
-    internal_static_ADL_Protocol_Peer_PeerInfoRequest_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_ADL_Protocol_Peer_PeerInfoRequest_fieldAccessorTable = new
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_descriptor =
+      internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor.getNestedTypes().get(2);
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ADL_Protocol_Peer_PeerInfoRequest_descriptor,
+        internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoRequest_descriptor,
         new java.lang.String[] { "Ping", });
-    internal_static_ADL_Protocol_Peer_PeerInfoResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_ADL_Protocol_Peer_PeerInfoResponse_fieldAccessorTable = new
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_descriptor =
+      internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor.getNestedTypes().get(3);
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ADL_Protocol_Peer_PeerInfoResponse_descriptor,
+        internal_static_ADL_Protocol_Peer_PeerProtocol_PeerInfoResponse_descriptor,
         new java.lang.String[] { "Pong", });
-    internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_fieldAccessorTable = new
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_descriptor =
+      internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor.getNestedTypes().get(4);
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ADL_Protocol_Peer_PeerNeighborsRequest_descriptor,
+        internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsRequest_descriptor,
         new java.lang.String[] { "Ping", });
-    internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_fieldAccessorTable = new
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_descriptor =
+      internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor.getNestedTypes().get(5);
+    internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ADL_Protocol_Peer_PeerNeighborsResponse_descriptor,
+        internal_static_ADL_Protocol_Peer_PeerProtocol_PeerNeighborsResponse_descriptor,
         new java.lang.String[] { "Pong", });
-    internal_static_ADL_Protocol_Peer_ChallengeRequest_descriptor =
-      getDescriptor().getMessageTypes().get(6);
-    internal_static_ADL_Protocol_Peer_ChallengeRequest_fieldAccessorTable = new
+    internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_descriptor =
+      internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor.getNestedTypes().get(6);
+    internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ADL_Protocol_Peer_ChallengeRequest_descriptor,
+        internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeRequest_descriptor,
         new java.lang.String[] { "Type", "Nonce", });
-    internal_static_ADL_Protocol_Peer_ChallengeResponse_descriptor =
-      getDescriptor().getMessageTypes().get(7);
-    internal_static_ADL_Protocol_Peer_ChallengeResponse_fieldAccessorTable = new
+    internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_descriptor =
+      internal_static_ADL_Protocol_Peer_PeerProtocol_descriptor.getNestedTypes().get(7);
+    internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ADL_Protocol_Peer_ChallengeResponse_descriptor,
-        new java.lang.String[] { "Type", "SignedNonce", "PublicKey", });
+        internal_static_ADL_Protocol_Peer_PeerProtocol_ChallengeResponse_descriptor,
+        new java.lang.String[] { "SignedNonce", "PublicKey", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

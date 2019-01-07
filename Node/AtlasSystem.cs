@@ -4,7 +4,7 @@ using Autofac;
 using System.Threading.Tasks;
 using ADL.Node.Core.Modules.Dfs;
 using ADL.Node.Core.Modules.Rpc;
-using ADL.Node.Core.Modules.Peer;
+using ADL.Node.Core.Modules.Network;
 using ADL.Node.Core.Modules.Gossip;
 using ADL.Node.Core.Modules.Ledger;
 using ADL.Node.Core.Modules.Mempool;
@@ -19,7 +19,7 @@ namespace ADL.Node
         private Kernel Kernel { get; set; }
         private IRpcService RcpService { get; set; }
         private IDfsService DfsService { get; set; }
-        private IPeerService PeerService { get; set; }
+        private INetworkService PeerService { get; set; }
         private static AtlasSystem Instance { get; set; }
         private IGossipService GossipService { get; set; }
         private ILedgerService LedgerService { get; set; }        
@@ -135,10 +135,9 @@ namespace ADL.Node
             
             if (options.Peer)
             {
-                Console.WriteLine("start p2p controller....");
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
-                    PeerService = scope.Resolve<IPeerService>();
+                    PeerService = scope.Resolve<INetworkService>();
                 }
                 PeerService.StartService();
             }         
@@ -155,6 +154,7 @@ namespace ADL.Node
         /// </summary>
         public void Dispose()
         {
+            PeerService?.StopService();
             RcpService?.StopService();
             MainActorSystem.Stop(TaskHandlerActor);
             MainActorSystem.Dispose();

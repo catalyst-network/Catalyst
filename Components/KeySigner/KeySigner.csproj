@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RootNamespace>ADL.KeySigner</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Helpers\Hex\Hex.csproj" />
+        <ProjectReference Include="..\..\Helpers\Util\Util.csproj" />
+        <ProjectReference Include="..\..\Helpers\RLP\RLP.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
+    </ItemGroup>
+</Project>

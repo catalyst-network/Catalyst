@@ -4,9 +4,9 @@ using System.Linq;
 using Newtonsoft.Json;
 using ADL.Node.Core.Modules.Dfs;
 using ADL.Node.Core.Modules.Rpc;
-using ADL.Node.Core.Modules.Peer;
 using ADL.Node.Core.Modules.Gossip;
 using ADL.Node.Core.Modules.Ledger;
+using ADL.Node.Core.Modules.Network;
 using ADL.Node.Core.Modules.Mempool;
 using ADL.Node.Core.Modules.Contract;
 using ADL.Node.Core.Modules.Consensus;
@@ -19,7 +19,7 @@ namespace ADL.Node
         public IRpcSettings Rpc { get; set; }
         public IDfsSettings Dfs { get; set; }
         public ISslSettings Ssl  { get; set; }
-        public IPeerSettings Peer { get; set; }
+        public INetworkSettings Peer { get; set; }
         public IGossipSettings Gossip { get; set; }
         public ILedgerSettings Ledger { get; set; }
         public NodeOptions NodeOptions { get; set; }
@@ -61,7 +61,7 @@ namespace ADL.Node
             Ssl = new SslSettings(userConfig.GetSection("Ssl"));
             Dfs = new DfsSettings(userConfig.GetSection("Dfs"));
             Rpc = new RpcSettings(userConfig.GetSection("Rpc"));
-            Peer = new PeerSettings(userConfig.GetSection("Peer"));
+            Peer = new NetworkSettings(userConfig.GetSection("Peer"));
             Gossip = new GossipSettings(userConfig.GetSection("Gossip"));
             Ledger = new LedgerSettings(userConfig.GetSection("Ledger"));
             Mempool = new MempoolSettings(userConfig.GetSection("Mempool"));
@@ -243,10 +243,10 @@ namespace ADL.Node
     /// <summary>
     /// Peer settings class.
     /// </summary>
-    public class PeerSettings : IPeerSettings
+    public class NetworkSettings : INetworkSettings
     {
         public string BindAddress { get; set; }
-        public ushort Port { get; set; }
+        public int Port { get; set; }
         public ushort MaxPeers { get; set; }
         public ushort PeerPingInterval { get; set; }
         public ushort PeerLifetimeInterval { get; set; }
@@ -258,11 +258,11 @@ namespace ADL.Node
         /// Set attributes
         /// </summary>
         /// <param name="section"></param>
-        protected internal PeerSettings(IConfiguration section)
+        protected internal NetworkSettings(IConfiguration section)
         {
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
             Magic = uint.Parse(section.GetSection("Magic").Value);
-            Port = ushort.Parse(section.GetSection("Port").Value);
+            Port = int.Parse(section.GetSection("Port").Value);
             MaxPeers = ushort.Parse(section.GetSection("MaxPeers").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
             PeerPingInterval = ushort.Parse(section.GetSection("PeerPingInterval").Value);
