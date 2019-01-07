@@ -322,8 +322,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                         if (!asyncClient.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
                         {
                             tcpClient.Close();
-                            throw new TimeoutException("Timeout connecting to " + targetEndpoint.Address + ":" +
-                                                       targetEndpoint.Port);
+                            throw new TimeoutException("Timeout connecting to " + targetEndpoint.Address + ":" + targetEndpoint.Port);
                         }
                     }
                     catch (ArgumentOutOfRangeException e)
