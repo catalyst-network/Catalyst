@@ -6,9 +6,10 @@
 #region Designer generated code
 
 using pb = global::Google.Protobuf;
+using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
-
-namespace ADL.Protocol.Rpc.Node.dist.csharp {
+using scg = global::System.Collections.Generic;
+namespace ADL.Protocol.Rpc.Node {
 
   /// <summary>Holder for reflection information generated from Rpc.proto</summary>
   public static partial class RpcReflection {
@@ -63,70 +64,73 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
             "dBINCgVxdWVyeRgBIAEoCCIrChpHZXRDb25uZWN0aW9uQ291bnRSZXNwb25z",
             "ZRINCgVxdWVyeRgBIAEoCSIgCg9HZXREZWx0YVJlcXVlc3QSDQoFcXVlcnkY",
             "ASABKAgiIQoQR2V0RGVsdGFSZXNwb25zZRINCgVxdWVyeRgBIAEoCSIiChFH",
-            "ZXRNZW1wb29sUmVxdWVzdBINCgVxdWVyeRgBIAEoCCIjChJHZXRNZW1wb29s",
-            "UmVzcG9uc2USDQoFcXVlcnkYASABKAkiIwoSU2lnbk1lc3NhZ2VSZXF1ZXN0",
-            "Eg0KBXF1ZXJ5GAEgASgIIiQKE1NpZ25NZXNzYWdlUmVzcG9uc2USDQoFcXVl",
-            "cnkYASABKAkiJQoUVmVyaWZ5TWVzc2FnZVJlcXVlc3QSDQoFcXVlcnkYASAB",
-            "KAgiJgoVVmVyaWZ5TWVzc2FnZVJlc3BvbnNlEg0KBXF1ZXJ5GAEgASgJIiUK",
-            "FFNlcnZpY2VTdGF0dXNSZXF1ZXN0Eg0KBXF1ZXJ5GAEgASgIIiYKFVNlcnZp",
-            "Y2VTdGF0dXNSZXNwb25zZRINCgVxdWVyeRgBIAEoCWIGcHJvdG8z"));
+            "ZXRNZW1wb29sUmVxdWVzdBINCgVxdWVyeRgBIAEoCCKEAQoSR2V0TWVtcG9v",
+            "bFJlc3BvbnNlEkEKBGluZm8YASADKAsyMy5BREwuUHJvdG9jb2wuUnBjLk5v",
+            "ZGUuR2V0TWVtcG9vbFJlc3BvbnNlLkluZm9FbnRyeRorCglJbmZvRW50cnkS",
+            "CwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASIjChJTaWduTWVzc2Fn",
+            "ZVJlcXVlc3QSDQoFcXVlcnkYASABKAgiJAoTU2lnbk1lc3NhZ2VSZXNwb25z",
+            "ZRINCgVxdWVyeRgBIAEoCSIlChRWZXJpZnlNZXNzYWdlUmVxdWVzdBINCgVx",
+            "dWVyeRgBIAEoCCImChVWZXJpZnlNZXNzYWdlUmVzcG9uc2USDQoFcXVlcnkY",
+            "ASABKAkiJQoUU2VydmljZVN0YXR1c1JlcXVlc3QSDQoFcXVlcnkYASABKAgi",
+            "JgoVU2VydmljZVN0YXR1c1Jlc3BvbnNlEg0KBXF1ZXJ5GAEgASgJYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.PingRequest.Parser, new[]{ "Ping" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.PongResponse.Parser, new[]{ "Pong" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.VersionRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.VersionResponse.Parser, new[]{ "Version" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.GetInfoResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateWalletResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.ListWalletResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateAddressResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.GetAddressResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.ListAddressResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.ValidateAddressResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.GetBalanceResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.CreateRawTransactionResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.SignRawTransactionResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.DecodeRawTransactionResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.BroadcastRawTransactionResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.SendToRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.SendToResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.SendToFromResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.SendManyResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.SendFromManyResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.AddNodeResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerListResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.GetPeerInfoResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.GetConnectionCountResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.GetDeltaResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.GetMempoolResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.SignMessageResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.VerifyMessageResponse.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest), global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusRequest.Parser, new[]{ "Query" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse), global::ADL.Protocol.Rpc.Node.dist.csharp.ServiceStatusResponse.Parser, new[]{ "Query" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.PingRequest), global::ADL.Protocol.Rpc.Node.PingRequest.Parser, new[]{ "Ping" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.PongResponse), global::ADL.Protocol.Rpc.Node.PongResponse.Parser, new[]{ "Pong" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.VersionRequest), global::ADL.Protocol.Rpc.Node.VersionRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.VersionResponse), global::ADL.Protocol.Rpc.Node.VersionResponse.Parser, new[]{ "Version" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetInfoRequest), global::ADL.Protocol.Rpc.Node.GetInfoRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetInfoResponse), global::ADL.Protocol.Rpc.Node.GetInfoResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.CreateWalletRequest), global::ADL.Protocol.Rpc.Node.CreateWalletRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.CreateWalletResponse), global::ADL.Protocol.Rpc.Node.CreateWalletResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.ListWalletRequest), global::ADL.Protocol.Rpc.Node.ListWalletRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.ListWalletResponse), global::ADL.Protocol.Rpc.Node.ListWalletResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.CreateAddressRequest), global::ADL.Protocol.Rpc.Node.CreateAddressRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.CreateAddressResponse), global::ADL.Protocol.Rpc.Node.CreateAddressResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetAddressRequest), global::ADL.Protocol.Rpc.Node.GetAddressRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetAddressResponse), global::ADL.Protocol.Rpc.Node.GetAddressResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.ListAddressRequest), global::ADL.Protocol.Rpc.Node.ListAddressRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.ListAddressResponse), global::ADL.Protocol.Rpc.Node.ListAddressResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.ValidateAddressRequest), global::ADL.Protocol.Rpc.Node.ValidateAddressRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.ValidateAddressResponse), global::ADL.Protocol.Rpc.Node.ValidateAddressResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetBalanceRequest), global::ADL.Protocol.Rpc.Node.GetBalanceRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetBalanceResponse), global::ADL.Protocol.Rpc.Node.GetBalanceResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest), global::ADL.Protocol.Rpc.Node.CreateRawTransactionRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse), global::ADL.Protocol.Rpc.Node.CreateRawTransactionResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest), global::ADL.Protocol.Rpc.Node.SignRawTransactionRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse), global::ADL.Protocol.Rpc.Node.SignRawTransactionResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest), global::ADL.Protocol.Rpc.Node.DecodeRawTransactionRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse), global::ADL.Protocol.Rpc.Node.DecodeRawTransactionResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest), global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse), global::ADL.Protocol.Rpc.Node.BroadcastRawTransactionResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SendToRequest), global::ADL.Protocol.Rpc.Node.SendToRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SendToResponse), global::ADL.Protocol.Rpc.Node.SendToResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SendToFromRequest), global::ADL.Protocol.Rpc.Node.SendToFromRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SendToFromResponse), global::ADL.Protocol.Rpc.Node.SendToFromResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SendManyRequest), global::ADL.Protocol.Rpc.Node.SendManyRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SendManyResponse), global::ADL.Protocol.Rpc.Node.SendManyResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SendFromManyRequest), global::ADL.Protocol.Rpc.Node.SendFromManyRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SendFromManyResponse), global::ADL.Protocol.Rpc.Node.SendFromManyResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.AddNodeRequest), global::ADL.Protocol.Rpc.Node.AddNodeRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.AddNodeResponse), global::ADL.Protocol.Rpc.Node.AddNodeResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetPeerListRequest), global::ADL.Protocol.Rpc.Node.GetPeerListRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetPeerListResponse), global::ADL.Protocol.Rpc.Node.GetPeerListResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest), global::ADL.Protocol.Rpc.Node.GetPeerInfoRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse), global::ADL.Protocol.Rpc.Node.GetPeerInfoResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest), global::ADL.Protocol.Rpc.Node.GetConnectionCountRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse), global::ADL.Protocol.Rpc.Node.GetConnectionCountResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetDeltaRequest), global::ADL.Protocol.Rpc.Node.GetDeltaRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetDeltaResponse), global::ADL.Protocol.Rpc.Node.GetDeltaResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetMempoolRequest), global::ADL.Protocol.Rpc.Node.GetMempoolRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.GetMempoolResponse), global::ADL.Protocol.Rpc.Node.GetMempoolResponse.Parser, new[]{ "Info" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SignMessageRequest), global::ADL.Protocol.Rpc.Node.SignMessageRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.SignMessageResponse), global::ADL.Protocol.Rpc.Node.SignMessageResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.VerifyMessageRequest), global::ADL.Protocol.Rpc.Node.VerifyMessageRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.VerifyMessageResponse), global::ADL.Protocol.Rpc.Node.VerifyMessageResponse.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.ServiceStatusRequest), global::ADL.Protocol.Rpc.Node.ServiceStatusRequest.Parser, new[]{ "Query" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocol.Rpc.Node.ServiceStatusResponse), global::ADL.Protocol.Rpc.Node.ServiceStatusResponse.Parser, new[]{ "Query" }, null, null, null)
           }));
     }
     #endregion
@@ -141,7 +145,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[0]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -270,7 +274,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[1]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -399,7 +403,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[2]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -528,7 +532,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[3]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -657,7 +661,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[4]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -786,7 +790,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[5]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -915,7 +919,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[6]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1044,7 +1048,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[7]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1173,7 +1177,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[8]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1302,7 +1306,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[9]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1431,7 +1435,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[10]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1560,7 +1564,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[11]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1689,7 +1693,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[12]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1818,7 +1822,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[13]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1947,7 +1951,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[14]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2076,7 +2080,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[15]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2205,7 +2209,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[16]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2334,7 +2338,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[17]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2463,7 +2467,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[18]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2592,7 +2596,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[19]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2721,7 +2725,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[20]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2850,7 +2854,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[21]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2979,7 +2983,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[22]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3108,7 +3112,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[23]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3237,7 +3241,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[24]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[24]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3366,7 +3370,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[25]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3495,7 +3499,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[26]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3624,7 +3628,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[27]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[27]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3753,7 +3757,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[28]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[28]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3882,7 +3886,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[29]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[29]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4011,7 +4015,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[30]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[30]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4140,7 +4144,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[31]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[31]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4269,7 +4273,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[32]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[32]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4398,7 +4402,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[33]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[33]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4527,7 +4531,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[34]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[34]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4656,7 +4660,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[35]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[35]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4785,7 +4789,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[36]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[36]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4914,7 +4918,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[37]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[37]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5043,7 +5047,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[38]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[38]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5172,7 +5176,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[39]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[39]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5301,7 +5305,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[40]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[40]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5430,7 +5434,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[41]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[41]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5559,7 +5563,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[42]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[42]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5688,7 +5692,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[43]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[43]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5817,7 +5821,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[44]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[44]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5946,7 +5950,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[45]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[45]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6075,7 +6079,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[46]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[46]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6204,7 +6208,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[47]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[47]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6221,7 +6225,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public GetMempoolResponse(GetMempoolResponse other) : this() {
-      query_ = other.query_;
+      info_ = other.info_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -6230,15 +6234,14 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
       return new GetMempoolResponse(this);
     }
 
-    /// <summary>Field number for the "query" field.</summary>
-    public const int QueryFieldNumber = 1;
-    private string query_ = "";
+    /// <summary>Field number for the "info" field.</summary>
+    public const int InfoFieldNumber = 1;
+    private static readonly pbc::MapField<string, string>.Codec _map_info_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 10);
+    private readonly pbc::MapField<string, string> info_ = new pbc::MapField<string, string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Query {
-      get { return query_; }
-      set {
-        query_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
+    public pbc::MapField<string, string> Info {
+      get { return info_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6254,14 +6257,14 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Query != other.Query) return false;
+      if (!Info.Equals(other.Info)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Query.Length != 0) hash ^= Query.GetHashCode();
+      hash ^= Info.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6275,10 +6278,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Query.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Query);
-      }
+      info_.WriteTo(output, _map_info_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6287,9 +6287,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Query.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Query);
-      }
+      size += info_.CalculateSize(_map_info_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -6301,9 +6299,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
       if (other == null) {
         return;
       }
-      if (other.Query.Length != 0) {
-        Query = other.Query;
-      }
+      info_.Add(other.info_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -6316,7 +6312,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            Query = input.ReadString();
+            info_.AddEntriesFrom(input, _map_info_codec);
             break;
           }
         }
@@ -6333,7 +6329,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[48]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[48]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6462,7 +6458,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[49]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[49]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6591,7 +6587,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[50]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[50]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6720,7 +6716,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[51]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[51]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6849,7 +6845,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[52]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[52]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6978,7 +6974,7 @@ namespace ADL.Protocol.Rpc.Node.dist.csharp {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocol.Rpc.Node.dist.csharp.RpcReflection.Descriptor.MessageTypes[53]; }
+      get { return global::ADL.Protocol.Rpc.Node.RpcReflection.Descriptor.MessageTypes[53]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

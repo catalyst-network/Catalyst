@@ -45,9 +45,5 @@
     <ItemGroup>
       <DeployManifest Remove="obj\Debug\netcoreapp2.1\Transaction.application" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="UnitTests" />
-    </ItemGroup>
     
 </Project>

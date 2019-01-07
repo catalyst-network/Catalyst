@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using StackExchange.Redis;
 using ADL.Bash;
 using ADL.Node.Core.Modules.Mempool;
-using ADL.Protocol.Mempool.dist.csharp;
+using ADL.Protocols.Mempool;
 using ADL.Redis;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,15 +16,24 @@ namespace ADL.UnitTests
     [TestClass]
     public class UT_Mempool
     {
-        private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance.Connection;
+        private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance().Connection;
+        
+        private class TestMempoolSettings : IMempoolSettings // sort of mock
+        {
+            public string Type { get; set; }
+            public string Expiry {get; set; }
+            public string When { get; set; }
+        }
+
+        private static TestMempoolSettings _settings;
         private static Mempool Memp = new Mempool(new Redis.Redis());
         
         private static Key _k = new Key();
         private static Tx _t = new Tx();
-
+                
         private class ProducerConsumer
         {
-            static readonly object locker = new object();
+            private static readonly object locker = new object();
             public object firstThreadId = null;
             
             public void Writer()
@@ -36,10 +47,21 @@ namespace ADL.UnitTests
                     }
 
                     _t.Amount = (uint)id;
+                    
+                    Thread.Sleep(5); //milliseconds
                 }
-
+                
+                // here there could be a context switch so second thread might call SaveTx failing the test
+                // so a little sleep was needed in the locked section
+                                
                 Memp.SaveTx(_k, _t); // write same key but different tx amount, not under lock                
             }
+        }
+        
+        [ClassInitialize]
+        public static void SetUp(TestContext testContext)
+        {
+            _settings = new TestMempoolSettings {Type = "redis", When = "NotExists"};
         }
         
         [TestInitialize]
@@ -58,9 +80,24 @@ namespace ADL.UnitTests
             
             var server = Cm.GetServer(endpoint[0]);
             server.FlushDatabase(); // clean up Redis before each test
-            //server.FlushAllDatabases();
+            server.FlushAllDatabases();
             
             server.ConfigSet("save","1 1"); // save every seconds for each change to the dataset
+            Thread.Sleep(500); //give it half a seconds to make changes affective
+        }
+        
+        [TestMethod]
+        public void GetInfo()
+        {
+            Memp.SaveTx(_k,_t);
+            
+            var response = Memp.GetInfo();
+
+            Assert.IsNotNull(response);
+            Assert.IsTrue(response.Any());
+            Assert.AreEqual(response["tcp_port"], "6379");
+            Assert.IsTrue(int.Parse(response["used_memory"]) < 1000000);
+            Assert.AreEqual(response["db0"], "keys=1,expires=0,avg_ttl=0");            
         }
         
         [TestMethod]
@@ -118,6 +155,7 @@ namespace ADL.UnitTests
         public void SaveNullKey()
         {
             Key newKey = null;
+
             Memp.SaveTx(newKey, _t);
         }
         
@@ -184,6 +222,7 @@ namespace ADL.UnitTests
             try
             {
                 Memp.SaveTx(_k, _t);
+
                 Assert.Fail("It should have thrown an exception if server is down");
             }
             catch (Exception)
@@ -211,7 +250,7 @@ namespace ADL.UnitTests
         public void KeysArePersistent()
         {
             Memp.SaveTx(_k, _t);            
-            Thread.Sleep(1100); // after one second the changes is saved
+            Thread.Sleep(2000); // after one second the changes is saved
             
             var transaction = Memp.GetTx(_k);
             Assert.AreEqual("signature", transaction.Signature);

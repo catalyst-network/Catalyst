@@ -26,6 +26,15 @@ namespace ADL.Node.Core.Modules.Gossip
             return true;
         }
 
+        /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IGossip GetImpl()
+        {
+            throw new System.NotImplementedException();
+        }
+
         private async Task RunAsyncActors()
         {
             using (var gossipSystem = ActorSystem.Create("GossipSystem"))

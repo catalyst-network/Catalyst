@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ADL.DataStore
 {
@@ -20,5 +22,11 @@ namespace ADL.DataStore
         /// <param name="value"></param>
         /// <returns></returns>
         byte[] Get(byte[] value);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<string, string> GetInfo();
     }
 }
