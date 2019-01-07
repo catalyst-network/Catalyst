@@ -16,6 +16,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         public bool IsCritical => PeerBucket.Count <= 25;
         internal readonly Dictionary<PeerIdentifier, Peer> PeerBucket;
         internal readonly ConcurrentDictionary<string, Connection> UnIdentifiedPeers;
+        public event EventHandler<SocksAuthenticationEventArgs> OnClientAuthenticating;
 
         /// <summary>
         /// 
@@ -108,6 +109,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 {
                     throw new Exception("Can not add unidentified connection to the list");
                 }
+                //@TODO raise event for added un-identified peers.
                 Log.Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port + " added to unidentified peer list)");
                 return true;    
             } catch (Exception e)
