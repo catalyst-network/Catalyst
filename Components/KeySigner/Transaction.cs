@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Threading.Tasks;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 using ADL.RLP;
 
 namespace ADL.KeySigner
@@ -55,8 +55,8 @@ namespace ADL.KeySigner
         }
 
         public Transaction(string to, BigInteger amount, BigInteger nonce, BigInteger gasPrice,
-            BigInteger gasLimit, string data) : this(nonce.ToBytesForRLPEncoding(), gasPrice.ToBytesForRLPEncoding(),
-            gasLimit.ToBytesForRLPEncoding(), to.HexToByteArray(), amount.ToBytesForRLPEncoding(), data.HexToByteArray()
+            BigInteger gasLimit, string data) : this(nonce.ToBytesForRlpEncoding(), gasPrice.ToBytesForRlpEncoding(),
+            gasLimit.ToBytesForRlpEncoding(), to.HexToByteArray(), amount.ToBytesForRlpEncoding(), data.HexToByteArray()
         )
         {
         }

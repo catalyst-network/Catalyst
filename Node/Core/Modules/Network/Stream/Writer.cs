@@ -58,7 +58,7 @@ namespace ADL.Node.Core.Modules.Network.Stream
                     header += payloadLength+":";
                 }
 
-                var headerBytes = header.ToBytesForRLPEncoding();
+                var headerBytes = header.ToBytesForRlpEncoding();
 
                 int messageLen = headerBytes.Length;
                 if (payloadLength > 0)

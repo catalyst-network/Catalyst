@@ -1,5 +1,5 @@
 ﻿using System;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 
 namespace ADL.RLP
 {
@@ -7,14 +7,14 @@ namespace ADL.RLP
     ///     Recursive Length Prefix (RLP) encoding.
     ///     <para>
     ///         The purpose of RLP is to encode arbitrarily nested arrays of binary data, and
-    ///         RLP is the main encoding method used to serialize objects in Atlasereum. The
+    ///         RLP is the main encoding method used to serialize objects in Atlas. The
     ///         only purpose of RLP is to encode structure; encoding specific atomic data
     ///         types (eg. strings, integers, floats) is left up to higher-order protocols; in
-    ///         Atlasereum the standard is that integers are represented in big endian binary
+    ///         Atlas the standard is that integers are represented in big endian binary
     ///         form. If one wishes to use RLP to encode a dictionary, the two suggested
     ///         canonical forms are to either use [[k1,v1],[k2,v2]...] with keys in
     ///         lexicographic order or to use the higher-level Patricia Tree encoding as
-    ///         Atlasereum does.
+    ///         Atlas does.
     ///     </para>
     ///     <para>
     ///         The RLP encoding function takes in an item. An item is defined as follows:
@@ -221,7 +221,7 @@ namespace ADL.RLP
         {
             byte[] item = {msgData[currentPosition]};
 
-            var rlpItem = new RLPItem(item);
+            var rlpItem = new RlpItem(item);
             rlpCollection.Add(rlpItem);
             currentPosition += 1;
             return currentPosition;
@@ -230,7 +230,7 @@ namespace ADL.RLP
         private static int ProcessNullItem(RLPCollection rlpCollection, int currentPosition)
         {
             var item = EMPTY_BYTE_ARRAY;
-            var rlpItem = new RLPItem(item);
+            var rlpItem = new RlpItem(item);
             rlpCollection.Add(rlpItem);
             currentPosition += 1;
             return currentPosition;
@@ -246,7 +246,7 @@ namespace ADL.RLP
             var rlpPrefix = new byte[2];
             Array.Copy(msgData, currentPosition, rlpPrefix, 0, 2);
 
-            var rlpItem = new RLPItem(item);
+            var rlpItem = new RlpItem(item);
             rlpCollection.Add(rlpItem);
             currentPosition += 1 + length;
             return currentPosition;
@@ -267,7 +267,7 @@ namespace ADL.RLP
             Array.Copy(msgData, currentPosition, rlpPrefix, 0,
                 lengthOfLength + 1);
 
-            var rlpItem = new RLPItem(item);
+            var rlpItem = new RlpItem(item);
             rlpCollection.Add(rlpItem);
             currentPosition += lengthOfLength + length + 1;
             return currentPosition;
@@ -282,7 +282,7 @@ namespace ADL.RLP
 
             Array.Copy(msgData, currentPosition, rlpData, 0, rlpDataLength);
 
-            var newLevelCollection = new RLPCollection {RLPData = rlpData};
+            var newLevelCollection = new RLPCollection {RlpData = rlpData};
 
             if (length > 0)
                 Decode(msgData, level + 1, currentPosition + 1, currentPosition + rlpDataLength,
@@ -305,7 +305,7 @@ namespace ADL.RLP
             var rlpData = new byte[rlpDataLength];
 
             Array.Copy(msgData, currentPosition, rlpData, 0, rlpDataLength);
-            var newLevelCollection = new RLPCollection {RLPData = rlpData};
+            var newLevelCollection = new RLPCollection {RlpData = rlpData};
 
             Decode(msgData, level + 1, currentPosition + lengthOfLength + 1,
                 currentPosition + rlpDataLength, levelToIndex,
@@ -316,7 +316,7 @@ namespace ADL.RLP
             return currentPosition;
         }
 
-        public static IRLPElement DecodeFirstElement(byte[] msgData, int startPos)
+        public static IRlpElement DecodeFirstElement(byte[] msgData, int startPos)
         {
             var rlpCollection = new RLPCollection();
             Decode(msgData, 0, startPos, startPos + 1, 1, rlpCollection);

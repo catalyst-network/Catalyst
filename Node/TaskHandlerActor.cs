@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
-using ADL.Protocol.Rpc.Node;
 using Akka.Actor;
-using Autofac.Features.ResolveAnything;
+using ADL.Protocol.Rpc.Node;
 
 namespace ADL.Node
 {
+    /// <inheritdoc />
     /// <summary>
     /// Actor handling requests coming via RPC
     /// </summary>
@@ -13,14 +12,12 @@ namespace ADL.Node
     {           
         protected override void OnReceive(object message)
         {
-            if (message is GetMempoolRequest)
-            {
-                var res = AtlasSystem.MempoolService.GetImpl().GetInfo();
-                
-                var response = new GetMempoolResponse();
-                response.Info.Add(res);
-                Sender.Tell(response);
-            }
+            if (message == null) throw new ArgumentNullException(nameof (message));
+            if (!(message is GetMempoolRequest)) return;
+            var res = AtlasSystem.MempoolService.GetImpl().GetInfo();
+            var response = new GetMempoolResponse();
+            response.Info.Add(res);
+            Sender.Tell(response);
         }
     }
 }

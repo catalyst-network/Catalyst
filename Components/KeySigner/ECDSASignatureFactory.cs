@@ -1,5 +1,5 @@
 ﻿using System;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 using ADL.KeySigner.Crypto;
 using Org.BouncyCastle.Math;
 

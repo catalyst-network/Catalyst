@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 using ADL.RLP;
 using ADL.KeySigner.Crypto;
 using ADL.Util;
@@ -161,7 +161,7 @@ namespace ADL.KeySigner
 
         public static int GetRecIdFromVChain(byte[] vChain, BigInteger chainId)
         {
-            return GetRecIdFromVChain(vChain.ToBigIntegerFromRLPDecoded(), chainId);
+            return GetRecIdFromVChain(vChain.ToBigIntegerFromRlpDecoded(), chainId);
         }
 
         public static AtlasECKey RecoverFromSignature(AtlasECDSASignature signature, byte[] hash)
@@ -186,7 +186,7 @@ namespace ADL.KeySigner
             var signature = _ecKey.Sign(hash);
             var recId = CalculateRecId(signature, hash);
             var vChain = CalculateV(chainId, recId);
-            signature.V = vChain.ToBytesForRLPEncoding();
+            signature.V = vChain.ToBytesForRlpEncoding();
             return new AtlasECDSASignature(signature);
         }
 

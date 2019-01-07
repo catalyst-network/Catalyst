@@ -6,10 +6,6 @@ namespace ADL.Util
 {
     /// BigNumber based on the original http://uberscraper.blogspot.co.uk/2013/09/c-bigdecimal-class-from-stackoverflow.html
     /// which was inspired by http://stackoverflow.com/a/4524254
-    /// Original Author: Jan Christoph Bernack (contact: jc.bernack at googlemail.com)
-    /// Changes JB: Added parse, Fix Normalise, Added Floor, New ToString, Change Equals (normalise to validate first), Change Casting to avoid overflows (even if might be slower), Added Normalise Bigger than zero, test on operations, parsing, casting, and other test coverage for ethereum unit conversions
-    /// Changes KJ: Added Culture formatting
-    /// http://stackoverflow.com/a/13813535/956364" />
     /// <summary>
     ///     Arbitrary precision Decimal.
     ///     All operations are exact, except for division.
@@ -17,13 +13,16 @@ namespace ADL.Util
     /// </summary>
     public struct BigDecimal : IComparable, IComparable<BigDecimal>
     {
+        private int Exponent { get; set; }
+        public BigInteger Mantissa { get; private set; }
+        
         /// <summary>
         ///     Sets the maximum precision of division operations.
         ///     If AlwaysTruncate is set to true all operations are affected.
         /// </summary>
-        public const int Precision = 50;
+        private const int Precision = 50;
 
-        public BigDecimal(BigDecimal bigDecimal, bool alwaysTruncate = false) : this(bigDecimal.Mantissa,
+        private BigDecimal(BigDecimal bigDecimal, bool alwaysTruncate = false) : this(bigDecimal.Mantissa,
             bigDecimal.Exponent, alwaysTruncate)
         {
         }
@@ -53,22 +52,31 @@ namespace ADL.Util
                 Truncate();
         }
 
-        public BigInteger Mantissa { get; internal set; }
-        public int Exponent { get; internal set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public int CompareTo(object obj)
         {
-            if (ReferenceEquals(obj, null) || !(obj is BigDecimal))
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            if (!(obj is BigDecimal))
                 throw new ArgumentException();
             return CompareTo((BigDecimal) obj);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(BigDecimal other)
         {
-            return this < other ? -1 : (this > other ? 1 : 0);
+            return this < other ? -1 : this > other ? 1 : 0;
         }
 
-        public void NormaliseExponentBiggerThanZero()
+        private void NormaliseExponentBiggerThanZero()
         {
             if (Exponent > 0)
             {
@@ -80,7 +88,7 @@ namespace ADL.Util
         /// <summary>
         ///     Removes trailing zeros on the mantissa
         /// </summary>
-        public void Normalize()
+        private void Normalize()
         {
             if (Exponent == 0) return;
 
@@ -107,7 +115,7 @@ namespace ADL.Util
         ///     Truncate the number to the given precision by removing the least significant digits.
         /// </summary>
         /// <returns>The truncated number</returns>
-        internal BigDecimal Truncate(int precision = Precision)
+        private BigDecimal Truncate(int precision = Precision)
         {
             // copy this instance (remember its a struct)
             var shortened = this;
@@ -131,11 +139,20 @@ namespace ADL.Util
             return Truncate(Mantissa.NumberOfDigits() + Exponent);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private static int NumberOfDigits(BigInteger value)
         {
             return value.NumberOfDigits();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             Normalize();
@@ -154,7 +171,12 @@ namespace ADL.Util
             return s;
         }
 
-        public bool Equals(BigDecimal other)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        private bool Equals(BigDecimal other)
         {
             var first = this;
             var second = other;
@@ -163,13 +185,21 @@ namespace ADL.Util
             return second.Mantissa.Equals(first.Mantissa) && second.Exponent == first.Exponent;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-                return false;
-            return obj is BigDecimal && Equals((BigDecimal) obj);
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            return obj is BigDecimal a && Equals(a);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -180,11 +210,21 @@ namespace ADL.Util
 
         #region Conversions
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static implicit operator BigDecimal(int value)
         {
             return new BigDecimal(value, 0);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static implicit operator BigDecimal(double value)
         {
             var mantissa = (BigInteger) value;
@@ -199,6 +239,11 @@ namespace ADL.Util
             return new BigDecimal(mantissa, exponent);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static implicit operator BigDecimal(decimal value)
         {
             var mantissa = (BigInteger) value;
@@ -213,26 +258,51 @@ namespace ADL.Util
             return new BigDecimal(mantissa, exponent);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static explicit operator double(BigDecimal value)
         {
             return double.Parse(value.ToString(), CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static explicit operator float(BigDecimal value)
         {
             return float.Parse(value.ToString(), CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static explicit operator decimal(BigDecimal value)
         {
             return decimal.Parse(value.ToString(), CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static explicit operator int(BigDecimal value)
         {
             return Convert.ToInt32((decimal) value);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static explicit operator uint(BigDecimal value)
         {
             return Convert.ToUInt32((decimal) value);

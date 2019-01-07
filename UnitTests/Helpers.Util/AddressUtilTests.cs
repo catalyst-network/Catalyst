@@ -14,18 +14,18 @@ namespace ADL.Util.UnitTests
         {
             var address1 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
             var address2 = "0x5aaeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
-            Assert.True(address1.IsValidAtlasereumAddressHexFormat());
-            Assert.True(address2.IsValidAtlasereumAddressHexFormat());
+            Assert.True(address1.IsValidAtlasAddressHexFormat());
+            Assert.True(address2.IsValidAtlasAddressHexFormat());
 
             var address3 = "5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
-            Assert.False(address3.IsValidAtlasereumAddressHexFormat());
+            Assert.False(address3.IsValidAtlasAddressHexFormat());
             //length
             var address4 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1Be";
-            Assert.False(address4.IsValidAtlasereumAddressHexFormat());
+            Assert.False(address4.IsValidAtlasAddressHexFormat());
             //non alpha
             //length
             var address5 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeA'#";
-            Assert.False(address5.IsValidAtlasereumAddressHexFormat());
+            Assert.False(address5.IsValidAtlasAddressHexFormat());
         }
 
         [Fact]

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 using ADL.RLP;
 using ADL.KeySigner.Crypto;
 
@@ -31,7 +31,7 @@ namespace ADL.KeySigner
             var publicKey = await GetPublicKeyAsync();
             var recId = AtlasECKey.CalculateRecId(signature, rawBytes, publicKey);
             var vChain = AtlasECKey.CalculateV(chainId, recId);
-            signature.V = vChain.ToBytesForRLPEncoding();
+            signature.V = vChain.ToBytesForRlpEncoding();
             return new AtlasECDSASignature(signature);
         }
 

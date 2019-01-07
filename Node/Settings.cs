@@ -323,7 +323,6 @@ namespace ADL.Node
         }
     }
 
-
     /// <summary>
     /// RPC settings class.
     /// </summary>

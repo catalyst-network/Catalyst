@@ -1,5 +1,5 @@
 ﻿using System;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 using ADL.RLP;
 using ADL.KeySigner.Crypto;
 using ADL.Util;
@@ -68,7 +68,7 @@ namespace ADL.KeySigner
 
         public bool IsVSignedForChain()
         {
-            return V.ToBigIntegerFromRLPDecoded() >= 35;
+            return V.ToBigIntegerFromRlpDecoded() >= 35;
         }
 
         public byte[] To64ByteArray()

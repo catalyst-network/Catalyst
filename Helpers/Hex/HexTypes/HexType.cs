@@ -1,106 +1,208 @@
 using System;
-using ADL.Hex.HexConvertors;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters;
+using ADL.Hex.HexConverters.Extensions;
 
 namespace ADL.Hex.HexTypes
 {
-    public class HexRPCType<T>
+    public class HexRpcType<T>
     {
-        protected IHexConvertor<T> convertor;
+        private T value;
+        private string hexValue;
+        private bool NeedsInitialisingValue;
+        private readonly IHexConvertor<T> converter;
+        private readonly object LockingObject = new object(); //@TODO is it wise to share locking object?
 
-        protected string hexValue;
-
-        protected T value;
-
-        protected object lockingObject = new object();
-        protected bool needsInitialisingValue;
-
-        protected T GetValue()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private T GetValue()
         {
-            lock (lockingObject)
+            lock (LockingObject)
             {
-                if (needsInitialisingValue)
+                if (NeedsInitialisingValue)
                 {
                     InitialiseValueFromHex(hexValue);
-                    needsInitialisingValue = false;
+                    NeedsInitialisingValue = false;
                 }
                 return value;
             }
         }
-        protected HexRPCType(IHexConvertor<T> convertor)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="converter"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected HexRpcType(IHexConvertor<T> converter)
         {
-            this.convertor = convertor;
+            if (converter == null) throw new ArgumentNullException(nameof(converter));
+            this.converter = converter;
         }
 
-        public HexRPCType(IHexConvertor<T> convertor, string hexValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="converter"></param>
+        /// <param name="hexValue"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        protected HexRpcType(IHexConvertor<T> converter, string hexValue)
         {
-            this.convertor = convertor;
+            if (hexValue == null) throw new ArgumentNullException(nameof(hexValue));
+            if (converter == null) throw new ArgumentNullException(nameof(converter));
+            if (converter == null) throw new ArgumentNullException(nameof(converter));
+            if (string.IsNullOrEmpty(hexValue))
+                throw new ArgumentException("Value cannot be null or empty.", nameof(hexValue));
+            if (converter == null) throw new ArgumentNullException(nameof(converter));
+            if (string.IsNullOrWhiteSpace(hexValue))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(hexValue));
+
+            this.converter = converter;
             SetHexAndFlagValueToBeInitialised(hexValue);
         }
 
-        public HexRPCType(T value, IHexConvertor<T> convertor)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="converter"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected HexRpcType(T value, IHexConvertor<T> converter)
         {
-            this.convertor = convertor;
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (converter == null) throw new ArgumentNullException(nameof(converter));
+
+            this.converter = converter;
             InitialiseFromValue(value);
         }
 
         public string HexValue
         {
             get => hexValue;
-            set => SetHexAndFlagValueToBeInitialised(value);
+            protected set => SetHexAndFlagValueToBeInitialised(value);
         }
 
-        public T Value
+        protected T Value
         {
             get => GetValue();
             set => InitialiseFromValue(value);
         }
 
-        protected void SetHexAndFlagValueToBeInitialised(string newHexValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newHexValue"></param>
+        /// <exception cref="ArgumentException"></exception>
+        private void SetHexAndFlagValueToBeInitialised(string newHexValue)
         {
+            if (string.IsNullOrEmpty(newHexValue))
+                throw new ArgumentException("Value cannot be null or empty.", nameof(newHexValue));
+            if (string.IsNullOrWhiteSpace(newHexValue))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(newHexValue));
             hexValue = newHexValue.EnsureHexPrefix();
-            lock (lockingObject)
+            lock (LockingObject)
             {
-                needsInitialisingValue = true;
+                NeedsInitialisingValue = true;
             }
         }
 
-        protected void InitialiseValueFromHex(string newHexValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newHexValue"></param>
+        /// <exception cref="ArgumentException"></exception>
+        private void InitialiseValueFromHex(string newHexValue)
         {
+            if (string.IsNullOrEmpty(newHexValue))
+                throw new ArgumentException("Value cannot be null or empty.", nameof(newHexValue));
+            if (string.IsNullOrWhiteSpace(newHexValue))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(newHexValue));
             value = ConvertFromHex(newHexValue);
         }
 
-        protected void InitialiseFromValue(T newValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newValue"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        private void InitialiseFromValue(T newValue)
         {
+            if (newValue == null) throw new ArgumentNullException(nameof(newValue));
             hexValue = ConvertToHex(newValue).EnsureHexPrefix();
-            value = newValue;
+            lock (LockingObject)
+            {
+                value = newValue;
+            }
         }
 
-        protected string ConvertToHex(T newValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newValue"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        private string ConvertToHex(T newValue)
         {
-            return convertor.ConvertToHex(newValue);
+            if (newValue == null) throw new ArgumentNullException(nameof(newValue));
+            lock (LockingObject)
+            {
+                return converter.ConvertToHex(newValue);
+            }
         }
 
-        protected T ConvertFromHex(string newHexValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newHexValue"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        private T ConvertFromHex(string newHexValue)
         {
-            return convertor.ConvertFromHex(newHexValue);
+            if (string.IsNullOrEmpty(newHexValue))
+                throw new ArgumentException("Value cannot be null or empty.", nameof(newHexValue));
+            if (string.IsNullOrWhiteSpace(newHexValue))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(newHexValue));
+            return converter.ConvertFromHex(newHexValue);
         }
 
-        public byte[] ToHexByteArray()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private byte[] ToHexByteArray()
         {
             return HexValue.HexToByteArray();
         }
 
-        public static implicit operator byte[](HexRPCType<T> hexRpcType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hexRpcType"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static implicit operator byte[](HexRpcType<T> hexRpcType)
         {
+            if (hexRpcType == null) throw new ArgumentNullException(nameof(hexRpcType));
             return hexRpcType.ToHexByteArray();
         }
 
-        public static implicit operator T(HexRPCType<T> hexRpcType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hexRpcType"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static implicit operator T(HexRpcType<T> hexRpcType)
         {
+            if (hexRpcType == null) throw new ArgumentNullException(nameof(hexRpcType));
             return hexRpcType.Value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return Value.GetHashCode();

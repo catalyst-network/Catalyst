@@ -6,7 +6,7 @@ using System.Text;
 using ADL.Network;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
@@ -133,7 +133,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
-            return endPoint.Port.ToBytesForRLPEncoding();
+            return endPoint.Port.ToBytesForRlpEncoding();
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientVersion(byte[] peerId)
         {            
-            if (!peerId.Slice(2, 4).ToHex().IsTheSameHex(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()).ToHexUTF8()))
+            if (!peerId.Slice(2, 4).ToHex().IsTheSameHex(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()).ToHexUtf8()))
             {
                 throw new ArgumentException("clientVersion not valid");
                 //@TODO we need to discuss how major version updates will be rolled out as we could potentially partition the network here!!!!
@@ -270,7 +270,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientPort(byte[] peerId)
         {
-            if (!Ip.ValidPortRange( peerId.Slice(20, 22).ToIntFromRLPDecoded()))
+            if (!Ip.ValidPortRange( peerId.Slice(20, 22).ToIntFromRlpDecoded()))
             {
                 throw new ArgumentException("clientPort not valid"); 
             }

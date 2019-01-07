@@ -13,22 +13,21 @@ namespace ADL.Platform
         /// <summary>
         /// True if runtime platform is Linux
         /// </summary>
-        private static bool _isLinux = false;
+        private static bool _isLinux;
 
         /// <summary>
         /// True if runtime platform is Mac OS X
         /// </summary>
-        private static bool _isMacOsX = false;
+        private static bool _isMacOsX;
         
         /// <summary>
         /// True if runtime platform is Windows
         /// </summary>
-        private static bool _isWindows = false;
+        private static bool _isWindows;
 
-        public static uint OS()
+        public static uint Os()
         {
-            uint platform;
-            platform = 0;
+            uint platform = 0;
             
             if (IsLinux)
             {
@@ -54,29 +53,17 @@ namespace ADL.Platform
         /// <summary>
         /// True if 64-bit runtime is used
         /// </summary>
-        public static bool Uses64BitRuntime
-        {
-            get
-            {
-                return (IntPtr.Size == 8);
-            }
-        }
+        public static bool Uses64BitRuntime => IntPtr.Size == 8;
 
         /// <summary>
         /// True if 32-bit runtime is used
         /// </summary>
-        public static bool Uses32BitRuntime
-        {
-            get
-            {
-                return (IntPtr.Size == 4);
-            }
-        }
+        public static bool Uses32BitRuntime => (IntPtr.Size == 4);
 
         /// <summary>
         /// True if runtime platform is Windows
         /// </summary>
-        public static bool IsWindows
+        private static bool IsWindows
         {
             get
             {
@@ -88,7 +75,7 @@ namespace ADL.Platform
         /// <summary>
         /// True if runtime platform is Linux
         /// </summary>
-        public static bool IsLinux
+        private static bool IsLinux
         {
             get
             {
@@ -100,7 +87,7 @@ namespace ADL.Platform
         /// <summary>
         /// True if runtime platform is Mac OS X
         /// </summary>
-        public static bool IsMacOsX
+        private static bool IsMacOsX
         {
             get
             {
@@ -118,8 +105,8 @@ namespace ADL.Platform
             if (_isWindows || _isLinux || _isMacOsX)
                 return;
 
-            var windir = Environment.GetEnvironmentVariable("windir");
-            if (!string.IsNullOrEmpty(windir) && windir.Contains(@"\") && Directory.Exists(windir))
+            var winDir = Environment.GetEnvironmentVariable("windir");
+            if (!string.IsNullOrEmpty(winDir) && winDir.Contains(@"\") && Directory.Exists(winDir))
             {
                 _isWindows = true;
             }
@@ -145,7 +132,7 @@ namespace ADL.Platform
             }
         }
     }
-
+    
     internal class UnsupportedPlatformException : Exception
     {
         /// <summary>

@@ -104,7 +104,7 @@ namespace ADL.Node.Core.Modules.Network
             
             try
             {
-                NodeIdentity = PeerIdentifier.BuildPeerId(publicKey.ToBytesForRLPEncoding(), new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
+                NodeIdentity = PeerIdentifier.BuildPeerId(publicKey.ToBytesForRlpEncoding(), new IPEndPoint(IPAddress.Parse(networkSettings.BindAddress), networkSettings.Port));
             }
             catch (ArgumentNullException e)
             {

@@ -1,5 +1,5 @@
 ﻿using System;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 using ADL.KeyStore.Crypto;
 using ADL.KeyStore.JsonDeserialisation;
 using ADL.KeyStore.Model;

@@ -2,20 +2,31 @@ using System;
 using System.Linq;
 using System.Numerics;
 
-namespace ADL.Hex.HexConvertors.Extensions
+namespace ADL.Hex.HexConverters.Extensions
 {
-    public static class HexBigIntegerConvertorExtensions
+    public static class HexBigIntegerConverterExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="littleEndian"></param>
+        /// <returns></returns>
         public static byte[] ToByteArray(this BigInteger value, bool littleEndian)
         {
             byte[] bytes;
-            if (BitConverter.IsLittleEndian != littleEndian)
-                bytes = value.ToByteArray().Reverse().ToArray();
-            else
-                bytes = value.ToByteArray().ToArray();
+            bytes = BitConverter.IsLittleEndian != littleEndian ? value.ToByteArray().Reverse().ToArray() : value.ToByteArray().ToArray();
             return bytes;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="littleEndian"></param>
+        /// <param name="compact"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static string ToHex(this BigInteger value, bool littleEndian, bool compact = true)
         {
             if (value.Sign < 0) throw new Exception("Hex Encoding of Negative BigInteger value is not supported");
@@ -32,10 +43,20 @@ namespace ADL.Hex.HexConvertors.Extensions
 
             return "0x" + bytes.ToHex();
         }
-
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <param name="isHexLittleEndian"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public static BigInteger HexToBigInteger(this string hex, bool isHexLittleEndian)
         {
+            if (hex == null) throw new ArgumentNullException(nameof(hex));
+            if (string.IsNullOrWhiteSpace(hex))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(hex));
             if (hex == "0x0") return 0;
 
             var encoded = hex.HexToByteArray();

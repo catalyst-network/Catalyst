@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Threading.Tasks;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 using ADL.RLP;
 
 namespace ADL.KeySigner
@@ -9,8 +9,8 @@ namespace ADL.KeySigner
     public class TransactionChainId : TransactionBase
     {  
         //The R and S Hashing values
-        private static readonly byte[] RHASH_DEFAULT = 0.ToBytesForRLPEncoding();
-        private static readonly byte[] SHASH_DEFAULT = 0.ToBytesForRLPEncoding();
+        private static readonly byte[] RHASH_DEFAULT = 0.ToBytesForRlpEncoding();
+        private static readonly byte[] SHASH_DEFAULT = 0.ToBytesForRlpEncoding();
 
         public TransactionChainId(byte[] rawData, BigInteger chainId)
         {
@@ -42,7 +42,7 @@ namespace ADL.KeySigner
         {
             //append the chainId, r and s so it can be recovered using the raw hash
             //the encoding has only the default 6 values
-            SimpleRlpSigner.AppendData(chainId.ToBytesForRLPEncoding(), RHASH_DEFAULT,
+            SimpleRlpSigner.AppendData(chainId.ToBytesForRlpEncoding(), RHASH_DEFAULT,
                 SHASH_DEFAULT);
         }
 
@@ -56,7 +56,7 @@ namespace ADL.KeySigner
 
         private BigInteger GetChainFromVChain()
         {
-            return AtlasECKey.GetChainFromVChain(Signature.V.ToBigIntegerFromRLPDecoded());
+            return AtlasECKey.GetChainFromVChain(Signature.V.ToBigIntegerFromRlpDecoded());
         }
 
         public TransactionChainId(byte[] nonce, byte[] gasPrice, byte[] gasLimit, byte[] receiveAddress, byte[] value,
@@ -92,17 +92,17 @@ namespace ADL.KeySigner
         }
 
         public TransactionChainId(string to, BigInteger amount, BigInteger nonce, BigInteger gasPrice,
-            BigInteger gasLimit, string data, BigInteger chainId) : this(nonce.ToBytesForRLPEncoding(),
-            gasPrice.ToBytesForRLPEncoding(),
-            gasLimit.ToBytesForRLPEncoding(), to.HexToByteArray(), amount.ToBytesForRLPEncoding(),
-            data.HexToByteArray(), chainId.ToBytesForRLPEncoding()
+            BigInteger gasLimit, string data, BigInteger chainId) : this(nonce.ToBytesForRlpEncoding(),
+            gasPrice.ToBytesForRlpEncoding(),
+            gasLimit.ToBytesForRlpEncoding(), to.HexToByteArray(), amount.ToBytesForRlpEncoding(),
+            data.HexToByteArray(), chainId.ToBytesForRlpEncoding()
         )
         {
         }
 
         public BigInteger GetChainIdAsBigInteger()
         {
-            return ChainId.ToBigIntegerFromRLPDecoded();
+            return ChainId.ToBigIntegerFromRlpDecoded();
         }
 
         public byte[] ChainId => SimpleRlpSigner.Data[6];
@@ -116,7 +116,7 @@ namespace ADL.KeySigner
         /// </summary>
         public override AtlasECKey Key => AtlasECKey.RecoverFromSignature(SimpleRlpSigner.Signature,
             SimpleRlpSigner.RawHash,
-            ChainId.ToBigIntegerFromRLPDecoded());
+            ChainId.ToBigIntegerFromRlpDecoded());
 
         public string ToJsonHex()
         {
