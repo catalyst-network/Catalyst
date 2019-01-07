@@ -66,14 +66,14 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 Console.WriteLine("trace ==========");
                 Console.WriteLine(needle.EndPoint.Address);
-                Console.WriteLine(needle.Port);
-                if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.Port, out var connection))
+                Console.WriteLine(needle.EndPoint.Port);
+                if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.EndPoint.Port, out var connection))
                 {
                     if (connection == null) throw new ArgumentNullException(nameof(connection));
                     // already have a connection in our unidentified list, check if result is actually connected
                     if (connection.IsConnected())
                     {
-                        Log.Log.Message("*** Active connection already exists for " + connection.EndPoint.Address + connection.Port);
+                        Log.Log.Message("*** Active connection already exists for " + connection.EndPoint.Address + connection.EndPoint.Port);
                         return false;
                     }
                     try
@@ -85,7 +85,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                         }
 
                         Log.Log.Message("Removed stale connection for  " + connection.EndPoint.Address +
-                                        connection.Port);
+                                        connection.EndPoint.Port);
                         return true;
                     }
                     catch (ArgumentNullException e)
@@ -130,12 +130,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             if (connection == null) throw new ArgumentNullException(nameof (connection));
             try
             {
-                if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.Port, out Connection removedConnection))
+                if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.EndPoint.Port, out Connection removedConnection))
                 {
-                    Log.Log.Message("***** Successfully removed " + removedConnection.EndPoint.Address + removedConnection.Port);
+                    Log.Log.Message("***** Successfully removed " + removedConnection.EndPoint.Address + removedConnection.EndPoint.Port);
                     return true;
                 }
-                Log.Log.Message("*** unable to find connection " + connection.EndPoint.Address+":"+connection.Port);
+                Log.Log.Message("*** unable to find connection " + connection.EndPoint.Address+":"+connection.EndPoint.Port);
                 return false;
             }
             catch (ArgumentNullException e)

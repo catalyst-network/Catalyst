@@ -149,7 +149,7 @@ namespace ADL.Util
         public bool TryValidateUnitValue(BigInteger ethUnit)
         {
             if (ethUnit.ToString().Trim('0') == "1") return true;
-            throw new Exception("Invalid unit value, it should be a power of 10 ");
+            throw new ArgumentOutOfRangeException("Invalid unit value, it should be a power of 10 ");
         }
 
         public BigInteger ToWeiFromUnit(decimal amount, BigInteger fromUnit)

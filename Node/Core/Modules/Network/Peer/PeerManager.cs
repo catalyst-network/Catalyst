@@ -121,12 +121,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
             catch (OperationCanceledException e)
             {
-                Log.LogException.Message("*** Data receiver cancelled " + connection.EndPoint.Address + ":" + connection.Port + " disconnected", e);
+                Log.LogException.Message("*** Data receiver cancelled " + connection.EndPoint.Address + ":" + connection.EndPoint.Port + " disconnected", e);
                 throw;
             }
             catch (Exception e)
             {
-                Log.LogException.Message("*** Data receiver exception " + connection.EndPoint.Address + ":" + connection.Port + " disconnected", e);
+                Log.LogException.Message("*** Data receiver exception " + connection.EndPoint.Address + ":" + connection.EndPoint.Port + " disconnected", e);
                 throw;
             }
             finally
@@ -424,7 +424,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     }
                     
                     if (await DataReceiver(connection, Token)) return;
-                    throw new Exception("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.Port);
+                    throw new Exception("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
                 }
             }
             catch (Exception e)
@@ -477,7 +477,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 Log.LogException.Message("StartPeerConnection: Interlocked.Increment", e);
                 throw;
             }
-            Log.Log.Message("*** Connection created for " + connection.EndPoint.Address + connection.Port + " (now " + activeCount + " connections)");
+            Log.Log.Message("*** Connection created for " + connection.EndPoint.Address + connection.EndPoint.Port + " (now " + activeCount + " connections)");
             return connection;
         }
 
@@ -543,14 +543,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     }
                     else
                     {
+                        connection.Dispose();
                         return false;
                     }
                 }
-                else
-                {
-                    connection.Dispose();
-                }
-
                 return true;
             }
             catch (Exception e)
@@ -561,7 +557,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             finally
             {
                 var activeCount = Interlocked.Decrement(ref ActiveConnections);
-                Log.Log.Message("***** Successfully disconnected " + connection.EndPoint.Address + connection.Port + " connected (now " + activeCount + " connections active)");
+                Log.Log.Message("***** Connection successfully disconnected connected (now " + activeCount + " connections active)");
             }
         }
         
