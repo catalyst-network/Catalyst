@@ -13,7 +13,7 @@ namespace ADL.Log
         {
             Log.Message("================================================================================");
             Log.Message(" = Method: " + method);
-            Log.Message(" = Exception Type: " + e.GetType().ToString());
+            Log.Message(" = Exception Type: " + e.GetType());
             Log.Message(" = Exception Data: " + e.Data);
             Log.Message(" = Inner Exception: " + e.InnerException);
             Log.Message(" = Exception Message: " + e.Message);

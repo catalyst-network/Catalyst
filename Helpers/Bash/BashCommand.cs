@@ -22,9 +22,12 @@ namespace ADL.Bash
        /// </remarks> 
         public static void BackgroundCmd(this string cmd)
         {
+            if (string.IsNullOrEmpty(cmd)) throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
+            if (string.IsNullOrWhiteSpace(cmd))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
             var escapedArgs = cmd.Replace("\"", "\\\"");
             
-            var process = new Process()
+            var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -32,7 +35,7 @@ namespace ADL.Bash
                     Arguments = $"-c \"{escapedArgs}\"&",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
-                    CreateNoWindow = true,
+                    CreateNoWindow = true
                 }
             };
             process.Start();
@@ -54,6 +57,9 @@ namespace ADL.Bash
        /// </remarks>
         public static string WaitForCmd(this string cmd)
         {
+            if (string.IsNullOrEmpty(cmd)) throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
+            if (string.IsNullOrWhiteSpace(cmd))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
             var escapedArgs = cmd.Replace("\"", "\\\"");
             
             var process = new Process()

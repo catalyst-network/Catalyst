@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace ADL.RLP
 {
-    public class RLPCollection : List<IRLPElement>, IRLPElement
+    public class RLPCollection : List<IRlpElement>, IRlpElement
     {
-        public byte[] RLPData { get; set; }
+        public byte[] RlpData { get; set; }
     }
 }

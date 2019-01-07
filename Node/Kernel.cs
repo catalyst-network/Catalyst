@@ -38,7 +38,7 @@ namespace ADL.Node
                     if (_instance == null) 
                     { 
                         // run platform detection
-                        options.Platform = Detection.OS();
+                        options.Platform = Detection.Os();
             
                         // check supplied data dir exists
                         if (!DataDirCheck(options.DataDir))

@@ -1,4 +1,4 @@
-﻿using ADL.Hex.HexConvertors.Extensions;
+﻿using ADL.Hex.HexConverters.Extensions;
 using ADL.KeyStore.Model;
 using Newtonsoft.Json;
 

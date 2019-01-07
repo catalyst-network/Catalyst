@@ -10,7 +10,7 @@ namespace ADL.Node.Core.Helpers.Services
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public Task AwaitCancellation(CancellationToken token)
+        public Task AwaitCancellation(CancellationToken token = new CancellationToken())
         {
             var taskSource = new TaskCompletionSource<bool>();
             token.Register(() => taskSource.SetResult(true));

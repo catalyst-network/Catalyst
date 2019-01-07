@@ -1,18 +1,25 @@
 using System;
 using System.Text;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 
 namespace ADL.RLP
 {
     public class RLPStringFormatter
     {
-        public static string Format(IRLPElement element)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Exception"></exception>
+        public static string Format(IRlpElement element)
         {
+            if (element == null) throw new ArgumentNullException(nameof(element));
             var output = new StringBuilder();
             if (element == null)
                 throw new Exception("RLPElement object can't be null");
-            var rlpCollection = element as RLPCollection;
-            if (rlpCollection != null)
+            if (element is RLPCollection rlpCollection)
             {
                 output.Append("[");
                 foreach (var innerElement in rlpCollection)
@@ -21,7 +28,7 @@ namespace ADL.RLP
             }
             else
             {
-                output.Append(element.RLPData.ToHex() + ", ");
+                output.Append(element.RlpData.ToHex() + ", ");
             }
             return output.ToString();
         }

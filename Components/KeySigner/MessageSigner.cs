@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 using ADL.Util;
 
 namespace ADL.KeySigner

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Text;
-using ADL.Hex.HexConvertors.Extensions;
+using ADL.Hex.HexConverters.Extensions;
 
 namespace ADL.KeySigner
 {
-    public class AtlasereumMessageSigner : MessageSigner
+    public class AtlasMessageSigner : MessageSigner
     {
         public override string EcRecover(byte[] message, string signature)
         {
@@ -25,7 +25,7 @@ namespace ADL.KeySigner
         {
             var byteList = new List<byte>();
             var bytePrefix = "0x19".HexToByteArray();
-            var textBytePrefix = Encoding.UTF8.GetBytes("Atlasereum Signed Message:\n" + message.Length);
+            var textBytePrefix = Encoding.UTF8.GetBytes("Atlas Signed Message:\n" + message.Length);
 
             byteList.AddRange(bytePrefix);
             byteList.AddRange(textBytePrefix);

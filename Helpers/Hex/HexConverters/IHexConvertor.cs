@@ -1,4 +1,4 @@
-namespace ADL.Hex.HexConvertors
+namespace ADL.Hex.HexConverters
 {
     public interface IHexConvertor<T>
     {
