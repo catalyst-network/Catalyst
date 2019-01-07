@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ADL.Hex.HexConverters.Extensions;
 using ADL.Network;
+using ADL.Node.Core.Modules.Network.Connections;
 using ADL.Node.Core.Modules.Network.Listeners;
 using ADL.Node.Core.Modules.Network.Messages;
 using ADL.Protocol.Peer;
@@ -48,6 +49,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
             AcceptInvalidCerts = true;
             SslCertificate = sslCertificate;
             MessageQueueManager = messageQueueManager;
+            PeerList.OnAddedUnIdentifiedConnection += AddedConnectionHandler;
+        }
+        
+        public void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs e)
+        {
+            Console.WriteLine("trace msg handler");
         }
 
         /// <summary>
@@ -62,24 +69,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
             var streamReadCounter = 0;
 
             if (connection == null) throw new ArgumentNullException(nameof (connection));
-            
-//            if (PeerList.UnIdentifiedPeers.TryRemove(ip+":"+port, out Connection removedConnection))
-//            {
-//                Log.Log.Message(removedConnection + "Connection already exists");
-//                return false;
-//            }
-//
-//            if (PeerList.UnIdentifiedPeers.TryAdd(ip+":"+port, connection))
-//            {    
-//                int activeCount = Interlocked.Increment(ref ActiveConnections);
-//                Log.Log.Message("*** FinalizeConnection starting data receiver for " + ip + port + " (now " + activeCount + " connections)");
-//            }
-//            else
-//            {
-//                Log.Log.Message("unable to add connection to unidentified list");
-//                connection.Dispose();
-//                return false;
-//            }
             
             try
             {

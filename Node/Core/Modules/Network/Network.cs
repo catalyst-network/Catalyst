@@ -40,28 +40,26 @@ namespace ADL.Node.Core.Modules.Network
             if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
             if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
             if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
-            
-            if (Instance == null)
+
+            if (Instance != null) return Instance;
+            lock (Mutex)
             {
-                lock (Mutex)
+                if (Instance == null)
                 {
-                    if (Instance == null)
-                    {
-                        // ms x509 facility generates invalid x590 certs (ofc ms!!!) have to accept invalid certs for now.
-                        // @TODO revist this once we re-write the current ssl layer to use bouncy castle.
-                        // @TODO revist permitted ips
-                        //@TODO get debug value from what pass in at initialisation of application.
-                        Instance = new Network(
-                            networkSettings,
-                            sslSettings,
-                            dataDir,
-                            publicKey,
-                            true,
-                            false,
-                            null,
-                            true
-                        );
-                    }
+                    // ms x509 facility generates invalid x590 certs (ofc ms!!!) have to accept invalid certs for now.
+                    // @TODO revist this once we re-write the current ssl layer to use bouncy castle.
+                    // @TODO revist permitted ips
+                    //@TODO get debug value from what pass in at initialisation of application.
+                    Instance = new Network(
+                        networkSettings,
+                        sslSettings,
+                        dataDir,
+                        publicKey,
+                        true,
+                        false,
+                        null,
+                        true
+                    );
                 }
             }
             return Instance;
@@ -127,8 +125,7 @@ namespace ADL.Node.Core.Modules.Network
             MutuallyAuthenticate = mutualAuthentication;
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
-            
-            PeerManager = new PeerManager(SslCertificate,new PeerList(new ClientWorker()),new MessageQueueManager());
+            PeerManager = new PeerManager(SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager());
 
             Task.Run(async () => 
                 await PeerManager.InboundConnectionListener(

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ADL.Util
 {
-    internal static class Events
+    public static class Events
     {
         /// <summary>
         /// 
@@ -30,7 +30,7 @@ namespace ADL.Util
         /// <param name="sender"></param>
         /// <param name="args"></param>
         /// <typeparam name="T"></typeparam>
-        internal static void Raise<T>(EventHandler<T> handler, object sender, T args) where T : EventArgs
+        public static void Raise<T>(EventHandler<T> handler, object sender, T args) where T : EventArgs
         {
             if (args == null) throw new ArgumentNullException(nameof(args));
             if (sender == null) throw new ArgumentNullException(nameof(sender));
