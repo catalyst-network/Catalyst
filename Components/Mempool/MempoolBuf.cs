@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace ADL.Protocols.Mempool {
+namespace ADL.Mempool.Proto {
 
   /// <summary>Holder for reflection information generated from MempoolBuf.proto</summary>
   public static partial class MempoolBufReflection {
@@ -24,20 +24,19 @@ namespace ADL.Protocols.Mempool {
     static MempoolBufReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChBNZW1wb29sQnVmLnByb3RvEhVBREwuUHJvdG9jb2xzLk1lbXBvb2wingIK",
-            "AlR4EhUKDWFkZHJlc3NTb3VyY2UYASABKAkSEwoLYWRkcmVzc0Rlc3QYAiAB",
-            "KAkSEQoJc2lnbmF0dXJlGAMgASgJEg4KBmFtb3VudBgEIAEoBxILCgNmZWUY",
-            "BSABKAcSFAoMb3V0cHV0QW1vdW50GAYgASgHEhMKC2lucHV0QWN0aW9uGAcg",
-            "ASgJEhQKDHVubG9ja1NjcmlwdBgIIAEoCRIYChB1bmxvY2tpbmdQcm9ncmFt",
-            "GAkgASgJEjQKB3VwZGF0ZWQYCiABKAsyIy5BREwuUHJvdG9jb2xzLk1lbXBv",
-            "b2wuVHguVGltZXN0YW1wGisKCVRpbWVzdGFtcBIPCgdzZWNvbmRzGAEgASgD",
-            "Eg0KBW5hbm9zGAIgASgFIh8KA0tleRIYChBoYXNoZWRfc2lnbmF0dXJlGAEg",
-            "ASgJYgZwcm90bzM="));
+            "ChBNZW1wb29sQnVmLnByb3RvEhFBREwuTWVtcG9vbC5Qcm90bxofZ29vZ2xl",
+            "L3Byb3RvYnVmL3RpbWVzdGFtcC5wcm90byLoAQoCVHgSFQoNYWRkcmVzc1Nv",
+            "dXJjZRgBIAEoCRITCgthZGRyZXNzRGVzdBgCIAEoCRIRCglzaWduYXR1cmUY",
+            "AyABKAkSDgoGYW1vdW50GAQgASgHEgsKA2ZlZRgFIAEoBxIUCgxvdXRwdXRB",
+            "bW91bnQYBiABKAcSEwoLaW5wdXRBY3Rpb24YByABKAkSFAoMdW5sb2NrU2Ny",
+            "aXB0GAggASgJEhgKEHVubG9ja2luZ1Byb2dyYW0YCSABKAkSKwoHdXBkYXRl",
+            "ZBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiHwoDS2V5EhgK",
+            "EGhhc2hlZF9zaWduYXR1cmUYASABKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocols.Mempool.Tx), global::ADL.Protocols.Mempool.Tx.Parser, new[]{ "AddressSource", "AddressDest", "Signature", "Amount", "Fee", "OutputAmount", "InputAction", "UnlockScript", "UnlockingProgram", "Updated" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocols.Mempool.Tx.Types.Timestamp), global::ADL.Protocols.Mempool.Tx.Types.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null)}),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Protocols.Mempool.Key), global::ADL.Protocols.Mempool.Key.Parser, new[]{ "HashedSignature" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Mempool.Proto.Tx), global::ADL.Mempool.Proto.Tx.Parser, new[]{ "AddressSource", "AddressDest", "Signature", "Amount", "Fee", "OutputAmount", "InputAction", "UnlockScript", "UnlockingProgram", "Updated" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ADL.Mempool.Proto.Key), global::ADL.Mempool.Proto.Key.Parser, new[]{ "HashedSignature" }, null, null, null)
           }));
     }
     #endregion
@@ -52,7 +51,7 @@ namespace ADL.Protocols.Mempool {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocols.Mempool.MempoolBufReflection.Descriptor.MessageTypes[0]; }
+      get { return global::ADL.Mempool.Proto.MempoolBufReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -188,9 +187,9 @@ namespace ADL.Protocols.Mempool {
 
     /// <summary>Field number for the "updated" field.</summary>
     public const int UpdatedFieldNumber = 10;
-    private global::ADL.Protocols.Mempool.Tx.Types.Timestamp updated_;
+    private global::Google.Protobuf.WellKnownTypes.Timestamp updated_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::ADL.Protocols.Mempool.Tx.Types.Timestamp Updated {
+    public global::Google.Protobuf.WellKnownTypes.Timestamp Updated {
       get { return updated_; }
       set {
         updated_ = value;
@@ -367,7 +366,7 @@ namespace ADL.Protocols.Mempool {
       }
       if (other.updated_ != null) {
         if (updated_ == null) {
-          updated_ = new global::ADL.Protocols.Mempool.Tx.Types.Timestamp();
+          updated_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
         }
         Updated.MergeFrom(other.Updated);
       }
@@ -420,7 +419,7 @@ namespace ADL.Protocols.Mempool {
           }
           case 82: {
             if (updated_ == null) {
-              updated_ = new global::ADL.Protocols.Mempool.Tx.Types.Timestamp();
+              updated_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
             }
             input.ReadMessage(updated_);
             break;
@@ -428,170 +427,6 @@ namespace ADL.Protocols.Mempool {
         }
       }
     }
-
-    #region Nested types
-    /// <summary>Container for nested types declared in the Tx message type.</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static partial class Types {
-      public sealed partial class Timestamp : pb::IMessage<Timestamp> {
-        private static readonly pb::MessageParser<Timestamp> _parser = new pb::MessageParser<Timestamp>(() => new Timestamp());
-        private pb::UnknownFieldSet _unknownFields;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public static pb::MessageParser<Timestamp> Parser { get { return _parser; } }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public static pbr::MessageDescriptor Descriptor {
-          get { return global::ADL.Protocols.Mempool.Tx.Descriptor.NestedTypes[0]; }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        pbr::MessageDescriptor pb::IMessage.Descriptor {
-          get { return Descriptor; }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public Timestamp() {
-          OnConstruction();
-        }
-
-        partial void OnConstruction();
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public Timestamp(Timestamp other) : this() {
-          seconds_ = other.seconds_;
-          nanos_ = other.nanos_;
-          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public Timestamp Clone() {
-          return new Timestamp(this);
-        }
-
-        /// <summary>Field number for the "seconds" field.</summary>
-        public const int SecondsFieldNumber = 1;
-        private long seconds_;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public long Seconds {
-          get { return seconds_; }
-          set {
-            seconds_ = value;
-          }
-        }
-
-        /// <summary>Field number for the "nanos" field.</summary>
-        public const int NanosFieldNumber = 2;
-        private int nanos_;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public int Nanos {
-          get { return nanos_; }
-          set {
-            nanos_ = value;
-          }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public override bool Equals(object other) {
-          return Equals(other as Timestamp);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public bool Equals(Timestamp other) {
-          if (ReferenceEquals(other, null)) {
-            return false;
-          }
-          if (ReferenceEquals(other, this)) {
-            return true;
-          }
-          if (Seconds != other.Seconds) return false;
-          if (Nanos != other.Nanos) return false;
-          return Equals(_unknownFields, other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public override int GetHashCode() {
-          int hash = 1;
-          if (Seconds != 0L) hash ^= Seconds.GetHashCode();
-          if (Nanos != 0) hash ^= Nanos.GetHashCode();
-          if (_unknownFields != null) {
-            hash ^= _unknownFields.GetHashCode();
-          }
-          return hash;
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public override string ToString() {
-          return pb::JsonFormatter.ToDiagnosticString(this);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public void WriteTo(pb::CodedOutputStream output) {
-          if (Seconds != 0L) {
-            output.WriteRawTag(8);
-            output.WriteInt64(Seconds);
-          }
-          if (Nanos != 0) {
-            output.WriteRawTag(16);
-            output.WriteInt32(Nanos);
-          }
-          if (_unknownFields != null) {
-            _unknownFields.WriteTo(output);
-          }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public int CalculateSize() {
-          int size = 0;
-          if (Seconds != 0L) {
-            size += 1 + pb::CodedOutputStream.ComputeInt64Size(Seconds);
-          }
-          if (Nanos != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeInt32Size(Nanos);
-          }
-          if (_unknownFields != null) {
-            size += _unknownFields.CalculateSize();
-          }
-          return size;
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public void MergeFrom(Timestamp other) {
-          if (other == null) {
-            return;
-          }
-          if (other.Seconds != 0L) {
-            Seconds = other.Seconds;
-          }
-          if (other.Nanos != 0) {
-            Nanos = other.Nanos;
-          }
-          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public void MergeFrom(pb::CodedInputStream input) {
-          uint tag;
-          while ((tag = input.ReadTag()) != 0) {
-            switch(tag) {
-              default:
-                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-                break;
-              case 8: {
-                Seconds = input.ReadInt64();
-                break;
-              }
-              case 16: {
-                Nanos = input.ReadInt32();
-                break;
-              }
-            }
-          }
-        }
-
-      }
-
-    }
-    #endregion
 
   }
 
@@ -603,7 +438,7 @@ namespace ADL.Protocols.Mempool {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ADL.Protocols.Mempool.MempoolBufReflection.Descriptor.MessageTypes[1]; }
+      get { return global::ADL.Mempool.Proto.MempoolBufReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

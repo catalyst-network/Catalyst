@@ -228,9 +228,6 @@ namespace ADL.Node
     {
         public string Type { get; set; }
         public string When { get; set; }
-        public string AllowAdmin { get; set; }
-        public ushort SaveAfterSeconds { get; set; }
-        public ushort SaveAfterChanges { get; set; }
 
         /// <summary>
         /// Set attributes
@@ -239,9 +236,7 @@ namespace ADL.Node
         protected internal MempoolSettings(IConfiguration section)
         {
             Type = section.GetSection("Type").Value;
-            AllowAdmin = section.GetSection("AllowAdmin").Value;
-            SaveAfterSeconds = ushort.Parse(section.GetSection("SaveAfterSeconds").Value);
-            SaveAfterChanges = ushort.Parse(section.GetSection("SaveAfterChanges").Value);
+            When = section.GetSection("When").Value;
         }
     } 
         
@@ -323,3 +318,4 @@ namespace ADL.Node
         }
     }
 }
+

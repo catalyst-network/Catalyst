@@ -16,5 +16,14 @@
             Ledger = ledger;
             LedgerSettings = ledgerSettings;
         }
+
+        /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public ILedger GetImpl()
+        {
+            return Ledger;
+        }
     }
 }

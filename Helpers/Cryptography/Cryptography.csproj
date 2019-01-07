@@ -43,8 +43,4 @@
       <DeployManifest Remove="obj\Debug\netcoreapp2.1\Cryptography.application" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="UnitTests" />
-    </ItemGroup>
-
 </Project>

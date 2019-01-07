@@ -15,5 +15,14 @@ namespace ADL.Node.Core.Modules.Consensus
             Consensus = consensus;
             ConsensusSettings = consensusSettings;
         }
+
+        /// <summary>
+        /// Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IConsensus GetImpl()
+        {
+            return Consensus;
+        }
     }
 }
