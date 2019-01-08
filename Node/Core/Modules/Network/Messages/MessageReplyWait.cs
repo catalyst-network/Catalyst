@@ -26,5 +26,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
             MagicCookie = magicCookie;
             Sent = DateTimeProvider.UtcNow;
         }
+        
+        //@TODO generate a correlationID
     }
 }

@@ -11,6 +11,14 @@ message PeerProtocol {
     message PongResponse {
         string pong = 1;
     }
+    
+    message ACK {
+        bytes ack = 1;
+    }
+    
+    message NACK {
+        bytes nack = 1;
+    }
 
     message PeerInfoRequest {
         string ping = 1;

@@ -1,3 +1,4 @@
+using System;
 using Google.Protobuf;
 using ADL.Node.Core.Modules.Network.Connections;
 
@@ -17,8 +18,11 @@ namespace ADL.Node.Core.Modules.Network.Messages
         /// <param name="messageDescriptor"></param>
         public Message(Connection connection, IMessage message, byte[] messageDescriptor)
         {
-            if (connection != null) Connection = connection;
+            if (messageDescriptor == null) throw new ArgumentNullException(nameof(messageDescriptor));
+            if (messageDescriptor.Length == 0)
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(messageDescriptor));
             if (message != null) ProtoMessage = message;
+            if (connection != null) Connection = connection;
             MessageDescriptor = messageDescriptor;
         }
         

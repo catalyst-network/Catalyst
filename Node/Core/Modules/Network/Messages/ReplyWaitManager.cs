@@ -34,13 +34,12 @@ namespace ADL.Node.Core.Modules.Network.Messages
         /// 
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="correlationId"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void Add(Message message, ulong correlationId)
+        public void Add(Message message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            if (correlationId <= 0) throw new ArgumentOutOfRangeException(nameof(correlationId));
+            var correlationId = ByteUtil.GenerateCorrelationId();
             
             lock (LockObject)
             {

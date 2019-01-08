@@ -3,11 +3,26 @@ using System.Linq;
 using System.Text;
 using ADL.Hex.HexConverters.Extensions;
 using Org.BouncyCastle.Crypto.Digests;
+using System.Security.Cryptography;
 
 namespace ADL.Util
 {
     public class Sha3Keccack
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string CalculateRandomHash()
+        {
+            using(RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenData = new byte[16];
+                rng.GetBytes(tokenData);
+                return CalculateHash(Convert.ToBase64String(tokenData));
+            }
+        }
+        
         /// <summary>
         /// 
         /// </summary>
