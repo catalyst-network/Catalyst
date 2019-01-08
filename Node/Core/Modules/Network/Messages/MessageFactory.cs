@@ -1,11 +1,24 @@
 using System;
 using ADL.Protocol.Peer;
+using System.Collections.Generic;
 using ADL.Node.Core.Modules.Network.Connections;
 
 namespace ADL.Node.Core.Modules.Network.Messages
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class MessageFactory
     {
+        // pass the request on the left hand side 🔥 🎵 💃 🕺 
+        static Dictionary<int, int> RequestResponseIdPairings = new Dictionary<int, int>
+        {
+            {1, 2},
+            {3, 4},
+            {5, 6},
+            {7, 8}
+        };
+        
         /// <summary>
         /// 
         /// </summary>
@@ -17,11 +30,10 @@ namespace ADL.Node.Core.Modules.Network.Messages
         public static Message Get(byte network, byte messageId, byte[] message, Connection connection)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
             if (network <= 0) throw new ArgumentOutOfRangeException(nameof(network));
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
             if (messageId <= 0) throw new ArgumentOutOfRangeException(nameof(messageId));
-            if (message.Length == 0)
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(message));
+            if (message.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(message));
             
             switch (messageId)
             {

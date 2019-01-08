@@ -31,12 +31,14 @@ namespace ADL.Node.Core.Modules.Network.Peer
             
             K = 42;
             WorkScheduler = worker;
-            PeerBucket = new Dictionary<PeerIdentifier, Peer>();
+            PeerBucket = new Dictionary<PeerIdentifier, Peer>(); // @TODO put this in thread safe concurrent directory
             UnIdentifiedPeers = new ConcurrentDictionary<string, Connection>();
 
+            // setup work queues for peer net.
             WorkScheduler.QueueForever(Save, TimeSpan.FromMinutes(1));
             WorkScheduler.QueueForever(Check, TimeSpan.FromMinutes(5));
             WorkScheduler.QueueForever(PurgePeers, TimeSpan.FromSeconds(15));
+            //@TODO add a purge for unidentified peers every 10 seconds
             WorkScheduler.Start();
         }
 
@@ -302,7 +304,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="peerId"></param>
+        /// <param name="peer"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public void Punish(Peer peer)
         {

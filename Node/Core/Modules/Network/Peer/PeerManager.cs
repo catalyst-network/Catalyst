@@ -31,6 +31,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private PeerIdentifier NodeIdentity { get; set; }
         private X509Certificate2 SslCertificate { get; set; }
         private MessageQueueManager MessageQueueManager { get; set; }
+        private readonly MessageReplyWaitManager MessageReplyManager;
         private CancellationTokenSource CancellationToken { get; set; }
         
         public event EventHandler<AnnounceNodeEventArgs> AnnounceNode;
@@ -51,6 +52,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             SslCertificate = sslCertificate;
             MessageQueueManager = messageQueueManager;
             PeerList.OnAddedUnIdentifiedConnection += AddedConnectionHandler;
+            MessageReplyManager = new MessageReplyWaitManager(MessageQueueManager, PeerList);
         }
         
         /// <summary>
@@ -58,8 +60,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs e)
+        private void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs e)
         {
+            MessageReplyManager.Add(new Package(endPoint, message, message.Length), header.CorrelationId);
             Console.WriteLine("trace msg handler");
         }
 
@@ -71,10 +74,8 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         private async Task<bool> DataReceiver(Connection connection, CancellationToken cancelToken)
         {
-            Console.WriteLine("trace DataReceiver");
-            var streamReadCounter = 0;
-
             if (connection == null) throw new ArgumentNullException(nameof (connection));
+            var streamReadCounter = 0;
             
             try
             {
