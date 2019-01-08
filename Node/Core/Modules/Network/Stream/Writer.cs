@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ADL.Node.Core.Modules.Network.Messages;
 using ADL.RLP;
 using ADL.Util;
+using ADL.Node.Core.Modules.Network.Connections;
 
 namespace ADL.Node.Core.Modules.Network.Stream
 {

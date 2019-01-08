@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
@@ -9,15 +8,12 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-using ADL.Hex.HexConverters.Extensions;
 using ADL.Network;
 using ADL.Node.Core.Modules.Network.Connections;
+using ADL.Node.Core.Modules.Network.Events;
 using ADL.Node.Core.Modules.Network.Listeners;
 using ADL.Node.Core.Modules.Network.Messages;
-using ADL.Protocol.Peer;
 using ADL.Util;
-using Google.Protobuf;
-using Org.BouncyCastle.Security;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
@@ -32,9 +28,12 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private TcpListener Listener { get; set; }
         private CancellationToken Token { get; set; }
         private bool AcceptInvalidCerts { get; set; }
+        private PeerIdentifier NodeIdentity { get; set; }
         private X509Certificate2 SslCertificate { get; set; }
         private MessageQueueManager MessageQueueManager { get; set; }
         private CancellationTokenSource CancellationToken { get; set; }
+        
+        public event EventHandler<AnnounceNodeEventArgs> AnnounceNode;
 
         /// <summary>
         /// 
@@ -42,17 +41,24 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <param name="sslCertificate"></param>
         /// <param name="peerList"></param>
         /// <param name="messageQueueManager"></param>
-        public PeerManager(X509Certificate2 sslCertificate, PeerList peerList, MessageQueueManager messageQueueManager)
+        /// <param name="nodeIdentity"></param>
+        public PeerManager(X509Certificate2 sslCertificate, PeerList peerList, MessageQueueManager messageQueueManager,PeerIdentifier nodeIdentity)
         {
             PeerList = peerList;
             ActiveConnections = 0;
             AcceptInvalidCerts = true;
+            NodeIdentity = nodeIdentity;
             SslCertificate = sslCertificate;
             MessageQueueManager = messageQueueManager;
             PeerList.OnAddedUnIdentifiedConnection += AddedConnectionHandler;
         }
         
-        public void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs e)
         {
             Console.WriteLine("trace msg handler");
         }
@@ -134,10 +140,21 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="Exception"></exception>
         internal async Task InboundConnectionListener(IPEndPoint ipEndPoint)
         {
+            //@TODO put in try catch
             Listener = ListenerFactory.CreateTcpListener(ipEndPoint);
 
+            //@TODO put in try catch
             Listener.Start();
             Log.Log.Message("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port );
+
+            try
+            {
+                Util.Events.Raise(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
+            }
+            catch (ArgumentNullException e)
+            {
+                Log.LogException.Message("InboundConnectionListener: Events.Raise(AnnounceNodeEventArgs)", e);
+            }
    
             while (!Token.IsCancellationRequested)
             {
@@ -178,9 +195,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                     {
                         try
                         {
-                            Console.WriteLine("trace 160344524");
                             connection = GetPeerConnectionTlsStream(connection, 1);
-                            Console.WriteLine("trace 160344524");
                         }
                         catch (Exception e)
                         {
@@ -421,7 +436,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             }
             finally
             {
-                if (asyncClientWaitHandle != null) asyncClientWaitHandle.Close();
+                asyncClientWaitHandle?.Close();
             } 
         }
 
@@ -434,7 +449,9 @@ namespace ADL.Node.Core.Modules.Network.Peer
         private Connection StartPeerConnection(TcpClient tcpClient)
         {
             if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
+            
             Connection connection;
+            
             try
             {
                 connection = new Connection(tcpClient);

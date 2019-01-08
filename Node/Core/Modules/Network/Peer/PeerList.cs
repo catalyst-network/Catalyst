@@ -7,12 +7,13 @@ using ADL.Node.Core.Modules.Network.Workers;
 using System.Linq;
 using System.Net.Sockets;
 using ADL.Node.Core.Modules.Network.Connections;
+using ADL.Node.Core.Modules.Network.Events;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
      public class PeerList : IEnumerable<Peer>
      {
-        private uint k { get; }
+        private uint K { get; }
         internal List<IPAddress> BannedIps { get; set; }
         public bool IsCritical => PeerBucket.Count <= 25;
         internal readonly Dictionary<PeerIdentifier, Peer> PeerBucket;
@@ -27,7 +28,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         {
             var workScheduler = worker ?? throw new ArgumentNullException(nameof(worker));
             
-            k = 42;
+            K = 42;
             PeerBucket = new Dictionary<PeerIdentifier, Peer>();
             UnIdentifiedPeers = new ConcurrentDictionary<string, Connection>();
 
@@ -83,8 +84,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                             throw new Exception("Cant remove stale connection");
                         }
 
-                        Log.Log.Message("Removed stale connection for  " + connection.EndPoint.Address +
-                                        connection.EndPoint.Port);
+                        Log.Log.Message("Removed stale connection for  " + connection.EndPoint.Address + connection.EndPoint.Port);
                     }
                     catch (ArgumentNullException e)
                     {

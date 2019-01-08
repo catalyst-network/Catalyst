@@ -4,7 +4,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using ADL.Util;
 
-namespace ADL.Node.Core.Modules.Network
+namespace ADL.Node.Core.Modules.Network.Connections
 {    
     /// <summary>
     /// 

@@ -8,6 +8,7 @@ using ADL.Node.Core.Modules.Network.Peer;
 using ADL.Node.Core.Modules.Network.Workers;
 using ADL.Node.Core.Modules.Network.Messages;
 using System.Security.Cryptography.X509Certificates;
+using ADL.Node.Core.Modules.Network.Events;
 using ADL.RLP;
 
 namespace ADL.Node.Core.Modules.Network
@@ -125,7 +126,8 @@ namespace ADL.Node.Core.Modules.Network
             MutuallyAuthenticate = mutualAuthentication;
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
-            PeerManager = new PeerManager(SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager());
+            PeerManager = new PeerManager(SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager(), NodeIdentity);
+            PeerManager.AnnounceNode += Announce;
 
             Task.Run(async () => 
                 await PeerManager.InboundConnectionListener(
@@ -171,7 +173,7 @@ namespace ADL.Node.Core.Modules.Network
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        void IDht.Announce(PeerIdentifier peerIdentifier)
+        public void Announce(object sender, AnnounceNodeEventArgs e)
         {
             throw new NotImplementedException();
         }
