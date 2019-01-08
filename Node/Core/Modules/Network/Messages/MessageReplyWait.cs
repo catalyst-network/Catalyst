@@ -9,6 +9,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
         public DateTime Sent { get; set; }
         public Message Message{ get; private set; }
         public ulong MagicCookie { get; private set; }
+        public ulong CorrelationId { get; private set; }
         public bool IsTimeout => (DateTimeProvider.UtcNow - Sent).TotalSeconds > 20;
 
         public MessageReplyWait(Message message, ulong magicCookie)

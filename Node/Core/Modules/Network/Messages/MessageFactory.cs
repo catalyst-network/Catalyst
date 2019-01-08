@@ -1,3 +1,4 @@
+using System;
 using ADL.Protocol.Peer;
 using ADL.Node.Core.Modules.Network.Connections;
 
@@ -5,8 +6,23 @@ namespace ADL.Node.Core.Modules.Network.Messages
 {
     public static class MessageFactory
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="messageId"></param>
+        /// <param name="message"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
         public static Message Get(byte network, byte messageId, byte[] message, Connection connection)
         {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (network <= 0) throw new ArgumentOutOfRangeException(nameof(network));
+            if (messageId <= 0) throw new ArgumentOutOfRangeException(nameof(messageId));
+            if (message.Length == 0)
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(message));
+            
             switch (messageId)
             {
                 case 1:
@@ -25,7 +41,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
                     return new Message(connection, new PeerProtocol.Types.PeerNeighborsResponse(), network, messageId);
                 default:
                     return new Message(connection, new PeerProtocol.Types.PingRequest(), network, messageId);
-            }            
+            }
         }
     }
 }
