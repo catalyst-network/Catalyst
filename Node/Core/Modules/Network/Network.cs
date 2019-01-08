@@ -183,7 +183,6 @@ namespace ADL.Node.Core.Modules.Network
             byte[] bytesToRead = new byte[client.ReceiveBufferSize];
             int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
             Console.WriteLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
-            Console.ReadLine();
             client.Close();
         }
 
