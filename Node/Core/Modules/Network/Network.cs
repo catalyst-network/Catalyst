@@ -4,10 +4,12 @@ using ADL.Network;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using ADL.Node.Core.Modules.Network.Peer;
 using ADL.Node.Core.Modules.Network.Workers;
 using ADL.Node.Core.Modules.Network.Messages;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using ADL.Node.Core.Modules.Network.Events;
 using ADL.RLP;
 
@@ -175,7 +177,14 @@ namespace ADL.Node.Core.Modules.Network
         /// <exception cref="NotImplementedException"></exception>
         public void Announce(object sender, AnnounceNodeEventArgs e)
         {
-            throw new NotImplementedException();
+            TcpClient client = new TcpClient("127.0.0.1", 3030); //@TODO get seed tracker from config
+            NetworkStream nwStream = client.GetStream();
+            nwStream.Write(NodeIdentity.Id, 0, NodeIdentity.Id.Length);
+            byte[] bytesToRead = new byte[client.ReceiveBufferSize];
+            int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+            Console.WriteLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
+            Console.ReadLine();
+            client.Close();
         }
 
         /// <summary>
