@@ -25,11 +25,5 @@ namespace ADL.Node.Core.Modules.Network
         /// </summary>
         /// <returns></returns>
         List<PeerIdentifier> FindNode();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="peerIdentifier"></param>
-        void Announce(PeerIdentifier peerIdentifier);
     }
 }

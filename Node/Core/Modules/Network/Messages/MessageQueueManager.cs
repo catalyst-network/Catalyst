@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using ADL.Node.Core.Modules.Network.Connections;
 using ADL.Node.Core.Modules.Network.Workers;
+using Google.Protobuf;
 
 namespace ADL.Node.Core.Modules.Network.Messages
 {
@@ -102,10 +104,10 @@ namespace ADL.Node.Core.Modules.Network.Messages
             }
         }
 
-        public void Send(IPEndPoint endPoint, byte[] message)
+        public void Send(Connection connection, IMessage message)
         {
             lock (_sendMessageQueue)
-            {
+            {//@TODO
 //                var package = new Message(endPoint, message, message.Length); 
 //                _sendMessageQueue.Enqueue(package);
             }
