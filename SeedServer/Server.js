@@ -12,12 +12,13 @@ var server = net.createServer(function(client) {
 
     // When receive client data.
     client.on('data', function (data) {
-
+        
+        var buff = new Buffer(data, 'ascii'); //no sure about this
         // Print received client data and length.
-        console.log('Receive client send data : ' + data + ', data size : ' + client.bytesRead);
+        console.log('Receive client send data : ' + buff.toString('hex') + ', data size : ' + client.bytesRead);
 
         // Server send data back to client use client net.Socket object.
-        client.end('Server received data : ' + data + ', send back to client data size : ' + client.bytesWritten);
+        client.end('Server received data : ' + buff.toString('hex')  + ', send back to client data size : ' + client.bytesWritten);
     });
 
     // When client send data complete.
@@ -45,7 +46,7 @@ var server = net.createServer(function(client) {
 });
 
 // Make the server a TCP server listening on port 9999.
-server.listen(9999, function () {
+server.listen(3030, function () {
 
     // Get server address info.
     var serverInfo = server.address();
