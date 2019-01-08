@@ -1,4 +1,5 @@
 using Google.Protobuf;
+using ADL.Node.Core.Modules.Network.Connections;
 
 namespace ADL.Node.Core.Modules.Network.Messages
 {

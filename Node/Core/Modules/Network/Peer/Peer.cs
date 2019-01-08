@@ -1,7 +1,8 @@
 using System;
+using ADL.Util;
 using System.Net;
 using ADL.Network;
-using ADL.Util;
+using ADL.Node.Core.Modules.Network.Connections;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {

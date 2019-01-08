@@ -1,6 +1,7 @@
 using System;
+using ADL.Node.Core.Modules.Network.Connections;
 
-namespace ADL.Node.Core.Modules.Network.Connections
+namespace ADL.Node.Core.Modules.Network.Events
 {
     public class NewUnIdentifiedConnectionEventArgs : EventArgs
     {
