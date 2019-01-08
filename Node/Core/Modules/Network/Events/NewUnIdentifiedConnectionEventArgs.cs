@@ -5,7 +5,7 @@ namespace ADL.Node.Core.Modules.Network.Events
 {
     public class NewUnIdentifiedConnectionEventArgs : EventArgs
     {
-        private Connection Connection { get; set; }
+        internal Connection Connection { get; set; }
 
         /// <summary>
         /// 

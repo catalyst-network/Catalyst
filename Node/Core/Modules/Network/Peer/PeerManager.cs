@@ -13,7 +13,10 @@ using ADL.Node.Core.Modules.Network.Connections;
 using ADL.Node.Core.Modules.Network.Events;
 using ADL.Node.Core.Modules.Network.Listeners;
 using ADL.Node.Core.Modules.Network.Messages;
+using ADL.Protocol.Peer;
 using ADL.Util;
+using Google.Protobuf;
+using Org.BouncyCastle.Security;
 
 namespace ADL.Node.Core.Modules.Network.Peer
 {
@@ -59,10 +62,20 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// 
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs e)
+        /// <param name="eventArgs"></param>
+        private void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs eventArgs)
         {
-            MessageReplyManager.Add(new Package(endPoint, message, message.Length), header.CorrelationId);
+            Log.Log.Message("Starting Challenge Request");
+            
+            PeerProtocol.Types.ChallengeRequest challengeRequest = new PeerProtocol.Types.ChallengeRequest();
+            SecureRandom random = new SecureRandom();
+            byte[] keyBytes = new byte[16];
+            random.NextBytes(keyBytes);
+            challengeRequest.Nonce = random.NextInt();
+
+            Message requestMessage = MessageFactory.RequestFactory(1, 3, eventArgs.Connection, challengeRequest);
+            
+            MessageReplyManager.Add(requestMessage);
             Console.WriteLine("trace msg handler");
         }
 
@@ -106,7 +119,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
                         // we need to learn the message type here
                         byte[] msgDescriptor = payload.Slice(0, 2);
                         byte[] messageBytes = payload.Slice(2);
-                        Message message = MessageFactory.Get(msgDescriptor[0], msgDescriptor[1], messageBytes, connection);
+                        Message message = MessageFactory.ResponseFactory(msgDescriptor[0], msgDescriptor[1], connection, messageBytes);
                         lock (MessageQueueManager._receivedMessageQueue)
                         {
                             MessageQueueManager._receivedMessageQueue.Enqueue(message);
@@ -207,26 +220,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
                         await DataReceiver(connection, Token);
 //                        Task.Run(async () => await DataReceiver(connection, Token), Token);
-//                        if (await DataReceiver(connection, Token))
-//                        {
-//                            Log.Log.Message("*** AcceptConnections accepted connection from " + connection.EndPoint.Address + connection.EndPoint.Port + " count " + ActiveConnections);
-//                            Log.Log.Message("Starting Challenge Request");
-////                            Message requestMessage = MessageFactory.Get(2);
-////
-////                            SecureRandom random = new SecureRandom();
-////                            byte[] keyBytes = new byte[16];
-////                            random.NextBytes(keyBytes);
-////                            requestMessage.Nonce = random.NextInt();
-////                            if (connection.SslStream != null)
-////                            {
-//////                            connection.Nonce = requestMessage.Nonce;
-////                                byte[] requestBytes = requestMessage.ToByteArray();
-////                                Console.WriteLine(requestMessage);
-////                                Console.WriteLine(requestBytes.ToHex());
-////                                Stream.Writer.MessageWrite(connection, requestBytes, 98);
-////                            }
-//                            continue;
-//                        }
+
 //                        Log.Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
 //                        throw new Exception("unable to add connection as peer");                        
                     }
