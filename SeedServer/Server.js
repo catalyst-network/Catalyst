@@ -1,5 +1,12 @@
 // Import net module.
 var net = require('net');
+var redis = require("redis")
+    , subscriber = redis.createClient()
+    , publisher  = redis.createClient();
+
+subscriber.on("message", function(channel, message) {
+    console.log("Message '" + message + "' on channel '" + channel + "' arrived!")
+});
 
 // Create and return a net.Server object, the function will be invoked when client connect to this server.
 var server = net.createServer(function(client) {
@@ -14,11 +21,11 @@ var server = net.createServer(function(client) {
     client.on('data', function (data) {
         
         var buff = new Buffer(data, 'ascii'); //no sure about this
-        // Print received client data and length.
-        console.log('Receive client send data : ' + buff.toString('hex') + ', data size : ' + client.bytesRead);
 
-        // Server send data back to client use client net.Socket object.
-        client.end('Server received data : ' + buff.toString('hex')  + ', send back to client data size : ' + client.bytesWritten);
+        publisher.publish("nodes", buff);
+
+        console.log('Receive client send data : ' + buff.toString('hex') + ', data size : ' + client.bytesRead);
+        //client.end('Server received data : ' + buff.toString('hex')  + ', send back to client data size : ' + client.bytesWritten);
     });
 
     // When client send data complete.
