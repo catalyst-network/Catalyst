@@ -4,7 +4,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using ADL.Util;
 
-namespace ADL.Node.Core.Modules.Network
+namespace ADL.Node.Core.Modules.Network.Connections
 {    
     /// <summary>
     /// 
@@ -18,6 +18,7 @@ namespace ADL.Node.Core.Modules.Network
         public IPEndPoint EndPoint { get; set; }
         public SslStream SslStream { set; get; }
         internal NetworkStream NetworkStream { get; }
+        public ADL.Node.Core.Modules.Network.Peer.Peer Peer { get; set; }
 
         /// <summary>
         /// 
@@ -46,6 +47,16 @@ namespace ADL.Node.Core.Modules.Network
             
             Connected = true;
             Known = false;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void AddPeer(ADL.Node.Core.Modules.Network.Peer.Peer peer)
+        {
+            if (peer == null) throw new ArgumentNullException(nameof(peer));
+            Peer = peer;
+            Connected = true;
         }
         
         /// <summary>

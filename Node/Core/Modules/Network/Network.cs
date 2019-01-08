@@ -4,10 +4,13 @@ using ADL.Network;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using ADL.Node.Core.Modules.Network.Peer;
 using ADL.Node.Core.Modules.Network.Workers;
 using ADL.Node.Core.Modules.Network.Messages;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using ADL.Node.Core.Modules.Network.Events;
 using ADL.RLP;
 
 namespace ADL.Node.Core.Modules.Network
@@ -18,7 +21,7 @@ namespace ADL.Node.Core.Modules.Network
         private CancellationToken Token { get; }
         private List<string> BannedIps { get; set; } //@TODO revist this
         private bool AcceptInvalidCerts { get; set; }
-        private PeerManager PeerManager { get; set; }
+        internal PeerManager PeerManager { get; set; }
         private static Network Instance { get; set; }
         private bool MutuallyAuthenticate { get; set; }
         private X509Certificate2 SslCertificate { get; }
@@ -40,28 +43,26 @@ namespace ADL.Node.Core.Modules.Network
             if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
             if (sslSettings == null) throw new ArgumentNullException(nameof(sslSettings));
             if (networkSettings == null) throw new ArgumentNullException(nameof(networkSettings));
-            
-            if (Instance == null)
+
+            if (Instance != null) return Instance;
+            lock (Mutex)
             {
-                lock (Mutex)
+                if (Instance == null)
                 {
-                    if (Instance == null)
-                    {
-                        // ms x509 facility generates invalid x590 certs (ofc ms!!!) have to accept invalid certs for now.
-                        // @TODO revist this once we re-write the current ssl layer to use bouncy castle.
-                        // @TODO revist permitted ips
-                        //@TODO get debug value from what pass in at initialisation of application.
-                        Instance = new Network(
-                            networkSettings,
-                            sslSettings,
-                            dataDir,
-                            publicKey,
-                            true,
-                            false,
-                            null,
-                            true
-                        );
-                    }
+                    // ms x509 facility generates invalid x590 certs (ofc ms!!!) have to accept invalid certs for now.
+                    // @TODO revist this once we re-write the current ssl layer to use bouncy castle.
+                    // @TODO revist permitted ips
+                    //@TODO get debug value from what pass in at initialisation of application.
+                    Instance = new Network(
+                        networkSettings,
+                        sslSettings,
+                        dataDir,
+                        publicKey,
+                        true,
+                        false,
+                        null,
+                        true
+                    );
                 }
             }
             return Instance;
@@ -127,8 +128,8 @@ namespace ADL.Node.Core.Modules.Network
             MutuallyAuthenticate = mutualAuthentication;
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
-            
-            PeerManager = new PeerManager(SslCertificate,new PeerList(new ClientWorker()),new MessageQueueManager());
+            PeerManager = new PeerManager(SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager(), NodeIdentity);
+            PeerManager.AnnounceNode += Announce;
 
             Task.Run(async () => 
                 await PeerManager.InboundConnectionListener(
@@ -174,9 +175,15 @@ namespace ADL.Node.Core.Modules.Network
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        void IDht.Announce(PeerIdentifier peerIdentifier)
+        public void Announce(object sender, AnnounceNodeEventArgs e)
         {
-            throw new NotImplementedException();
+            TcpClient client = new TcpClient("127.0.0.1", 3030); //@TODO get seed tracker from config
+            NetworkStream nwStream = client.GetStream();
+            nwStream.Write(NodeIdentity.Id, 0, NodeIdentity.Id.Length);
+            byte[] bytesToRead = new byte[client.ReceiveBufferSize];
+            int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+            Console.WriteLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
+            client.Close();
         }
 
         /// <summary>

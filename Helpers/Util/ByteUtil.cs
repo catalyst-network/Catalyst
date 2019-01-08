@@ -6,8 +6,20 @@ namespace ADL.Util
 {
     public static class ByteUtil
     {
-        public static byte[] EmptyByteArray { get; } = new byte[0];
         public static byte[] ZeroByteArray { get; } = {0};
+        private static readonly Random Rand = new Random();
+        public static byte[] EmptyByteArray { get; } = new byte[0];
+
+        /// <summary>
+        /// returns a random 8 byte long ulong for use in message correlation
+        /// </summary>
+        /// <returns></returns>
+        public static ulong GenerateCorrelationId()
+        {
+            var buf = new byte[8];
+            Rand.NextBytes(buf);
+            return BitConverter.ToUInt64(buf, 0);
+        }
 
         /// <summary>
         /// 

@@ -17,7 +17,8 @@ namespace ADL.Node.Core.Modules.Mempool
         /// <param name="keyStore"></param>
         public Mempool(IKeyStore keyStore)
         {
-            KeyStore = keyStore ?? throw new ArgumentNullException(nameof(keyStore));
+            if (keyStore == null) throw new ArgumentNullException(nameof(keyStore));
+            KeyStore = keyStore;
         }
         
         /// <summary>
@@ -33,6 +34,12 @@ namespace ADL.Node.Core.Modules.Mempool
             return KeyStore.Set(k.ToByteArray(), value.ToByteArray(), null);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         Tx IMempool.GetTx(Key k)
         {
             if (k == null) throw new ArgumentNullException(nameof(k));
