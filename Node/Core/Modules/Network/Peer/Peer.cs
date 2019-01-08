@@ -8,12 +8,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
 {
     public abstract class Peer : IDisposable
     {   
+        private int Reputation { get; set; }
         private bool Disposed  { get; set; }
-        public bool Connected { get; set; }
         public DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
         public Connection Connection { get; set; }
-        public int Reputation { get; private set; }
         public PeerIdentifier PeerIdentifier { get; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
@@ -26,6 +25,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <exception cref="ArgumentException"></exception>
         private Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
         {
+            if (peerIdentifier == null) throw new ArgumentNullException(nameof(peerIdentifier));
             if (!Ip.ValidPortRange(EndPoint.Port)) throw new ArgumentException("Peer Endpoint port range invalid");
             
             EndPoint = endpoint;
@@ -36,28 +36,31 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="connection"></param>
-        public void AddConnection(Connection connection)
-        {
-            Connection = connection ?? throw new ArgumentNullException(nameof(connection));
-            Connected = true;
-        }
-        
         internal void Touch()
         {
             LastSeen = DateTimeProvider.UtcNow;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void IncreaseReputation()
         {
             Reputation++;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void DecreaseReputation()
         {
+            //@TODO check if this is bellow ban threshold
             Reputation--;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -65,6 +68,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
         private void Dispose(bool disposing)
         {
             if (Disposed)
@@ -74,11 +81,11 @@ namespace ADL.Node.Core.Modules.Network.Peer
 
             if (disposing)
             {
-                Connection.Dispose();
+//                Connection.Dispose();
             }
             
             Disposed = true;    
-            Log.Log.Message("Peer class disposed");
+            Log.Log.Message($"Peer {PeerIdentifier.Id} disposed");
         }
     }
 }

@@ -5,8 +5,8 @@ namespace ADL.Node.Core.Modules.Network.Messages
 {
     public class Message
     {
-        private Connection Connection { get; set; }
-        private IMessage ProtoMessage { get; set; }
+        internal Connection Connection { get; set; }
+        internal IMessage ProtoMessage { get; set; }
         private byte[] MessageDescriptor { get; set; }
 
         /// <summary>

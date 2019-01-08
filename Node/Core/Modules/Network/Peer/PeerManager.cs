@@ -495,7 +495,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        private Connection GetPeerConnectionTlsStream(Connection connection, int direction, IPEndPoint endPoint=null)
+        private Connection GetPeerConnectionTlsStream(Connection connection, int direction, IPEndPoint endPoint = null)
         {
             if (connection == null) throw new ArgumentNullException(nameof (connection));
 
@@ -522,7 +522,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
             return connection;
         }
         
-        
         /// <summary>
         /// Disconnects a connection
         /// </summary>
@@ -540,8 +539,10 @@ namespace ADL.Node.Core.Modules.Network.Peer
                 if (!PeerList.RemoveUnidentifiedConnectionFromList(connection))
                 {
                     // its not in our unidentified list so now check the peer bucket
-                    Peer peer = PeerList.FindPeerFromConnection(connection);
-                    if (peer == null) throw new ArgumentNullException(nameof(peer));
+                    if (!PeerList.FindPeerFromConnection(connection, out Peer peer))
+                    {
+                        return false;
+                    }
                     if (PeerList.RemovePeerFromBucket(peer))
                     {
                         peer.Dispose();

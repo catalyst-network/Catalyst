@@ -1,9 +1,15 @@
-using System.Net;
+using ADL.Node.Core.Modules.Network.Connections;
+using Google.Protobuf;
 
 namespace ADL.Node.Core.Modules.Network.Messages
 {
     public interface IMessageSender
     {
-        void Send(IPEndPoint endPoint, byte[] message);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="message"></param>
+        void Send(Connection connection, IMessage message);
     }
 }
