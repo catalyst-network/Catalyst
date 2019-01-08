@@ -98,8 +98,7 @@ namespace ADL.Node.Core.Modules.Network.Messages
                     if (replyWait.Attempts++ >= 3)
                     {
                         _internal.Remove(replyWait.CorrelationId);
-                        Connection connection;
-                        if (_peerList.SearchLists(replyWait.Message.Connection, out connection))
+                        if (_peerList.SearchLists(replyWait.Message.Connection, out Connection connection))
                         {
                             _peerList.Punish(connection.Peer);
                         }
