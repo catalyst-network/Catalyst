@@ -66,8 +66,6 @@ namespace ADL.Node.Core.Modules.Network.Peer
             // copy client public key chunk
             Buffer.BlockCopy(publicKey, 0, peerId, 22, 20);
             
-            Log.Log.Message(BitConverter.ToString(peerId));
-
             return new PeerIdentifier(peerId);
         }
 
@@ -117,7 +115,7 @@ namespace ADL.Node.Core.Modules.Network.Peer
             
             if (ipBytes.Length == 4)
             {
-                Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
+                Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4); //@TODO hook into byte util
             }
             else
             {

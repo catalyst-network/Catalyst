@@ -12,5 +12,10 @@ namespace ADL.Log
         {
             Console.WriteLine(msg);
         }
+        
+        public static void ByteArr(byte[] byteArrMsg)
+        {
+            Console.WriteLine(BitConverter.ToString(byteArrMsg));
+        }
     }
 }
