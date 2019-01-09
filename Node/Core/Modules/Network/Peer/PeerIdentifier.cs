@@ -121,16 +121,19 @@ namespace ADL.Node.Core.Modules.Network.Peer
             {
                 ipChunk = ipBytes;
             }
+            Log.Log.ByteArr(ipBytes);
+
             return ipChunk;
         }
 
         /// <summary>
-        ///
+        ///@TODO this gets the connection end point for our port rather than the advertised port
         /// </summary>
         /// <param name="endPoint"></param>
         /// <returns></returns>
         private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
+            Log.Log.ByteArr(endPoint.Port.ToBytesForRlpEncoding());
             return endPoint.Port.ToBytesForRlpEncoding();
         }
 

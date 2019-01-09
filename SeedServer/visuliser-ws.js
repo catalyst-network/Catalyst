@@ -3,9 +3,7 @@ var app = express();
 var http = require('http').Server(app);
 
 var redis = require('redis')
-  , subscriber = redis.createClient({
-    return_buffers: true
-  })
+  , subscriber = redis.createClient()
   , publisher  = redis.createClient()
 
 var io = require('socket.io')(http)
@@ -30,15 +28,38 @@ http.listen(8000, function(){
 subscriber.subscribe('nodes');
 
 subscriber.on('message', (chan, msg) => {
-  console.log(msg)
+
+    console.log(msg)
 
   io.sockets.emit('node_announce', msg);
 
   // publisher.hgetall(msg, (err, res) => {
   //   res.key = msg;
-  //   io.sockets.emit('node-announce', res);
   // });
 });
 
-
 subscriber.subscribe('nodes');
+
+
+
+// var express = require('express');
+// var app = express();
+// var http = require('http').Server(app);
+//
+// var redis = require('redis');
+// var client1 = redis.createClient();
+// var client2 = redis.createClient();
+//
+// var io = require('socket.io')(http)
+//
+// app.use('/', express.static('www'));
+//
+// http.listen(8000, function(){
+//     console.log('listening on *:8000');
+// });
+//
+// client1.on('message', function(chan, msg) {
+//   io.sockets.emit('node_announce', msg);
+// });
+//
+// client1.subscribe('nodes');
