@@ -12,6 +12,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ADL.Node.Core.Modules.Network.Events;
 using ADL.RLP;
+using ADL.Util;
 
 namespace ADL.Node.Core.Modules.Network
 {
@@ -179,10 +180,12 @@ namespace ADL.Node.Core.Modules.Network
         {
             TcpClient client = new TcpClient("127.0.0.1", 3030); //@TODO get seed tracker from config
             NetworkStream nwStream = client.GetStream();
-            nwStream.Write(NodeIdentity.Id, 0, NodeIdentity.Id.Length);
-            byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-            int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-            Console.WriteLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
+            byte[] network = new byte[1];
+            network[0] = 0x01;
+            Log.Log.ByteArr(network);
+            byte[] announcePackage = ByteUtil.Merge(network, NodeIdentity.Id);
+            Log.Log.ByteArr(announcePackage);
+            nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
         }
 
