@@ -28,7 +28,7 @@ var server = net.createServer((socket) => {
 
     // When receive client data.
     socket.on('data', (data) => {
-        
+
         var buff = new Buffer(data, 'ascii'); //no sure about this
         var network = buff.slice(0,1);
         var client = buff.slice(1,3);
@@ -40,20 +40,13 @@ var server = net.createServer((socket) => {
 
         publisher.publish("nodes", buff);
 
-        console.log('Receive client send data : ' + buff.toString('hex') + ', data size : ' + socket.bytesRead);    
-        
+        console.log('Receive client send data : ' + buff.toString('hex') + ', data size : ' + socket.bytesRead);
+
         const hash = crypto.createHash('sha256');
 
         hash.update(buff.slice(0,43));
-    
-        keyStore.set(hash.digest('hex'), buff.slice(0,43));
-        
-        keyStore.get('895e3c0431b5eb6579e89498275d99821a7279f3bfb00cb9f5eae7b04ab35d3f', (err, data) => {
-            console.log(err);
-            console.log(data);
-        })        
 
-        //client.end('Server received data : ' + buff.toString('hex')  + ', send back to client data size : ' + client.bytesWritten);
+        keyStore.set(hash.digest('hex'), buff.slice(0,43));
     });
 
     // When client send data complete.

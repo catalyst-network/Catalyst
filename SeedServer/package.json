@@ -1,0 +1,17 @@
+{
+  "name": "seedserver",
+  "version": "0.0.1",
+  "description": "Katalyse seedServer",
+  "main": "Server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "config": "^1.24.0",
+    "express": "^4.14.0",
+    "redis": "^2.8.0",
+    "socket.io": "^1.5.1"
+  }
+}
