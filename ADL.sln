@@ -5,8 +5,6 @@ MinimumVisualStudioVersion = 15.0.26124.0
 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Node", "Node\Node.csproj", "{7C564D0C-D181-44D6-AAC4-F8B63BF10554}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GossipProto", "Protocols\Gossip\GossipProto.csproj", "{3AB5DD01-EBF1-4B5B-85A3-127711B1D098}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MempoolProto", "Protocols\Mempool\MempoolProto.csproj", "{2061899B-1E4E-45FE-892C-BC507E258564}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeerProto", "Protocols\Peer\PeerProto.csproj", "{9B3C9ADF-A1FF-456E-8F51-980996052F81}"
@@ -17,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletRpcProto", "Protocols
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bash", "Helpers\Bash\Bash.csproj", "{EA50CCC1-B035-4C94-B62F-B9CDB44A6F62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography", "Helpers\Cryptography\Cryptography.csproj", "{7B353D76-7524-4F35-AE0F-B8F09384336D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStore", "Helpers\DataStore\DataStore.csproj", "{48919063-2B79-4011-87E2-7EADD65EE53A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptions", "Helpers\Exceptions\Exceptions.csproj", "{B785AA34-AE93-4377-A481-8A88B60C3522}"
@@ -26,8 +22,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSystem", "Helpers\FileSystem\FileSystem.csproj", "{001F7231-9074-4A23-BA17-B851A2168692}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Helpers\Logger\Logger.csproj", "{53774F6A-8194-4CC0-B077-B4DE132CD0EE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math", "Helpers\Math\Math.csproj", "{1C4759AD-01D6-44D7-B1A4-5D20F8900714}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "Helpers\Network\Network.csproj", "{2EEA2C4C-03B8-4017-83D7-A85DFB8785F3}"
 EndProject
@@ -41,23 +35,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis", "Components\Redis\R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shell", "Components\Shell\Shell.csproj", "{571864F9-33B3-4173-AD64-5D765A69EACC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transaction", "Components\Transaction\Transaction.csproj", "{5A24CD66-3489-4B0C-9462-DB723D8D3A13}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTests\UnitTest.csproj", "{AA460BB3-A3A9-454A-8CF7-E0E845BBBD9E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Cli\Cli.csproj", "{A64936B8-56F2-4B35-9DBD-FB958D8F5B92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeySigner", "Components\KeySigner\KeySigner.csproj", "{2AA0DFB8-CB89-425E-96CA-A07969C29DFC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hex", "Helpers\Hex\Hex.csproj", "{EA6AC737-F23C-431F-9DF5-F5D8859CC9C6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigInteger", "Helpers\BigInteger\BigInteger.csproj", "{B6F7564D-DE39-4724-894A-EE49CE2AEE47}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLP", "Helpers\RLP\RLP.csproj", "{AC4F41F9-B231-4FA9-9643-701F7EA60734}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "Helpers\Util\Util.csproj", "{033A1E9A-B7A1-4AEC-910C-D407C586F92B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyStore", "Components\KeyStore\KeyStore.csproj", "{AE3C2770-749C-4B8E-9E70-5319E5B75386}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

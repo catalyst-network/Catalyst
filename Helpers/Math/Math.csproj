@@ -3,43 +3,9 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RootNamespace>ADL.Math</RootNamespace>
+        <SelfContained>false</SelfContained>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
-        <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_UnmanagedRegistrationCache Remove="obj\Math.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Math.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Math.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Math.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Math.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Math.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netcoreapp2.1\Math.application" />
-    </ItemGroup>
-
+    
 </Project>

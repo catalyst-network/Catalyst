@@ -27,14 +27,14 @@ namespace ADL.Node
                 var daemonOption = app.Option("-d|--daemon", "Run as daemon", CommandOptionType.NoValue);
                 var envOption = app.Option("-e|--Env", "Specify environment", CommandOptionType.SingleValue);
                 var networkOption = app.Option("-n|--Net", "Specify network", CommandOptionType.SingleValue);
-                var p2POption = app.Option("--disable-p2p", "disable p2p network", CommandOptionType.NoValue);
+                var p2pOption = app.Option("--disable-p2p", "disable p2p network", CommandOptionType.NoValue);
                 var gossipOption = app.Option("--disable-gossip", "disable gossip", CommandOptionType.NoValue);
                 var consensusOption = app.Option("--disable-consensus", "disable consensus", CommandOptionType.NoValue);
                 var dataDirOption = app.Option("--data-dir", "Specify a data directory", CommandOptionType.SingleValue);
                 var publicKeyOption = app.Option("--public-key", "Specify a public key", CommandOptionType.SingleValue);
                 var contractOption = app.Option("--disable-contract", "disable smart contracts", CommandOptionType.NoValue);
-                var walletRpcIpOption = app.Option("--data-dir", "Specify a data directory", CommandOptionType.SingleValue);
-                var walletRpcPortOption = app.Option("--data-dir", "Specify a data directory", CommandOptionType.SingleValue);
+                var walletRpcIpOption = app.Option("--wallet-ip", "Specify a data directory", CommandOptionType.SingleValue);
+                var walletRpcPortOption = app.Option("--wallet-port", "Specify a data directory", CommandOptionType.SingleValue);
                 var payoutAddressOption = app.Option("--payout-address", "Specify a payout address", CommandOptionType.SingleValue);
                 
                 app.OnExecute(() =>
@@ -104,7 +104,7 @@ namespace ADL.Node
                         }
                     }
                     
-                    if (p2POption.HasValue())
+                    if (p2pOption.HasValue())
                     {
                         options.Peer = false;
                     }

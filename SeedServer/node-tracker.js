@@ -54,6 +54,7 @@ socket.on('data', (data) => {
     
     const hash = crypto.createHash('sha256');
     const nodeIdHash = hash.digest('hex');
+    nodeId.hash = nodeIdHash;
     const payload = JSON.stringify(nodeId);
     publisher.publish("nodes", JSON.stringify({ nodeIdHash, nodeId }));
     keyStore.set(nodeIdHash, payload);

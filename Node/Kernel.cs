@@ -21,7 +21,7 @@ namespace ADL.Node
     {
         private static Kernel _instance;
         public IContainer Container { get; set; }
-        public static Settings Settings { get; set; }
+        private static Settings Settings { get; set; }
         private static readonly object Mutex = new object();
 
         /// <summary>

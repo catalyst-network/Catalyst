@@ -24,10 +24,9 @@ namespace ADL.Node
         public ILedgerSettings Ledger { get; set; }
         public NodeOptions NodeOptions { get; set; }
         public IMempoolSettings Mempool { get; set; }
+        private static Settings Instance { get; set; }
         public IContractSettings Contract { get; set; }
         public IConsensusSettings Consensus { get; set; }
-       
-        private static Settings Instance { get; set; }
         private static readonly object Mutex = new object();
 
         /// <summary>

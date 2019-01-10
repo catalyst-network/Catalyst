@@ -3,6 +3,9 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RootNamespace>ADL.Shell</RootNamespace>
+        <SelfContained>false</SelfContained>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,40 +13,7 @@
         <PackageReference Include="Grpc.Core" Version="1.16.0" />
         <PackageReference Include="Google.Protobuf" Version="3.6.1" />
     </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
-        <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_UnmanagedRegistrationCache Remove="obj\Shell.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Shell.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Shell.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Shell.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Shell.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Shell.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <DeployManifest Remove="obj\Debug\netcoreapp2.1\Shell.application" />
-    </ItemGroup>
-
+    
     <ItemGroup>
         <ProjectReference Include="..\..\Protocols\Rpc\Node\NodeRpcProto.csproj" />
     </ItemGroup>
