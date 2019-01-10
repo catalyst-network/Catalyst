@@ -8,8 +8,8 @@
       }
     },
     "Ssl": {
-      "PfxFileName": "PeerCert.pfx",
-      "SslCertPassword": "WeNeedASaf3rPassword"
+      "PfxFileName": "mycert.pfx",
+      "SslCertPassword": "test"
     },
     "Consensus": {
       "nDepth": 100

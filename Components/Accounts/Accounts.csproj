@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>ADL.Accounts</RootNamespace>
+    <SelfContained>false</SelfContained>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
   </PropertyGroup>
   
   <ItemGroup>

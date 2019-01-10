@@ -24,11 +24,12 @@ namespace ADL.Node
         private static AtlasSystem Instance { get; set; }
         private IGossipService GossipService { get; set; }
         private ILedgerService LedgerService { get; set; }        
-        private static readonly object Mutex = new object();
         private IContractService ContractService { get; set; }
         private IConsensusService ConsensusService { get; set; }
         private static ActorSystem MainActorSystem { get; set; }
-        
+
+        private static readonly object Mutex = new object();
+
         /// <summary>
         /// Get reference to actor (static)
         /// </summary>
@@ -69,6 +70,7 @@ namespace ADL.Node
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
             Options = options;
+            Log.Log.Message(Options.DataDir);
             MainActorSystem = ActorSystem.Create("AtlasActorSystem");
             TaskHandlerActor = MainActorSystem.ActorOf<TaskHandlerActor>();
             

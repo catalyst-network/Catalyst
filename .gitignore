@@ -9,7 +9,13 @@
 peer2net
 vinchuca
 Node2
-.data
+
+# Redis data
+data
+
+# Certificates
+*.pfx
+*.pem
 
 # User-specific files
 *.rsuser

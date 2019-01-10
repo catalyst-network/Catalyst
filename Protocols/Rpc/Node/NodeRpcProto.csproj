@@ -3,6 +3,9 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RootNamespace>ADL.Protocol.Rpc.Node</RootNamespace>
+        <SelfContained>false</SelfContained>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,33 +23,6 @@
         <Generated Include=".\dist\csharp\Rpc.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-        <_UnmanagedRegistrationCache Remove="obj\RpcProto.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\RpcProto.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\RpcProto.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\RpcProto.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\RpcProto.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.RpcProto.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <DeployManifest Remove="obj\Debug\netcoreapp2.1\RpcProto.application" />
-    </ItemGroup>
 
     <ItemGroup>
       <Folder Include="dist" />
