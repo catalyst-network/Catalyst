@@ -178,7 +178,7 @@ namespace ADL.Node.Core.Modules.Network
         /// <exception cref="NotImplementedException"></exception>
         public void Announce(object sender, AnnounceNodeEventArgs e)
         {
-            TcpClient client = new TcpClient("127.0.0.1", 3030); //@TODO get seed tracker from config
+            TcpClient client = new TcpClient("192.168.1.213", 21420); //@TODO get seed tracker from config
             NetworkStream nwStream = client.GetStream();
             byte[] network = new byte[1];
             network[0] = 0x01;

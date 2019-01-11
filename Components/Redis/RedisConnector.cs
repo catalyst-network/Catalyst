@@ -20,7 +20,7 @@ namespace ADL.Redis
         {
             return _instance ?? (_instance =
                        new Lazy<RedisConnector>(() => 
-                           new RedisConnector("127.0.0.1 ,allowAdmin=true")).Value);
+                           new RedisConnector("redis-mempool ,allowAdmin=true")).Value);
         }
 
         /// <summary>
