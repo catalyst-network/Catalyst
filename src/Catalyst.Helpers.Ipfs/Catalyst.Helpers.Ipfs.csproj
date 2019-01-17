@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Title>Catalyst Ipfs Component</Title>
+        <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+        <PackageDescription>Ipfs Wrapper</PackageDescription>
+        <Copyright>MIT</Copyright>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageLicenseUrl>http://github.com/atlascity/catalyst-Ipfs/LICENSE.md</PackageLicenseUrl>
+        <PackageProjectUrl>http://github.com/atlascity/catalyst-Ipfs/</PackageProjectUrl>
+        <RepositoryUrl>http://github.com/atlascity/catalyst-Ipfs/</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
+        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RootNamespace>Catalyst.Helpers.Ipfs</RootNamespace>
+        <PackageId>Catalyst.Helpers.Ipfs</PackageId>
+        <Deterministic>true</Deterministic>
+        <Optimize>true</Optimize>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Ipfs.Api" Version="0.23.2" />
+        <PackageReference Include="Ipfs.Core" Version="0.34.2" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Helpers.Bash\Catalyst.Helpers.Bash.csproj" />
+        <ProjectReference Include="..\Catalyst.Helpers.Logger\Catalyst.Helpers.Logger.csproj" />
+    </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>False</DebugSymbols>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Remove="UnitTests\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Remove="UnitTests\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="UnitTests\**" />
+    </ItemGroup>
+    <PropertyGroup>
+        <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
+    </PropertyGroup>
+</Project>

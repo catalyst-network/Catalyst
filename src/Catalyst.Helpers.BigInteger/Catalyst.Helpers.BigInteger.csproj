@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>Catalyst BigInteger Helper</Title>
+    <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+    <PackageDescription>BigInteger Helper</PackageDescription>
+    <Copyright>MIT</Copyright>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>http://github.com/atlascity/catalyst-BigInteger/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>http://github.com/atlascity/catalyst-BigInteger/</PackageProjectUrl>
+    <RepositoryUrl>http://github.com/atlascity/catalyst-BigInteger/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
+    <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Catalyst.Helpers.BigInteger</RootNamespace>
+    <PackageId>Catalyst.Helpers.BigInteger</PackageId>
+    <AssemblyName>Catalyst.Helpers.BigInteger</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>False</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="UnitTests\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="UnitTests\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="UnitTests\**" />
+  </ItemGroup>
+  <PropertyGroup>
+    <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

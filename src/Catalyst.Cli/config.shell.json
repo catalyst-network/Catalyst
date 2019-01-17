@@ -1,0 +1,13 @@
+{
+  "defaultAssembly": "Catalyst.Cli",
+  "components": [
+    {
+      "type": "Catalyst.Catalyst.Helpers.Shell.Catalyst.Helpers.Shell, Catalyst.Helpers.Shell",
+      "services": [
+        {
+          "type": "Catalyst.Catalyst.Helpers.Shell.IAds, Catalyst.Helpers.Shell"
+        }
+      ]
+    }
+  ]
+}

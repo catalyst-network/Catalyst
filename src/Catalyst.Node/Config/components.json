@@ -1,0 +1,61 @@
+{
+  "defaultAssembly": "Catalyst.Node",
+  "components": [
+    {
+      "type": "Catalyst.Node.Modules.Core.Mempool.Mempool, Catalyst.Node",
+      "services": [
+        {
+          "type": "Catalyst.Node.Modules.Core.Mempool.IMempool, Catalyst.Node"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Modules.Core.Consensus.Consensus, Catalyst.Node",
+      "services": [
+        {
+          "type": "Catalyst.Node.Modules.Core.Consensus.IConsensus, Catalyst.Node"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Modules.Core.Contract.Contract, Catalyst.Node",
+      "services": [
+        {
+          "type": "Catalyst.Node.Modules.Core.Contract.IContract, Catalyst.Node"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Modules.Core.Ledger.Ledger, Catalyst.Node",
+      "services": [
+        {
+          "type": "Catalyst.Node.Modules.Core.Ledger.ILedger, Catalyst.Node"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Modules.Core.Rpc.RpcServerImpl, Catalyst.Node",
+      "services": [
+        {
+          "type": "Catalyst.Node.Modules.Core.Rpc.IRpcServer, Catalyst.Node"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Helpers.Redis.Catalyst.Helpers.Redis, Catalyst.Helpers.Redis",
+      "services": [
+        {
+          "type": "Catalyst.Helpers.DataStore.IKeyStore, Catalyst.Helpers.DataStore"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Helpers.Ipfs.IpfsConnector, Catalyst.Helpers.Ipfs",
+      "services": [
+        {
+          "type": "Catalyst.Helpers.Ipfs.IIpfs, Catalyst.Helpers.Ipfs"
+        }
+      ]
+    }
+  ]
+}

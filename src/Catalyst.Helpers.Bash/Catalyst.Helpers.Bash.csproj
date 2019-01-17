@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Title>Catalyst Bash Helper</Title>
+        <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+        <PackageDescription>Bash Helper</PackageDescription>
+        <Copyright>MIT</Copyright>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageLicenseUrl>http://github.com/atlascity/catalyst-Bash/LICENSE.md</PackageLicenseUrl>
+        <PackageProjectUrl>http://github.com/atlascity/catalyst-Bash/</PackageProjectUrl>
+        <RepositoryUrl>http://github.com/atlascity/catalyst-Bash/</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
+        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RootNamespace>Catalyst.Helpers.Bash</RootNamespace>
+        <PackageId>Catalyst.Helpers.Bash</PackageId>
+        <AssemblyName>Catalyst.Helpers.Bash</AssemblyName>
+        <Deterministic>true</Deterministic>
+        <Optimize>true</Optimize>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>False</DebugSymbols>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Remove="UnitTests\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Remove="UnitTests\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="UnitTests\**" />
+    </ItemGroup>
+    <PropertyGroup>
+        <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
+    </PropertyGroup>
+</Project>

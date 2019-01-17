@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <Authors>James Kirby (james.kirby@atlascity.io)</Authors>
+        <IsPackable>false</IsPackable>
+        <AssemblyName>Catalyst.Helpers.Redis.UnitTests</AssemblyName>
+        <PackageId>Catalyst.Helpers.Redis.UnitTests</PackageId>
+        <RootNamespace>Catalyst.Helpers.Redis.UnitTests</RootNamespace>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Akka.TestKit" Version="1.3.10" />
+        <PackageReference Include="Akka.TestKit.VsTest" Version="1.3.2" />
+        <PackageReference Include="Microsoft.UnitTestFramework.Extensions" Version="2.0.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
+        <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Protocol\Mempool\Catalyst.Protocol.Mempool.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Catalyst.Components.Ipfs\Catalyst.Components.Ipfs.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Catalyst.Node\Catalyst.Node.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\UnitTests.dll" />
+        <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\UnitTest.dll" />
+    </ItemGroup>
+    <ItemGroup>
+        <DeployManifest Remove="obj\Debug\netcoreapp2.1\UnitTests.application" />
+        <DeployManifest Remove="obj\Debug\netcoreapp2.1\UnitTest.application" />
+    </ItemGroup>
+    <ItemGroup>
+        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\UnitTests.pdb" />
+        <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\UnitTest.pdb" />
+    </ItemGroup>
+    <ItemGroup>
+        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\UnitTests.dll" />
+        <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\UnitTest.dll" />
+    </ItemGroup>
+    <ItemGroup>
+        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.UnitTests.manifest" />
+        <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.UnitTest.manifest" />
+    </ItemGroup>
+    <ItemGroup>
+        <_UnmanagedRegistrationCache Remove="obj\UnitTests.csproj.UnmanagedRegistration.cache" />
+        <_UnmanagedRegistrationCache Remove="obj\UnitTest.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+    <ItemGroup>
+        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\UnitTests.csproj.ResolveComReference.cache" />
+        <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\UnitTest.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+</Project>

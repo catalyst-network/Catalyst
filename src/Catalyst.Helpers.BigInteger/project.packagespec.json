@@ -1,0 +1,21 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "/Users/nsh/RiderProjects/Catalyst/Catalyst.Helpers.BigInteger/Catalyst.Helpers.BigInteger.csproj",
+    "projectName": "Catalyst.Helpers.BigInteger",
+    "projectPath": "/Users/nsh/RiderProjects/Catalyst/Catalyst.Helpers.BigInteger/Catalyst.Helpers.BigInteger.csproj",
+    "outputPath": "/Users/nsh/RiderProjects/Catalyst/Catalyst.Helpers.BigInteger/",
+    "projectStyle": "PackageReference",
+    "originalTargetFrameworks": [
+      "netcoreapp2.1"
+    ],
+    "frameworks": {
+      "netcoreapp2.1": {
+        "projectReferences": {}
+      }
+    }
+  },
+  "frameworks": {
+    "netcoreapp2.1": {}
+  }
+}
