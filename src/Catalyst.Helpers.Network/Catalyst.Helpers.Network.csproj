@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Title>Catalyst Network Helper</Title>
+        <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+        <PackageDescription>Network Helper</PackageDescription>
+        <Copyright>MIT</Copyright>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageLicenseUrl>http://github.com/atlascity/catalyst-node/LICENSE.md</PackageLicenseUrl>
+        <PackageProjectUrl>http://github.com/atlascity/catalyst-node/</PackageProjectUrl>
+        <RepositoryUrl>http://github.com/atlascity/catalyst-node/</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
+        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RootNamespace>Catalyst.Helpers.Network</RootNamespace>
+        <PackageId>Catalyst.Helpers.Network</PackageId>
+        <AssemblyName>Catalyst.Helpers.Network</AssemblyName>
+        <Deterministic>true</Deterministic>
+        <Optimize>true</Optimize>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Helpers.Logger\Catalyst.Helpers.Logger.csproj" />
+        <ProjectReference Include="..\Catalyst.Helpers.Util\Catalyst.Helpers.Util.csproj" />
+    </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>False</DebugSymbols>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Remove="UnitTests\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Remove="UnitTests\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="UnitTests\**" />
+    </ItemGroup>
+    <PropertyGroup>
+        <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
+    </PropertyGroup>
+</Project>

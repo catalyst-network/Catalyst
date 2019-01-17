@@ -1,0 +1,41 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v2.1": []
+  },
+  "packageFolders": {
+    "/Users/nsh/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/nsh/RiderProjects/Catalyst/Catalyst.Helpers.BigInteger/Catalyst.Helpers.BigInteger.csproj",
+      "projectName": "Catalyst.Helpers.BigInteger",
+      "projectPath": "/Users/nsh/RiderProjects/Catalyst/Catalyst.Helpers.BigInteger/Catalyst.Helpers.BigInteger.csproj",
+      "packagesPath": "/Users/nsh/.nuget/packages/",
+      "outputPath": "/Users/nsh/RiderProjects/Catalyst/Catalyst.Helpers.BigInteger/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/nsh/.config/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp2.1"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netcoreapp2.1": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "netcoreapp2.1": {}
+    }
+  }
+}

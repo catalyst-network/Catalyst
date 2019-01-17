@@ -1,29 +1,0 @@
-
-æ
-
-Peer.protoADL.Protocol.Peer google/protobuf/descriptor.proto"š
-PeerProtocol!
-PingRequest
-ping (	Rping"
-PongResponse
-pong (	Rpong%
-PeerInfoRequest
-ping (	Rping&
-PeerInfoResponse
-pong (	Rpong*
-PeerNeighborsRequest
-ping (	Rping+
-PeerNeighborsResponse
-pong (	Rpong€
-ChallengeRequestB
-
-descriptor (2".google.protobuf.FileDescriptorSetR
-descriptor
-type (Rtype
-nonce (Rnonce—
-ChallengeResponseB
-
-descriptor (2".google.protobuf.FileDescriptorSetR
-descriptor 
-signedNonce (	RsignedNonce
-	publicKey (	R	publicKeybproto3

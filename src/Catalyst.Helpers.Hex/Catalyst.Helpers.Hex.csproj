@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>Catalyst Hex Helper</Title>
+    <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+    <PackageDescription>Hex Helper</PackageDescription>
+    <Copyright>MIT</Copyright>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>http://github.com/atlascity/catalyst-node/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>http://github.com/atlascity/catalyst-node/</PackageProjectUrl>
+    <RepositoryUrl>http://github.com/atlascity/catalyst-node/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
+    <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Catalyst.Helpers.Hex</RootNamespace>
+    <PackageId>Catalyst.Helpers.Hex</PackageId>
+    <AssemblyName>Catalyst.Helpers.Hex</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigInteger.cs" Link="BigInteger\BigInteger.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigIntegerCalculator.AddSub.cs" Link="BigInteger\BigIntegerCalculator.AddSub.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigIntegerCalculator.BitsBuffer.cs" Link="BigInteger\BigIntegerCalculator.BitsBuffer.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigIntegerCalculator.DivRem.cs" Link="BigInteger\BigIntegerCalculator.DivRem.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigIntegerCalculator.FastReducer.cs" Link="BigInteger\BigIntegerCalculator.FastReducer.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigIntegerCalculator.GcdInv.cs" Link="BigInteger\BigIntegerCalculator.GcdInv.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigIntegerCalculator.PowMod.cs" Link="BigInteger\BigIntegerCalculator.PowMod.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigIntegerCalculator.SquMul.cs" Link="BigInteger\BigIntegerCalculator.SquMul.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\BigNumber.cs" Link="BigInteger\BigNumber.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\FormatProvider.BigInteger.cs" Link="BigInteger\FormatProvider.BigInteger.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\FormatProvider.Number.cs" Link="BigInteger\FormatProvider.Number.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\FormatProvider.NumberBuffer.cs" Link="BigInteger\FormatProvider.NumberBuffer.cs" />
+    <Compile Include="..\Catalyst.Helpers.BigInteger\NumericHelpers.cs" Link="BigInteger\NumericHelpers.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>False</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="UnitTests\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="UnitTests\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="UnitTests\**" />
+  </ItemGroup>
+  <PropertyGroup>
+    <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>
