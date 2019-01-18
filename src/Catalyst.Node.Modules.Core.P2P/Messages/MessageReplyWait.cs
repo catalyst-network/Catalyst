@@ -5,15 +5,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
 {
     public class MessageReplyWait
     {
-        public int Attempts { get; set; }
-        public DateTime Sent { get; set; }
-        public Message Message{ get; private set; }
-        public ulong MagicCookie { get; private set; }
-        public ulong CorrelationId { get; private set; }
-        public bool IsTimeout => (DateTimeProvider.UtcNow - Sent).TotalSeconds > 20;
-
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="message"></param>
         /// <param name="magicCookie"></param>
@@ -26,7 +18,14 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
             MagicCookie = magicCookie;
             Sent = DateTimeProvider.UtcNow;
         }
-        
+
+        public int Attempts { get; set; }
+        public DateTime Sent { get; set; }
+        public Message Message { get; }
+        public ulong MagicCookie { get; }
+        public ulong CorrelationId { get; private set; }
+        public bool IsTimeout => (DateTimeProvider.UtcNow - Sent).TotalSeconds > 20;
+
         //@TODO generate a correlationID
     }
 }

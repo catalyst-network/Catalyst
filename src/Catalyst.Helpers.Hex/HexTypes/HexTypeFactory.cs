@@ -6,7 +6,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
     public static class HexTypeFactory
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hex"></param>
         /// <typeparam name="T"></typeparam>

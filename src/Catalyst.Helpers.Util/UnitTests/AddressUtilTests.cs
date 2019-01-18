@@ -10,25 +10,6 @@ namespace Catalyst.Helpers.Util.UnitTests
         }
 
         [Fact]
-        public virtual void ShouldValidateAddressHexFormat()
-        {
-            var address1 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
-            var address2 = "0x5aaeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
-            Assert.True(address1.IsValidCatalystAddressHexFormat());
-            Assert.True(address2.IsValidCatalystAddressHexFormat());
-
-            var address3 = "5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
-            Assert.False(address3.IsValidCatalystAddressHexFormat());
-            //length
-            var address4 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1Be";
-            Assert.False(address4.IsValidCatalystAddressHexFormat());
-            //non alpha
-            //length
-            var address5 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeA'#";
-            Assert.False(address5.IsValidCatalystAddressHexFormat());
-        }
-
-        [Fact]
         public virtual void ShouldCheckIsCheckSumAddress()
         {
             var address1 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
@@ -57,6 +38,25 @@ namespace Catalyst.Helpers.Util.UnitTests
             Assert.Equal(address2, ToChecksumAddress(address2.ToUpper()));
             Assert.Equal(address3, ToChecksumAddress(address3.ToUpper()));
             Assert.Equal(address4, ToChecksumAddress(address4.ToUpper()));
+        }
+
+        [Fact]
+        public virtual void ShouldValidateAddressHexFormat()
+        {
+            var address1 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
+            var address2 = "0x5aaeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
+            Assert.True(address1.IsValidCatalystAddressHexFormat());
+            Assert.True(address2.IsValidCatalystAddressHexFormat());
+
+            var address3 = "5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed";
+            Assert.False(address3.IsValidCatalystAddressHexFormat());
+            //length
+            var address4 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1Be";
+            Assert.False(address4.IsValidCatalystAddressHexFormat());
+            //non alpha
+            //length
+            var address5 = "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeA'#";
+            Assert.False(address5.IsValidCatalystAddressHexFormat());
         }
     }
 }

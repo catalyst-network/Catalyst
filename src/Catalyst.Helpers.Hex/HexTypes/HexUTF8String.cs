@@ -16,7 +16,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hex"></param>
         /// <returns></returns>
@@ -30,7 +29,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -38,10 +36,7 @@ namespace Catalyst.Helpers.Hex.HexTypes
         public override bool Equals(object obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            if (obj is HexUTF8String val)
-            {
-                return val.Value == Value;
-            }
+            if (obj is HexUTF8String val) return val.Value == Value;
             return false;
         }
     }

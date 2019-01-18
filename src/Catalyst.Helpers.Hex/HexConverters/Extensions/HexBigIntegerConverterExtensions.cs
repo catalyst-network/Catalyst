@@ -7,7 +7,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
     public static class HexBigIntegerConverterExtensions
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <param name="littleEndian"></param>
@@ -15,12 +14,13 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         public static byte[] ToByteArray(this BigInteger value, bool littleEndian)
         {
             byte[] bytes;
-            bytes = BitConverter.IsLittleEndian != littleEndian ? value.ToByteArray().Reverse().ToArray() : value.ToByteArray().ToArray();
+            bytes = BitConverter.IsLittleEndian != littleEndian
+                ? value.ToByteArray().Reverse().ToArray()
+                : value.ToByteArray().ToArray();
             return bytes;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <param name="littleEndian"></param>
@@ -29,7 +29,8 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         /// <exception cref="Exception"></exception>
         public static string ToHex(this BigInteger value, bool littleEndian, bool compact = true)
         {
-            if (value.Sign < 0) throw new Exception("Catalyst.Helpers.Hex Encoding of Negative BigInteger value is not supported");
+            if (value.Sign < 0)
+                throw new Exception("Catalyst.Helpers.Hex Encoding of Negative BigInteger value is not supported");
             if (value == 0) return "0x0";
 
 #if NETCOREAPP2_1
@@ -43,9 +44,8 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
 
             return "0x" + bytes.ToHex();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hex"></param>
         /// <param name="isHexLittleEndian"></param>
@@ -67,6 +67,7 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
                 listEncoded.Insert(0, 0x00);
                 encoded = listEncoded.ToArray().Reverse().ToArray();
             }
+
             return new BigInteger(encoded);
         }
     }

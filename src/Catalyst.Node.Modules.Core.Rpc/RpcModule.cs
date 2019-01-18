@@ -1,25 +1,59 @@
 ﻿using System;
-using Autofac;
 using System.IO;
-using Grpc.Core;
 using System.Threading;
-using Catalyst.Helpers.Util;
 using System.Threading.Tasks;
+using Autofac;
 using Catalyst.Helpers.Logger;
+using Catalyst.Helpers.Util;
 using Catalyst.Protocol.Rpc.Node;
+using Grpc.Core;
 
 namespace Catalyst.Node.Modules.Core.Rpc
 {
     public class RpcModule : ModuleBase, IRpcModule
     {
-        private Server Server { get; set; }
         public static Rpc Rpc;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="settings"></param>
+        public RpcModule(IRpcSettings settings)
+        {
+            Guard.NotNull(settings, nameof(settings));
+            Rpc = Rpc.GetInstance();
+            Settings = settings;
+        }
+
+        private Server Server { get; set; }
         private Task ServerTask { get; set; }
-        private IRpcSettings Settings { get; set; }
+        private IRpcSettings Settings { get; }
         private CancellationTokenSource TokenSource { get; set; }
 
         /// <summary>
-        /// 
+        /// </summary>
+        public override bool StartService()
+        {
+            Server = new Server
+            {
+                Services = {RpcServer.BindService(Rpc)},
+                Ports = {new ServerPort(Settings.BindAddress.ToString(), Settings.Port, ServerCredentials.Insecure)}
+            };
+
+            TokenSource = new CancellationTokenSource();
+            ServerTask = RunServiceAsync(Server, TokenSource.Token);
+            return true;
+        }
+
+        /// <summary>
+        ///     Get current implementation of this service
+        /// </summary>
+        /// <returns></returns>
+        public IRpcServer GetImpl()
+        {
+            return (IRpcServer) Server; // not great but grpc is partially sealed so we cant extend to assign it a iface
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="rpcSettings"></param>
@@ -35,45 +69,8 @@ namespace Catalyst.Node.Modules.Core.Rpc
 
             return builder;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="settings"></param>
-        public RpcModule(IRpcSettings settings)
-        {
-            Guard.NotNull(settings, nameof(settings));
-            Rpc = Rpc.GetInstance();
-            Settings = settings;
-        }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public override bool StartService()
-        {
-            Server = new Server
-            {
-                Services =  { RpcServer.BindService(Rpc) },
-                Ports = { new ServerPort(Settings.BindAddress.ToString(), Settings.Port, ServerCredentials.Insecure) }
-            };
-            
-            TokenSource = new CancellationTokenSource();
-            ServerTask = RunServiceAsync(Server, TokenSource.Token);
-            return true;
-        }
-
-        /// <summary>
-        /// Get current implementation of this service
-        /// </summary>
-        /// <returns></returns>
-        public IRpcServer GetImpl()
-        {
-            return (IRpcServer) Server; // not great but grpc is partially sealed so we cant extend to assign it a iface
-        }
-
-        /// <summary>
-        /// 
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
@@ -94,11 +91,12 @@ namespace Catalyst.Node.Modules.Core.Rpc
                 LogException.Message("AwaitCancellation: SetResult", e);
                 throw;
             }
+
             return taskSource.Task;
         }
 
         /// <summary>
-        ///  Starts the RpcService
+        ///     Starts the RpcService
         /// </summary>
         /// <param name="server"></param>
         /// <param name="cancellationToken"></param>
@@ -110,7 +108,7 @@ namespace Catalyst.Node.Modules.Core.Rpc
         }
 
         /// <summary>
-        ///  Starts the RpcService
+        ///     Starts the RpcService
         /// </summary>
         /// <param name="server"></param>
         /// <param name="cancellationToken"></param>

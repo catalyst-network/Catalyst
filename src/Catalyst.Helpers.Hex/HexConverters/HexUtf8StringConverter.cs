@@ -5,9 +5,7 @@ namespace Catalyst.Helpers.Hex.HexConverters
 {
     public class HexUtf8StringConverter : IHexConvertor<string>
     {
-        
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -22,7 +20,6 @@ namespace Catalyst.Helpers.Hex.HexConverters
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hex"></param>
         /// <returns></returns>

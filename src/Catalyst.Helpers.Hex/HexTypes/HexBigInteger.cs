@@ -19,10 +19,7 @@ namespace Catalyst.Helpers.Hex.HexTypes
         public override bool Equals(object obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            if (obj is HexBigInteger val)
-            {
-                return val.Value == Value;
-            }
+            if (obj is HexBigInteger val) return val.Value == Value;
 
             return false;
         }

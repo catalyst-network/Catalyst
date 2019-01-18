@@ -3,65 +3,38 @@ using System.IO;
 
 namespace Catalyst.Helpers.Platform
 {
-    
     /// <summary>
-    /// Utility class for runtime platform detection
+    ///     Utility class for runtime platform detection
     /// </summary>
     public static class Detection
     {
-        
         /// <summary>
-        /// True if runtime platform is Linux
+        ///     True if runtime platform is Linux
         /// </summary>
         private static bool _isLinux;
 
         /// <summary>
-        /// True if runtime platform is Mac OS X
+        ///     True if runtime platform is Mac OS X
         /// </summary>
         private static bool _isMacOsX;
-        
+
         /// <summary>
-        /// True if runtime platform is Windows
+        ///     True if runtime platform is Windows
         /// </summary>
         private static bool _isWindows;
 
-        public static uint Os()
-        {
-            uint platform = 0;
-            
-            if (IsLinux)
-            {
-                platform = 1;
-            }
-            else if (IsMacOsX)
-            {
-                platform = 2;
-            }
-            else if (IsWindows)
-            {
-                platform = 3;
-            }
-
-            if (platform == 0)
-            {
-                throw new Exception();
-            }
-            
-            return platform;
-        }
-        
         /// <summary>
-        /// True if 64-bit runtime is used
+        ///     True if 64-bit runtime is used
         /// </summary>
         public static bool Uses64BitRuntime => IntPtr.Size == 8;
 
         /// <summary>
-        /// True if 32-bit runtime is used
+        ///     True if 32-bit runtime is used
         /// </summary>
-        public static bool Uses32BitRuntime => (IntPtr.Size == 4);
+        public static bool Uses32BitRuntime => IntPtr.Size == 4;
 
         /// <summary>
-        /// True if runtime platform is Windows
+        ///     True if runtime platform is Windows
         /// </summary>
         private static bool IsWindows
         {
@@ -71,9 +44,9 @@ namespace Catalyst.Helpers.Platform
                 return _isWindows;
             }
         }
-        
+
         /// <summary>
-        /// True if runtime platform is Linux
+        ///     True if runtime platform is Linux
         /// </summary>
         private static bool IsLinux
         {
@@ -85,7 +58,7 @@ namespace Catalyst.Helpers.Platform
         }
 
         /// <summary>
-        /// True if runtime platform is Mac OS X
+        ///     True if runtime platform is Mac OS X
         /// </summary>
         private static bool IsMacOsX
         {
@@ -96,8 +69,23 @@ namespace Catalyst.Helpers.Platform
             }
         }
 
+        public static uint Os()
+        {
+            uint platform = 0;
+
+            if (IsLinux)
+                platform = 1;
+            else if (IsMacOsX)
+                platform = 2;
+            else if (IsWindows) platform = 3;
+
+            if (platform == 0) throw new Exception();
+
+            return platform;
+        }
+
         /// <summary>
-        /// Performs platform detection
+        ///     Performs platform detection
         /// </summary>
         private static void DetectPlatform()
         {
@@ -114,13 +102,10 @@ namespace Catalyst.Helpers.Platform
             {
                 var osType = File.ReadAllText(@"/proc/sys/kernel/ostype");
                 if (osType.StartsWith("Linux", StringComparison.OrdinalIgnoreCase))
-                {
                     _isLinux = true;
-                }
                 else
-                {
-                    throw new UnsupportedPlatformException($"Catalyst Catalyst.Node is not supported on \"{osType}\" platform");
-                }
+                    throw new UnsupportedPlatformException(
+                        $"Catalyst Catalyst.Node is not supported on \"{osType}\" platform");
             }
             else if (File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
             {
@@ -132,13 +117,15 @@ namespace Catalyst.Helpers.Platform
             }
         }
     }
-    
+
     internal class UnsupportedPlatformException : Exception
     {
         /// <summary>
-        /// Initializes new instance of UnsupportedPlatformException class
+        ///     Initializes new instance of UnsupportedPlatformException class
         /// </summary>
         /// <param name="message"></param>
-        public UnsupportedPlatformException(string message) : base (message) {}
+        public UnsupportedPlatformException(string message) : base(message)
+        {
+        }
     }
 }

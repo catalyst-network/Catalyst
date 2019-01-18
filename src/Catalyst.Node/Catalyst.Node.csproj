@@ -13,17 +13,16 @@
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.1</TargetFramework>
-        <RootNamespace>Catalyst.Node</RootNamespace>
         <PackageId>Catalyst.Node</PackageId>
-        <AssemblyName>Catalyst.Node</AssemblyName>
-        <Deterministic>true</Deterministic>
-        <Optimize>true</Optimize>
+        <!--<Deterministic>true</Deterministic>-->
+        <!--<Optimize>true</Optimize>-->
         <PlatformTarget>AnyCPU</PlatformTarget>
         <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
         <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyAuthorAttribute>true</GenerateAssemblyAuthorAttribute>
+        <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
-        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Akka" Version="1.3.11" />
@@ -90,6 +89,9 @@
     <ItemGroup>
         <None Remove="UnitTests\**" />
     </ItemGroup>
+    <PropertyGroup>
+        <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
+    </PropertyGroup>
     <ItemGroup>
       <_UnmanagedRegistrationCache Remove="obj\Catalyst.Node.csproj.UnmanagedRegistration.cache" />
     </ItemGroup>
@@ -111,7 +113,10 @@
     <ItemGroup>
       <DeployManifest Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.application" />
     </ItemGroup>
-    <PropertyGroup>
-        <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
-    </PropertyGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <ItemGroup>
+            <PluginAssembly Include="$(SolutionDir)\Catalyst.Node.Modules.Core.Mempool\bin\$(ConfigurationName)\**\Catalyst.Node.Modules.Core.Mempool.dll" />
+        </ItemGroup>
+        <Copy SourceFiles="@(PluginAssembly)" DestinationFolder="$(OutDir)" />
+    </Target>
 </Project>

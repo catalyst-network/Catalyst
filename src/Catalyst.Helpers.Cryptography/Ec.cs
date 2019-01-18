@@ -1,10 +1,10 @@
 using System;
 using System.Text;
+using Catalyst.Helpers.Logger;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
-using Catalyst.Helpers.Logger;
 
 namespace Catalyst.Helpers.Cryptography
 {
@@ -13,23 +13,21 @@ namespace Catalyst.Helpers.Cryptography
         private static readonly SecureRandom SecureRandom = new SecureRandom();
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public static AsymmetricCipherKeyPair CreateKeyPair()
         {
-            ECKeyPairGenerator gen = new ECKeyPairGenerator("EC");
-            KeyGenerationParameters keyGenerationParams = new KeyGenerationParameters(SecureRandom, 256);
+            var gen = new ECKeyPairGenerator("EC");
+            var keyGenerationParams = new KeyGenerationParameters(SecureRandom, 256);
             gen.Init(keyGenerationParams);
-            AsymmetricCipherKeyPair keyPair = gen.GenerateKeyPair();
+            var keyPair = gen.GenerateKeyPair();
             var privateBytes = ((ECPrivateKeyParameters) keyPair.Private).D.ToByteArray();
             if (privateBytes.Length != 32)
                 return CreateKeyPair();
             return keyPair;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="privKey"></param>
@@ -38,24 +36,23 @@ namespace Catalyst.Helpers.Cryptography
         {
             try
             {
-                byte[] msgBytes = Encoding.UTF8.GetBytes(msg);
+                var msgBytes = Encoding.UTF8.GetBytes(msg);
 
-                ISigner signer = SignerUtilities.GetSigner("SHA-256withECDSA");
+                var signer = SignerUtilities.GetSigner("SHA-256withECDSA");
                 signer.Init(true, privKey);
                 signer.BlockUpdate(msgBytes, 0, msgBytes.Length);
-                byte[] sigBytes = signer.GenerateSignature();
+                var sigBytes = signer.GenerateSignature();
 
                 return Convert.ToBase64String(sigBytes);
             }
             catch (Exception exc)
             {
-                Log.Message("Signing Failed: " + exc.ToString());
+                Log.Message("Signing Failed: " + exc);
                 return null;
             }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="pubKey"></param>
         /// <param name="signature"></param>
@@ -65,17 +62,17 @@ namespace Catalyst.Helpers.Cryptography
         {
             try
             {
-                byte[] msgBytes = Encoding.UTF8.GetBytes(msg);
-                byte[] sigBytes = Convert.FromBase64String(signature);
+                var msgBytes = Encoding.UTF8.GetBytes(msg);
+                var sigBytes = Convert.FromBase64String(signature);
 
-                ISigner signer = SignerUtilities.GetSigner("SHA-256withECDSA");
+                var signer = SignerUtilities.GetSigner("SHA-256withECDSA");
                 signer.Init(false, pubKey);
                 signer.BlockUpdate(msgBytes, 0, msgBytes.Length);
                 return signer.VerifySignature(sigBytes);
             }
             catch (Exception exc)
             {
-                Log.Message("Verification failed with the error: " + exc.ToString());
+                Log.Message("Verification failed with the error: " + exc);
                 return false;
             }
         }

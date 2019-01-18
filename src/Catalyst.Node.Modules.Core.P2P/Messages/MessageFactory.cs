@@ -1,5 +1,4 @@
 using System;
-using Catalyst.Protocol.Peer;
 using System.Collections.Generic;
 using Catalyst.Node.Modules.Core.P2P.Connections;
 using Google.Protobuf;
@@ -7,12 +6,11 @@ using Google.Protobuf;
 namespace Catalyst.Node.Modules.Core.P2P.Messages
 {
     /// <summary>
-    /// 
     /// </summary>
     public static class MessageFactory
     {
         // pass the request on the left hand side 🔥 🎵 💃 🕺 ;)
-        static Dictionary<int, int> RequestResponseIdPairings = new Dictionary<int, int>
+        private static Dictionary<int, int> RequestResponseIdPairings = new Dictionary<int, int>
         {
             {1, 2},
             {3, 4},
@@ -21,7 +19,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
         };
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="network"></param>
         /// <param name="messageId"></param>
@@ -33,12 +30,11 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
             if (network <= 0) throw new ArgumentOutOfRangeException(nameof(network));
             if (connection == null) throw new ArgumentNullException(nameof(connection));
             if (messageId <= 0) throw new ArgumentOutOfRangeException(nameof(messageId));
-            
+
             return new Message(connection, message, network, messageId);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="network"></param>
         /// <param name="messageId"></param>

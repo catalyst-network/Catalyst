@@ -4,9 +4,7 @@ namespace Catalyst.Helpers.Util
 {
     public static class AddressExtensions
     {
-        
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -21,7 +19,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -37,7 +34,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// Validates if the hex string is 40 alphanumeric characters
+        ///     Validates if the hex string is 40 alphanumeric characters
         /// </summary>
         public static bool IsValidCatalystAddressHexFormat(this string address)
         {
@@ -50,7 +47,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>

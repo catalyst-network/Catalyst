@@ -5,9 +5,7 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
 {
     public static class HexStringUtf8ConverterExtensions
     {
-        
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -22,7 +20,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hex"></param>
         /// <returns></returns>
@@ -33,7 +30,9 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
             if (string.IsNullOrWhiteSpace(hex))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(hex));
             var bytes = hex.HexToByteArray();
-            return Encoding.UTF8.GetString(bytes, 0, bytes.Length);  //@TODO want to hook this into the  ByteToString util method but creates circular dep
+            return
+                Encoding.UTF8.GetString(bytes, 0,
+                    bytes.Length); //@TODO want to hook this into the  ByteToString util method but creates circular dep
         }
     }
 }

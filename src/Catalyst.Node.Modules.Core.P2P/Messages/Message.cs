@@ -1,17 +1,12 @@
 using System;
-using Google.Protobuf;
 using Catalyst.Node.Modules.Core.P2P.Connections;
+using Google.Protobuf;
 
 namespace Catalyst.Node.Modules.Core.P2P.Messages
 {
     public class Message
     {
-        internal Connection Connection { get; set; }
-        internal IMessage ProtoMessage { get; set; }
-        private byte[] MessageDescriptor { get; set; }
-
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="message"></param>
@@ -25,9 +20,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
             if (connection != null) Connection = connection;
             MessageDescriptor = messageDescriptor;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="message"></param>
@@ -39,18 +33,22 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
             if (message != null) ProtoMessage = message;
             MessageDescriptor = BuildMsgDescriptor(network, type);
         }
-        
+
+        internal Connection Connection { get; set; }
+        internal IMessage ProtoMessage { get; set; }
+        private byte[] MessageDescriptor { get; }
+
         /// <summary>
-        /// Message descriptor should return a 2byte array
-        /// The first byte denotes the network 0 = devNet, 1 = testNet, 2 = liveNet
-        /// The second byte is the message type
+        ///     Message descriptor should return a 2byte array
+        ///     The first byte denotes the network 0 = devNet, 1 = testNet, 2 = liveNet
+        ///     The second byte is the message type
         /// </summary>
         /// <param name="network"></param>
         /// <param name="type"></param>
         /// <returns></returns>
         public static byte[] BuildMsgDescriptor(byte network, byte type)
         {
-            return new [] { network, type };
+            return new[] {network, type};
         }
     }
 }

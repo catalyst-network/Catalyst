@@ -5,7 +5,7 @@ using Catalyst.Helpers.FileSystem;
 namespace Catalyst.Node
 {
     /// <summary>
-    /// Default options for node
+    ///     Default options for node
     /// </summary>
     public sealed class NodeOptions
     {
@@ -24,9 +24,9 @@ namespace Catalyst.Node
         public uint WalletRpcPort { get; set; } = 0;
         public string PublicKey { get; set; } = null;
         public string Network { get; set; } = "devnet"; //@TODO hardcoded network
-        public string PayoutAddress{ get; set; } = null;
+        public string PayoutAddress { get; set; } = null;
         public IPAddress WalletRpcIp { get; set; } = null;
         public IPAddress Host { get; set; } = IPAddress.Parse("127.0.0.1"); //@TODO hardcoded network
-        public string DataDir { get; set; } = Fs.GetUserHomeDir()+"/.Catalyst"; //@TODO hardcoded network
+        public string DataDir { get; set; } = Fs.GetUserHomeDir() + "/.Catalyst"; //@TODO hardcoded network
     }
 }

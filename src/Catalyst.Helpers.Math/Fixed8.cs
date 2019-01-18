@@ -11,24 +11,24 @@ namespace Catalyst.Helpers.Math
         void Serialize(BinaryWriter writer);
         void Deserialize(BinaryReader reader);
     }
-    
+
     /// <summary>
-    /// Accurate to 10^-8 64-bit fixed-point numbers minimize rounding errors.
-    /// By controlling the accuracy of the multiplier, rounding errors can be completely eliminated.
+    ///     Accurate to 10^-8 64-bit fixed-point numbers minimize rounding errors.
+    ///     By controlling the accuracy of the multiplier, rounding errors can be completely eliminated.
     /// </summary>
     public struct Fixed8 : IComparable<Fixed8>, IEquatable<Fixed8>, IFormattable, ISerializable
     {
         private const long D = 100_000_000;
-        
+
         internal long value;
 
-        public static readonly Fixed8 MaxValue = new Fixed8 { value = long.MaxValue };
+        public static readonly Fixed8 MaxValue = new Fixed8 {value = long.MaxValue};
 
-        public static readonly Fixed8 MinValue = new Fixed8 { value = long.MinValue };
+        public static readonly Fixed8 MinValue = new Fixed8 {value = long.MinValue};
 
-        public static readonly Fixed8 One = new Fixed8 { value = D };
+        public static readonly Fixed8 One = new Fixed8 {value = D};
 
-        public static readonly Fixed8 Satoshi = new Fixed8 { value = 1 };
+        public static readonly Fixed8 Satoshi = new Fixed8 {value = 1};
 
         public static readonly Fixed8 Zero = default(Fixed8);
 
@@ -36,7 +36,7 @@ namespace Catalyst.Helpers.Math
 
         public Fixed8(long data)
         {
-            this.value = data;
+            value = data;
         }
 
         public Fixed8 Abs()
@@ -50,18 +50,17 @@ namespace Catalyst.Helpers.Math
 
         public Fixed8 Ceiling()
         {
-            long remainder = value % D;
+            var remainder = value % D;
             if (remainder == 0) return this;
             if (remainder > 0)
                 return new Fixed8
                 {
                     value = value - remainder + D
                 };
-            else
-                return new Fixed8
-                {
-                    value = value - remainder
-                };
+            return new Fixed8
+            {
+                value = value - remainder
+            };
         }
 
         public int CompareTo(Fixed8 other)
@@ -82,7 +81,7 @@ namespace Catalyst.Helpers.Math
         public override bool Equals(object obj)
         {
             if (!(obj is Fixed8)) return false;
-            return Equals((Fixed8)obj);
+            return Equals((Fixed8) obj);
         }
 
         public static Fixed8 FromDecimal(decimal value)
@@ -92,11 +91,14 @@ namespace Catalyst.Helpers.Math
                 throw new OverflowException();
             return new Fixed8
             {
-                value = (long)value
+                value = (long) value
             };
         }
 
-        public long GetData() => value;
+        public long GetData()
+        {
+            return value;
+        }
 
         public override int GetHashCode()
         {
@@ -105,21 +107,17 @@ namespace Catalyst.Helpers.Math
 
         public static Fixed8 Max(Fixed8 first, params Fixed8[] others)
         {
-            foreach (Fixed8 other in others)
-            {
+            foreach (var other in others)
                 if (first.CompareTo(other) < 0)
                     first = other;
-            }
             return first;
         }
 
         public static Fixed8 Min(Fixed8 first, params Fixed8[] others)
         {
-            foreach (Fixed8 other in others)
-            {
+            foreach (var other in others)
                 if (first.CompareTo(other) > 0)
                     first = other;
-            }
             return first;
         }
 
@@ -135,17 +133,17 @@ namespace Catalyst.Helpers.Math
 
         public override string ToString()
         {
-            return ((decimal)this).ToString(CultureInfo.InvariantCulture);
+            return ((decimal) this).ToString(CultureInfo.InvariantCulture);
         }
 
         public string ToString(string format)
         {
-            return ((decimal)this).ToString(format);
+            return ((decimal) this).ToString(format);
         }
 
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            return ((decimal)this).ToString(format, formatProvider);
+            return ((decimal) this).ToString(format, formatProvider);
         }
 
         public static bool TryParse(string s, out Fixed8 result)
@@ -156,22 +154,24 @@ namespace Catalyst.Helpers.Math
                 result = default(Fixed8);
                 return false;
             }
+
             d *= D;
             if (d < long.MinValue || d > long.MaxValue)
             {
                 result = default(Fixed8);
                 return false;
             }
+
             result = new Fixed8
             {
-                value = (long)d
+                value = (long) d
             };
             return true;
         }
 
         public static explicit operator decimal(Fixed8 value)
         {
-            return value.value / (decimal)D;
+            return value.value / (decimal) D;
         }
 
         public static explicit operator long(Fixed8 value)
@@ -213,29 +213,29 @@ namespace Catalyst.Helpers.Math
         {
             const ulong QUO = (1ul << 63) / (D >> 1);
             const ulong REM = ((1ul << 63) % (D >> 1)) << 1;
-            int sign = System.Math.Sign(x.value) * System.Math.Sign(y.value);
-            ulong ux = (ulong)System.Math.Abs(x.value);
-            ulong uy = (ulong)System.Math.Abs(y.value);
-            ulong xh = ux >> 32;
-            ulong xl = ux & 0x00000000fffffffful;
-            ulong yh = uy >> 32;
-            ulong yl = uy & 0x00000000fffffffful;
-            ulong rh = xh * yh;
-            ulong rm = xh * yl + xl * yh;
-            ulong rl = xl * yl;
-            ulong rmh = rm >> 32;
-            ulong rml = rm << 32;
+            var sign = System.Math.Sign(x.value) * System.Math.Sign(y.value);
+            var ux = (ulong) System.Math.Abs(x.value);
+            var uy = (ulong) System.Math.Abs(y.value);
+            var xh = ux >> 32;
+            var xl = ux & 0x00000000fffffffful;
+            var yh = uy >> 32;
+            var yl = uy & 0x00000000fffffffful;
+            var rh = xh * yh;
+            var rm = xh * yl + xl * yh;
+            var rl = xl * yl;
+            var rmh = rm >> 32;
+            var rml = rm << 32;
             rh += rmh;
             rl += rml;
             if (rl < rml)
                 ++rh;
             if (rh >= D)
                 throw new OverflowException();
-            ulong rd = rh * REM + rl;
+            var rd = rh * REM + rl;
             if (rd < rl)
                 ++rh;
-            ulong r = rh * QUO + rd / D;
-            x.value = (long)r * sign;
+            var r = rh * QUO + rd / D;
+            x.value = (long) r * sign;
             return x;
         }
 

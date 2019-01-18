@@ -7,7 +7,6 @@ namespace Catalyst.Helpers.RLP
     public class RLPStringFormatter
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
@@ -30,6 +29,7 @@ namespace Catalyst.Helpers.RLP
             {
                 output.Append(element.RlpData.ToHex() + ", ");
             }
+
             return output.ToString();
         }
     }

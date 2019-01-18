@@ -9,7 +9,6 @@ namespace Catalyst.Helpers.RLP
     public static class ConverterForRlpEncodingExtensions
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
@@ -24,11 +23,11 @@ namespace Catalyst.Helpers.RLP
                 bytes = listEncoded.ToArray().Reverse().ToArray();
                 return new BigInteger(bytes);
             }
+
             return new BigInteger(bytes);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="bigInteger"></param>
         /// <returns></returns>
@@ -38,7 +37,6 @@ namespace Catalyst.Helpers.RLP
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
@@ -48,7 +46,6 @@ namespace Catalyst.Helpers.RLP
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
@@ -58,7 +55,6 @@ namespace Catalyst.Helpers.RLP
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -68,7 +64,6 @@ namespace Catalyst.Helpers.RLP
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="strings"></param>
         /// <returns></returns>
@@ -84,7 +79,6 @@ namespace Catalyst.Helpers.RLP
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
@@ -98,7 +92,6 @@ namespace Catalyst.Helpers.RLP
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
@@ -112,7 +105,6 @@ namespace Catalyst.Helpers.RLP
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
@@ -122,11 +114,12 @@ namespace Catalyst.Helpers.RLP
         {
             if (bytes == null) throw new ArgumentNullException(nameof(bytes));
             if (bytes.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(bytes));
-            return Encoding.UTF8.GetString(bytes, 0, bytes.Length); //@TODO want to hook this into the  ByteToString util method but creates circular dep
+            return
+                Encoding.UTF8.GetString(bytes, 0,
+                    bytes.Length); //@TODO want to hook this into the  ByteToString util method but creates circular dep
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>

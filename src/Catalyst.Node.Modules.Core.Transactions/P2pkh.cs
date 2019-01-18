@@ -21,10 +21,9 @@ namespace Catalyst.Node.Modules.Core.Transactions
 
             return true;
         }
-        
+
         public void CreateInput(ref BasicTransaction tx)
         {
-    
         }
     }
 }

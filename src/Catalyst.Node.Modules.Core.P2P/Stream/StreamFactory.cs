@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
 using System.Net.Security;
+using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Helpers.Logger;
@@ -12,20 +12,20 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
     public static class StreamFactory
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="certificate"></param>
         /// <param name="chain"></param>
         /// <param name="sslPolicyErrors"></param>
         /// <returns></returns>
-        private static bool AcceptCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        private static bool AcceptCertificate(object sender, X509Certificate certificate, X509Chain chain,
+            SslPolicyErrors sslPolicyErrors)
         {
             return true;
         }
 
         /// <summary>
-        /// inbound connections = 1, outbound connections = 2
+        ///     inbound connections = 1, outbound connections = 2
         /// </summary>
         /// <param name="networkStream"></param>
         /// <param name="direction"></param>
@@ -46,12 +46,14 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
             IPEndPoint endPoint = null
         )
         {
-            if (networkStream == null) throw new ArgumentNullException(nameof (networkStream));
-            if (sslCertificate == null) throw new ArgumentNullException(nameof (sslCertificate));
+            if (networkStream == null) throw new ArgumentNullException(nameof(networkStream));
+            if (sslCertificate == null) throw new ArgumentNullException(nameof(sslCertificate));
 
-            X509CertificateCollection certificateCollection = new X509CertificateCollection {sslCertificate};
+            var certificateCollection = new X509CertificateCollection {sslCertificate};
 
-            var sslStream = acceptInvalidCerts ? new SslStream(networkStream, false, new RemoteCertificateValidationCallback(AcceptCertificate)) : new SslStream(networkStream, false);
+            var sslStream = acceptInvalidCerts
+                ? new SslStream(networkStream, false, AcceptCertificate)
+                : new SslStream(networkStream, false);
 
             try
             {
@@ -71,7 +73,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
                     case 2:
                         throw new Exception("need endpoint for outbound connections");
                     default:
-                        throw new Exception("logically you should never get here, so here is a un-useful error message");
+                        throw new Exception(
+                            "logically you should never get here, so here is a un-useful error message");
                 }
 
                 if (!sslStream.IsEncrypted)
@@ -85,12 +88,13 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
                     sslStream.Dispose();
                     throw new AuthenticationException("*** ssl stream not authenticated");
                 }
-                
+
                 if (mutuallyAuthenticate && !sslStream.IsMutuallyAuthenticated)
                 {
                     sslStream.Dispose();
                     throw new AuthenticationException("*** ssl stream failed mutual authentication");
                 }
+
                 return sslStream;
             }
             catch (IOException e)

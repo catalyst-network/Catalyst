@@ -1,20 +1,25 @@
-using System;
 using Akka.Actor;
-using Catalyst.Node.Modules.Core.Transactions;
 using Catalyst.Helpers.Logger;
+using Catalyst.Node.Modules.Core.Transactions;
 
 namespace Catalyst.Node.Modules.Core.Gossip
 {
-    public class GossipActor : UntypedActor , IGossip
+    public class GossipActor : UntypedActor, IGossip
     {
-        protected override void PreStart() => Log.Message("Started Gossip actor");
-            
-        protected override void PostStop() => Log.Message("Stopped Gossip actor");
-            
+        protected override void PreStart()
+        {
+            Log.Message("Started Gossip actor");
+        }
+
+        protected override void PostStop()
+        {
+            Log.Message("Stopped Gossip actor");
+        }
+
         protected override void OnReceive(object message)
         {
             Log.Message("LocalPeerService OnReceive");
-        
+
             Log.Message($"Message received {message}");
             switch (message)
             {
@@ -29,8 +34,10 @@ namespace Catalyst.Node.Modules.Core.Gossip
                             ReceiveTransaction(tx);
                             break;
                     }
+
                     break;
             }
+
             var receivedMessage = (BasicTransaction) message;
         }
 
@@ -45,10 +52,10 @@ namespace Catalyst.Node.Modules.Core.Gossip
             // Send the message to connected nodes as an object so it's unpacked and cast
             // to the same Catalyst.Node.Modules.Core.Transactions object on the receiving end
         }
-                
+
         private void ReceiveTransaction(BasicTransaction tx)
         {
-            P2pkh p2pkh = new P2pkh();
+            var p2pkh = new P2pkh();
             p2pkh.CheckInput(tx);
         }
     }

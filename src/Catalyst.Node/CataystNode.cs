@@ -1,149 +1,110 @@
 using System;
-using Autofac;
-using Akka.Actor;
-using Catalyst.Helpers.Util;
 using System.Threading.Tasks;
+using Akka.Actor;
+using Autofac;
+using Catalyst.Helpers.Util;
+using Catalyst.Node.Modules.Core.Consensus;
+using Catalyst.Node.Modules.Core.Contract;
 using Catalyst.Node.Modules.Core.Dfs;
-using Catalyst.Node.Modules.Core.Rpc;
-using Catalyst.Node.Modules.Core.P2P;
 using Catalyst.Node.Modules.Core.Gossip;
 using Catalyst.Node.Modules.Core.Ledger;
 using Catalyst.Node.Modules.Core.Mempool;
-using Catalyst.Node.Modules.Core.Contract;
-using Catalyst.Node.Modules.Core.Consensus;
+using Catalyst.Node.Modules.Core.P2P;
+using Catalyst.Node.Modules.Core.Rpc;
 
 namespace Catalyst.Node
 {
     public class CatalystNode : IDisposable
     {
-        private Kernel Kernel { get; set; }
-        private IDfsModule DfsModule { get; set; }
-        private IRpcModule RcpModule { get; set; }
-        private IP2PModule PeerService { get; set; }
-        private static CatalystNode Instance { get; set; }
-        private IGossipModule GossipModule { get; set; }
-        private ILedgerService LedgerService { get; set; }        
-        private IContractModule ContractModule { get; set; }
-        private IConsensusService ConsensusService { get; set; }
-        private static ActorSystem CatalystActorSystem { get; set; }
-
-        private readonly NodeOptions Options;
+        private readonly NodeOptions _options;
         private static readonly object Mutex = new object();
 
         /// <summary>
-        /// Get reference to actor (static)
-        /// </summary>
-        /// <returns>IActorRef</returns>
-        public static IActorRef RpcTaskManager { get; private set; }
-        
-        /// <summary>
-        /// Get mempool implementation (static)
-        /// </summary>
-        /// <returns>IMempoolService</returns>
-        public static IMempoolModule MempoolModule { get; private set; }
-
-        /// <summary>
-        /// Get a thread safe CatalystSystem singleton.
-        /// </summary>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static CatalystNode GetInstance(NodeOptions options)
-        {
-            Guard.NotNull(options, nameof(options));
-            if (Instance == null) 
-            { 
-                lock (Mutex)
-                {
-                    if (Instance == null) 
-                    { 
-                        //@TODO try instantiate kernel here and pass to CatalystNode as param
-                        Instance = new CatalystNode(options);
-                    }
-                } 
-            }
-            return Instance;
-        }
-        
-        /// <summary>
-        /// Instantiates basic CatalystSystem.
+        ///     Instantiates basic CatalystSystem.
         /// </summary>
         private CatalystNode(NodeOptions options) // @TODO make kernel be a param
         {
             Guard.NotNull(options, nameof(options));
-            Options = options;
+            _options = options;
 
             using (CatalystActorSystem = ActorSystem.Create("CatalystActorSystem"))
             {
-                
             }
-            
-            Kernel = Kernel.GetInstance(options);
-            
-            if (options.Consensus)
+
+            Kernel = Kernel.GetInstance(_options);
+
+            if (_options.Consensus)
             {
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
                     ConsensusService = scope.Resolve<IConsensusService>();
                 }
-                ConsensusService.StartService();  
+
+                ConsensusService.StartService();
             }
-            
-            if (options.Contract)
+
+            if (_options.Contract)
             {
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
                     ContractModule = scope.Resolve<IContractModule>();
                 }
-                ContractModule.StartService();  
+
+                ContractModule.StartService();
             }
-            
-            if (options.Dfs)
+
+            if (_options.Dfs)
             {
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
                     DfsModule = scope.Resolve<IDfsModule>();
                 }
+
                 DfsModule.StartService();
             }
-            
-            if (options.Gossip)
+
+            if (_options.Gossip)
             {
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
                     GossipModule = scope.Resolve<IGossipModule>();
                 }
-                GossipModule.StartService();  
+
+                GossipModule.StartService();
             }
 
-            if (options.Ledger)
+            if (_options.Ledger)
             {
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
                     LedgerService = scope.Resolve<ILedgerService>();
                 }
-                LedgerService.StartService();     
+
+                LedgerService.StartService();
             }
-            
-            if (options.Mempool)
+
+            if (_options.Mempool)
             {
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
                     MempoolModule = scope.Resolve<IMempoolModule>();
                 }
-                MempoolModule.StartService();       
+
+                MempoolModule.StartService();
             }
-            
-            if (options.Peer)
+
+            if (_options.Peer)
             {
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
                     PeerService = scope.Resolve<IP2PModule>();
                 }
+
                 PeerService.StartService();
             }
-            
+
             // @TODO we need to try catch all of this and gracefully exit if we cant start services required.
-            if (options.Rpc)
+            if (_options.Rpc)
             {
                 using (var scope = Kernel.Container.BeginLifetimeScope())
                 {
@@ -155,16 +116,28 @@ namespace Catalyst.Node
             }
         }
 
+        private Kernel Kernel { get; }
+        private IDfsModule DfsModule { get; }
+        private IRpcModule RcpModule { get; }
+        private IP2PModule PeerService { get; }
+        private static CatalystNode Instance { get; set; }
+        private IGossipModule GossipModule { get; }
+        private ILedgerService LedgerService { get; }
+        private IContractModule ContractModule { get; }
+        private IConsensusService ConsensusService { get; }
+        private static ActorSystem CatalystActorSystem { get; set; }
+
         /// <summary>
-        /// @TODO make a single global cancellation token that is passed to all objects
-        /// @TODO hook into dotnet process manager when main process recieves shutdown hit this method to cancel the global token and have a clean system wide dispose, this will allow us to gracefully say bye to all peers and keep data integrity.
+        ///     Get reference to actor (static)
         /// </summary>
-        /// <returns></returns>
-        public Task Shutdown()
-        {
-            var taskSource = new TaskCompletionSource<bool>();
-            return taskSource.Task;
-        }
+        /// <returns>IActorRef</returns>
+        public static IActorRef RpcTaskManager { get; private set; }
+
+        /// <summary>
+        ///     Get mempool implementation (static)
+        /// </summary>
+        /// <returns>IMempoolService</returns>
+        public static IMempoolModule MempoolModule { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -175,6 +148,36 @@ namespace Catalyst.Node
             RcpModule?.StopService();
             CatalystActorSystem.Stop(RpcTaskManager);
             CatalystActorSystem.Dispose();
+        }
+
+        /// <summary>
+        ///     Get a thread safe CatalystSystem singleton.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static CatalystNode GetInstance(NodeOptions options)
+        {
+            Guard.NotNull(options, nameof(options));
+            if (Instance == null)
+                lock (Mutex)
+                {
+                    if (Instance == null) Instance = new CatalystNode(options);
+                }
+
+            return Instance;
+        }
+
+        /// <summary>
+        ///     @TODO make a single global cancellation token that is passed to all objects
+        ///     @TODO hook into dotnet process manager when main process recieves shutdown hit this method to cancel the global
+        ///     token and have a clean system wide dispose, this will allow us to gracefully say bye to all peers and keep data
+        ///     integrity.
+        /// </summary>
+        /// <returns></returns>
+        public Task Shutdown()
+        {
+            var taskSource = new TaskCompletionSource<bool>();
+            return taskSource.Task;
         }
     }
 }

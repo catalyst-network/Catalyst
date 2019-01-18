@@ -11,22 +11,28 @@ namespace Catalyst.Helpers.Redis
     public class Redis : IKeyValueStore
     {
         private When _when;
-        private static IPAddress Host { get; set; }
-        private readonly IDatabase _redisDb = RedisConnector.GetInstance(Host).GetDb;
+        private RedisConnector _redisConnector;
 
         /// <summary>
-        /// Class constructor.
+        ///     Class constructor.
         /// </summary>
         /// <param name="host"></param>
         /// <param name="when"></param>
-        public Redis(IPAddress host, When when = When.NotExists)
+        public Redis(When when = When.NotExists)
         {
             _when = when;
-            Host = host;
+        }
+
+//        public IPAddress Host { get; set; }
+
+        public void Connect(IPEndPoint host)
+        {
+            //@TODO guard util
+            if (_redisConnector == null)
+                _redisConnector = RedisConnector.GetInstance(host);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -35,44 +41,40 @@ namespace Catalyst.Helpers.Redis
         /// <returns></returns>
         public bool Set(byte[] key, byte[] value, TimeSpan? expiry)
         {
-            
-            return _redisDb.StringSet(key, value, expiry, _when);
+            //@TODO guard util
+            return _redisConnector.GetDb.StringSet(key, value, expiry, _when);
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public byte[] Get(byte[] value)
         {
-            return _redisDb.StringGet(value);
+            //@TODO guard util
+            return _redisConnector.GetDb.StringGet(value);
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns>Dictionary<string,string></returns>
+        /// <returns>Dictionary<string, string></returns>
         /// <see>https://redis.io/commands/INFO</see>
         public Dictionary<string, string> GetInfo()
         {
             var serializer = new NewtonsoftSerializer();
-            var sut = new StackExchangeRedisCacheClient(RedisConnector.GetInstance(Host).Connection, serializer);
-            
+            var sut = new StackExchangeRedisCacheClient(_redisConnector.Connection, serializer);
+
             return sut.GetInfo();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="when"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ParseSettings(string  when)
-        {            
-            if (!Enum.TryParse(when, out _when))
-            {
-                throw new ArgumentException($"Invalid When setting format:{when}");
-            }
+        private void ParseSettings(string when)
+        {
+//        @TODO guard util
+            if (!Enum.TryParse(when, out _when)) throw new ArgumentException($"Invalid When setting format:{when}");
         }
     }
 }

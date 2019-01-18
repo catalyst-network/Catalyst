@@ -13,35 +13,62 @@ namespace Catalyst.Helpers.Shell
         private static string ServiceName => "Catalyst Distributed Shell";
 
         /// <summary>
-        /// Prints a list of available cli commands.
         /// </summary>
         /// <returns></returns>
-        public bool OnHelpCommand(string advancedCmds="")
-        {
-            var normalCmds = 
-                "Normal Commands:\n" +
-                    "\tstart node\n" +
-                    "\tstart work\n" +
-                    "\tstop node\n" +
-                    "\tstop work\n" +
-                    "\tget info\n" +
-                    "\tget config\n" +
-                    "\tget version\n" +
-                    "\thelp\n" +
-                    "\tclear\n" +
-                    "\texit\n";
-            
-            Log.Message(normalCmds);
-            
-            if (advancedCmds != "")
-            {
-                Log.Message(advancedCmds);
-            }
-            return true;
-        }      
-        
+        public abstract bool OnStart(string[] args);
+
         /// <summary>
-        /// Catalyst.Cli command service router.
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool OnStartNode(string[] args);
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool OnStartWork(string[] args);
+
+        /// <summary>
+        /// </summary>
+        public abstract bool OnStop(string[] args);
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool OnStopNode(string[] args);
+
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool OnStopWork(string[] args);
+
+        /// <summary>
+        ///     Prints a list of available cli commands.
+        /// </summary>
+        /// <returns></returns>
+        public bool OnHelpCommand(string advancedCmds = "")
+        {
+            var normalCmds =
+                "Normal Commands:\n" +
+                "\tstart node\n" +
+                "\tstart work\n" +
+                "\tstop node\n" +
+                "\tstop work\n" +
+                "\tget info\n" +
+                "\tget config\n" +
+                "\tget version\n" +
+                "\thelp\n" +
+                "\tclear\n" +
+                "\texit\n";
+
+            Log.Message(normalCmds);
+
+            if (advancedCmds != "") Log.Message(advancedCmds);
+            return true;
+        }
+
+        /// <summary>
+        ///     Catalyst.Cli command service router.
         /// </summary>
         /// <param name="args"></param>
         /// <param name="args"></param>
@@ -64,45 +91,8 @@ namespace Catalyst.Helpers.Shell
                     return CommandNotFound(args);
             }
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStart(string[] args);
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStartNode(string[] args);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStartWork(string[] args);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public abstract bool OnStop(string[] args);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStopNode(string[] args);
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStopWork(string[] args);
-        
-        /// <summary>
-        /// 
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -122,45 +112,45 @@ namespace Catalyst.Helpers.Shell
                     return CommandNotFound(args);
             }
         }
-        
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        abstract public bool OnGetInfo();
-        
+        public abstract bool OnGetInfo();
+
         /// <summary>
-        /// Prints the current loaded settings.
+        ///     Prints the current loaded settings.
         /// </summary>
         /// <returns></returns>
         public abstract bool OnGetConfig();
-        
-        /// <summary>
-        /// Prints the current node version.
-        /// </summary>
-        /// <returns></returns>
-        abstract public bool OnGetVersion();
 
         /// <summary>
-        /// Prints stats about the mempool implementation.
+        ///     Prints the current node version.
         /// </summary>
         /// <returns></returns>
-        abstract public bool OnGetMempool();
-        
+        public abstract bool OnGetVersion();
+
         /// <summary>
-        /// 
+        ///     Prints stats about the mempool implementation.
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool OnGetMempool();
+
+        /// <summary>
         /// </summary>
         /// <param name="prompt"></param>
         /// <returns></returns>
         public string ReadPassword(string prompt)
         {
-            const string t = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-            StringBuilder sb = new StringBuilder();
+            const string t =
+                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+            var sb = new StringBuilder();
             ConsoleKeyInfo key;
             Log.Message(prompt);
             Log.Message(": ");
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            
+
             do
             {
                 key = Console.ReadKey(true);
@@ -183,13 +173,13 @@ namespace Catalyst.Helpers.Shell
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="prompt"></param>
         /// <returns></returns>
         public SecureString ReadSecureString(string prompt)
         {
-            const string t = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+            const string t =
+                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
             var securePwd = new SecureString();
             ConsoleKeyInfo key;
             Log.Message(prompt);
@@ -218,18 +208,18 @@ namespace Catalyst.Helpers.Shell
             securePwd.MakeReadOnly();
             return securePwd;
         }
-        
+
         /// <summary>
-        /// Runs the main cli ui.
+        ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
         public bool RunConsole()
         {
             var running = true;
-            
+
             Console.OutputEncoding = Encoding.Unicode;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Version ver = Assembly.GetEntryAssembly().GetName().Version;
+            var ver = Assembly.GetEntryAssembly().GetName().Version;
             Log.Message($"{ServiceName} Version: {ver}");
 
             while (running)
@@ -244,17 +234,14 @@ namespace Catalyst.Helpers.Shell
                 var line = Console.ReadLine()?.Trim();
                 if (line == null) break;
                 Console.ForegroundColor = ConsoleColor.White;
-                var args = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var args = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
                 if (args.Length == 0)
                     continue;
 
 #if DEBUG
-                foreach (var item in args)
-                {
-                    Log.Message(item.ToString());
-                }          
+                foreach (var item in args) Log.Message(item);
 #endif
-                
+
                 try
                 {
                     running = OnCommand(args);
@@ -265,12 +252,12 @@ namespace Catalyst.Helpers.Shell
                     Log.Message("error");
                 }
             }
+
             Console.ResetColor();
             return running;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -278,6 +265,6 @@ namespace Catalyst.Helpers.Shell
         {
             Log.Message("error: command not found " + args);
             return true;
-        }  
+        }
     }
 }

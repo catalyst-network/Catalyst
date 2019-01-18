@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Catalyst.Helpers.Util
 {
     public static class ByteUtil
     {
-        public static byte[] ZeroByteArray { get; } = {0};
         private static readonly Random Rand = new Random();
+        public static byte[] ZeroByteArray { get; } = {0};
         public static byte[] EmptyByteArray { get; } = new byte[0];
 
         /// <summary>
-        /// returns a random 8 byte long ulong for use in message correlation
+        ///     returns a random 8 byte long ulong for use in message correlation
         /// </summary>
         /// <returns></returns>
         public static ulong GenerateCorrelationId()
@@ -22,7 +23,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="arrays"></param>
         /// <returns></returns>
@@ -30,18 +30,19 @@ namespace Catalyst.Helpers.Util
         {
             if (arrays == null) throw new ArgumentNullException(nameof(arrays));
             if (arrays.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
-            byte[] rv = new byte[arrays.Sum(a => a.Length)];
-            int offset = 0;
-            foreach (byte[] array in arrays)
+            var rv = new byte[arrays.Sum(a => a.Length)];
+            var offset = 0;
+            foreach (var array in arrays)
             {
                 Buffer.BlockCopy(array, 0, rv, offset, array.Length);
                 offset += array.Length;
             }
+
             return rv;
         }
-        
+
         /// <summary>
-        /// Creates a copy of bytes and appends b to the end of it
+        ///     Creates a copy of bytes and appends b to the end of it
         /// </summary>
         public static byte[] AppendByte(byte[] bytes, byte b)
         {
@@ -54,7 +55,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// Slice a section from byte array
+        ///     Slice a section from byte array
         /// </summary>
         /// <param name="org"></param>
         /// <param name="start"></param>
@@ -64,10 +65,7 @@ namespace Catalyst.Helpers.Util
         {
             if (org == null) throw new ArgumentNullException(nameof(org));
             if (org.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(org));
-            if (end < 0)
-            {
-                end = org.Length + end;                
-            }
+            if (end < 0) end = org.Length + end;
             start = Math.Max(0, start);
             end = Math.Max(start, end);
 
@@ -75,7 +73,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// @TODO replace all new byte with this method
+        ///     @TODO replace all new byte with this method
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>
@@ -89,7 +87,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="arrays"></param>
         /// <returns></returns>
@@ -110,9 +107,8 @@ namespace Catalyst.Helpers.Util
             if (arrays.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
             return MergeToEnum(arrays).ToArray();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
@@ -120,11 +116,10 @@ namespace Catalyst.Helpers.Util
         {
             if (array == null) throw new ArgumentNullException(nameof(array));
             if (array.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(array));
-            return System.Text.Encoding.UTF8.GetString(array);
+            return Encoding.UTF8.GetString(array);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>

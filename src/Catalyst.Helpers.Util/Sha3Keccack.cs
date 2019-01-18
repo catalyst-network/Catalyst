@@ -1,30 +1,28 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using Catalyst.Helpers.Hex.HexConverters.Extensions;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Security.Cryptography;
 
 namespace Catalyst.Helpers.Util
 {
     public class Sha3Keccack
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public string CalculateRandomHash()
         {
-            using(RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
             {
-                byte[] tokenData = new byte[16];
+                var tokenData = new byte[16];
                 rng.GetBytes(tokenData);
                 return CalculateHash(Convert.ToBase64String(tokenData));
             }
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -41,7 +39,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hexValues"></param>
         /// <returns></returns>
@@ -57,7 +54,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>

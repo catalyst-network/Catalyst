@@ -77,8 +77,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Protocol.P2P", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Events.Core", "Catalyst.Node.Events.Core\Catalyst.Node.Events.Core.csproj", "{98DD44C7-DEBA-4E79-B95F-03E31AB07696}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Settings.Core", "Catalyst.Node.Settings.Core\Catalyst.Node.Settings.Core.csproj", "{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -599,18 +597,6 @@ Global
 		{98DD44C7-DEBA-4E79-B95F-03E31AB07696}.Release|x64.Build.0 = Release|Any CPU
 		{98DD44C7-DEBA-4E79-B95F-03E31AB07696}.Release|x86.ActiveCfg = Release|Any CPU
 		{98DD44C7-DEBA-4E79-B95F-03E31AB07696}.Release|x86.Build.0 = Release|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Debug|x64.Build.0 = Debug|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Debug|x86.Build.0 = Debug|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Release|x64.ActiveCfg = Release|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Release|x64.Build.0 = Release|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Release|x86.ActiveCfg = Release|Any CPU
-		{0D38C16E-EDD4-4F8E-A0E1-C661CBB2CB4C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 
 EndGlobal

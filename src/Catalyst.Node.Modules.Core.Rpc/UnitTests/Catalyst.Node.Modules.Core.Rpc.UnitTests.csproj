@@ -21,12 +21,10 @@
         <ProjectReference Include="..\..\Catalyst.Helpers.Ipfs\Catalyst.Helpers.Ipfs.csproj" />
         <ProjectReference Include="..\..\Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj" />
         <ProjectReference Include="..\..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
+        <ProjectReference Include="..\..\Catalyst.Node\Catalyst.Node.csproj" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\Sdk\Catalyst.Protocol.Mempool\csharp\Catalyst.Protocol.Mempool.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\Catalyst.Node\Catalyst.Node.csproj" />
     </ItemGroup>
     <ItemGroup>
         <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\UnitTests.dll" />
