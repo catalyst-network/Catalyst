@@ -2,15 +2,14 @@ using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StackExchange.Redis;
-using Catalyst.Redis;
 
 namespace Catalyst.Helpers.Redis.UnitTests
 {
     [TestClass]
     public class UT_RedisConnector
     {
-        private static readonly ConnectionMultiplexer Cm = RedisConnector.Instance().Connection;
-        private static readonly IDatabase Db = RedisConnector.Instance().GetDb;
+        private static readonly ConnectionMultiplexer Cm = RedisConnector.GetInstance(Network.EndpointBuilder.BuildNewEndPoint("127.0.0.1", 6379)).Connection;
+        private static readonly IDatabase Db = RedisConnector.GetInstance(Network.EndpointBuilder.BuildNewEndPoint("127.0.0.1", 6379)).GetDb;
 
         private static void Writer(int start, int end)
         {

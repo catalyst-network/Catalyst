@@ -3,9 +3,9 @@
         <IsPackable>false</IsPackable>
         <Authors>James Kirby (james.kirby@atlascity.io)</Authors>
         <IsPackable>false</IsPackable>
-        <AssemblyName>Catalyst.Node.Modules.Core.Rpc.UnitTests</AssemblyName>
-        <PackageId>Catalyst.Node.Modules.Core.Rpc.UnitTests</PackageId>
-        <RootNamespace>Catalyst.Node.Modules.Core.Rpc.UnitTests</RootNamespace>
+        <AssemblyName>Catalyst.Cli.UnitTests</AssemblyName>
+        <PackageId>Catalyst.Cli.UnitTests</PackageId>
+        <RootNamespace>Catalyst.Cli.UnitTests</RootNamespace>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     </PropertyGroup>
@@ -16,14 +16,5 @@
         <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
         <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\Catalyst.Helpers.Ipfs\Catalyst.Helpers.Ipfs.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Node\Catalyst.Node.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\Sdk\Catalyst.Protocol.Mempool\csharp\Catalyst.Protocol.Mempool.csproj" />
     </ItemGroup>
 </Project>
