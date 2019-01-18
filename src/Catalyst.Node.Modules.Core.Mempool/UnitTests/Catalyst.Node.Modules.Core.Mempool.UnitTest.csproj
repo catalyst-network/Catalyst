@@ -3,24 +3,31 @@
         <IsPackable>false</IsPackable>
         <Authors>James Kirby (james.kirby@atlascity.io)</Authors>
         <IsPackable>false</IsPackable>
-        <AssemblyName>Catalyst.Helpers.RLP.UnitTests</AssemblyName>
-        <PackageId>Catalyst.Helpers.RLP.UnitTests</PackageId>
-        <RootNamespace>Catalyst.Helpers.RLP.UnitTests</RootNamespace>
+        <AssemblyName>Catalyst.Node.Modules.Core.Mempool.UnitTests</AssemblyName>
+        <PackageId>Catalyst.Node.Events.Modules.Mempool.UnitTests</PackageId>
+        <RootNamespace>Catalyst.Node.Modules.Core.Mempool.UnitTests</RootNamespace>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="StackExchange.Redis" Version="2.0.513" />
+        <PackageReference Include="StackExchange.Redis.Extensions.Core" Version="4.0.5" />
+        <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
         <PackageReference Include="Microsoft.UnitTestFramework.Extensions" Version="2.0.0" />
         <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
         <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-        <PackageReference Include="xunit" Version="2.4.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Catalyst.Helpers.Ipfs\Catalyst.Helpers.Ipfs.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Helpers.Hex\Catalyst.Helpers.Hex.csproj" />
+    </ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="..\..\Catalyst.Node\Catalyst.Node.csproj" />
     </ItemGroup>
 </Project>

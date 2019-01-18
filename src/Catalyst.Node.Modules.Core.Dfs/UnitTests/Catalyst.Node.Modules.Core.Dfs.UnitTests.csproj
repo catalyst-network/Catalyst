@@ -3,9 +3,9 @@
         <IsPackable>false</IsPackable>
         <Authors>James Kirby (james.kirby@atlascity.io)</Authors>
         <IsPackable>false</IsPackable>
-        <AssemblyName>Catalyst.Helpers.RLP.UnitTests</AssemblyName>
-        <PackageId>Catalyst.Helpers.RLP.UnitTests</PackageId>
-        <RootNamespace>Catalyst.Helpers.RLP.UnitTests</RootNamespace>
+        <AssemblyName>Catalyst.Node.Modules.Core.Dfs.UnitTests</AssemblyName>
+        <PackageId>Catalyst.Node.Modules.Dfs.UnitTests</PackageId>
+        <RootNamespace>Catalyst.Node.Modules.Core.Dfs.UnitTests</RootNamespace>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     </PropertyGroup>
@@ -14,13 +14,8 @@
         <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
         <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-        <PackageReference Include="xunit" Version="2.4.1" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Catalyst.Helpers.Ipfs\Catalyst.Helpers.Ipfs.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Helpers.Hex\Catalyst.Helpers.Hex.csproj" />
-        <ProjectReference Include="..\..\Catalyst.Node\Catalyst.Node.csproj" />
+      <ProjectReference Include="..\Catalyst.Node.Modules.Core.Dfs.csproj" />
     </ItemGroup>
 </Project>
