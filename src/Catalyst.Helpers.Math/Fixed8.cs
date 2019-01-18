@@ -148,8 +148,7 @@ namespace Catalyst.Helpers.Math
 
         public static bool TryParse(string s, out Fixed8 result)
         {
-            decimal d;
-            if (!decimal.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out d))
+            if (!decimal.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out var d))
             {
                 result = default(Fixed8);
                 return false;
