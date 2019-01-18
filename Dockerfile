@@ -1,7 +1,7 @@
 FROM microsoft/dotnet:2.1-sdk AS publish
 #RUN apk update && apk add libc6-compat libnsl libnsl-dev
 WORKDIR /srv
-COPY ../src ./
+COPY ./src ./
 RUN dotnet restore
 WORKDIR /srv/Catalyst.Node
 #RUN dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731 -s https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
