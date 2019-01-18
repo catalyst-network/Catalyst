@@ -1,15 +1,14 @@
 using System;
 using System.Net;
-using Catalyst.Helpers.KeyValueStore;
 using StackExchange.Redis;
 
 namespace Catalyst.Helpers.Redis
 {
     public class RedisConnector
     {
-        private readonly string _connectionParam;
         private static RedisConnector _instance;
         private static Lazy<ConnectionMultiplexer> _connection;
+        private readonly string _connectionParam;
 
         /// <summary>
         /// </summary>

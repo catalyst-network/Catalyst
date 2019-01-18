@@ -8,7 +8,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         private readonly TimedWorker _timedWorker;
 
         /// <summary>
-        /// 
         /// </summary>
         public ClientWorker()
         {
@@ -17,7 +16,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="action"></param>
         public void Queue(Action action)
@@ -26,7 +24,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public void Start()
         {
@@ -35,7 +32,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public void Stop()
         {
@@ -44,7 +40,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="action"></param>
         /// <param name="interval"></param>
@@ -54,7 +49,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="action"></param>
         /// <param name="interval"></param>

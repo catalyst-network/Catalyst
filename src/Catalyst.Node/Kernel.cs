@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 using System.Runtime.Loader;
 using Autofac;
 using Autofac.Configuration;
@@ -83,8 +82,9 @@ namespace Catalyst.Node
                         {
                             LogException.Message("Boot process failed: {0}", e);
                         }
-                        
-                        Guard.NotNull(settingsInstance, nameof(settingsInstance), "Couldn't instantiate settings class");
+
+                        Guard.NotNull(settingsInstance, nameof(settingsInstance),
+                            "Couldn't instantiate settings class");
 
                         if (options.WalletRpcIp != null)
                         {
@@ -126,13 +126,15 @@ namespace Catalyst.Node
 //                        }
                         Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory()));
 
-                        AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) => context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
+                        AssemblyLoadContext.Default.Resolving += (context, assembly) =>
+                            context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(),
+                                $"{assembly.Name}.dll"));
 
                         var componentConfig = new ConfigurationBuilder()
                             .AddJsonFile(options.DataDir + "/components.json")
                             .Build(); //@TODO try catch
 
-                        var iocComponents = new ConfigurationModule(componentConfig);  //@TODO try catch
+                        var iocComponents = new ConfigurationModule(componentConfig); //@TODO try catch
                         var builder = new ContainerBuilder();
                         builder.RegisterModule(iocComponents); //@TODO try catch
 
@@ -145,13 +147,14 @@ namespace Catalyst.Node
                         ConsensusModule.Load(builder, settingsInstance?.Consensus);
                         P2PModule.Load(builder, settingsInstance?.Peer, options.DataDir,
                             options.PublicKey.ToBytesForRlpEncoding());
-                        
+
                         Log.Message("=========");
                         Console.WriteLine(Type.GetType("Catalyst.Node.CatalystNode, Catalyst.Node"));
                         Console.WriteLine(Type.GetType("Catalyst.Node.Kernel, Catalyst.Node"));
-                        Console.WriteLine(Type.GetType("Catalyst.Node.Modules.Core.Mempool.Mempool, Catalyst.Node.Modules.Core.Mempool"));
+                        Console.WriteLine(Type.GetType(
+                            "Catalyst.Node.Modules.Core.Mempool.Mempool, Catalyst.Node.Modules.Core.Mempool"));
                         Log.Message("=========");
-                        
+
                         var container = builder.Build(); //@TODO try catch
 
                         _instance = new Kernel(settingsInstance, container); //@TODO try catch

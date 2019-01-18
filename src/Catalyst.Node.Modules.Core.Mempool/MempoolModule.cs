@@ -1,15 +1,13 @@
 using System;
-using System.Net;
 using Autofac;
 using Catalyst.Helpers.Util;
-using static Catalyst.Helpers.Network.EndpointBuilder;
 
 namespace Catalyst.Node.Modules.Core.Mempool
 {
     public class MempoolModule : ModuleBase, IMempoolModule
     {
         private readonly IMempool Mempool;
-        private IMempoolSettings MempoolSettings;
+        private readonly IMempoolSettings MempoolSettings;
 
         /// <summary>
         /// </summary>

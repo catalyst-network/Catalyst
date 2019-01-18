@@ -15,7 +15,7 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         public static IPEndPoint BuildNewEndPoint(IPAddress ip, int port)
         {
-            if (ip == null) throw new ArgumentNullException(nameof(ip));//@TODO guard
+            if (ip == null) throw new ArgumentNullException(nameof(ip)); //@TODO guard
             if (!Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
             return new IPEndPoint(ip, port);
         }
@@ -27,7 +27,7 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         public static IPEndPoint BuildNewEndPoint(string ip, int port)
         {
-            if (ip == null) throw new ArgumentNullException(nameof(ip));//@TODO guard
+            if (ip == null) throw new ArgumentNullException(nameof(ip)); //@TODO guard
             if (!Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
             IPAddress validatedIp;
             try

@@ -1,6 +1,5 @@
 using Akka.TestKit.VsTest;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Node;
 using Grpc.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -22,7 +21,7 @@ namespace Catalyst.Node.Modules.Core.Rpc.UnitTests
             options.PayoutAddress = "kek";
             options.WalletRpcPort = 0;
 
-            Node.CatalystNode.GetInstance(options);
+            CatalystNode.GetInstance(options);
             var SessionHost = new Channel("127.0.0.1:42042", ChannelCredentials.Insecure);
             _rpcClient = new RpcServer.RpcServerClient(SessionHost);
         }
