@@ -16,8 +16,8 @@ namespace Catalyst.Node
 {
     public class CatalystNode : IDisposable
     {
-        private readonly NodeOptions _options;
         private static readonly object Mutex = new object();
+        private readonly NodeOptions _options;
 
         /// <summary>
         ///     Instantiates basic CatalystSystem.

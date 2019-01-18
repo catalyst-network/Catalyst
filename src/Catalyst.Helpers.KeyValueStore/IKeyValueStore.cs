@@ -7,11 +7,10 @@ namespace Catalyst.Helpers.KeyValueStore
     public interface IKeyValueStore
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="host"></param>
         void Connect(IPEndPoint host);
-        
+
         /// <summary>
         /// </summary>
         /// <param name="key"></param>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Catalyst.Helpers.Network;
 using Catalyst.Helpers.Util;
 using Catalyst.Node.Modules.Core.Consensus;
 using Catalyst.Node.Modules.Core.Contract;
@@ -254,10 +255,10 @@ namespace Catalyst.Node
             Section = section;
             Type = section.GetSection("Type").Value;
             When = section.GetSection("When").Value;
-            Host = Helpers.Network.EndpointBuilder.BuildNewEndPoint(
-                        IPAddress.Parse(section.GetSection("Host").Value),
-                        int.Parse(section.GetSection("Port").Value)
-                   );
+            Host = EndpointBuilder.BuildNewEndPoint(
+                IPAddress.Parse(section.GetSection("Host").Value),
+                int.Parse(section.GetSection("Port").Value)
+            );
         }
 
         public string Type { get; set; }

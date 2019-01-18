@@ -1,45 +1,40 @@
 using System;
 using System.IO;
 using System.Linq;
+using Catalyst.Helpers.Ipfs;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Catalyst.Helpers.Ipfs;
+using Newtonsoft.Json;
 
 namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
 {
     [TestClass]
     public class UT_Dfs
     {
-        private static IpfsConnector _ipfs = new IpfsConnector();
-
-        private class TestDfsSettings : IDfsSettings // sort of mock
-        {
-            public string StorageType { get; set; }
-            public ushort ConnectRetries { get; set; }
-            public string IpfsVersionApi { get; set; }
-        }
+        private static readonly IpfsConnector _ipfs = new IpfsConnector();
         private static TestDfsSettings _settings;
-        
-        private static Random random = new Random();
+
+        private static readonly Random random = new Random();
+
         private static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
-                
+
         [ClassInitialize]
         public static void SetUp(TestContext testContext)
         {
             _settings = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 10, IpfsVersionApi = "api/v0/"};
             _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
         }
-        
+
         [TestInitialize]
         public void Initialize()
         {
             _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
         }
-        
+
         [TestMethod]
         public void AddFile()
         {
@@ -51,7 +46,7 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Newtonsoft.Json.JsonReaderException))]
+        [ExpectedException(typeof(JsonReaderException))]
         public void AddFileAsync_EmptyFilename()
         {
             _ipfs.AddFile("");
@@ -75,7 +70,7 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
         public void StopDoesNotThrow()
         {
             Assert.IsTrue(_ipfs.IsClientConnected());
-            
+
             try
             {
                 _ipfs.DestroyIpfsClient();
@@ -85,7 +80,7 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
                 Assert.Fail("Expected no exception, but got: " + ex.Message);
             }
         }
-        
+
         [TestMethod]
         public void Stop_Start_DoesNotThrow()
         {
@@ -107,7 +102,7 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
         public void Stop_Add_Fail()
         {
             _ipfs.DestroyIpfsClient();
-            
+
             var tmpFile = Path.GetTempFileName();
             _ipfs.AddFile(tmpFile);
         }
@@ -119,7 +114,7 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
             _ipfs.DestroyIpfsClient();
             var text = _ipfs.ReadAllTextAsync("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD").Result;
         }
-        
+
         [TestMethod]
         public void Stop_Twice_NoThrow()
         {
@@ -133,7 +128,7 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
                 Assert.Fail("Expected no exception, but got: " + ex.Message);
             }
         }
-        
+
         [TestMethod]
         public void Start_Twice_NoThrow()
         {
@@ -146,7 +141,7 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
             {
                 Assert.Fail("Expected no exception, but got: " + ex.Message);
             }
-                        
+
             Assert.IsTrue(_ipfs.IsClientConnected());
         }
 
@@ -174,6 +169,13 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
                 var hash2 = _ipfs.AddFile(tmpFile); // retrieve the hash back, does not add
                 Assert.AreEqual(hash1, hash2);
             }
+        }
+
+        private class TestDfsSettings : IDfsSettings // sort of mock
+        {
+            public string StorageType { get; set; }
+            public ushort ConnectRetries { get; set; }
+            public string IpfsVersionApi { get; set; }
         }
     }
 }

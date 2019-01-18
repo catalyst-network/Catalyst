@@ -10,8 +10,8 @@ namespace Catalyst.Helpers.Redis
 {
     public class Redis : IKeyValueStore
     {
-        private When _when;
         private RedisConnector _redisConnector;
+        private When _when;
 
         /// <summary>
         ///     Class constructor.

@@ -12,8 +12,6 @@ namespace Catalyst.Node.Modules.Core.Mempool
     /// </summary>
     public class Mempool : IMempool
     {
-        public IKeyValueStore _keyValueStore { get; set;}
-
         /// <summary>
         /// </summary>
         /// <param name="keyValueStore"></param>
@@ -22,6 +20,8 @@ namespace Catalyst.Node.Modules.Core.Mempool
             Guard.NotNull(keyValueStore, nameof(keyValueStore));
             _keyValueStore = keyValueStore;
         }
+
+        public IKeyValueStore _keyValueStore { get; set; }
 
         /// <summary>
         /// </summary>
