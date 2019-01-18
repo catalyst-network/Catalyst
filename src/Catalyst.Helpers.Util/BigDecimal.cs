@@ -484,7 +484,7 @@ namespace Catalyst.Helpers.Util
         {
             //todo culture format
             var decimalCharacter = ".";
-            var indexOfDecimal = value.IndexOf(".");
+            var indexOfDecimal = value.IndexOf(".", StringComparison.Ordinal);
             var exponent = 0;
             if (indexOfDecimal != -1)
                 exponent = (value.Length - (indexOfDecimal + 1)) * -1;

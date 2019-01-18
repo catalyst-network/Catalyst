@@ -11,12 +11,23 @@ namespace Catalyst.Helpers.Math
 
         public int Sign => Value.Sign;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="decimals"></param>
         public BigDecimal(BigInteger value, byte decimals)
         {
             Value = value;
             Decimals = decimals;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="decimals"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public BigDecimal ChangeDecimals(byte decimals)
         {
             if (Decimals == decimals) return this;
