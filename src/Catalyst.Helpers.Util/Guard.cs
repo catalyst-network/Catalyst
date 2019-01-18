@@ -1,24 +1,32 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Catalyst.Helpers.Util
 {
     public static class Guard
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="o"></param>
         /// <param name="paramName"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public static void NotNull(object o, string paramName)
         {
-            if (o == null) throw new ArgumentNullException(paramName);
+            NotNull(o, paramName, null);
         }
 
         /// <summary>
-        /// 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="paramName"></param>
+        /// <param name="message"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static void NotNull(object o, string paramName, string message)
+        {
+            if (o == null) throw new ArgumentNullException(paramName, message);
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="str"></param>
         /// <param name="paramName"></param>
@@ -29,7 +37,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="val"></param>
         /// <param name="min"></param>
@@ -42,7 +49,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="val"></param>
         /// <param name="min"></param>
@@ -54,7 +60,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="dict"></param>
         /// <param name="key"></param>
@@ -62,7 +67,7 @@ namespace Catalyst.Helpers.Util
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TQ"></typeparam>
         /// <exception cref="ArgumentException"></exception>
-        public static void ContainsKey<T,TQ>(IDictionary<T, TQ> dict, T key, string message)
+        public static void ContainsKey<T, TQ>(IDictionary<T, TQ> dict, T key, string message)
         {
             if (!dict.ContainsKey(key)) throw new ArgumentException(message);
         }

@@ -7,7 +7,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Listeners
     public static class ListenerFactory
     {
         /// <summary>
-        /// returns a TcpListener
+        ///     returns a TcpListener
         /// </summary>
         /// <param name="ipEndPoint"></param>
         /// <returns></returns>
@@ -16,9 +16,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Listeners
             //@TODO put in try catch
             return new TcpListener(ipEndPoint.Address, ipEndPoint.Port);
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>

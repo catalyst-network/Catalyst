@@ -6,31 +6,13 @@ namespace Catalyst.Helpers.Hex.HexTypes
 {
     public class HexRpcType<T>
     {
-        private T value;
-        private string hexValue;
-        private bool NeedsInitialisingValue;
         private readonly IHexConvertor<T> converter;
         private readonly object LockingObject = new object(); //@TODO is it wise to share locking object?
+        private string hexValue;
+        private bool NeedsInitialisingValue;
+        private T value;
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private T GetValue()
-        {
-            lock (LockingObject)
-            {
-                if (NeedsInitialisingValue)
-                {
-                    InitialiseValueFromHex(hexValue);
-                    NeedsInitialisingValue = false;
-                }
-                return value;
-            }
-        }
-        
-        /// <summary>
-        /// 
         /// </summary>
         /// <param name="converter"></param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -41,7 +23,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="converter"></param>
         /// <param name="hexValue"></param>
@@ -63,7 +44,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <param name="converter"></param>
@@ -90,7 +70,23 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
+        /// </summary>
+        /// <returns></returns>
+        private T GetValue()
+        {
+            lock (LockingObject)
+            {
+                if (NeedsInitialisingValue)
+                {
+                    InitialiseValueFromHex(hexValue);
+                    NeedsInitialisingValue = false;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="newHexValue"></param>
         /// <exception cref="ArgumentException"></exception>
@@ -108,7 +104,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="newHexValue"></param>
         /// <exception cref="ArgumentException"></exception>
@@ -122,7 +117,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="newValue"></param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -137,7 +131,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="newValue"></param>
         /// <returns></returns>
@@ -152,7 +145,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="newHexValue"></param>
         /// <returns></returns>
@@ -167,7 +159,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         private byte[] ToHexByteArray()
@@ -176,7 +167,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hexRpcType"></param>
         /// <returns></returns>
@@ -188,7 +178,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hexRpcType"></param>
         /// <returns></returns>
@@ -200,7 +189,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()

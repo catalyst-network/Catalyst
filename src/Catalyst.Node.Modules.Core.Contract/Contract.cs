@@ -2,7 +2,6 @@ using System;
 
 namespace Catalyst.Node.Modules.Core.Contract
 {
-
     public class Contract : IContract
     {
         public Guid Identity { get; set; }

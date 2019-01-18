@@ -15,7 +15,7 @@ namespace Catalyst.Helpers.Util
     {
         private int Exponent { get; set; }
         public BigInteger Mantissa { get; private set; }
-        
+
         /// <summary>
         ///     Sets the maximum precision of division operations.
         ///     If AlwaysTruncate is set to true all operations are affected.
@@ -23,7 +23,7 @@ namespace Catalyst.Helpers.Util
         private const int Precision = 50;
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="bigDecimal"></param>
         /// <param name="alwaysTruncate"></param>
@@ -33,7 +33,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="value"></param>
         /// <param name="alwaysTruncate"></param>
@@ -45,7 +45,7 @@ namespace Catalyst.Helpers.Util
         /// </summary>
         /// <param name="mantissa"></param>
         /// <param name="exponent">
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         ///     The number of decimal units for example (-18). A positive value will be normalised as 10 ^
         ///     exponent
         /// </param>
@@ -64,21 +64,20 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         public int CompareTo(object obj)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));//@TODO Guart Util
+            if (obj == null) throw new ArgumentNullException(nameof(obj)); //@TODO Guart Util
             if (!(obj is BigDecimal))
                 throw new ArgumentException();
             return CompareTo((BigDecimal) obj);
         }
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -88,7 +87,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         private void NormaliseExponentBiggerThanZero()
         {
@@ -121,6 +119,7 @@ namespace Catalyst.Helpers.Util
                     Mantissa = shortened;
                     Exponent++;
                 }
+
                 NormaliseExponentBiggerThanZero();
             }
         }
@@ -141,6 +140,7 @@ namespace Catalyst.Helpers.Util
                 shortened.Mantissa /= 10;
                 shortened.Exponent++;
             }
+
             return shortened;
         }
 
@@ -154,7 +154,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -164,7 +163,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -182,11 +180,11 @@ namespace Catalyst.Helpers.Util
                 else
                     s = s.PadRight(decimalPos, '0');
             }
+
             return s;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -200,7 +198,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -211,7 +209,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
@@ -223,7 +220,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -233,7 +230,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -248,11 +245,12 @@ namespace Catalyst.Helpers.Util
                 scaleFactor *= 10;
                 mantissa = (BigInteger) (value * scaleFactor);
             }
+
             return new BigDecimal(mantissa, exponent);
         }
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -267,6 +265,7 @@ namespace Catalyst.Helpers.Util
                 scaleFactor *= 10;
                 mantissa = (BigInteger) (value * scaleFactor);
             }
+
             return new BigDecimal(mantissa, exponent);
         }
 
@@ -307,7 +306,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -317,7 +315,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -327,7 +324,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -338,7 +334,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -348,7 +343,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -358,7 +352,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -369,7 +362,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -380,7 +372,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -393,7 +384,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -404,7 +394,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="dividend"></param>
         /// <param name="divisor"></param>
@@ -420,7 +409,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -431,7 +419,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -442,7 +429,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -455,7 +441,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -468,7 +453,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -481,7 +465,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -494,7 +477,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -520,7 +502,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="exponent"></param>
         /// <returns></returns>
@@ -533,11 +515,12 @@ namespace Catalyst.Helpers.Util
                 tmp *= Math.Exp(diff);
                 exponent -= diff;
             }
+
             return tmp * Math.Exp(exponent);
         }
 
         /// <summary>
-        /// @TODO Guart Util
+        ///     @TODO Guart Util
         /// </summary>
         /// <param name="basis"></param>
         /// <param name="exponent"></param>
@@ -551,6 +534,7 @@ namespace Catalyst.Helpers.Util
                 tmp *= Math.Pow(basis, diff);
                 exponent -= diff;
             }
+
             return tmp * Math.Pow(basis, exponent);
         }
     }

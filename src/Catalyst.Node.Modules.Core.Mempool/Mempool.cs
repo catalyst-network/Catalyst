@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Helpers.KeyValueStore;
+using Catalyst.Helpers.Util;
 using Catalyst.Protocols.Mempool;
 using Google.Protobuf;
-using Catalyst.Helpers.Util;
 
 namespace Catalyst.Node.Modules.Core.Mempool
 {
     /// <summary>
-    /// Mempool class wraps around a IKeyValueStore
+    ///     Mempool class wraps around a IKeyValueStore
     /// </summary>
     public class Mempool : IMempool
     {
-        private readonly IKeyValueStore _keyValueStore;
+        public IKeyValueStore _keyValueStore { get; set;}
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="keyValueStore"></param>
         public Mempool(IKeyValueStore keyValueStore)
@@ -24,9 +22,8 @@ namespace Catalyst.Node.Modules.Core.Mempool
             Guard.NotNull(keyValueStore, nameof(keyValueStore));
             _keyValueStore = keyValueStore;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="k"></param>
         /// <param name="value"></param>
@@ -39,7 +36,6 @@ namespace Catalyst.Node.Modules.Core.Mempool
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -49,11 +45,9 @@ namespace Catalyst.Node.Modules.Core.Mempool
             Guard.NotNull(k, nameof(k));
             return Tx.Parser.ParseFrom(_keyValueStore.Get(k.ToByteArray()));
         }
-       
+
         /// <summary>
-        /// 
         /// </summary>
-        /// 
         /// <returns></returns>
         public Dictionary<string, string> GetMempool()
         {
@@ -61,4 +55,3 @@ namespace Catalyst.Node.Modules.Core.Mempool
         }
     }
 }
- 

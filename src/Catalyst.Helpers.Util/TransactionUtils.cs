@@ -5,7 +5,6 @@ namespace Catalyst.Helpers.Util
     public static class TransactionUtils
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="rawSignedTransaction"></param>
         /// <returns></returns>

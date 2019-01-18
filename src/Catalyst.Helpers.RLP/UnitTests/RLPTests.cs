@@ -8,14 +8,13 @@ namespace Catalyst.Helpers.RLP.UnitTests
     public class RLPTests
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="test"></param>
         /// <param name="expected"></param>
         private static void AssertStringEncoding(string test, string expected)
         {
             var testBytes = test.ToBytesForRlpEncoding();
-            var encoderesult = Catalyst.Helpers.RLP.RLP.EncodeElement(testBytes);
+            var encoderesult = RLP.EncodeElement(testBytes);
             Assert.Equal(expected, encoderesult.ToHex());
 
             var decodeResult = RLP.Decode(encoderesult)[0].RlpData;
@@ -23,7 +22,6 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="test"></param>
         /// <param name="expected"></param>
@@ -38,22 +36,20 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="test"></param>
         /// <param name="expected"></param>
         private static void AssertStringCollection(string[] test, string expected)
         {
-            var encoderesult = Catalyst.Helpers.RLP.RLP.EncodeList(EncodeElementsBytes(test.ToBytesForRlpEncoding()));
+            var encoderesult = RLP.EncodeList(EncodeElementsBytes(test.ToBytesForRlpEncoding()));
             Assert.Equal(expected, encoderesult.ToHex());
 
-            var decodeResult = Catalyst.Helpers.RLP.RLP.Decode(encoderesult)[0] as RlpCollection;
+            var decodeResult = RLP.Decode(encoderesult)[0] as RlpCollection;
             for (var i = 0; i < test.Length; i++)
                 Assert.Equal(test[i], decodeResult[i].RlpData.ToStringFromRlpDecoded());
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
@@ -61,12 +57,11 @@ namespace Catalyst.Helpers.RLP.UnitTests
         {
             var encodeElements = new List<byte[]>();
             foreach (var byteElement in bytes)
-                encodeElements.Add(Catalyst.Helpers.RLP.RLP.EncodeElement(byteElement));
+                encodeElements.Add(RLP.EncodeElement(byteElement));
             return encodeElements.ToArray();
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeBigInteger()
@@ -75,30 +70,28 @@ namespace Catalyst.Helpers.RLP.UnitTests
                 .ToBigIntegerFromRlpDecoded();
             var expected = "a0100102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f";
             var testBytes = test.ToBytesForRlpEncoding();
-            var encoderesult = Catalyst.Helpers.RLP.RLP.EncodeElement(testBytes);
+            var encoderesult = RLP.EncodeElement(testBytes);
             Assert.Equal(expected, encoderesult.ToHex());
 
-            var decodeResult = Catalyst.Helpers.RLP.RLP.Decode(encoderesult)[0].RlpData;
+            var decodeResult = RLP.Decode(encoderesult)[0].RlpData;
             Assert.Equal(test, decodeResult.ToBigIntegerFromRlpDecoded());
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeEmptyList()
         {
             var test = new byte[0][];
             var expected = "c0";
-            var encoderesult = Catalyst.Helpers.RLP.RLP.EncodeList(test);
+            var encoderesult = RLP.EncodeList(test);
             Assert.Equal(expected, encoderesult.ToHex());
 
-            var decodeResult = Catalyst.Helpers.RLP.RLP.Decode(encoderesult)[0] as RlpCollection;
+            var decodeResult = RLP.Decode(encoderesult)[0] as RlpCollection;
             Assert.True(decodeResult.Count == 0);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeEmptyString()
@@ -106,14 +99,13 @@ namespace Catalyst.Helpers.RLP.UnitTests
             var test = "";
             var testBytes = Encoding.UTF8.GetBytes(test);
             var expected = "80";
-            var encoderesult = Catalyst.Helpers.RLP.RLP.EncodeElement(testBytes);
+            var encoderesult = RLP.EncodeElement(testBytes);
             Assert.Equal(expected, encoderesult.ToHex());
-            var decodeResult = Catalyst.Helpers.RLP.RLP.Decode(encoderesult)[0].RlpData;
+            var decodeResult = RLP.Decode(encoderesult)[0].RlpData;
             Assert.Null(decodeResult);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeLongString()
@@ -125,7 +117,6 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeLongStringList()
@@ -139,7 +130,6 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeMediumInteger()
@@ -154,7 +144,6 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeShortString()
@@ -165,7 +154,6 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeShortStringList()
@@ -180,7 +168,6 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeSingleCharacter()
@@ -191,7 +178,6 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeSmallInteger()
@@ -202,7 +188,6 @@ namespace Catalyst.Helpers.RLP.UnitTests
         }
 
         /// <summary>
-        /// 
         /// </summary>
         [Fact]
         public void ShouldEncodeZeroAs80()

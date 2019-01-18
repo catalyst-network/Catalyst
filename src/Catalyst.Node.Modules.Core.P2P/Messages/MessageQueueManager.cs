@@ -1,21 +1,32 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using Catalyst.Helpers.Logger;
 using Catalyst.Node.Modules.Core.P2P.Connections;
-using Catalyst.Node.Modules.Core.P2P.Workers;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Modules.Core.P2P.Messages
 {
-     public class MessageQueueManager : IMessageSender
+    public class MessageQueueManager : IMessageSender
     {
 //        private readonly IMessageListener _listener;
         private readonly List<IPAddress> _blackList;
-        private readonly Queue<Message> _sendMessageQueue;
         internal readonly Queue<Message> _receivedMessageQueue;
         private readonly Dictionary<IPAddress, int> _requestsByIp;
+        private readonly Queue<Message> _sendMessageQueue;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="message"></param>
+        public void Send(Connection connection, IMessage message)
+        {
+            lock (_sendMessageQueue)
+            {
+                //@TODO
+//                var package = new Message(endPoint, message, message.Length); 
+//                _sendMessageQueue.Enqueue(package);
+            }
+        }
 //        public EventHandler<PackageReceivedEventArgs<IPEndPoint>> PackageReceivedEventArgs;
 
 //        internal MessageQueueManager(IMessageListener listener, IWorkScheduler worker)
@@ -54,7 +65,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
 //        }
 
         /// <summary>
-        /// 
         /// </summary>
         private void SendReceive()
         {
@@ -63,7 +73,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
         }
 
         /// <summary>
-        /// 
         /// </summary>
         private void ReceiveAndProcessPendingMessages()
         {
@@ -79,7 +88,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
         }
 
         /// <summary>
-        /// 
         /// </summary>
         private void SendPendingMessages()
         {
@@ -95,7 +103,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
         }
 
         /// <summary>
-        /// 
         /// </summary>
         private void AnalyzeRequestList()
         {
@@ -107,32 +114,18 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
                 {
                     var num = _requestsByIp[ip];
 
-                    if(num > 10 && !IsBlocked(ip))
+                    if (num > 10 && !IsBlocked(ip))
                     {
                         BlockIp(ip);
                         return;
                     }
+
                     _requestsByIp[ip] = 0;
                 }
             }
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="message"></param>
-        public void Send(Connection connection, IMessage message)
-        {
-            lock (_sendMessageQueue)
-            {//@TODO
-//                var package = new Message(endPoint, message, message.Length); 
-//                _sendMessageQueue.Enqueue(package);
-            }
-        }
-
-        /// <summary>
-        /// 
         /// </summary>
         /// <param name="endPoint"></param>
         /// <param name="message"></param>
@@ -151,24 +144,23 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="ip"></param>
         private void IncrementRequestByIp(IPAddress ip)
         {
             lock (_requestsByIp)
             {
-                if(_requestsByIp.ContainsKey(ip))
+                if (_requestsByIp.ContainsKey(ip))
                 {
                     _requestsByIp[ip]++;
                     return;
                 }
+
                 _requestsByIp.Add(ip, 1);
             }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>
@@ -178,7 +170,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="ip"></param>
         public void BlockIp(IPAddress ip)

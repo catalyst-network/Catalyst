@@ -7,7 +7,6 @@ namespace Catalyst.Helpers.RLP
         private readonly byte[] _data;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="rlpData"></param>
         /// <exception cref="ArgumentException"></exception>
@@ -22,7 +21,6 @@ namespace Catalyst.Helpers.RLP
         public byte[] RlpData => GetRlpData();
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         private byte[] GetRlpData()

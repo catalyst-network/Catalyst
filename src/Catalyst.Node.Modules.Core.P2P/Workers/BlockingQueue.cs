@@ -1,13 +1,24 @@
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Catalyst.Node.Modules.Core.P2P.Workers
 {
-    class BlockingQueue<T>
+    internal class BlockingQueue<T>
     {
         private readonly Queue<T> _queue = new Queue<T>();
         private readonly object _queueLock = new object();
         private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
+
+        public int Count
+        {
+            get
+            {
+                lock (_queue)
+                {
+                    return _queue.Count;
+                }
+            }
+        }
 
         public T Take()
         {
@@ -16,6 +27,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
                 if (_queue.Count > 0)
                     return _queue.Dequeue();
             }
+
             _resetEvent.WaitOne();
 
             return Take();
@@ -27,18 +39,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
             {
                 _queue.Enqueue(obj);
             }
-            _resetEvent.Set();
-        }
 
-        public int Count
-        {
-            get
-            {
-                lock (_queue)
-                {
-                    return _queue.Count;
-                }
-            }
+            _resetEvent.Set();
         }
     }
 }

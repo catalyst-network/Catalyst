@@ -6,7 +6,6 @@ namespace Catalyst.Helpers.Logger
     public static class ErrorLog
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="ex"></param>
@@ -32,6 +31,7 @@ namespace Catalyst.Helpers.Logger
                     ex = ex.InnerException;
                     continue;
                 }
+
                 break;
             }
         }

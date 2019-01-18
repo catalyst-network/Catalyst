@@ -3,9 +3,8 @@ using System;
 namespace Catalyst.Helpers.Logger
 {
     public class LogException
-    {   
+    {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="method"></param>
         /// <param name="e"></param>

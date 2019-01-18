@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Net;
 using Catalyst.Helpers.Exceptions;
-using McMaster.Extensions.CommandLineUtils;
-using Catalyst.Helpers.Shell;
-using Akka.Actor;
 using Catalyst.Helpers.Logger;
+using Catalyst.Helpers.Shell;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace Catalyst.Node
 {
     public sealed class Program
-    {        
+    {
         /// <summary>
-        /// Main cli loop
+        ///     Main cli loop
         /// </summary>
         /// <param name="args"></param>
         public static int Main(string[] args)
-        {   
+        {
             AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
 
             var app = new CommandLineApplication();
-            
+
             app.Command("", config =>
             {
                 var dfsOption = app.Option("--disable-dfs", "disable dfs", CommandOptionType.NoValue);
@@ -33,31 +32,27 @@ namespace Catalyst.Node
                 var consensusOption = app.Option("--disable-consensus", "disable consensus", CommandOptionType.NoValue);
                 var dataDirOption = app.Option("--data-dir", "Specify a data directory", CommandOptionType.SingleValue);
                 var publicKeyOption = app.Option("--public-key", "Specify a public key", CommandOptionType.SingleValue);
-                var contractOption = app.Option("--disable-contract", "disable smart contracts", CommandOptionType.NoValue);
-                var walletRpcIpOption = app.Option("--wallet-ip", "Specify a data directory", CommandOptionType.SingleValue);
-                var walletRpcPortOption = app.Option("--wallet-port", "Specify a data directory", CommandOptionType.SingleValue);
-                var payoutAddressOption = app.Option("--payout-address", "Specify a payout address", CommandOptionType.SingleValue);
-                var seedServerOption = app.Option("--seed-server", "Specify a seed server", CommandOptionType.SingleValue);
+                var contractOption = app.Option("--disable-contract", "disable smart contracts",
+                    CommandOptionType.NoValue);
+                var walletRpcIpOption =
+                    app.Option("--wallet-ip", "Specify a data directory", CommandOptionType.SingleValue);
+                var walletRpcPortOption = app.Option("--wallet-port", "Specify a data directory",
+                    CommandOptionType.SingleValue);
+                var payoutAddressOption = app.Option("--payout-address", "Specify a payout address",
+                    CommandOptionType.SingleValue);
+                var seedServerOption =
+                    app.Option("--seed-server", "Specify a seed server", CommandOptionType.SingleValue);
 
                 app.OnExecute(() =>
                 {
-                    NodeOptions options = new NodeOptions();
-                    
-                    if (dfsOption.HasValue())
-                    {
-                        options.Dfs = false;
-                    }
-                    
-                    if (rpcOption.HasValue())
-                    {
-                        options.Rpc = false;
-                    }
+                    var options = new NodeOptions();
 
-                    if (hostOption.HasValue())
-                    {
-                        options.Host = IPAddress.Parse(hostOption.Value());
-                    }
-                    
+                    if (dfsOption.HasValue()) options.Dfs = false;
+
+                    if (rpcOption.HasValue()) options.Rpc = false;
+
+                    if (hostOption.HasValue()) options.Host = IPAddress.Parse(hostOption.Value());
+
                     if (envOption.HasValue())
                     {
                         var envParam = envOption.Value();
@@ -84,10 +79,10 @@ namespace Catalyst.Node
                                 break;
                         }
                     }
-                    
+
                     if (networkOption.HasValue())
                     {
-                        string networkParam = networkOption.Value();
+                        var networkParam = networkOption.Value();
 
                         switch (networkParam)
                         {
@@ -105,73 +100,38 @@ namespace Catalyst.Node
                                 break;
                         }
                     }
-                    
-                    if (p2pOption.HasValue())
-                    {
-                        options.Peer = false;
-                    }
-                    
-                    if (gossipOption.HasValue())
-                    {
-                        options.Gossip = false;
-                    }
-                    
-                    if (consensusOption.HasValue())
-                    {
-                        options.Consensus = false;
-                    }
-                    
-                    if (dataDirOption.HasValue())
-                    {
-                        options.DataDir = dataDirOption.Value();
-                    }
-                    
-                    if (publicKeyOption.HasValue())
-                    {
-                        options.PublicKey = publicKeyOption.Value();
-                    }
-                    
-                    if (contractOption.HasValue())
-                    {
-                        options.Contract = false;
-                    }
-                    
-                    if (walletRpcIpOption.HasValue())
-                    {
-                        options.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
-                    }
-                    
-                    if (walletRpcPortOption.HasValue())
-                    {
-                        options.WalletRpcPort = uint.Parse(walletRpcPortOption.Value());
-                    }
-                    
-                    if (payoutAddressOption.HasValue())
-                    {
-                        options.PayoutAddress = payoutAddressOption.Value();
-                    }
-                    
-                    if (seedServerOption.HasValue())
-                    {
-                        options.SeedServer = new Uri(seedServerOption.Value());
-                    }
-                    
+
+                    if (p2pOption.HasValue()) options.Peer = false;
+
+                    if (gossipOption.HasValue()) options.Gossip = false;
+
+                    if (consensusOption.HasValue()) options.Consensus = false;
+
+                    if (dataDirOption.HasValue()) options.DataDir = dataDirOption.Value();
+
+                    if (publicKeyOption.HasValue()) options.PublicKey = publicKeyOption.Value();
+
+                    if (contractOption.HasValue()) options.Contract = false;
+
+                    if (walletRpcIpOption.HasValue()) options.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
+
+                    if (walletRpcPortOption.HasValue()) options.WalletRpcPort = uint.Parse(walletRpcPortOption.Value());
+
+                    if (payoutAddressOption.HasValue()) options.PayoutAddress = payoutAddressOption.Value();
+
+                    if (seedServerOption.HasValue()) options.SeedServer = new Uri(seedServerOption.Value());
+
                     if (daemonOption.HasValue())
-                    {
-                        RunNodeDemon(options);       
-                    }
+                        RunNodeDemon(options);
                     else
-                    {
-                        RunNodeInteractive(options);                        
-                    }
+                        RunNodeInteractive(options);
                 });
-                app.Execute(args); 
+                app.Execute(args);
             });
             return 1;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="options"></param>
         private static void RunNodeDemon(NodeOptions options)
@@ -179,13 +139,14 @@ namespace Catalyst.Node
             //@TODO guard util
             if (options == null) throw new ArgumentNullException(nameof(options));
             CatalystNode.GetInstance(options);
-			Log.Message("daemon Mode");
-			while (true){}  
+            Log.Message("daemon Mode");
+            while (true)
+            {
+            }
         }
 
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="options"></param>
         private static void RunNodeInteractive(NodeOptions options)
@@ -195,16 +156,12 @@ namespace Catalyst.Node
             if (!options.Daemon)
             {
                 CatalystNode.GetInstance(options);
-                var basicShell = new BasicShell();                
-                while (basicShell.Run())
-                {
-                    Log.Message("Catalyst.Helpers.Shell Mode");
-                }   
+                var basicShell = new BasicShell();
+                while (basicShell.Run()) Log.Message("Catalyst.Helpers.Shell Mode");
             }
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         private class BasicShell : ShellBase
         {
@@ -222,25 +179,23 @@ namespace Catalyst.Node
 //            Log.Message(Catalyst.Kernel.Settings.SerializeSettings());
                 return true;
             }
-        
+
             /// <summary>
-            /// 
             /// </summary>
             /// <returns></returns>
             public override bool OnGetInfo()
             {
                 return true;
             }
-        
+
             /// <summary>
-            /// 
             /// </summary>
             /// <returns></returns>
             public override bool OnGetVersion()
             {
                 return true;
             }
-            
+
             /// <inheritdoc />
             /// <summary>
             /// </summary>
@@ -251,16 +206,14 @@ namespace Catalyst.Node
             }
 
             /// <summary>
-            /// 
             /// </summary>
             /// <returns></returns>
             public override bool OnStart(string[] args)
             {
                 return true;
             }
-        
+
             /// <summary>
-            /// 
             /// </summary>
             /// <param name="args"></param>
             /// <returns></returns>
@@ -268,9 +221,8 @@ namespace Catalyst.Node
             {
                 return true;
             }
-            
+
             /// <summary>
-            /// 
             /// </summary>
             /// <param name="args"></param>
             /// <returns></returns>
@@ -278,9 +230,8 @@ namespace Catalyst.Node
             {
                 return true;
             }
-        
+
             /// <summary>
-            /// 
             /// </summary>
             /// <param name="args"></param>
             /// <returns></returns>
@@ -288,9 +239,8 @@ namespace Catalyst.Node
             {
                 return true;
             }
-            
+
             /// <summary>
-            /// 
             /// </summary>
             /// <param name="args"></param>
             /// <returns></returns>
@@ -300,7 +250,6 @@ namespace Catalyst.Node
             }
 
             /// <summary>
-            /// 
             /// </summary>
             /// <returns></returns>
             public override bool OnGetMempool()

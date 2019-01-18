@@ -7,7 +7,6 @@ namespace Catalyst.Helpers.Hex.HexConverters
     public class HexBigIntegerBigEndianConverter : IHexConvertor<BigInteger>
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="newValue"></param>
         /// <returns></returns>
@@ -17,7 +16,6 @@ namespace Catalyst.Helpers.Hex.HexConverters
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hex"></param>
         /// <returns></returns>

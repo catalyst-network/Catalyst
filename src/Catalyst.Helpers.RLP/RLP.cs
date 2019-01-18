@@ -361,6 +361,7 @@ namespace Catalyst.Helpers.RLP
                     ++byteNum;
                     tmpLength = tmpLength >> 8;
                 }
+
                 var lenBytes = new byte[byteNum];
                 for (var i = 0; i < byteNum; ++i)
                     lenBytes[byteNum - 1 - i] = (byte) (srcData.Length >> (8 * i));
@@ -429,6 +430,7 @@ namespace Catalyst.Helpers.RLP
                 Array.Copy(item, 0, data, copyPos, item.Length);
                 copyPos += item.Length;
             }
+
             return data;
         }
 
@@ -451,6 +453,7 @@ namespace Catalyst.Helpers.RLP
                 length += msgData[pos + i] << (8 * pow);
                 pow--;
             }
+
             return length;
         }
     }

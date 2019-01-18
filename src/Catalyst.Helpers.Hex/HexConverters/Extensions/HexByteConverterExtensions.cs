@@ -8,7 +8,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         private static readonly byte[] Empty = new byte[0];
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -20,7 +19,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <param name="prefix"></param>
@@ -34,7 +32,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -49,7 +46,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -64,7 +60,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="first"></param>
         /// <param name="second"></param>
@@ -88,7 +83,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -105,7 +99,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
@@ -121,7 +114,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -135,7 +127,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -188,7 +179,6 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -200,7 +190,8 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
                 throw new ArgumentException("Value cannot be null or empty.", nameof(value));
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(value));
-            try {
+            try
+            {
                 return HexToByteArrayInternal(value);
             }
             catch (FormatException ex)
@@ -208,9 +199,8 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
                 throw new FormatException($"String '{value}' could not be converted to byte array (not hex?).", ex);
             }
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="character"></param>
         /// <param name="index"></param>
@@ -240,6 +230,7 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
                 throw new FormatException(
                     $"Character '{character}' at index '{index}' is not valid alphanumeric character.");
             }
+
             return value;
         }
     }

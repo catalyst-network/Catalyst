@@ -8,7 +8,6 @@ namespace Catalyst.Helpers.Util
     public static class ContractUtils
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="address"></param>
         /// <param name="nonce"></param>
@@ -20,7 +19,7 @@ namespace Catalyst.Helpers.Util
             if (string.IsNullOrWhiteSpace(address))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(address));
             var sha3 = new Sha3Keccack();
-            return  
+            return
                 sha3.CalculateHash(RLP.RLP.EncodeList(RLP.RLP.EncodeElement(address.HexToByteArray()),
                     RLP.RLP.EncodeElement(nonce.ToBytesForRlpEncoding()))).ToHex().Substring(24);
         }

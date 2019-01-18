@@ -14,8 +14,8 @@
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <PackageId>Catalyst.Node.Modules.Core.Mempool</PackageId>
-        <Deterministic>true</Deterministic>
-        <Optimize>true</Optimize>
+        <!--<Deterministic>true</Deterministic>-->
+        <!--<Optimize>true</Optimize>-->
         <PlatformTarget>AnyCPU</PlatformTarget>
         <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
         <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
@@ -43,6 +43,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Sdk\Catalyst.Protocol.Mempool\csharp\Catalyst.Protocol.Mempool.csproj" />
       <ProjectReference Include="..\Catalyst.Helpers.KeyValueStore\Catalyst.Helpers.KeyValueStore.csproj" />
+      <ProjectReference Include="..\Catalyst.Helpers.Network\Catalyst.Helpers.Network.csproj" />
       <ProjectReference Include="..\Catalyst.Helpers.Util\Catalyst.Helpers.Util.csproj" />
       <ProjectReference Include="..\Catalyst.Node.Modules.Core.Transactions\Catalyst.Node.Modules.Core.Transactions.csproj" />
       <ProjectReference Include="..\Catalyst.Node.Modules.Core\Catalyst.Node.Modules.Core.csproj" />

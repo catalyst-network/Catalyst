@@ -2,9 +2,17 @@ using System;
 
 namespace Catalyst.Node.Modules.Core.Contract
 {
-    public enum StorageType { Ipfs }
-    public enum ContractType { Standard, External }
-    
+    public enum StorageType
+    {
+        Ipfs
+    }
+
+    public enum ContractType
+    {
+        Standard,
+        External
+    }
+
     public interface IContract
     {
         Guid Identity { get; set; }

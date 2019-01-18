@@ -2,50 +2,50 @@
   "defaultAssembly": "Catalyst.Node",
   "components": [
     {
-      "type": "Catalyst.Node.Modules.Core.Mempool.Mempool, Catalyst.Node",
+      "type": "Catalyst.Node.Modules.Core.Mempool.Mempool, Catalyst.Node.Modules.Core.Mempool",
       "services": [
         {
-          "type": "Catalyst.Node.Modules.Core.Mempool.IMempool, Catalyst.Node"
+          "type": "Catalyst.Node.Modules.Core.Mempool.IMempool, Catalyst.Node.Modules.Core.Mempool"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Modules.Core.Consensus.Consensus, Catalyst.Node",
+      "type": "Catalyst.Node.Modules.Core.Consensus.Consensus, Catalyst.Node.Modules.Core.Consensus",
       "services": [
         {
-          "type": "Catalyst.Node.Modules.Core.Consensus.IConsensus, Catalyst.Node"
+          "type": "Catalyst.Node.Modules.Core.Consensus.IConsensus, Catalyst.Node.Modules.Core.Consensus"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Modules.Core.Contract.Contract, Catalyst.Node",
+      "type": "Catalyst.Node.Modules.Core.Contract.Contract, Catalyst.Node.Modules.Core.Contract",
       "services": [
         {
-          "type": "Catalyst.Node.Modules.Core.Contract.IContract, Catalyst.Node"
+          "type": "Catalyst.Node.Modules.Core.Contract.IContract, Catalyst.Node.Modules.Core.Contract"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Modules.Core.Ledger.Ledger, Catalyst.Node",
+      "type": "Catalyst.Node.Modules.Core.Ledger.Ledger, Catalyst.Node.Modules.Core.Ledger",
       "services": [
         {
-          "type": "Catalyst.Node.Modules.Core.Ledger.ILedger, Catalyst.Node"
+          "type": "Catalyst.Node.Modules.Core.Ledger.ILedger, Catalyst.Node.Modules.Core.Ledger"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Modules.Core.Rpc.RpcServerImpl, Catalyst.Node",
+      "type": "Catalyst.Node.Modules.Core.Rpc.Rpc, Catalyst.Node.Modules.Core.Rpc",
       "services": [
         {
-          "type": "Catalyst.Node.Modules.Core.Rpc.IRpcServer, Catalyst.Node"
+          "type": "Catalyst.Node.Modules.Core.Rpc.IRpcServer, Catalyst.Node.Modules.Core.Rpc"
         }
       ]
     },
     {
-      "type": "Catalyst.Helpers.Redis.Catalyst.Helpers.Redis, Catalyst.Helpers.Redis",
+      "type": "Catalyst.Helpers.Redis.Redis, Catalyst.Helpers.Redis",
       "services": [
         {
-          "type": "Catalyst.Helpers.DataStore.IKeyStore, Catalyst.Helpers.DataStore"
+          "type": "Catalyst.Helpers.KeyValueStore.IKeyValueStore, Catalyst.Helpers.KeyValueStore"
         }
       ]
     },

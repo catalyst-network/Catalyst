@@ -1,6 +1,5 @@
-using Catalyst.Helpers.Logger;
 using Autofac;
-using Autofac.Core;
+using Catalyst.Helpers.Logger;
 
 namespace Catalyst.Node.Modules.Core
 {
@@ -8,7 +7,6 @@ namespace Catalyst.Node.Modules.Core
     public abstract class ModuleBase : Module
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public virtual bool StartService()
@@ -17,7 +15,6 @@ namespace Catalyst.Node.Modules.Core
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public virtual bool StopService()
@@ -26,7 +23,6 @@ namespace Catalyst.Node.Modules.Core
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public bool RestartService()
@@ -48,6 +44,7 @@ namespace Catalyst.Node.Modules.Core
                 Log.Message("Couldn't stop service"); //@TODO get service name from class attribute
                 return false;
             }
+
             return true;
         }
     }

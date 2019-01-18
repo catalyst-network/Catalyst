@@ -23,8 +23,6 @@
         <ProjectReference Include="..\..\Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj" />
         <ProjectReference Include="..\..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
         <ProjectReference Include="..\..\Catalyst.Helpers.Hex\Catalyst.Helpers.Hex.csproj" />
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\..\Catalyst.Node\Catalyst.Node.csproj" />
     </ItemGroup>
     <ItemGroup>

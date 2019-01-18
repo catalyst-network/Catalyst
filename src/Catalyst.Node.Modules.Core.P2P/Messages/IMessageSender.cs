@@ -6,7 +6,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
     public interface IMessageSender
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="message"></param>

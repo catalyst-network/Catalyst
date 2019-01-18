@@ -3,26 +3,14 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using Catalyst.Helpers.Logger;
-using Catalyst.Helpers.Util;
 
 namespace Catalyst.Node.Modules.Core.P2P.Connections
-{    
+{
     /// <summary>
-    /// 
     /// </summary>
     public sealed class Connection : IDisposable
     {
-        public bool Known { get; set; }
-        public bool Connected { set; get; }
-        internal bool Disposed { get; set; }
-        internal TcpClient TcpClient { get; }
-        public IPEndPoint EndPoint { get; set; }
-        public SslStream SslStream { set; get; }
-        internal NetworkStream NetworkStream { get; }
-        public Node.Modules.Core.P2P.Peer.Peer Peer { get; set; }
-
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="tcp"></param>
         public Connection(TcpClient tcp)
@@ -46,46 +34,21 @@ namespace Catalyst.Node.Modules.Core.P2P.Connections
             }
 
             EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
-            
+
             Connected = true;
             Known = false;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void AddPeer(Node.Modules.Core.P2P.Peer.Peer peer)
-        {
-            //@TODO guard util
-            if (peer == null) throw new ArgumentNullException(nameof(peer));
-            Peer = peer;
-            Connected = true;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        internal bool IsConnected()
-        {
-            if (TcpClient == null) throw new ArgumentNullException(nameof(TcpClient));
-            
-            if (!TcpClient.Connected)
-            {
-                return false;
-            }
-            
-            if (!TcpClient.Client.Poll(0, SelectMode.SelectWrite) || TcpClient.Client.Poll(0, SelectMode.SelectError))
-            {
-                return false;
-            }
-            
-            byte[] buffer = new byte[1];// @TODO hook into new byte array method
-            return TcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
-        }
+
+        public bool Known { get; set; }
+        public bool Connected { set; get; }
+        internal bool Disposed { get; set; }
+        internal TcpClient TcpClient { get; }
+        public IPEndPoint EndPoint { get; set; }
+        public SslStream SslStream { set; get; }
+        internal NetworkStream NetworkStream { get; }
+        public Peer.Peer Peer { get; set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public void Dispose()
         {
@@ -95,15 +58,37 @@ namespace Catalyst.Node.Modules.Core.P2P.Connections
         }
 
         /// <summary>
-        /// 
+        /// </summary>
+        public void AddPeer(Peer.Peer peer)
+        {
+            //@TODO guard util
+            if (peer == null) throw new ArgumentNullException(nameof(peer));
+            Peer = peer;
+            Connected = true;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        internal bool IsConnected()
+        {
+            if (TcpClient == null) throw new ArgumentNullException(nameof(TcpClient));
+
+            if (!TcpClient.Connected) return false;
+
+            if (!TcpClient.Client.Poll(0, SelectMode.SelectWrite) ||
+                TcpClient.Client.Poll(0, SelectMode.SelectError)) return false;
+
+            var buffer = new byte[1]; // @TODO hook into new byte array method
+            return TcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="disposing"></param>
         private void Dispose(bool disposing)
         {
-            if (Disposed)
-            {
-                return;
-            }
+            if (Disposed) return;
 
             if (disposing)
             {
@@ -112,7 +97,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Connections
                 TcpClient?.Dispose();
                 EndPoint = null;
             }
-            
+
             Disposed = true;
             Connected = false;
             Log.Message("connection disposed");

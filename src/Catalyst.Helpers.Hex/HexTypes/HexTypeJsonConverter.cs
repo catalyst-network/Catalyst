@@ -5,9 +5,7 @@ namespace Catalyst.Helpers.Hex.HexTypes
 {
     public class HexRpcTypeJsonConverter<T, TValue> : JsonConverter where T : HexRpcType<TValue>
     {
-        
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="value"></param>
@@ -23,7 +21,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="objectType"></param>
@@ -39,7 +36,6 @@ namespace Catalyst.Helpers.Hex.HexTypes
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="objectType"></param>
         /// <returns></returns>

@@ -15,5 +15,4 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         void QueueForever(Action action, TimeSpan interval);
         void QueueOneTime(Action action, TimeSpan interval);
     }
-
 }

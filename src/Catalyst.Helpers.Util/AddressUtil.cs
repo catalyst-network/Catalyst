@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Catalyst.Helpers.Hex.HexConverters.Extensions;
 
 namespace Catalyst.Helpers.Util
@@ -12,7 +11,6 @@ namespace Catalyst.Helpers.Util
         public static AddressUtil Current => _current ?? (_current = new AddressUtil());
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -38,7 +36,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -56,7 +53,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -74,7 +70,7 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// Validates if the hex string is 40 alphanumeric characters
+        ///     Validates if the hex string is 40 alphanumeric characters
         /// </summary>
         public bool IsValidCatalystAddressHexFormat(string address)
         {
@@ -88,7 +84,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -112,6 +107,7 @@ namespace Catalyst.Helpers.Util
                     value <= 7 && address[i].ToString().ToLower() != address[i].ToString())
                     return false;
             }
+
             return true;
         }
     }

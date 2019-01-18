@@ -6,7 +6,6 @@ namespace Catalyst.Node.Modules.Core
     public abstract class AsyncModuleBase : ModuleBase
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>

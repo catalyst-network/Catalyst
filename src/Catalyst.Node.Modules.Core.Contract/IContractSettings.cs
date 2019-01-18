@@ -1,4 +1,6 @@
 namespace Catalyst.Node.Modules.Core.Contract
 {
-    public interface IContractSettings {}
+    public interface IContractSettings
+    {
+    }
 }

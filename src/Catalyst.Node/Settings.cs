@@ -1,57 +1,27 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Linq;
+using System.Net;
 using Catalyst.Helpers.Util;
-using Newtonsoft.Json;
+using Catalyst.Node.Modules.Core.Consensus;
+using Catalyst.Node.Modules.Core.Contract;
 using Catalyst.Node.Modules.Core.Dfs;
-using Catalyst.Node.Modules.Core.Rpc;
 using Catalyst.Node.Modules.Core.Gossip;
 using Catalyst.Node.Modules.Core.Ledger;
-using Catalyst.Node.Modules.Core.P2P;
 using Catalyst.Node.Modules.Core.Mempool;
-using Catalyst.Node.Modules.Core.Contract;
-using Catalyst.Node.Modules.Core.Consensus;
+using Catalyst.Node.Modules.Core.P2P;
+using Catalyst.Node.Modules.Core.Rpc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace Catalyst.Node
 {
     public sealed class Settings
     {
-        public IRpcSettings Rpc { get; set; }
-        public IDfsSettings Dfs { get; set; }
-        public IP2PSettings Peer { get; set; }
-        public IGossipSettings Gossip { get; set; }
-        public ILedgerSettings Ledger { get; set; }
-        public NodeOptions NodeOptions { get; set; }
-        public IMempoolSettings Mempool { get; set; }
-        private static Settings Instance { get; set; }
-        public IContractSettings Contract { get; set; }
-        public IConsensusSettings Consensus { get; set; }
         private static readonly object Mutex = new object();
 
         /// <summary>
-        /// Get a thread safe settings singleton.
-        /// </summary>
-        /// <returns></returns>
-        public static Settings GetInstance(NodeOptions options)
-        {
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            if (Instance == null) 
-            { 
-                lock (Mutex)
-                {
-                    if (Instance == null) 
-                    { 
-                        Instance = new Settings(options);
-                    }
-                } 
-            }
-            return Instance;
-        }
-        
-        /// <summary>
-        /// Settings constructor
+        ///     Settings constructor
         /// </summary>
         /// <param name="options"></param>
         private Settings(NodeOptions options)
@@ -68,11 +38,37 @@ namespace Catalyst.Node
             Mempool = new MempoolSettings(userConfig.GetSection("Mempool"));
             Contract = new ContractSettings(userConfig.GetSection("Contract"));
             Consensus = new ConsensusSettings(userConfig.GetSection("Consensus"));
+        }
 
+        public IRpcSettings Rpc { get; set; }
+        public IDfsSettings Dfs { get; set; }
+        public IP2PSettings Peer { get; set; }
+        public IGossipSettings Gossip { get; set; }
+        public ILedgerSettings Ledger { get; set; }
+        public NodeOptions NodeOptions { get; set; }
+        public IMempoolSettings Mempool { get; set; }
+        private static Settings Instance { get; set; }
+        public IContractSettings Contract { get; set; }
+        public IConsensusSettings Consensus { get; set; }
+
+        /// <summary>
+        ///     Get a thread safe settings singleton.
+        /// </summary>
+        /// <returns></returns>
+        public static Settings GetInstance(NodeOptions options)
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (Instance == null)
+                lock (Mutex)
+                {
+                    if (Instance == null) Instance = new Settings(options);
+                }
+
+            return Instance;
         }
 
         /// <summary>
-        /// Loads config files from defined dataDir
+        ///     Loads config files from defined dataDir
         /// </summary>
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
@@ -83,7 +79,7 @@ namespace Catalyst.Node
             if (network == null) throw new ArgumentNullException(nameof(network));
 
             string networkConfigFile;
-            
+
             switch (network)
             {
                 case "devnet":
@@ -99,15 +95,15 @@ namespace Catalyst.Node
                     networkConfigFile = "/devnet.json";
                     break;
             }
-           
+
             return new ConfigurationBuilder()
-                .AddJsonFile(dataDir+networkConfigFile)
+                .AddJsonFile(dataDir + networkConfigFile)
                 .Build()
                 .GetSection("ApplicationConfiguration");
         }
-        
+
         /// <summary>
-        /// Serialises setting section to a json string.
+        ///     Serialises setting section to a json string.
         /// </summary>
         /// <returns></returns>
         public string SerializeSettings()
@@ -120,168 +116,169 @@ namespace Catalyst.Node
             return JsonConvert.SerializeObject(this, serializerSettings);
         }
     }
-    
+
     /// <summary>
-    /// Persistence settings class.
-    /// Holds the local storage locations.
+    ///     Persistence settings class.
+    ///     Holds the local storage locations.
     /// </summary>
     public class LedgerSettings : ILedgerSettings
     {
         private readonly IConfiguration Section;
-        public string Type { get; set; }
-        public string Chain { get; set; }
-        public string Index { get; set; }
 
         /// <summary>
-        /// Set attributes
+        ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
         protected internal LedgerSettings(IConfiguration section)
         {
-            Guard.NotNull(section,nameof(section));
+            Guard.NotNull(section, nameof(section));
             Section = section;
             Type = section.GetSection("Persistence").Value;
             Chain = section.GetSection("Paths").GetSection("Chain").Value;
             Index = section.GetSection("Paths").GetSection("Index").Value;
         }
+
+        public string Type { get; set; }
+        public string Chain { get; set; }
+        public string Index { get; set; }
     }
 
 //        
     /// <summary>
-    /// Consensus settings class.
-    /// Holds the local storage locations.
+    ///     Consensus settings class.
+    ///     Holds the local storage locations.
     /// </summary>
     public class ConsensusSettings : IConsensusSettings
     {
         private readonly IConfiguration Section;
-        public string NDepth { get; set; }
 
         /// <summary>
-        /// Set attributes
+        ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
         protected internal ConsensusSettings(IConfiguration section)
         {
-            Guard.NotNull(section,nameof(section));
+            Guard.NotNull(section, nameof(section));
             Section = section;
             NDepth = section.GetSection("nDepth").Value;
         }
+
+        public string NDepth { get; set; }
     }
-        
+
     /// <summary>
-    /// Contract settings class.
-    /// Holds the local storage locations.
+    ///     Contract settings class.
+    ///     Holds the local storage locations.
     /// </summary>
     public class ContractSettings : IContractSettings
     {
         private readonly IConfiguration Section;
-        public string StorageType { get; set; }
 
         /// <summary>
-        /// Set attributes
+        ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
         protected internal ContractSettings(IConfiguration section)
         {
-            Guard.NotNull(section,nameof(section));
+            Guard.NotNull(section, nameof(section));
             Section = section;
             StorageType = section.GetSection("StorageType").Value;
         }
+
+        public string StorageType { get; set; }
     }
-        
+
     /// <summary>
-    /// Dfs settings class.
-    /// Holds the local storage locations.
+    ///     Dfs settings class.
+    ///     Holds the local storage locations.
     /// </summary>
     public class DfsSettings : IDfsSettings
     {
         private readonly IConfiguration Section;
-        public string StorageType { get; set; }
-        public ushort ConnectRetries { get; set; }
-        public string IpfsVersionApi { get; set; }
-            
+
         /// <summary>
-        /// Set attributes
+        ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
         protected internal DfsSettings(IConfiguration section)
         {
-            Guard.NotNull(section,nameof(section));
+            Guard.NotNull(section, nameof(section));
             Section = section;
             StorageType = section.GetSection("StorageType").Value;
             ConnectRetries = ushort.Parse(section.GetSection("ConnectRetries").Value);
             IpfsVersionApi = section.GetSection("IpfsVersionApi").Value;
         }
+
+        public string StorageType { get; set; }
+        public ushort ConnectRetries { get; set; }
+        public string IpfsVersionApi { get; set; }
     }
 
     /// <summary>
-    /// Gossip settings class.
-    /// Holds the local storage locations.
+    ///     Gossip settings class.
+    ///     Holds the local storage locations.
     /// </summary>
     public class GossipSettings : IGossipSettings
     {
         private readonly IConfiguration Section;
-        public string Instances { get; set; }
 
         /// <summary>
-        /// Set attributes
+        ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
         protected internal GossipSettings(IConfiguration section)
         {
-            Guard.NotNull(section,nameof(section));
+            Guard.NotNull(section, nameof(section));
             Section = section;
             Instances = section.GetSection("instances").Value;
         }
-    }        
-        
+
+        public string Instances { get; set; }
+    }
+
     /// <summary>
-    /// Mempool settings class.
-    /// Holds the local storage locations.
+    ///     Mempool settings class.
+    ///     Holds the local storage locations.
     /// </summary>
     public class MempoolSettings : IMempoolSettings
     {
         private readonly IConfiguration Section;
-        public string Type { get; set; }
-        public string When { get; set; }
 
         /// <summary>
-        /// Set attributes
+        ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
         protected internal MempoolSettings(IConfiguration section)
         {
-            Guard.NotNull(section,nameof(section));
+            Guard.NotNull(section, nameof(section));
             Section = section;
             Type = section.GetSection("Type").Value;
             When = section.GetSection("When").Value;
+            Host = Helpers.Network.EndpointBuilder.BuildNewEndPoint(
+                        IPAddress.Parse(section.GetSection("Host").Value),
+                        int.Parse(section.GetSection("Port").Value)
+                   );
         }
-    } 
-        
+
+        public string Type { get; set; }
+        public string When { get; set; }
+        public IPEndPoint Host { get; set; }
+    }
+
     /// <summary>
-    /// Peer settings class.
+    ///     Peer settings class.
     /// </summary>
     public class P2PSettings : IP2PSettings
     {
         private readonly IConfiguration Section;
-        public int Port { get; set; }
-        public uint Magic { get; set; }
-        public ushort MaxPeers { get; set; }
-        public string BindAddress { get; set; }
-        public string PfxFileName { get; set; }
-        public List<Uri> SeedList { get; set; }
-        public byte AddressVersion { get; set; }
-        public string SslCertPassword { get; set; }
-        public ushort PeerPingInterval { get; set; }
-        public ushort PeerLifetimeInterval { get; set; }
-        
+
         /// <summary>
-        /// Set attributes
+        ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
         protected internal P2PSettings(IConfiguration section)
         {
-            Guard.NotNull(section,nameof(section));
+            Guard.NotNull(section, nameof(section));
             Section = section;
             Port = int.Parse(section.GetSection("Port").Value);
             Magic = uint.Parse(section.GetSection("Magic").Value);
@@ -294,27 +291,39 @@ namespace Catalyst.Node
             PeerLifetimeInterval = ushort.Parse(section.GetSection("PeerLifetimeInterval").Value);
             SeedList = section.GetSection("SeedList").GetChildren().Select(p => new Uri(p.Value)).ToList();
         }
+
+        public ushort MaxPeers { get; set; }
+        public ushort PeerPingInterval { get; set; }
+        public ushort PeerLifetimeInterval { get; set; }
+        public int Port { get; set; }
+        public uint Magic { get; set; }
+        public string BindAddress { get; set; }
+        public string PfxFileName { get; set; }
+        public List<Uri> SeedList { get; set; }
+        public byte AddressVersion { get; set; }
+        public string SslCertPassword { get; set; }
     }
 
     /// <summary>
-    /// RPC settings class.
+    ///     RPC settings class.
     /// </summary>
     public class RpcSettings : IRpcSettings
     {
         private readonly IConfiguration Section;
-        public int Port { get; set; }
-        public IPAddress BindAddress { get; set; }
-        
+
         /// <summary>
-        /// Set attributes
+        ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
         protected internal RpcSettings(IConfiguration section)
         {
-            Guard.NotNull(section,nameof(section));
+            Guard.NotNull(section, nameof(section));
             Section = section;
             Port = int.Parse(section.GetSection("Port").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
         }
+
+        public int Port { get; set; }
+        public IPAddress BindAddress { get; set; }
     }
 }

@@ -2,10 +2,9 @@
 
 namespace Catalyst.Helpers.Util
 {
-    static class TimeExtensions
+    internal static class TimeExtensions
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="seconds"></param>
         /// <returns></returns>
@@ -14,9 +13,8 @@ namespace Catalyst.Helpers.Util
             if (seconds <= 0) throw new ArgumentOutOfRangeException(nameof(seconds));
             return TimeSpan.FromMinutes(seconds);
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="seconds"></param>
         /// <returns></returns>
@@ -27,7 +25,6 @@ namespace Catalyst.Helpers.Util
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="milliseconds"></param>
         /// <returns></returns>

@@ -7,10 +7,6 @@
         "Index": "Index_{0}"
       }
     },
-    "Ssl": {
-      "PfxFileName": "mycert.pfx",
-      "SslCertPassword": "test"
-    },
     "Consensus": {
       "nDepth": 100
     },
@@ -27,11 +23,12 @@
     },
     "Mempool": {
       "Type" : "redis",
-      "AllowAdmin" : "yes",
-      "SaveAfterSeconds" : 1,
-      "SaveAfterChanges" : 1
+      "Host" : "127.0.0.1",
+      "Port" : "6379"
     },
     "Peer": {
+      "PfxFileName": "mycert.pfx",
+      "SslCertPassword": "test",
       "BindAddress": "127.0.0.1",
       "Port": 42069,
       "MaxPeers": 10,

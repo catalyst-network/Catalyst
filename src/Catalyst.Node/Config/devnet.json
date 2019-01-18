@@ -23,9 +23,8 @@
     },
     "Mempool": {
       "Type" : "redis",
-      "AllowAdmin" : "yes",
-      "SaveAfterSeconds" : 1,
-      "SaveAfterChanges" : 1
+      "Host" : "127.0.0.1",
+      "Port" : "6379"
     },
     "Peer": {
       "PfxFileName": "mycert.pfx",

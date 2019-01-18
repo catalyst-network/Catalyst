@@ -1,55 +1,40 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Catalyst.Helpers.Math
 {
-    
     /// <summary>
-    /// Base class for little-endian unsigned integers. Two classes inherit from this: UInt160 and UInt256.
-    /// Only basic comparison/serialization are proposed for these classes. For arithmetic purposes, use BigInteger class.
+    ///     Base class for little-endian unsigned integers. Two classes inherit from this: UInt160 and UInt256.
+    ///     Only basic comparison/serialization are proposed for these classes. For arithmetic purposes, use BigInteger class.
     /// </summary>
     public abstract class UIntBase : IEquatable<UIntBase>, ISerializable
     {
         /// <summary>
-        /// Storing unsigned int in a little-endian byte array.
+        ///     Storing unsigned int in a little-endian byte array.
         /// </summary>
-        private byte[] data_bytes;
+        private readonly byte[] data_bytes;
 
         /// <summary>
-        /// Number of bytes of the unsigned int.
-        /// Currently, inherited classes use 20-bytes (UInt160) or 32-bytes (UInt256)
-        /// </summary>
-        public int Size => data_bytes.Length;
-
-        /// <summary>
-        /// Base constructor receives the intended number of bytes and a byte array. 
-        /// If byte array is null, it's automatically initialized with given size.
+        ///     Base constructor receives the intended number of bytes and a byte array.
+        ///     If byte array is null, it's automatically initialized with given size.
         /// </summary>
         protected UIntBase(int bytes, byte[] value)
         {
             if (value == null)
             {
-                this.data_bytes = new byte[bytes];
+                data_bytes = new byte[bytes];
                 return;
             }
+
             if (value.Length != bytes)
                 throw new ArgumentException();
-            this.data_bytes = value;
+            data_bytes = value;
         }
 
         /// <summary>
-        /// Deserialize function reads the expected size in bytes from the given BinaryReader and stores in data_bytes array.
-        /// </summary>
-        void ISerializable.Deserialize(BinaryReader reader)
-        {
-            reader.Read(data_bytes, 0, data_bytes.Length);
-        }
-
-        /// <summary>
-        /// Method Equals returns true if objects are equal, false otherwise
-        /// If null is passed as parameter, this method returns false. If it's a self-reference, it returns true.
+        ///     Method Equals returns true if objects are equal, false otherwise
+        ///     If null is passed as parameter, this method returns false. If it's a self-reference, it returns true.
         /// </summary>
         public bool Equals(UIntBase other)
         {
@@ -63,8 +48,30 @@ namespace Catalyst.Helpers.Math
         }
 
         /// <summary>
-        /// Method Equals returns true if objects are equal, false otherwise
-        /// If null is passed as parameter or if it's not a UIntBase object, this method returns false.
+        ///     Number of bytes of the unsigned int.
+        ///     Currently, inherited classes use 20-bytes (UInt160) or 32-bytes (UInt256)
+        /// </summary>
+        public int Size => data_bytes.Length;
+
+        /// <summary>
+        ///     Deserialize function reads the expected size in bytes from the given BinaryReader and stores in data_bytes array.
+        /// </summary>
+        void ISerializable.Deserialize(BinaryReader reader)
+        {
+            reader.Read(data_bytes, 0, data_bytes.Length);
+        }
+
+        /// <summary>
+        ///     Method Serialize writes the data_bytes array into a BinaryWriter object
+        /// </summary>
+        void ISerializable.Serialize(BinaryWriter writer)
+        {
+            writer.Write(data_bytes);
+        }
+
+        /// <summary>
+        ///     Method Equals returns true if objects are equal, false otherwise
+        ///     If null is passed as parameter or if it's not a UIntBase object, this method returns false.
         /// </summary>
         public override bool Equals(object obj)
         {
@@ -72,7 +79,7 @@ namespace Catalyst.Helpers.Math
                 return false;
             if (!(obj is UIntBase))
                 return false;
-            return this.Equals((UIntBase)obj);
+            return Equals((UIntBase) obj);
         }
 
 //        /// <summary>
@@ -84,29 +91,21 @@ namespace Catalyst.Helpers.Math
 //        }
 
         /// <summary>
-        /// Method Parse receives a big-endian hex string and stores as a UInt160 or UInt256 little-endian byte array
-        /// Example: Parse("0xa400ff00ff00ff00ff00ff00ff00ff00ff00ff01") should create UInt160 01ff00ff00ff00ff00ff00ff00ff00ff00ff00a4
+        ///     Method Parse receives a big-endian hex string and stores as a UInt160 or UInt256 little-endian byte array
+        ///     Example: Parse("0xa400ff00ff00ff00ff00ff00ff00ff00ff00ff01") should create UInt160
+        ///     01ff00ff00ff00ff00ff00ff00ff00ff00ff00a4
         /// </summary>
         public static UIntBase Parse(string s)
         {
             if (s.Length == 40 || s.Length == 42)
                 return UInt160.Parse(s);
-            else if (s.Length == 64 || s.Length == 66)
+            if (s.Length == 64 || s.Length == 66)
                 return UInt256.Parse(s);
-            else
-                throw new FormatException();
+            throw new FormatException();
         }
 
         /// <summary>
-        /// Method Serialize writes the data_bytes array into a BinaryWriter object
-        /// </summary>
-        void ISerializable.Serialize(BinaryWriter writer)
-        {
-            writer.Write(data_bytes);
-        }
-
-        /// <summary>
-        /// Method ToArray() returns the byte array data_bytes, which stores the little-endian unsigned int
+        ///     Method ToArray() returns the byte array data_bytes, which stores the little-endian unsigned int
         /// </summary>
         public byte[] ToArray()
         {
@@ -114,8 +113,9 @@ namespace Catalyst.Helpers.Math
         }
 
         /// <summary>
-        /// Method ToString returns a big-endian string starting by "0x" representing the little-endian unsigned int
-        /// Example: if this is storing 20-bytes 01ff00ff00ff00ff00ff00ff00ff00ff00ff00a4, ToString() should return "0xa400ff00ff00ff00ff00ff00ff00ff00ff00ff01"
+        ///     Method ToString returns a big-endian string starting by "0x" representing the little-endian unsigned int
+        ///     Example: if this is storing 20-bytes 01ff00ff00ff00ff00ff00ff00ff00ff00ff00a4, ToString() should return
+        ///     "0xa400ff00ff00ff00ff00ff00ff00ff00ff00ff01"
         /// </summary>
         public override string ToString()
         {
@@ -123,8 +123,10 @@ namespace Catalyst.Helpers.Math
         }
 
         /// <summary>
-        /// Method TryParse tries to parse a big-endian hex string and stores it as a UInt160 or UInt256 little-endian bytes array
-        /// Example: TryParse("0xa400ff00ff00ff00ff00ff00ff00ff00ff00ff01", result) should create result UInt160 01ff00ff00ff00ff00ff00ff00ff00ff00ff00a4
+        ///     Method TryParse tries to parse a big-endian hex string and stores it as a UInt160 or UInt256 little-endian bytes
+        ///     array
+        ///     Example: TryParse("0xa400ff00ff00ff00ff00ff00ff00ff00ff00ff01", result) should create result UInt160
+        ///     01ff00ff00ff00ff00ff00ff00ff00ff00ff00a4
         /// </summary>
         public static bool TryParse<T>(string s, out T result) where T : UIntBase
         {
@@ -141,28 +143,30 @@ namespace Catalyst.Helpers.Math
                 size = 0;
             if (size == 20)
             {
-                if (UInt160.TryParse(s, out UInt160 r))
+                if (UInt160.TryParse(s, out var r))
                 {
-                    result = (T)(UIntBase)r;
+                    result = (T) (UIntBase) r;
                     return true;
                 }
             }
             else if (size == 32)
             {
-                if (UInt256.TryParse(s, out UInt256 r))
+                if (UInt256.TryParse(s, out var r))
                 {
-                    result = (T)(UIntBase)r;
+                    result = (T) (UIntBase) r;
                     return true;
                 }
             }
+
             result = null;
             return false;
         }
 
         /// <summary>
-        /// Operator == returns true if left UIntBase is equals to right UIntBase
-        /// If any parameter is null, it returns false. If both are the same object, it returns true.
-        /// Example: UIntBase(02ff00ff00ff00ff00ff00ff00ff00ff00ff00a3) == UIntBase(02ff00ff00ff00ff00ff00ff00ff00ff00ff00a3) is true
+        ///     Operator == returns true if left UIntBase is equals to right UIntBase
+        ///     If any parameter is null, it returns false. If both are the same object, it returns true.
+        ///     Example: UIntBase(02ff00ff00ff00ff00ff00ff00ff00ff00ff00a3) == UIntBase(02ff00ff00ff00ff00ff00ff00ff00ff00ff00a3)
+        ///     is true
         /// </summary>
         public static bool operator ==(UIntBase left, UIntBase right)
         {
@@ -174,8 +178,9 @@ namespace Catalyst.Helpers.Math
         }
 
         /// <summary>
-        /// Operator != returns true if left UIntBase is not equals to right UIntBase
-        /// Example: UIntBase(02ff00ff00ff00ff00ff00ff00ff00ff00ff00a3) != UIntBase(01ff00ff00ff00ff00ff00ff00ff00ff00ff00a4) is true
+        ///     Operator != returns true if left UIntBase is not equals to right UIntBase
+        ///     Example: UIntBase(02ff00ff00ff00ff00ff00ff00ff00ff00ff00a3) != UIntBase(01ff00ff00ff00ff00ff00ff00ff00ff00ff00a4)
+        ///     is true
         /// </summary>
         public static bool operator !=(UIntBase left, UIntBase right)
         {
