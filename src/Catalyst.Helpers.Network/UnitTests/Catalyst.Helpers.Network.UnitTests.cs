@@ -1,21 +1,20 @@
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Catalyst.Helpers.Network.UnitTests
 {
     [TestClass]
-    public class UT_
+    public class DnsUnitTests
     {
-        [TestInitialize]
-        public void Initialize()
-        {
-            throw new NotImplementedException();
-        }
 
         [TestMethod]
         public void MethodTest()
         {
-            throw new NotImplementedException();
+            var seedIp = Dns.GetTxtRecords("seed1.network.atlascity.io");
+            
+            foreach (var ip in seedIp)
+            {
+                Assert.AreEqual("92.207.178.198:42069", ip);
+            }
         }
     }
 }

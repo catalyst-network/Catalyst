@@ -110,6 +110,8 @@ namespace Catalyst.Node
                                 throw new Exception(
                                     "Need a wallet to connect to or be supplied public key and payout addresses");
                         }
+                        
+//                        Catalyst.Helpers.Network.Dns
 
                         // check we have a pfx cert for watson server
 //                        if (File.Exists(options.DataDir+"/"+settingsInstance.Ssl.PfxFileName) == false)

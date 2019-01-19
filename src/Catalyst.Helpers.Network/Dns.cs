@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Util;
 
 namespace Catalyst.Helpers.Network
@@ -11,7 +13,7 @@ namespace Catalyst.Helpers.Network
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        private static IList<string> GetTxtRecords(string hostname)
+        public static IList<string> GetTxtRecords(string hostname)
         {
             Guard.NotNull(hostname, nameof(hostname));
             Guard.NotEmpty(hostname, nameof(hostname));
@@ -33,6 +35,7 @@ namespace Catalyst.Helpers.Network
             }
 
             var matches = Regex.Matches(output, pattern, RegexOptions.IgnoreCase);
+            
             foreach (Match match in matches)
                 if (match.Success)
                     txtRecords.Add(match.Groups[1].Value);
