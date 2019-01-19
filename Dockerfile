@@ -1,7 +1,8 @@
 FROM microsoft/dotnet:2.1-sdk AS publish
 #RUN apk update && apk add libc6-compat libnsl libnsl-dev
-WORKDIR /srv
-COPY ./src ./
+WORKDIR /srv/
+COPY ./ ./
+WORKDIR /srv/src
 RUN dotnet restore
 WORKDIR /srv/Catalyst.Node
 #RUN dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731 -s https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
@@ -9,14 +10,14 @@ RUN dotnet publish -c release -o out --self-contained --runtime linux-x64 --fram
 
 # test application
 FROM publish AS testrunner
-WORKDIR /srv/Catalyst.Node
+WORKDIR /srv/src
 ENTRYPOINT ["dotnet", "test", "--logger:trx"]
 
 # ADL runtime
 FROM microsoft/dotnet:2.1-runtime AS runtime
 #RUN apk update && apk add libc6-compat libnsl libnsl-dev
-WORKDIR /srv/Catalyst.Node
-COPY --from=publish /srv/Catalyst.Node/out ./
+WORKDIR /srv/src/Catalyst.Node
+COPY --from=publish /srv/src/Catalyst.Node/out ./
 
 COPY certificate.pem ./
 COPY mycert.pfx ./
