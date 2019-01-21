@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
@@ -12,6 +13,7 @@ using Catalyst.Node.Modules.Core.P2P.Events;
 using Catalyst.Node.Modules.Core.P2P.Messages;
 using Catalyst.Node.Modules.Core.P2P.Peer;
 using Catalyst.Node.Modules.Core.P2P.Workers;
+using DnsClient.Protocol;
 
 namespace Catalyst.Node.Modules.Core.P2P
 {
@@ -54,7 +56,7 @@ namespace Catalyst.Node.Modules.Core.P2P
             try
             {
                 NodeIdentity = PeerIdentifier.BuildPeerId(publicKey,
-                    new IPEndPoint(IPAddress.Parse(p2PSettings.BindAddress), p2PSettings.Port));
+                    EndpointBuilder.BuildNewEndPoint(p2PSettings.BindAddress, p2PSettings.Port));
             }
             catch (ArgumentNullException e)
             {
@@ -62,22 +64,33 @@ namespace Catalyst.Node.Modules.Core.P2P
                 return;
             }
 
-            if (BannedIps?.Count > 0) BannedIps = new List<string>(bannedIps);
+//            if (BannedIps?.Count > 0) BannedIps = new List<string>(bannedIps);
 
             SslCertificateCollection = new X509Certificate2Collection
             {
                 SslCertificate
             };
 
-            Debug = debug;
+            Debug = debug;// @todo get from node options
             AcceptInvalidCerts = acceptInvalidCerts;
             MutuallyAuthenticate = mutualAuthentication;
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
+            
+            try
+            {
+                GetSeedNodes(p2PSettings);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             PeerManager = new PeerManager(SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager(),
                 NodeIdentity);
             PeerManager.AnnounceNode += Announce;
-
+            
             Task.Run(async () =>
                 await PeerManager.InboundConnectionListener(
                     new IPEndPoint(IPAddress.Parse(p2PSettings.BindAddress),
@@ -89,15 +102,17 @@ namespace Catalyst.Node.Modules.Core.P2P
 
         private bool Debug { get; }
         private CancellationToken Token { get; }
-        private List<string> BannedIps { get; } //@TODO revist this
+        private List<IPAddress> BannedIps { get; } //@TODO revist this
         private bool AcceptInvalidCerts { get; }
         internal PeerManager PeerManager { get; set; }
         private static P2PNetwork Instance { get; set; }
         private bool MutuallyAuthenticate { get; }
+        private List<EndPoint> SeedNodes { get; }
         private X509Certificate2 SslCertificate { get; }
         private PeerIdentifier NodeIdentity { get; }
         private CancellationTokenSource CancellationToken { get; }
         private X509Certificate2Collection SslCertificateCollection { get; }
+
 
         /// <summary>
         ///     @TODO just to satisfy the DHT interface, need to implement
@@ -138,6 +153,41 @@ namespace Catalyst.Node.Modules.Core.P2P
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p2PSettings"></param>
+        internal IList<IPEndPoint> GetSeedNodes(IP2PSettings p2PSettings)
+        {
+            var listSeedNodes = new List<IPEndPoint>();
+            var dnsQueryAnswers = Helpers.Network.Dns.GetTxtRecords(p2PSettings.SeedList);
+            foreach (var dnsQueryAnswer in dnsQueryAnswers)
+            {
+                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
+                listSeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+            }
+            return listSeedNodes;
+        }
+        
+        /// <summary>
+        ///     @TODO just to satisfy the DHT interface, need to implement
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Announce(object sender, AnnounceNodeEventArgs e)
+        {
+            //@TODO guard util
+            var client = new TcpClient("192.168.1.213", 21420); //@TODO get seed tracker from config
+            var nwStream = client.GetStream();
+            var network = new byte[1];
+            network[0] = 0x01;
+            Log.ByteArr(network);
+            var announcePackage = ByteUtil.Merge(network, NodeIdentity.Id);
+            Log.ByteArr(announcePackage);
+            nwStream.Write(announcePackage, 0, announcePackage.Length);
+            client.Close();
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="ip2PSettings"></param>
         /// <param name="sslSettings"></param>
@@ -171,25 +221,6 @@ namespace Catalyst.Node.Modules.Core.P2P
             }
 
             return Instance;
-        }
-
-        /// <summary>
-        ///     @TODO just to satisfy the DHT interface, need to implement
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Announce(object sender, AnnounceNodeEventArgs e)
-        {
-            //@TODO guard util
-            var client = new TcpClient("192.168.1.213", 21420); //@TODO get seed tracker from config
-            var nwStream = client.GetStream();
-            var network = new byte[1];
-            network[0] = 0x01;
-            Log.ByteArr(network);
-            var announcePackage = ByteUtil.Merge(network, NodeIdentity.Id);
-            Log.ByteArr(announcePackage);
-            nwStream.Write(announcePackage, 0, announcePackage.Length);
-            client.Close();
         }
     }
 }

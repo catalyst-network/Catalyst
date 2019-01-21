@@ -119,7 +119,7 @@ namespace Catalyst.Node
 
                     if (payoutAddressOption.HasValue()) options.PayoutAddress = payoutAddressOption.Value();
 
-                    if (seedServerOption.HasValue()) options.SeedServer = new Uri(seedServerOption.Value());
+                    if (seedServerOption.HasValue()) options.SeedServer = seedServerOption.Value();
 
                     if (daemonOption.HasValue())
                         RunNodeDemon(options);
