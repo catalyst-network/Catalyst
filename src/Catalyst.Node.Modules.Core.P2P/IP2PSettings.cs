@@ -8,7 +8,7 @@ namespace Catalyst.Node.Modules.Core.P2P
         int Port { get; set; }
         uint Magic { get; set; }
         string BindAddress { get; }
-        List<Uri> SeedList { get; set; }
+        List<string> SeedList { get; set; }
         string PfxFileName { get; set; }
         byte AddressVersion { get; set; }
         string SslCertPassword { get; set; }

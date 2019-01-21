@@ -20,7 +20,7 @@ namespace Catalyst.Node
         public bool Mempool { get; set; } = true;
         public bool Contract { get; set; } = true;
         public bool Consensus { get; set; } = true;
-        public Uri SeedServer { get; set; } = null;
+        public string SeedServer { get; set; } = null;
         public uint WalletRpcPort { get; set; } = 0;
         public string PublicKey { get; set; } = null;
         public string Network { get; set; } = "devnet"; //@TODO hardcoded network

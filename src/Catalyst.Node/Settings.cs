@@ -290,7 +290,7 @@ namespace Catalyst.Node
             PeerPingInterval = ushort.Parse(section.GetSection("PeerPingInterval").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
             PeerLifetimeInterval = ushort.Parse(section.GetSection("PeerLifetimeInterval").Value);
-            SeedList = section.GetSection("SeedList").GetChildren().Select(p => new Uri(p.Value)).ToList();
+            SeedList = section.GetSection("SeedList").GetChildren().Select(p => p.Value).ToList(); // @TODO put a method to check uri is valid.
         }
 
         public ushort MaxPeers { get; set; }
@@ -300,7 +300,7 @@ namespace Catalyst.Node
         public uint Magic { get; set; }
         public string BindAddress { get; set; }
         public string PfxFileName { get; set; }
-        public List<Uri> SeedList { get; set; }
+        public List<string> SeedList { get; set; }
         public byte AddressVersion { get; set; }
         public string SslCertPassword { get; set; }
     }
