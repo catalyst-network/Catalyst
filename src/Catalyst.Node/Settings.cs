@@ -27,10 +27,9 @@ namespace Catalyst.Node
         /// <param name="options"></param>
         private Settings(NodeOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            Guard.NotNull(options, nameof(options));
             var userConfig = LoadConfig(options.DataDir, options.Network);
 
-            NodeOptions = options;
             Dfs = new DfsSettings(userConfig.GetSection("Dfs"));
             Rpc = new RpcSettings(userConfig.GetSection("Rpc"));
             Peer = new P2PSettings(userConfig.GetSection("Peer"));
@@ -46,7 +45,6 @@ namespace Catalyst.Node
         public IP2PSettings Peer { get; set; }
         public IGossipSettings Gossip { get; set; }
         public ILedgerSettings Ledger { get; set; }
-        public NodeOptions NodeOptions { get; set; }
         public IMempoolSettings Mempool { get; set; }
         private static Settings Instance { get; set; }
         public IContractSettings Contract { get; set; }
@@ -58,7 +56,8 @@ namespace Catalyst.Node
         /// <returns></returns>
         public static Settings GetInstance(NodeOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            Guard.NotNull(options, nameof(options));
+
             if (Instance == null)
                 lock (Mutex)
                 {
@@ -76,8 +75,8 @@ namespace Catalyst.Node
         /// <returns></returns>
         private static IConfiguration LoadConfig(string dataDir, string network)
         {
-            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
-            if (network == null) throw new ArgumentNullException(nameof(network));
+            Guard.NotNull(dataDir, nameof(dataDir));
+            Guard.NotNull(network, nameof(network));
 
             string networkConfigFile;
 
@@ -124,7 +123,6 @@ namespace Catalyst.Node
     /// </summary>
     public class LedgerSettings : ILedgerSettings
     {
-        private readonly IConfiguration Section;
 
         /// <summary>
         ///     Set attributes
@@ -133,7 +131,6 @@ namespace Catalyst.Node
         protected internal LedgerSettings(IConfiguration section)
         {
             Guard.NotNull(section, nameof(section));
-            Section = section;
             Type = section.GetSection("Persistence").Value;
             Chain = section.GetSection("Paths").GetSection("Chain").Value;
             Index = section.GetSection("Paths").GetSection("Index").Value;
@@ -151,7 +148,6 @@ namespace Catalyst.Node
     /// </summary>
     public class ConsensusSettings : IConsensusSettings
     {
-        private readonly IConfiguration Section;
 
         /// <summary>
         ///     Set attributes
@@ -160,7 +156,6 @@ namespace Catalyst.Node
         protected internal ConsensusSettings(IConfiguration section)
         {
             Guard.NotNull(section, nameof(section));
-            Section = section;
             NDepth = section.GetSection("nDepth").Value;
         }
 
@@ -173,7 +168,6 @@ namespace Catalyst.Node
     /// </summary>
     public class ContractSettings : IContractSettings
     {
-        private readonly IConfiguration Section;
 
         /// <summary>
         ///     Set attributes
@@ -182,7 +176,6 @@ namespace Catalyst.Node
         protected internal ContractSettings(IConfiguration section)
         {
             Guard.NotNull(section, nameof(section));
-            Section = section;
             StorageType = section.GetSection("StorageType").Value;
         }
 
@@ -195,7 +188,6 @@ namespace Catalyst.Node
     /// </summary>
     public class DfsSettings : IDfsSettings
     {
-        private readonly IConfiguration Section;
 
         /// <summary>
         ///     Set attributes
@@ -204,7 +196,6 @@ namespace Catalyst.Node
         protected internal DfsSettings(IConfiguration section)
         {
             Guard.NotNull(section, nameof(section));
-            Section = section;
             StorageType = section.GetSection("StorageType").Value;
             ConnectRetries = ushort.Parse(section.GetSection("ConnectRetries").Value);
             IpfsVersionApi = section.GetSection("IpfsVersionApi").Value;
@@ -221,7 +212,6 @@ namespace Catalyst.Node
     /// </summary>
     public class GossipSettings : IGossipSettings
     {
-        private readonly IConfiguration Section;
 
         /// <summary>
         ///     Set attributes
@@ -230,7 +220,6 @@ namespace Catalyst.Node
         protected internal GossipSettings(IConfiguration section)
         {
             Guard.NotNull(section, nameof(section));
-            Section = section;
             Instances = section.GetSection("instances").Value;
         }
 
@@ -243,7 +232,6 @@ namespace Catalyst.Node
     /// </summary>
     public class MempoolSettings : IMempoolSettings
     {
-        private readonly IConfiguration Section;
 
         /// <summary>
         ///     Set attributes
@@ -252,7 +240,6 @@ namespace Catalyst.Node
         protected internal MempoolSettings(IConfiguration section)
         {
             Guard.NotNull(section, nameof(section));
-            Section = section;
             Type = section.GetSection("Type").Value;
             When = section.GetSection("When").Value;
             Host = EndpointBuilder.BuildNewEndPoint(
@@ -271,7 +258,6 @@ namespace Catalyst.Node
     /// </summary>
     public class P2PSettings : IP2PSettings
     {
-        private readonly IConfiguration Section;
 
         /// <summary>
         ///     Set attributes
@@ -280,7 +266,7 @@ namespace Catalyst.Node
         protected internal P2PSettings(IConfiguration section)
         {
             Guard.NotNull(section, nameof(section));
-            Section = section;
+            Network = section.GetSection("Network").Value;
             Port = int.Parse(section.GetSection("Port").Value);
             Magic = uint.Parse(section.GetSection("Magic").Value);
             PfxFileName = section.GetSection("PfxFileName").Value;
@@ -288,11 +274,16 @@ namespace Catalyst.Node
             MaxPeers = ushort.Parse(section.GetSection("MaxPeers").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
             PeerPingInterval = ushort.Parse(section.GetSection("PeerPingInterval").Value);
+            AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value).ToString();
+            MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
             PeerLifetimeInterval = ushort.Parse(section.GetSection("PeerLifetimeInterval").Value);
-            SeedList = section.GetSection("SeedList").GetChildren().Select(p => p.Value).ToList(); // @TODO put a method to check uri is valid.
+            SeedList = section.GetSection("SeedList").GetChildren().Select(p => p.Value).ToList();
         }
 
+        public string Network { get; set; }
+        public bool MutualAuthentication { get; set; }
+        public bool AcceptInvalidCerts { get; set; }
         public ushort MaxPeers { get; set; }
         public ushort PeerPingInterval { get; set; }
         public ushort PeerLifetimeInterval { get; set; }
@@ -310,7 +301,6 @@ namespace Catalyst.Node
     /// </summary>
     public class RpcSettings : IRpcSettings
     {
-        private readonly IConfiguration Section;
 
         /// <summary>
         ///     Set attributes
@@ -319,7 +309,6 @@ namespace Catalyst.Node
         protected internal RpcSettings(IConfiguration section)
         {
             Guard.NotNull(section, nameof(section));
-            Section = section;
             Port = int.Parse(section.GetSection("Port").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
         }

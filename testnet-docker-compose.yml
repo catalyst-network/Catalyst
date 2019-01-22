@@ -4,24 +4,67 @@ networks:
   testNetOverlay:
 
 services:
-  redis-mempool:
-    image: redis:5-alpine3.8
+  catalyst-visuliser:
+    image: adlnode.azurecr.io/catalyst-visualiser:latest
+    ports:
+      - "80:80"
+    networks:
+      - pubSubNetwork
+    depends_on:
+      - redis-pubsub
+      - node-tracker
+      - visuliser-websocket
+
+  redis-pubsub:
+    image: redis:alpine
     ports:
       - "6379:6379"
+    networks:
+      - pubSubNetwork
+
+  node-tracker:
+    image: adlnode.azurecr.io/catalyst-seed-server:latest
+    ports:
+      - "21420:21420"
+    depends_on:
+      - redis-pubsub
+    networks:
+      - pubSubNetwork
+      - testNet
+
+  visuliser-websocket:
+    image: adlnode.azurecr.io/catalyst-visualiser-websocket-server:latest
+    ports:
+      - "8181:8181"
+    depends_on:
+      - redis-pubsub
+    networks:
+      - pubSubNetwork
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=redis-pubsub:redis-pubsub:6379
+    ports:
+      - "8081:8081"
+    networks:
+      - pubSubNetwork
+
+  redis-mempool:
+    image: redis:5-alpine3.8
     volumes:
       - ./data/redis:/data
     restart: always
     networks:
-      - testNetOverlay
+      - testNet
 
   catalyst:
     image: adlnode.azurecr.io/catalyst:testnet
-    ports:
-      - "42069:42069"
     restart: always
     networks:
-      - testNetOverlay
-    volumes:
-      - "/home/nsh/.Catalyst"
+      - testNet
     depends_on:
       - redis-mempool

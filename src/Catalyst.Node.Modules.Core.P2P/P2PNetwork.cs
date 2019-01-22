@@ -53,6 +53,11 @@ namespace Catalyst.Node.Modules.Core.P2P
                 ? new X509Certificate2(dataDir + "/" + p2PSettings.PfxFileName)
                 : new X509Certificate2(dataDir + "/" + p2PSettings.PfxFileName, p2PSettings.SslCertPassword);
 
+            SslCertificateCollection = new X509Certificate2Collection
+            {
+                SslCertificate
+            };
+            
             try
             {
                 NodeIdentity = PeerIdentifier.BuildPeerId(publicKey,
@@ -65,11 +70,6 @@ namespace Catalyst.Node.Modules.Core.P2P
             }
 
 //            if (BannedIps?.Count > 0) BannedIps = new List<string>(bannedIps);
-
-            SslCertificateCollection = new X509Certificate2Collection
-            {
-                SslCertificate
-            };
 
             Debug = debug;// @todo get from node options
             AcceptInvalidCerts = acceptInvalidCerts; //@TODO put this in settings

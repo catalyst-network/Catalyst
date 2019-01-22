@@ -23,7 +23,7 @@ namespace Catalyst.Node
         public string SeedServer { get; set; } = null;
         public uint WalletRpcPort { get; set; } = 0;
         public string PublicKey { get; set; } = null;
-        public string Network { get; set; } = "devnet"; //@TODO hardcoded network
+        public string Network { get; set; } = null;
         public string PayoutAddress { get; set; } = null;
         public IPAddress WalletRpcIp { get; set; } = null;
         public IPAddress Host { get; set; } = IPAddress.Parse("127.0.0.1"); //@TODO hardcoded network

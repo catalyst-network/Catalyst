@@ -27,6 +27,9 @@
       "Port" : "6379"
     },
     "Peer": {
+      "Network": "testnet",
+      "MutualAuthentication": false,
+      "AcceptInvalidCerts": false,
       "PfxFileName": "mycert.pfx",
       "SslCertPassword": "test",
       "BindAddress": "127.0.0.1",
