@@ -6,8 +6,6 @@ networks:
 services:
   redis-mempool:
     image: redis:5-alpine3.8
-    ports:
-      - "6379:6379"
     volumes:
       - ./data/redis:/data
     restart: always
@@ -16,8 +14,6 @@ services:
 
   catalyst:
     image: adlnode.azurecr.io/catalyst:testnet
-    ports:
-      - "42069:42069"
     restart: always
     networks:
       - testNetOverlay
