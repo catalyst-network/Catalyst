@@ -39,6 +39,8 @@
       "PeerPingInterval": 600,
       "AddressVersion": 23,
       "Magic": 4206942,
+      "Announce": true,
+      "AnnounceServer": "catalyst-node-tracker:21420",
       "SeedList": [
         "seed1.network.atlascity.io",
         "seed2.network.atlascity.io",
