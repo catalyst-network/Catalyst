@@ -40,7 +40,7 @@ namespace Catalyst.Helpers.Ipfs
 
             _client = new IpfsClient();
 
-            _defaultApiEndPoint = IpfsClient.DefaultApiUri + ipfsVersionApi;
+//            _defaultApiEndPoint = IpfsClient.DefaultApiUri + ipfsVersionApi;
 
             TryToConnectClient(connectRetries);
         }

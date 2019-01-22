@@ -16,7 +16,7 @@ namespace Catalyst.Node
         public uint Platform { get; set; } = 0;
         public bool Gossip { get; set; } = true;
         public bool Daemon { get; set; } = false;
-        public bool Ledger { get; set; } = false;
+        public bool Ledger { get; set; } = true;
         public bool Mempool { get; set; } = true;
         public bool Contract { get; set; } = true;
         public bool Consensus { get; set; } = true;

@@ -3,6 +3,7 @@ using System.Net;
 using Catalyst.Helpers.Exceptions;
 using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Shell;
+using Catalyst.Helpers.Util;
 using McMaster.Extensions.CommandLineUtils;
 
 namespace Catalyst.Node
@@ -75,7 +76,7 @@ namespace Catalyst.Node
                                 options.Env = 5;
                                 break;
                             default:
-                                options.Env = 1;
+                                options.Env = 5;
                                 break;
                         }
                     }
@@ -101,17 +102,17 @@ namespace Catalyst.Node
                         }
                     }
 
-                    if (p2pOption.HasValue()) options.Peer = false;
+                    if (p2pOption.HasValue()) options.Peer = p2pOption.Value();
 
-                    if (gossipOption.HasValue()) options.Gossip = false;
+                    if (gossipOption.HasValue()) options.Gossip = gossipOption.Value();
 
-                    if (consensusOption.HasValue()) options.Consensus = false;
+                    if (consensusOption.HasValue()) options.Consensus = consensusOption.Value();
 
                     if (dataDirOption.HasValue()) options.DataDir = dataDirOption.Value();
 
                     if (publicKeyOption.HasValue()) options.PublicKey = publicKeyOption.Value();
 
-                    if (contractOption.HasValue()) options.Contract = false;
+                    if (contractOption.HasValue()) options.Contract = contractOption.Value();
 
                     if (walletRpcIpOption.HasValue()) options.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
 
@@ -136,8 +137,7 @@ namespace Catalyst.Node
         /// <param name="options"></param>
         private static void RunNodeDemon(NodeOptions options)
         {
-            //@TODO guard util
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            Guard.NotNull(options, nameof(options));
             CatalystNode.GetInstance(options);
             Log.Message("daemon Mode");
             while (true)
@@ -151,8 +151,7 @@ namespace Catalyst.Node
         /// <param name="options"></param>
         private static void RunNodeInteractive(NodeOptions options)
         {
-            //@TODO guard util
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            Guard.NotNull(options, nameof(options));
             if (!options.Daemon)
             {
                 CatalystNode.GetInstance(options);
