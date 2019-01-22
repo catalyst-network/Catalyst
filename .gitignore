@@ -9,7 +9,7 @@
 peer2net
 vinchuca
 Node2
-compose
+.ipfsData
 # Redis data
 data
 
