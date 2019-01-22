@@ -65,24 +65,12 @@ namespace Catalyst.Helpers.Cryptography
             return true;
         }
 
-        private static X509Certificate2 LoadPrivateKey(string fileName, string password)
-        {
-            return new X509Certificate2(fileName, password);
-        }
-
-        public static X509Certificate2 LoadPublicKey(string fileName, string password)
-        {
-            return new X509Certificate2(fileName, password);
-        }
-
         public static bool Verify(byte[] data, X509Certificate2 publicKey, byte[] signature)
         {
             if (data == null) throw new ArgumentNullException("data");
-
             if (publicKey == null) throw new ArgumentNullException("publicKey");
-
             if (signature == null) throw new ArgumentNullException("signature");
-
+            
             var provider = (RSACryptoServiceProvider) publicKey.PublicKey.Key;
             return provider.VerifyData(data, new SHA1CryptoServiceProvider(), signature);
         }
@@ -95,11 +83,9 @@ namespace Catalyst.Helpers.Cryptography
         public static byte[] Sign(byte[] data, X509Certificate2 privateKey)
         {
             if (data == null) throw new ArgumentNullException("data");
-
             if (privateKey == null) throw new ArgumentNullException("privateKey");
-
             if (!privateKey.HasPrivateKey) throw new ArgumentException("invalid certicate", "privateKey");
-
+            
             var provider = (RSACryptoServiceProvider) privateKey.PrivateKey;
             return provider.SignData(data, new SHA1CryptoServiceProvider());
         }

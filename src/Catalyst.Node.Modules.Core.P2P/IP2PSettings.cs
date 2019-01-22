@@ -5,6 +5,9 @@ namespace Catalyst.Node.Modules.Core.P2P
 {
     public interface IP2PSettings
     {
+        string Network { get; set; }
+        bool MutualAuthentication { get; set; }
+        bool AcceptInvalidCerts { get; set; }
         int Port { get; set; }
         uint Magic { get; set; }
         string BindAddress { get; }
