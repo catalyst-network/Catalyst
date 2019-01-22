@@ -1,70 +1,107 @@
 version: '3'
 
 networks:
-  testNetOverlay:
+  devNet:
+  pubSubNetwork:
 
 services:
-  catalyst-visuliser:
-    image: adlnode.azurecr.io/catalyst-visualiser:latest
+
+  catalyst-node:
+    hostname: catalyst-node
+    image: adlnode.azurecr.io/catalyst:testnet
+    networks:
+      - devNet
+    depends_on:
+      - catalyst-node-mempool-redis
+      - catalyst-node-tracker
+
+  catalyst-node-mempool-redis:
+    hostname: catalyst-node-mempool-redis
+    container_name: catalyst-node-mempool-redis
+    image: redis:5-alpine3.8
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - devNet
+
+  #  catalyst-node-db:
+  #    hostname: catalyst-node-db
+  #    container_name: catalyst-node-db
+  #    image: couchdb:latest
+  #    environment:
+  #      COUCHDB_USER: admin
+  #      COUCHDB_PASSWORD: password
+  #    ports:
+  #      - "5984:5984"
+  #
+  #  catalyst-node-dfs:
+  #    hostname: catalyst-node-dfs
+  #    container_name: catalyst-node-dfs
+  #    expose:
+  #      - 4001
+  #      - 5001
+  #      - 8080
+  #    ports:
+  #      - 4001:4001
+  #      - 8080:8080
+  #    image: ipfs/go-ipfs
+
+  catalyst-node-tracker:
+    hostname: catalyst-node-tracker
+    container_name: catalyst-node-tracker
+    image: adlnode.azurecr.io/catalyst-seed-server:latest
+    depends_on:
+      - catalyst-node-tracker-pubsub-redis
     ports:
-      - "80:80"
+      - "21420:21420"
     networks:
       - pubSubNetwork
-    depends_on:
-      - redis-pubsub
-      - node-tracker
-      - visuliser-websocket
+      - devNet
 
-  redis-pubsub:
+  catalyst-node-tracker-pubsub-redis:
+    hostname: catalyst-node-tracker-pubsub-redis
+    container_name: catalyst-node-tracker-pubsub-redis
     image: redis:alpine
     ports:
       - "6379:6379"
     networks:
       - pubSubNetwork
 
-  node-tracker:
-    image: adlnode.azurecr.io/catalyst-seed-server:latest
+  catalyst-visuliser:
+    hostname: catalyst-visuliser
+    container_name: catalyst-visuliser
+    image: adlnode.azurecr.io/catalyst-visualiser:latest
     ports:
-      - "21420:21420"
-    depends_on:
-      - redis-pubsub
+      - "80:80"
     networks:
       - pubSubNetwork
-      - testNet
+    depends_on:
+      - catalyst-node-tracker-pubsub-redis
+      - catalyst-visuliser-websocket
 
-  visuliser-websocket:
+  catalyst-visuliser-websocket:
+    hostname: catalyst-visuliser-websocket
+    container_name: catalyst-visuliser-websocket
     image: adlnode.azurecr.io/catalyst-visualiser-websocket-server:latest
     ports:
       - "8181:8181"
     depends_on:
-      - redis-pubsub
+      - catalyst-node-tracker-pubsub-redis
     networks:
       - pubSubNetwork
 
-  redis-commander:
-    container_name: redis-commander
-    hostname: redis-commander
+  catalyst-dev-redis-commander:
+    hostname: catalyst-dev-redis-commander
+    container_name: catalyst-dev-redis-commander
     image: rediscommander/redis-commander:latest
     restart: always
     environment:
-      - REDIS_HOSTS=redis-pubsub:redis-pubsub:6379
+      - REDIS_HOSTS=catalyst-node-tracker-pubsub-redis:catalyst-node-tracker-pubsub-redis:6379,catalyst-node-mempool-redis:catalyst-node-mempool-redis:6379
     ports:
       - "8081:8081"
+    depends_on:
+      - catalyst-node-tracker-pubsub-redis
+      - catalyst-node-mempool-redis
     networks:
       - pubSubNetwork
-
-  redis-mempool:
-    image: redis:5-alpine3.8
-    volumes:
-      - ./data/redis:/data
-    restart: always
-    networks:
-      - testNet
-
-  catalyst:
-    image: adlnode.azurecr.io/catalyst:testnet
-    restart: always
-    networks:
-      - testNet
-    depends_on:
-      - redis-mempool
+      - devNet
