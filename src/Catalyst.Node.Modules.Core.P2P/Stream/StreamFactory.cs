@@ -58,7 +58,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
             try
             {
                 switch (direction)
-                {
+                {//@TODO see if we want this async?
                     case 1:
                         sslStream.AuthenticateAsServer(sslCertificate, true, SslProtocols.Tls12, false);
                         break;

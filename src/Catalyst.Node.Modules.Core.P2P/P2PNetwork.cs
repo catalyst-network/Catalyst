@@ -72,13 +72,14 @@ namespace Catalyst.Node.Modules.Core.P2P
             };
 
             Debug = debug;// @todo get from node options
-            AcceptInvalidCerts = acceptInvalidCerts;
-            MutuallyAuthenticate = mutualAuthentication;
+            AcceptInvalidCerts = acceptInvalidCerts; //@TODO put this in settings
+            MutuallyAuthenticate = mutualAuthentication; //@TODO put this in settings
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
             
             try
             {
+                SeedNodes = new List<IPEndPoint>();
                 GetSeedNodes(p2PSettings);
             }
             catch (Exception e)
@@ -88,7 +89,10 @@ namespace Catalyst.Node.Modules.Core.P2P
             }
             
             PeerManager = new PeerManager(SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager(),
-                NodeIdentity);
+                NodeIdentity); //@TODO DI inject this from autofac
+            
+//            PeerManager.PeerList.
+            
             PeerManager.AnnounceNode += Announce;
             
             Task.Run(async () =>
@@ -107,19 +111,18 @@ namespace Catalyst.Node.Modules.Core.P2P
         internal PeerManager PeerManager { get; set; }
         private static P2PNetwork Instance { get; set; }
         private bool MutuallyAuthenticate { get; }
-        private List<EndPoint> SeedNodes { get; }
+        private List<IPEndPoint> SeedNodes { get; }
         private X509Certificate2 SslCertificate { get; }
         private PeerIdentifier NodeIdentity { get; }
         private CancellationTokenSource CancellationToken { get; }
         private X509Certificate2Collection SslCertificateCollection { get; }
-
 
         /// <summary>
         ///     @TODO just to satisfy the DHT interface, need to implement
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IDht.Ping()
+        bool IDht.Ping(PeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -133,21 +136,55 @@ namespace Catalyst.Node.Modules.Core.P2P
         {
             throw new NotImplementedException();
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        dynamic IDht.FindValue(string k)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         ///     @TODO just to satisfy the DHT interface, need to implement
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        List<IPeerIdentifier> IDht.FindNode()
+        List<PeerIdentifier> IDht.FindNode(PeerIdentifier queryingNode, PeerIdentifier targetNode)
         {
             throw new NotImplementedException();
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        List<PeerIdentifier> IDht.GetPeers(PeerIdentifier queryingNode)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryingNode"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        List<PeerIdentifier> IDht.PeerExchange(PeerIdentifier queryingNode)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>
         /// </summary>
         public void Dispose()
         {
+            //@TODO add gc supress dispose
             CancellationToken.Cancel();
             PeerManager.Dispose();
         }
@@ -156,20 +193,18 @@ namespace Catalyst.Node.Modules.Core.P2P
         /// 
         /// </summary>
         /// <param name="p2PSettings"></param>
-        internal IList<IPEndPoint> GetSeedNodes(IP2PSettings p2PSettings)
+        internal void GetSeedNodes(IP2PSettings p2PSettings)
         {
-            var listSeedNodes = new List<IPEndPoint>();
             var dnsQueryAnswers = Helpers.Network.Dns.GetTxtRecords(p2PSettings.SeedList);
             foreach (var dnsQueryAnswer in dnsQueryAnswers)
             {
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                listSeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
             }
-            return listSeedNodes;
         }
         
         /// <summary>
-        ///     @TODO just to satisfy the DHT interface, need to implement
+        /// 
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -219,7 +254,6 @@ namespace Catalyst.Node.Modules.Core.P2P
                         true
                     );
             }
-
             return Instance;
         }
     }

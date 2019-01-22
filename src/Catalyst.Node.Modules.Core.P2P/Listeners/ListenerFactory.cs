@@ -18,6 +18,16 @@ namespace Catalyst.Node.Modules.Core.P2P.Listeners
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static UdpClient CreateUdpListener()
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>

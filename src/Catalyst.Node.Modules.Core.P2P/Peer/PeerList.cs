@@ -15,7 +15,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
 {
     public class PeerList : IEnumerable<Peer>
     {
-        internal readonly Dictionary<PeerIdentifier, Peer> PeerBucket;
+        internal readonly ConcurrentDictionary<PeerIdentifier, Peer> PeerBucket;
         internal readonly ConcurrentDictionary<string, Connection> UnIdentifiedPeers;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
 
             K = 42;
             WorkScheduler = worker;
-            PeerBucket = new Dictionary<PeerIdentifier, Peer>(); // @TODO put this in thread safe concurrent directory
+            PeerBucket = new ConcurrentDictionary<PeerIdentifier, Peer>(); // @TODO put this in thread safe concurrent directory
             UnIdentifiedPeers = new ConcurrentDictionary<string, Connection>();
 
             // setup work queues for peer net.
@@ -215,8 +215,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
             if (peer == null) throw new ArgumentNullException(nameof(peer));
             try
             {
-                if (!PeerBucket.Remove(peer.PeerIdentifier)) return false;
-                Log.Message("***** Successfully removed " + peer.PeerIdentifier.Id + " from peer bucket");
+                if (!PeerBucket.TryRemove(peer.PeerIdentifier, out Peer removedPeer)) return false;
+                Log.Message("***** Successfully removed " + removedPeer.PeerIdentifier + " from peer bucket");
                 return true;
             }
             catch (ArgumentNullException e)
@@ -278,7 +278,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
 
             if (PeerBucket.Count >= 256) PurgePeers();
 
-            PeerBucket.Add(peerInfo.PeerIdentifier, peerInfo);
+            PeerBucket.TryAdd(peerInfo.PeerIdentifier, peerInfo);
             Log.Message("{0} added" + peerInfo);
 
 //            if (!Equals(peerInfo.Known, false) && IsRegisteredConnection(peerId))
@@ -349,7 +349,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
             var peersInfo = new List<Peer>(PeerBucket.Values);
             foreach (var peerInfo in peersInfo)
                 if (peerInfo.IsAwolBot) //@TODO check if connected
-                    PeerBucket.Remove(peerInfo.PeerIdentifier);
+                    PeerBucket.TryRemove(peerInfo.PeerIdentifier, out _);
         }
 
         /// <summary>

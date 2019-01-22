@@ -18,7 +18,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
     ///     clientID [2] + clientVersion[2] + Ip[16] + Port[2] + pub[20]
     ///     The client ID for this implementation is "AC" or hexadecimal 4143
     /// </summary>
-    public class PeerIdentifier : IPeerIdentifier
+    public class PeerIdentifier
     {
         /// <summary>
         /// </summary>

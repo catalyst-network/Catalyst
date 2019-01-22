@@ -48,7 +48,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         }
 
         private bool Disposed { get; set; }
-        private PeerList PeerList { get; }
+        internal PeerList PeerList { get; }
         private TcpListener Listener { get; set; }
         private CancellationToken Token { get; set; }
         private bool AcceptInvalidCerts { get; }
@@ -176,7 +176,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
 
             try
             {
-                AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
+                await AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
             }
             catch (ArgumentNullException e)
             {
@@ -189,21 +189,9 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
                     var tcpClient = await Listener.AcceptTcpClientAsync();
                     tcpClient.LingerState.Enabled = false;
 
-                    Connection connection;
                     try
                     {
-                        connection = StartPeerConnection(tcpClient);
-                        if (connection == null) continue;
-                    }
-                    catch (Exception e)
-                    {
-                        LogException.Message("InboundConnectionListener: StartPeerConnection", e);
-                        continue;
-                    }
-
-                    try
-                    {
-                        if (PeerList.CheckIfIpBanned(connection.TcpClient))
+                        if (PeerList.CheckIfIpBanned(tcpClient))
                         {
                             // incoming endpoint is in banned list so peace out bro! ☮ ☮ ☮ ☮ 
                             tcpClient.Dispose();
@@ -214,6 +202,18 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
                     {
                         tcpClient.Dispose();
                         LogException.Message("InboundConnectionListener: CheckIfIpBanned", e);
+                        continue;
+                    }
+                    
+                    Connection connection;
+                    try
+                    {
+                        connection = StartPeerConnection(tcpClient);
+                        if (connection == null) continue;
+                    }
+                    catch (Exception e)
+                    {
+                        LogException.Message("InboundConnectionListener: StartPeerConnection", e);
                         continue;
                     }
 
