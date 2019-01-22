@@ -18,10 +18,10 @@ RUN apk update && apk add libc6-compat libnsl libnsl-dev
 WORKDIR /srv/src/Catalyst.Node
 COPY --from=publish /srv/src/Catalyst.Node/out ./
 
-RUN mkdir ~/.Catalyst
-COPY certificate.pem ~/.Catalyst
-COPY mycert.pfx ~/.Catalyst
-COPY mykey.pem ~/.Catalyst
+RUN mkdir /root/.Catalyst
+COPY certificate.pem /root/.Catalyst
+COPY mycert.pfx /root/.Catalyst
+COPY mykey.pem /root/.Catalyst
 
 RUN ldd /usr/lib/libnsl.so
 RUN cp /usr/lib/libnsl.so /usr/lib/libnsl.so.1
@@ -31,8 +31,4 @@ RUN ldd libgrpc_csharp_ext.x64.so
 
 COPY entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
-RUN ls -la
-RUN pwd
 ENTRYPOINT ["/srv/src/Catalyst.Node/entrypoint.sh"]
-
-#ENTRYPOINT ["./Node", "--public-key", "jem832p1uajfnc73kfhct", "--payout-address", "kek", "--disable-dfs", "--disable-gossip", "--disable-consensus", "-d", "--data-dir", "/srv/Node"]
