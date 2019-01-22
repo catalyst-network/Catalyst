@@ -4,10 +4,10 @@ version: '3.4'
 # It runs two Cluster peers (cluster0, cluster1) attached to two
 # IPFS daemons (ipfs0, ipfs1).
 #
-# It expects a "compose" subfolder as follows where it will store configurations
+# It expects a ".ipfsData" subfolder as follows where it will store configurations
 # and states permanently:
 #
-# compose/
+# .ipfsData/
 # |-- cluster0
 # |-- cluster1
 # |-- ipfs0
@@ -18,11 +18,6 @@ version: '3.4'
 
 services:
 
-##################################################################################
-##################################################################################
-## Cluster PEER 0 ################################################################
-##################################################################################
-
   ipfs0:
     container_name: ipfs0
     image: ipfs/go-ipfs:release
@@ -30,9 +25,9 @@ services:
           - "4001:4001" # ipfs swarm
           - "4002:4002/udp" # udp swarm
           - "5001:5001" # expose if needed/wanted
-#         - "8080:8080" # exposes if needed/wanted
+          - "8080:8080" # exposes if needed/wanted
     volumes:
-      - ./compose/ipfs0:/data/ipfs
+      - ./.ipfsData/ipfs0:/data/ipfs
       
   cluster0:
     container_name: cluster0
@@ -40,19 +35,13 @@ services:
     depends_on:
       - ipfs0
     environment:
-      # Change this! Same for all peers!
-      CLUSTER_SECRET: adc72159e0ce63350c13de6a5e4d3b2f500232a770cb8c3e7829fc514d89d109 
+      CLUSTER_SECRET: adc72159e1ce63351c13de6a5e4d3b2f511232a771cb8c3e7829fc514d89d119 
       IPFS_API: /dns4/ipfs0/tcp/5001
     ports:
           - "9094:9094" # API
-#         - "9096:9096" # Cluster IPFS Proxy endpoint
+          - "9096:9096" # Cluster IPFS Proxy endpoint
     volumes:
-      - ./compose/cluster0:/data/ipfs-cluster
-
-##################################################################################
-##################################################################################
-## Cluster PEER 1 ################################################################
-##################################################################################
+      - ./.ipfsData/cluster0:/data/ipfs-cluster
       
   ipfs1:
     container_name: ipfs1
@@ -61,11 +50,10 @@ services:
           - "4101:4001" # ipfs swarm
           - "4102:4002/udp" # udp swarm
           - "5101:5001" # expose if needed/wanted
-#         - "8180:8080" # exposes if needed/wanted
+          - "8180:8080" # exposes if needed/wanted
     volumes:
-      - ./compose/ipfs1:/data/ipfs
+      - ./.ipfsData/ipfs1:/data/ipfs
 
-  # cluster1 bootstraps to cluster0 if not bootstrapped before
   cluster1:
     container_name: cluster1
     image: ipfs/ipfs-cluster:latest
@@ -73,19 +61,16 @@ services:
       - cluster0
       - ipfs1
     environment:
-      # Change this! Same for all peers!
-      CLUSTER_SECRET: adc72159e0ce63350c13de6a5e4d3b2f500232a770cb8c3e7829fc514d89d109
+      CLUSTER_SECRET: adc72159e1ce63351c13de6a5e4d3b2f511232a771cb8c3e7829fc514d89d119
       IPFS_API: /dns4/ipfs1/tcp/5001
     ports:
           - "9194:9094" # API
-#         - "9196:9096" # Cluster IPFS Proxy endpoint
+          - "9196:9096" # Cluster IPFS Proxy endpoint
     volumes:
-      - ./compose/cluster1:/data/ipfs-cluster
+      - ./.ipfsData/cluster1:/data/ipfs-cluster
     entrypoint:
       - "/sbin/tini"
       - "--"
-    # Translation: if state folder does not exist, find cluster0 id and bootstrap
-    # to it.
     command: >-
       sh -c '
         cmd="daemon --upgrade"
@@ -99,5 +84,3 @@ services:
         fi
         /usr/local/bin/entrypoint.sh $$cmd
       '
-# For adding more peers, copy PEER 1 and rename things to ipfs2, cluster2.
-# Keep bootstrapping to cluster0.
