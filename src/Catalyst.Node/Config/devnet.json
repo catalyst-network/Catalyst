@@ -37,11 +37,11 @@
       "AddressVersion": 23,
       "Magic": 4206942,
       "SeedList": [
-        "seed1.network.atlas.io",
-        "seed2.network.atlas.io",
-        "seed3.network.atlas.io",
-        "seed4.network.atlas.io",
-        "seed5.network.atlas.io"
+        "seed1.network.atlascity.io",
+        "seed2.network.atlascity.io",
+        "seed3.network.atlascity.io",
+        "seed4.network.atlascity.io",
+        "seed5.network.atlascity.io"
       ]
     },
     "Rpc": {
