@@ -1,0 +1,63 @@
+version: '2'
+
+services:
+   ipfsA:
+     image: ipfs/go-ipfs
+     container_name: "ipfsA"
+     ports:
+       - 4001:4001
+       - 5001:5001
+     volumes:
+       - ./ipfsA:/data/ipfs/ 
+   clusterA:
+     image: ipfs/ipfs-cluster:latest
+     container_name: "ipfs-cluster-A"
+     environment:
+       IPFS_API: "/ip4/${HOST_IP}/tcp/5001"
+       IPFS_BOOTSTRAP_RM_ALL: "true"
+     ports:
+       - 7080:8080
+     depends_on:
+       - ipfsA 
+     volumes:
+       - ./clusterA:/data/ipfs-cluster
+   ipfsB:
+     image: ipfs/go-ipfs
+     container_name: "ipfsB"
+     ports:
+       - 6001:4001
+       - 7001:5001
+     volumes:
+       - ./ipfsB:/data/ipfs/ 
+   clusterB:
+     image: ipfs/ipfs-cluster:latest
+     container_name: "ipfs-cluster-B"
+     environment:
+       IPFS_API: "/ip4/${HOST_IP}/tcp/7001"
+       IPFS_BOOTSTRAP_RM_ALL: "true"
+     ports:
+       - 8080:8080
+     depends_on:
+       - ipfsB
+     volumes:
+       - ./clusterB:/data/ipfs-cluster
+   ipfsC:
+     image: ipfs/go-ipfs
+     container_name: "ipfsC"
+     ports:
+       - 8001:4001
+       - 9001:5001
+     volumes:
+       - ./ipfsC:/data/ipfs/ 
+   clusterC:
+     image: ipfs/ipfs-cluster:latest
+     container_name: "ipfs-cluster-C"
+     environment:
+       IPFS_API: "/ip4/${HOST_IP}/tcp/9001"
+       IPFS_BOOTSTRAP_RM_ALL: "true"
+     ports:
+       - 9080:8080
+     depends_on:
+       - ipfsC
+     volumes:
+       - ./clusterC:/data/ipfs-cluster  
