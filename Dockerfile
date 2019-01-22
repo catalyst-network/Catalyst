@@ -28,4 +28,9 @@ COPY mykey.pem ./
 #RUN ldd /usr/lib/libnsl.so.1
 #RUN ldd /usr/lib/libnsl.so.2
 #RUN ldd libgrpc_csharp_ext.x64.so
-ENTRYPOINT ["./Node", "--public-key", "jem832p1uajfnc73kfhct", "--payout-address", "kek", "--disable-dfs", "--disable-gossip", "--disable-consensus", "-d", "--data-dir", "/srv/Node"]
+
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+#ENTRYPOINT ["./Node", "--public-key", "jem832p1uajfnc73kfhct", "--payout-address", "kek", "--disable-dfs", "--disable-gossip", "--disable-consensus", "-d", "--data-dir", "/srv/Node"]

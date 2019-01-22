@@ -149,12 +149,14 @@ namespace Catalyst.Node.Modules.Core.P2P
         }
 
         /// <summary>
-        ///     @TODO just to satisfy the DHT interface, need to implement
+        ///  If a corresponding value is present on the queried node, the associated data is returned.
+        ///  Otherwise the return value is the return equivalent to FindNode()
         /// </summary>
+        /// <param name="k"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         List<PeerIdentifier> IDht.FindNode(PeerIdentifier queryingNode, PeerIdentifier targetNode)
         {
+            // @TODO just to satisfy the DHT interface, need to implement
             throw new NotImplementedException();
         }
         
