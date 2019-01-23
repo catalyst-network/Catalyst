@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Autofac;
+using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Util;
 using Catalyst.Node.Modules.Core.Consensus;
 using Catalyst.Node.Modules.Core.Contract;
@@ -31,7 +32,16 @@ namespace Catalyst.Node
             {
             }
 
-            Kernel = Kernel.GetInstance(_options);
+            try
+            {
+                Kernel = Kernel.GetInstance(_options);
+            }
+            catch (ArgumentNullException e)
+            {
+                Dispose();
+                LogException.Message(nameof(e), e);
+                throw;
+            }
 
             if (_options.Consensus)
             {

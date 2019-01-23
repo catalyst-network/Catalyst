@@ -102,17 +102,17 @@ namespace Catalyst.Node
                         }
                     }
 
-                    if (p2pOption.HasValue()) options.Peer = p2pOption.Value();
+                    if (p2pOption.HasValue()) options.Peer = false;
 
-                    if (gossipOption.HasValue()) options.Gossip = gossipOption.Value();
+                    if (gossipOption.HasValue()) options.Gossip = false;
 
-                    if (consensusOption.HasValue()) options.Consensus = consensusOption.Value();
+                    if (consensusOption.HasValue()) options.Consensus = false;
 
                     if (dataDirOption.HasValue()) options.DataDir = dataDirOption.Value();
 
                     if (publicKeyOption.HasValue()) options.PublicKey = publicKeyOption.Value();
 
-                    if (contractOption.HasValue()) options.Contract = contractOption.Value();
+                    if (contractOption.HasValue()) options.Contract = false;
 
                     if (walletRpcIpOption.HasValue()) options.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
 

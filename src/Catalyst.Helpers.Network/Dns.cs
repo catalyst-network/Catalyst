@@ -51,10 +51,30 @@ namespace Catalyst.Helpers.Network
             Guard.NotNull(hostname, nameof(hostname));
             Guard.NotEmpty(hostname, nameof(hostname));
             
+            return Query(hostname, QueryType.TXT);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hostname"></param>
+        /// <returns></returns>
+        public static IDnsQueryResponse GetARecords(string hostname)
+        {
+            return Query(hostname, QueryType.A);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hostname"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static IDnsQueryResponse Query(string hostname, QueryType type)
+        {
             var endpoint = new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53); //@TODO get these from settings
             var client = new LookupClient(endpoint);
-            var result = client.Query(hostname, QueryType.TXT);
-            return result;
+            return client.Query(hostname, type);
         }
     }
 }

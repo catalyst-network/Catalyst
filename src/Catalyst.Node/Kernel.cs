@@ -78,6 +78,10 @@ namespace Catalyst.Node
                         {
                             settingsInstance = Settings.GetInstance(options);
                         }
+                        catch (ArgumentNullException e)
+                        {
+                            LogException.Message("Boot process failed: {0}", e);
+                        }
                         catch (Exception e)
                         {
                             LogException.Message("Boot process failed: {0}", e);
@@ -98,7 +102,7 @@ namespace Catalyst.Node
                                 // if we're not supplied a wallet check we have payout address and public key
                                 if (options.WalletRpcIp == null && options.PayoutAddress == null ||
                                     options.WalletRpcIp == null && options.PublicKey == null)
-                                    throw new Exception(
+                                    throw new ArgumentNullException(nameof(options.WalletRpcIp),
                                         "Need a wallet to connect to or be supplied public key and payout addresses");
                             }
                         }
@@ -107,23 +111,10 @@ namespace Catalyst.Node
                             // if we're not supplied a wallet check we have payout address and public key
                             if (options.WalletRpcIp == null && options.PayoutAddress == null ||
                                 options.WalletRpcIp == null && options.PublicKey == null)
-                                throw new Exception(
+                                throw new ArgumentNullException(nameof(options.WalletRpcIp),
                                     "Need a wallet to connect to or be supplied public key and payout addresses");
                         }
                         
-                        // check we have a pfx cert for watson server
-//                        if (File.Exists(options.DataDir+"/"+settingsInstance.Ssl.PfxFileName) == false)
-//                        {
-//                            Log.Message("===============");
-//                            Log.Message(settingsInstance.Ssl.SslCertPassword);
-//                            Log.Message("===============");
-//                            X509Certificate x509Cert = SSLUtil.CreateCertificate(settingsInstance.Ssl.SslCertPassword, "node-name"); //@TODO get node name from somewhere
-//                            SSLUtil.WriteCertificateFile(new DirectoryInfo(options.DataDir),  settingsInstance.Ssl.PfxFileName, x509Cert.Export(X509ContentType.Pfx));   
-//                        }
-//                        else
-//                        {
-//                            Log.Message("got cert");                
-//                        }
                         Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory()));
 
                         AssemblyLoadContext.Default.Resolving += (context, assembly) =>
@@ -147,13 +138,6 @@ namespace Catalyst.Node
                         ConsensusModule.Load(builder, settingsInstance?.Consensus);
                         P2PModule.Load(builder, settingsInstance?.Peer, options.DataDir,
                             options.PublicKey.ToBytesForRlpEncoding());
-
-                        Log.Message("=========");
-                        Console.WriteLine(Type.GetType("Catalyst.Node.CatalystNode, Catalyst.Node"));
-                        Console.WriteLine(Type.GetType("Catalyst.Node.Kernel, Catalyst.Node"));
-                        Console.WriteLine(Type.GetType(
-                            "Catalyst.Node.Modules.Core.Mempool.Mempool, Catalyst.Node.Modules.Core.Mempool"));
-                        Log.Message("=========");
 
                         var container = builder.Build(); //@TODO try catch
 

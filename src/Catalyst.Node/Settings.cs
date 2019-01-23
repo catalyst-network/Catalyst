@@ -270,7 +270,7 @@ namespace Catalyst.Node
             Port = int.Parse(section.GetSection("Port").Value);
             Magic = uint.Parse(section.GetSection("Magic").Value);
             PfxFileName = section.GetSection("PfxFileName").Value;
-            Announce: bool.Parse(section.GetSection("Announce").Value);
+            Announce = bool.Parse(section.GetSection("Announce").Value);
             SslCertPassword = section.GetSection("SslCertPassword").Value;
             MaxPeers = ushort.Parse(section.GetSection("MaxPeers").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
@@ -280,7 +280,7 @@ namespace Catalyst.Node
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
             PeerLifetimeInterval = ushort.Parse(section.GetSection("PeerLifetimeInterval").Value);
             SeedList = section.GetSection("SeedList").GetChildren().Select(p => p.Value).ToList();
-            AnnounceServer: EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value);
+            AnnounceServer = Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
         }
 
         public string Network { get; set; }

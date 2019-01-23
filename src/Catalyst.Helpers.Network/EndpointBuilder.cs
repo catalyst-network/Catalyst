@@ -18,6 +18,7 @@ namespace Catalyst.Helpers.Network
         /// <exception cref="FormatException"></exception>
         public static IPEndPoint BuildNewEndPoint(string endPoint)
         {
+            Console.WriteLine(endPoint);
             string[] ep = endPoint.Split(':');
             if (ep.Length < 2) throw new FormatException("Invalid endpoint format");
             IPAddress ip;
@@ -35,8 +36,8 @@ namespace Catalyst.Helpers.Network
                     throw new FormatException("Invalid ip address");
                 }
             }
-            int port;
-            if (!int.TryParse(ep[ep.Length - 1], NumberStyles.None, NumberFormatInfo.CurrentInfo, out port))
+
+            if (!int.TryParse(ep[ep.Length - 1], NumberStyles.None, NumberFormatInfo.CurrentInfo, out var port))
             {
                 throw new FormatException("Invalid port");
             }
