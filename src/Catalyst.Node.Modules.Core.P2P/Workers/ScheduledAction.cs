@@ -47,11 +47,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         /// <returns></returns>
         public static ScheduledAction Create(Action action, TimeSpan interval, bool repeat)
         {
-            Log.Message("creating scheduled action");
-            Log.Message(action.ToString());
-            Log.Message(repeat.ToString());
-            Log.Message(interval.ToString());
-
             var sa = Pool.Count > 0 ? Pool.Dequeue() : new ScheduledAction();
             sa.Action = action;
             sa.Interval = interval;
