@@ -12,7 +12,12 @@ Node2
 .ipfsData
 # Redis data
 data
-
+ipfsA
+ipfsB
+ipfsC
+ClusterA
+ClusterB
+ClusterC
 # Certificates
 *.pfx
 *.pem

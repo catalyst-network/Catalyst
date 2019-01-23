@@ -24,7 +24,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
         /// </summary>
         public void Start()
         {
-            Log.Message("TimedWorker start");
             Task.Factory.StartNew(() =>
             {
                 ScheduledAction scheduledAction = null;
@@ -34,7 +33,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
                     bool any;
                     lock (_actions)
                     {
-                        Log.Message(_actions.Count.ToString());
                         any = _actions.Count > 0;
                         if (any) scheduledAction = _actions[0];
                     }
@@ -61,8 +59,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Workers
                         if (scheduledAction.Repeat) QueueForever(scheduledAction.Action, scheduledAction.Interval);
                     }
                 }
-
-                Log.Message("TimedWorker loop exit");
             }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 

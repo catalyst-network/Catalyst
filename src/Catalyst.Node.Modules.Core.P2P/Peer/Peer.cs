@@ -16,8 +16,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <exception cref="ArgumentException"></exception>
         private Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
         {
-            if (peerIdentifier == null)
-                throw new ArgumentNullException(nameof(peerIdentifier)); //@TODO put into guard util
+            Guard.NotNull(peerIdentifier, nameof(peerIdentifier));
             if (!Ip.ValidPortRange(EndPoint.Port)) throw new ArgumentException("Peer Endpoint port range invalid");
 
             EndPoint = endpoint;
