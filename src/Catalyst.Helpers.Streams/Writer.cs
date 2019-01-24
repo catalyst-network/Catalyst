@@ -1,38 +1,32 @@
 using System;
 using System.IO;
+using System.Net.Security;
 using System.Net.Sockets;
 using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.RLP;
 using Catalyst.Helpers.Util;
-using Catalyst.Node.Modules.Core.P2P.Connections;
-using Catalyst.Node.Modules.Core.P2P.Messages;
 
-namespace Catalyst.Node.Modules.Core.P2P.Stream
+namespace Catalyst.Helpers.Streams
 {
     public static class Writer
     {
         /// <summary>
+        /// 
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="sslStream"></param>
         /// <param name="data"></param>
         /// <param name="messageType"></param>
-        /// <param name="sendLock"></param>
+        /// <param name="messageDescriptor"></param>
         /// <returns></returns>
-        public static bool MessageWrite(Connection connection, byte[] data, int messageType)
+        public static bool MessageWrite(SslStream sslStream, byte[] data, int messageType, byte[] messageDescriptor)
         {
-            var payloCatalystength = 0;
+            var payloadLength = 0;
             var disconnectDetected = false;
 
             try
             {
-                if (connection == null)
-                {
-                    Log.Message("MessageWriteAsync peer is null");
-                    disconnectDetected = true;
-                    return false;
-                }
 
-                if (connection.SslStream == null)
+                if (sslStream == null)
                 {
                     Log.Message("MessageWriteAsync SSL stream is null");
                     disconnectDetected = true;
@@ -40,7 +34,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
                 }
 
                 var header = "";
-                var messageDescriptor = Message.BuildMsgDescriptor(2, 42);
 
                 foreach (int i in messageDescriptor) Log.Message(i.ToString());
 
@@ -51,14 +44,14 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
                 }
                 else
                 {
-                    payloCatalystength = messageDescriptor.Length + data.Length;
-                    header += payloCatalystength + ":";
+                    payloadLength = messageDescriptor.Length + data.Length;
+                    header += payloadLength + ":";
                 }
 
                 var headerBytes = header.ToBytesForRlpEncoding();
 
                 var messageLen = headerBytes.Length;
-                if (payloCatalystength > 0) messageLen += payloCatalystength;
+                if (payloadLength > 0) messageLen += payloadLength;
 
                 var message = new byte[messageLen]; //@TODO hook into new byte mthod
 
@@ -69,17 +62,14 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
                 if (data != null && data.Length > 0)
                     Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
 
-                connection.SslStream.Write(message, 0, message.Length);
-                connection.SslStream.Flush();
+                sslStream.Write(message, 0, message.Length);
+                sslStream.Flush();
                 return true;
             }
             catch (ObjectDisposedException objDipInner)
             {
                 disconnectDetected = true;
-                if (connection != null)
-                    LogException.Message(
-                        "*** MessageWriteAsync server disconnected (obj disposed exception): " +
-                        connection.EndPoint.Address + ":" + connection.EndPoint.Port, objDipInner);
+                LogException.Message("*** MessageWriteAsync server disconnected (obj disposed exception)", objDipInner);
                 return false;
             }
             catch (SocketException sockInner)
@@ -109,7 +99,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Stream
             }
             finally
             {
-                if (disconnectDetected) connection?.Dispose();
+                if (disconnectDetected) sslStream?.Dispose();
             }
         }
     }

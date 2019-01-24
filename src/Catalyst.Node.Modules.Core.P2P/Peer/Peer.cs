@@ -3,7 +3,7 @@ using System.Net;
 using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Network;
 using Catalyst.Helpers.Util;
-using Catalyst.Node.Modules.Core.P2P.Connections;
+using Catalyst.Helpers.IO;
 
 namespace Catalyst.Node.Modules.Core.P2P.Peer
 {

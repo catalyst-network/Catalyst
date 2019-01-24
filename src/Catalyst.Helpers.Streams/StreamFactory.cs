@@ -7,7 +7,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Helpers.Logger;
 
-namespace Catalyst.Node.Modules.Core.P2P.Stream
+namespace Catalyst.Helpers.Streams
 {
     public static class StreamFactory
     {

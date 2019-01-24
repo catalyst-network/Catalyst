@@ -4,7 +4,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using Catalyst.Helpers.Logger;
 
-namespace Catalyst.Node.Modules.Core.P2P.Connections
+namespace Catalyst.Helpers.IO
 {
     /// <summary>
     /// </summary>
@@ -18,21 +18,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Connections
             //@TODO guard util
             TcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
 
-            try
-            {
-                NetworkStream = tcp.GetStream();
-            }
-            catch (ObjectDisposedException e)
-            {
-                LogException.Message("Connection Constructor: tcp stream object disposed", e);
-                throw;
-            }
-            catch (InvalidOperationException e)
-            {
-                LogException.Message("Connection Constructor: tcp stream invalid operation", e);
-                throw;
-            }
-
             EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
 
             Connected = true;
@@ -42,10 +27,9 @@ namespace Catalyst.Node.Modules.Core.P2P.Connections
         public bool Known { get; set; }
         public bool Connected { set; get; }
         internal bool Disposed { get; set; }
-        internal TcpClient TcpClient { get; }
+        public TcpClient TcpClient { get; }
         public IPEndPoint EndPoint { get; set; }
         public SslStream SslStream { set; get; }
-        internal NetworkStream NetworkStream { get; }
         public Peer.Peer Peer { get; set; }
 
         /// <summary>
@@ -70,7 +54,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Connections
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        internal bool IsConnected()
+        public bool IsConnected()
         {
             if (TcpClient == null) throw new ArgumentNullException(nameof(TcpClient));
 
@@ -93,7 +77,6 @@ namespace Catalyst.Node.Modules.Core.P2P.Connections
             if (disposing)
             {
                 SslStream?.Dispose();
-                NetworkStream?.Dispose();
                 TcpClient?.Dispose();
                 EndPoint = null;
             }

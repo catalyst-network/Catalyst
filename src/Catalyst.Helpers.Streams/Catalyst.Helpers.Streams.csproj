@@ -1,21 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <Title>Catalyst Node Core Module P2P</Title>
+        <Title>Catalyst Shell Component</Title>
         <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
-        <PackageDescription>Catalyst Node Core Module P2P</PackageDescription>
+        <PackageDescription>Shell Component</PackageDescription>
         <Copyright>MIT</Copyright>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-        <PackageLicenseUrl>http://github.com/atlascity/catalyst-Node/LICENSE.md</PackageLicenseUrl>
-        <PackageProjectUrl>http://github.com/atlascity/catalyst-Node/</PackageProjectUrl>
-        <RepositoryUrl>http://github.com/atlascity/catalyst-Node/</RepositoryUrl>
+        <PackageLicenseUrl>http://github.com/atlascity/catalyst-Shell/LICENSE.md</PackageLicenseUrl>
+        <PackageProjectUrl>http://github.com/atlascity/catalyst-Shell/</PackageProjectUrl>
+        <RepositoryUrl>http://github.com/atlascity/catalyst-Shell/</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <TargetFramework>netcoreapp2.1</TargetFramework>
-        <RootNamespace>Catalyst.Node.Modules.Core.P2P</RootNamespace>
-        <PackageId>Catalyst.Node.Modules.Core.P2P</PackageId>
-        <AssemblyName>Catalyst.Node.Modules.Core.P2P</AssemblyName>
+        <PackageId>Catalyst.Helpers.Streams</PackageId>
         <Deterministic>true</Deterministic>
         <Optimize>true</Optimize>
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -26,7 +23,11 @@
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.8.1" />
+
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Helpers.Logger\Catalyst.Helpers.Logger.csproj" />
+        <ProjectReference Include="..\Catalyst.Helpers.Util\Catalyst.Helpers.Util.csproj" />
     </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
@@ -40,17 +41,6 @@
     </ItemGroup>
     <ItemGroup>
         <None Remove="UnitTests\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\..\Sdk\Catalyst.Protocol.P2P\csharp\Catalyst.Protocol.P2P.csproj" />
-      <ProjectReference Include="..\Catalyst.Helpers.IO\Catalyst.Helpers.IO.csproj" />
-      <ProjectReference Include="..\Catalyst.Helpers.Logger\Catalyst.Helpers.Logger.csproj" />
-      <ProjectReference Include="..\Catalyst.Helpers.Network\Catalyst.Helpers.Network.csproj" />
-      <ProjectReference Include="..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
-      <ProjectReference Include="..\Catalyst.Helpers.Streams\Catalyst.Helpers.Streams.csproj" />
-      <ProjectReference Include="..\Catalyst.Helpers.Util\Catalyst.Helpers.Util.csproj" />
-      <ProjectReference Include="..\Catalyst.Node.Events.Core\Catalyst.Node.Events.Core.csproj" />
-      <ProjectReference Include="..\Catalyst.Node.Modules.Core\Catalyst.Node.Modules.Core.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>

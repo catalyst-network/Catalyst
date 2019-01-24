@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Network;
 using Catalyst.Helpers.Util;
-using Catalyst.Node.Modules.Core.P2P.Connections;
+using Catalyst.Helpers.IO;
 using Catalyst.Node.Modules.Core.P2P.Events;
 using Catalyst.Node.Modules.Core.P2P.Listeners;
 using Catalyst.Node.Modules.Core.P2P.Messages;
-using Catalyst.Node.Modules.Core.P2P.Stream;
+using Catalyst.Helpers.Streams;
 using Catalyst.Protocol.Peer;
 using Org.BouncyCastle.Security;
 using static Catalyst.Node.Events.Core.Events;
@@ -503,7 +503,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
             if (connection == null) throw new ArgumentNullException(nameof(connection));
 
             connection.SslStream = StreamFactory.CreateTlsStream(
-                connection.NetworkStream,
+                connection.TcpClient.GetStream(),
                 direction,
                 SslCertificate,
                 AcceptInvalidCerts,
