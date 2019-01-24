@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Catalyst.Node.Modules.Core.P2P.Workers
+namespace Catalyst.Helpers.Workers
 {
-    internal class ClientWorker : IWorker, IWorkScheduler
+    public class ClientWorker : IWorker, IWorkScheduler
     {
         private readonly BackgroundWorker _backgroundWorker;
         private readonly TimedWorker _timedWorker;

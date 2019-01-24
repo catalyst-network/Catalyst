@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Helpers.Logger;
 
-namespace Catalyst.Node.Modules.Core.P2P.Workers
+namespace Catalyst.Helpers.Workers
 {
     internal class ScheduledAction : IComparable<ScheduledAction>
     {

@@ -47,23 +47,5 @@ namespace Catalyst.Node.Modules.Core.P2P
         {
             return P2PNetwork;
         }
-
-        public static ContainerBuilder Load(
-            ContainerBuilder builder,
-            IP2PSettings P2PSettings,
-            string dataDir,
-            byte[] publicKey
-        )
-        {
-            //@TODO guard util
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
-            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
-            if (P2PSettings == null) throw new ArgumentNullException(nameof(P2PSettings));
-
-            builder.Register(c => new P2PModule(P2PSettings, dataDir, publicKey))
-                .As<IP2PModule>()
-                .InstancePerLifetimeScope();
-            return builder;
-        }
     }
 }

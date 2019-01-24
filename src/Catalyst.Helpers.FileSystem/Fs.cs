@@ -7,7 +7,7 @@ namespace Catalyst.Helpers.FileSystem
     public static class Fs
     {
         /// <summary>
-        ///     Gets current home directory. @TODO move FS functions from CatalystSystem to here.
+        ///     Gets current home directory.
         /// </summary>
         /// <param name="platform"></param>
         /// <returns></returns>
@@ -47,14 +47,14 @@ namespace Catalyst.Helpers.FileSystem
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
         /// <returns></returns>
-        public static void CopySkeletonConfigs(string dataDir, string network)
+        public static void CopySkeletonConfigs(string dataDir, string network, string configDir = "Config", string modulesFiles = "comonents.json")
         {
             Guard.NotNull(dataDir, nameof(dataDir));
             Guard.NotNull(network, nameof(network));
             Guard.NotEmpty(dataDir, nameof(dataDir));
             Guard.NotEmpty(network, nameof(network));
-            File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/Config/components.json", dataDir);
-            File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/Config/" + network + ".json", dataDir);
+            File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{modulesFiles}", dataDir);
+            File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{network}.json", dataDir);
         }
 
         /// <summary>

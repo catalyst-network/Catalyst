@@ -1,5 +1,5 @@
 {
-  "ApplicationConfiguration": {
+  "CatalystNodeConfiguration": {
     "Ledger": {
       "Persistence": "Catalyst.Helpers.CouchDB",
       "Paths": {
@@ -34,14 +34,13 @@
       "SslCertPassword": "test",
       "BindAddress": "127.0.0.1",
       "Port": 42069,
-      "MaxPeers": 10,
-      "PeerLifetimeInterval":  3600,
-      "PeerPingInterval": 600,
+      "MaxConnections": 10,
+      "PingInterval": 600,
       "AddressVersion": 23,
       "Magic": 4206942,
       "Announce": true,
       "AnnounceServer": "127.0.0.1:21420",
-      "SeedList": [
+      "SeedServers": [
         "seed1.network.atlascity.io",
         "seed2.network.atlascity.io",
         "seed3.network.atlascity.io",

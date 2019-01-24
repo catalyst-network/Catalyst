@@ -23,13 +23,5 @@ namespace Catalyst.Node.Modules.Core.Ledger
         {
             return Ledger;
         }
-
-        public static ContainerBuilder Load(ContainerBuilder builder, ILedgerSettings ledgerSettings)
-        {
-            builder.Register(c => new LedgerModule(c.Resolve<ILedger>(), ledgerSettings))
-                .As<ILedgerService>()
-                .InstancePerLifetimeScope();
-            return builder;
-        }
     }
 }

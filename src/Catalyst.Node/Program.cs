@@ -1,15 +1,26 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using Catalyst.Helpers.Exceptions;
 using Catalyst.Helpers.Logger;
-using Catalyst.Helpers.Shell;
 using Catalyst.Helpers.Util;
 using McMaster.Extensions.CommandLineUtils;
+using Autofac;
+using Catalyst.Helpers.Platform;
+using Catalyst.Node.Modules.Core.Consensus;
+using Catalyst.Node.Modules.Core.Contract;
+using Catalyst.Node.Modules.Core.Dfs;
+using Catalyst.Node.Modules.Core.Gossip;
+using Catalyst.Node.Modules.Core.Ledger;
+using Catalyst.Node.Modules.Core.Mempool;
+using Catalyst.Node.Modules.Core.P2P;
 
 namespace Catalyst.Node
 {
     public sealed class Program
     {
+        private static CatalystNode Pid { get; set; }
+
         /// <summary>
         ///     Main cli loop
         /// </summary>
@@ -22,114 +33,124 @@ namespace Catalyst.Node
 
             app.Command("", config =>
             {
-                var dfsOption = app.Option("--disable-dfs", "disable dfs", CommandOptionType.NoValue);
-                var rpcOption = app.Option("--disable-rpc", "disable rpc", CommandOptionType.NoValue);
-                var hostOption = app.Option("-h|--host", "daemon host", CommandOptionType.SingleValue);
-                var daemonOption = app.Option("-d|--daemon", "Run as daemon", CommandOptionType.NoValue);
-                var envOption = app.Option("-e|--Env", "Specify environment", CommandOptionType.SingleValue);
-                var networkOption = app.Option("-n|--Net", "Specify network", CommandOptionType.SingleValue);
-                var p2pOption = app.Option("--disable-p2p", "disable p2p network", CommandOptionType.NoValue);
-                var gossipOption = app.Option("--disable-gossip", "disable gossip", CommandOptionType.NoValue);
-                var consensusOption = app.Option("--disable-consensus", "disable consensus", CommandOptionType.NoValue);
-                var dataDirOption = app.Option("--data-dir", "Specify a data directory", CommandOptionType.SingleValue);
-                var publicKeyOption = app.Option("--public-key", "Specify a public key", CommandOptionType.SingleValue);
-                var contractOption = app.Option("--disable-contract", "disable smart contracts",
-                    CommandOptionType.NoValue);
-                var walletRpcIpOption =
-                    app.Option("--wallet-ip", "Specify a data directory", CommandOptionType.SingleValue);
-                var walletRpcPortOption = app.Option("--wallet-port", "Specify a data directory",
-                    CommandOptionType.SingleValue);
-                var payoutAddressOption = app.Option("--payout-address", "Specify a payout address",
-                    CommandOptionType.SingleValue);
-                var seedServerOption =
-                    app.Option("--seed-server", "Specify a seed server", CommandOptionType.SingleValue);
+                // Disable services
+                var disableDfs = app.Option("--disable-dfs", "disable dfs service", CommandOptionType.NoValue);
+                var disablePeer = app.Option("--disable-p2p", "disable peer service", CommandOptionType.NoValue);
+                var disableGossip = app.Option("--disable-gossip", "disable gossip service", CommandOptionType.NoValue);
+                var disableLedger = app.Option("--disable-ledger", "disable ledger service", CommandOptionType.NoValue);
+                var disableWallet = app.Option("--disable-wallet", "disable wallet service", CommandOptionType.NoValue);
+                var disableMempool = app.Option("--disable-mempool", "disable mempool service", CommandOptionType.NoValue);
+                var disbleContract = app.Option("--disable-contract", "disable smart contract service", CommandOptionType.NoValue);
+                var disbleConsensus = app.Option("--disable-consensus", "disable consensus service", CommandOptionType.NoValue);
+                var disableRpc = app.Option("--disable-rpc", "disable rpc service", CommandOptionType.NoValue);
+
+                // node override options
+                var nodeDaemon = app.Option("-d|--node-daemon", "Run as daemon", CommandOptionType.NoValue);
+                var nodeEnv = app.Option("-e|--node-env", "Specify environment", CommandOptionType.SingleValue);
+                var nodeDataDir = app.Option("--node-data-dir", "Specify a data directory", CommandOptionType.SingleValue);
+                var nodeNetwork = app.Option("-n|--node-net", "Specify network", CommandOptionType.NoValue);
+                
+                // peer override options
+                var peerBindAddress = app.Option("-h|--peer-bind-address", "daemon host", CommandOptionType.SingleValue);
+                var peerSeedServers = app.Option("--peer-seed-servers", "Specify seed servers", CommandOptionType.MultipleValue);
+                var peerKnownNodes = app.Option("--peer-known-nodes", "Specify known nodes", CommandOptionType.MultipleValue);
+                var peerPublicKey = app.Option("--peer-public-key", "Specify a public key", CommandOptionType.SingleValue);
+                var peerPayoutAddress = app.Option("--peer-payout-address", "Specify a payout address", CommandOptionType.SingleValue);
+                
+                // wallet override options
+                var walletRpcIpOption = app.Option("--wallet-ip", "Specify a data directory", CommandOptionType.SingleValue);
+                var walletRpcPortOption = app.Option("--wallet-port", "Specify a data directory", CommandOptionType.SingleValue);
 
                 app.OnExecute(() =>
                 {
-                    var options = new NodeOptions();
+                    // get some basic required params
+                    uint platform = Detection.Os();
+                    string dataDir = nodeDataDir.Value() != null ? nodeDataDir.Value() : "~/.Catalyst";
+                    uint env = nodeEnv.Value() != null && ValidEnvPram(nodeEnv.Value()) ? uint.Parse(nodeEnv.Value()) : 1;
+                    string network = nodeNetwork.Value() != null && ValidNetworkParam(nodeNetwork.Value()) ? nodeNetwork.Value() : "devnet";
+                    
+                    // conditionally build NodeOptions object with enabled modules
+                    NodeOptions nodeOptions = new NodeOptionsBuilder(env, dataDir, network, platform)
+                        .LoadDfsSettings()
+                            .When(() => !disableDfs.HasValue())
+                        .LoadPeerSettings()
+                            .When(() => !disablePeer.HasValue())
+                        .LoadGossipSettings()
+                            .When(() => !disableGossip.HasValue())
+                        .LoadLedgerSettings()
+                            .When(() => !disableLedger.HasValue())
+                        .LoadWalletSettings()
+                            .When(() => !disableWallet.HasValue())
+                        .LoadMempoolSettings()
+                            .When(() => !disableMempool.HasValue())
+                        .LoadContractSettings()
+                            .When(() => !disbleContract.HasValue())
+                        .LoadConsensusSettings()
+                            .When(() => !disbleConsensus.HasValue())
+                        .Build();
 
-                    if (dfsOption.HasValue()) options.Dfs = false;
+                    // override settings classes with cli params
+                    if (peerPublicKey.HasValue()) nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
+                    if (peerBindAddress.HasValue()) nodeOptions.PeerSettings.BindAddress = IPAddress.Parse(peerBindAddress.Value());
+                    if (peerPayoutAddress.HasValue()) nodeOptions.PeerSettings.PayoutAddress = peerPayoutAddress.Value();
+                    if (walletRpcIpOption.HasValue()) nodeOptions.WalletSettings.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
+                    if (walletRpcPortOption.HasValue()) nodeOptions.WalletSettings.WalletRpcPort = uint.Parse(walletRpcPortOption.Value());
+                    if (peerSeedServers.HasValue()) nodeOptions.PeerSettings.SeedServers.InsertRange(0, peerSeedServers.Values);
+                    if (peerKnownNodes.HasValue()) nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
 
-                    if (rpcOption.HasValue()) options.Rpc = false;
-
-                    if (hostOption.HasValue()) options.Host = IPAddress.Parse(hostOption.Value());
-
-                    if (envOption.HasValue())
-                    {
-                        var envParam = envOption.Value();
-
-                        switch (envParam)
-                        {
-                            case "debug":
-                                options.Env = 1;
-                                break;
-                            case "test":
-                                options.Env = 2;
-                                break;
-                            case "benchmark":
-                                options.Env = 3;
-                                break;
-                            case "simulation":
-                                options.Env = 4;
-                                break;
-                            case "prod":
-                                options.Env = 5;
-                                break;
-                            default:
-                                options.Env = 5;
-                                break;
-                        }
-                    }
-
-                    if (networkOption.HasValue())
-                    {
-                        var networkParam = networkOption.Value();
-
-                        switch (networkParam)
-                        {
-                            case "devnet":
-                                options.Network = "devnet";
-                                break;
-                            case "testnet":
-                                options.Network = "testnet";
-                                break;
-                            case "mainnet":
-                                options.Network = "mainnet";
-                                break;
-                            default:
-                                options.Network = "devnet";
-                                break;
-                        }
-                    }
-
-                    if (p2pOption.HasValue()) options.Peer = false;
-
-                    if (gossipOption.HasValue()) options.Gossip = false;
-
-                    if (consensusOption.HasValue()) options.Consensus = false;
-
-                    if (dataDirOption.HasValue()) options.DataDir = dataDirOption.Value();
-
-                    if (publicKeyOption.HasValue()) options.PublicKey = publicKeyOption.Value();
-
-                    if (contractOption.HasValue()) options.Contract = false;
-
-                    if (walletRpcIpOption.HasValue()) options.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
-
-                    if (walletRpcPortOption.HasValue()) options.WalletRpcPort = uint.Parse(walletRpcPortOption.Value());
-
-                    if (payoutAddressOption.HasValue()) options.PayoutAddress = payoutAddressOption.Value();
-
-                    if (seedServerOption.HasValue()) options.SeedServer = seedServerOption.Value();
-
-                    if (daemonOption.HasValue())
-                        RunNodeDemon(options);
+                    Kernel kernel = BuildKernel(nodeOptions);
+                    if (nodeDaemon.HasValue())
+                        RunNodeDemon(nodeOptions);
                     else
-                        RunNodeInteractive(options);
+                        RunNodeInteractive(nodeOptions);
                 });
                 app.Execute(args);
             });
             return 1;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        private static bool ValidNetworkParam(string network)
+        {
+            switch (network)
+            {
+                case "devnet":
+                    return true;
+                case "testnet":
+                    return true;
+                case "mainnet":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="env"></param>
+        /// <returns></returns>
+        private static bool ValidEnvPram(string env)
+        {
+            switch (env)
+            {
+                case "debug":
+                    return true;                    
+                case "test":
+                    return true;
+                case "benchmark":
+                    return true;
+                case "simulation":
+                    return true;
+                case "prod":
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>
@@ -138,13 +159,19 @@ namespace Catalyst.Node
         private static void RunNodeDemon(NodeOptions options)
         {
             Guard.NotNull(options, nameof(options));
-            CatalystNode.GetInstance(options);
-            Log.Message("daemon Mode");
-            while (true)
+            try
             {
+                Pid = CatalystNode.GetInstance(options);
+                while (true)
+                {
+                } //@TODO                
+            }
+            catch (Exception e)
+            {
+                LogException.Message("RunNodeDemon: CatalystNode.GetInstance", e);
+                Pid.Dispose();
             }
         }
-
 
         /// <summary>
         /// </summary>
@@ -152,108 +179,44 @@ namespace Catalyst.Node
         private static void RunNodeInteractive(NodeOptions options)
         {
             Guard.NotNull(options, nameof(options));
-            if (!options.Daemon)
-            {
-                CatalystNode.GetInstance(options);
-                var basicShell = new BasicShell();
-                while (basicShell.Run()) Log.Message("Catalyst.Helpers.Shell Mode");
-            }
+            Log.Message("Catalyst.Helpers.Shell Mode");
+            CatalystNode.GetInstance(options);
+            var basicShell = new BasicShell();
+            while (basicShell.Run());
         }
-
+        
         /// <summary>
+        /// 
         /// </summary>
-        private class BasicShell : ShellBase
+        /// <param name="options"></param>
+        private static void BuildKernel(NodeOptions options)
         {
-            public bool Run()
-            {
-                return RunConsole();
-            }
+            Guard.NotNull(options, nameof(options));
 
-            /// <inheritdoc />
-            /// <summary>
-            /// </summary>
-            /// <returns></returns>
-            public override bool OnGetConfig()
-            {
-//            Log.Message(Catalyst.Kernel.Settings.SerializeSettings());
-                return true;
-            }
+            Kernel kernel;
 
-            /// <summary>
-            /// </summary>
-            /// <returns></returns>
-            public override bool OnGetInfo()
+            try
             {
-                return true;
+                kernel = Kernel.GetInstance(options);
             }
-
-            /// <summary>
-            /// </summary>
-            /// <returns></returns>
-            public override bool OnGetVersion()
+            catch (ArgumentNullException e)
             {
-                return true;
+                LogException.Message(nameof(e), e);
+                throw;
             }
-
-            /// <inheritdoc />
-            /// <summary>
-            /// </summary>
-            public override bool OnStop(string[] args)
+            
+            using (var scope = kernel.Container.BeginLifetimeScope())
             {
-//            Catalyst.Dispose();
-                return false;
-            }
-
-            /// <summary>
-            /// </summary>
-            /// <returns></returns>
-            public override bool OnStart(string[] args)
-            {
-                return true;
-            }
-
-            /// <summary>
-            /// </summary>
-            /// <param name="args"></param>
-            /// <returns></returns>
-            public override bool OnStartNode(string[] args)
-            {
-                return true;
-            }
-
-            /// <summary>
-            /// </summary>
-            /// <param name="args"></param>
-            /// <returns></returns>
-            public override bool OnStartWork(string[] args)
-            {
-                return true;
-            }
-
-            /// <summary>
-            /// </summary>
-            /// <param name="args"></param>
-            /// <returns></returns>
-            public override bool OnStopNode(string[] args)
-            {
-                return true;
-            }
-
-            /// <summary>
-            /// </summary>
-            /// <param name="args"></param>
-            /// <returns></returns>
-            public override bool OnStopWork(string[] args)
-            {
-                return true;
-            }
-
-            /// <summary>
-            /// </summary>
-            /// <returns></returns>
-            public override bool OnGetMempool()
-            {
-                return true;
+                if (options.Contract)
+                {
+                    ContractModule = scope.Resolve<IContractModule>();
+                    ConsensusModule = scope.Resolve<IConsensusModule>();
+                    DfsModule = scope.Resolve<IDfsModule>();
+                    GossipModule = scope.Resolve<IGossipModule>();
+                    LedgerService = scope.Resolve<ILedgerService>();
+                    MempoolModule = scope.Resolve<IMempoolModule>();
+                    PeerService = scope.Resolve<IP2PModule>();
+                }
             }
         }
     }

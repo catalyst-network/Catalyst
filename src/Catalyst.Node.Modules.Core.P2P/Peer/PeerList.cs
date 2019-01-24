@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.IO;
 using Catalyst.Node.Modules.Core.P2P.Events;
-using Catalyst.Node.Modules.Core.P2P.Workers;
+using Catalyst.Helpers.Workers;
 using static Catalyst.Node.Events.Core.Events;
 
 namespace Catalyst.Node.Modules.Core.P2P.Peer

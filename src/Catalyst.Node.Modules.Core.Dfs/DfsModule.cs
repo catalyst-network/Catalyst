@@ -45,18 +45,5 @@ namespace Catalyst.Node.Modules.Core.Dfs
         {
             return Dfs;
         }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="dfsSettings"></param>
-        public static ContainerBuilder Load(ContainerBuilder builder, IDfsSettings dfsSettings)
-        {
-            //@TODO guard util
-            builder.Register(c => new DfsModule(c.Resolve<IIpfs>(), dfsSettings))
-                .As<IDfsModule>()
-                .InstancePerLifetimeScope();
-            return builder;
-        }
     }
 }

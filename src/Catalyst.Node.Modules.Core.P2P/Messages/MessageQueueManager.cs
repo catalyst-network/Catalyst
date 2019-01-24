@@ -43,7 +43,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
 //start worker?
 //        }
 
-//        private void ProcessMessageQueue()//@TODO this is duplicated in message queue manager
+//        private void ProcessMessageQueue()
 //        {
 //            Log.Message("ProcessMessageQueue");
 //            lock (MessageQueueManager.ReceivedMessageQueue)

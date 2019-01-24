@@ -12,7 +12,7 @@ using Catalyst.Helpers.Util;
 using Catalyst.Node.Modules.Core.P2P.Events;
 using Catalyst.Node.Modules.Core.P2P.Messages;
 using Catalyst.Node.Modules.Core.P2P.Peer;
-using Catalyst.Node.Modules.Core.P2P.Workers;
+using Catalyst.Helpers.Workers;
 using DnsClient.Protocol;
 
 namespace Catalyst.Node.Modules.Core.P2P

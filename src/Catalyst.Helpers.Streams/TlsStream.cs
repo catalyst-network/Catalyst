@@ -9,7 +9,7 @@ using Catalyst.Helpers.Logger;
 
 namespace Catalyst.Helpers.Streams
 {
-    public static class StreamFactory
+    public static class TlsStream
     {
         /// <summary>
         /// </summary>
@@ -37,7 +37,7 @@ namespace Catalyst.Helpers.Streams
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
         /// <exception cref="AuthenticationException"></exception>
-        public static SslStream CreateTlsStream(
+        public static SslStream GetTlsStream(
             NetworkStream networkStream,
             int direction,
             X509Certificate sslCertificate,
