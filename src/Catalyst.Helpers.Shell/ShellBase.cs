@@ -238,10 +238,6 @@ namespace Catalyst.Helpers.Shell
                 if (args.Length == 0)
                     continue;
 
-#if DEBUG
-                foreach (var item in args) Log.Message(item);
-#endif
-
                 try
                 {
                     running = OnCommand(args);

@@ -502,7 +502,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         {
             if (connection == null) throw new ArgumentNullException(nameof(connection));
 
-            connection.SslStream = StreamFactory.CreateTlsStream(
+            connection.SslStream = TlsStream.GetTlsStream(
                 connection.TcpClient.GetStream(),
                 direction,
                 SslCertificate,

@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using Catalyst.Helpers.Logger;
+using System.Linq;
 
 namespace Catalyst.Helpers.Network
 {
@@ -31,10 +32,22 @@ namespace Catalyst.Helpers.Network
         /// </summary>
         /// <param name="port"></param>
         /// <returns></returns>
-        public static bool ValidPortRange(int port)
+        public static bool ValidPortRange(uint port)
         {
             if (port < 1025 || port > 65535) return false;//@TODO hook this into guard util and then re-throw the exceptions
             return true;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ipOrHost"></param>
+        /// <returns></returns>
+        public static IPAddress BuildIPAddress(string ipOrHost)
+        {
+            return IPAddress.TryParse(ipOrHost, out IPAddress address)
+                ? address
+                : System.Net.Dns.GetHostAddressesAsync(ipOrHost).Result.FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
         }
 
         /// <summary>

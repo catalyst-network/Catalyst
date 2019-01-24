@@ -91,8 +91,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
                     if (replyWait.Attempts++ >= 3)
                     {
                         _internal.Remove(replyWait.CorrelationId);
-                        if (_peerList.SearchLists(replyWait.Message.Connection, out var connection))
-                            _peerList.Punish(connection.Peer);
+//                        if (_peerList.SearchLists(replyWait.Message.Connection, out var connection)) //@TODO decouple from peer
+//                            _peerList.Punish(connection.Peer);
                     }
                     else
                     {

@@ -1,15 +1,15 @@
 using System;
 
-namespace Catalyst.Node.Modules.Core.P2P.Workers
+namespace Catalyst.Helpers.Workers
 {
-    internal interface IWorker
+    public interface IWorker
     {
         void Stop();
         void Start();
         void Queue(Action action);
     }
 
-    internal interface IWorkScheduler
+    public interface IWorkScheduler
     {
         void Start();
         void QueueForever(Action action, TimeSpan interval);

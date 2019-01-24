@@ -69,6 +69,11 @@ namespace Catalyst.Helpers.Platform
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static uint Os()
         {
             uint platform = 0;
@@ -118,6 +123,9 @@ namespace Catalyst.Helpers.Platform
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     internal class UnsupportedPlatformException : Exception
     {
         /// <summary>

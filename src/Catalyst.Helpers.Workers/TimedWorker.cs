@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Helpers.Logger;
 
-namespace Catalyst.Node.Modules.Core.P2P.Workers
+namespace Catalyst.Helpers.Workers
 {
     internal class TimedWorker : IWorkScheduler
     {

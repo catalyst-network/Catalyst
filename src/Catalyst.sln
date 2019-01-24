@@ -135,6 +135,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Helpers.Streams", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Helpers.IO", "Catalyst.Helpers.IO\Catalyst.Helpers.IO.csproj", "{4A4002BB-E04F-485C-9CCE-034C5D8E9A18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Helpers.Workers", "Catalyst.Helpers.Workers\Catalyst.Helpers.Workers.csproj", "{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1003,6 +1005,18 @@ Global
 		{4A4002BB-E04F-485C-9CCE-034C5D8E9A18}.Release|x64.Build.0 = Release|Any CPU
 		{4A4002BB-E04F-485C-9CCE-034C5D8E9A18}.Release|x86.ActiveCfg = Release|Any CPU
 		{4A4002BB-E04F-485C-9CCE-034C5D8E9A18}.Release|x86.Build.0 = Release|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Debug|x64.Build.0 = Debug|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Debug|x86.Build.0 = Debug|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Release|x64.ActiveCfg = Release|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Release|x64.Build.0 = Release|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Release|x86.ActiveCfg = Release|Any CPU
+		{9CF1C4F9-3A87-42B6-A58D-6604C95D70EB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 
 EndGlobal

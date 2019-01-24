@@ -28,20 +28,5 @@ namespace Catalyst.Node.Modules.Core.Mempool
         {
             return Mempool;
         }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="mempoolSettings"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static ContainerBuilder Load(ContainerBuilder builder, IMempoolSettings mempoolSettings)
-        {
-            Guard.NotNull(builder, nameof(builder));
-            Guard.NotNull(mempoolSettings, nameof(mempoolSettings));
-            builder.Register(c => new MempoolModule(c.Resolve<IMempool>(), mempoolSettings))
-                .As<IMempoolModule>()
-                .InstancePerLifetimeScope();
-            return builder;
-        }
     }
 }

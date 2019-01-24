@@ -49,6 +49,7 @@
       <ProjectReference Include="..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
       <ProjectReference Include="..\Catalyst.Helpers.Streams\Catalyst.Helpers.Streams.csproj" />
       <ProjectReference Include="..\Catalyst.Helpers.Util\Catalyst.Helpers.Util.csproj" />
+      <ProjectReference Include="..\Catalyst.Helpers.Workers\Catalyst.Helpers.Workers.csproj" />
       <ProjectReference Include="..\Catalyst.Node.Events.Core\Catalyst.Node.Events.Core.csproj" />
       <ProjectReference Include="..\Catalyst.Node.Modules.Core\Catalyst.Node.Modules.Core.csproj" />
     </ItemGroup>

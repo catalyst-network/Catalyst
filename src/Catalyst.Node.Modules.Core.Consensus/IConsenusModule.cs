@@ -1,6 +1,6 @@
 namespace Catalyst.Node.Modules.Core.Consensus
 {
-    public interface IConsensusService : IModule<IConsensus>
+    public interface IConsensusModule : IModule<IConsensus>
     {
     }
 }

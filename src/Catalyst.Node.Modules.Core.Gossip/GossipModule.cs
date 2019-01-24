@@ -36,14 +36,6 @@ namespace Catalyst.Node.Modules.Core.Gossip
             throw new NotImplementedException();
         }
 
-        public static ContainerBuilder Load(ContainerBuilder builder, IGossipSettings gossipSettings)
-        {
-            builder.Register(c => new GossipModule(gossipSettings))
-                .As<IGossipModule>()
-                .InstancePerLifetimeScope();
-            return builder;
-        }
-
         private async Task RunAsyncActors()
         {
             using (var gossipSystem = ActorSystem.Create("GossipSystem"))

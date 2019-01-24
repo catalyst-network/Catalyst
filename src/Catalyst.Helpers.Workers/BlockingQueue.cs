@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Catalyst.Node.Modules.Core.P2P.Workers
+namespace Catalyst.Helpers.Workers
 {
     internal class BlockingQueue<T>
     {

@@ -21,16 +21,13 @@ namespace Catalyst.Helpers.IO
             EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
 
             Connected = true;
-            Known = false;
         }
 
-        public bool Known { get; set; }
         public bool Connected { set; get; }
         internal bool Disposed { get; set; }
         public TcpClient TcpClient { get; }
         public IPEndPoint EndPoint { get; set; }
         public SslStream SslStream { set; get; }
-        public Peer.Peer Peer { get; set; }
 
         /// <summary>
         /// </summary>
@@ -39,16 +36,6 @@ namespace Catalyst.Helpers.IO
             Log.Message("disposing connection");
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// </summary>
-        public void AddPeer(Peer.Peer peer)
-        {
-            //@TODO guard util
-            if (peer == null) throw new ArgumentNullException(nameof(peer));
-            Peer = peer;
-            Connected = true;
         }
 
         /// <summary>
@@ -63,7 +50,7 @@ namespace Catalyst.Helpers.IO
             if (!TcpClient.Client.Poll(0, SelectMode.SelectWrite) ||
                 TcpClient.Client.Poll(0, SelectMode.SelectError)) return false;
 
-            var buffer = new byte[1]; // @TODO hook into new byte array method
+            var buffer = new byte[1]; // @TODO hook into new byte array method && determine buffer length
             return TcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
         }
 
