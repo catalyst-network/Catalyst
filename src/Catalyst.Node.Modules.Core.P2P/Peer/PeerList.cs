@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Catalyst.Helpers.Logger;
-using Catalyst.Node.Modules.Core.P2P.Connections;
+using Catalyst.Helpers.IO;
 using Catalyst.Node.Modules.Core.P2P.Events;
 using Catalyst.Node.Modules.Core.P2P.Workers;
 using static Catalyst.Node.Events.Core.Events;

@@ -1,5 +1,5 @@
 using System;
-using Catalyst.Node.Modules.Core.P2P.Connections;
+using Catalyst.Helpers.IO;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Modules.Core.P2P.Messages

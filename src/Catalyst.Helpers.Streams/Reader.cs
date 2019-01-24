@@ -4,7 +4,7 @@ using System.Net.Security;
 using System.Threading.Tasks;
 using Catalyst.Helpers.Util;
 
-namespace Catalyst.Node.Modules.Core.P2P.Stream
+namespace Catalyst.Helpers.Streams
 {
     public static class Reader
     {
