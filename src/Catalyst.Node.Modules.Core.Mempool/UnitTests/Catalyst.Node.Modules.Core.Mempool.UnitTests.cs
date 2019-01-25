@@ -18,7 +18,7 @@ namespace Catalyst.Node.Modules.Core.Mempool.UnitTests
             .GetInstance(EndpointBuilder.BuildNewEndPoint("127.0.0.1", 6379)).Connection;
 
         private static TestMempoolSettings _settings;
-        private static readonly Mempool Memp = new Mempool(new Redis());
+        private static readonly Mempool Memp = Mempool.GetInstance(new Redis());
 
         private static readonly Key _k = new Key();
         private static readonly Tx _t = new Tx();

@@ -52,7 +52,6 @@
         <ProjectReference Include="..\Catalyst.Node.Modules.Core.Gossip\Catalyst.Node.Modules.Core.Gossip.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Modules.Core.Ledger\Catalyst.Node.Modules.Core.Ledger.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Modules.Core.Mempool\Catalyst.Node.Modules.Core.Mempool.csproj" />
-        <ProjectReference Include="..\Catalyst.Node.Modules.Core.Rpc\Catalyst.Node.Modules.Core.Rpc.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Modules.Core.Transactions\Catalyst.Node.Modules.Core.Transactions.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Modules.Core\Catalyst.Node.Modules.Core.csproj" />
     </ItemGroup>
@@ -62,7 +61,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Sdk\Catalyst.Protocol.Mempool\csharp\Catalyst.Protocol.Mempool.csproj" />
-        <ProjectReference Include="..\..\Sdk\Catalyst.Protocol.Node.Rpc\csharp\Catalyst.Protocol.Node.Rpc.csproj" />
         <ProjectReference Include="..\..\Sdk\Catalyst.Protocol.P2P\csharp\Catalyst.Protocol.P2P.csproj" />
     </ItemGroup>
     <ItemGroup>
@@ -75,6 +73,7 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
+        <Content Include="Config\components.json" />
     </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>

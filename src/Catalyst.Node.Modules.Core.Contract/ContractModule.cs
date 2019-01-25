@@ -2,26 +2,19 @@
 
 namespace Catalyst.Node.Modules.Core.Contract
 {
-    public class ContractModule : ModuleBase, IContractModule
+    public class ContractModule : Module
     {
-        private readonly IContract Contract;
-        private IContractSettings ContractSettings;
 
         /// <summary>
         /// </summary>
-        public ContractModule(IContract contract, IContractSettings contractSettings)
+        /// <param name="builder"></param>
+        /// <param name="contractSettings"></param>
+        public static ContainerBuilder Load(ContainerBuilder builder)
         {
-            Contract = contract;
-            ContractSettings = contractSettings;
-        }
-
-        /// <summary>
-        ///     Get current implementation of this service
-        /// </summary>
-        /// <returns></returns>
-        public IContract GetImpl()
-        {
-            return Contract;
+            builder.Register(c => Contract.GetInstance())
+                .As<IContract>()
+                .InstancePerLifetimeScope();
+            return builder;
         }
     }
 }

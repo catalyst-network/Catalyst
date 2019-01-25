@@ -6,7 +6,7 @@ namespace Catalyst.Node.Modules.Core.P2P
     /// <summary>
     ///     The Peer Service
     /// </summary>
-    public class P2PModule : AsyncModuleBase, IP2PModule
+    public class P2PModule : Module
     {
         /// <summary>
         /// </summary>
@@ -30,18 +30,18 @@ namespace Catalyst.Node.Modules.Core.P2P
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool StartService()
-        {
-            P2PNetwork = P2PNetwork.GetInstance(P2PSettings, DataDir, PublicKey);
-//            Catalyst.Helpers.Network.PeerManager.BuildOutBoundConnection("127.0.0.1", 42069);
-            return true;
-        }
+//        public override bool StartService()
+//        {
+//            P2PNetwork = P2PNetwork.GetInstance(P2PSettings, DataDir, PublicKey);
+////            Catalyst.Helpers.Network.PeerManager.BuildOutBoundConnection("127.0.0.1", 42069);
+//            return true;
+//        }
 
-        public override bool StopService()
-        {
-            P2PNetwork.Dispose();
-            return false;
-        }
+//        public override bool StopService()
+//        {
+//            P2PNetwork.Dispose();
+//            return false;
+//        }
 
         public IDht GetImpl()
         {

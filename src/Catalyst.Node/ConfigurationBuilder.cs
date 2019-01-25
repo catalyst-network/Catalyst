@@ -33,26 +33,9 @@ namespace Catalyst.Node
         /// 
         /// </summary>
         /// <returns></returns>
-        public ConfigurationBuilder Build()
+        public IConfigurationRoot Build()
         {
-            Configuration = _configurationBuilder.Build();
-            return this;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public IConfigurationRoot GetInstance()
-        {
-            Build();
-            if (Configuration != null)
-            {
-                return Configuration;
-            }
-
-            throw new ArgumentNullException();
+            return _configurationBuilder.Build();
         }
 
         /// <summary>

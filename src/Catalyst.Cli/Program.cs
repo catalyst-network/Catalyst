@@ -30,13 +30,13 @@ namespace Catalyst.Cli
 
             AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
 
-            if (!Directory.Exists(Fs.GetUserHomeDir() + "/.Catalyst"))
-                Directory.CreateDirectory(Fs.GetUserHomeDir() + "/.Catalyst");
+            if (!Directory.Exists($"{Fs.GetUserHomeDir()}/.Catalyst"))
+                Directory.CreateDirectory($"{Fs.GetUserHomeDir()}/.Catalyst");
 
             // check if user home data dir has a shell config
-            if (!File.Exists(Fs.GetUserHomeDir() + "/.Catalyst/shell.json"))
-                File.Copy(AppDomain.CurrentDomain.BaseDirectory + "/config.shell.json",
-                    Fs.GetUserHomeDir() + "/.Catalyst/shell.json");
+            if (!File.Exists($"{Fs.GetUserHomeDir()}/.Catalyst/shell.json"))
+                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/config.shell.json",
+                    $"{Fs.GetUserHomeDir()}/.Catalyst/shell.json");
 
             // resolve config from autofac
             var builder = new ContainerBuilder();
@@ -44,7 +44,7 @@ namespace Catalyst.Cli
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
                 context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
 
-            var shellConfig = new ConfigurationBuilder().AddJsonFile(Fs.GetUserHomeDir() + "/.Catalyst/shell.json")
+            var shellConfig = new ConfigurationBuilder().AddJsonFile($"{Fs.GetUserHomeDir()}/.Catalyst/shell.json")
                 .Build();
 
             var shellModule = new ConfigurationModule(shellConfig);

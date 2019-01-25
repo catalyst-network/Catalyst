@@ -10,19 +10,37 @@ namespace Catalyst.Node.Modules.Core.Mempool
     /// <summary>
     ///     Mempool class wraps around a IKeyValueStore
     /// </summary>
-    public class Mempool : IMempool
+    public class Mempool : IMempool, IDisposable
     {
+        private static Mempool Instance { get; set; }
+        private static readonly object Mutex = new object();
+        
+        public IKeyValueStore _keyValueStore { get; set; }
+
         /// <summary>
         /// </summary>
         /// <param name="keyValueStore"></param>
-        public Mempool(IKeyValueStore keyValueStore)
+        private Mempool(IKeyValueStore keyValueStore)
         {
             Guard.NotNull(keyValueStore, nameof(keyValueStore));
             _keyValueStore = keyValueStore;
         }
-
-        public IKeyValueStore _keyValueStore { get; set; }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ipfs"></param>
+        /// <returns></returns>
+        public static Mempool GetInstance(IKeyValueStore keyValueStore)
+        {
+            if (Instance == null)
+                lock (Mutex)
+                {
+                    if (Instance == null) Instance = new Mempool(keyValueStore);
+                }
+            return Instance;
+        }
+        
         /// <summary>
         /// </summary>
         /// <param name="k"></param>
@@ -52,6 +70,13 @@ namespace Catalyst.Node.Modules.Core.Mempool
         public Dictionary<string, string> GetMempool()
         {
             return _keyValueStore.GetInfo();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
         }
     }
 }

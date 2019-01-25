@@ -1,49 +1,21 @@
 using Autofac;
+using Autofac.Core;
 using Catalyst.Helpers.Ipfs;
 
 namespace Catalyst.Node.Modules.Core.Dfs
 {
-    public class DfsModule : ModuleBase, IDfsModule
+    public class DfsModule : Module
     {
         /// <summary>
         /// </summary>
-        /// <param name="dfs"></param>
-        /// <param name="settings"></param>
-        public DfsModule(IIpfs dfs, IDfsSettings settings)
+        /// <param name="builder"></param>
+        /// <param name="dfsSettings"></param>
+        protected override void Load (ContainerBuilder builder)
         {
             //@TODO guard util
-            Dfs = dfs;
-            DfsSettings = settings;
-        }
-
-        private IIpfs Dfs { get; }
-        private IDfsSettings DfsSettings { get; }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public override bool StartService()
-        {
-            Dfs.CreateIpfsClient(DfsSettings.IpfsVersionApi, DfsSettings.ConnectRetries);
-            return true;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public override bool StopService()
-        {
-            Dfs.DestroyIpfsClient();
-            return true;
-        }
-
-        /// <summary>
-        ///     Get current implementation of this service
-        /// </summary>
-        /// <returns></returns>
-        public IIpfs GetImpl()
-        {
-            return Dfs;
+            builder.Register(c => Dfs.GetInstance(c.Resolve<IIpfs>()))
+                .As<IDfs>()
+                .SingleInstance();
         }
     }
 }

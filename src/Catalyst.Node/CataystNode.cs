@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Autofac;
 using Catalyst.Helpers.Util;
 using Catalyst.Node.Modules.Core.Consensus;
 using Catalyst.Node.Modules.Core.Contract;
@@ -13,7 +14,7 @@ namespace Catalyst.Node
 {
     public class CatalystNode : IDisposable
     {
-        private readonly Kernel kernel;
+        private readonly Kernel Kernel;
         private static readonly object Mutex = new object();
 
         /// <summary>
@@ -21,7 +22,21 @@ namespace Catalyst.Node
         /// </summary>
         private CatalystNode(Kernel kernel)
         {
-            kernel = kernel;
+            Kernel = kernel;
+        }
+        
+        public void Start()
+        {
+            using (var scope = Kernel.Container.BeginLifetimeScope())
+            {
+//                var ContractModule = scope.Resolve<IContract>();
+//               var ConsensusModule = scope.Resolve<IConsensus>();
+                var dfsModule = scope.Resolve<IDfs>();
+//                GossipModule = scope.Resolve<IGossipModule>();
+//                LedgerService = scope.Resolve<ILedgerService>();
+//                MempoolModule = scope.Resolve<IMempoolModule>();
+//                PeerService = scope.Resolve<IP2PModule>();
+            }
         }
         
         private static CatalystNode Instance { get; set; }
@@ -61,9 +76,12 @@ namespace Catalyst.Node
             return taskSource.Task;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
-            kernel?.Dispose();
+            Kernel?.Dispose();
         }
     }
 }

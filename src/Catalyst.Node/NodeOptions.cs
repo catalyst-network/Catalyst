@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Catalyst.Helpers.FileSystem;
 using Catalyst.Helpers.Network;
 using Catalyst.Helpers.Util;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ namespace Catalyst.Node
         /// <summary>
         ///     Settings constructor
         /// </summary>
-        private NodeOptions(uint env, string dataDir, string network, uint platform)
+        private NodeOptions(int env, string dataDir, string network, int platform)
         {
             Env = env;
             DataDir = dataDir;
@@ -26,8 +27,8 @@ namespace Catalyst.Node
             Platform = platform;
         }
         
-        public uint Env { get; set; }
-        public uint Platform { get; set; }
+        public int Env { get; set; }
+        public int Platform { get; set; }
         public string Network { get; set; }
         public string DataDir { get; set; }
         public DfsSettings DfsSettings { get; internal set; }
@@ -43,14 +44,13 @@ namespace Catalyst.Node
         ///     Get a thread safe settings singleton.
         /// </summary>
         /// <returns></returns>
-        internal static NodeOptions GetInstance(uint env, string dataDir, string network, uint platform)
+        internal static NodeOptions GetInstance(int env, string dataDir, string network, int platform)
         {
             if (Instance == null)
                 lock (Mutex)
                 {
                     if (Instance == null) Instance = new NodeOptions(env, dataDir, network, platform);
                 }
-
             return Instance;
         }
 
@@ -75,8 +75,16 @@ namespace Catalyst.Node
         private IConfiguration _networkConfiguration;
         private readonly List<Action<NodeOptions>> _builderActions;
 
-        public NodeOptionsBuilder(uint env, string dataDir, string network, uint platform)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="env"></param>
+        /// <param name="dataDir"></param>
+        /// <param name="network"></param>
+        /// <param name="platform"></param>
+        public NodeOptionsBuilder(int env, string dataDir, string network, int platform)
         {
+            _builderActions = new List<Action<NodeOptions>>();
             _networkConfiguration = LoadNetworkConfig(network, dataDir);
             _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform);
         }
@@ -87,7 +95,12 @@ namespace Catalyst.Node
         /// <returns></returns>
         public NodeOptionsBuilder LoadDfsSettings()
         {
-            _builderActions.Add(n => n.DfsSettings = new DfsSettings(_networkConfiguration.GetSection("Dfs")));
+            _builderActions.Add(
+                n => n.DfsSettings
+                    = new DfsSettings(
+                        _networkConfiguration.GetSection("Dfs")
+                        )
+                );
             return this;
         }
         
@@ -229,7 +242,7 @@ namespace Catalyst.Node
             }
 
             return new ConfigurationBuilder()
-                .AddJsonFile($"{dataDir}/{networkConfigFile}")
+                .AddJsonFile($"/{dataDir}/{networkConfigFile}")
                 .Build()
                 .GetSection("CatalystNodeConfiguration");
         }
@@ -353,14 +366,14 @@ namespace Catalyst.Node
             Guard.NotNull(section, nameof(section));
             WalletRpcIp = IPAddress.Parse(section.GetSection("WalletRpcIp").Value);
             Guard.NotNull(WalletRpcIp, nameof(WalletRpcIp));
-            WalletRpcPort = uint.Parse(section.GetSection("WalletRpcPort").Value);
+            WalletRpcPort = int.Parse(section.GetSection("WalletRpcPort").Value);
 
             if (!Ip.ValidPortRange(WalletRpcPort))
             {
                 WalletRpcPort = 42444; 
             }
         }
-        public uint WalletRpcPort { get; set; }
+        public int WalletRpcPort { get; set; }
         public IPAddress WalletRpcIp { get; set; }
     }
 
@@ -406,7 +419,7 @@ namespace Catalyst.Node
             Network = section.GetSection("Network").Value;
             PublicKey = section.GetSection("PublicKey").Value;
             Port = int.Parse(section.GetSection("Port").Value);
-            Magic = uint.Parse(section.GetSection("Magic").Value);
+            Magic = int.Parse(section.GetSection("Magic").Value);
             PfxFileName = section.GetSection("PfxFileName").Value;
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             Announce = bool.Parse(section.GetSection("Announce").Value);
@@ -432,7 +445,7 @@ namespace Catalyst.Node
         public ushort MaxConnections { get; set; }
         public ushort PingInterval { get; set; }
         public int Port { get; set; }
-        public uint Magic { get; set; }
+        public int Magic { get; set; }
         public IPAddress BindAddress { get; set; }
         public string PfxFileName { get; set; }
         public List<string> KnownNodes { get; set; }

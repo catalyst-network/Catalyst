@@ -1,14 +1,11 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Helpers.Logger;
-using Catalyst.Protocol.Rpc.Node;
-using Grpc.Core;
 
 namespace Catalyst.Helpers.Shell
 {
     internal sealed class Shell : ShellBase, IAds
     {
-        private static RpcServer.RpcServerClient _rpcClient;
 
         /// <summary>
         /// </summary>
@@ -20,7 +17,6 @@ namespace Catalyst.Helpers.Shell
 
         private uint sessionType => 0;
         public override string Prompt => "koopa";
-        private Channel SessionHost { set; get; }
         private static string ServiceName => "ADS Advanced Catalyst.Helpers.Shell";
 
         /// <summary>
@@ -324,9 +320,6 @@ namespace Catalyst.Helpers.Shell
 
             var channelTarget = ip + ":" + port;
 
-            SessionHost = new Channel(channelTarget, ChannelCredentials.Insecure);
-            _rpcClient = new RpcServer.RpcServerClient(SessionHost);
-
             return true;
         }
 
@@ -518,9 +511,7 @@ namespace Catalyst.Helpers.Shell
         /// <returns>Boolean</returns>
         public override bool OnGetMempool()
         {
-            var response = _rpcClient.GetMempool(new GetMempoolRequest {Query = true});
-            Log.Message(response.ToString());
-            return true;
+            return false;
         }
 
         /// <summary>

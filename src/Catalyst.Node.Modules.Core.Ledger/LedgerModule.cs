@@ -2,26 +2,15 @@
 
 namespace Catalyst.Node.Modules.Core.Ledger
 {
-    public class LedgerModule : ModuleBase, ILedgerService
+    public class LedgerModule : Module
     {
-        private readonly ILedger Ledger;
-        private ILedgerSettings LedgerSettings;
 
-        /// <summary>
-        /// </summary>
-        public LedgerModule(ILedger ledger, ILedgerSettings ledgerSettings)
+        public static ContainerBuilder Load(ContainerBuilder builder)
         {
-            Ledger = ledger;
-            LedgerSettings = ledgerSettings;
-        }
-
-        /// <summary>
-        ///     Get current implementation of this service
-        /// </summary>
-        /// <returns></returns>
-        public ILedger GetImpl()
-        {
-            return Ledger;
+            builder.Register(c => Ledger.GetInstance())
+                .As<ILedger>()
+                .InstancePerLifetimeScope();
+            return builder;
         }
     }
 }

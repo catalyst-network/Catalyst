@@ -27,6 +27,7 @@
       "Port" : "6379"
     },
     "Peer": {
+      "PublicKey": "3242423432",
       "Network": "devnet",
       "MutualAuthentication": false,
       "AcceptInvalidCerts": false,

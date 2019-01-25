@@ -74,9 +74,9 @@ namespace Catalyst.Helpers.Platform
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static uint Os()
+        public static int Os()
         {
-            uint platform = 0;
+            int platform = 0;
 
             if (IsLinux)
                 platform = 1;
