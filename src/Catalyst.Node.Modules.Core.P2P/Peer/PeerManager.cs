@@ -16,6 +16,7 @@ using Catalyst.Node.Modules.Core.P2P.Listeners;
 using Catalyst.Node.Modules.Core.P2P.Messages;
 using Catalyst.Helpers.Streams;
 using Catalyst.Protocol.Peer;
+using Dawn;
 using Org.BouncyCastle.Security;
 using static Catalyst.Node.Events.Core.Events;
 
@@ -97,8 +98,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <returns></returns>
         private async Task<bool> DataReceiver(Connection connection, CancellationToken cancelToken)
         {
-            //@TODO guard util
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            Guard.Argument(connection, nameof(connection)).NotNull();
+
             var streamReadCounter = 0;
 
             try

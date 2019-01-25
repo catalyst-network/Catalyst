@@ -29,6 +29,7 @@
         <PackageReference Include="StackExchange.Redis" Version="2.0.513" />
         <PackageReference Include="StackExchange.Redis.Extensions.Core" Version="4.0.5" />
         <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
+        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Helpers.KeyValueStore\Catalyst.Helpers.KeyValueStore.csproj" />

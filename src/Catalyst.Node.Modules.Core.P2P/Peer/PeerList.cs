@@ -9,6 +9,7 @@ using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.IO;
 using Catalyst.Node.Modules.Core.P2P.Events;
 using Catalyst.Helpers.Workers;
+using Dawn;
 using static Catalyst.Node.Events.Core.Events;
 
 namespace Catalyst.Node.Modules.Core.P2P.Peer
@@ -23,8 +24,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <param name="worker"></param>
         internal PeerList(IWorkScheduler worker)
         {
-            //@TODO guard Util
-            if (worker == null) throw new ArgumentNullException(nameof(worker));
+            Guard.Argument(worker, nameof(worker)).NotNull();
 
             K = 42;
             WorkScheduler = worker;
@@ -69,8 +69,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <returns></returns>
         public bool SearchLists(Connection connection, out Connection foundConnection)
         {
-            //@TODO guard Util
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            Guard.Argument(connection, nameof(connection)).NotNull();
 
             if (FindPeerFromConnection(connection, out var foundPeer)) foundConnection = foundPeer.Connection;
 
@@ -106,8 +105,9 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <exception cref="Exception"></exception>
         internal bool AddUnidentifiedConnectionToList(Connection needle)
         {
-            //@TODO guard Util
-            if (needle?.EndPoint?.Address == null) throw new ArgumentNullException(nameof(needle));
+            Guard.Argument(needle, nameof(needle)).NotNull();
+            Guard.Argument(needle.EndPoint, nameof(needle.EndPoint)).NotNull();
+            Guard.Argument(needle.EndPoint.Address, nameof(needle.EndPoint.Address)).NotNull();
 
             try
             {

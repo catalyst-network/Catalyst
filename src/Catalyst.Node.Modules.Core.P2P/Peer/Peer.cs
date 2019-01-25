@@ -4,6 +4,7 @@ using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Network;
 using Catalyst.Helpers.Util;
 using Catalyst.Helpers.IO;
+using Dawn;
 
 namespace Catalyst.Node.Modules.Core.P2P.Peer
 {
@@ -16,9 +17,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <exception cref="ArgumentException"></exception>
         private Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
         {
-            Guard.NotNull(peerIdentifier, nameof(peerIdentifier));
-            if (!Ip.ValidPortRange(EndPoint.Port)) throw new ArgumentException("Peer Endpoint port range invalid");
-
+            Guard.Argument(peerIdentifier, nameof(peerIdentifier)).NotNull();
+            Guard.Argument(EndPoint.Port, nameof(EndPoint.Port)).Min(1025).Max(123);
             EndPoint = endpoint;
             PeerIdentifier = peerIdentifier;
             LastSeen = DateTimeProvider.UtcNow;

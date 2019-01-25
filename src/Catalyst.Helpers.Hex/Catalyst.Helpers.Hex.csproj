@@ -40,6 +40,7 @@
     <Compile Include="..\Catalyst.Helpers.BigInteger\NumericHelpers.cs" Link="BigInteger\NumericHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">

@@ -40,6 +40,9 @@
     <ItemGroup>
         <None Remove="UnitTests\**" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Dawn.Guard" Version="1.7.0" />
+    </ItemGroup>
     <PropertyGroup>
         <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
     </PropertyGroup>

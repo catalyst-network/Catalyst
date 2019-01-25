@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Catalyst.Helpers.KeyValueStore;
 using Catalyst.Helpers.Util;
 using Catalyst.Protocols.Mempool;
+using Dawn;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Modules.Core.Mempool
@@ -22,7 +23,7 @@ namespace Catalyst.Node.Modules.Core.Mempool
         /// <param name="keyValueStore"></param>
         private Mempool(IKeyValueStore keyValueStore)
         {
-            Guard.NotNull(keyValueStore, nameof(keyValueStore));
+            Guard.Argument(keyValueStore, nameof(keyValueStore)).NotNull();
             _keyValueStore = keyValueStore;
         }
         
@@ -48,8 +49,8 @@ namespace Catalyst.Node.Modules.Core.Mempool
         /// <returns></returns>
         public bool SaveTx(Key k, Tx value)
         {
-            Guard.NotNull(k, nameof(k));
-            Guard.NotNull(value, nameof(value));
+            Guard.Argument(k, nameof(k)).NotNull();
+            Guard.Argument(value, nameof(value)).NotNull();
             return _keyValueStore.Set(k.ToByteArray(), value.ToByteArray(), null);
         }
 
@@ -60,7 +61,7 @@ namespace Catalyst.Node.Modules.Core.Mempool
         /// <exception cref="ArgumentNullException"></exception>
         public Tx GetTx(Key k)
         {
-            Guard.NotNull(k, nameof(k));
+            Guard.Argument(k, nameof(k)).NotNull();
             return Tx.Parser.ParseFrom(_keyValueStore.Get(k.ToByteArray()));
         }
 

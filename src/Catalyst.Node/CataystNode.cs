@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Helpers.Util;
 using Catalyst.Node.Modules.Core.Consensus;
 using Catalyst.Node.Modules.Core.Contract;
 using Catalyst.Node.Modules.Core.Dfs;
@@ -9,6 +8,7 @@ using Catalyst.Node.Modules.Core.Gossip;
 using Catalyst.Node.Modules.Core.Ledger;
 using Catalyst.Node.Modules.Core.Mempool;
 using Catalyst.Node.Modules.Core.P2P;
+using Dawn;
 
 namespace Catalyst.Node
 {
@@ -29,23 +29,17 @@ namespace Catalyst.Node
         {
             using (var scope = Kernel.Container.BeginLifetimeScope())
             {
-//                var ContractModule = scope.Resolve<IContract>();
-//               var ConsensusModule = scope.Resolve<IConsensus>();
+                var ContractModule = scope.Resolve<IContract>();
+                var ConsensusModule = scope.Resolve<IConsensus>();
                 var dfsModule = scope.Resolve<IDfs>();
-//                GossipModule = scope.Resolve<IGossipModule>();
-//                LedgerService = scope.Resolve<ILedgerService>();
-//                MempoolModule = scope.Resolve<IMempoolModule>();
-//                PeerService = scope.Resolve<IP2PModule>();
+                var gossipModule = scope.Resolve<IGossip>();
+                var ledgerService = scope.Resolve<ILedger>();
+                var mempoolModule = scope.Resolve<IMempool>();
+                var peerService = scope.Resolve<IP2P>();
             }
         }
         
         private static CatalystNode Instance { get; set; }
-
-        /// <summary>
-        ///     Get mempool implementation (static)
-        /// </summary>
-        /// <returns>IMempoolService</returns>
-        public static IMempoolModule MempoolModule { get; private set; }
 
         /// <summary>
         ///     Get a thread safe CatalystSystem singleton.
@@ -54,7 +48,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public static CatalystNode GetInstance(Kernel kernel)
         {
-            Guard.NotNull(kernel, nameof(kernel));
+            Guard.Argument(kernel, nameof(kernel)).NotNull();
             if (Instance == null)
                 lock (Mutex)
                 {

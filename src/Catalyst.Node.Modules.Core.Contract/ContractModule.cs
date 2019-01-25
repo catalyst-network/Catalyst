@@ -13,7 +13,7 @@ namespace Catalyst.Node.Modules.Core.Contract
         {
             builder.Register(c => Contract.GetInstance())
                 .As<IContract>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
             return builder;
         }
     }

@@ -5,6 +5,7 @@ using System.Net;
 using Catalyst.Helpers.FileSystem;
 using Catalyst.Helpers.Network;
 using Catalyst.Helpers.Util;
+using Dawn;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -220,8 +221,8 @@ namespace Catalyst.Node
         /// <returns></returns>
         private IConfiguration LoadNetworkConfig(string network, string dataDir)
         {
-            Guard.NotNull(dataDir, nameof(dataDir));
-            Guard.NotNull(network, nameof(network));
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
 
             string networkConfigFile;
 
@@ -260,7 +261,7 @@ namespace Catalyst.Node
         /// <param name="section"></param>
         protected internal LedgerSettings(IConfiguration section)
         {
-            Guard.NotNull(section, nameof(section));
+            Guard.Argument(section, nameof(section)).NotNull();
             Type = section.GetSection("Persistence").Value;
             Chain = section.GetSection("Paths").GetSection("Chain").Value;
             Index = section.GetSection("Paths").GetSection("Index").Value;
@@ -283,7 +284,7 @@ namespace Catalyst.Node
         /// <param name="section"></param>
         protected internal ConsensusSettings(IConfiguration section)
         {
-            Guard.NotNull(section, nameof(section));
+            Guard.Argument(section, nameof(section)).NotNull();
             NDepth = section.GetSection("nDepth").Value;
         }
 
@@ -302,7 +303,7 @@ namespace Catalyst.Node
         /// <param name="section"></param>
         protected internal ContractSettings(IConfiguration section)
         {
-            Guard.NotNull(section, nameof(section));
+            Guard.Argument(section, nameof(section)).NotNull();
             StorageType = section.GetSection("StorageType").Value;
         }
 
@@ -321,7 +322,7 @@ namespace Catalyst.Node
         /// <param name="section"></param>
         protected internal DfsSettings(IConfiguration section)
         {
-            Guard.NotNull(section, nameof(section));
+            Guard.Argument(section, nameof(section)).NotNull();
             StorageType = section.GetSection("StorageType").Value;
             ConnectRetries = ushort.Parse(section.GetSection("ConnectRetries").Value);
             IpfsVersionApi = section.GetSection("IpfsVersionApi").Value;
@@ -344,7 +345,7 @@ namespace Catalyst.Node
         /// <param name="section"></param>
         protected internal GossipSettings(IConfiguration section)
         {
-            Guard.NotNull(section, nameof(section));
+            Guard.Argument(section, nameof(section)).NotNull();
             Instances = section.GetSection("instances").Value;
         }
 
@@ -363,15 +364,11 @@ namespace Catalyst.Node
         /// <param name="section"></param>
         protected internal WalletSettings(IConfiguration section)
         {
-            Guard.NotNull(section, nameof(section));
+            Guard.Argument(section, nameof(section)).NotNull();
             WalletRpcIp = IPAddress.Parse(section.GetSection("WalletRpcIp").Value);
-            Guard.NotNull(WalletRpcIp, nameof(WalletRpcIp));
+            Guard.Argument(WalletRpcIp, nameof(WalletRpcIp)).NotNull();
             WalletRpcPort = int.Parse(section.GetSection("WalletRpcPort").Value);
-
-            if (!Ip.ValidPortRange(WalletRpcPort))
-            {
-                WalletRpcPort = 42444; 
-            }
+            Guard.Argument(WalletRpcPort, nameof(WalletRpcPort)).Min(1025).Max(65535);
         }
         public int WalletRpcPort { get; set; }
         public IPAddress WalletRpcIp { get; set; }
@@ -389,7 +386,7 @@ namespace Catalyst.Node
         /// <param name="section"></param>
         protected internal MempoolSettings(IConfiguration section)
         {
-            Guard.NotNull(section, nameof(section));
+            Guard.Argument(section, nameof(section)).NotNull();
             Type = section.GetSection("Type").Value;
             When = section.GetSection("When").Value;
             Host = EndpointBuilder.BuildNewEndPoint(
@@ -415,7 +412,7 @@ namespace Catalyst.Node
         /// <param name="section"></param>
         protected internal PeerSettings(IConfiguration section)
         {
-            Guard.NotNull(section, nameof(section));
+            Guard.Argument(section, nameof(section)).NotNull();
             Network = section.GetSection("Network").Value;
             PublicKey = section.GetSection("PublicKey").Value;
             Port = int.Parse(section.GetSection("Port").Value);

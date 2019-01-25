@@ -8,6 +8,7 @@ using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Network;
 using Catalyst.Helpers.RLP;
 using Catalyst.Helpers.Util;
+using Dawn;
 
 namespace Catalyst.Node.Modules.Core.P2P.Peer
 {
@@ -41,9 +42,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <exception cref="ArgumentException"></exception>
         public static PeerIdentifier BuildPeerId(byte[] publicKey, IPEndPoint endPoint)
         {
-            //@TODO guard Util
-            // we need a public key with at least 20 bytes anything else wont do.
-            if (publicKey.Length < 20) throw new ArgumentException("public key must be 20 bytes long");
+            Guard.Argument(endPoint, nameof(endPoint)).NotNull();
+            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty().MaxCount(42).MinCount(42);
 
             // init blank nodeId
             var peerId = new byte[42]; //@TODO hook into new byte method
@@ -91,10 +91,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <returns></returns>
         private static string PadVersionString(string version)
         {
-            //@TODO guard Util
-
+            Guard.Argument(version, nameof(version)).NotNull().NotEmpty().NotWhiteSpace();
             while (version.Length < 2) version = version.PadLeft(2, '0');
-
             return version;
         }
 
@@ -124,8 +122,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <returns></returns>
         private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
-            //@TODO guard Util
-
+            Guard.Argument(endPoint, nameof(endPoint)).NotNull();
             Log.ByteArr(endPoint.Port.ToBytesForRlpEncoding());
             return endPoint.Port.ToBytesForRlpEncoding();
         }
@@ -137,7 +134,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <exception cref="ArgumentNullException"></exception>
         public bool ValidatePeerId(byte[] peerId)
         {
-            //@TODO guard Util
+            Guard.Argument(peerId, nameof(peerId)).NotNull().NotEmpty().MinCount(42).MaxCount(42);
             if (peerId == null) throw new ArgumentNullException(nameof(peerId));
 
             try

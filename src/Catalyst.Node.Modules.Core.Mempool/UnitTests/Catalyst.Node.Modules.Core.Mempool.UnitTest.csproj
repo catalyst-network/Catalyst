@@ -20,6 +20,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Catalyst.Helpers.RLP\Catalyst.Helpers.RLP.csproj" />
+        <ProjectReference Include="..\Catalyst.Node.Modules.Core.Mempool.csproj" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj" />

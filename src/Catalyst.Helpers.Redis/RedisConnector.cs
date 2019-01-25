@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using Dawn;
 using StackExchange.Redis;
 
 namespace Catalyst.Helpers.Redis
@@ -15,13 +16,11 @@ namespace Catalyst.Helpers.Redis
         /// <param name="connectionParam"></param>
         private RedisConnector(string connectionParam)
         {
-            if (string.IsNullOrEmpty(connectionParam))
-                throw new ArgumentException("Value cannot be null or empty.", nameof(connectionParam));
-            if (string.IsNullOrWhiteSpace(connectionParam))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(connectionParam));
-//            Guard.NotNull(connectionParam, nameof(connectionParam));
+            Guard.Argument(connectionParam, nameof(connectionParam))
+                .NotNull()
+                .NotEmpty()
+                .NotWhiteSpace();
             _connectionParam = connectionParam;
-            //@TODO guard util
             _connection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(_connectionParam));
         }
 
@@ -42,7 +41,7 @@ namespace Catalyst.Helpers.Redis
         /// </summary>
         public static RedisConnector GetInstance(IPEndPoint host)
         {
-            //@TODO guard util
+            Guard.Argument(host, nameof(host)).NotNull();
             return _instance ?? (_instance =
                        new Lazy<RedisConnector>(() =>
                            new RedisConnector($"{host.Address},allowAdmin=true")).Value);
