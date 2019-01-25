@@ -53,6 +53,31 @@ namespace Catalyst.Helpers.Cryptography
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public X509Certificate2 LoadCert(string password, string filePath)
+        {
+            return string.IsNullOrEmpty(password)
+                ? new X509Certificate2(filePath)
+                : new X509Certificate2(filePath, password);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="dataDir"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public X509Certificate2 LoadCert(string password, string dataDir, string fileName)
+        {
+            return LoadCert(password, $"{dataDir}/{fileName}");
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="dataDir"></param>
         /// <param name="fileName"></param>
@@ -65,6 +90,14 @@ namespace Catalyst.Helpers.Cryptography
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="publicKey"></param>
+        /// <param name="signature"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static bool Verify(byte[] data, X509Certificate2 publicKey, byte[] signature)
         {
             if (data == null) throw new ArgumentNullException("data");
@@ -88,6 +121,19 @@ namespace Catalyst.Helpers.Cryptography
             
             var provider = (RSACryptoServiceProvider) privateKey.PrivateKey;
             return provider.SignData(data, new SHA1CryptoServiceProvider());
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="certificate"></param>
+        /// <returns></returns>
+        public X509CertificateCollection GetCertificateCollection(X509Certificate2 certificate) 
+        {
+            return new X509Certificate2Collection
+            {
+                certificate
+            };
         }
     }
 }

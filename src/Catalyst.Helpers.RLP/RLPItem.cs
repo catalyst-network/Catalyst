@@ -1,4 +1,5 @@
 using System;
+using Dawn;
 
 namespace Catalyst.Helpers.RLP
 {
@@ -12,9 +13,7 @@ namespace Catalyst.Helpers.RLP
         /// <exception cref="ArgumentException"></exception>
         public RlpItem(byte[] rlpData)
         {
-            //@TODO guard util
-            if (rlpData.Length == 0)
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(rlpData));
+            Guard.Argument(rlpData, nameof(rlpData)).NotEmpty();
             _data = rlpData;
         }
 

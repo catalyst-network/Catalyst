@@ -1,15 +1,12 @@
+using System;
+
 namespace Catalyst.Node.Modules.Core.Transactions
 {
-    public class WindowsSigner // : ISigner
+    public class WindowsSigner : ISigner
     {
-        #region ISigner Members
-
-        public void Sign()
+        public byte[] Sign(object certificate, byte[] hash, string hashOID)
         {
-//            var privateKey = certificate.GetRSAPrivateKey();
-//            privateKey.SignHash(hash, hashOID);
+            throw new NotImplementedException();
         }
-
-        #endregion
     }
 }

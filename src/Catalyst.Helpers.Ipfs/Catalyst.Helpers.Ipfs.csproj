@@ -24,6 +24,7 @@
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
         <PackageReference Include="Ipfs.Api" Version="0.23.2" />
         <PackageReference Include="Ipfs.Core" Version="0.34.2" />
     </ItemGroup>

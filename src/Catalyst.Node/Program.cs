@@ -8,6 +8,7 @@ using McMaster.Extensions.CommandLineUtils;
 using Autofac;
 using Catalyst.Helpers.FileSystem;
 using Catalyst.Helpers.Platform;
+using Dawn;
 
 namespace Catalyst.Node
 {
@@ -151,7 +152,7 @@ namespace Catalyst.Node
         /// <param name="options"></param>
         private static void RunNodeDemon(NodeOptions options)
         {
-            Guard.NotNull(options, nameof(options));
+            Guard.Argument(options, nameof(options)).NotNull();
             try
             {
                 Pid = CatalystNode.GetInstance(
@@ -174,8 +175,7 @@ namespace Catalyst.Node
         /// <param name="options"></param>
         private static void RunNodeInteractive(NodeOptions options)
         {
-            
-            Guard.NotNull(options, nameof(options));
+            Guard.Argument(options, nameof(options)).NotNull();
             Log.Message("Catalyst.Helpers.Shell Mode");
 
             try

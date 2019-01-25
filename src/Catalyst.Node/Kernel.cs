@@ -1,22 +1,11 @@
 using System;
+using Autofac;
 using System.IO;
 using System.Runtime.Loader;
-using Autofac;
 using Autofac.Configuration;
-using Catalyst.Helpers.FileSystem;
-using Catalyst.Helpers.Ipfs;
-using Catalyst.Helpers.Logger;
-using Catalyst.Helpers.Platform;
-using Catalyst.Helpers.RLP;
 using Catalyst.Helpers.Util;
-using Catalyst.Node.Modules.Core.Consensus;
-using Catalyst.Node.Modules.Core.Contract;
-using Catalyst.Node.Modules.Core.Dfs;
-using Catalyst.Node.Modules.Core.Gossip;
-using Catalyst.Node.Modules.Core.Ledger;
-using Catalyst.Node.Modules.Core.Mempool;
-using Catalyst.Node.Modules.Core.P2P;
-using Microsoft.Extensions.Configuration;
+using Catalyst.Helpers.FileSystem;
+using Dawn;
 
 namespace Catalyst.Node
 {
@@ -32,8 +21,8 @@ namespace Catalyst.Node
         /// <param name="container"></param>
         private Kernel(NodeOptions nodeOptions, IContainer container)
         {
-            Guard.NotNull(nodeOptions, nameof(nodeOptions));
-            Guard.NotNull(container, nameof(container));
+            Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
+            Guard.Argument(container, nameof(container)).NotNull();
             NodeOptions = nodeOptions;
             Container = container;
         }
@@ -48,7 +37,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public static Kernel GetInstance(NodeOptions nodeOptions)
         {
-            Guard.NotNull(nodeOptions, nameof(nodeOptions));
+            Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
             if (_instance == null)
                 lock (Mutex)
                 {

@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Util;
+using Dawn;
 using DnsClient;
 using DnsClient.Protocol;
 
@@ -20,7 +21,7 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         public static IList<IDnsQueryResponse> GetTxtRecords(List<string> hostnames)
         {
-            //@TODO guard util
+            Guard.Argument(hostnames, nameof(hostnames)).NotEmpty().NotNull().DoesNotContainNull();
             var recordList = new List<IDnsQueryResponse>();
             foreach (var hostname in hostnames)
             {
@@ -37,7 +38,7 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         public static IDnsQueryResponse GetTxtRecords(Uri hostname)
         {
-            //@TODO guard util
+            Guard.Argument(hostname, nameof(hostname)).NotNull().Http();
             return GetTxtRecords(hostname.Host);
         }
         
@@ -47,10 +48,7 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         public static IDnsQueryResponse GetTxtRecords(string hostname)
         {
-            Log.Message(hostname);
-            Guard.NotNull(hostname, nameof(hostname));
-            Guard.NotEmpty(hostname, nameof(hostname));
-            
+            Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
             return Query(hostname, QueryType.TXT);
         }
 
@@ -61,6 +59,7 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         public static IDnsQueryResponse GetARecords(string hostname)
         {
+            Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
             return Query(hostname, QueryType.A);
         }
 
@@ -72,6 +71,7 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         private static IDnsQueryResponse Query(string hostname, QueryType type)
         {
+            Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
             var endpoint = new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53); //@TODO get these from settings
             var client = new LookupClient(endpoint);
             return client.Query(hostname, type);

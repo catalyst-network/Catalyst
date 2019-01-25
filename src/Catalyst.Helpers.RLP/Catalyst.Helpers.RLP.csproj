@@ -25,6 +25,9 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Dawn.Guard" Version="1.7.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Catalyst.Helpers.Hex\Catalyst.Helpers.Hex.csproj" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">

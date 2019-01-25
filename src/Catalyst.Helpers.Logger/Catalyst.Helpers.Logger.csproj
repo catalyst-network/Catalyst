@@ -29,6 +29,9 @@
         <DebugSymbols>False</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
+    </ItemGroup>
+    <ItemGroup>
         <Compile Remove="UnitTests\**" />
     </ItemGroup>
     <ItemGroup>

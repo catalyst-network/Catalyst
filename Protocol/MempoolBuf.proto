@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package Catalyst.Protocols.Mempool;
+package Catalyst.Protocols.Transactions;
 
 message Tx {
     string addressSource = 1;
@@ -10,15 +10,14 @@ message Tx {
     fixed32 fee = 5;
     fixed32 outputAmount = 6;
     string inputAction = 7;
-    string unlockScript = 8;
-    string unlockingProgram = 9;
+    string unlockingProgram = 8;
 
     message Timestamp {
         int64 seconds = 1;
         int32 nanos = 2;
     }
     
-    Timestamp updated = 10;
+    Timestamp updated = 9;
 }
 
 message Key {

@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Net;
 using Catalyst.Helpers.Logger;
+using Dawn;
 
 namespace Catalyst.Helpers.Network
 {
@@ -50,8 +51,8 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         public static IPEndPoint BuildNewEndPoint(IPAddress ip, int port)
         {
-            if (ip == null) throw new ArgumentNullException(nameof(ip)); //@TODO guard
-            if (!Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));  //@TODO SEE ValidPortRange
+            Guard.Argument(ip, nameof(ip)).NotNull();
+            Guard.Argument(port, nameof(port)).Min(1025).Max(65535);
             return new IPEndPoint(ip, port);
         }
 
@@ -62,8 +63,9 @@ namespace Catalyst.Helpers.Network
         /// <returns></returns>
         public static IPEndPoint BuildNewEndPoint(string ip, int port)
         {
-            if (ip == null) throw new ArgumentNullException(nameof(ip)); //@TODO guard
-            if (!Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port)); //@TODO SEE ValidPortRange
+            Guard.Argument(ip, nameof(ip)).NotNull();
+            Guard.Argument(port, nameof(port)).Min(1025).Max(65535);
+            
             IPAddress validatedIp;
             try
             {

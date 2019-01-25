@@ -216,7 +216,7 @@ namespace Catalyst.Node.Modules.Core.Mempool.UnitTests
             Assert.AreEqual((uint) 1, transaction.Amount);
         }
 
-        private class TestMempoolSettings : IMempoolSettings // sort of mock
+        private class TestMempoolSettings// sort of mock
         {
             public string Expiry { get; set; }
             public IPEndPoint Host { get; set; }

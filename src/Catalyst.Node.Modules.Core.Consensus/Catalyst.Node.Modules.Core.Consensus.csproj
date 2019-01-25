@@ -24,6 +24,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Helpers.Ipfs\Catalyst.Helpers.Ipfs.csproj" />

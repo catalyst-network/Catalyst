@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Helpers.KeyValueStore;
+using Dawn;
 using StackExchange.Redis;
 using StackExchange.Redis.Extensions.Core;
 using StackExchange.Redis.Extensions.Newtonsoft;
@@ -27,9 +28,8 @@ namespace Catalyst.Helpers.Redis
 
         public void Connect(IPEndPoint host)
         {
-            //@TODO guard util
-            if (_redisConnector == null)
-                _redisConnector = RedisConnector.GetInstance(host);
+            Guard.Argument(host, nameof(host)).NotNull();
+            _redisConnector = RedisConnector.GetInstance(host);
         }
 
         /// <summary>
@@ -41,7 +41,8 @@ namespace Catalyst.Helpers.Redis
         /// <returns></returns>
         public bool Set(byte[] key, byte[] value, TimeSpan? expiry)
         {
-            //@TODO guard util
+            Guard.Argument(key, nameof(key)).NotEmpty();
+            Guard.Argument(value, nameof(value)).NotEmpty();
             return _redisConnector.GetDb.StringSet(key, value, expiry, _when);
         }
 
@@ -51,7 +52,7 @@ namespace Catalyst.Helpers.Redis
         /// <returns></returns>
         public byte[] Get(byte[] value)
         {
-            //@TODO guard util
+            Guard.Argument(value, nameof(value)).NotEmpty();
             return _redisConnector.GetDb.StringGet(value);
         }
 
@@ -73,7 +74,7 @@ namespace Catalyst.Helpers.Redis
         /// <exception cref="ArgumentException"></exception>
         private void ParseSettings(string when)
         {
-//        @TODO guard util
+            Guard.Argument(when, nameof(when)).NotNull().NotEmpty().NotWhiteSpace();
             if (!Enum.TryParse(when, out _when)) throw new ArgumentException($"Invalid When setting format:{when}");
         }
     }

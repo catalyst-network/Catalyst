@@ -23,8 +23,7 @@
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Grpc" Version="1.16.0" />
-        <PackageReference Include="Grpc.Core" Version="1.16.0" />
+        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Helpers.Logger\Catalyst.Helpers.Logger.csproj" />

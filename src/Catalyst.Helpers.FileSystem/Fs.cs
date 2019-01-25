@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Catalyst.Helpers.Util;
+using Dawn;
 
 namespace Catalyst.Helpers.FileSystem
 {
@@ -29,7 +30,7 @@ namespace Catalyst.Helpers.FileSystem
         /// <returns></returns>
         public static bool DataDirCheck(string dataDir)
         {
-            Guard.NotNull(dataDir, nameof(dataDir));
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             return Directory.Exists(dataDir);
         }
 
@@ -38,7 +39,7 @@ namespace Catalyst.Helpers.FileSystem
         /// <param name="dataDir"></param>
         public static void CreateSystemFolder(string dataDir)
         {
-            Guard.NotNull(dataDir, nameof(dataDir));
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Directory.CreateDirectory(dataDir);
         }
 
@@ -49,10 +50,10 @@ namespace Catalyst.Helpers.FileSystem
         /// <returns></returns>
         public static void CopySkeletonConfigs(string dataDir, string network, string configDir = "Config", string modulesFiles = "comonents.json")
         {
-            Guard.NotNull(dataDir, nameof(dataDir));
-            Guard.NotNull(network, nameof(network));
-            Guard.NotEmpty(dataDir, nameof(dataDir));
-            Guard.NotEmpty(network, nameof(network));
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(configDir, nameof(configDir)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(modulesFiles, nameof(modulesFiles)).NotNull().NotEmpty().NotWhiteSpace();
             File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{modulesFiles}", dataDir);
             File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{network}.json", dataDir);
         }
@@ -65,10 +66,8 @@ namespace Catalyst.Helpers.FileSystem
         /// <returns></returns>
         public static bool CheckConfigExists(string dataDir, string network)
         {
-            Guard.NotNull(dataDir, nameof(dataDir));
-            Guard.NotNull(network, nameof(network));
-            Guard.NotEmpty(dataDir, nameof(dataDir));
-            Guard.NotEmpty(network, nameof(network));
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
             return File.Exists(dataDir + "/" + network + ".json");
         }
     }

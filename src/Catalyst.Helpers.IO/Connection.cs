@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using Catalyst.Helpers.Logger;
+using Dawn;
 
 namespace Catalyst.Helpers.IO
 {
@@ -15,11 +16,8 @@ namespace Catalyst.Helpers.IO
         /// <param name="tcp"></param>
         public Connection(TcpClient tcp)
         {
-            //@TODO guard util
-            TcpClient = tcp ?? throw new ArgumentNullException(nameof(tcp));
-
+            Guard.Argument(tcp, nameof(tcp)).NotNull();
             EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
-
             Connected = true;
         }
 

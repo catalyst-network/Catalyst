@@ -13,11 +13,12 @@ using Catalyst.Node.Modules.Core.P2P.Events;
 using Catalyst.Node.Modules.Core.P2P.Messages;
 using Catalyst.Node.Modules.Core.P2P.Peer;
 using Catalyst.Helpers.Workers;
+using Dawn;
 using DnsClient.Protocol;
 
 namespace Catalyst.Node.Modules.Core.P2P
 {
-    public class P2PNetwork : IDht, IDisposable
+    public class P2P : IDht, IDisposable
     {
         private static readonly object Mutex = new object();
 
@@ -32,31 +33,15 @@ namespace Catalyst.Node.Modules.Core.P2P
         /// <param name="bannedIps"></param>
         /// <param name="debug"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private P2PNetwork(
-            IP2PSettings p2PSettings,
+        private P2P(
             string dataDir,
             byte[] publicKey,
             bool acceptInvalidCerts,
             bool mutualAuthentication,
-            IEnumerable<string> bannedIps, // @TODO do we want this as a parameter can we not pull it once obj is instantiated
             bool debug
         )
         {
-            //@TODO guard util
-            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
-            if (p2PSettings == null) throw new ArgumentNullException(nameof(p2PSettings));
-
-            // don't let me run on privileged ports, I shouldn't be started as root!!!!
-            if (!Ip.ValidPortRange(p2PSettings.Port)) throw new ArgumentOutOfRangeException(nameof(p2PSettings.Port));
-
-            SslCertificate = string.IsNullOrEmpty(p2PSettings.SslCertPassword)
-                ? new X509Certificate2(dataDir + "/" + p2PSettings.PfxFileName)
-                : new X509Certificate2(dataDir + "/" + p2PSettings.PfxFileName, p2PSettings.SslCertPassword);
-
-            SslCertificateCollection = new X509Certificate2Collection
-            {
-                SslCertificate
-            };
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull();
             
             try
             {
@@ -109,7 +94,7 @@ namespace Catalyst.Node.Modules.Core.P2P
         private List<IPAddress> BannedIps { get; } //@TODO revist this
         private bool AcceptInvalidCerts { get; }
         internal PeerManager PeerManager { get; set; }
-        private static P2PNetwork Instance { get; set; }
+        private static P2P Instance { get; set; }
         private bool MutuallyAuthenticate { get; }
         private List<IPEndPoint> SeedNodes { get; }
         private X509Certificate2 SslCertificate { get; }
@@ -195,9 +180,9 @@ namespace Catalyst.Node.Modules.Core.P2P
         /// 
         /// </summary>
         /// <param name="p2PSettings"></param>
-        internal void GetSeedNodes(IP2PSettings p2PSettings)
+        internal void GetSeedNodes(List<string> seedServers)
         {
-            var dnsQueryAnswers = Helpers.Network.Dns.GetTxtRecords(p2PSettings.SeedList);
+            var dnsQueryAnswers = Helpers.Network.Dns.GetTxtRecords(seedServers);
             foreach (var dnsQueryAnswer in dnsQueryAnswers)
             {
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
@@ -212,7 +197,8 @@ namespace Catalyst.Node.Modules.Core.P2P
         /// <exception cref="NotImplementedException"></exception>
         public void Announce(object sender, AnnounceNodeEventArgs e)
         {
-            //@TODO guard util
+            Guard.Argument(sender, nameof(sender)).NotNull();
+            Guard.Argument(e, nameof(e)).NotNull();
             var client = new TcpClient("192.168.1.213", 21420); //@TODO get seed tracker from config
             var nwStream = client.GetStream();
             var network = new byte[1];
@@ -231,23 +217,16 @@ namespace Catalyst.Node.Modules.Core.P2P
         /// <param name="dataDir"></param>
         /// <param name="publicKey"></param>
         /// <returns></returns>
-        public static P2PNetwork GetInstance(IP2PSettings p2PSettings, string dataDir, byte[] publicKey)
+        public static P2P GetInstance(string dataDir, byte[] publicKey)
         {
-            //@TODO guard util
-            if (p2PSettings == null) throw new ArgumentNullException(nameof(p2PSettings));
-            if (dataDir == null) throw new ArgumentNullException(nameof(dataDir));
-            if (publicKey == null) throw new ArgumentNullException(nameof(publicKey));
-            if (string.IsNullOrEmpty(dataDir))
-                throw new ArgumentException("Value cannot be null or empty.", nameof(dataDir));
-            if (string.IsNullOrWhiteSpace(dataDir))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(dataDir));
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty();
 
             if (Instance != null) return Instance;
             lock (Mutex)
             {
                 if (Instance == null)
-                    Instance = new P2PNetwork(
-                        p2PSettings,
+                    Instance = new P2P(
                         dataDir,
                         publicKey,
                         true,

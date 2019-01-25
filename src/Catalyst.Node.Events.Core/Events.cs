@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Dawn;
 
 namespace Catalyst.Node.Events.Core
 {
@@ -13,10 +14,9 @@ namespace Catalyst.Node.Events.Core
         /// <typeparam name="T"></typeparam>
         public static Task AsyncRaiseEvent<T>(EventHandler<T> handler, object sender, T args) where T : EventArgs
         {
-            //@TODO guard util
-            if (args == null) throw new ArgumentNullException(nameof(args));
-            if (sender == null) throw new ArgumentNullException(nameof(sender));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            Guard.Argument(args, nameof(args)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
+            Guard.Argument(handler, nameof(handler)).NotNull();
             return Task.Factory.StartNew(() => { handler(sender, args); });
         }
     }

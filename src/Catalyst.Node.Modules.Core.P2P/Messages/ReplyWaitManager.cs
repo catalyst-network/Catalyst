@@ -4,6 +4,7 @@ using System.Net;
 using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Util;
 using Catalyst.Node.Modules.Core.P2P.Peer;
+using Dawn;
 
 namespace Catalyst.Node.Modules.Core.P2P.Messages
 {
@@ -21,10 +22,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Messages
         /// <exception cref="ArgumentNullException"></exception>
         public MessageReplyWaitManager(IMessageSender messageSender, PeerList peerList)
         {
-            //@TODO guard util
-            if (peerList == null) throw new ArgumentNullException(nameof(peerList));
-            if (messageSender == null) throw new ArgumentNullException(nameof(messageSender));
-
+            Guard.Argument(messageSender, nameof(messageSender)).NotNull();
+            Guard.Argument(peerList, nameof(peerList)).NotNull();
             _peerList = peerList;
             _messageSender = messageSender;
         }

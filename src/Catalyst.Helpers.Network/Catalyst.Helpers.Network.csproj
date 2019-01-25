@@ -43,6 +43,7 @@
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="DnsClient" Version="1.2.0" />
+        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     </ItemGroup>
     <PropertyGroup>
         <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>

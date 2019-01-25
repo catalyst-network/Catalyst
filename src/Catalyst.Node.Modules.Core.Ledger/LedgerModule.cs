@@ -9,7 +9,7 @@ namespace Catalyst.Node.Modules.Core.Ledger
         {
             builder.Register(c => Ledger.GetInstance())
                 .As<ILedger>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
             return builder;
         }
     }

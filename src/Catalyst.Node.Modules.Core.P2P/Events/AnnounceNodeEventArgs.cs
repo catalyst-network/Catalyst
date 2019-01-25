@@ -1,6 +1,7 @@
 using System;
 using Catalyst.Helpers.Logger;
 using Catalyst.Node.Modules.Core.P2P.Peer;
+using Dawn;
 
 namespace Catalyst.Node.Modules.Core.P2P.Events
 {
@@ -13,8 +14,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Events
         /// <exception cref="T:System.ArgumentNullException"></exception>
         public AnnounceNodeEventArgs(PeerIdentifier nodeIdentity)
         {
-            //@TODO guard util
-            if (nodeIdentity == null) throw new ArgumentNullException(nameof(nodeIdentity));
+            Guard.Argument(nodeIdentity, nameof(nodeIdentity)).NotNull();
             Log.Message($"AnnounceNodeEventArgs {nodeIdentity.Id}");
             NodeIdentity = nodeIdentity;
         }

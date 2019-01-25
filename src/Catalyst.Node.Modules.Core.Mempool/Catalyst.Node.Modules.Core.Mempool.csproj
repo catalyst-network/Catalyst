@@ -14,8 +14,8 @@
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <PackageId>Catalyst.Node.Modules.Core.Mempool</PackageId>
-        <!--<Deterministic>true</Deterministic>-->
-        <!--<Optimize>true</Optimize>-->
+        <Deterministic>true</Deterministic>
+        <Optimize>true</Optimize>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
         <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
@@ -26,6 +26,7 @@
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
         <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
