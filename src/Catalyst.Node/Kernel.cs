@@ -69,7 +69,7 @@ namespace Catalyst.Node
                                 Fs.CopySkeletonConfigs(nodeOptions.DataDir, nodeOptions.Network);
                         }
                         
-                        _instance = new Kernel(nodeOptions, ConfigureServices(nodeOptions)); //@TODO try catch
+                        _instance = new Kernel(nodeOptions, ConfigureContainer(nodeOptions)); //@TODO try catch
                     }
                 }
             return _instance;
@@ -80,49 +80,38 @@ namespace Catalyst.Node
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        private static IContainer ConfigureServices(NodeOptions options)
+        private static IContainer ConfigureContainer(NodeOptions options)
         {
+            // Set path to load assemblies from ** be-carefull **
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
                 context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(),
                     $"{assembly.Name}.dll"));
-
-            var componentConfig = new ConfigurationBuilder()
-                .AddJsonFile(options.DataDir + "/components.json")
-                .GetInstance();
             
-            var iocComponents = new ConfigurationModule(componentConfig); //@TODO try catch
+            // get builder
             var builder = new ContainerBuilder();
-            builder.RegisterModule(iocComponents); //@TODO try catch
             
-            builder.Register(c => new DfsModule(c.Resolve<IIpfs>(), settingsInstance?.Dfs))
-                .As<IDfsModule>()
-                .InstancePerLifetimeScope();
-                        
-            builder.Register(c => new GossipModule(settingsInstance?.Gossip))
-                .As<IGossipModule>()
-                .InstancePerLifetimeScope();
-                        
-            builder.Register(c => new LedgerModule(c.Resolve<ILedger>(), settingsInstance?.Ledger))
-                .As<ILedgerService>()
-                .InstancePerLifetimeScope();
-            builder.Register(c => new MempoolModule(c.Resolve<IMempool>(), settingsInstance?.Mempool))
-                .As<IMempoolModule>()
-                .InstancePerLifetimeScope();
+            // register our options object
+            builder.RegisterType<NodeOptions>();
 
-            builder.Register(c => new ContractModule(c.Resolve<IContract>(), settingsInstance?.Contract))
-                .As<IContractModule>()
-                .InstancePerLifetimeScope();
-                        
-            builder.Register(c => new ConsensusModule(c.Resolve<IConsensus>(), settingsInstance?.Consensus))
-                .As<IConsensusModule>()
-                .InstancePerLifetimeScope();
-                        
-            builder.Register(c => new P2PModule(settingsInstance?.Peer, options.DataDir,
-                    options.PublicKey.ToBytesForRlpEncoding()))
-                .As<IP2PModule>()
-                .InstancePerLifetimeScope();
+            // load module config file
+            var moduleConfig = new ConfigurationBuilder()
+                .AddJsonFile($"{options.DataDir}/modules.json")
+                .Build();
+            
+            // register modules
+            var coreModules = new ConfigurationModule(moduleConfig);
+            builder.RegisterModule(coreModules);
+            
+            // load components config file
+            var componentConfig = new ConfigurationBuilder()
+                .AddJsonFile($"{options.DataDir}/components.json")
+                .Build();
+            
+            // register components
+            var components = new ConfigurationModule(componentConfig);
+            builder.RegisterModule(components);
 
-            var container = builder.Build(); //@TODO try catch   
+            var container = builder.Build();   
 
             return container;
         }

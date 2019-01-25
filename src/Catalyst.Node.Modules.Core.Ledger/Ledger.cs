@@ -1,9 +1,33 @@
-﻿namespace Catalyst.Node.Modules.Core.Ledger
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Catalyst.Node.Modules.Core.Ledger
 {
-    /// <summary>
-    ///     Ledger - Ledger Class
-    /// </summary>
-    internal class Ledger : ILedger
+    public class Ledger : IDisposable, ILedger
     {
+        private static Ledger Instance { get; set; }
+        private static readonly object Mutex = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ipfs"></param>
+        /// <returns></returns>
+        public static Ledger GetInstance()
+        {
+            if (Instance == null)
+                lock (Mutex)
+                {
+                    if (Instance == null) Instance = new Ledger();
+                }
+            return Instance;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+        }
     }
 }

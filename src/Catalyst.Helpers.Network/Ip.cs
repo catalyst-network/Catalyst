@@ -32,7 +32,7 @@ namespace Catalyst.Helpers.Network
         /// </summary>
         /// <param name="port"></param>
         /// <returns></returns>
-        public static bool ValidPortRange(uint port)
+        public static bool ValidPortRange(int port)
         {
             if (port < 1025 || port > 65535) return false;//@TODO hook this into guard util and then re-throw the exceptions
             return true;

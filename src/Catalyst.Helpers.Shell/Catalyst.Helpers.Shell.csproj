@@ -30,8 +30,6 @@
         <ProjectReference Include="..\Catalyst.Helpers.Logger\Catalyst.Helpers.Logger.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Sdk\Catalyst.Protocol.Node.Rpc\csharp\Catalyst.Protocol.Node.Rpc.csproj" />
-        <ProjectReference Include="..\..\Sdk\Catalyst.Protocol.Node.Rpc.Grpc\Catalyst.Protocol.Node.Rpc.Grpc.csproj" />
     </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>

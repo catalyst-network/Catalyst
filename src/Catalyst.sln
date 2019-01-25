@@ -55,10 +55,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.P2P", "Catalyst.Node.Modules.Core.P2P\Catalyst.Node.Modules.Core.P2P.csproj", "{4BCC3B38-E77B-4987-807B-B87B61001D4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.Rpc", "Catalyst.Node.Modules.Core.Rpc\Catalyst.Node.Modules.Core.Rpc.csproj", "{9E46AD07-E5AA-4FF2-ACE1-C139831BA9D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.Rpc.UnitTests", "Catalyst.Node.Modules.Core.Rpc\UnitTests\Catalyst.Node.Modules.Core.Rpc.UnitTests.csproj", "{C0D069B3-C00B-4B45-B65A-C2C569997DBE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.Consensus", "Catalyst.Node.Modules.Core.Consensus\Catalyst.Node.Modules.Core.Consensus.csproj", "{ACD47223-4327-418C-BAC4-4CE53F810E58}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Helpers.Redis", "Catalyst.Helpers.Redis\Catalyst.Helpers.Redis.csproj", "{B4024CB0-D90E-40A7-AC8E-1EE7A6344BEF}"
@@ -68,10 +64,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.Ledger", "Catalyst.Node.Modules.Core.Ledger\Catalyst.Node.Modules.Core.Ledger.csproj", "{09E31C96-21B7-40B8-ADF3-01C7276F14BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Protocol.Mempool", "..\Sdk\Catalyst.Protocol.Mempool\csharp\Catalyst.Protocol.Mempool.csproj", "{C6773136-9614-4778-9B94-C6BB7BA4319E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Protocol.Node.Rpc", "..\Sdk\Catalyst.Protocol.Node.Rpc\csharp\Catalyst.Protocol.Node.Rpc.csproj", "{15CA5936-0110-408F-8EC3-58241283EF7A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Protocol.Node.Rpc.Grpc", "..\Sdk\Catalyst.Protocol.Node.Rpc.Grpc\Catalyst.Protocol.Node.Rpc.Grpc.csproj", "{60ED5D7B-32B3-4CE9-8E97-9620A1D2226D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Protocol.P2P", "..\Sdk\Catalyst.Protocol.P2P\csharp\Catalyst.Protocol.P2P.csproj", "{95F5F255-05D3-40DF-8E52-13D27332E12C}"
 EndProject

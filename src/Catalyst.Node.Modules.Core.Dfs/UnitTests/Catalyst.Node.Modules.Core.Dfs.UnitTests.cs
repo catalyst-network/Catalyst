@@ -171,7 +171,7 @@ namespace Catalyst.Node.Modules.Core.Dfs.UnitTests
             }
         }
 
-        private class TestDfsSettings : IDfsSettings // sort of mock
+        private class TestDfsSettings
         {
             public string StorageType { get; set; }
             public ushort ConnectRetries { get; set; }

@@ -6,14 +6,8 @@ using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Util;
 using McMaster.Extensions.CommandLineUtils;
 using Autofac;
+using Catalyst.Helpers.FileSystem;
 using Catalyst.Helpers.Platform;
-using Catalyst.Node.Modules.Core.Consensus;
-using Catalyst.Node.Modules.Core.Contract;
-using Catalyst.Node.Modules.Core.Dfs;
-using Catalyst.Node.Modules.Core.Gossip;
-using Catalyst.Node.Modules.Core.Ledger;
-using Catalyst.Node.Modules.Core.Mempool;
-using Catalyst.Node.Modules.Core.P2P;
 
 namespace Catalyst.Node
 {
@@ -35,7 +29,7 @@ namespace Catalyst.Node
             {
                 // Disable services
                 var disableDfs = app.Option("--disable-dfs", "disable dfs service", CommandOptionType.NoValue);
-                var disablePeer = app.Option("--disable-p2p", "disable peer service", CommandOptionType.NoValue);
+                var disablePeer = app.Option("--disable-peer", "disable peer service", CommandOptionType.NoValue);
                 var disableGossip = app.Option("--disable-gossip", "disable gossip service", CommandOptionType.NoValue);
                 var disableLedger = app.Option("--disable-ledger", "disable ledger service", CommandOptionType.NoValue);
                 var disableWallet = app.Option("--disable-wallet", "disable wallet service", CommandOptionType.NoValue);
@@ -48,7 +42,7 @@ namespace Catalyst.Node
                 var nodeDaemon = app.Option("-d|--node-daemon", "Run as daemon", CommandOptionType.NoValue);
                 var nodeEnv = app.Option("-e|--node-env", "Specify environment", CommandOptionType.SingleValue);
                 var nodeDataDir = app.Option("--node-data-dir", "Specify a data directory", CommandOptionType.SingleValue);
-                var nodeNetwork = app.Option("-n|--node-net", "Specify network", CommandOptionType.NoValue);
+                var nodeNetwork = app.Option("-n|--node-net", "Specify network", CommandOptionType.SingleValue);
                 
                 // peer override options
                 var peerBindAddress = app.Option("-h|--peer-bind-address", "daemon host", CommandOptionType.SingleValue);
@@ -64,9 +58,9 @@ namespace Catalyst.Node
                 app.OnExecute(() =>
                 {
                     // get some basic required params
-                    uint platform = Detection.Os();
-                    string dataDir = nodeDataDir.Value() != null ? nodeDataDir.Value() : "~/.Catalyst";
-                    uint env = nodeEnv.Value() != null && ValidEnvPram(nodeEnv.Value()) ? uint.Parse(nodeEnv.Value()) : 1;
+                    int platform = Detection.Os();
+                    string dataDir = nodeDataDir.Value() != null ? nodeDataDir.Value() : $"/{Fs.GetUserHomeDir()}/.Catalyst";
+                    int env = nodeEnv.Value() != null && ValidEnvPram(nodeEnv.Value()) > 0 ? ValidEnvPram(nodeEnv.Value()) : 1;
                     string network = nodeNetwork.Value() != null && ValidNetworkParam(nodeNetwork.Value()) ? nodeNetwork.Value() : "devnet";
                     
                     // conditionally build NodeOptions object with enabled modules
@@ -90,15 +84,14 @@ namespace Catalyst.Node
                         .Build();
 
                     // override settings classes with cli params
-                    if (peerPublicKey.HasValue()) nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
-                    if (peerBindAddress.HasValue()) nodeOptions.PeerSettings.BindAddress = IPAddress.Parse(peerBindAddress.Value());
-                    if (peerPayoutAddress.HasValue()) nodeOptions.PeerSettings.PayoutAddress = peerPayoutAddress.Value();
-                    if (walletRpcIpOption.HasValue()) nodeOptions.WalletSettings.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
-                    if (walletRpcPortOption.HasValue()) nodeOptions.WalletSettings.WalletRpcPort = uint.Parse(walletRpcPortOption.Value());
-                    if (peerSeedServers.HasValue()) nodeOptions.PeerSettings.SeedServers.InsertRange(0, peerSeedServers.Values);
-                    if (peerKnownNodes.HasValue()) nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
+//                    if (peerPublicKey.HasValue()) nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
+//                    if (peerBindAddress.HasValue()) nodeOptions.PeerSettings.BindAddress = IPAddress.Parse(peerBindAddress.Value());
+//                    if (peerPayoutAddress.HasValue()) nodeOptions.PeerSettings.PayoutAddress = peerPayoutAddress.Value();
+//                    if (walletRpcIpOption.HasValue()) nodeOptions.WalletSettings.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
+//                    if (walletRpcPortOption.HasValue()) nodeOptions.WalletSettings.WalletRpcPort = int.Parse(walletRpcPortOption.Value());
+//                    if (peerSeedServers.HasValue()) nodeOptions.PeerSettings.SeedServers.InsertRange(0, peerSeedServers.Values);
+//                    if (peerKnownNodes.HasValue()) nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
 
-                    Kernel kernel = BuildKernel(nodeOptions);
                     if (nodeDaemon.HasValue())
                         RunNodeDemon(nodeOptions);
                     else
@@ -134,22 +127,22 @@ namespace Catalyst.Node
         /// </summary>
         /// <param name="env"></param>
         /// <returns></returns>
-        private static bool ValidEnvPram(string env)
+        private static int ValidEnvPram(string env)
         {
             switch (env)
             {
                 case "debug":
-                    return true;                    
+                    return 1;                    
                 case "test":
-                    return true;
+                    return 2;
                 case "benchmark":
-                    return true;
+                    return 3;
                 case "simulation":
-                    return true;
+                    return 4;
                 case "prod":
-                    return true;
+                    return 5;
                 default:
-                    return false;
+                    return 1;
             }
         }
 
@@ -161,10 +154,13 @@ namespace Catalyst.Node
             Guard.NotNull(options, nameof(options));
             try
             {
-                Pid = CatalystNode.GetInstance(options);
+                Pid = CatalystNode.GetInstance(
+                    Kernel.GetInstance(options)
+                    );
+                Pid.Start();
                 while (true)
                 {
-                } //@TODO                
+                }
             }
             catch (Exception e)
             {
@@ -178,45 +174,22 @@ namespace Catalyst.Node
         /// <param name="options"></param>
         private static void RunNodeInteractive(NodeOptions options)
         {
+            
             Guard.NotNull(options, nameof(options));
             Log.Message("Catalyst.Helpers.Shell Mode");
-            CatalystNode.GetInstance(options);
-            var basicShell = new BasicShell();
-            while (basicShell.Run());
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="options"></param>
-        private static void BuildKernel(NodeOptions options)
-        {
-            Guard.NotNull(options, nameof(options));
-
-            Kernel kernel;
 
             try
             {
-                kernel = Kernel.GetInstance(options);
-            }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message(nameof(e), e);
-                throw;
-            }
-            
-            using (var scope = kernel.Container.BeginLifetimeScope())
-            {
-                if (options.Contract)
+                Pid = CatalystNode.GetInstance(Kernel.GetInstance(options));
+                var basicShell = new BasicShell();
+                while (basicShell.Run())
                 {
-                    ContractModule = scope.Resolve<IContractModule>();
-                    ConsensusModule = scope.Resolve<IConsensusModule>();
-                    DfsModule = scope.Resolve<IDfsModule>();
-                    GossipModule = scope.Resolve<IGossipModule>();
-                    LedgerService = scope.Resolve<ILedgerService>();
-                    MempoolModule = scope.Resolve<IMempoolModule>();
-                    PeerService = scope.Resolve<IP2PModule>();
                 }
+            }
+            catch (Exception e)
+            {
+                LogException.Message("RunNodeDemon: CatalystNode.GetInstance", e);
+                Pid.Dispose();
             }
         }
     }

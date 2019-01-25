@@ -5,7 +5,7 @@ using Autofac;
 
 namespace Catalyst.Node.Modules.Core.Gossip
 {
-    public class GossipModule : AsyncModuleBase, IGossipModule
+    public class GossipModule : Module
     {
         private IActorRef Gossip;
         private IGossipSettings GossipSettings;
@@ -17,16 +17,7 @@ namespace Catalyst.Node.Modules.Core.Gossip
             //@TODO guard util
             GossipSettings = gossipSettings;
         }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public override bool StartService()
-        {
-            Task.Run(RunAsyncActors).Wait();
-            return true;
-        }
-
+        
         /// <summary>
         ///     Get current implementation of this service
         /// </summary>
