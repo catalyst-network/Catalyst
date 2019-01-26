@@ -44,19 +44,6 @@ namespace Catalyst.Node
         }
 
         /// <summary>
-        ///     @TODO make a single global cancellation token that is passed to all objects
-        ///     @TODO hook into dotnet process manager when main process recieves shutdown hit this method to cancel the global
-        ///     token and have a clean system wide dispose, this will allow us to gracefully say bye to all peers and keep data
-        ///     integrity.
-        /// </summary>
-        /// <returns></returns>
-        public Task Shutdown()
-        {
-            var taskSource = new TaskCompletionSource<bool>();
-            return taskSource.Task;
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         public void Dispose()
