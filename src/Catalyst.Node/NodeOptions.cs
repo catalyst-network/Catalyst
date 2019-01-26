@@ -495,10 +495,9 @@ namespace Catalyst.Node
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             Announce = bool.Parse(section.GetSection("Announce").Value);
             SslCertPassword = section.GetSection("SslCertPassword").Value;
-            MaxConnections = ushort.Parse(section.GetSection("MaxPeers").Value);
+            MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
-            PingInterval = ushort.Parse(section.GetSection("PeerPingInterval").Value);
             AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
             KnownNodes = section.GetSection("KnownNodes").GetChildren().Select(p => p.Value).ToList();

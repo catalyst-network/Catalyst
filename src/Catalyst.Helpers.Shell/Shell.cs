@@ -4,7 +4,7 @@ using Catalyst.Helpers.Logger;
 
 namespace Catalyst.Helpers.Shell
 {
-    internal sealed class Shell : ShellBase, IAds
+    public sealed class Shell : ShellBase, IAds
     {
 
         /// <summary>

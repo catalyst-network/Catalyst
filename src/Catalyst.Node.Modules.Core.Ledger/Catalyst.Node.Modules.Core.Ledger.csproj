@@ -42,7 +42,6 @@
         <None Remove="UnitTests\**" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Catalyst.Node.Modules.Core\Catalyst.Node.Modules.Core.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>

@@ -6,13 +6,14 @@ using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Platform;
 using Catalyst.Helpers.Exceptions;
 using Catalyst.Helpers.FileSystem;
+using Catalyst.Helpers.Shell;
 using McMaster.Extensions.CommandLineUtils;
 
 namespace Catalyst.Node
 {
     public sealed class Program
     {
-        private static Kernel CatalystNodeKernel { get; set; }
+        private static CatalystNode CatalystNode { get; set; }
 
         /// <summary>
         ///     Main cli loop
@@ -23,6 +24,7 @@ namespace Catalyst.Node
             AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
 
             var cli = new CommandLineApplication();
+            var cts = new CancellationTokenSource();
 
             try
             {
@@ -131,7 +133,7 @@ namespace Catalyst.Node
 //                        if (peerKnownNodes.HasValue())
 //                            nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
 
-                        using (CatalystNodeKernel = new KernelBuilder(nodeOptions)
+                        using (CatalystNode = new KernelBuilder(nodeOptions)
                             .WithDfsModule()
                                 .When(() => !disableDfs.HasValue())
                             .WithPeerModule()
@@ -146,24 +148,19 @@ namespace Catalyst.Node
                                 .When(() => !disbleContract.HasValue())
                             .WithConsensusModule()
                                 .When(() => !disbleConsensus.HasValue())
-                            .Build())
+                            .Build().StartUp())
                         {
-                            using (CatalystNodeKernel.StartUp())
+                            while (nodeDaemon.HasValue() ? !cts.Token.IsCancellationRequested : new Shell().RunConsole())
                             {
-                                CancellationTokenSource cts = new CancellationTokenSource();
-
-                                while (nodeDaemon.HasValue() ? !cts.Token.IsCancellationRequested : new BasicShell().Run())
+                                if (cts.Token.IsCancellationRequested)
                                 {
-                                    if (cts.Token.IsCancellationRequested)
-                                    {
-                                        CatalystNodeKernel.Dispose();
-                                        cts.Token.ThrowIfCancellationRequested();
-                                    }
+                                    CatalystNode.Kernel.Dispose();
+                                    cts.Token.ThrowIfCancellationRequested();
+                                }
 #if DEBUG
-                                    Console.Write(".");
+                                Console.Write(".");
 #endif
-                                    Thread.Sleep(100);
-                                }                                
+                                Thread.Sleep(100);
                             }
                         }
                         return 1;
@@ -174,7 +171,8 @@ namespace Catalyst.Node
             catch (Exception e)
             {
                 LogException.Message("main app command", e);
-                CatalystNodeKernel?.Shutdown();
+                cts.Cancel();
+                CatalystNode?.Kernel.Shutdown();
                 return 0;
             }
             return 1;

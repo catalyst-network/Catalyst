@@ -1,6 +1,6 @@
 using System;
-using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.IO;
+using Catalyst.Helpers.Logger;
 
 namespace Catalyst.Node.Modules.Core.P2P.Events
 {

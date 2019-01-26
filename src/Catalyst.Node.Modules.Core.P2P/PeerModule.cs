@@ -18,9 +18,9 @@ namespace Catalyst.Node.Modules.Core.P2P
         public static ContainerBuilder Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.Register(c => P2P.GetInstance())
-                .As<IP2P>()
-                .SingleInstance();
+//            builder.Register(c => P2P.GetInstance())
+//                .As<IP2P>()
+//                .SingleInstance();
             return builder;
         }
     }

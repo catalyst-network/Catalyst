@@ -103,8 +103,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.UnitTest", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Events.Core.UnitTests", "Catalyst.Node.Events.Core\UnitTests\Catalyst.Node.Events.Core.UnitTests.csproj", "{A5E59AD0-3AC4-49D9-8A86-A6051BA3267B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.UnitTests", "Catalyst.Node.Modules.Core\UnitTests\Catalyst.Node.Modules.Core.UnitTests.csproj", "{23FA8350-599F-4711-9EC8-F86A4496F32C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.Consensus.UnitTests", "Catalyst.Node.Modules.Core.Consensus\UnitTests\Catalyst.Node.Modules.Core.Consensus.UnitTests.csproj", "{F5BF663E-CA5A-49F5-9734-AF131F42FAFF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Modules.Core.Contract.UnitTests", "Catalyst.Node.Modules.Core.Contract\UnitTests\Catalyst.Node.Modules.Core.Contract.UnitTests.csproj", "{42925572-A9BF-4ECE-9FBA-1E5F2A5EF441}"
@@ -851,18 +849,6 @@ Global
 		{A5E59AD0-3AC4-49D9-8A86-A6051BA3267B}.Release|x64.Build.0 = Release|Any CPU
 		{A5E59AD0-3AC4-49D9-8A86-A6051BA3267B}.Release|x86.ActiveCfg = Release|Any CPU
 		{A5E59AD0-3AC4-49D9-8A86-A6051BA3267B}.Release|x86.Build.0 = Release|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Debug|x64.Build.0 = Debug|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Debug|x86.Build.0 = Debug|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Release|x64.ActiveCfg = Release|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Release|x64.Build.0 = Release|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Release|x86.ActiveCfg = Release|Any CPU
-		{23FA8350-599F-4711-9EC8-F86A4496F32C}.Release|x86.Build.0 = Release|Any CPU
 		{F5BF663E-CA5A-49F5-9734-AF131F42FAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5BF663E-CA5A-49F5-9734-AF131F42FAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5BF663E-CA5A-49F5-9734-AF131F42FAFF}.Debug|x64.ActiveCfg = Debug|Any CPU

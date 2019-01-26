@@ -48,7 +48,6 @@
       <ProjectReference Include="..\Catalyst.Helpers.Network\Catalyst.Helpers.Network.csproj" />
       <ProjectReference Include="..\Catalyst.Helpers.Util\Catalyst.Helpers.Util.csproj" />
       <ProjectReference Include="..\Catalyst.Node.Modules.Core.Transactions\Catalyst.Node.Modules.Core.Transactions.csproj" />
-      <ProjectReference Include="..\Catalyst.Node.Modules.Core\Catalyst.Node.Modules.Core.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
