@@ -17,14 +17,14 @@ namespace Catalyst.Node
         private static NodeOptions Instance { get; set; }
         private static readonly object Mutex = new object();
 
-        public enum Networks
+        public enum Networks : int
         {
             devnet = 1,
             testnet = 2,
             mainnet = 3
         }
         
-        public enum Enviroments
+        public enum Enviroments : int
         {
             debug = 1,
             test = 2,
@@ -69,19 +69,23 @@ namespace Catalyst.Node
         /// <param name="network"></param>
         /// <param name="platform"></param>
         /// <returns></returns>
-        internal static NodeOptions GetInstance(string env, string dataDir, string network, int platform)
+        internal static NodeOptions GetInstance(string enviroment, string dataDir, string network, int platform)
         {
-            Guard.Argument(env, nameof(env)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(platform, nameof(platform)).InRange(1,3);
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
-            Guard.Argument(platform, nameof(platform)).InRange(1,3);
-
+            Guard.Argument(enviroment, nameof(enviroment)).NotNull().NotEmpty().NotWhiteSpace();
+            
             if (Instance == null)
                 lock (Mutex)
                 {
-                    Instance = Enviroments.TryParse(env, true, out int envEnum) &&
-                     Networks.TryParse(network, true, out int networkEnum) && Instance == null
-                        ? new NodeOptions(envEnum, dataDir, networkEnum, platform)
+                    Instance = Instance == null
+                        ? new NodeOptions(
+                            (int)(Enviroments) Enum.Parse(typeof(Enviroments), enviroment),
+                            dataDir,
+                            (int)(Networks) Enum.Parse(typeof(Networks), network),
+                            platform
+                        )
                         : throw new ArgumentException(); 
                 }
             return Instance;
@@ -104,8 +108,8 @@ namespace Catalyst.Node
 
     public class NodeOptionsBuilder
     {
-        private NodeOptions _nodeOptions;
-        private IConfiguration _networkConfiguration;
+        private readonly NodeOptions _nodeOptions;
+        private readonly IConfiguration _networkConfiguration;
         private readonly List<Action<NodeOptions>> _builderActions;
 
         /// <summary>
@@ -118,10 +122,10 @@ namespace Catalyst.Node
         /// <exception cref="ArgumentException"></exception>
         public NodeOptionsBuilder(string env, string dataDir, string network, int platform)
         {
+            Guard.Argument(platform, nameof(platform)).InRange(1,3);
             Guard.Argument(env, nameof(env)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
-            Guard.Argument(platform, nameof(platform)).InRange(1,3);
             
             _builderActions = new List<Action<NodeOptions>>();
 

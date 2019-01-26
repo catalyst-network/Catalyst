@@ -37,7 +37,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public KernelBuilder WithDfsModule()
         {
-            kernel._serviceLoader.Add(n => n.DfsService = kernel.Container.Resolve<IDfs>());
+            kernel.ServiceLoader.Add(n => n.DfsService = kernel.Container.Resolve<IDfs>());
             return this;
         }
         
@@ -47,7 +47,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public KernelBuilder WithPeerModule()
         {
-            kernel._serviceLoader.Add(n => n.P2PService = kernel.Container.Resolve<IP2P>());
+            kernel.ServiceLoader.Add(n => n.P2PService = kernel.Container.Resolve<IP2P>());
             return this;
         }
         
@@ -57,7 +57,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public KernelBuilder WithContractModule()
         {
-            kernel._serviceLoader.Add(n => n.ContractService = kernel.Container.Resolve<IContract>());
+            kernel.ServiceLoader.Add(n => n.ContractService = kernel.Container.Resolve<IContract>());
             return this;
         }
         
@@ -67,7 +67,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public KernelBuilder WithMempoolModule()
         {
-            kernel._serviceLoader.Add(n => n.MempoolService = kernel.Container.Resolve<IMempool>());
+            kernel.ServiceLoader.Add(n => n.MempoolService = kernel.Container.Resolve<IMempool>());
             return this;
         }
         
@@ -77,7 +77,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public KernelBuilder WithLedgerModule()
         {
-            kernel._serviceLoader.Add(n => n.LedgerService = kernel.Container.Resolve<ILedger>());
+            kernel.ServiceLoader.Add(n => n.LedgerService = kernel.Container.Resolve<ILedger>());
             return this;
         }
         
@@ -87,7 +87,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public KernelBuilder WithGossipModule()
         {
-            kernel._serviceLoader.Add(n => n.GossipService = kernel.Container.Resolve<IGossip>());
+            kernel.ServiceLoader.Add(n => n.GossipService = kernel.Container.Resolve<IGossip>());
             return this;
         }
         
@@ -97,7 +97,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public KernelBuilder WithConsensusModule()
         {
-            kernel._serviceLoader.Add(n => n.ConsensusService = kernel.Container.Resolve<IConsensus>());
+            kernel.ServiceLoader.Add(n => n.ConsensusService = kernel.Container.Resolve<IConsensus>());
             return this;
         }
         
@@ -121,8 +121,8 @@ namespace Catalyst.Node
 
             if (!result)
             {
-                var oldAction = kernel._serviceLoader[kernel._serviceLoader.Count - 1];
-                kernel._serviceLoader.Remove(oldAction);
+                var oldAction = kernel.ServiceLoader[kernel.ServiceLoader.Count - 1];
+                kernel.ServiceLoader.Remove(oldAction);
             }
 
             return this;
@@ -148,6 +148,7 @@ namespace Catalyst.Node
         {
             Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
             Guard.Argument(container, nameof(container)).NotNull();
+            ServiceLoader = new List<Action<Kernel>>();
             NodeOptions = nodeOptions;
             Container = container;
         }
@@ -163,7 +164,7 @@ namespace Catalyst.Node
         public IContract ContractService;
         public IConsensus ConsensusService;
 
-        internal readonly List<Action<Kernel>> _serviceLoader;
+        internal readonly List<Action<Kernel>> ServiceLoader;
 
         /// <summary>
         ///     Get a thread safe kernel singleton.
@@ -173,98 +174,128 @@ namespace Catalyst.Node
         {
             Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
             if (_instance == null)
-                lock (Mutex)
+            {
+             lock (Mutex)
                 {
                     if (_instance == null)
-                    {   
-                        // check supplied data dir exists
-                        if (!Fs.DataDirCheck(nodeOptions.DataDir))
+                    {
+                        try
                         {
-                            try
-                            {
-                                // not there make one
-                                Fs.CreateSystemFolder(nodeOptions.DataDir);
-                            }
-                            catch (ArgumentNullException e)
-                            {
-                                LogException.Message(e.Message, e);
-                                throw;
-                            }
-                            catch (ArgumentException e)
-                            {
-                                LogException.Message(e.Message, e);
-                                throw;
-                            }
-                            catch (IOException e)
-                            {
-                                LogException.Message(e.Message, e);
-                                throw;
-                            }
+                            RunConfigStartUp(nodeOptions);
+                        }
+                        catch (Exception e)
+                        {
+                            LogException.Message("RunConfigStartUp", e);
+                            throw;
+                        }
 
-                            try
-                            {
-                                // make config with new system folder
-                                Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), NodeOptions.Network));
-                            }
-                            catch (ArgumentNullException e)
-                            {
-                                LogException.Message(e.Message, e);
-                                throw;
-                            }
-                            catch (ArgumentException e)
-                            {
-                                LogException.Message(e.Message, e);
-                                throw;
-                            }
-                            catch (IOException e)
-                            {
-                                LogException.Message(e.Message, e);
-                                throw;
-                            }
-                        }
-                        else
+                        try
                         {
-                            // dir does exist, check config exits
-                            if (!Fs.CheckConfigExists(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), NodeOptions.Network)))
-                            {
-                                try
-                                {
-                                    // make config with new system folder
-                                    Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), NodeOptions.Network));
-                                }
-                                catch (ArgumentNullException e)
-                                {
-                                    LogException.Message(e.Message, e);
-                                    throw;
-                                }
-                                catch (ArgumentException e)
-                                {
-                                    LogException.Message(e.Message, e);
-                                    throw;
-                                }
-                                catch (IOException e)
-                                {
-                                    LogException.Message(e.Message, e);
-                                    throw;
-                                }
-                            }
+                            _instance = new Kernel(nodeOptions, Configure(nodeOptions));   
                         }
-                        _instance = new Kernel(nodeOptions, Configure(nodeOptions)); //@TODO try catch
+                        catch (Exception e)
+                        {
+                            LogException.Message("new kernel", e);
+                            throw;
+                        }
                     }
-                }
+                }   
+            }
             return _instance;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void StartUp()
+        /// <param name="nodeOptions"></param>
+        /// <returns></returns>
+        private static void RunConfigStartUp(NodeOptions nodeOptions)
+        {
+            Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
+            // check supplied data dir exists
+            if (!Fs.DataDirCheck(nodeOptions.DataDir))
+            {
+                try
+                {
+                    // not there make one
+                    Fs.CreateSystemFolder(nodeOptions.DataDir);
+                }
+                catch (ArgumentNullException e)
+                {
+                    LogException.Message(e.Message, e);
+                    throw;
+                }
+                catch (ArgumentException e)
+                {
+                    LogException.Message(e.Message, e);
+                    throw;
+                }
+                catch (IOException e)
+                {
+                    LogException.Message(e.Message, e);
+                    throw;
+                }
+
+                try
+                {
+                    // make config with new system folder
+                    Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network));
+                }
+                catch (ArgumentNullException e)
+                {
+                    LogException.Message(e.Message, e);
+                    throw;
+                }
+                catch (ArgumentException e)
+                {
+                    LogException.Message(e.Message, e);
+                    throw;
+                }
+                catch (IOException e)
+                {
+                    LogException.Message(e.Message, e);
+                    throw;
+                }
+            }
+            else
+            {
+                // dir does exist, check config exits
+                if (!Fs.CheckConfigExists(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network)))
+                {
+                    try
+                    {
+                        // make config with new system folder
+                        Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), NodeOptions.Network));
+                    }
+                    catch (ArgumentNullException e)
+                    {
+                        LogException.Message(e.Message, e);
+                        throw;
+                    }
+                    catch (ArgumentException e)
+                    {
+                        LogException.Message(e.Message, e);
+                        throw;
+                    }
+                    catch (IOException e)
+                    {
+                        LogException.Message(e.Message, e);
+                        throw;
+                    }
+                }
+            }            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Kernel StartUp()
         {
             using (var kernalScope = Container.BeginLifetimeScope())
             {
-                _serviceLoader.ForEach(ba => ba(this));
-
-                kernalScope.CurrentScopeEnding += Dispose; //@TODO logic chek this?
+                kernalScope.CurrentScopeEnding += Dispose; //@TODO logic check this?
+                ServiceLoader.ForEach(ba => ba(this));
+                return this;
             }
         }
 
@@ -273,6 +304,7 @@ namespace Catalyst.Node
         /// </summary>
         public void Shutdown()
         {
+            throw new NotImplementedException();
             // @TODO some clean up and disposing of everything in some nice way
         }
         
