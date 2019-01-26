@@ -7,6 +7,8 @@ using Autofac.Configuration;
 using Autofac.Core.Lifetime;
 using Catalyst.Helpers.FileSystem;
 using Catalyst.Helpers.Logger;
+using Catalyst.Helpers.Network;
+using Catalyst.Helpers.RLP;
 using Catalyst.Node.Modules.Core.Consensus;
 using Catalyst.Node.Modules.Core.Contract;
 using Catalyst.Node.Modules.Core.Dfs;
@@ -14,6 +16,7 @@ using Catalyst.Node.Modules.Core.Gossip;
 using Catalyst.Node.Modules.Core.Ledger;
 using Catalyst.Node.Modules.Core.Mempool;
 using Catalyst.Node.Modules.Core.P2P;
+using Catalyst.Node.Modules.Core.P2P.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
@@ -21,7 +24,7 @@ namespace Catalyst.Node
 {
     public sealed class KernelBuilder
     {
-        private Kernel kernel;
+        public Kernel kernel;
 
         /// <summary>
         /// 
@@ -47,7 +50,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public KernelBuilder WithPeerModule()
         {
-            kernel.ServiceLoader.Add(n => n.P2PService = kernel.Container.Resolve<IP2P>());
+//            kernel.ServiceLoader.Add(n => n.P2PService = kernel.Container.Resolve<IP2P>());
             return this;
         }
         
@@ -128,8 +131,31 @@ namespace Catalyst.Node
             return this;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Kernel Build()
         {
+            Log.ByteArr(kernel.NodeOptions.PeerSettings.PublicKey.ToBytesForRlpEncoding());
+            Log.Message(kernel.NodeOptions.PeerSettings.BindAddress.ToString());
+            Log.Message(kernel.NodeOptions.PeerSettings.Port.ToString());
+
+            try
+            {
+                kernel.NodeIdentity = PeerIdentifier.BuildPeerId(
+                    kernel.NodeOptions.PeerSettings.PublicKey.ToBytesForRlpEncoding(),
+                    EndpointBuilder.BuildNewEndPoint(
+                        kernel.NodeOptions.PeerSettings.BindAddress,
+                        kernel.NodeOptions.PeerSettings.Port
+                    )
+                );
+            }
+            catch (ArgumentNullException e)
+            {
+                LogException.Message("Catalyst.Helpers.Network GetInstance", e);
+                throw;
+            }
             return kernel;
         }
     }
@@ -154,10 +180,11 @@ namespace Catalyst.Node
         }
 
         public IContainer Container { get; set; }
-        private static NodeOptions NodeOptions { get; set; }
+        public NodeOptions NodeOptions { get; set; }
+        public PeerIdentifier NodeIdentity { get; set; }
         
         public IDfs DfsService;
-        public IP2P P2PService;
+//        public IP2P P2PService;
         public IGossip GossipService;
         public ILedger LedgerService;
         public IMempool MempoolService;
@@ -265,7 +292,7 @@ namespace Catalyst.Node
                     try
                     {
                         // make config with new system folder
-                        Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), NodeOptions.Network));
+                        Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network));
                     }
                     catch (ArgumentNullException e)
                     {
@@ -289,13 +316,14 @@ namespace Catalyst.Node
         /// <summary>
         /// 
         /// </summary>
-        public Kernel StartUp()
+        public CatalystNode StartUp()
         {
-            using (var kernalScope = Container.BeginLifetimeScope())
+            CatalystNode catalystNode = CatalystNode.GetInstance(this);
+            using (var kernelScope = catalystNode.Kernel.Container.BeginLifetimeScope())
             {
-                kernalScope.CurrentScopeEnding += Dispose; //@TODO logic check this?
-                ServiceLoader.ForEach(ba => ba(this));
-                return this;
+                kernelScope.CurrentScopeEnding += Dispose; //@TODO logic check this?
+                catalystNode.Kernel.ServiceLoader.ForEach(ba => ba(this));
+                return catalystNode;
             }
         }
 

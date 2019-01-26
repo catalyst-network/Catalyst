@@ -43,7 +43,8 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         public static PeerIdentifier BuildPeerId(byte[] publicKey, IPEndPoint endPoint)
         {
             Guard.Argument(endPoint, nameof(endPoint)).NotNull();
-            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty().MaxCount(42).MinCount(42);
+            Log.Message(publicKey.Length.ToString());
+            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty().MaxCount(20).MinCount(20);
 
             // init blank nodeId
             var peerId = new byte[42]; //@TODO hook into new byte method

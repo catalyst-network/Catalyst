@@ -34,7 +34,6 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Helpers.Logger\Catalyst.Helpers.Logger.csproj" />
         <ProjectReference Include="..\Catalyst.Helpers.Ipfs\Catalyst.Helpers.Ipfs.csproj" />
-        <ProjectReference Include="..\Catalyst.Node.Modules.Core\Catalyst.Node.Modules.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Compile Remove="UnitTests\**" />

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Catalyst.Node.Modules.Core.P2P.Peer;
 
-namespace Catalyst.Node.Modules.Core.P2P
+namespace Catalyst.Node
 {
-    public interface IDht
+    public interface IIPPN
     {
         
         /// <summary>

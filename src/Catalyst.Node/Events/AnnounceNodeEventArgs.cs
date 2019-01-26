@@ -3,7 +3,7 @@ using Catalyst.Helpers.Logger;
 using Catalyst.Node.Modules.Core.P2P.Peer;
 using Dawn;
 
-namespace Catalyst.Node.Modules.Core.P2P.Events
+namespace Catalyst.Node.Events
 {
     public class AnnounceNodeEventArgs : EventArgs
     {

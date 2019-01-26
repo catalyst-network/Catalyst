@@ -69,7 +69,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
 
         /// <summary>
         /// </summary>
-        public event EventHandler<AnnounceNodeEventArgs> AnnounceNode;
+//        public event EventHandler<AnnounceNodeEventArgs> AnnounceNode;
 
         /// <summary>
         /// </summary>
@@ -175,14 +175,14 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
             Listener.Start();
             Log.Message("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
 
-            try
-            {
-                await AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
-            }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message("InboundConnectionListener: Events.Raise(AnnounceNodeEventArgs)", e);
-            }
+//            try
+//            {
+//                await AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
+//            }
+//            catch (ArgumentNullException e)
+//            {
+//                LogException.Message("InboundConnectionListener: Events.Raise(AnnounceNodeEventArgs)", e);
+//            }
 
             while (!Token.IsCancellationRequested)
                 try
