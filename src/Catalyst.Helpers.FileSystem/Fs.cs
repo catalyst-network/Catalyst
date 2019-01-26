@@ -14,13 +14,13 @@ namespace Catalyst.Helpers.FileSystem
         /// <returns></returns>
         public static DirectoryInfo GetUserHomeDir()
         {
-            var dir = Environment.OSVersion.Platform == PlatformID.Unix ||
+            var dir = Environment.OSVersion.Platform == PlatformID.Unix || //@TODO hook this into platform detection helper.
                       Environment.OSVersion.Platform == PlatformID.MacOSX
                 ? Environment.GetEnvironmentVariable("HOME")
                 : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
 
-            if (dir == null) throw new Exception();
-
+            Guard.Argument(dir, nameof(dir)).NotNull().NotEmpty();
+            
             return new DirectoryInfo(dir);
         }
 
@@ -40,7 +40,25 @@ namespace Catalyst.Helpers.FileSystem
         public static void CreateSystemFolder(string dataDir)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-            Directory.CreateDirectory(dataDir);
+            try
+            {
+                Directory.CreateDirectory(dataDir);
+            }
+            catch (ArgumentNullException e)
+            {
+                 Logger.LogException.Message(e.Message, e);
+                 throw;
+            }
+            catch (ArgumentException e)
+            {
+                Logger.LogException.Message(e.Message, e);
+                throw;       
+            }
+            catch (IOException e)
+            {
+                Logger.LogException.Message(e.Message, e);
+                throw;          
+            }
         }
 
         /// <summary>
@@ -54,8 +72,44 @@ namespace Catalyst.Helpers.FileSystem
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(configDir, nameof(configDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(modulesFiles, nameof(modulesFiles)).NotNull().NotEmpty().NotWhiteSpace();
-            File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{modulesFiles}", dataDir);
-            File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{network}.json", dataDir);
+            try
+            {
+                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{modulesFiles}", dataDir);                
+            }
+            catch (ArgumentNullException e)
+            {
+                Logger.LogException.Message(e.Message, e);
+                throw;
+            }
+            catch (ArgumentException e)
+            {
+                Logger.LogException.Message(e.Message, e);
+                throw;       
+            }
+            catch (IOException e)
+            {
+                Logger.LogException.Message(e.Message, e);
+                throw;          
+            }
+            try
+            {
+                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{network}.json", dataDir);
+            }
+            catch (ArgumentNullException e)
+            {
+                Logger.LogException.Message(e.Message, e);
+                throw;
+            }
+            catch (ArgumentException e)
+            {
+                Logger.LogException.Message(e.Message, e);
+                throw;       
+            }
+            catch (IOException e)
+            {
+                Logger.LogException.Message(e.Message, e);
+                throw;          
+            }
         }
 
         /// <summary>

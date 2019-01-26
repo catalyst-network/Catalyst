@@ -18,6 +18,7 @@
         <Optimize>true</Optimize>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+        <LangVersion>7.2</LangVersion>
         <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
         <GenerateAssemblyAuthorAttribute>true</GenerateAssemblyAuthorAttribute>
         <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>

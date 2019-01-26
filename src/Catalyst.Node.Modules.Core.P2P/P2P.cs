@@ -23,49 +23,41 @@ namespace Catalyst.Node.Modules.Core.P2P
         private static readonly object Mutex = new object();
 
         /// <summary>
+        /// 
         /// </summary>
-        /// <param name="ip2PSettings"></param>
-        /// <param name="sslSettings"></param>
         /// <param name="dataDir"></param>
         /// <param name="publicKey"></param>
         /// <param name="acceptInvalidCerts"></param>
         /// <param name="mutualAuthentication"></param>
-        /// <param name="bannedIps"></param>
         /// <param name="debug"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private P2P(
-            string dataDir,
-            byte[] publicKey,
-            bool acceptInvalidCerts,
-            bool mutualAuthentication,
-            bool debug
+ 
         )
         {
-            Guard.Argument(dataDir, nameof(dataDir)).NotNull();
+//            Guard.Argument(dataDir, nameof(dataDir)).NotNull();
             
-            try
-            {
-                NodeIdentity = PeerIdentifier.BuildPeerId(publicKey,
-                    EndpointBuilder.BuildNewEndPoint(p2PSettings.BindAddress, p2PSettings.Port));
-            }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message("Catalyst.Helpers.Network GetInstance", e);
-                return;
-            }
+//            try
+//            {
+//                NodeIdentity = PeerIdentifier.BuildPeerId(publicKey,
+//                    EndpointBuilder.BuildNewEndPoint(p2PSettings.BindAddress, p2PSettings.Port));
+//            }
+//            catch (ArgumentNullException e)
+//            {
+//                LogException.Message("Catalyst.Helpers.Network GetInstance", e);
+//                return;
+//            }
 
 //            if (BannedIps?.Count > 0) BannedIps = new List<string>(bannedIps);
 
-            Debug = debug;// @todo get from node options
-            AcceptInvalidCerts = acceptInvalidCerts; //@TODO put this in settings
-            MutuallyAuthenticate = mutualAuthentication; //@TODO put this in settings
+//            AcceptInvalidCerts = acceptInvalidCerts; //@TODO put this in settings
+//            MutuallyAuthenticate = mutualAuthentication; //@TODO put this in settings
             CancellationToken = new CancellationTokenSource();
             Token = CancellationToken.Token;
             
             try
             {
                 SeedNodes = new List<IPEndPoint>();
-                GetSeedNodes(p2PSettings);
+//                GetSeedNodes(p2PSettings);
             }
             catch (Exception e)
             {
@@ -80,13 +72,13 @@ namespace Catalyst.Node.Modules.Core.P2P
             
             PeerManager.AnnounceNode += Announce;
             
-            Task.Run(async () =>
-                await PeerManager.InboundConnectionListener(
-                    new IPEndPoint(IPAddress.Parse(p2PSettings.BindAddress),
-                        p2PSettings.Port
-                    )
-                )
-            );
+//            Task.Run(async () =>
+//                await PeerManager.InboundConnectionListener(
+//                    new IPEndPoint(IPAddress.Parse(p2PSettings.BindAddress),
+//                        p2PSettings.Port
+//                    )
+//                )
+//            );
         }
 
         private bool Debug { get; }
@@ -217,23 +209,17 @@ namespace Catalyst.Node.Modules.Core.P2P
         /// <param name="dataDir"></param>
         /// <param name="publicKey"></param>
         /// <returns></returns>
-        public static P2P GetInstance(string dataDir, byte[] publicKey)
+//        public static P2P GetInstance(string dataDir, byte[] publicKey)
+        public static P2P GetInstance()
         {
-            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty();
+//            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+//            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty();
 
             if (Instance != null) return Instance;
             lock (Mutex)
             {
                 if (Instance == null)
-                    Instance = new P2P(
-                        dataDir,
-                        publicKey,
-                        true,
-                        false,
-                        null,
-                        true
-                    );
+                    Instance = new P2P();
             }
             return Instance;
         }

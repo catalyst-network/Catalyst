@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Catalyst.Helpers.FileSystem;
+using Catalyst.Helpers.Logger;
 using Catalyst.Helpers.Network;
 using Catalyst.Helpers.Util;
 using Dawn;
@@ -13,14 +14,33 @@ namespace Catalyst.Node
 {
     public sealed class NodeOptions
     {
-        
         private static NodeOptions Instance { get; set; }
         private static readonly object Mutex = new object();
 
+        public enum Networks
+        {
+            devnet = 1,
+            testnet = 2,
+            mainnet = 3
+        }
+        
+        public enum Enviroments
+        {
+            debug = 1,
+            test = 2,
+            benchmark = 3,
+            simulation = 4,
+            prod = 5
+        }
+        
         /// <summary>
-        ///     Settings constructor
+        ///    Settings constructor
         /// </summary>
-        private NodeOptions(int env, string dataDir, string network, int platform)
+        /// <param name="env"></param>
+        /// <param name="dataDir"></param>
+        /// <param name="network"></param>
+        /// <param name="platform"></param>
+        private NodeOptions(int env, string dataDir, int network, int platform)
         {
             Env = env;
             DataDir = dataDir;
@@ -29,8 +49,8 @@ namespace Catalyst.Node
         }
         
         public int Env { get; set; }
+        public int Network { get; set; }
         public int Platform { get; set; }
-        public string Network { get; set; }
         public string DataDir { get; set; }
         public DfsSettings DfsSettings { get; internal set; }
         public PeerSettings PeerSettings { get; internal set; }
@@ -42,15 +62,27 @@ namespace Catalyst.Node
         public ConsensusSettings ConsensusSettings { get; internal set; }
 
         /// <summary>
-        ///     Get a thread safe settings singleton.
+        ///    Get a thread safe settings singleton.
         /// </summary>
+        /// <param name="env"></param>
+        /// <param name="dataDir"></param>
+        /// <param name="network"></param>
+        /// <param name="platform"></param>
         /// <returns></returns>
-        internal static NodeOptions GetInstance(int env, string dataDir, string network, int platform)
+        internal static NodeOptions GetInstance(string env, string dataDir, string network, int platform)
         {
+            Guard.Argument(env, nameof(env)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(platform, nameof(platform)).InRange(1,3);
+
             if (Instance == null)
                 lock (Mutex)
                 {
-                    if (Instance == null) Instance = new NodeOptions(env, dataDir, network, platform);
+                    Instance = Enviroments.TryParse(env, true, out int envEnum) &&
+                     Networks.TryParse(network, true, out int networkEnum) && Instance == null
+                        ? new NodeOptions(envEnum, dataDir, networkEnum, platform)
+                        : throw new ArgumentException(); 
                 }
             return Instance;
         }
@@ -83,11 +115,64 @@ namespace Catalyst.Node
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
         /// <param name="platform"></param>
-        public NodeOptionsBuilder(int env, string dataDir, string network, int platform)
+        /// <exception cref="ArgumentException"></exception>
+        public NodeOptionsBuilder(string env, string dataDir, string network, int platform)
         {
+            Guard.Argument(env, nameof(env)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(platform, nameof(platform)).InRange(1,3);
+            
             _builderActions = new List<Action<NodeOptions>>();
+
+            if (!ValidEnvPram(env) || !ValidNetworkParam(network)) throw new ArgumentException();
+            
             _networkConfiguration = LoadNetworkConfig(network, dataDir);
             _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        private bool ValidNetworkParam(string network)
+        {
+            switch (network)
+            {
+                case "devnet":
+                    return true;
+                case "testnet":
+                    return true;
+                case "mainnet":
+                    return true;
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="env"></param>
+        /// <returns></returns>
+        private bool ValidEnvPram(string env)
+        {
+            switch (env)
+            {
+                case "debug":
+                    return true;                
+                case "test":
+                    return true;                
+                case "benchmark":
+                    return true;                
+                case "simulation":
+                    return true;                
+                case "prod":
+                    return true;                
+                default:
+                    throw new ArgumentException();
+            }
         }
         
         /// <summary>
@@ -96,12 +181,7 @@ namespace Catalyst.Node
         /// <returns></returns>
         public NodeOptionsBuilder LoadDfsSettings()
         {
-            _builderActions.Add(
-                n => n.DfsSettings
-                    = new DfsSettings(
-                        _networkConfiguration.GetSection("Dfs")
-                        )
-                );
+            _builderActions.Add(n => n.DfsSettings = new DfsSettings(_networkConfiguration.GetSection("Dfs")));
             return this;
         }
         
@@ -172,16 +252,6 @@ namespace Catalyst.Node
         public NodeOptionsBuilder LoadWalletSettings()
         {
             _builderActions.Add(n => n.WalletSettings = new WalletSettings(_networkConfiguration.GetSection("Wallet")));
-            return this;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public NodeOptionsBuilder Override()
-        {
-            _builderActions.Add(n => n.DfsSettings = new DfsSettings(_networkConfiguration.GetSection("Dfs")));
             return this;
         }
         
