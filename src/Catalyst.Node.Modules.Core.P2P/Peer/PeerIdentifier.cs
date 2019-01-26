@@ -134,7 +134,12 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <exception cref="ArgumentNullException"></exception>
         public bool ValidatePeerId(byte[] peerId)
         {
-            Guard.Argument(peerId, nameof(peerId)).NotNull().NotEmpty().MinCount(42).MaxCount(42);
+            Guard.Argument(peerId, nameof(peerId))
+                .NotNull()
+                .NotEmpty()
+                .MinCount(42)
+                .MaxCount(42);
+            
             if (peerId == null) throw new ArgumentNullException(nameof(peerId));
 
             try
@@ -215,6 +220,7 @@ namespace Catalyst.Node.Modules.Core.P2P.Peer
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientId(byte[] peerId)
         {
+            //@TODO have a known list of clients.
             if (!Regex.IsMatch(ByteUtil.ByteToString(peerId.Slice(0, 2)), @"^[a-zA-Z]+$"))
                 throw new ArgumentException("ClientID not valid");
         }

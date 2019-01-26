@@ -12,6 +12,7 @@
         <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <TargetFramework>netcoreapp2.1</TargetFramework>
+        <LangVersion>7.2</LangVersion>
         <RootNamespace>Catalyst.Helpers.FileSystem</RootNamespace>
         <PackageId>Catalyst.Helpers.FileSystem</PackageId>
         <AssemblyName>Catalyst.Helpers.FileSystem</AssemblyName>
@@ -38,6 +39,7 @@
         <None Remove="UnitTests\**" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Helpers.Logger\Catalyst.Helpers.Logger.csproj" />
       <ProjectReference Include="..\Catalyst.Helpers.Util\Catalyst.Helpers.Util.csproj" />
     </ItemGroup>
     <ItemGroup>

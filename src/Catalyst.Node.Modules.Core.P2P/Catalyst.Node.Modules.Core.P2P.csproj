@@ -13,6 +13,7 @@
         <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <TargetFramework>netcoreapp2.1</TargetFramework>
+        <LangVersion>7.2</LangVersion>
         <RootNamespace>Catalyst.Node.Modules.Core.P2P</RootNamespace>
         <PackageId>Catalyst.Node.Modules.Core.P2P</PackageId>
         <AssemblyName>Catalyst.Node.Modules.Core.P2P</AssemblyName>

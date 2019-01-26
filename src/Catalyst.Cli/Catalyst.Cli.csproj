@@ -13,6 +13,7 @@
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.1</TargetFramework>
+        <LangVersion>7.2</LangVersion>
         <RootNamespace>Catalyst.Cli</RootNamespace>
         <PackageId>Catalyst.Cli</PackageId>
         <AssemblyName>Catalyst.Cli</AssemblyName>

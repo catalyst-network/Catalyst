@@ -16,10 +16,7 @@ namespace Catalyst.Helpers.Redis
         /// <param name="connectionParam"></param>
         private RedisConnector(string connectionParam)
         {
-            Guard.Argument(connectionParam, nameof(connectionParam))
-                .NotNull()
-                .NotEmpty()
-                .NotWhiteSpace();
+            Guard.Argument(connectionParam, nameof(connectionParam)).NotNull().NotEmpty().NotWhiteSpace();
             _connectionParam = connectionParam;
             _connection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(_connectionParam));
         }

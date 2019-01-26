@@ -25,20 +25,6 @@ namespace Catalyst.Node
             Kernel = kernel;
         }
         
-        public void Start()
-        {
-            using (var scope = Kernel.Container.BeginLifetimeScope())
-            {
-                var ContractModule = scope.Resolve<IContract>();
-                var ConsensusModule = scope.Resolve<IConsensus>();
-                var dfsModule = scope.Resolve<IDfs>();
-                var gossipModule = scope.Resolve<IGossip>();
-                var ledgerService = scope.Resolve<ILedger>();
-                var mempoolModule = scope.Resolve<IMempool>();
-                var peerService = scope.Resolve<IP2P>();
-            }
-        }
-        
         private static CatalystNode Instance { get; set; }
 
         /// <summary>

@@ -1,14 +1,139 @@
 using System;
+using System.Collections.Generic;
 using Autofac;
 using System.IO;
 using System.Runtime.Loader;
 using Autofac.Configuration;
-using Catalyst.Helpers.Util;
+using Autofac.Core.Lifetime;
 using Catalyst.Helpers.FileSystem;
+using Catalyst.Helpers.Logger;
+using Catalyst.Node.Modules.Core.Consensus;
+using Catalyst.Node.Modules.Core.Contract;
+using Catalyst.Node.Modules.Core.Dfs;
+using Catalyst.Node.Modules.Core.Gossip;
+using Catalyst.Node.Modules.Core.Ledger;
+using Catalyst.Node.Modules.Core.Mempool;
+using Catalyst.Node.Modules.Core.P2P;
 using Dawn;
+using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node
 {
+    public sealed class KernelBuilder
+    {
+        private Kernel kernel;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public KernelBuilder(NodeOptions nodeOptions)
+        {
+            kernel = Kernel.GetInstance(nodeOptions);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KernelBuilder WithDfsModule()
+        {
+            kernel._serviceLoader.Add(n => n.DfsService = kernel.Container.Resolve<IDfs>());
+            return this;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KernelBuilder WithPeerModule()
+        {
+            kernel._serviceLoader.Add(n => n.P2PService = kernel.Container.Resolve<IP2P>());
+            return this;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KernelBuilder WithContractModule()
+        {
+            kernel._serviceLoader.Add(n => n.ContractService = kernel.Container.Resolve<IContract>());
+            return this;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KernelBuilder WithMempoolModule()
+        {
+            kernel._serviceLoader.Add(n => n.MempoolService = kernel.Container.Resolve<IMempool>());
+            return this;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KernelBuilder WithLedgerModule()
+        {
+            kernel._serviceLoader.Add(n => n.LedgerService = kernel.Container.Resolve<ILedger>());
+            return this;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KernelBuilder WithGossipModule()
+        {
+            kernel._serviceLoader.Add(n => n.GossipService = kernel.Container.Resolve<IGossip>());
+            return this;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KernelBuilder WithConsensusModule()
+        {
+            kernel._serviceLoader.Add(n => n.ConsensusService = kernel.Container.Resolve<IConsensus>());
+            return this;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KernelBuilder WithWalletModule()
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public KernelBuilder When(Func<Boolean> condition)
+        {
+            var result = condition.Invoke();
+
+            if (!result)
+            {
+                var oldAction = kernel._serviceLoader[kernel._serviceLoader.Count - 1];
+                kernel._serviceLoader.Remove(oldAction);
+            }
+
+            return this;
+        }
+        
+        public Kernel Build()
+        {
+            return kernel;
+        }
+    }
+    
     public sealed class Kernel : IDisposable
     {
         private static Kernel _instance;
@@ -29,10 +154,19 @@ namespace Catalyst.Node
 
         public IContainer Container { get; set; }
         private static NodeOptions NodeOptions { get; set; }
+        
+        public IDfs DfsService;
+        public IP2P P2PService;
+        public IGossip GossipService;
+        public ILedger LedgerService;
+        public IMempool MempoolService;
+        public IContract ContractService;
+        public IConsensus ConsensusService;
+
+        internal readonly List<Action<Kernel>> _serviceLoader;
 
         /// <summary>
         ///     Get a thread safe kernel singleton.
-        ///     @TODO need check that if we dont pass all module options you cant start a livenet instance
         /// </summary>
         /// <returns></returns>
         public static Kernel GetInstance(NodeOptions nodeOptions)
@@ -42,23 +176,80 @@ namespace Catalyst.Node
                 lock (Mutex)
                 {
                     if (_instance == null)
-                    {
+                    {   
                         // check supplied data dir exists
                         if (!Fs.DataDirCheck(nodeOptions.DataDir))
                         {
-                            // not there make one
-                            Fs.CreateSystemFolder(nodeOptions.DataDir);
-                            // make config with new system folder
-                            Fs.CopySkeletonConfigs(nodeOptions.DataDir, nodeOptions.Network);
+                            try
+                            {
+                                // not there make one
+                                Fs.CreateSystemFolder(nodeOptions.DataDir);
+                            }
+                            catch (ArgumentNullException e)
+                            {
+                                LogException.Message(e.Message, e);
+                                throw;
+                            }
+                            catch (ArgumentException e)
+                            {
+                                LogException.Message(e.Message, e);
+                                throw;
+                            }
+                            catch (IOException e)
+                            {
+                                LogException.Message(e.Message, e);
+                                throw;
+                            }
+
+                            try
+                            {
+                                // make config with new system folder
+                                Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), NodeOptions.Network));
+                            }
+                            catch (ArgumentNullException e)
+                            {
+                                LogException.Message(e.Message, e);
+                                throw;
+                            }
+                            catch (ArgumentException e)
+                            {
+                                LogException.Message(e.Message, e);
+                                throw;
+                            }
+                            catch (IOException e)
+                            {
+                                LogException.Message(e.Message, e);
+                                throw;
+                            }
                         }
                         else
                         {
                             // dir does exist, check config exits
-                            if (!Fs.CheckConfigExists(nodeOptions.DataDir, nodeOptions.Network))
-                                Fs.CopySkeletonConfigs(nodeOptions.DataDir, nodeOptions.Network);
+                            if (!Fs.CheckConfigExists(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), NodeOptions.Network)))
+                            {
+                                try
+                                {
+                                    // make config with new system folder
+                                    Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), NodeOptions.Network));
+                                }
+                                catch (ArgumentNullException e)
+                                {
+                                    LogException.Message(e.Message, e);
+                                    throw;
+                                }
+                                catch (ArgumentException e)
+                                {
+                                    LogException.Message(e.Message, e);
+                                    throw;
+                                }
+                                catch (IOException e)
+                                {
+                                    LogException.Message(e.Message, e);
+                                    throw;
+                                }
+                            }
                         }
-                        
-                        _instance = new Kernel(nodeOptions, ConfigureContainer(nodeOptions)); //@TODO try catch
+                        _instance = new Kernel(nodeOptions, Configure(nodeOptions)); //@TODO try catch
                     }
                 }
             return _instance;
@@ -67,11 +258,32 @@ namespace Catalyst.Node
         /// <summary>
         /// 
         /// </summary>
+        public void StartUp()
+        {
+            using (var kernalScope = Container.BeginLifetimeScope())
+            {
+                _serviceLoader.ForEach(ba => ba(this));
+
+                kernalScope.CurrentScopeEnding += Dispose; //@TODO logic chek this?
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Shutdown()
+        {
+            // @TODO some clean up and disposing of everything in some nice way
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        private static IContainer ConfigureContainer(NodeOptions options)
+        private static IContainer Configure(NodeOptions options)
         {
-            // Set path to load assemblies from ** be-carefull **
+            // Set path to load assemblies from ** be-careful **
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
                 context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(),
                     $"{assembly.Name}.dll"));
@@ -81,30 +293,33 @@ namespace Catalyst.Node
             
             // register our options object
             builder.RegisterType<NodeOptions>();
-
-            // load module config file
-            var moduleConfig = new ConfigurationBuilder()
+            
+            // register modules from config file
+            var coreModules = new ConfigurationModule(new ConfigurationBuilder()
                 .AddJsonFile($"{options.DataDir}/modules.json")
-                .Build();
-            
-            // register modules
-            var coreModules = new ConfigurationModule(moduleConfig);
+                .Build());
             builder.RegisterModule(coreModules);
-            
-            // load components config file
-            var componentConfig = new ConfigurationBuilder()
+                        
+            // register components from config file
+            var components = new ConfigurationModule(new ConfigurationBuilder()
                 .AddJsonFile($"{options.DataDir}/components.json")
-                .Build();
-            
-            // register components
-            var components = new ConfigurationModule(componentConfig);
+                .Build());
             builder.RegisterModule(components);
 
-            var container = builder.Build();   
-
-            return container;
+            // return a built container
+            return builder.Build();   
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Dispose(object sender, LifetimeScopeEndingEventArgs e)
+        {
+            Dispose();
+        }
+        
         /// <summary>
         /// 
         /// </summary>
