@@ -1,9 +1,9 @@
+stages:
+    - build
+    - test
+
 build_dotnet:
     image: microsoft/dotnet:latest
-
-    stages:
-        - build
-        - test
 
     before_script:
         - "cd src"
@@ -24,9 +24,6 @@ build_docker:
     
     services:
         - docker:dind
-    
-    stages:
-        - build
 
     build:
         stage: build
