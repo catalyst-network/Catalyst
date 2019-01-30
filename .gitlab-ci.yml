@@ -1,4 +1,4 @@
-build:dotnet:
+build_dotnet:
     image: microsoft/dotnet:latest
 
     stages:
@@ -19,7 +19,7 @@ build:dotnet:
         script: 
             - "ls ./**/UnitTests/*.csproj | dotnet test"
 
-build:docker:
+build_docker:
     image: docker:stable
     
     services:
