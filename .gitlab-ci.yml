@@ -2,30 +2,24 @@ stages:
     - build
     - test
 
-build_dotnet:
+dotnet_build:
     image: microsoft/dotnet:latest
-
     before_script:
         - "cd src"
         - "dotnet restore"
+    stage: build
+    script:
+        - "dotnet build"
 
-    build:
-        stage: build
-        script:
-            - "dotnet build"
-
-    test:
-        stage: test
-        script: 
-            - "ls ./**/UnitTests/*.csproj | dotnet test"
+dotnet_test:
+    stage: test
+    script: 
+        - "ls ./**/UnitTests/*.csproj | dotnet test"
 
 build_docker:
     image: docker:stable
-    
     services:
         - docker:dind
-
-    build:
-        stage: build
-        script:
-            - "docker build ."
+    stage: build
+    script:
+        - "docker build ."
