@@ -14,7 +14,7 @@ dotnet_build:
 dotnet_test:
     stage: test
     script: 
-        - "ls ./**/UnitTests/*.csproj | dotnet test"
+        - "for project in `ls ./src/**/UnitTests/*.csproj` ; do dotnet test ${project} --no-build; done;"
 
 build_docker:
     image: docker:stable
