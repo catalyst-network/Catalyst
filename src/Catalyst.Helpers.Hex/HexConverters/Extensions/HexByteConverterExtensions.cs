@@ -211,7 +211,7 @@ namespace Catalyst.Helpers.Hex.HexConverters.Extensions
         private static byte FromCharacterToByte(char character, int index, int shift = 0)
         {
             if (character <= 0) throw new ArgumentOutOfRangeException(nameof(character));
-            if (index <= 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             var value = (byte) character;
             if (0x40 < value && 0x47 > value || 0x60 < value && 0x67 > value)
             {
