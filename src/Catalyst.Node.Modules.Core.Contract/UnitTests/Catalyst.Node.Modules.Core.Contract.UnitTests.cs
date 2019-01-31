@@ -13,6 +13,7 @@ namespace Catalyst.Node.Modules.Core.Contract.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         public void MethodTest()
         {
             throw new NotImplementedException();

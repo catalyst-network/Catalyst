@@ -13,6 +13,7 @@ namespace Catalyst.Helpers.Logger.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         public void MethodTest()
         {
             throw new NotImplementedException();
