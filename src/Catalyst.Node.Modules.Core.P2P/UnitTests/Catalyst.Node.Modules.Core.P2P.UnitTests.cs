@@ -13,6 +13,7 @@ namespace Catalyst.Node.Modules.Core.P2P.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         public void MethodTest()
         {
             throw new NotImplementedException();

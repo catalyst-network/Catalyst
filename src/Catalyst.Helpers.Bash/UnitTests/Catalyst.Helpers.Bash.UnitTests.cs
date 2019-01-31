@@ -13,6 +13,7 @@ namespace Catalyst.Helpers.Bash.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         public void MethodTest()
         {
             throw new NotImplementedException();
