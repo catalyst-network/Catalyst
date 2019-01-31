@@ -17,13 +17,12 @@ WORKDIR /srv/src/Catalyst.Node
 COPY --from=publish /srv/src/Catalyst.Node/out ./
 
 RUN mkdir /root/.Catalyst
-COPY certificate.pem /root/.Catalyst
-COPY mycert.pfx /root/.Catalyst
-COPY mykey.pem /root/.Catalyst
+# COPY certificate.pem /root/.Catalyst
+# COPY mycert.pfx /root/.Catalyst
+# COPY mykey.pem /root/.Catalyst
 
 COPY entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 RUN ls -la
 RUN pwd
 ENTRYPOINT ["/srv/src/Catalyst.Node/entrypoint.sh"]
-
