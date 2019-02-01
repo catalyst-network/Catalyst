@@ -12,6 +12,7 @@ namespace Catalyst.Helpers.KeyValueStore
         void Connect(IPEndPoint host);
 
         /// <summary>
+        /// Sets the <see cref="value"/>for the given <see cref="key"/>> if it doesn't exist yet in the store
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
