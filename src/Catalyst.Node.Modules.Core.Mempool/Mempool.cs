@@ -21,7 +21,7 @@ namespace Catalyst.Node.Modules.Core.Mempool
         /// <summary>
         /// </summary>
         /// <param name="keyValueStore"></param>
-        private Mempool(IKeyValueStore keyValueStore)
+        public Mempool(IKeyValueStore keyValueStore)
         {
             Guard.Argument(keyValueStore, nameof(keyValueStore)).NotNull();
             _keyValueStore = keyValueStore;

@@ -24,7 +24,7 @@ namespace Catalyst.Helpers.Redis
             _when = when;
         }
 
-//        public IPAddress Host { get; set; }
+        //public IPAddress Host { get; set; }
 
         public void Connect(IPEndPoint host)
         {
@@ -32,13 +32,7 @@ namespace Catalyst.Helpers.Redis
             _redisConnector = RedisConnector.GetInstance(host);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="expiry"></param>
-        /// <param name="when"></param>
-        /// <returns></returns>
+        ///<inheritdoc />
         public bool Set(byte[] key, byte[] value, TimeSpan? expiry)
         {
             Guard.Argument(key, nameof(key)).NotEmpty();
