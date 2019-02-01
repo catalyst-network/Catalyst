@@ -1,0 +1,21 @@
+{
+  "defaultAssembly": "Catalyst.Node.Core",
+  "components": [
+    {
+      "type": "Catalyst.Helpers.Redis.Redis, Catalyst.Helpers.Redis",
+      "services": [
+        {
+          "type": "Catalyst.Helpers.KeyValueStore.IKeyValueStore, Catalyst.Helpers.KeyValueStore"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Helpers.Ipfs.IpfsConnector, Catalyst.Helpers.Ipfs",
+      "services": [
+        {
+          "type": "Catalyst.Helpers.Ipfs.IIpfs, Catalyst.Helpers.Ipfs"
+        }
+      ]
+    }
+  ]
+}

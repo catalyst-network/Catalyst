@@ -4,15 +4,16 @@ using System.Net;
 using System.Runtime.Loader;
 using Autofac;
 using Autofac.Configuration;
-using Catalyst.Helpers.Exceptions;
-using Catalyst.Helpers.FileSystem;
-using Catalyst.Helpers.Shell;
+using Catalyst.Node.Common.Shell;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Cli
 {
     public class Program
     {
+        public const string CatalystSubfolder = ".Catalyst";
+        public const string shellFileName = "shell.json";
+        
         private static uint Env { get; set; }
         private static uint Port { get; set; }
         private static string Network { get; set; }
@@ -28,15 +29,21 @@ namespace Catalyst.Cli
         {
             const int bufferSize = 1024 * 67 + 128;
 
-            AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
+            //TODO: Log exception to file
+            //AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
 
-            if (!Directory.Exists($"{Fs.GetUserHomeDir()}/.Catalyst"))
-                Directory.CreateDirectory($"{Fs.GetUserHomeDir()}/.Catalyst");
+            var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
+            
+            if (!Directory.Exists(catalystHomeDirectory))
+                Directory.CreateDirectory(catalystHomeDirectory);
 
             // check if user home data dir has a shell config
-            if (!File.Exists($"{Fs.GetUserHomeDir()}/.Catalyst/shell.json"))
+            ;
+            var shellFilePath = Path.Combine(catalystHomeDirectory, shellFileName);
+            if (!File.Exists(shellFilePath))
                 File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/config.shell.json",
-                    $"{Fs.GetUserHomeDir()}/.Catalyst/shell.json");
+                    shellFilePath);
 
             // resolve config from autofac
             var builder = new ContainerBuilder();
@@ -44,7 +51,7 @@ namespace Catalyst.Cli
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
                 context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
 
-            var shellConfig = new ConfigurationBuilder().AddJsonFile($"{Fs.GetUserHomeDir()}/.Catalyst/shell.json")
+            var shellConfig = new ConfigurationBuilder().AddJsonFile(shellFilePath)
                 .Build();
 
             var shellModule = new ConfigurationModule(shellConfig);

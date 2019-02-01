@@ -32,9 +32,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Helpers.Exceptions\Catalyst.Helpers.Exceptions.csproj" />
-        <ProjectReference Include="..\Catalyst.Helpers.FileSystem\Catalyst.Helpers.FileSystem.csproj" />
-        <ProjectReference Include="..\Catalyst.Helpers.Shell\Catalyst.Helpers.Shell.csproj" />
+        <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="config.shell.json" />
@@ -54,17 +52,5 @@
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
         <DebugSymbols>False</DebugSymbols>
-    </PropertyGroup>
-    <ItemGroup>
-        <Compile Remove="UnitTests\**" />
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Remove="UnitTests\**" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Remove="UnitTests\**" />
-    </ItemGroup>
-    <PropertyGroup>
-        <DefaultItemExcludes>./UnitTests</DefaultItemExcludes>
     </PropertyGroup>
 </Project>

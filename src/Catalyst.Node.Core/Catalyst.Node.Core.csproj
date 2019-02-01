@@ -1,0 +1,85 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Title>Catalyst Node</Title>
+        <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+        <PackageDescription>Catalyst Node</PackageDescription>
+        <Copyright>MIT</Copyright>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageLicenseUrl>http://github.com/atlascity/catalyst-Node/LICENSE.md</PackageLicenseUrl>
+        <PackageProjectUrl>http://github.com/atlascity/catalyst-Node/</PackageProjectUrl>
+        <RepositoryUrl>http://github.com/atlascity/catalyst-Node/</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
+        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <PackageId>Catalyst.Node</PackageId>
+        <Deterministic>true</Deterministic>
+        <Optimize>true</Optimize>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+        <LangVersion>7.2</LangVersion>
+        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+        <GenerateAssemblyAuthorAttribute>true</GenerateAssemblyAuthorAttribute>
+        <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Akka" Version="1.3.11" />
+        <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+        <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
+        <PackageReference Include="DnsClient" Version="1.2.0" />
+        <PackageReference Include="Ipfs.Api" Version="0.23.6" />
+        <PackageReference Include="Ipfs.Core" Version="0.40.0" />
+        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+        <PackageReference Include="Networker" Version="3.0.9-rc" />
+        <PackageReference Include="Networker.Formatter.ProtobufNet" Version="3.0.9-rc" />
+        <PackageReference Include="Serilog" Version="2.7.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801" />
+        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
+        <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
+        <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include=".\Config\components.json;.\Config\devnet.json;.\Config\testnet.json;.\Config\mainnet.json;">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+        </Content>
+        <Content Include="Config\components.json" />
+    </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>False</DebugSymbols>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <_UnmanagedRegistrationCache Remove="obj\Catalyst.Node.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+    <ItemGroup>
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+    <ItemGroup>
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.pdb" />
+    </ItemGroup>
+    <ItemGroup>
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll.manifest" />
+    </ItemGroup>
+    <ItemGroup>
+      <DeployManifest Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.application" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
+    </ItemGroup>
+</Project>
