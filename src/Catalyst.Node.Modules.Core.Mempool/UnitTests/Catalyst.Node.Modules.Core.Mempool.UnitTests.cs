@@ -1,44 +1,49 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
+using System.Linq;
 using System.Threading;
 using Catalyst.Helpers.Bash;
+using Catalyst.Helpers.KeyValueStore;
 using Catalyst.Helpers.Network;
 using Catalyst.Helpers.Redis;
 using Catalyst.Protocols.Mempool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using StackExchange.Redis;
+using NSubstitute;
+using FluentAssertions;
+using Google.Protobuf;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute.ExceptionExtensions;
 
 namespace Catalyst.Node.Modules.Core.Mempool.UnitTests
 {
-    [TestClass]
+    
     public class UT_Mempool
     {
         private static readonly ConnectionMultiplexer Cm = RedisConnector
             .GetInstance(EndpointBuilder.BuildNewEndPoint("127.0.0.1", 6379)).Connection;
 
-        private static TestMempoolSettings _settings;
-        private static readonly Mempool Memp = Mempool.GetInstance(new Redis());
+        private readonly Mempool _memPool;
 
-        private static readonly Key _k = new Key();
-        private static readonly Tx _t = new Tx();
+        private readonly Key _key;
+        private readonly Tx _transaction;
+        private readonly IKeyValueStore _keyValueStore;
 
-        [ClassInitialize]
-        public static void SetUp(TestContext testContext)
+        public UT_Mempool()
         {
-            _settings = new TestMempoolSettings {Type = "redis", When = "NotExists"};
-        }
+            _keyValueStore = Substitute.For<IKeyValueStore>();
+            _memPool = new Mempool(_keyValueStore);
 
-        [TestInitialize]
-        public void Initialize()
-        {
-            _k.HashedSignature = "hashed_signature";
-
-            _t.Amount = 1;
-            _t.Signature = "signature";
-            _t.AddressDest = "address_dest";
-            _t.AddressSource = "address_source";
-            _t.Updated = new Tx.Types.Timestamp {Nanos = 100, Seconds = 30};
+            _key = new Key() {HashedSignature = "hashed_signature"};
+            _transaction = new Tx()
+            {
+                Amount = 1,
+                Signature = "signature",
+                AddressDest = "address_dest",
+                AddressSource = "address_source",
+                Updated = new Tx.Types.Timestamp {Nanos = 100, Seconds = 30}
+            };
 
             var endpoint = Cm.GetEndPoints();
             Assert.AreEqual(1, endpoint.Length);
@@ -65,85 +70,99 @@ namespace Catalyst.Node.Modules.Core.Mempool.UnitTests
 //            Assert.AreEqual(response["db0"], "keys=1,expires=0,avg_ttl=0");            
 //        }
 
-        [TestMethod]
-        public void SaveAndGet()
+        [Fact]
+        public void Get_should_retrieve_a_saved_transaction()
         {
-            Memp.SaveTx(_k, _t);
-            var transaction = Memp.GetTx(_k);
-            Assert.AreEqual((uint) 1, transaction.Amount);
-            Assert.AreEqual("signature", transaction.Signature);
-            Assert.AreEqual("address_dest", transaction.AddressDest);
-            Assert.AreEqual("address_source", transaction.AddressSource);
-            Assert.AreEqual(100, transaction.Updated.Nanos);
-            Assert.AreEqual(30, transaction.Updated.Seconds);
+            _memPool.SaveTx(_key, _transaction);
+            _keyValueStore.Get(null).ReturnsForAnyArgs(_transaction.ToByteArray());
+            
+            var transactionFromMemPool = _memPool.GetTx(_key);
+            
+            transactionFromMemPool.Amount.Should().Be(_transaction.Amount);
+            transactionFromMemPool.Signature.Should().Be(_transaction.Signature);
+            transactionFromMemPool.AddressDest.Should().Be(_transaction.AddressDest);
+            transactionFromMemPool.AddressSource.Should().Be(_transaction.AddressSource);
+            transactionFromMemPool.Updated.Nanos.Should().Be(_transaction.Updated.Nanos);
+            transactionFromMemPool.Updated.Seconds.Should().Be(_transaction.Updated.Seconds);
         }
 
-        [TestMethod]
-        public void SaveAndGetMany()
+        [Fact]
+        public void Get_should_retrieve_saved_transaction_matching_their_keys()
         {
-            const int numTx = 15000;
+            const int numTx = 10;
             for (var i = 0; i < numTx; i++)
-                Memp.SaveTx(new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"}, _t);
+            {
+                var key = new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"};
+                var transaction = new Tx(){Amount = (uint)i};
+                _memPool.SaveTx(key, transaction);
+                AddKeyValueStoreEntryExpectation(key, transaction);
+            }
 
             for (var i = 0; i < numTx; i++)
             {
-                var transaction = Memp.GetTx(new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"});
-                Assert.AreEqual((uint) 1, transaction.Amount);
-                Assert.AreEqual("signature", transaction.Signature);
-                Assert.AreEqual("address_dest", transaction.AddressDest);
-                Assert.AreEqual("address_source", transaction.AddressSource);
-                Assert.AreEqual(100, transaction.Updated.Nanos);
-                Assert.AreEqual(30, transaction.Updated.Seconds);
+                var key = new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"};
+                var transaction = _memPool.GetTx(key);
+                transaction.Amount.Should().Be((uint)i);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void KeyAlreadyExists()
         {
             var key = new Key {HashedSignature = "just_a_short_key_for_easy_search:0"};
 
-            Memp.SaveTx(key, _t);
-
-            _t.Amount = 100;
-
-            Memp.SaveTx(key, _t);
-
-            var transaction = Memp.GetTx(key);
-            Assert.AreEqual((uint) 1, transaction.Amount); // assert tx with same key not updated
+            _memPool.SaveTx(key, _transaction);
+            //This is really testing the underlying IKeyValueStore behavior...
+            var tx = _transaction;
+            AddKeyValueStoreEntryExpectation(key, tx);
+            
+            _transaction.Amount = 100;
+            _memPool.SaveTx(key, _transaction);
+            
+            var transaction = _memPool.GetTx(key);
+            transaction.Amount.Should().Be(1); // assert tx with same key not updated
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Value cannot be null")]
+        private void AddKeyValueStoreEntryExpectation(Key key, Tx tx)
+        {
+            _keyValueStore.Get(Arg.Is<byte[]>(bytes => bytes.SequenceEqual(key.ToByteArray())))
+                .Returns(tx.ToByteArray());
+        }
+
+        [Fact]
         public void SaveNullKey()
         {
             Key newKey = null;
-
-            Memp.SaveTx(newKey, _t);
+            new Action(() => _memPool.SaveTx(newKey, _transaction))
+                .Should().Throw<ArgumentNullException>()
+                .And.Message.Should().Contain("cannot be null");
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Value cannot be null")]
+        [Fact]
         public void SaveNullTx()
         {
             var newKey = new Key {HashedSignature = "just_a_short_key_for_easy_search:0"};
             Tx newTx = null;
 
-            Memp.SaveTx(newKey, newTx); // transaction is null so do not insert
+            new Action(() => _memPool.SaveTx(newKey, newTx))
+                .Should().Throw<ArgumentNullException>()
+                .And.Message.Should().Contain("cannot be null"); // transaction is null so do not insert
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Value cannot be null")]
+        [Fact]
         public void GetNonExistentKey()
         {
-            Memp.GetTx(new Key {HashedSignature = "just_a_short_key_for_easy_search:0"});
+            _keyValueStore.Get(null).ThrowsForAnyArgs(new KeyNotFoundException());
+            new Action(() => _memPool.GetTx(new Key {HashedSignature = "just_a_short_key_for_easy_search:0"}))
+                .Should().Throw<KeyNotFoundException>();
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleThreadsSameKey()
         {
             const int threadNum = 8;
             var threadW = new Thread[threadNum];
-            var pc = new ProducerConsumer();
+            var pc = new ProducerConsumer(_memPool, _key, _keyValueStore);
 
             // Set up writer
             for (var i = 0; i < threadNum; i++) threadW[i] = new Thread(pc.Writer);
@@ -153,14 +172,14 @@ namespace Catalyst.Node.Modules.Core.Mempool.UnitTests
 
             for (var i = 0; i < threadNum; i++) threadW[i].Join();
 
-            var transaction = Memp.GetTx(_k);
+            var transaction = _memPool.GetTx(_key);
 
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
             Assert.AreEqual(pc.firstThreadId, (int) transaction.Amount);
         }
 
-        [TestMethod]
+        [Fact(Skip = "Move to Redis integration test")]
         public void Reconnect()
         {
             var localByName = Process.GetProcessesByName("redis-server");
@@ -171,7 +190,7 @@ namespace Catalyst.Node.Modules.Core.Mempool.UnitTests
 
             try
             {
-                Memp.SaveTx(_k, _t);
+                _memPool.SaveTx(_key, _transaction);
 
                 Assert.Fail("It should have thrown an exception if server is down");
             }
@@ -185,8 +204,8 @@ namespace Catalyst.Node.Modules.Core.Mempool.UnitTests
 
             try
             {
-                Memp.SaveTx(_k, _t);
-                var transaction = Memp.GetTx(_k);
+                _memPool.SaveTx(_key, _transaction);
+                var transaction = _memPool.GetTx(_key);
 
                 Assert.AreEqual("signature", transaction.Signature);
             }
@@ -196,55 +215,63 @@ namespace Catalyst.Node.Modules.Core.Mempool.UnitTests
             }
         }
 
-        [TestMethod]
+        [Fact(Skip = "Move to Redis integration test")]
         public void KeysArePersistent()
         {
-            Memp.SaveTx(_k, _t);
+            _memPool.SaveTx(_key, _transaction);
+            AddKeyValueStoreEntryExpectation(_key, _transaction);
+            
             Thread.Sleep(2000); // after one second the changes is saved
 
-            var transaction = Memp.GetTx(_k);
-            Assert.AreEqual("signature", transaction.Signature);
+            var transaction = _memPool.GetTx(_key);
+            transaction.Signature.Should().Be("signature");
 
             var localByName = Process.GetProcessesByName("redis-server");
             if (localByName.Length > 0) localByName[0].Kill(); // kill daemon process
 
             "redis-server".BackgroundCmd(); // restart
             localByName = Process.GetProcessesByName("redis-server");
-            Assert.IsTrue(localByName.Length > 0);
+            localByName.Length.Should().BeGreaterThan(0);
 
-            transaction = Memp.GetTx(_k);
-            Assert.AreEqual((uint) 1, transaction.Amount);
-        }
-
-        private class TestMempoolSettings// sort of mock
-        {
-            public string Expiry { get; set; }
-            public IPEndPoint Host { get; set; }
-            public string Type { get; set; }
-            public string When { get; set; }
+            transaction = _memPool.GetTx(_key);
+            transaction.Amount.Should().Be(1);
         }
 
         private class ProducerConsumer
         {
             private static readonly object locker = new object();
-            public object firstThreadId;
+            public int? firstThreadId;
+            private readonly IMempool _memPool;
+            private readonly Key _key;
+            private readonly IKeyValueStore _keyValueStore;
 
+            public ProducerConsumer(IMempool memPool, Key key, IKeyValueStore keyValueStore)
+            {
+                _memPool = memPool;
+                _key = key;
+                _keyValueStore = keyValueStore;
+            }
+            
             public void Writer()
             {
+                Tx transaction = null;
                 lock (locker)
                 {
                     var id = Thread.CurrentThread.ManagedThreadId;
-                    if (firstThreadId == null) firstThreadId = id;
-
-                    _t.Amount = (uint) id;
-
+                    transaction = new Tx(){Amount = (uint)id };
+                    
+                    if (firstThreadId == null)
+                    {
+                        firstThreadId = id;
+                        _keyValueStore.Get(Arg.Is<byte[]>(bytes => bytes.SequenceEqual(_key.ToByteArray())))
+                            .Returns(transaction.ToByteArray());
+                    }
                     Thread.Sleep(5); //milliseconds
                 }
 
                 // here there could be a context switch so second thread might call SaveTx failing the test
                 // so a little sleep was needed in the locked section
-
-                Memp.SaveTx(_k, _t); // write same key but different tx amount, not under lock                
+                _memPool.SaveTx(_key, transaction); // write same key but different tx amount, not under lock
             }
         }
     }
