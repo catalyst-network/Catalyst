@@ -2,6 +2,7 @@
 using System;
 using System.Net;
 using System.Threading;
+using Akka;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Exceptions;
 using Catalyst.Node.Core.Helpers.Logger;
@@ -133,7 +134,7 @@ namespace Catalyst.Node.Core
 //                        if (peerKnownNodes.HasValue())
 //                            nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
 
-                        using (CatalystNode = new KernelBuilder(nodeOptions)
+                        using (var kernel = new KernelBuilder(nodeOptions)
                             .WithDfsModule()
                                 .When(() => !disableDfs.HasValue())
                             .WithPeerModule()
@@ -148,19 +149,24 @@ namespace Catalyst.Node.Core
                                 .When(() => !disbleContract.HasValue())
                             .WithConsensusModule()
                                 .When(() => !disbleConsensus.HasValue())
-                            .Build().StartUp())
+                            .Build()
+                        )
                         {
-                            while (nodeDaemon.HasValue() ? !cts.Token.IsCancellationRequested : new Shell().RunConsole())
+                            CatalystNode = CatalystNode.GetInstance(kernel);
+                            using (var kernelScope = CatalystNode.Kernel.Container.BeginLifetimeScope())
                             {
-                                if (cts.Token.IsCancellationRequested)
+                                while (nodeDaemon.HasValue() ? !cts.Token.IsCancellationRequested : new Shell().RunConsole())
                                 {
-                                    CatalystNode.Kernel.Dispose();
-                                    cts.Token.ThrowIfCancellationRequested();
-                                }
+                                    if (cts.Token.IsCancellationRequested)
+                                    {
+                                        CatalystNode.Kernel.Dispose();
+                                        cts.Token.ThrowIfCancellationRequested();
+                                    }
 #if DEBUG
-                                Console.Write(".");
+                                    Console.Write(".");
 #endif
-                                Thread.Sleep(100);
+                                    Thread.Sleep(100);
+                                }   
                             }
                         }
                         return 1;

@@ -1,15 +1,14 @@
 using System.Collections.Generic;
-using Catalyst.Node.Core.Modules.P2P;
 
-namespace Catalyst.Node.Core
+namespace Catalyst.Node.Common.Modules
 {
-    public interface IIPPN
+    public interface IP2P
     {
         
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        bool Ping(PeerIdentifier queryingNode);
+        bool Ping(IPeerIdentifier queryingNode);
         
         /// <summary>
         /// 
@@ -17,13 +16,13 @@ namespace Catalyst.Node.Core
         /// <param name="queryingNode"></param>
         /// <param name="targetNode"></param>
         /// <returns></returns>
-        List<PeerIdentifier> FindNode(PeerIdentifier queryingNode, PeerIdentifier targetNode);
+        List<IPeerIdentifier> FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        List<PeerIdentifier> GetPeers(PeerIdentifier queryingNode);
+        List<IPeerIdentifier> GetPeers(IPeerIdentifier queryingNode);
 
         /// <summary>
         /// </summary>
@@ -45,6 +44,6 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <param name="queryingNode"></param>
         /// <returns></returns>
-        List<PeerIdentifier> PeerExchange(PeerIdentifier queryingNode);
+        List<IPeerIdentifier> PeerExchange(IPeerIdentifier queryingNode);
     }
 }
