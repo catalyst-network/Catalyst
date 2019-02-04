@@ -82,4 +82,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Modules\P2P\Events" />
+    </ItemGroup>
 </Project>
