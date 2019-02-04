@@ -1,12 +1,9 @@
 ﻿<Project>
   <PropertyGroup>
-    <IsPackable>false</IsPackable>
     <Authors>James Kirby (james.kirby@atlascity.io)</Authors>
     <AssemblyName>Catalyst.Node.UnitTests</AssemblyName>
     <PackageId>Catalyst.Node.UnitTests</PackageId>
     <RootNamespace>Catalyst.Node.UnitTests</RootNamespace>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
   </PropertyGroup>
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
@@ -29,6 +26,10 @@
     <Folder Include="Helpers\Shell" />
     <Folder Include="Modules\Consensus" />
     <Folder Include="Modules\Contract" />
+    <Folder Include="Modules\Gossip" />
+    <Folder Include="Modules\Ledger" />
+    <Folder Include="Modules\P2P" />
+    <Folder Include="Modules\Transactions" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />

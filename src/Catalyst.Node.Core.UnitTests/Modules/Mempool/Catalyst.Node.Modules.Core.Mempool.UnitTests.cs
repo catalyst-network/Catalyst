@@ -1,10 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Catalyst.Node.Core.Components.Redis;
+using Catalyst.Node.Core.Helpers;
+using Catalyst.Node.Core.Helpers.Network;
+using Catalyst.Protocols.Mempool;
+using FluentAssertions;
+using Google.Protobuf;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using StackExchange.Redis;
 using Xunit;
 
@@ -38,7 +46,7 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
             };
 
             var endpoint = Cm.GetEndPoints();
-            Assert.AreEqual(1, endpoint.Length);
+            endpoint.Length.Should().Be(1);
 
             var server = Cm.GetServer(endpoint[0]);
             server.FlushDatabase(); // clean up Redis before each test
@@ -168,7 +176,7 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
 
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
-            Assert.AreEqual(pc.firstThreadId, (int) transaction.Amount);
+            ((int)transaction.Amount).Should().Be(pc.firstThreadId);
         }
 
         [Fact(Skip = "Move to Redis integration test")]
@@ -178,13 +186,12 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
             if (localByName.Length > 0) localByName[0].Kill(); // kill daemon process
 
             // redis-server is down
-            Assert.AreEqual(0, Process.GetProcessesByName("redis-server").Length);
+            Process.GetProcessesByName("redis-server").Should().BeEmpty();
 
             try
             {
-                _memPool.SaveTx(_key, _transaction);
-
-                Assert.Fail("It should have thrown an exception if server is down");
+                new Action(() => _memPool.SaveTx(_key, _transaction))
+                    .Should().Throw<Exception>("It should throw an exception if server is down");
             }
             catch (Exception)
             {
@@ -192,19 +199,14 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
             }
 
             localByName = Process.GetProcessesByName("redis-server");
-            Assert.IsTrue(localByName.Length > 0);
-
-            try
-            {
-                _memPool.SaveTx(_key, _transaction);
-                var transaction = _memPool.GetTx(_key);
-
-                Assert.AreEqual("signature", transaction.Signature);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Not expected exception. It should have reconnected automatically " + e);
-            }
+            localByName.Should().NotBeNullOrEmpty();
+            
+            new Action(() =>
+                {
+                    _memPool.SaveTx(_key, _transaction);
+                    var transaction = _memPool.GetTx(_key);
+                    transaction.Signature.Should().Be("signature");
+                }).Should().NotThrow("It should have reconnected automatically");
         }
 
         [Fact(Skip = "Move to Redis integration test")]
