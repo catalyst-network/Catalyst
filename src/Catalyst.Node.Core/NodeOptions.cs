@@ -61,24 +61,24 @@ namespace Catalyst.Node.Core
         /// <summary>
         ///    Get a thread safe settings singleton.
         /// </summary>
-        /// <param name="env"></param>
+        /// <param name="environment"></param>
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
         /// <param name="platform"></param>
         /// <returns></returns>
-        internal static NodeOptions GetInstance(string enviroment, string dataDir, string network, int platform)
+        internal static NodeOptions GetInstance(string environment, string dataDir, string network, int platform)
         {
             Guard.Argument(platform, nameof(platform)).InRange(1,3);
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
-            Guard.Argument(enviroment, nameof(enviroment)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(environment, nameof(environment)).NotNull().NotEmpty().NotWhiteSpace();
             
             if (Instance == null)
                 lock (Mutex)
                 {
                     Instance = Instance == null
                         ? new NodeOptions(
-                            (int)(Enviroments) Enum.Parse(typeof(Enviroments), enviroment),
+                            (int)(Enviroments) Enum.Parse(typeof(Enviroments), environment),
                             dataDir,
                             (int)(Networks) Enum.Parse(typeof(Networks), network),
                             platform

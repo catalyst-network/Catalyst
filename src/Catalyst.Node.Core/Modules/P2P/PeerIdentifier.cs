@@ -3,6 +3,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Catalyst.Node.Common;
 using Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
@@ -19,7 +20,7 @@ namespace Catalyst.Node.Core.Modules.P2P
     ///     clientID [2] + clientVersion[2] + Ip[16] + Port[2] + pub[20]
     ///     The client ID for this implementation is "AC" or hexadecimal 4143
     /// </summary>
-    public class PeerIdentifier
+    public class PeerIdentifier : IPeerIdentifier
     {
         /// <summary>
         /// </summary>
