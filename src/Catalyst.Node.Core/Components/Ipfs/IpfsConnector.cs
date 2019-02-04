@@ -3,12 +3,13 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
+using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Logger;
 using Ipfs.Api;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Catalyst.Node.Core.Helpers.Ipfs
+namespace Catalyst.Node.Core.Components.Ipfs
 {
     /// <summary>
     ///     Wrapper for some of the Catalyst.Components.Ipfs methods.

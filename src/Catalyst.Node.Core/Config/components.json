@@ -2,18 +2,18 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "Catalyst.Helpers.Redis.Redis, Catalyst.Helpers.Redis",
+      "type": "Catalyst.Node.Core.Components.Redis.Redis, Catalyst.Node.Core",
       "services": [
         {
-          "type": "Catalyst.Helpers.KeyValueStore.IKeyValueStore, Catalyst.Helpers.KeyValueStore"
+          "type": "Catalyst.Node.Common.IKeyValueStore, Catalyst.Node.Common"
         }
       ]
     },
     {
-      "type": "Catalyst.Helpers.Ipfs.IpfsConnector, Catalyst.Helpers.Ipfs",
+      "type": "Catalyst.Node.Core.Components.Ipfs.IpfsConnector, Catalyst.Node.Core",
       "services": [
         {
-          "type": "Catalyst.Helpers.Ipfs.IIpfs, Catalyst.Helpers.Ipfs"
+          "type": "Catalyst.Node.Common.IIpfs, Catalyst.Node.Common"
         }
       ]
     }
