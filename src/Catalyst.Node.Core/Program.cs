@@ -155,7 +155,7 @@ namespace Catalyst.Node.Core
                             CatalystNode = CatalystNode.GetInstance(kernel);
                             using (var kernelScope = CatalystNode.Kernel.Container.BeginLifetimeScope())
                             {
-                                while (nodeDaemon.HasValue() ? !cts.Token.IsCancellationRequested : new Shell().RunConsole())
+                                while (nodeDaemon.HasValue() ? !cts.Token.IsCancellationRequested : new Shell().RunConsole()) //@TODO get a list of loaded modules and pass in here so we can enable/disable menu options.
                                 {
                                     if (cts.Token.IsCancellationRequested)
                                     {
