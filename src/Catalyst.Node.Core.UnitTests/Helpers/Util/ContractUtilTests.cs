@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions;
 using Catalyst.Node.Core.Helpers.Util;
+using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Node.UnitTests.Helpers.Util
@@ -14,7 +15,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
             var nonce = 0;
             var expected = "0x243e72b69141f6af525a9a5fd939668ee9f2b354";
             var contractAddress = ContractUtils.CalculateContractAddress(adresss, new BigInteger(nonce));
-            Assert.True(expected.IsTheSameHex(contractAddress));
+            contractAddress.IsTheSameHex(expected).Should().BeTrue();
         }
     }
 }

@@ -2,19 +2,19 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "modules": [
     {
-      "type": "Catalyst.Node.Core.Modules.Core.Dfs.DfsModule, Catalyst.Node.Core.Modules.Core.Dfs"
+      "type": "Catalyst.Node.Core.Modules.Dfs.DfsModule, Catalyst.Node.Core"
     },
     {
-      "type": "Catalyst.Node.Core.Modules.Core.Consensus.ConsensusModule, Catalyst.Node.Core.Modules.Core.Consensus"
+      "type": "Catalyst.Node.Core.Modules.Consensus.ConsensusModule, Catalyst.Node.Core"
     },
     {
-      "type": "Catalyst.Node.Core.Modules.Core.Contract.ContractModule, Catalyst.Node.Core.Modules.Core.Contract"
+      "type": "Catalyst.Node.Core.Modules.Contract.ContractModule, Catalyst.Node.Core"
     },
     {
-      "type": "Catalyst.Node.Core.Modules.Core.Ledger.LedgerModule, Catalyst.Node.Core.Modules.Core.Ledger"
+      "type": "Catalyst.Node.Core.Modules.Ledger.LedgerModule, Catalyst.Node.Core"
     },
     {
-      "type": "Catalyst.Node.Core.Modules.Core.Mempool.MempoolModule, Catalyst.Node.Core.Modules.Core.Mempool"
+      "type": "Catalyst.Node.Core.Modules.Mempool.MempoolModule, Catalyst.Node.Core"
     }
   ]
 }

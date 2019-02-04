@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <IsTestProject>True</IsTestProject>
+        <IsPackable>false</IsPackable>
         <Copyright>Copyright © 2019 AtlasCity.io</Copyright>
         <PackageLicenseUrl>http://github.com/atlascity/catalyst-node/LICENSE.md</PackageLicenseUrl>
         <PackageProjectUrl>http://github.com/atlascity/catalyst-node</PackageProjectUrl>

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using Catalyst.Node.Common;
+using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
@@ -15,7 +17,7 @@ using Networker.Server;
 
 namespace Catalyst.Node.Core
 {
-    public class CatalystNode : IDisposable, IIPPN
+    public class CatalystNode : IDisposable, IP2P
     {
         private static CatalystNode Instance { get; set; }
         private static readonly object Mutex = new object();
@@ -75,7 +77,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IIPPN.Ping(PeerIdentifier queryingNode)
+        bool IP2P.Ping(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -85,7 +87,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IIPPN.Store(string k, byte[] v)
+        bool IP2P.Store(string k, byte[] v)
         {
             throw new NotImplementedException();
         }
@@ -96,7 +98,7 @@ namespace Catalyst.Node.Core
         /// <param name="k"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        dynamic IIPPN.FindValue(string k)
+        dynamic IP2P.FindValue(string k)
         {
             throw new NotImplementedException();
         }
@@ -107,7 +109,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
-        List<PeerIdentifier> IIPPN.FindNode(PeerIdentifier queryingNode, PeerIdentifier targetNode)
+        List<IPeerIdentifier> IP2P.FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
         {
             // @TODO just to satisfy the DHT interface, need to implement
             throw new NotImplementedException();
@@ -118,7 +120,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        List<PeerIdentifier> IIPPN.GetPeers(PeerIdentifier queryingNode)
+        List<IPeerIdentifier> IP2P.GetPeers(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -129,7 +131,7 @@ namespace Catalyst.Node.Core
         /// <param name="queryingNode"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        List<PeerIdentifier> IIPPN.PeerExchange(PeerIdentifier queryingNode)
+        List<IPeerIdentifier> IP2P.PeerExchange(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -153,11 +155,11 @@ namespace Catalyst.Node.Core
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
         }
-        
+
         /// <summary>
         ///     Get a thread safe CatalystSystem singleton.
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="kernel"></param>
         /// <returns></returns>
         public static CatalystNode GetInstance(Kernel kernel)
         {
