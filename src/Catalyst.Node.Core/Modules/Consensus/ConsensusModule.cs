@@ -11,7 +11,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
         /// <param name="consensusSettings"></param>
         public static ContainerBuilder Load(ContainerBuilder builder)
         {
-            builder.Register(c => Node.Core.Modules.Consensus.Consensus.GetInstance())
+            builder.Register(c => new Consensus())
                 .As<IConsensus>()
                 .SingleInstance();
             return builder;

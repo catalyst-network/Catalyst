@@ -210,7 +210,7 @@ namespace Catalyst.Node.Core
                             LogException.Message("RunConfigStartUp", e);
                             throw;
                         }
-
+                        
                         try
                         {
                             _instance = new Kernel(nodeOptions, Configure(nodeOptions));   
