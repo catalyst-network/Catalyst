@@ -13,7 +13,7 @@ namespace Catalyst.Node.Core.Modules.Gossip
         protected override void Load (ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.Register(c => Node.Core.Modules.Gossip.Gossip.GetInstance())
+            builder.Register(c => new Gossip())
                 .As<IGossip>()
                 .SingleInstance();
         }

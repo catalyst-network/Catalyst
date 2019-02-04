@@ -8,25 +8,8 @@ namespace Catalyst.Node.Core.Modules.Gossip
 {
     public class Gossip : UntypedActor, IGossip
     {
-        private static Gossip Instance { get; set; }
-        private static readonly object Mutex = new object();
         
         private IActorRef GossipActor { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ipfs"></param>
-        /// <returns></returns>
-        public static Gossip GetInstance()
-        {
-            if (Instance == null)
-                lock (Mutex)
-                {
-                    if (Instance == null) Instance = new Gossip();
-                }
-            return Instance;
-        }
         
         /// <summary>
         /// 

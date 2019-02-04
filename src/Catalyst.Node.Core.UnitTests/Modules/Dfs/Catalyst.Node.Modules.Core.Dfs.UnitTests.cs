@@ -1,14 +1,14 @@
 using System;
 using System.IO;
 using System.Linq;
-using Catalyst.Node.Core.Helpers.Ipfs;
+using Catalyst.Node.Core.Components.Ipfs;
+using FluentAssertions;
 using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Xunit;
 
 namespace Catalyst.Node.UnitTests.Modules.Dfs
 {
-    [TestClass]
     public class UT_Dfs
     {
         private static readonly IpfsConnector _ipfs = new IpfsConnector();
@@ -22,139 +22,126 @@ namespace Catalyst.Node.UnitTests.Modules.Dfs
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        [ClassInitialize]
-        public static void SetUp(TestContext testContext)
+        static UT_Dfs()
+        {
+            random = new Random();
+        }
+
+        public UT_Dfs()
         {
             _settings = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 10, IpfsVersionApi = "api/v0/"};
             _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
         }
 
-        [TestInitialize]
-        public void Initialize()
-        {
-            _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
-        }
-
-        [TestMethod]
+        [Fact]
         public void AddFile()
         {
             var tmpFile = Path.GetTempFileName();
             File.WriteAllText(tmpFile, "hello my friends");
 
             var hash = _ipfs.AddFile(tmpFile);
-            Assert.AreEqual("QmaMjZpjD17yRfCwk6Yg8aRnspyR4EcvCsqoyBECCP8bjJ", hash);
+            hash.Should().Be("QmaMjZpjD17yRfCwk6Yg8aRnspyR4EcvCsqoyBECCP8bjJ");
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(JsonReaderException))]
+        [Fact]
         public void AddFileAsync_EmptyFilename()
         {
-            _ipfs.AddFile("");
+            new Action(() => _ipfs.AddFile("")).Should().Throw<JsonReaderException>();
         }
 
-        [TestMethod]
+        [Fact]
         public void ReadAllTextAsync()
         {
             var text = _ipfs.ReadAllTextAsync("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD");
-            Assert.AreEqual("hello world", text.Result);
+            text.Result.Should().Be("hello world");
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(AggregateException), "invalid ipfs ref path")]
+        [Fact]
         public void ReadAllTextAsync_Dodgy_Hash()
         {
-            var text = _ipfs.ReadAllTextAsync("Qmf412jQZiuVAbcdefghilmnopqrst12").Result;
+            
+            new Action(() =>{
+                    var result = _ipfs.ReadAllTextAsync("Qmf412jQZiuVAbcdefghilmnopqrst12").Result;
+                }).Should().Throw<AggregateException>("invalid ipfs ref path");
         }
 
-        [TestMethod]
+        [Fact]
         public void StopDoesNotThrow()
         {
-            Assert.IsTrue(_ipfs.IsClientConnected());
+            _ipfs.IsClientConnected().Should().BeTrue();
 
-            try
-            {
-                _ipfs.DestroyIpfsClient();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail("Expected no exception, but got: " + ex.Message);
-            }
+            new Action(() => _ipfs.DestroyIpfsClient())
+                .Should().NotThrow();
         }
 
-        [TestMethod]
+        [Fact]
         public void Stop_Start_DoesNotThrow()
         {
-            try
+            new Action(() =>
             {
                 _ipfs.DestroyIpfsClient();
                 _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail("Expected no exception, but got: " + ex.Message);
-            }
+            }).Should().NotThrow();
 
-            Assert.IsTrue(_ipfs.IsClientConnected());
+            _ipfs.IsClientConnected().Should().BeTrue();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(RuntimeBinderException), "Cannot perform runtime binding on a null reference")]
+        [Fact]
         public void Stop_Add_Fail()
         {
-            _ipfs.DestroyIpfsClient();
+            new Action(() =>
+            {
+                _ipfs.DestroyIpfsClient();
 
-            var tmpFile = Path.GetTempFileName();
-            _ipfs.AddFile(tmpFile);
+                var tmpFile = Path.GetTempFileName();
+                _ipfs.AddFile(tmpFile);
+            }).Should().Throw<RuntimeBinderException>("Cannot perform runtime binding on a null reference");
+
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(AggregateException), "Connection refused")]
+        [Fact]
         public void Stop_Read_Fail()
         {
-            _ipfs.DestroyIpfsClient();
-            var text = _ipfs.ReadAllTextAsync("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD").Result;
+            new Action(() =>
+            {
+                _ipfs.DestroyIpfsClient();
+                var text = _ipfs.ReadAllTextAsync("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD").Result; 
+            }).Should().Throw<AggregateException>("Connection refused");
+           
         }
 
-        [TestMethod]
+        [Fact]
         public void Stop_Twice_NoThrow()
         {
-            try
-            {
+            new Action(() => {
                 _ipfs.DestroyIpfsClient();
                 _ipfs.DestroyIpfsClient();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail("Expected no exception, but got: " + ex.Message);
-            }
+            }).Should().NotThrow();
         }
 
-        [TestMethod]
+        [Fact]
         public void Start_Twice_NoThrow()
         {
-            try
-            {
+            new Action(() => {
                 _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
                 _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail("Expected no exception, but got: " + ex.Message);
-            }
-
-            Assert.IsTrue(_ipfs.IsClientConnected());
+            }).Should().NotThrow();
+            _ipfs.IsClientConnected().Should().BeTrue();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException), "Failed to connect with IPFS daemon")]
+        [Fact]
         public void ChangeSettings_FailToStart()
         {
-            var x = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 0, IpfsVersionApi = "api/v0/"};
-            _ipfs.DestroyIpfsClient();
-            _ipfs.CreateIpfsClient(x.IpfsVersionApi, x.ConnectRetries);
+            new Action(() =>
+            {
+                var x = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 0, IpfsVersionApi = "api/v0/"};
+                _ipfs.DestroyIpfsClient();
+                _ipfs.CreateIpfsClient(x.IpfsVersionApi, x.ConnectRetries);
+            }).Should().Throw<InvalidOperationException>("Failed to connect with IPFS daemon");
+
         }
 
-        [TestMethod]
+        [Fact]
         public void SequentialAdd()
         {
             const int numIter = 50;
@@ -165,9 +152,9 @@ namespace Catalyst.Node.UnitTests.Modules.Dfs
                 File.WriteAllText(tmpFile, RandomString(32));
 
                 var hash1 = _ipfs.AddFile(tmpFile);
-                Assert.IsTrue(hash1.Length == 46); // just make sure was added
+                hash1.Length.Should().Be(46); // just make sure was added
                 var hash2 = _ipfs.AddFile(tmpFile); // retrieve the hash back, does not add
-                Assert.AreEqual(hash1, hash2);
+                hash1.Should().Be(hash2);
             }
         }
 

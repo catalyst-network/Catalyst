@@ -13,13 +13,12 @@ namespace Catalyst.Node.Core.Modules.Mempool
         /// <param name="builder"></param>
         /// <param name="mempoolSettings"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public static ContainerBuilder Load(ContainerBuilder builder)
+        protected override void Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.Register(c => Node.Core.Modules.Mempool.Mempool.GetInstance(c.Resolve<IKeyValueStore>()))
+            builder.Register(c => new Mempool(c.Resolve<IKeyValueStore>()))
                 .As<IMempool>()
                 .SingleInstance();
-            return builder;
         }
     }
 }
