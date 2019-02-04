@@ -510,7 +510,6 @@ namespace Catalyst.Node.Core
         public bool MutualAuthentication { get; set; }
         public bool AcceptInvalidCerts { get; set; }
         public ushort MaxConnections { get; set; }
-        public ushort PingInterval { get; set; }
         public int Port { get; set; }
         public int Magic { get; set; }
         public IPAddress BindAddress { get; set; }

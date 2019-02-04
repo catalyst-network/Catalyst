@@ -7,26 +7,29 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Streams;
 using Catalyst.Node.Core.Helpers.Util;
+using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Events;
 using Catalyst.Node.Core.Modules.P2P.Listeners;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Org.BouncyCastle.Security;
-
-namespace Catalyst.Node.Core.Modules.P2P
+using Catalyst.Node.Core.Events;
+    
+namespace Catalyst.Node.Core
 {
     /// <summary>
     /// </summary>
     public class PeerManager : IDisposable
     {
-        private readonly MessageReplyWaitManager MessageReplyManager;
-        private int ActiveConnections;
+        private readonly MessageReplyWaitManager _messageReplyManager;
+        private int _activeConnections;
 
         /// <summary>
         /// </summary>
@@ -38,13 +41,13 @@ namespace Catalyst.Node.Core.Modules.P2P
             PeerIdentifier nodeIdentity)
         {
             PeerList = peerList;
-            ActiveConnections = 0;
+            _activeConnections = 0;
             AcceptInvalidCerts = true;
             NodeIdentity = nodeIdentity;
             SslCertificate = sslCertificate;
             MessageQueueManager = messageQueueManager;
             PeerList.OnAddedUnIdentifiedConnection += AddedConnectionHandler;
-            MessageReplyManager = new MessageReplyWaitManager(MessageQueueManager, PeerList);
+            _messageReplyManager = new MessageReplyWaitManager(MessageQueueManager, PeerList);
         }
 
         private bool Disposed { get; set; }
@@ -68,7 +71,7 @@ namespace Catalyst.Node.Core.Modules.P2P
 
         /// <summary>
         /// </summary>
-//        public event EventHandler<AnnounceNodeEventArgs> AnnounceNode;
+        public event EventHandler<AnnounceNodeEventArgs> AnnounceNode;
 
         /// <summary>
         /// </summary>
@@ -86,7 +89,7 @@ namespace Catalyst.Node.Core.Modules.P2P
 
             var requestMessage = MessageFactory.RequestFactory(1, 3, eventArgs.Connection, challengeRequest);
 
-            MessageReplyManager.Add(requestMessage);
+            _messageReplyManager.Add(requestMessage);
             Log.Message("trace msg handler");
         }
 
@@ -174,14 +177,14 @@ namespace Catalyst.Node.Core.Modules.P2P
             Listener.Start();
             Log.Message("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
 
-//            try
-//            {
-//                await AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
-//            }
-//            catch (ArgumentNullException e)
-//            {
-//                LogException.Message("InboundConnectionListener: Events.Raise(AnnounceNodeEventArgs)", e);
-//            }
+            try
+            {
+                await Events.Events.AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
+            }
+            catch (ArgumentNullException e)
+            {
+                LogException.Message("InboundConnectionListener: Events.Raise(AnnounceNodeEventArgs)", e);
+            }
 
             while (!Token.IsCancellationRequested)
                 try
@@ -477,7 +480,7 @@ namespace Catalyst.Node.Core.Modules.P2P
             int activeCount;
             try
             {
-                activeCount = Interlocked.Increment(ref ActiveConnections);
+                activeCount = Interlocked.Increment(ref _activeConnections);
             }
             catch (NullReferenceException e)
             {
@@ -561,7 +564,7 @@ namespace Catalyst.Node.Core.Modules.P2P
             }
             finally
             {
-                var activeCount = Interlocked.Decrement(ref ActiveConnections);
+                var activeCount = Interlocked.Decrement(ref _activeConnections);
                 Log.Message("***** Connection successfully disconnected connected (now " + activeCount +
                             " connections active)");
             }

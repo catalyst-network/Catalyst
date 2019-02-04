@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
+using Catalyst.Node.Core.Helpers.Cryptography;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Util;
+using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P;
+using Catalyst.Node.Core.Modules.P2P.Messages;
 using Dawn;
 using DnsClient.Protocol;
 using Networker.Formatter.ProtobufNet;
@@ -29,39 +33,40 @@ namespace Catalyst.Node.Core
         {
             Kernel = kernel;
             SeedNodes = new List<IPEndPoint>();
-//            PeerManager = new PeerManager(Kernel.NodeOptions.Network.SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager(),
-//                NodeIdentity); //@TODO DI inject this from autofac
+            PeerManager = new PeerManager(
+                Ssl.LoadCert(Kernel.NodeOptions.PeerSettings.SslCertPassword, Kernel.NodeOptions.DataDir, Kernel.NodeOptions.PeerSettings.PfxFileName),
+                new PeerList(new ClientWorker()),
+                new MessageQueueManager(),
+                Kernel.NodeIdentity
+            );
 
-            var server = new ServerBuilder().UseTcp(kernel.NodeOptions.PeerSettings.Port)
-                .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
-                .UseUdp(kernel.NodeOptions.PeerSettings.Port)
+//            var server = new ServerBuilder().UseTcp(kernel.NodeOptions.PeerSettings.Port)
+//                .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
+//                .UseUdp(kernel.NodeOptions.PeerSettings.Port)
 //                .RegisterPacketHandlerModule<DefaultPacketHandlerModule>()
-                .UseProtobufNet()
-                .Build();
-
-            server.Start();
-
+//                .UseProtobufNet()
+//                .Build();
+//            server.Start();
         
-        
-//            Task.Run(async () =>
-//                await PeerManager.InboundConnectionListener(
-//                    new IPEndPoint(IPAddress.Parse(p2PSettings.BindAddress),
-//                        p2PSettings.Port
-//                    )
-//                )
-//            );
+            Task.Run(async () =>
+                await PeerManager.InboundConnectionListener(
+                    new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
+                        Kernel.NodeOptions.PeerSettings.Port
+                    )
+                )
+            );
+            
+            PeerManager.AnnounceNode += Announce;
         }
 
         public readonly Kernel Kernel;
         private List<IPEndPoint> SeedNodes { get; }
         internal PeerManager PeerManager { get; set; }
 
-//        PeerManager.AnnounceNode += Announce;
-        
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="p2PSettings"></param>
+        /// <param name="seedServers"></param>
         internal void GetSeedNodes(List<string> seedServers)
         {
             var dnsQueryAnswers = Helpers.Network.Dns.GetTxtRecords(seedServers);
@@ -145,7 +150,7 @@ namespace Catalyst.Node.Core
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(e, nameof(e)).NotNull();
-            var client = new TcpClient("192.168.1.213", 21420); //@TODO get seed tracker from config 
+            var client = new TcpClient(Kernel.NodeOptions.PeerSettings.AnnounceServer.Address.ToString(), Kernel.NodeOptions.PeerSettings.AnnounceServer.Port);
             var nwStream = client.GetStream();
             var network = new byte[1];
             network[0] = 0x01;

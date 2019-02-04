@@ -163,7 +163,7 @@ namespace Catalyst.Node.Core.Modules.P2P
             {
                 Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port +
                             " added to unidentified peer list)");
-                Catalyst.Node.Core.Events.Events.AsyncRaiseEvent(OnAddedUnIdentifiedConnection, this, new NewUnIdentifiedConnectionEventArgs(needle));
+                Core.Events.Events.AsyncRaiseEvent(OnAddedUnIdentifiedConnection, this, new NewUnIdentifiedConnectionEventArgs(needle));
             }
             catch (ArgumentNullException e)
             {

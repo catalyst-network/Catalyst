@@ -56,25 +56,25 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         /// 
         /// </summary>
         /// <param name="password"></param>
-        /// <param name="filePath"></param>
+        /// <param name="dataDir"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public X509Certificate2 LoadCert(string password, string filePath)
+        public static X509Certificate2 LoadCert(string password, string dataDir, string fileName)
         {
-            return string.IsNullOrEmpty(password)
-                ? new X509Certificate2(filePath)
-                : new X509Certificate2(filePath, password);
+            return LoadCert(password, $"{dataDir}/{fileName}");
         }
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="password"></param>
-        /// <param name="dataDir"></param>
-        /// <param name="fileName"></param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
-        public X509Certificate2 LoadCert(string password, string dataDir, string fileName)
+        public static X509Certificate2 LoadCert(string password, string filePath)
         {
-            return LoadCert(password, $"{dataDir}/{fileName}");
+            return string.IsNullOrEmpty(password)
+                ? new X509Certificate2(filePath)
+                : new X509Certificate2(filePath, password);
         }
 
         /// <summary>
