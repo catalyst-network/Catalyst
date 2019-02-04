@@ -1,4 +1,5 @@
 using Catalyst.Node.Core.Helpers.Util;
+using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Node.UnitTests.Helpers.Util
@@ -13,7 +14,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
                 "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae",
                 "0x0d57c7d8b54ebf963f94cded8a57a1b109ac7465ada218575473648bf373b90d");
 
-            Assert.Equal("13265b3c8b785f6715b215cb1e6869312588a03afe0076beda8042c2ceb5603b", result);
+            result.Should().Be("13265b3c8b785f6715b215cb1e6869312588a03afe0076beda8042c2ceb5603b");
         }
     }
 }
