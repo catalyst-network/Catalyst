@@ -1,7 +1,6 @@
 using Autofac;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
-using Catalyst.Node.Core.Helpers.Ipfs;
 using Dawn;
 
 namespace Catalyst.Node.Core.Modules.Dfs

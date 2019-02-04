@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
-using Catalyst.Node.Core.Helpers.Ipfs;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {

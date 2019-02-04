@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using Catalyst.Node.Core.Helpers.Ipfs;
+using Catalyst.Node.Core.Components.Ipfs;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
