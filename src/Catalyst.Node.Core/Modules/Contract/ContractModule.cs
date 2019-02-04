@@ -12,7 +12,7 @@ namespace Catalyst.Node.Core.Modules.Contract
         /// <param name="contractSettings"></param>
         public static ContainerBuilder Load(ContainerBuilder builder)
         {
-            builder.Register(c => Node.Core.Modules.Contract.Contract.GetInstance())
+            builder.Register(c => new Contract())
                 .As<IContract>()
                 .SingleInstance();
             return builder;

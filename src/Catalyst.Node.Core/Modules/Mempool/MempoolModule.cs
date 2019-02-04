@@ -16,7 +16,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
         public static ContainerBuilder Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.Register(c => Node.Core.Modules.Mempool.Mempool.GetInstance(c.Resolve<IKeyValueStore>()))
+            builder.Register(c => new Mempool(c.Resolve<IKeyValueStore>()))
                 .As<IMempool>()
                 .SingleInstance();
             return builder;
