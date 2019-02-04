@@ -1,4 +1,5 @@
 ﻿using Catalyst.Node.Core.Helpers.Util;
+using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Node.UnitTests.Helpers.Util
@@ -20,7 +21,8 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
         [InlineData("0.0020", "0.11", "0.00022")]
         public void ShouldMultiply(string first, string second, string expected)
         {
-            Assert.Equal(expected, (decimal.Parse(first) * (BigDecimal) decimal.Parse(second)).ToString());
+            (decimal.Parse(first) * (BigDecimal) decimal.Parse(second))
+                .ToString().Should().Be(expected);
         }
 
 
@@ -39,7 +41,8 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
         [InlineData("0.002", "0.11", "0.00022")]
         public void ShouldDivide(string expected, string denominator, string numerator)
         {
-            Assert.Equal(expected, (BigDecimal.Parse(numerator) / decimal.Parse(denominator)).ToString());
+            (BigDecimal.Parse(numerator) / decimal.Parse(denominator))
+                .ToString().Should().Be(expected);
         }
 
         [Theory]
@@ -57,32 +60,34 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
         [InlineData("0.00022")]
         public void ShouldParse(string value)
         {
-            Assert.Equal(value, BigDecimal.Parse(value).ToString());
+            BigDecimal.Parse(value).ToString().Should().Be(value);
         }
 
         [Fact]
         public void ShouldCastToDecimal()
         {
-            Assert.Equal(200.002m, (decimal) (BigDecimal) 200.002m);
-            Assert.Equal(15241576832799933607683.320835m,
-                (decimal) BigDecimal.Parse("15241576832799933607683.3208352565279684"));
-            Assert.Equal(152415768327999.32083525652797m,
-                (decimal) BigDecimal.Parse("152415768327999.3208352565279684"));
+            ((decimal) (BigDecimal) 200.002m)
+                .Should().Be(200.002m);
+            ((decimal) BigDecimal.Parse("15241576832799933607683.3208352565279684"))
+                .Should().Be(15241576832799933607683.320835m);
+            ((decimal) BigDecimal.Parse("152415768327999.3208352565279684"))
+                .Should().Be(152415768327999.32083525652797m);
         }
 
         [Fact]
         public void ShouldCastToDouble()
         {
-            Assert.Equal(200.002, (double) (BigDecimal) 200.002m);
-            Assert.Equal(15241576832799933607683.320835,
-                (double) BigDecimal.Parse("15241576832799933607683.3208352565279684"));
-            Assert.Equal(152415768327999.320835, (double) BigDecimal.Parse("152415768327999.3208352565279684"));
+            ((double) (BigDecimal) 200.002m).Should().Be(200.002);
+            ((double) BigDecimal.Parse("15241576832799933607683.3208352565279684"))
+                .Should().Be(15241576832799933607683.320835);
+            ((double) BigDecimal.Parse("152415768327999.3208352565279684"))
+                .Should().Be(152415768327999.320835);
         }
 
         [Fact]
         public void ShouldCastToInt()
         {
-            Assert.Equal(200, (int) (BigDecimal) 200.002m);
+            ((int) (BigDecimal) 200.002m).Should().Be(200);
         }
     }
 }
