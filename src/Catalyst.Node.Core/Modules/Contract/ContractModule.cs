@@ -10,12 +10,11 @@ namespace Catalyst.Node.Core.Modules.Contract
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="contractSettings"></param>
-        public static ContainerBuilder Load(ContainerBuilder builder)
+        protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => new Contract())
                 .As<IContract>()
                 .SingleInstance();
-            return builder;
         }
     }
 }
