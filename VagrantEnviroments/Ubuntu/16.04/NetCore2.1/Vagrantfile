@@ -5,18 +5,18 @@ Vagrant.configure("2") do |config|
   
   config.ssh.shell="bash"
 
-  config.vm.define "node1" do |node1|
+  config.vm.define "node1" do |catalyst-node-ubuntu1604|
   	node1.vm.box = "ubuntu/xenial64"
   end 
   
   config.vm.network "public_network",
   use_dhcp_assigned_default_route: true
    
-  config.vm.synced_folder "/Users/nsh/RiderProjects/ADL", "/srv"
+  config.vm.synced_folder "/srv/Dev/catalyst-node", "/srv"
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
-    vb.memory = "1024"
+    vb.memory = "2048"
   end
 
   config.vm.provision "shell", inline: <<-SHELL
@@ -30,6 +30,6 @@ Vagrant.configure("2") do |config|
 	sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
 	apt update
 	apt upgrade
-  	apt install -f -y openssl dotnet-runtime-deps-2.1 htop lsof git dotnet-sdk-2.1.105
+	sudo apt-get install dotnet-sdk-2.1 openssl dotnet-runtime-deps-2.1 htop lsof git
   SHELL
 end
