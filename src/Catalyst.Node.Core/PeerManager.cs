@@ -15,13 +15,14 @@ using Catalyst.Node.Core.Helpers.Streams;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Events;
-using Catalyst.Node.Core.Modules.P2P.Listeners;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Org.BouncyCastle.Security;
 using Catalyst.Node.Core.Events;
-    
+using Catalyst.Node.Core.Listeners;
+using Catalyst.Node.Core.Messages;
+
 namespace Catalyst.Node.Core
 {
     /// <summary>
@@ -232,12 +233,7 @@ namespace Catalyst.Node.Core
                             LogException.Message("InboundConnectionListener: GetPeerConnectionTlsStream", e);
                             continue;
                         }
-
-                        await DataReceiver(connection, Token);
-//                        Task.Run(async () => await DataReceiver(connection, Token), Token);
-
-//                        Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
-//                        throw new Exception("unable to add connection as peer");                        
+                        await Task.Run(async () => await DataReceiver(connection, Token), Token);                  
                     }
                 }
                 catch (AuthenticationException e)

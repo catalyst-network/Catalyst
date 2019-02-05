@@ -1,18 +1,15 @@
-﻿using Dawn;
-using System;
-using System.Net;
+﻿using System;
 using System.Threading;
-using Akka;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Exceptions;
+using Catalyst.Node.Core.Helpers.Shell;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Platform;
-using Catalyst.Node.Core.Helpers.Shell;
 using McMaster.Extensions.CommandLineUtils;
+using Catalyst.Node.Core.Helpers.Exceptions;
 
 namespace Catalyst.Node.Core
 {
-    public sealed class Program
+    public static class Program
     {
         private static CatalystNode CatalystNode { get; set; }
 
@@ -153,7 +150,7 @@ namespace Catalyst.Node.Core
                         )
                         {
                             CatalystNode = CatalystNode.GetInstance(kernel);
-                            using (var kernelScope = CatalystNode.Kernel.Container.BeginLifetimeScope())
+                            using (CatalystNode.Kernel.Container.BeginLifetimeScope())
                             {
                                 while (nodeDaemon.HasValue() ? !cts.Token.IsCancellationRequested : new Shell().RunConsole()) //@TODO get a list of loaded modules and pass in here so we can enable/disable menu options.
                                 {
@@ -178,7 +175,7 @@ namespace Catalyst.Node.Core
             {
                 LogException.Message("main app command", e);
                 cts.Cancel();
-                CatalystNode?.Kernel.Shutdown();
+                CatalystNode.Dispose();
                 return 0;
             }
             return 1;
