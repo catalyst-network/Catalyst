@@ -15,3 +15,9 @@ Make sure you have updated the Vagrantfile so your sync folder paths are correct
 then run:
 
 	vagrant up --provision
+
+You will need to make sure the code lives in the following path on your host
+
+/srv/dev/catalyst-node
+
+to be synced to the guest vm
