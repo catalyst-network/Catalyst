@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Autofac;
 using System.IO;
 using System.Runtime.Loader;
-using Autofac.Configuration;
-using Autofac.Core.Lifetime;
-using Catalyst.Node.Common.Modules;
+using Autofac.Core.Registration;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
@@ -48,12 +46,9 @@ namespace Catalyst.Node.Core
             _containerBuilder.RegisterType<NodeOptions>();
                         
             // register components from config file
-            _containerBuilder.RegisterModule(new ConfigurationModule(new ConfigurationBuilder()
+            _containerBuilder.RegisterModule(new Autofac.Configuration.ConfigurationModule(new ConfigurationBuilder()
                 .AddJsonFile($"{nodeOptions.DataDir}/components.json")
                 .Build()));
-
-//            // return a built container
-//            return builder.Build();   
         }
 
         /// <summary>
@@ -185,6 +180,7 @@ namespace Catalyst.Node.Core
     {
         private static Kernel _instance;
         private static readonly object Mutex = new object();
+        public bool Disposed { get; set; }
 
         /// <summary>
         ///     Private kernel constructor.
@@ -203,13 +199,13 @@ namespace Catalyst.Node.Core
         public NodeOptions NodeOptions { get; set; }
         public PeerIdentifier NodeIdentity { get; set; }
         
-        public Autofac.Core.Registration.IModuleRegistrar DfsService;
-        public Autofac.Core.Registration.IModuleRegistrar P2PService;
-        public Autofac.Core.Registration.IModuleRegistrar GossipService;
-        public Autofac.Core.Registration.IModuleRegistrar LedgerService;
-        public Autofac.Core.Registration.IModuleRegistrar MempoolService;
-        public Autofac.Core.Registration.IModuleRegistrar ContractService;
-        public Autofac.Core.Registration.IModuleRegistrar ConsensusService;
+        public IModuleRegistrar DfsService;
+        public IModuleRegistrar P2PService;
+        public IModuleRegistrar GossipService;
+        public IModuleRegistrar LedgerService;
+        public IModuleRegistrar MempoolService;
+        public IModuleRegistrar ContractService;
+        public IModuleRegistrar ConsensusService;
 
         /// <summary>
         ///     Get a thread safe kernel singleton.
@@ -218,6 +214,7 @@ namespace Catalyst.Node.Core
         public static Kernel GetInstance(NodeOptions nodeOptions, ContainerBuilder containerBuilder)
         {
             Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
+            Guard.Argument(containerBuilder, nameof(containerBuilder)).NotNull();
             if (_instance == null)
             {
              lock (Mutex)
@@ -332,30 +329,29 @@ namespace Catalyst.Node.Core
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        public void Shutdown()
+        public void Dispose()
         {
-            throw new NotImplementedException();
-            // @TODO some clean up and disposing of everything in some nice way
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Dispose(object sender, LifetimeScopeEndingEventArgs e)
-        {
-            Dispose();
+            Dispose(true);
+            Log.Message("disposing catalyst kernel");
+            GC.SuppressFinalize(this);
         }
         
         /// <summary>
         /// 
         /// </summary>
-        public void Dispose()
+        /// <param name="disposing"></param>
+        private void Dispose(bool disposing)
         {
-            Container?.Dispose();
+            if (Disposed) return;
+
+            if (disposing)
+            {
+                Container?.Dispose();
+            }
+
+            Disposed = true;
+            Log.Message("Catalyst kernel disposed");
         }
     }
 }

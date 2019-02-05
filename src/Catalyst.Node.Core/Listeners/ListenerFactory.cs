@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Catalyst.Node.Core.Modules.P2P.Listeners
+namespace Catalyst.Node.Core.Listeners
 {
     public static class ListenerFactory
     {

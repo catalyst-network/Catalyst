@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Autofac.Core.Lifetime;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
@@ -12,6 +13,7 @@ using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
+using Catalyst.Node.Core.Messages;
 using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Dawn;
@@ -25,6 +27,11 @@ namespace Catalyst.Node.Core
     {
         private static CatalystNode Instance { get; set; }
         private static readonly object Mutex = new object();
+
+        public readonly Kernel Kernel;
+        private List<IPEndPoint> SeedNodes { get; }
+        private PeerManager PeerManager { get; set; }
+        private bool Disposed { get; set; }
 
         /// <summary>
         ///     Instantiates basic CatalystSystem.
@@ -40,7 +47,8 @@ namespace Catalyst.Node.Core
                 Kernel.NodeIdentity
             );
 
-//            var server = new ServerBuilder().UseTcp(kernel.NodeOptions.PeerSettings.Port)
+//            var server = new ServerBuilder()
+//                .UseTcp(kernel.NodeOptions.PeerSettings.Port)
 //                .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
 //                .UseUdp(kernel.NodeOptions.PeerSettings.Port)
 //                .RegisterPacketHandlerModule<DefaultPacketHandlerModule>()
@@ -59,10 +67,6 @@ namespace Catalyst.Node.Core
             PeerManager.AnnounceNode += Announce;
         }
 
-        public readonly Kernel Kernel;
-        private List<IPEndPoint> SeedNodes { get; }
-        internal PeerManager PeerManager { get; set; }
-
         /// <summary>
         /// 
         /// </summary>
@@ -73,7 +77,8 @@ namespace Catalyst.Node.Core
             foreach (var dnsQueryAnswer in dnsQueryAnswers)
             {
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                if (answerSection != null)
+                    SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
             }
         }
         
@@ -178,12 +183,29 @@ namespace Catalyst.Node.Core
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public void Dispose()
         {
-//            CancellationToken.Cancel();
-            Kernel?.Dispose();
+            Dispose(true);
+            Log.Message("disposing catalyst node");
+            GC.SuppressFinalize(this);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
+        private void Dispose(bool disposing)
+        {
+            if (Disposed) return;
+
+            if (disposing)
+            {
+                Kernel?.Dispose();
+            }
+
+            Disposed = true;
+            Log.Message("CatalystNode disposed");
         }
     }
 }
