@@ -1,5 +1,4 @@
 ﻿<Project>
-  <Import Project="../Common.Projects.props" />
   <PropertyGroup>
     <Title>Catalyst CLI</Title>
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
@@ -7,6 +6,7 @@
     <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
+  <Import Project="../Common.Projects.props" />
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
