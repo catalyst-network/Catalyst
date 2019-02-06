@@ -110,6 +110,8 @@ namespace Catalyst.Node.Core
         ///     Otherwise the return value is the return equivalent to FindNode()
         /// </summary>
         /// <param name="k"></param>
+        /// <param name="queryingNode"></param>
+        /// <param name="targetNode"></param>
         /// <returns></returns>
         List<IPeerIdentifier> IP2P.FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
         {
