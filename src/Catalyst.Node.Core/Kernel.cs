@@ -8,7 +8,6 @@ using Autofac.Core.Lifetime;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
-using Catalyst.Node.Core.Helpers.RLP;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Contract;
 using Catalyst.Node.Core.Modules.Dfs;
@@ -18,6 +17,7 @@ using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Node.Core.Modules.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
 using IModuleRegistrar = Autofac.Core.Registration.IModuleRegistrar;
 
 namespace Catalyst.Node.Core
@@ -156,7 +156,7 @@ namespace Catalyst.Node.Core
             try
             {
                 kernel.NodeIdentity = PeerIdentifier.BuildPeerId(
-                        kernel.NodeOptions.PeerSettings.PublicKey.ToBytesForRlpEncoding(),
+                        kernel.NodeOptions.PeerSettings.PublicKey.ToBytesForRLPEncoding(),
                         EndpointBuilder.BuildNewEndPoint(
                                 kernel.NodeOptions.PeerSettings.BindAddress,
                                 kernel.NodeOptions.PeerSettings.Port
