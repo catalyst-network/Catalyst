@@ -3,8 +3,8 @@ using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using Catalyst.Node.Core.Helpers.Logger;
-using Catalyst.Node.Core.Helpers.RLP;
 using Catalyst.Node.Core.Helpers.Util;
+using Nethereum.RLP;
 
 namespace Catalyst.Node.Core.Helpers.Streams
 {
@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
                     header += payloadLength + ":";
                 }
 
-                var headerBytes = header.ToBytesForRlpEncoding();
+                var headerBytes = header.ToBytesForRLPEncoding();
 
                 var messageLen = headerBytes.Length;
                 if (payloadLength > 0) messageLen += payloadLength;

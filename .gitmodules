@@ -1,0 +1,3 @@
+[submodule "submodules/Nethereum"]
+	path = submodules/Nethereum
+	url = https://github.com/atlascity/Nethereum.git

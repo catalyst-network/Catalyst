@@ -4,12 +4,12 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common;
-using Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
-using Catalyst.Node.Core.Helpers.RLP;
 using Catalyst.Node.Core.Helpers.Util;
 using Dawn;
+using Nethereum.Hex.HexConvertors.Extensions;
+using Nethereum.RLP;
 
 namespace Catalyst.Node.Core.Modules.P2P
 {
@@ -125,8 +125,8 @@ namespace Catalyst.Node.Core.Modules.P2P
         private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
             Guard.Argument(endPoint, nameof(endPoint)).NotNull();
-            Log.ByteArr(endPoint.Port.ToBytesForRlpEncoding());
-            return endPoint.Port.ToBytesForRlpEncoding();
+            Log.ByteArr(endPoint.Port.ToBytesForRLPEncoding());
+            return endPoint.Port.ToBytesForRLPEncoding();
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientPort(byte[] peerId)
         {
-            if (!Ip.ValidPortRange(peerId.Slice(20, 22).ToIntFromRlpDecoded()))
+            if (!Ip.ValidPortRange(peerId.Slice(20, 22).ToIntFromRLPDecoded()))
                 throw new ArgumentException("clientPort not valid");
         }
 

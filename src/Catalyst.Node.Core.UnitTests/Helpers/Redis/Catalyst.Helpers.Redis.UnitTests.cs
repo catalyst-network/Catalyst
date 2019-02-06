@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Node.Core.Components.Redis;
 using Catalyst.Node.Core.Helpers.Network;
 using FluentAssertions;
@@ -112,6 +113,71 @@ namespace Catalyst.Node.UnitTests.Helpers.Redis
             for (var i = 0; i < num; i++) _database.StringSet($"mykey:{i}", i);
 
             for (var i = 0; i < num; i++) _database.StringGet($"mykey:{i}").Should().Be(i);
+        }
+        
+        [Fact]
+        public async Task KeysArePersistent()
+        {
+            var key = "persisted_key";
+            var value = "persisted_value";
+            await _database.KeyDeleteAsync(key);
+            (await _database.StringGetAsync(key)).HasValue.Should().BeFalse("we just deleted that key");
+            
+            await _database.StringSetAsync(key, value);
+            
+            await Task.Delay(500); // after 500ms the changes is saved
+
+            var redisValue = (await _database.StringGetAsync(key));
+            redisValue.HasValue.Should().BeTrue();
+            redisValue.Should().Be(value);
+
+            await _connector.Connection.CloseAsync();
+            _connector.Connection.IsConnected.Should().BeFalse();
+            _connector.Dispose();
+            await Task.Delay(500);
+
+            using (var newConnector = new RedisConnector(EndPoint.ToString()))
+            {
+                var database = newConnector.Database;
+                var persistedValue = await database.StringGetAsync(key);
+                persistedValue.HasValue.Should().BeTrue();
+                persistedValue.Should().Be(value);
+                
+                //do some cleaning
+                await database.KeyDeleteAsync(key);
+            }
+        }
+        
+        //TODO : find a better way to simulate disconnection, kill process is forbidden and might 
+        //run while other tests are trying to use the Redis cache.
+        [Fact(Skip = "cf todo")]
+        public void Reconnect()
+        {
+            // var localByName = Process.GetProcessesByName("redis-server");
+            // if (localByName.Length > 0) localByName[0].Kill(); // kill daemon process
+            //
+            // // redis-server is down
+            // Process.GetProcessesByName("redis-server").Should().BeEmpty();
+            //
+            // try
+            // {
+            //     new Action(() => _memPool.SaveTx(_key, _transaction))
+            //        .Should().Throw<Exception>("It should throw an exception if server is down");
+            // }
+            // catch (Exception)
+            // {
+            //     "redis-server".BackgroundCmd(); // restart
+            // }
+            //
+            // localByName = Process.GetProcessesByName("redis-server");
+            // localByName.Should().NotBeNullOrEmpty();
+            //
+            // new Action(() =>
+            //            {
+            //                _memPool.SaveTx(_key, _transaction);
+            //                var transaction = _memPool.GetTx(_key);
+            //                transaction.Signature.Should().Be("signature");
+            //            }).Should().NotThrow("It should have reconnected automatically");
         }
     }
 }
