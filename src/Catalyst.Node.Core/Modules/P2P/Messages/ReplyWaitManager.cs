@@ -4,6 +4,7 @@ using System.Net;
 using Catalyst.Node.Common.Modules.P2P.Messages;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
+using Catalyst.Node.Core.Messages;
 using Dawn;
 
 namespace Catalyst.Node.Core.Modules.P2P.Messages
@@ -90,8 +91,8 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
                     if (replyWait.Attempts++ >= 3)
                     {
                         _internal.Remove(replyWait.CorrelationId);
-                        //                        if (_peerList.SearchLists(replyWait.Message.Connection, out var connection)) //@TODO decouple from peer
-                        //                            _peerList.Punish(connection.Peer);
+//                        if (_peerList.SearchLists(replyWait.Message.Connection, out var connection)) //@TODO decouple from peer
+//                            _peerList.Punish(connection.Peer);
                     }
                     else
                     {

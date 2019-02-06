@@ -10,7 +10,6 @@ namespace Catalyst.Node.Core.Helpers
         /// <summary>
         ///     Gets current home directory.
         /// </summary>
-        /// <param name="platform"></param>
         /// <returns></returns>
         public static DirectoryInfo GetUserHomeDir()
         {
@@ -66,6 +65,8 @@ namespace Catalyst.Node.Core.Helpers
         /// </summary>
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
+        /// <param name="configDir"></param>
+        /// <param name="modulesFiles"></param>
         /// <returns></returns>
         public static void CopySkeletonConfigs(string dataDir,
             string network,

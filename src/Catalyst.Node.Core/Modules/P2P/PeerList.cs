@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.Modules.P2P.Events;
 using Dawn;
 
 namespace Catalyst.Node.Core.Modules.P2P
 {
-    public class PeerList : IEnumerable<Peer>
+    public class PeerList : IEnumerable<Node.Core.Modules.P2P.Peer>
     {
-        internal readonly ConcurrentDictionary<PeerIdentifier, Peer> PeerBucket;
+        internal readonly ConcurrentDictionary<PeerIdentifier, Node.Core.Modules.P2P.Peer> PeerBucket;
         internal readonly ConcurrentDictionary<string, Connection> UnIdentifiedPeers;
 
         /// <summary>
@@ -27,8 +27,7 @@ namespace Catalyst.Node.Core.Modules.P2P
 
             K = 42;
             WorkScheduler = worker;
-            PeerBucket =
-                new ConcurrentDictionary<PeerIdentifier, Peer>(); // @TODO put this in thread safe concurrent directory
+            PeerBucket = new ConcurrentDictionary<PeerIdentifier, Node.Core.Modules.P2P.Peer>(); // @TODO put this in thread safe concurrent directory
             UnIdentifiedPeers = new ConcurrentDictionary<string, Connection>();
 
             // setup work queues for peer net.
@@ -47,7 +46,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<Peer> GetEnumerator()
+        public IEnumerator<Node.Core.Modules.P2P.Peer> GetEnumerator()
         {
             return PeerBucket.Values.GetEnumerator();
         }
@@ -164,8 +163,7 @@ namespace Catalyst.Node.Core.Modules.P2P
             {
                 Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port +
                             " added to unidentified peer list)");
-                Core.Events.Events.AsyncRaiseEvent(OnAddedUnIdentifiedConnection, this,
-                    new NewUnIdentifiedConnectionEventArgs(needle));
+                Core.Events.Events.AsyncRaiseEvent(OnAddedUnIdentifiedConnection, this, new NewUnIdentifiedConnectionEventArgs(needle));
             }
             catch (ArgumentNullException e)
             {
@@ -211,12 +209,12 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// <param name="peer"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        internal bool RemovePeerFromBucket(Peer peer)
+        internal bool RemovePeerFromBucket(Node.Core.Modules.P2P.Peer peer)
         {
             if (peer == null) throw new ArgumentNullException(nameof(peer));
             try
             {
-                if (!PeerBucket.TryRemove(peer.PeerIdentifier, out var removedPeer)) return false;
+                if (!PeerBucket.TryRemove(peer.PeerIdentifier, out Peer removedPeer)) return false;
                 Log.Message("***** Successfully removed " + removedPeer.PeerIdentifier + " from peer bucket");
                 return true;
             }
@@ -282,17 +280,17 @@ namespace Catalyst.Node.Core.Modules.P2P
             PeerBucket.TryAdd(peerInfo.PeerIdentifier, peerInfo);
             Log.Message("{0} added" + peerInfo);
 
-            //            if (!Equals(peerInfo.Known, false) && IsRegisteredConnection(peerId))
-            //            {
-            //                PeerBucket.Remove(peerId);
-            //            }
+//            if (!Equals(peerInfo.Known, false) && IsRegisteredConnection(peerId))
+//            {
+//                PeerBucket.Remove(peerId);
+//            }
             return true;
         }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public List<Peer> GetPeersEndPoint()
+        public List<Node.Core.Modules.P2P.Peer> GetPeersEndPoint()
         {
             return Recent();
         }
@@ -311,7 +309,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// </summary>
         /// <param name="peer"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void Punish(Peer peer)
+        public void Punish(Node.Core.Modules.P2P.Peer peer)
         {
             if (peer == null) throw new ArgumentNullException(nameof(peer));
             if (PeerBucket.ContainsKey(peer.PeerIdentifier)) PeerBucket[peer.PeerIdentifier].DecreaseReputation();
@@ -347,7 +345,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// </summary>
         private void PurgePeers()
         {
-            var peersInfo = new List<Peer>(PeerBucket.Values);
+            var peersInfo = new List<Node.Core.Modules.P2P.Peer>(PeerBucket.Values);
             foreach (var peerInfo in peersInfo)
                 if (peerInfo.IsAwolBot) //@TODO check if connected
                     PeerBucket.TryRemove(peerInfo.PeerIdentifier, out _);
@@ -356,7 +354,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private List<Peer> Recent()
+        private List<Node.Core.Modules.P2P.Peer> Recent()
         {
             var sortedBy = SortedPeers();
             return sortedBy.GetRange(0, Math.Min(8, sortedBy.Count));
@@ -365,9 +363,9 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private List<Peer> SortedPeers()
+        private List<Node.Core.Modules.P2P.Peer> SortedPeers()
         {
-            var all = new List<Peer>(PeerBucket.Values);
+            var all = new List<Node.Core.Modules.P2P.Peer>(PeerBucket.Values);
             all.Sort((s1, s2) => (int) (s1.LastSeen - s2.LastSeen).TotalSeconds);
             return all;
         }
@@ -385,7 +383,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        internal bool FindPeerFromConnection(Connection connection, out Peer peer)
+        internal bool FindPeerFromConnection(Connection connection, out Node.Core.Modules.P2P.Peer peer)
         {
             // iterate peer bucket to find a peer with connection value matches connection param
             foreach (var item in PeerBucket.Values)

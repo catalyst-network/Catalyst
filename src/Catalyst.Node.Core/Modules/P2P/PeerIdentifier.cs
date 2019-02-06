@@ -137,11 +137,11 @@ namespace Catalyst.Node.Core.Modules.P2P
         public bool ValidatePeerId(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
-                 .NotNull()
-                 .NotEmpty()
-                 .MinCount(42)
-                 .MaxCount(42);
-
+                .NotNull()
+                .NotEmpty()
+                .MinCount(42)
+                .MaxCount(42);
+            
             if (peerId == null) throw new ArgumentNullException(nameof(peerId));
 
             try
@@ -234,9 +234,8 @@ namespace Catalyst.Node.Core.Modules.P2P
         private void ValidateClientVersion(byte[] peerId)
         {
             if (!peerId.Slice(2, 4).ToHex()
-                       .IsTheSameHex(
-                            PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString())
-                               .ToHexUTF8())) throw new ArgumentException("clientVersion not valid");
+                .IsTheSameHex(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString())
+                    .ToHexUTF8())) throw new ArgumentException("clientVersion not valid");
         }
 
         /// <summary>

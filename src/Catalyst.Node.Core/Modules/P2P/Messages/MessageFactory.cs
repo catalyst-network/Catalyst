@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Catalyst.Node.Core.Helpers.IO;
+using Catalyst.Node.Core.Modules.P2P.Messages;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.Modules.P2P.Messages
+namespace Catalyst.Node.Core.Messages
 {
     /// <summary>
     /// </summary>
@@ -11,12 +12,12 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
     {
         // pass the request on the left hand side 🔥 🎵 💃 🕺 ;)
         private static Dictionary<int, int> RequestResponseIdPairings = new Dictionary<int, int>
-                                                                        {
-                                                                            {1, 2},
-                                                                            {3, 4},
-                                                                            {5, 6},
-                                                                            {7, 8}
-                                                                        };
+        {
+            {1, 2},
+            {3, 4},
+            {5, 6},
+            {7, 8}
+        };
 
         /// <summary>
         /// </summary>
