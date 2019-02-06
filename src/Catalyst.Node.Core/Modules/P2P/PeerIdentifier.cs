@@ -235,7 +235,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         {
             if (!peerId.Slice(2, 4).ToHex()
                 .IsTheSameHex(PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString())
-                    .ToHexUtf8())) throw new ArgumentException("clientVersion not valid");
+                    .ToHexUTF8())) throw new ArgumentException("clientVersion not valid");
         }
 
         /// <summary>

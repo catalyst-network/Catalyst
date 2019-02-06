@@ -161,7 +161,7 @@ namespace Catalyst.Node.Core
             try
             {
                 kernel.NodeIdentity = PeerIdentifier.BuildPeerId(
-                    kernel.NodeOptions.PeerSettings.PublicKey.ToBytesForRlpEncoding(),
+                    kernel.NodeOptions.PeerSettings.PublicKey.ToBytesForRLPEncoding(),
                     EndpointBuilder.BuildNewEndPoint(
                         kernel.NodeOptions.PeerSettings.BindAddress,
                         kernel.NodeOptions.PeerSettings.Port

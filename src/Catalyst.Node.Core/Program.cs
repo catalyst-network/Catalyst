@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Threading;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Shell;
@@ -175,7 +175,7 @@ namespace Catalyst.Node.Core
             {
                 LogException.Message("main app command", e);
                 cts.Cancel();
-                CatalystNode.Dispose();
+                CatalystNode?.Dispose();
                 return 0;
             }
             return 1;

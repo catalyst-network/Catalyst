@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Autofac.Core.Lifetime;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
