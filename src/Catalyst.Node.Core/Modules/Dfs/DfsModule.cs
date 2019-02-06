@@ -11,12 +11,12 @@ namespace Catalyst.Node.Core.Modules.Dfs
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="dfsSettings"></param>
-        protected override void Load (ContainerBuilder builder)
+        protected override void Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
             builder.Register(c => new Dfs(c.Resolve<IIpfs>()))
-                .As<IDfs>()
-                .SingleInstance();
+                   .As<IDfs>()
+                   .SingleInstance();
         }
     }
 }

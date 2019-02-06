@@ -14,13 +14,15 @@ using Dawn;
 using DnsClient.Protocol;
 using Networker.Formatter.ProtobufNet;
 using Networker.Server;
+using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core
 {
     public class CatalystNode : IDisposable, IP2P
     {
-        private static CatalystNode Instance { get; set; }
         private static readonly object Mutex = new object();
+
+        public readonly Kernel Kernel;
 
         /// <summary>
         ///     Instantiates basic CatalystSystem.
@@ -29,49 +31,38 @@ namespace Catalyst.Node.Core
         {
             Kernel = kernel;
             SeedNodes = new List<IPEndPoint>();
-//            PeerManager = new PeerManager(Kernel.NodeOptions.Network.SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager(),
-//                NodeIdentity); //@TODO DI inject this from autofac
+            //            PeerManager = new PeerManager(Kernel.NodeOptions.Network.SslCertificate, new PeerList(new ClientWorker()), new MessageQueueManager(),
+            //                NodeIdentity); //@TODO DI inject this from autofac
 
             var server = new ServerBuilder().UseTcp(kernel.NodeOptions.PeerSettings.Port)
-                .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
-                .UseUdp(kernel.NodeOptions.PeerSettings.Port)
-//                .RegisterPacketHandlerModule<DefaultPacketHandlerModule>()
-                .UseProtobufNet()
-                .Build();
+                                            .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
+                                            .UseUdp(kernel.NodeOptions.PeerSettings.Port)
+                                             //                .RegisterPacketHandlerModule<DefaultPacketHandlerModule>()
+                                            .UseProtobufNet()
+                                            .Build();
 
             server.Start();
 
-        
-        
-//            Task.Run(async () =>
-//                await PeerManager.InboundConnectionListener(
-//                    new IPEndPoint(IPAddress.Parse(p2PSettings.BindAddress),
-//                        p2PSettings.Port
-//                    )
-//                )
-//            );
+            //Task.Run(async () =>
+            //    await PeerManager.InboundConnectionListener(
+            //        new IPEndPoint(IPAddress.Parse(p2PSettings.BindAddress),
+            //            p2PSettings.Port
+            //        )
+            //    )
+            //);
         }
 
-        public readonly Kernel Kernel;
+        private static CatalystNode Instance { get; set; }
         private List<IPEndPoint> SeedNodes { get; }
         internal PeerManager PeerManager { get; set; }
 
-//        PeerManager.AnnounceNode += Announce;
-        
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="p2PSettings"></param>
-        internal void GetSeedNodes(List<string> seedServers)
+        public void Dispose()
         {
-            var dnsQueryAnswers = Helpers.Network.Dns.GetTxtRecords(seedServers);
-            foreach (var dnsQueryAnswer in dnsQueryAnswers)
-            {
-                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
-            }
+            Kernel?.Dispose();
         }
-        
+
         /// <summary>
         ///     @TODO just to satisfy the DHT interface, need to implement
         /// </summary>
@@ -91,9 +82,8 @@ namespace Catalyst.Node.Core
         {
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -104,8 +94,8 @@ namespace Catalyst.Node.Core
         }
 
         /// <summary>
-        ///  If a corresponding value is present on the queried node, the associated data is returned.
-        ///  Otherwise the return value is the return equivalent to FindNode()
+        ///     If a corresponding value is present on the queried node, the associated data is returned.
+        ///     Otherwise the return value is the return equivalent to FindNode()
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -114,9 +104,8 @@ namespace Catalyst.Node.Core
             // @TODO just to satisfy the DHT interface, need to implement
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -124,9 +113,8 @@ namespace Catalyst.Node.Core
         {
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="queryingNode"></param>
         /// <returns></returns>
@@ -135,9 +123,23 @@ namespace Catalyst.Node.Core
         {
             throw new NotImplementedException();
         }
-        
+
+        //        PeerManager.AnnounceNode += Announce;
+
         /// <summary>
-        /// 
+        /// </summary>
+        /// <param name="p2PSettings"></param>
+        internal void GetSeedNodes(List<string> seedServers)
+        {
+            var dnsQueryAnswers = Dns.GetTxtRecords(seedServers);
+            foreach (var dnsQueryAnswer in dnsQueryAnswers)
+            {
+                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
+                SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+            }
+        }
+
+        /// <summary>
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -169,16 +171,8 @@ namespace Catalyst.Node.Core
                 {
                     if (Instance == null) Instance = new CatalystNode(kernel);
                 }
-            return Instance;
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
-//            CancellationToken.Cancel();
-            Kernel?.Dispose();
+            return Instance;
         }
     }
 }

@@ -15,8 +15,8 @@ namespace Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions
         {
             byte[] bytes;
             bytes = BitConverter.IsLittleEndian != littleEndian
-                ? value.ToByteArray().Reverse().ToArray()
-                : value.ToByteArray().ToArray();
+                        ? value.ToByteArray().Reverse().ToArray()
+                        : value.ToByteArray().ToArray();
             return bytes;
         }
 

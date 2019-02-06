@@ -1,34 +1,27 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 
 namespace Catalyst.Node.Common
 {
     public interface IKeyValueStore
     {
         /// <summary>
+        ///     Sets the <see cref="value" /> for the given <see cref="key" /> if it doesn't exist yet in the store.
         /// </summary>
-        /// <param name="host"></param>
-        void Connect(IPEndPoint host);
-
-        /// <summary>
-        /// Sets the <see cref="value"/>for the given <see cref="key"/>> if it doesn't exist yet in the store
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="expiry"></param>
-        /// <returns></returns>
+        /// <param name="key">The key under which the value needs to be stored.</param>
+        /// <param name="value">The value to store.</param>
+        /// <param name="expiry">The time for which the record should be held in store.</param>
+        /// <returns>True if the value has been stored. False otherwise.</returns>
         bool Set(byte[] key, byte[] value, TimeSpan? expiry);
 
         /// <summary>
+        ///     Returns the value stored at the given <see cref="key" /> if it is found in the store.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        byte[] Get(byte[] value);
+        byte[] Get(byte[] key);
 
         /// <summary>
+        ///     Get a snapshot of all the values currently in store.
         /// </summary>
-        /// <returns></returns>
-        Dictionary<string, string> GetInfo();
+        IDictionary<byte[], byte[]> GetSnapshot();
     }
 }

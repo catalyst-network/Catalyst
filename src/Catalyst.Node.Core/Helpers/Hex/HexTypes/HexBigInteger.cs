@@ -8,13 +8,9 @@ namespace Catalyst.Node.Core.Helpers.Hex.HexTypes
     [JsonConverter(typeof(HexRpcTypeJsonConverter<HexBigInteger, BigInteger>))]
     public class HexBigInteger : HexRpcType<BigInteger>
     {
-        public HexBigInteger(string hex) : base(new HexBigIntegerBigEndianConverter(), hex)
-        {
-        }
+        public HexBigInteger(string hex) : base(new HexBigIntegerBigEndianConverter(), hex) { }
 
-        public HexBigInteger(BigInteger value) : base(value, new HexBigIntegerBigEndianConverter())
-        {
-        }
+        public HexBigInteger(BigInteger value) : base(value, new HexBigIntegerBigEndianConverter()) { }
 
         public override bool Equals(object obj)
         {

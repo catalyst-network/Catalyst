@@ -8,23 +8,20 @@ namespace Catalyst.Node.Core.Modules.Gossip
 {
     public class Gossip : UntypedActor, IGossip
     {
-        
         private IActorRef GossipActor { get; set; }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         private async Task RunAsyncActors()
         {
             using (var gossipSystem = ActorSystem.Create("GossipSystem"))
             {
-               GossipActor = gossipSystem.ActorOf(Props.Create(() => new Gossip()), "GossipActor");
+                GossipActor = gossipSystem.ActorOf(Props.Create(() => new Gossip()), "GossipActor");
             }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="message"></param>
         protected override void OnReceive(object message)
@@ -45,13 +42,14 @@ namespace Catalyst.Node.Core.Modules.Gossip
                             ReceiveTransaction(tx);
                             break;
                     }
+
                     break;
             }
+
             var receivedMessage = (BasicTransaction) message;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         private void SendTransaction()
         {
@@ -59,7 +57,6 @@ namespace Catalyst.Node.Core.Modules.Gossip
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="tx"></param>
         private void SendTransaction(BasicTransaction tx)
@@ -69,7 +66,6 @@ namespace Catalyst.Node.Core.Modules.Gossip
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="tx"></param>
         private void ReceiveTransaction(BasicTransaction tx)
