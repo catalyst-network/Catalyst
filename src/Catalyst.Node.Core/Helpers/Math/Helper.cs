@@ -17,43 +17,43 @@ namespace Catalyst.Node.Core.Helpers.Math
         private static int BitLen(int w)
         {
             return w < 1 << 15
-                ? w < 1 << 7
-                    ? w < 1 << 3
-                        ? w < 1 << 1
-                            ? w < 1 << 0 ? w < 0 ? 32 : 0 : 1
-                            : w < 1 << 2
-                                ? 2
-                                : 3
-                        : w < 1 << 5
-                            ? w < 1 << 4 ? 4 : 5
-                            : w < 1 << 6
-                                ? 6
-                                : 7
-                    : w < 1 << 11
-                        ? w < 1 << 9 ? w < 1 << 8 ? 8 : 9 :
-                        w < 1 << 10 ? 10 : 11
-                        : w < 1 << 13
-                            ? w < 1 << 12 ? 12 : 13
-                            : w < 1 << 14
-                                ? 14
-                                : 15
-                : w < 1 << 23
-                    ? w < 1 << 19
-                        ? w < 1 << 17 ? w < 1 << 16 ? 16 : 17 :
-                        w < 1 << 18 ? 18 : 19
-                        : w < 1 << 21
-                            ? w < 1 << 20 ? 20 : 21
-                            : w < 1 << 22
-                                ? 22
-                                : 23
-                    : w < 1 << 27
-                        ? w < 1 << 25 ? w < 1 << 24 ? 24 : 25 :
-                        w < 1 << 26 ? 26 : 27
-                        : w < 1 << 29
-                            ? w < 1 << 28 ? 28 : 29
-                            : w < 1 << 30
-                                ? 30
-                                : 31;
+                       ? w < 1 << 7
+                             ? w < 1 << 3
+                                   ? w < 1 << 1
+                                         ? w < 1 << 0 ? w < 0 ? 32 : 0 : 1
+                                         : w < 1 << 2
+                                             ? 2
+                                             : 3
+                                   : w < 1 << 5
+                                       ? w < 1 << 4 ? 4 : 5
+                                       : w < 1 << 6
+                                           ? 6
+                                           : 7
+                             : w < 1 << 11
+                                 ? w < 1 << 9 ? w < 1 << 8 ? 8 : 9 :
+                                   w < 1 << 10 ? 10 : 11
+                                 : w < 1 << 13
+                                     ? w < 1 << 12 ? 12 : 13
+                                     : w < 1 << 14
+                                         ? 14
+                                         : 15
+                       : w < 1 << 23
+                           ? w < 1 << 19
+                                 ? w < 1 << 17 ? w < 1 << 16 ? 16 : 17 :
+                                   w < 1 << 18 ? 18 : 19
+                                 : w < 1 << 21
+                                     ? w < 1 << 20 ? 20 : 21
+                                     : w < 1 << 22
+                                         ? 22
+                                         : 23
+                           : w < 1 << 27
+                               ? w < 1 << 25 ? w < 1 << 24 ? 24 : 25 :
+                                 w < 1 << 26 ? 26 : 27
+                               : w < 1 << 29
+                                   ? w < 1 << 28 ? 28 : 29
+                                   : w < 1 << 30
+                                       ? 30
+                                       : 31;
         }
 
         public static int GetBitLength(this BigInteger i)
@@ -79,7 +79,8 @@ namespace Catalyst.Node.Core.Helpers.Math
         public static string GetVersion(this Assembly assembly)
         {
             var attribute = assembly.CustomAttributes.FirstOrDefault(p =>
-                p.AttributeType == typeof(AssemblyInformationalVersionAttribute));
+                                                                         p.AttributeType ==
+                                                                         typeof(AssemblyInformationalVersionAttribute));
             if (attribute == null) return assembly.GetName().Version.ToString(3);
             return (string) attribute.ConstructorArguments[0].Value;
         }
@@ -210,7 +211,8 @@ namespace Catalyst.Node.Core.Helpers.Math
             return new IPEndPoint(endPoint.Address.Unmap(), endPoint.Port);
         }
 
-        public static long WeightedAverage<T>(this IEnumerable<T> source, Func<T, long> valueSelector,
+        public static long WeightedAverage<T>(this IEnumerable<T> source,
+            Func<T, long> valueSelector,
             Func<T, long> weightSelector)
         {
             long sum_weight = 0;
@@ -226,8 +228,11 @@ namespace Catalyst.Node.Core.Helpers.Math
             return sum_value / sum_weight;
         }
 
-        public static IEnumerable<TResult> WeightedFilter<T, TResult>(this IList<T> source, double start, double end,
-            Func<T, long> weightSelector, Func<T, long, TResult> resultSelector)
+        public static IEnumerable<TResult> WeightedFilter<T, TResult>(this IList<T> source,
+            double start,
+            double end,
+            Func<T, long> weightSelector,
+            Func<T, long, TResult> resultSelector)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (start < 0 || start > 1) throw new ArgumentOutOfRangeException(nameof(start));

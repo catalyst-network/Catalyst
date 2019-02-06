@@ -30,7 +30,7 @@ namespace Catalyst.Node.Core.Helpers.Math
 
         public static readonly Fixed8 Satoshi = new Fixed8 {value = 1};
 
-        public static readonly Fixed8 Zero = default(Fixed8);
+        public static readonly Fixed8 Zero = default;
 
         public int Size => sizeof(long);
 
@@ -43,9 +43,9 @@ namespace Catalyst.Node.Core.Helpers.Math
         {
             if (value >= 0) return this;
             return new Fixed8
-            {
-                value = -value
-            };
+                   {
+                       value = -value
+                   };
         }
 
         public Fixed8 Ceiling()
@@ -54,13 +54,13 @@ namespace Catalyst.Node.Core.Helpers.Math
             if (remainder == 0) return this;
             if (remainder > 0)
                 return new Fixed8
-                {
-                    value = value - remainder + D
-                };
+                       {
+                           value = value - remainder + D
+                       };
             return new Fixed8
-            {
-                value = value - remainder
-            };
+                   {
+                       value = value - remainder
+                   };
         }
 
         public int CompareTo(Fixed8 other)
@@ -90,9 +90,9 @@ namespace Catalyst.Node.Core.Helpers.Math
             if (value < long.MinValue || value > long.MaxValue)
                 throw new OverflowException();
             return new Fixed8
-            {
-                value = (long) value
-            };
+                   {
+                       value = (long) value
+                   };
         }
 
         public long GetData()
@@ -150,21 +150,21 @@ namespace Catalyst.Node.Core.Helpers.Math
         {
             if (!decimal.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out var d))
             {
-                result = default(Fixed8);
+                result = default;
                 return false;
             }
 
             d *= D;
             if (d < long.MinValue || d > long.MaxValue)
             {
-                result = default(Fixed8);
+                result = default;
                 return false;
             }
 
             result = new Fixed8
-            {
-                value = (long) d
-            };
+                     {
+                         value = (long) d
+                     };
             return true;
         }
 

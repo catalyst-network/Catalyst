@@ -70,13 +70,12 @@ namespace Catalyst.Node.Core.Helpers.Platform
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public static int Os()
         {
-            int platform = 0;
+            var platform = 0;
 
             if (IsLinux)
                 platform = 1;
@@ -124,7 +123,6 @@ namespace Catalyst.Node.Core.Helpers.Platform
     }
 
     /// <summary>
-    /// 
     /// </summary>
     internal class UnsupportedPlatformException : Exception
     {
@@ -132,8 +130,6 @@ namespace Catalyst.Node.Core.Helpers.Platform
         ///     Initializes new instance of UnsupportedPlatformException class
         /// </summary>
         /// <param name="message"></param>
-        public UnsupportedPlatformException(string message) : base(message)
-        {
-        }
+        public UnsupportedPlatformException(string message) : base(message) { }
     }
 }

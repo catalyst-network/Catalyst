@@ -7,13 +7,9 @@ namespace Catalyst.Node.Core.Helpers.Hex.HexTypes
     [JsonConverter(typeof(HexRpcTypeJsonConverter<HexUTF8String, string>))]
     public class HexUTF8String : HexRpcType<string>
     {
-        private HexUTF8String() : base(new HexUtf8StringConverter())
-        {
-        }
+        private HexUTF8String() : base(new HexUtf8StringConverter()) { }
 
-        public HexUTF8String(string value) : base(value, new HexUtf8StringConverter())
-        {
-        }
+        public HexUTF8String(string value) : base(value, new HexUtf8StringConverter()) { }
 
         /// <summary>
         /// </summary>

@@ -53,33 +53,27 @@
         </Content>
         <Content Include="Config\components.json" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="Modules\MemPool\**" />
+      <Compile Include="Modules\Mempool\Mempool.cs" />
+      <Compile Include="Modules\Mempool\MempoolModule.cs" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <EmbeddedResource Remove="Modules\MemPool\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Remove="Modules\MemPool\**" />
+    </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
         <DebugSymbols>False</DebugSymbols>
     </PropertyGroup>
     
-    <ItemGroup>
-      <_UnmanagedRegistrationCache Remove="obj\Catalyst.Node.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-    <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-    <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll" />
-    </ItemGroup>
-    <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.pdb" />
-    </ItemGroup>
-    <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll" />
-    </ItemGroup>
-    <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll.manifest" />
-    </ItemGroup>
-    <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.application" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
-    </ItemGroup>
 </Project>

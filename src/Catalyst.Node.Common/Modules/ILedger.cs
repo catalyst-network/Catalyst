@@ -1,6 +1,4 @@
 namespace Catalyst.Node.Common.Modules
 {
-    public interface ILedger
-    {
-    }
+    public interface ILedger { }
 }
