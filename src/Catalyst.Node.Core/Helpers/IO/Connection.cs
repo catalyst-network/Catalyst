@@ -10,7 +10,7 @@ namespace Catalyst.Node.Core.Helpers.IO
 {
     /// <summary>
     /// </summary>
-    public sealed class Connection : IConnection
+    public sealed class Connection : IDisposable, IConnection
     {
         /// <summary>
         /// </summary>

@@ -28,18 +28,14 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <param name="bigDecimal"></param>
         /// <param name="alwaysTruncate"></param>
         private BigDecimal(BigDecimal bigDecimal, bool alwaysTruncate = false) : this(bigDecimal.Mantissa,
-            bigDecimal.Exponent, alwaysTruncate)
-        {
-        }
+            bigDecimal.Exponent, alwaysTruncate) { }
 
         /// <summary>
         ///     @TODO Guart Util
         /// </summary>
         /// <param name="value"></param>
         /// <param name="alwaysTruncate"></param>
-        public BigDecimal(decimal value, bool alwaysTruncate = false) : this((BigDecimal) value, alwaysTruncate)
-        {
-        }
+        public BigDecimal(decimal value, bool alwaysTruncate = false) : this((BigDecimal) value, alwaysTruncate) { }
 
         /// <summary>
         /// </summary>
@@ -379,8 +375,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         private static BigDecimal Add(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
-                ? new BigDecimal(AlignExponent(left, right) + right.Mantissa, right.Exponent)
-                : new BigDecimal(AlignExponent(right, left) + left.Mantissa, left.Exponent);
+                       ? new BigDecimal(AlignExponent(left, right) + right.Mantissa, right.Exponent)
+                       : new BigDecimal(AlignExponent(right, left) + left.Mantissa, left.Exponent);
         }
 
         /// <summary>
@@ -436,8 +432,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         public static bool operator <(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
-                ? AlignExponent(left, right) < right.Mantissa
-                : left.Mantissa < AlignExponent(right, left);
+                       ? AlignExponent(left, right) < right.Mantissa
+                       : left.Mantissa < AlignExponent(right, left);
         }
 
         /// <summary>
@@ -448,8 +444,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         public static bool operator >(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
-                ? AlignExponent(left, right) > right.Mantissa
-                : left.Mantissa > AlignExponent(right, left);
+                       ? AlignExponent(left, right) > right.Mantissa
+                       : left.Mantissa > AlignExponent(right, left);
         }
 
         /// <summary>
@@ -460,8 +456,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         public static bool operator <=(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
-                ? AlignExponent(left, right) <= right.Mantissa
-                : left.Mantissa <= AlignExponent(right, left);
+                       ? AlignExponent(left, right) <= right.Mantissa
+                       : left.Mantissa <= AlignExponent(right, left);
         }
 
         /// <summary>
@@ -472,8 +468,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         public static bool operator >=(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
-                ? AlignExponent(left, right) >= right.Mantissa
-                : left.Mantissa >= AlignExponent(right, left);
+                       ? AlignExponent(left, right) >= right.Mantissa
+                       : left.Mantissa >= AlignExponent(right, left);
         }
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
             ToChecksumAddress(address3.ToUpper()).Should().Be(address3);
             ToChecksumAddress(address4.ToUpper()).Should().Be(address4);
         }
-        
+
         [Fact]
         public virtual void ShouldValidateAddressHexFormat()
         {

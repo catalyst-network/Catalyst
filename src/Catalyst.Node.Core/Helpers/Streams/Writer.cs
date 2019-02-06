@@ -11,7 +11,6 @@ namespace Catalyst.Node.Core.Helpers.Streams
     public static class Writer
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="sslStream"></param>
         /// <param name="data"></param>
@@ -25,7 +24,6 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
             try
             {
-
                 if (sslStream == null)
                 {
                     Log.Message("MessageWriteAsync SSL stream is null");

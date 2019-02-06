@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Dawn;
 using Catalyst.Node.Common;
-using Catalyst.Node.Common.Modules;
 using Catalyst.Protocols.Mempool;
-using Dawn;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Node.Common.Modules;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Modules.Mempool
@@ -11,55 +11,38 @@ namespace Catalyst.Node.Core.Modules.Mempool
     /// <summary>
     ///     Mempool class wraps around a IKeyValueStore
     /// </summary>
-    public class Mempool : IMempool, IDisposable
-    {   
-        public IKeyValueStore _keyValueStore { get; set; }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="keyValueStore"></param>
+    public class Mempool : IMempool
+    {
+        /// <inheritdoc />
         public Mempool(IKeyValueStore keyValueStore)
         {
             Guard.Argument(keyValueStore, nameof(keyValueStore)).NotNull();
-            _keyValueStore = keyValueStore;
+            KeyValueStore = keyValueStore;
         }
-        
-        /// <summary>
-        /// </summary>
-        /// <param name="k"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+
+        public IKeyValueStore KeyValueStore { get; }
+
+        /// <inheritdoc />
+        public IDictionary<Key, Tx> GetMemPoolContent()
+        {
+            return KeyValueStore.GetSnapshot().ToDictionary(
+                p => Key.Parser.ParseFrom(p.Key),
+                p => Tx.Parser.ParseFrom(p.Value));
+        }
+
+        /// <inheritdoc />
         public bool SaveTx(Key k, Tx value)
         {
             Guard.Argument(k, nameof(k)).NotNull();
             Guard.Argument(value, nameof(value)).NotNull();
-            return _keyValueStore.Set(k.ToByteArray(), value.ToByteArray(), null);
+            return KeyValueStore.Set(k.ToByteArray(), value.ToByteArray(), null);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="k"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <inheritdoc />
         public Tx GetTx(Key k)
         {
             Guard.Argument(k, nameof(k)).NotNull();
-            return Tx.Parser.ParseFrom(_keyValueStore.Get(k.ToByteArray()));
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<string, string> GetMempool()
-        {
-            return _keyValueStore.GetInfo();
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
+            return Tx.Parser.ParseFrom(KeyValueStore.Get(k.ToByteArray()));
         }
     }
 }

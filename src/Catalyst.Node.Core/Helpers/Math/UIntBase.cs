@@ -82,13 +82,13 @@ namespace Catalyst.Node.Core.Helpers.Math
             return Equals((UIntBase) obj);
         }
 
-//        /// <summary>
-//        /// Method GetHashCode returns a 32-bit int representing a hash code, composed of the first 4 bytes.
-//        /// </summary>
-//        public override int GetHashCode()
-//        {
-//            return data_bytes.ToInt32(0);
-//        }
+        //        /// <summary>
+        //        /// Method GetHashCode returns a 32-bit int representing a hash code, composed of the first 4 bytes.
+        //        /// </summary>
+        //        public override int GetHashCode()
+        //        {
+        //            return data_bytes.ToInt32(0);
+        //        }
 
         /// <summary>
         ///     Method Parse receives a big-endian hex string and stores as a UInt160 or UInt256 little-endian byte array

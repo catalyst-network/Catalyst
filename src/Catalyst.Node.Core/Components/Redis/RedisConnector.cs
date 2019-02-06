@@ -1,47 +1,26 @@
-using System;
-using System.Net;
 using Dawn;
 using StackExchange.Redis;
 
 namespace Catalyst.Node.Core.Components.Redis
 {
-    public class RedisConnector
+    public class RedisConnector : IRedisConnector
     {
-        private static RedisConnector _instance;
-        private static Lazy<ConnectionMultiplexer> _connection;
-        private readonly string _connectionParam;
-
-        /// <summary>
-        /// </summary>
-        /// <param name="connectionParam"></param>
-        private RedisConnector(string connectionParam)
+        public RedisConnector(string connectionParam)
         {
             Guard.Argument(connectionParam, nameof(connectionParam)).NotNull().NotEmpty().NotWhiteSpace();
-            _connectionParam = connectionParam;
-            _connection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(_connectionParam));
+            Connection = ConnectionMultiplexer.ConnectAsync(connectionParam).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        ///     Get the connection multiplexer to Catalyst.Helpers.Redis
-        /// </summary>
-        /// <returns>ConnectionMultiplexer</returns>
-        public ConnectionMultiplexer Connection => _connection.Value;
+        /// <inheritdoc />
+        public IConnectionMultiplexer Connection { get; }
 
-        /// <summary>
-        ///     Get the Catalyst.Helpers.Redis database
-        /// </summary>
-        /// <returns>IDatabase</returns>
-        public IDatabase GetDb => _connection.Value.GetDatabase();
+        /// <inheritdoc />
+        public IDatabase Database => Connection.GetDatabase();
 
-        /// <summary>
-        ///     Get the instance of this class (singleton)
-        /// </summary>
-        public static RedisConnector GetInstance(IPEndPoint host)
+        /// <inheritdoc />
+        public void Dispose()
         {
-            Guard.Argument(host, nameof(host)).NotNull();
-            return _instance ?? (_instance =
-                       new Lazy<RedisConnector>(() =>
-                           new RedisConnector($"{host.Address},allowAdmin=true")).Value);
+            Connection?.Dispose();
         }
     }
 }
