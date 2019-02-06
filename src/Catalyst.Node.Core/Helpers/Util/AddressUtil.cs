@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Node.Core.Helpers.Util
 {

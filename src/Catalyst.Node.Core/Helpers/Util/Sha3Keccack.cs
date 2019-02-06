@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace Catalyst.Node.Core.Helpers.Util

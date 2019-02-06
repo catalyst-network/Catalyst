@@ -1,10 +1,4 @@
 ﻿<Project>
-  <PropertyGroup>
-    <Authors>James Kirby (james.kirby@atlascity.io)</Authors>
-    <AssemblyName>Catalyst.Node.UnitTests</AssemblyName>
-    <PackageId>Catalyst.Node.UnitTests</PackageId>
-    <RootNamespace>Catalyst.Node.UnitTests</RootNamespace>
-  </PropertyGroup>
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
@@ -12,8 +6,12 @@
     <PackageReference Include="NSubstitute" Version="4.0.0" />
     <PackageReference Include="xunit.core" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageReference Include="xunit.assert" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP.UnitTests\RLPTests.cs" />
   </ItemGroup>
 </Project>
