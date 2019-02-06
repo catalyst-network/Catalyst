@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.Modules.P2P.Events;
 using Dawn;
 
 namespace Catalyst.Node.Core.Modules.P2P

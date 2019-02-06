@@ -15,7 +15,6 @@ using Catalyst.Node.Core.Helpers.Streams;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Listeners;
 using Catalyst.Node.Core.Messages;
-using Catalyst.Node.Core.Modules.P2P.Events;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Dawn;
 using Org.BouncyCastle.Security;
