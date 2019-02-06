@@ -18,7 +18,9 @@ namespace Catalyst.Node.Core.Helpers.IO
         /// <param name="chain"></param>
         /// <param name="sslPolicyErrors"></param>
         /// <returns></returns>
-        private static bool AcceptCertificate(object sender, X509Certificate certificate, X509Chain chain,
+        private static bool AcceptCertificate(object sender,
+            X509Certificate certificate,
+            X509Chain chain,
             SslPolicyErrors sslPolicyErrors)
         {
             return true;
@@ -38,13 +40,13 @@ namespace Catalyst.Node.Core.Helpers.IO
         /// <exception cref="Exception"></exception>
         /// <exception cref="AuthenticationException"></exception>
         public static SslStream GetTlsStream(
-            NetworkStream networkStream,
-            int direction,
-            X509Certificate sslCertificate,
-            bool acceptInvalidCerts,
-            bool mutuallyAuthenticate = false,
-            IPEndPoint endPoint = null
-        )
+                NetworkStream networkStream,
+                int direction,
+                X509Certificate sslCertificate,
+                bool acceptInvalidCerts,
+                bool mutuallyAuthenticate = false,
+                IPEndPoint endPoint = null
+            )
         {
             if (networkStream == null) throw new ArgumentNullException(nameof(networkStream));
             if (sslCertificate == null) throw new ArgumentNullException(nameof(sslCertificate));
@@ -52,23 +54,25 @@ namespace Catalyst.Node.Core.Helpers.IO
             var certificateCollection = new X509CertificateCollection {sslCertificate};
 
             var sslStream = acceptInvalidCerts
-                ? new SslStream(networkStream, false, AcceptCertificate)
-                : new SslStream(networkStream, false);
+                                ? new SslStream(networkStream, false, AcceptCertificate)
+                                : new SslStream(networkStream, false);
 
             try
             {
                 switch (direction)
-                {//@TODO see if we want this async?
+                {
+                    //@TODO see if we want this async?
                     case 1:
                         sslStream.AuthenticateAsServer(sslCertificate, true, SslProtocols.Tls12, false);
                         break;
                     case 2 when endPoint != null:
                         sslStream.AuthenticateAsClient(
-                            endPoint.Address.ToString() ?? throw new ArgumentNullException(nameof(endPoint.Address)),
-                            certificateCollection,
-                            SslProtocols.Tls12,
-                            acceptInvalidCerts
-                        );
+                                endPoint.Address.ToString() ??
+                                throw new ArgumentNullException(nameof(endPoint.Address)),
+                                certificateCollection,
+                                SslProtocols.Tls12,
+                                acceptInvalidCerts
+                            );
                         break;
                     case 2:
                         throw new Exception("need endpoint for outbound connections");

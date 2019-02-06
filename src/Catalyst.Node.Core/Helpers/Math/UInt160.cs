@@ -15,17 +15,13 @@ namespace Catalyst.Node.Core.Helpers.Math
         ///     The empty constructor stores a null byte array
         /// </summary>
         public UInt160()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         /// <summary>
         ///     The byte[] constructor invokes base class UIntBase constructor for 20 bytes
         /// </summary>
         public UInt160(byte[] value)
-            : base(20, value)
-        {
-        }
+            : base(20, value) { }
 
         /// <summary>
         ///     Method CompareTo returns 1 if this UInt160 is bigger than other UInt160; -1 if it's smaller; 0 if it's equals

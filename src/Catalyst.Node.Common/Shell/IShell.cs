@@ -26,7 +26,6 @@ namespace Catalyst.Node.Common.Shell
         /// <returns></returns>
         bool OnStopNode(string[] args);
 
-
         /// <summary>
         /// </summary>
         /// <returns></returns>

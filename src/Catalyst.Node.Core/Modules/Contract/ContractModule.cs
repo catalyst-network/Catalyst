@@ -5,7 +5,6 @@ namespace Catalyst.Node.Core.Modules.Contract
 {
     public class ContractModule : Module
     {
-
         /// <summary>
         /// </summary>
         /// <param name="builder"></param>
@@ -13,8 +12,8 @@ namespace Catalyst.Node.Core.Modules.Contract
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => new Contract())
-                .As<IContract>()
-                .SingleInstance();
+                   .As<IContract>()
+                   .SingleInstance();
         }
     }
 }

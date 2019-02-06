@@ -12,7 +12,6 @@ namespace Catalyst.Node.Core.Helpers.Math
         public int Sign => Value.Sign;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="value"></param>
         /// <param name="decimals"></param>
@@ -23,7 +22,6 @@ namespace Catalyst.Node.Core.Helpers.Math
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="decimals"></param>
         /// <returns></returns>
@@ -82,7 +80,7 @@ namespace Catalyst.Node.Core.Helpers.Math
             {
                 if (!sbyte.TryParse(s.Substring(index + 1), out var e_temp))
                 {
-                    result = default(BigDecimal);
+                    result = default;
                     return false;
                 }
 
@@ -101,7 +99,7 @@ namespace Catalyst.Node.Core.Helpers.Math
             var ds = e + decimals;
             if (ds < 0)
             {
-                result = default(BigDecimal);
+                result = default;
                 return false;
             }
 
@@ -109,7 +107,7 @@ namespace Catalyst.Node.Core.Helpers.Math
                 s += new string('0', ds);
             if (!BigInteger.TryParse(s, out var value))
             {
-                result = default(BigDecimal);
+                result = default;
                 return false;
             }
 

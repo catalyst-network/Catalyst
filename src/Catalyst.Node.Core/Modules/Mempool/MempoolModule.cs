@@ -17,8 +17,8 @@ namespace Catalyst.Node.Core.Modules.Mempool
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
             builder.Register(c => new Mempool(c.Resolve<IKeyValueStore>()))
-                .As<IMempool>()
-                .SingleInstance();
+                   .As<IMempool>()
+                   .SingleInstance();
         }
     }
 }

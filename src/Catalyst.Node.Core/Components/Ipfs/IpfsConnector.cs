@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
 using Catalyst.Node.Core.Helpers;
@@ -123,7 +122,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
             {
                 // Try to get id of this peer. If the daemon is not running than
                 // it will throw a socket connection exception.
-                var x = _client.DoCommandAsync("id", default(CancellationToken)).Result;
+                var x = _client.DoCommandAsync("id", default).Result;
                 var j = JObject.Parse(x);
 
                 Log.Message("Started IPFS peer ID = " + (j["ID"] != null ? $"{j["ID"]}" : "field not found"));

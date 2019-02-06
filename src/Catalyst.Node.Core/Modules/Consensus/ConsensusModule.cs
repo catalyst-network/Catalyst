@@ -12,8 +12,8 @@ namespace Catalyst.Node.Core.Modules.Consensus
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => new Consensus())
-                .As<IConsensus>()
-                .SingleInstance();
+                   .As<IConsensus>()
+                   .SingleInstance();
         }
     }
 }

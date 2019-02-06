@@ -10,9 +10,7 @@ namespace Catalyst.Node.Core.Helpers.Workers
 
         /// <summary>
         /// </summary>
-        private ScheduledAction()
-        {
-        }
+        private ScheduledAction() { }
 
         public Action Action { get; private set; }
         public TimeSpan Interval { get; private set; }
