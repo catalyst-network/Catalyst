@@ -14,7 +14,6 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         /// </summary>
         /// <param name="password"></param>
         /// <param name="commonName"></param>
-        /// <param name="fileName"></param>
         /// <returns></returns>
         public static X509Certificate2 CreateCertificate(string password, string commonName)
         {
@@ -55,24 +54,24 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         /// <summary>
         /// </summary>
         /// <param name="password"></param>
-        /// <param name="filePath"></param>
+        /// <param name="dataDir"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public X509Certificate2 LoadCert(string password, string filePath)
+        public static X509Certificate2 LoadCert(string password, string dataDir, string fileName)
         {
-            return string.IsNullOrEmpty(password)
-                       ? new X509Certificate2(filePath)
-                       : new X509Certificate2(filePath, password);
+            return LoadCert(password, $"{dataDir}/{fileName}");
         }
 
         /// <summary>
         /// </summary>
         /// <param name="password"></param>
-        /// <param name="dataDir"></param>
-        /// <param name="fileName"></param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
-        public X509Certificate2 LoadCert(string password, string dataDir, string fileName)
+        public static X509Certificate2 LoadCert(string password, string filePath)
         {
-            return LoadCert(password, $"{dataDir}/{fileName}");
+            return string.IsNullOrEmpty(password)
+                ? new X509Certificate2(filePath)
+                : new X509Certificate2(filePath, password);
         }
 
         /// <summary>
@@ -107,14 +106,12 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 
         /// <summary>
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="certPath"></param>
         /// <returns></returns>
         public static byte[] Sign(byte[] data, X509Certificate2 privateKey)
         {
-            if (data == null) throw new ArgumentNullException("data");
-            if (privateKey == null) throw new ArgumentNullException("privateKey");
-            if (!privateKey.HasPrivateKey) throw new ArgumentException("invalid certicate", "privateKey");
+            if (data == null) throw new ArgumentNullException(nameof(data));
+            if (privateKey == null) throw new ArgumentNullException(nameof(privateKey));
+            if (!privateKey.HasPrivateKey) throw new ArgumentException("invalid certificate", nameof(privateKey));
 
             var provider = (RSACryptoServiceProvider) privateKey.PrivateKey;
             return provider.SignData(data, new SHA1CryptoServiceProvider());
