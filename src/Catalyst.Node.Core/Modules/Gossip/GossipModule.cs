@@ -10,12 +10,12 @@ namespace Catalyst.Node.Core.Modules.Gossip
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="dfsSettings"></param>
-        protected override void Load (ContainerBuilder builder)
+        protected override void Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
             builder.Register(c => new Gossip())
-                .As<IGossip>()
-                .SingleInstance();
+                   .As<IGossip>()
+                   .SingleInstance();
         }
     }
 }

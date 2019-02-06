@@ -11,22 +11,17 @@ namespace Catalyst.Node.Core.Helpers.Math
     {
         public static readonly UInt256 Zero = new UInt256();
 
-
         /// <summary>
         ///     The empty constructor stores a null byte array
         /// </summary>
         public UInt256()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         /// <summary>
         ///     The byte[] constructor invokes base class UIntBase constructor for 32 bytes
         /// </summary>
         public UInt256(byte[] value)
-            : base(32, value)
-        {
-        }
+            : base(32, value) { }
 
         /// <summary>
         ///     Method CompareTo returns 1 if this UInt256 is bigger than other UInt256; -1 if it's smaller; 0 if it's equals

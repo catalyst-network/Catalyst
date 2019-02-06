@@ -11,17 +11,7 @@ namespace Catalyst.Node.Core
 {
     public sealed class NodeOptions
     {
-        private static NodeOptions Instance { get; set; }
-        private static readonly object Mutex = new object();
-
-        public enum Networks : int
-        {
-            devnet = 1,
-            testnet = 2,
-            mainnet = 3
-        }
-        
-        public enum Enviroments : int
+        public enum Enviroments
         {
             debug = 1,
             test = 2,
@@ -29,9 +19,18 @@ namespace Catalyst.Node.Core
             simulation = 4,
             prod = 5
         }
-        
+
+        public enum Networks
+        {
+            devnet = 1,
+            testnet = 2,
+            mainnet = 3
+        }
+
+        private static readonly object Mutex = new object();
+
         /// <summary>
-        ///    Settings constructor
+        ///     Settings constructor
         /// </summary>
         /// <param name="env"></param>
         /// <param name="dataDir"></param>
@@ -44,7 +43,9 @@ namespace Catalyst.Node.Core
             Network = network;
             Platform = platform;
         }
-        
+
+        private static NodeOptions Instance { get; set; }
+
         public int Env { get; set; }
         public int Network { get; set; }
         public int Platform { get; set; }
@@ -59,7 +60,7 @@ namespace Catalyst.Node.Core
         public ConsensusSettings ConsensusSettings { get; internal set; }
 
         /// <summary>
-        ///    Get a thread safe settings singleton.
+        ///     Get a thread safe settings singleton.
         /// </summary>
         /// <param name="environment"></param>
         /// <param name="dataDir"></param>
@@ -68,23 +69,24 @@ namespace Catalyst.Node.Core
         /// <returns></returns>
         internal static NodeOptions GetInstance(string environment, string dataDir, string network, int platform)
         {
-            Guard.Argument(platform, nameof(platform)).InRange(1,3);
+            Guard.Argument(platform, nameof(platform)).InRange(1, 3);
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(environment, nameof(environment)).NotNull().NotEmpty().NotWhiteSpace();
-            
+
             if (Instance == null)
                 lock (Mutex)
                 {
                     Instance = Instance == null
-                        ? new NodeOptions(
-                            (int)(Enviroments) Enum.Parse(typeof(Enviroments), environment),
-                            dataDir,
-                            (int)(Networks) Enum.Parse(typeof(Networks), network),
-                            platform
-                        )
-                        : throw new ArgumentException(); 
+                                   ? new NodeOptions(
+                                           (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
+                                           dataDir,
+                                           (int) (Networks) Enum.Parse(typeof(Networks), network),
+                                           platform
+                                       )
+                                   : throw new ArgumentException();
                 }
+
             return Instance;
         }
 
@@ -95,22 +97,21 @@ namespace Catalyst.Node.Core
         public string SerializeSettings()
         {
             var serializerSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
+                                     {
+                                         Formatting = Formatting.Indented,
+                                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                                     };
             return JsonConvert.SerializeObject(this, serializerSettings);
         }
     }
 
     public class NodeOptionsBuilder
     {
-        private readonly NodeOptions _nodeOptions;
-        private readonly IConfiguration _networkConfiguration;
         private readonly List<Action<NodeOptions>> _builderActions;
+        private readonly IConfiguration _networkConfiguration;
+        private readonly NodeOptions _nodeOptions;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="env"></param>
         /// <param name="dataDir"></param>
@@ -119,21 +120,20 @@ namespace Catalyst.Node.Core
         /// <exception cref="ArgumentException"></exception>
         public NodeOptionsBuilder(string env, string dataDir, string network, int platform)
         {
-            Guard.Argument(platform, nameof(platform)).InRange(1,3);
+            Guard.Argument(platform, nameof(platform)).InRange(1, 3);
             Guard.Argument(env, nameof(env)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
-            
+
             _builderActions = new List<Action<NodeOptions>>();
 
             if (!ValidEnvPram(env) || !ValidNetworkParam(network)) throw new ArgumentException();
-            
+
             _networkConfiguration = LoadNetworkConfig(network, dataDir);
             _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform);
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="network"></param>
         /// <returns></returns>
@@ -153,7 +153,6 @@ namespace Catalyst.Node.Core
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="env"></param>
         /// <returns></returns>
@@ -162,22 +161,21 @@ namespace Catalyst.Node.Core
             switch (env)
             {
                 case "debug":
-                    return true;                
+                    return true;
                 case "test":
-                    return true;                
+                    return true;
                 case "benchmark":
-                    return true;                
+                    return true;
                 case "simulation":
-                    return true;                
+                    return true;
                 case "prod":
-                    return true;                
+                    return true;
                 default:
                     throw new ArgumentException();
             }
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptionsBuilder LoadDfsSettings()
@@ -185,9 +183,8 @@ namespace Catalyst.Node.Core
             _builderActions.Add(n => n.DfsSettings = new DfsSettings(_networkConfiguration.GetSection("Dfs")));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptionsBuilder LoadPeerSettings()
@@ -195,29 +192,28 @@ namespace Catalyst.Node.Core
             _builderActions.Add(n => n.PeerSettings = new PeerSettings(_networkConfiguration.GetSection("Peer")));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptionsBuilder LoadContractSettings()
         {
-            _builderActions.Add(n => n.ContractSettings = new ContractSettings(_networkConfiguration.GetSection("Contract")));
+            _builderActions.Add(n => n.ContractSettings =
+                                         new ContractSettings(_networkConfiguration.GetSection("Contract")));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptionsBuilder LoadMempoolSettings()
         {
-            _builderActions.Add(n => n.MempoolSettings = new MempoolSettings(_networkConfiguration.GetSection("Mempool")));
+            _builderActions.Add(n => n.MempoolSettings =
+                                         new MempoolSettings(_networkConfiguration.GetSection("Mempool")));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptionsBuilder LoadLedgerSettings()
@@ -225,9 +221,8 @@ namespace Catalyst.Node.Core
             _builderActions.Add(n => n.LedgerSettings = new LedgerSettings(_networkConfiguration.GetSection("Ledger")));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptionsBuilder LoadGossipSettings()
@@ -237,17 +232,16 @@ namespace Catalyst.Node.Core
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptionsBuilder LoadConsensusSettings()
         {
-            _builderActions.Add(n => n.ConsensusSettings = new ConsensusSettings(_networkConfiguration.GetSection("Consensus")));
+            _builderActions.Add(n => n.ConsensusSettings =
+                                         new ConsensusSettings(_networkConfiguration.GetSection("Consensus")));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptionsBuilder LoadWalletSettings()
@@ -255,13 +249,12 @@ namespace Catalyst.Node.Core
             _builderActions.Add(n => n.WalletSettings = new WalletSettings(_networkConfiguration.GetSection("Wallet")));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public NodeOptionsBuilder When(Func<Boolean> condition)
+        public NodeOptionsBuilder When(Func<bool> condition)
         {
             var result = condition.Invoke();
 
@@ -275,7 +268,6 @@ namespace Catalyst.Node.Core
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public NodeOptions Build()
@@ -283,7 +275,7 @@ namespace Catalyst.Node.Core
             _builderActions.ForEach(ba => ba(_nodeOptions));
             return _nodeOptions;
         }
-        
+
         /// <summary>
         ///     Loads config files from defined dataDir
         /// </summary>
@@ -314,9 +306,9 @@ namespace Catalyst.Node.Core
             }
 
             return new ConfigurationBuilder()
-                .AddJsonFile($"/{dataDir}/{networkConfigFile}")
-                .Build()
-                .GetSection("CatalystNodeConfiguration");
+                  .AddJsonFile($"/{dataDir}/{networkConfigFile}")
+                  .Build()
+                  .GetSection("CatalystNodeConfiguration");
         }
     }
 
@@ -325,7 +317,6 @@ namespace Catalyst.Node.Core
     /// </summary>
     public class LedgerSettings
     {
-
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -348,7 +339,6 @@ namespace Catalyst.Node.Core
     /// </summary>
     public class ConsensusSettings
     {
-
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -367,7 +357,6 @@ namespace Catalyst.Node.Core
     /// </summary>
     public class ContractSettings
     {
-
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -386,7 +375,6 @@ namespace Catalyst.Node.Core
     /// </summary>
     public class DfsSettings
     {
-
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -409,7 +397,6 @@ namespace Catalyst.Node.Core
     /// </summary>
     public class GossipSettings
     {
-
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -422,13 +409,12 @@ namespace Catalyst.Node.Core
 
         public string Instances { get; set; }
     }
-    
+
     /// <summary>
     ///     wallet settings class.
     /// </summary>
     public class WalletSettings
     {
-
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -441,6 +427,7 @@ namespace Catalyst.Node.Core
             WalletRpcPort = int.Parse(section.GetSection("WalletRpcPort").Value);
             Guard.Argument(WalletRpcPort, nameof(WalletRpcPort)).Min(1025).Max(65535);
         }
+
         public int WalletRpcPort { get; set; }
         public IPAddress WalletRpcIp { get; set; }
     }
@@ -450,7 +437,6 @@ namespace Catalyst.Node.Core
     /// </summary>
     public class MempoolSettings
     {
-
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -461,9 +447,9 @@ namespace Catalyst.Node.Core
             Type = section.GetSection("Type").Value;
             When = section.GetSection("When").Value;
             Host = EndpointBuilder.BuildNewEndPoint(
-                IPAddress.Parse(section.GetSection("Host").Value),
-                int.Parse(section.GetSection("Port").Value)
-            );
+                    IPAddress.Parse(section.GetSection("Host").Value),
+                    int.Parse(section.GetSection("Port").Value)
+                );
         }
 
         public string Type { get; set; }
@@ -476,7 +462,6 @@ namespace Catalyst.Node.Core
     /// </summary>
     public class PeerSettings
     {
-
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -499,7 +484,8 @@ namespace Catalyst.Node.Core
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
             KnownNodes = section.GetSection("KnownNodes").GetChildren().Select(p => p.Value).ToList();
             SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
-            AnnounceServer = Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
+            AnnounceServer =
+                Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
         }
 
         public string Network { get; set; }

@@ -214,7 +214,7 @@ namespace Catalyst.Node.Core.Modules.P2P
             if (peer == null) throw new ArgumentNullException(nameof(peer));
             try
             {
-                if (!PeerBucket.TryRemove(peer.PeerIdentifier, out Node.Core.Modules.P2P.Peer removedPeer)) return false;
+                if (!PeerBucket.TryRemove(peer.PeerIdentifier, out Peer removedPeer)) return false;
                 Log.Message("***** Successfully removed " + removedPeer.PeerIdentifier + " from peer bucket");
                 return true;
             }
@@ -259,7 +259,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// </summary>
         /// <param name="peerInfo"></param>
         /// <returns></returns>
-        public bool TryRegister(Node.Core.Modules.P2P.Peer peerInfo)
+        public bool TryRegister(Peer peerInfo)
         {
             // we also need to look in our unidentified list
             //@TODO we should pass in connection as we need to establish a relationship between the connection and the peer

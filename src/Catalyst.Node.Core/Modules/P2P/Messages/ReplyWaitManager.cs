@@ -4,11 +4,10 @@ using System.Net;
 using Catalyst.Node.Common.Modules.P2P.Messages;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
-using Catalyst.Node.Core.Modules.P2P;
-using Catalyst.Node.Core.Modules.P2P.Messages;
+using Catalyst.Node.Core.Messages;
 using Dawn;
 
-namespace Catalyst.Node.Core.Messages
+namespace Catalyst.Node.Core.Modules.P2P.Messages
 {
     internal class MessageReplyWaitManager
     {

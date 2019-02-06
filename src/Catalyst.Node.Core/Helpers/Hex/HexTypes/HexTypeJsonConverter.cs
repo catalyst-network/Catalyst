@@ -28,7 +28,9 @@ namespace Catalyst.Node.Core.Helpers.Hex.HexTypes
         /// <param name="serializer"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+        public override object ReadJson(JsonReader reader,
+            Type objectType,
+            object existingValue,
             JsonSerializer serializer)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));

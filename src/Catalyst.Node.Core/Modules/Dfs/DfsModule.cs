@@ -14,8 +14,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
             builder.Register(c => new Dfs(c.Resolve<IIpfs>()))
-                .As<IDfs>()
-                .SingleInstance();
+                   .As<IDfs>()
+                   .SingleInstance();
         }
     }
 }

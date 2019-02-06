@@ -13,17 +13,15 @@ using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Streams;
 using Catalyst.Node.Core.Helpers.Util;
-using Catalyst.Node.Core.Modules.P2P;
-using Catalyst.Node.Core.Modules.P2P.Events;
-using Catalyst.Node.Core.Modules.P2P.Messages;
-using Catalyst.Protocol.Peer;
-using Dawn;
-using Org.BouncyCastle.Security;
-using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Listeners;
 using Catalyst.Node.Core.Messages;
+using Catalyst.Node.Core.Modules.P2P.Events;
+using Catalyst.Node.Core.Modules.P2P.Messages;
+using Dawn;
+using Org.BouncyCastle.Security;
+using Catalyst.Protocol.Peer;
 
-namespace Catalyst.Node.Core
+namespace Catalyst.Node.Core.Modules.P2P
 {
     /// <summary>
     /// </summary>
@@ -82,7 +80,7 @@ namespace Catalyst.Node.Core
         {
             Log.Message("Starting Challenge Request");
 
-            var challengeRequest = new PeerProtocol.Types.ChallengeRequest();
+            var challengeRequest = new Catalyst.Protocol.Peer.PeerProtocol
             var random = new SecureRandom();
             var keyBytes = new byte[16];
             random.NextBytes(keyBytes);
@@ -180,7 +178,7 @@ namespace Catalyst.Node.Core
 
             try
             {
-                await Events.Events.AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
+                await Core.Events.Events.AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
             }
             catch (ArgumentNullException e)
             {

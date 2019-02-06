@@ -7,9 +7,8 @@ using DnsClient;
 namespace Catalyst.Node.Core.Helpers.Network
 {
     public class Dns
-    {   
+    {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hostnames"></param>
         /// <returns></returns>
@@ -17,16 +16,12 @@ namespace Catalyst.Node.Core.Helpers.Network
         {
             Guard.Argument(hostnames, nameof(hostnames)).NotEmpty().NotNull().DoesNotContainNull();
             var recordList = new List<IDnsQueryResponse>();
-            foreach (var hostname in hostnames)
-            {
-                recordList.Add(GetTxtRecords(hostname));
-            }
-            
+            foreach (var hostname in hostnames) recordList.Add(GetTxtRecords(hostname));
+
             return recordList;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
@@ -35,7 +30,7 @@ namespace Catalyst.Node.Core.Helpers.Network
             Guard.Argument(hostname, nameof(hostname)).NotNull().Http();
             return GetTxtRecords(hostname.Host);
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="hostname"></param>
@@ -47,7 +42,6 @@ namespace Catalyst.Node.Core.Helpers.Network
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
@@ -58,7 +52,6 @@ namespace Catalyst.Node.Core.Helpers.Network
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="hostname"></param>
         /// <param name="type"></param>

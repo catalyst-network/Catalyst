@@ -4,7 +4,6 @@ namespace Catalyst.Node.Core.Modules.Transactions
     {
         private const int Locking_program_hash = 1;
 
-
         public bool CheckInput(BasicTransaction tx)
         {
             /*
@@ -22,8 +21,6 @@ namespace Catalyst.Node.Core.Modules.Transactions
             return true;
         }
 
-        public void CreateInput(ref BasicTransaction tx)
-        {
-        }
+        public void CreateInput(ref BasicTransaction tx) { }
     }
 }

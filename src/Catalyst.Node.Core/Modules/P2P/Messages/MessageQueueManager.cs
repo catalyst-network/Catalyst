@@ -3,10 +3,9 @@ using System.Net;
 using Catalyst.Node.Common.Modules.P2P.Messages;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
-using Catalyst.Node.Core.Modules.P2P.Messages;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.Messages
+namespace Catalyst.Node.Core.Modules.P2P.Messages
 {
     public class MessageQueueManager : IMessageSender
     {
