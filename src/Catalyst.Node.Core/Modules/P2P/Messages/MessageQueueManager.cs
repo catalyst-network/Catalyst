@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Node.Common.Modules.P2P.Messages;
@@ -9,11 +10,16 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
 {
     public class MessageQueueManager : IMessageSender
     {
-//        private readonly IMessageListener _listener;
+        //        private readonly IMessageListener _listener;
         private readonly List<IPAddress> _blackList;
         internal readonly Queue<Message> _receivedMessageQueue;
         private readonly Dictionary<IPAddress, int> _requestsByIp;
         private readonly Queue<Message> _sendMessageQueue;
+
+        public void Send(IConnection connection, IMessage message)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// </summary>
@@ -24,46 +30,46 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
             lock (_sendMessageQueue)
             {
                 //@TODO
-//                var package = new Message(endPoint, message, message.Length); 
-//                _sendMessageQueue.Enqueue(package);
+                //                var package = new Message(endPoint, message, message.Length); 
+                //                _sendMessageQueue.Enqueue(package);
             }
         }
-//        public EventHandler<PackageReceivedEventArgs<IPEndPoint>> PackageReceivedEventArgs;
+        //        public EventHandler<PackageReceivedEventArgs<IPEndPoint>> PackageReceivedEventArgs;
 
-//        internal MessageQueueManager(IMessageListener listener, IWorkScheduler worker)
-//        {
-//            _listener = listener;
+        //        internal MessageQueueManager(IMessageListener listener, IWorkScheduler worker)
+        //        {
+        //            _listener = listener;
 
-//            _receivedMessageQueue = new Queue<Message>();
-//            _sendMessageQueue = new Queue<Message>();
-//            _blackList = new List<IPAddress>();
-//            _requestsByIp = new Dictionary<IPAddress, int>();
+        //            _receivedMessageQueue = new Queue<Message>();
+        //            _sendMessageQueue = new Queue<Message>();
+        //            _blackList = new List<IPAddress>();
+        //            _requestsByIp = new Dictionary<IPAddress, int>();
 
-//            worker.QueueForever(SendReceive, TimeSpan.FromMilliseconds(200));
-//            worker.QueueForever(AnalyzeRequestList, TimeSpan.FromMinutes(1));
-//start worker?
-//        }
+        //            worker.QueueForever(SendReceive, TimeSpan.FromMilliseconds(200));
+        //            worker.QueueForever(AnalyzeRequestList, TimeSpan.FromMinutes(1));
+        //start worker?
+        //        }
 
-//        private void ProcessMessageQueue()
-//        {
-//            Log.Message("ProcessMessageQueue");
-//            lock (MessageQueueManager.ReceivedMessageQueue)
-//            {
-//                Log.Message("Messages to process: " + ReceivedMessageQueue.Count);
-//                byte[] msg = null;
-//                var receivedCount = ReceivedMessageQueue.Count;
-//                for (var i = 0; i < receivedCount; i++)
-//                {
-//                    Log.Message("processing message: " + receivedCount);
-//                    msg = ReceivedMessageQueue.Dequeue();
-//                }
-//                byte[] msgDescriptor = msg.Slice(0, 3);
-//                byte[] message = msg.Slice(3);
-//                Log.Message(BitConverter.ToString(msgDescriptor));
-//                Log.Message(BitConverter.ToString(message));
-//            }
-//            Log.Message("unlocked msg queue");
-//        }
+        //        private void ProcessMessageQueue()
+        //        {
+        //            Log.Message("ProcessMessageQueue");
+        //            lock (MessageQueueManager.ReceivedMessageQueue)
+        //            {
+        //                Log.Message("Messages to process: " + ReceivedMessageQueue.Count);
+        //                byte[] msg = null;
+        //                var receivedCount = ReceivedMessageQueue.Count;
+        //                for (var i = 0; i < receivedCount; i++)
+        //                {
+        //                    Log.Message("processing message: " + receivedCount);
+        //                    msg = ReceivedMessageQueue.Dequeue();
+        //                }
+        //                byte[] msgDescriptor = msg.Slice(0, 3);
+        //                byte[] message = msg.Slice(3);
+        //                Log.Message(BitConverter.ToString(msgDescriptor));
+        //                Log.Message(BitConverter.ToString(message));
+        //            }
+        //            Log.Message("unlocked msg queue");
+        //        }
 
         /// <summary>
         /// </summary>
@@ -83,7 +89,7 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
                 for (var i = 0; i < receivedCount; i++)
                 {
                     var package = _receivedMessageQueue.Dequeue();
-//                    Events.Raise(PackageReceivedEventArgs, this, new PackageReceivedEventArgs<IPEndPoint>(package.EndPoint, package.Data, package.Count));
+                    //                    Events.Raise(PackageReceivedEventArgs, this, new PackageReceivedEventArgs<IPEndPoint>(package.EndPoint, package.Data, package.Count));
                 }
             }
         }
@@ -98,7 +104,7 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
                 for (var i = 0; i < sendCount; i++)
                 {
                     var pkg = _sendMessageQueue.Dequeue();
-//                    _listener.Send(pkg);
+                    //                    _listener.Send(pkg);
                 }
             }
         }
@@ -137,10 +143,10 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
             if (IsBlocked(ip)) return;
             IncrementRequestByIp(ip);
 
-//            var package = new Message(endPoint, message, count);
+            //            var package = new Message(endPoint, message, count);
             lock (_receivedMessageQueue)
             {
-//                _receivedMessageQueue.Enqueue(package);
+                //                _receivedMessageQueue.Enqueue(package);
             }
         }
 
@@ -177,11 +183,6 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
         {
             Log.Message("Blocking IP {0}" + ip);
             _blackList.Add(ip);
-        }
-
-        public void Send(IConnection connection, IMessage message)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
