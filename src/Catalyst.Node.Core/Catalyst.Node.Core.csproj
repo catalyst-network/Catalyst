@@ -1,5 +1,5 @@
-﻿﻿<Project>
-    <Import Project="../Common.Projects.props" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <Title>Catalyst Node</Title>
         <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
@@ -10,6 +10,7 @@
         <Optimize>true</Optimize>
         <PlatformTarget>AnyCPU</PlatformTarget>
     </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
     <ItemGroup>
         <PackageReference Include="Akka" Version="1.3.11" />
         <PackageReference Include="Autofac" Version="4.8.1" />

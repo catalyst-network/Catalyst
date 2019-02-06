@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.Modules.P2P
         {
             Log.Message("Starting Challenge Request");
 
-            var challengeRequest = new Catalyst.Protocol.Peer.PeerProtocol
+            var challengeRequest = new PeerProtocol.Types.ChallengeRequest();
             var random = new SecureRandom();
             var keyBytes = new byte[16];
             random.NextBytes(keyBytes);
