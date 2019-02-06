@@ -79,11 +79,11 @@ namespace Catalyst.Node.Core
                 {
                     Instance = Instance == null
                                    ? new NodeOptions(
-                                           (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
-                                           dataDir,
-                                           (int) (Networks) Enum.Parse(typeof(Networks), network),
-                                           platform
-                                       )
+                                       (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
+                                       dataDir,
+                                       (int) (Networks) Enum.Parse(typeof(Networks), network),
+                                       platform
+                                   )
                                    : throw new ArgumentException();
                 }
 
@@ -447,9 +447,9 @@ namespace Catalyst.Node.Core
             Type = section.GetSection("Type").Value;
             When = section.GetSection("When").Value;
             Host = EndpointBuilder.BuildNewEndPoint(
-                    IPAddress.Parse(section.GetSection("Host").Value),
-                    int.Parse(section.GetSection("Port").Value)
-                );
+                IPAddress.Parse(section.GetSection("Host").Value),
+                int.Parse(section.GetSection("Port").Value)
+            );
         }
 
         public string Type { get; set; }

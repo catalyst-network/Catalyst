@@ -40,13 +40,13 @@ namespace Catalyst.Node.Core.Helpers.IO
         /// <exception cref="Exception"></exception>
         /// <exception cref="AuthenticationException"></exception>
         public static SslStream GetTlsStream(
-                NetworkStream networkStream,
-                int direction,
-                X509Certificate sslCertificate,
-                bool acceptInvalidCerts,
-                bool mutuallyAuthenticate = false,
-                IPEndPoint endPoint = null
-            )
+            NetworkStream networkStream,
+            int direction,
+            X509Certificate sslCertificate,
+            bool acceptInvalidCerts,
+            bool mutuallyAuthenticate = false,
+            IPEndPoint endPoint = null
+        )
         {
             if (networkStream == null) throw new ArgumentNullException(nameof(networkStream));
             if (sslCertificate == null) throw new ArgumentNullException(nameof(sslCertificate));
@@ -67,12 +67,12 @@ namespace Catalyst.Node.Core.Helpers.IO
                         break;
                     case 2 when endPoint != null:
                         sslStream.AuthenticateAsClient(
-                                endPoint.Address.ToString() ??
-                                throw new ArgumentNullException(nameof(endPoint.Address)),
-                                certificateCollection,
-                                SslProtocols.Tls12,
-                                acceptInvalidCerts
-                            );
+                            endPoint.Address.ToString() ??
+                            throw new ArgumentNullException(nameof(endPoint.Address)),
+                            certificateCollection,
+                            SslProtocols.Tls12,
+                            acceptInvalidCerts
+                        );
                         break;
                     case 2:
                         throw new Exception("need endpoint for outbound connections");

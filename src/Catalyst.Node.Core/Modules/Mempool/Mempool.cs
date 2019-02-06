@@ -1,9 +1,9 @@
-﻿using Dawn;
-using Catalyst.Node.Common;
-using Catalyst.Protocols.Mempool;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
+using Catalyst.Protocols.Mempool;
+using Dawn;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Modules.Mempool

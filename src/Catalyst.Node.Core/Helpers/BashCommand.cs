@@ -27,16 +27,16 @@ namespace Catalyst.Node.Core.Helpers
             var escapedArgs = cmd.Replace("\"", "\\\"");
 
             var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/bash",
-                    Arguments = $"-c \"{escapedArgs}\"&",
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
+                          {
+                              StartInfo = new ProcessStartInfo
+                                          {
+                                              FileName = "/bin/bash",
+                                              Arguments = $"-c \"{escapedArgs}\"&",
+                                              RedirectStandardOutput = true,
+                                              UseShellExecute = false,
+                                              CreateNoWindow = true
+                                          }
+                          };
             process.Start();
             Thread.Sleep(1000);
 
@@ -62,16 +62,16 @@ namespace Catalyst.Node.Core.Helpers
             var escapedArgs = cmd.Replace("\"", "\\\"");
 
             var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/bash",
-                    Arguments = $"-c \"{escapedArgs}\"",
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
+                          {
+                              StartInfo = new ProcessStartInfo
+                                          {
+                                              FileName = "/bin/bash",
+                                              Arguments = $"-c \"{escapedArgs}\"",
+                                              RedirectStandardOutput = true,
+                                              UseShellExecute = false,
+                                              CreateNoWindow = true
+                                          }
+                          };
             process.Start();
 
             var result = process.StandardOutput.ReadToEnd();

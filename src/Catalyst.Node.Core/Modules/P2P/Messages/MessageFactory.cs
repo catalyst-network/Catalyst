@@ -12,12 +12,12 @@ namespace Catalyst.Node.Core.Messages
     {
         // pass the request on the left hand side 🔥 🎵 💃 🕺 ;)
         private static Dictionary<int, int> RequestResponseIdPairings = new Dictionary<int, int>
-        {
-            {1, 2},
-            {3, 4},
-            {5, 6},
-            {7, 8}
-        };
+                                                                        {
+                                                                            {1, 2},
+                                                                            {3, 4},
+                                                                            {5, 6},
+                                                                            {7, 8}
+                                                                        };
 
         /// <summary>
         /// </summary>
