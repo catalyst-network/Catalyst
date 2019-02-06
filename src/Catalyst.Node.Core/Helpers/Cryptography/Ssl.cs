@@ -70,8 +70,8 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         public static X509Certificate2 LoadCert(string password, string filePath)
         {
             return string.IsNullOrEmpty(password)
-                ? new X509Certificate2(filePath)
-                : new X509Certificate2(filePath, password);
+                       ? new X509Certificate2(filePath)
+                       : new X509Certificate2(filePath, password);
         }
 
         /// <summary>

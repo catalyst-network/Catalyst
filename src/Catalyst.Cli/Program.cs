@@ -39,7 +39,6 @@ namespace Catalyst.Cli
                 Directory.CreateDirectory(catalystHomeDirectory);
 
             // check if user home data dir has a shell config
-            ;
             var shellFilePath = Path.Combine(catalystHomeDirectory, shellFileName);
             if (!File.Exists(shellFilePath))
                 File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/config.shell.json",
