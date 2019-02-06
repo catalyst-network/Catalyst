@@ -10,15 +10,16 @@ namespace Catalyst.Node.Core.Helpers.IO
 {
     /// <summary>
     /// </summary>
-    public sealed class Connection : IDisposable, IConnection
+    public sealed class Connection : IConnection
     {
         /// <summary>
         /// </summary>
-        /// <param name="tcp"></param>
-        public Connection(TcpClient tcp)
+        /// <param name="tcpClient"></param>
+        public Connection(TcpClient tcpClient)
         {
-            Guard.Argument(tcp, nameof(tcp)).NotNull();
-            EndPoint = (IPEndPoint) tcp.Client.RemoteEndPoint;
+            Guard.Argument(tcpClient, nameof(tcpClient)).NotNull();
+            TcpClient = tcpClient;
+            EndPoint = (IPEndPoint) tcpClient.Client.RemoteEndPoint;
             Connected = true;
         }
 
