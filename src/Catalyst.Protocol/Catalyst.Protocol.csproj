@@ -1,8 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
-    </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
 
     <ItemGroup>
       <Compile Include="..\..\Sdk\Catalyst.Protocol.Mempool\csharp\MempoolBuf.cs">

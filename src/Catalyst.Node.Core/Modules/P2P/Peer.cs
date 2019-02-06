@@ -1,12 +1,9 @@
 using System;
 using System.Net;
-using Catalyst.Node.Common;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
 using Dawn;
-using Catalyst.Node.Core.Helpers.Util;
-using Catalyst.Node.Core.Helpers.Logger;
 
 namespace Catalyst.Node.Core.Modules.P2P
 {
@@ -75,7 +72,7 @@ namespace Catalyst.Node.Core.Modules.P2P
 
             if (disposing)
             {
-//                Connection.Dispose();
+                //                Connection.Dispose();
             }
 
             Disposed = true;
