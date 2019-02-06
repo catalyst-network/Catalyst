@@ -30,6 +30,9 @@ ProjectSection(SolutionItems) = preProject
 	..\Vagrantfile = ..\Vagrantfile
 	..\.gitignore = ..\.gitignore
 	..\.dockerignore = ..\.dockerignore
+	Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
+	Common.UnitTests.props = Common.UnitTests.props
+	Common.Projects.props = Common.Projects.props
 EndProjectSection
 EndProject
 Global
@@ -124,4 +127,6 @@ Global
 		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
 EndGlobal

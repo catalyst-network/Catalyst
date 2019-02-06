@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
-using Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions;
-using Catalyst.Node.Core.Helpers.RLP;
+using Nethereum.Hex.HexConvertors.Extensions;
+using Nethereum.RLP;
 
 namespace Catalyst.Node.Core.Helpers.Util
 {
@@ -20,8 +20,8 @@ namespace Catalyst.Node.Core.Helpers.Util
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(address));
             var sha3 = new Sha3Keccack();
             return
-                sha3.CalculateHash(RLP.RLP.EncodeList(RLP.RLP.EncodeElement(address.HexToByteArray()),
-                    RLP.RLP.EncodeElement(nonce.ToBytesForRlpEncoding()))).ToHex().Substring(24);
+                sha3.CalculateHash(RLP.EncodeList(RLP.EncodeElement(address.HexToByteArray()),
+                    RLP.EncodeElement(nonce.ToBytesForRLPEncoding()))).ToHex().Substring(24);
         }
     }
 }

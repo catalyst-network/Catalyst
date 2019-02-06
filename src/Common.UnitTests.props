@@ -1,20 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project>
     <PropertyGroup>
         <IsTestProject>True</IsTestProject>
         <IsPackable>false</IsPackable>
-        <Copyright>Copyright © 2019 AtlasCity.io</Copyright>
-        <PackageLicenseUrl>http://github.com/atlascity/catalyst-node/LICENSE.md</PackageLicenseUrl>
-        <PackageProjectUrl>http://github.com/atlascity/catalyst-node</PackageProjectUrl>
-        <RepositoryUrl>http://github.com/atlascity/catalyst-node</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
-        <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Version)' == '' ">
-        <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">0.0.1</VersionPrefix>
-        <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix).$(VersionSuffix)</Version>
-        <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
-    </PropertyGroup>
+    <Import Project="./Common.Projects.props" />
 </Project>
