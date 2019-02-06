@@ -7,7 +7,6 @@ using Autofac.Core.Registration;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
-using Catalyst.Node.Core.Helpers.RLP;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Contract;
 using Catalyst.Node.Core.Modules.Dfs;
@@ -17,6 +16,8 @@ using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Node.Core.Modules.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
+using IModuleRegistrar = Autofac.Core.Registration.IModuleRegistrar;
 
 namespace Catalyst.Node.Core
 {
