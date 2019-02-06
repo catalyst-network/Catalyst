@@ -3,12 +3,8 @@
   <PropertyGroup>
     <Title>Catalyst Node</Title>
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
-    <PackageDescription>Catalyst Core Node</PackageDescription>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <OutputType>Exe</OutputType>
-    <Deterministic>true</Deterministic>
-    <Optimize>true</Optimize>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PackageDescription>Catalyst Core Node</PackageDescription>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Akka" Version="1.3.11" />
@@ -29,13 +25,6 @@
     <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
     <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include=".\Config\components.json;.\Config\devnet.json;.\Config\testnet.json;.\Config\mainnet.json;">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Config\components.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
@@ -59,8 +48,9 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DebugType>none</DebugType>
-    <DebugSymbols>False</DebugSymbols>
-  </PropertyGroup>
+  <ItemGroup>
+    <None Update="Config\*.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
