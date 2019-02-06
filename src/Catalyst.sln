@@ -27,7 +27,6 @@ ProjectSection(SolutionItems) = preProject
 	..\pi-docker-compose.yml = ..\pi-docker-compose.yml
 	..\README.md = ..\README.md
 	..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
-	..\Vagrantfile = ..\Vagrantfile
 	..\.gitignore = ..\.gitignore
 	..\.dockerignore = ..\.dockerignore
 	Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
