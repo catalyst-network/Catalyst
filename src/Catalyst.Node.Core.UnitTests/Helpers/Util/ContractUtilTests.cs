@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
-using Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions;
 using Catalyst.Node.Core.Helpers.Util;
 using FluentAssertions;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Xunit;
 
 namespace Catalyst.Node.UnitTests.Helpers.Util
