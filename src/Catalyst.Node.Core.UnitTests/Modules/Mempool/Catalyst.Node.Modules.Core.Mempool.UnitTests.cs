@@ -159,28 +159,6 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
             transaction.Amount.Should().Be(1); // assert tx with same key not updated
         }
 
-        [Fact(Skip = "Move to Redis integration test")]
-        public void KeysArePersistent()
-        {
-            _memPool.SaveTx(_key, _transaction);
-            AddKeyValueStoreEntryExpectation(_key, _transaction);
-
-            Thread.Sleep(2000); // after one second the changes is saved
-
-            var transaction = _memPool.GetTx(_key);
-            transaction.Signature.Should().Be("signature");
-
-            var localByName = Process.GetProcessesByName("redis-server");
-            if (localByName.Length > 0) localByName[0].Kill(); // kill daemon process
-
-            "redis-server".BackgroundCmd(); // restart
-            localByName = Process.GetProcessesByName("redis-server");
-            localByName.Length.Should().BeGreaterThan(0);
-
-            transaction = _memPool.GetTx(_key);
-            transaction.Amount.Should().Be(1);
-        }
-
         [Fact]
         public void MultipleThreadsSameKey()
         {
@@ -201,36 +179,6 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
             ((int) transaction.Amount).Should().Be(pc.FirstThreadId);
-        }
-
-        [Fact(Skip = "Move to Redis integration test")]
-        public void Reconnect()
-        {
-            var localByName = Process.GetProcessesByName("redis-server");
-            if (localByName.Length > 0) localByName[0].Kill(); // kill daemon process
-
-            // redis-server is down
-            Process.GetProcessesByName("redis-server").Should().BeEmpty();
-
-            try
-            {
-                new Action(() => _memPool.SaveTx(_key, _transaction))
-                   .Should().Throw<Exception>("It should throw an exception if server is down");
-            }
-            catch (Exception)
-            {
-                "redis-server".BackgroundCmd(); // restart
-            }
-
-            localByName = Process.GetProcessesByName("redis-server");
-            localByName.Should().NotBeNullOrEmpty();
-
-            new Action(() =>
-                       {
-                           _memPool.SaveTx(_key, _transaction);
-                           var transaction = _memPool.GetTx(_key);
-                           transaction.Signature.Should().Be("signature");
-                       }).Should().NotThrow("It should have reconnected automatically");
         }
 
         [Fact]
