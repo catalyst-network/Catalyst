@@ -118,8 +118,12 @@ namespace Catalyst.Node.Core.Helpers.RLP
         /// <summary>
         ///     Decodes a message from a starting point to an end point
         /// </summary>
-        public static void Decode(byte[] msgData, int level, int startPosition,
-            int endPosition, int levelToIndex, RlpCollection rlpCollection)
+        public static void Decode(byte[] msgData,
+            int level,
+            int startPosition,
+            int endPosition,
+            int levelToIndex,
+            RlpCollection rlpCollection)
         {
             if (msgData == null || msgData.Length == 0)
                 return;
@@ -188,7 +192,7 @@ namespace Catalyst.Node.Core.Helpers.RLP
         private static bool IsListLessThan55Bytes(byte[] msgData, int currentPosition)
         {
             return msgData[currentPosition] >= OFFSET_SHORT_LIST
-                   && msgData[currentPosition] <= OFFSET_LONG_LIST;
+                && msgData[currentPosition] <= OFFSET_LONG_LIST;
         }
 
         // It's an item with a payload more than 55 bytes
@@ -197,14 +201,14 @@ namespace Catalyst.Node.Core.Helpers.RLP
         private static bool IsItemBiggerThan55Bytes(byte[] msgData, int currentPosition)
         {
             return msgData[currentPosition] > OFFSET_LONG_ITEM
-                   && msgData[currentPosition] < OFFSET_SHORT_LIST;
+                && msgData[currentPosition] < OFFSET_SHORT_LIST;
         }
 
         // data[0] - 0x80 == length of the item
         private static bool IsItemLessThan55Bytes(byte[] msgData, int currentPosition)
         {
             return msgData[currentPosition] > OFFSET_SHORT_ITEM
-                   && msgData[currentPosition] <= OFFSET_LONG_ITEM;
+                && msgData[currentPosition] <= OFFSET_LONG_ITEM;
         }
 
         private static bool IsNullItem(byte[] msgData, int currentPosition)
@@ -252,7 +256,8 @@ namespace Catalyst.Node.Core.Helpers.RLP
             return currentPosition;
         }
 
-        private static int ProcessItemBiggerThan55Bytes(byte[] msgData, RlpCollection rlpCollection,
+        private static int ProcessItemBiggerThan55Bytes(byte[] msgData,
+            RlpCollection rlpCollection,
             int currentPosition)
         {
             var lengthOfLength = (byte) (msgData[currentPosition] - OFFSET_LONG_ITEM);
@@ -273,8 +278,11 @@ namespace Catalyst.Node.Core.Helpers.RLP
             return currentPosition;
         }
 
-        private static int ProcessListLessThan55Bytes(byte[] msgData, int level, int levelToIndex,
-            RlpCollection rlpCollection, int currentPosition)
+        private static int ProcessListLessThan55Bytes(byte[] msgData,
+            int level,
+            int levelToIndex,
+            RlpCollection rlpCollection,
+            int currentPosition)
         {
             var length = msgData[currentPosition] - OFFSET_SHORT_LIST;
             var RlpDataLength = length + 1;
@@ -295,8 +303,11 @@ namespace Catalyst.Node.Core.Helpers.RLP
             return currentPosition;
         }
 
-        private static int ProcessListBiggerThan55Bytes(byte[] msgData, int level, int levelToIndex,
-            RlpCollection rlpCollection, int currentPosition)
+        private static int ProcessListBiggerThan55Bytes(byte[] msgData,
+            int level,
+            int levelToIndex,
+            RlpCollection rlpCollection,
+            int currentPosition)
         {
             var lengthOfLength = (byte) (msgData[currentPosition] - OFFSET_LONG_LIST);
             var length = CalculateLength(lengthOfLength, msgData, currentPosition);

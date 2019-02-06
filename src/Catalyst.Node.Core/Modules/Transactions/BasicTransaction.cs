@@ -4,6 +4,15 @@ namespace Catalyst.Node.Core.Modules.Transactions
 {
     public class BasicTransaction : ITransaction
     {
+        private readonly UInt160 _inputAddress;
+        private readonly byte[] _inputAction;
+        private readonly Fixed8 _amount;
+        private readonly Fixed8 _fee;
+        private readonly byte[] _unlockScript;
+        private readonly UInt160 _outputAddress;
+        private readonly Fixed8 _outputAmount;
+        private readonly byte[] _unlockingProgram;
+        
         // Constructor taking all the values from a message
         public BasicTransaction(UInt160 fromAddress,
             UInt160 toAddress,
@@ -14,20 +23,16 @@ namespace Catalyst.Node.Core.Modules.Transactions
             Fixed8 outputAmount,
             byte[] unlockingProgram)
         {
-            InputAddress = fromAddress;
-            OutputAddress = toAddress;
-            InputAction = inputAction;
-            UnlockScript = unlockScript;
-            OutputAmount = outputAmount;
-            UnlockingProgram = unlockingProgram;
+            _inputAddress = fromAddress;
+            _outputAddress = toAddress;
+            _inputAction = inputAction;
+            _amount = amount;
+            _fee = fee;
+            _unlockScript = unlockScript;
+            _outputAmount = outputAmount;
+            _unlockingProgram = unlockingProgram;
         }
 
         public bool BSending { get; set; }
-        private UInt160 InputAddress { get; }
-        private byte[] InputAction { get; }
-        private byte[] UnlockScript { get; }
-        private UInt160 OutputAddress { get; }
-        private Fixed8 OutputAmount { get; }
-        private byte[] UnlockingProgram { get; }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Dawn;
 
@@ -93,7 +92,7 @@ namespace Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions
         public static string[] EnsureHexPrefix(this string[] values)
         {
             Guard.Argument(values, nameof(values)).NotNull()
-                .NotEmpty(_ => "Value cannot be an empty collection.");
+                 .NotEmpty(_ => "Value cannot be an empty collection.");
             foreach (var value in values)
                 value.EnsureHexPrefix();
             return values;
@@ -108,7 +107,7 @@ namespace Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions
         public static string ToHexCompact(this byte[] value)
         {
             Guard.Argument(value, nameof(value)).NotNull()
-                .NotEmpty(_ => "Value cannot be an empty collection.");
+                 .NotEmpty(_ => "Value cannot be an empty collection.");
             return ToHex(value).TrimStart('0');
         }
 
@@ -120,7 +119,7 @@ namespace Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions
         private static byte[] HexToByteArrayInternal(string value)
         {
             Guard.Argument(value, nameof(value)).NotNull().NotEmpty().NotWhiteSpace();
-            
+
             var stringLength = value.Length;
             var characterIndex = value.StartsWith("0x", StringComparison.Ordinal) ? 2 : 0;
             // Does the string define leading HEX indicator '0x'. Adjust starting index accordingly.               
@@ -185,7 +184,7 @@ namespace Catalyst.Node.Core.Helpers.Hex.HexConverters.Extensions
         {
             Guard.Argument(character, nameof(character)).NotNegative().NotZero();
             Guard.Argument(index, nameof(index)).NotNegative();
-            
+
             var value = (byte) character;
             if (0x40 < value && 0x47 > value || 0x60 < value && 0x67 > value)
             {

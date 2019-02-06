@@ -1,6 +1,4 @@
 namespace Catalyst.Node.Common.Modules
 {
-    public interface IConsensus
-    {
-    }
+    public interface IConsensus { }
 }

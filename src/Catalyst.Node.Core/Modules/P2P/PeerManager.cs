@@ -34,7 +34,9 @@ namespace Catalyst.Node.Core.Modules.P2P
         /// <param name="peerList"></param>
         /// <param name="messageQueueManager"></param>
         /// <param name="nodeIdentity"></param>
-        public PeerManager(X509Certificate2 sslCertificate, PeerList peerList, MessageQueueManager messageQueueManager,
+        public PeerManager(X509Certificate2 sslCertificate,
+            PeerList peerList,
+            MessageQueueManager messageQueueManager,
             PeerIdentifier nodeIdentity)
         {
             PeerList = peerList;
@@ -68,7 +70,7 @@ namespace Catalyst.Node.Core.Modules.P2P
 
         /// <summary>
         /// </summary>
-//        public event EventHandler<AnnounceNodeEventArgs> AnnounceNode;
+        //        public event EventHandler<AnnounceNodeEventArgs> AnnounceNode;
 
         /// <summary>
         /// </summary>
@@ -174,14 +176,14 @@ namespace Catalyst.Node.Core.Modules.P2P
             Listener.Start();
             Log.Message("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
 
-//            try
-//            {
-//                await AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
-//            }
-//            catch (ArgumentNullException e)
-//            {
-//                LogException.Message("InboundConnectionListener: Events.Raise(AnnounceNodeEventArgs)", e);
-//            }
+            //            try
+            //            {
+            //                await AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
+            //            }
+            //            catch (ArgumentNullException e)
+            //            {
+            //                LogException.Message("InboundConnectionListener: Events.Raise(AnnounceNodeEventArgs)", e);
+            //            }
 
             while (!Token.IsCancellationRequested)
                 try
@@ -204,7 +206,7 @@ namespace Catalyst.Node.Core.Modules.P2P
                         LogException.Message("InboundConnectionListener: CheckIfIpBanned", e);
                         continue;
                     }
-                    
+
                     Connection connection;
                     try
                     {
@@ -231,10 +233,10 @@ namespace Catalyst.Node.Core.Modules.P2P
                         }
 
                         await DataReceiver(connection, Token);
-//                        Task.Run(async () => await DataReceiver(connection, Token), Token);
+                        //                        Task.Run(async () => await DataReceiver(connection, Token), Token);
 
-//                        Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
-//                        throw new Exception("unable to add connection as peer");                        
+                        //                        Log.Message("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address + connection.EndPoint.Port);
+                        //                        throw new Exception("unable to add connection as peer");                        
                     }
                 }
                 catch (AuthenticationException e)
@@ -243,14 +245,14 @@ namespace Catalyst.Node.Core.Modules.P2P
                 }
                 catch (ObjectDisposedException ex)
                 {
-//                    Log.Message("*** AcceptConnections ObjectDisposedException from " + ListenerIpAddress + Environment.NewLine +ex);
+                    //                    Log.Message("*** AcceptConnections ObjectDisposedException from " + ListenerIpAddress + Environment.NewLine +ex);
                 }
                 catch (SocketException ex)
                 {
                     switch (ex.Message)
                     {
                         case "An existing connection was forcibly closed by the remote host":
-//                            Log.Message("*** AcceptConnections SocketException " + ListenerIpAddress + " closed the connection.");
+                            //                            Log.Message("*** AcceptConnections SocketException " + ListenerIpAddress + " closed the connection.");
                             break;
                     }
                 }
@@ -503,13 +505,13 @@ namespace Catalyst.Node.Core.Modules.P2P
             if (connection == null) throw new ArgumentNullException(nameof(connection));
 
             connection.SslStream = TlsStream.GetTlsStream(
-                connection.TcpClient.GetStream(),
-                direction,
-                SslCertificate,
-                AcceptInvalidCerts,
-                false,
-                endPoint
-            );
+                    connection.TcpClient.GetStream(),
+                    direction,
+                    SslCertificate,
+                    AcceptInvalidCerts,
+                    false,
+                    endPoint
+                );
 
             if (connection.SslStream == null || connection.SslStream.GetType() != typeof(SslStream))
                 throw new ArgumentNullException(nameof(SslStream));

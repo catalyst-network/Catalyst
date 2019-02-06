@@ -34,20 +34,21 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// <returns></returns>
         public static bool ValidPortRange(int port)
         {
-            if (port < 1025 || port > 65535) return false;//@TODO hook this into guard util and then re-throw the exceptions
+            if (port < 1025 || port > 65535)
+                return false; //@TODO hook this into guard util and then re-throw the exceptions
             return true;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="ipOrHost"></param>
         /// <returns></returns>
         public static IPAddress BuildIPAddress(string ipOrHost)
         {
-            return IPAddress.TryParse(ipOrHost, out IPAddress address)
-                ? address
-                : System.Net.Dns.GetHostAddressesAsync(ipOrHost).Result.FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
+            return IPAddress.TryParse(ipOrHost, out var address)
+                       ? address
+                       : System.Net.Dns.GetHostAddressesAsync(ipOrHost).Result
+                               .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
         }
 
         /// <summary>

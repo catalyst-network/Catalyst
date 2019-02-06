@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Autofac;
 using System.IO;
 using System.Runtime.Loader;
+using Autofac;
 using Autofac.Configuration;
 using Autofac.Core.Lifetime;
-using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
@@ -19,45 +18,46 @@ using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Node.Core.Modules.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using IModuleRegistrar = Autofac.Core.Registration.IModuleRegistrar;
 
 namespace Catalyst.Node.Core
 {
     public sealed class KernelBuilder
     {
-        private readonly NodeOptions _nodeOptions;
         private readonly ContainerBuilder _containerBuilder;
         private readonly List<Action<Kernel>> _moduleLoader;
-        
+        private readonly NodeOptions _nodeOptions;
+
         /// <summary>
-        /// 
         /// </summary>
         public KernelBuilder(NodeOptions nodeOptions)
         {
             _nodeOptions = nodeOptions;
             _moduleLoader = new List<Action<Kernel>>();
-            
+
             // Set path to load assemblies from ** be-careful **
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
-                context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(),
-                    $"{assembly.Name}.dll"));
-            
+                                                         context.LoadFromAssemblyPath(Path.Combine(
+                                                             Directory.GetCurrentDirectory(),
+                                                             $"{assembly.Name}.dll"));
+
             // get builder
             _containerBuilder = new ContainerBuilder();
-            
+
             // register our options object
             _containerBuilder.RegisterType<NodeOptions>();
-                        
+
             // register components from config file
             _containerBuilder.RegisterModule(new ConfigurationModule(new ConfigurationBuilder()
-                .AddJsonFile($"{nodeOptions.DataDir}/components.json")
-                .Build()));
+                                                                    .AddJsonFile(
+                                                                         $"{nodeOptions.DataDir}/components.json")
+                                                                    .Build()));
 
-//            // return a built container
-//            return builder.Build();   
+            //            // return a built container
+            //            return builder.Build();   
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public KernelBuilder WithDfsModule()
@@ -65,9 +65,8 @@ namespace Catalyst.Node.Core
             _moduleLoader.Add(n => n.DfsService = _containerBuilder.RegisterModule(new DfsModule()));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public KernelBuilder WithPeerModule()
@@ -75,9 +74,8 @@ namespace Catalyst.Node.Core
             _moduleLoader.Add(n => n.P2PService = _containerBuilder.RegisterModule(new PeerModule()));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public KernelBuilder WithContractModule()
@@ -85,9 +83,8 @@ namespace Catalyst.Node.Core
             _moduleLoader.Add(n => n.ContractService = _containerBuilder.RegisterModule(new ContractModule()));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public KernelBuilder WithMempoolModule()
@@ -95,9 +92,8 @@ namespace Catalyst.Node.Core
             _moduleLoader.Add(n => n.MempoolService = _containerBuilder.RegisterModule(new MempoolModule()));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public KernelBuilder WithLedgerModule()
@@ -105,9 +101,8 @@ namespace Catalyst.Node.Core
             _moduleLoader.Add(n => n.LedgerService = _containerBuilder.RegisterModule(new LedgerModule()));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public KernelBuilder WithGossipModule()
@@ -115,9 +110,8 @@ namespace Catalyst.Node.Core
             _moduleLoader.Add(n => n.GossipService = _containerBuilder.RegisterModule(new GossipModule()));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public KernelBuilder WithConsensusModule()
@@ -125,22 +119,20 @@ namespace Catalyst.Node.Core
             _moduleLoader.Add(n => n.ConsensusService = _containerBuilder.RegisterModule(new ConsensusModule()));
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public KernelBuilder WithWalletModule()
         {
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public KernelBuilder When(Func<Boolean> condition)
+        public KernelBuilder When(Func<bool> condition)
         {
             var result = condition.Invoke();
 
@@ -152,9 +144,8 @@ namespace Catalyst.Node.Core
 
             return this;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         public Kernel Build()
@@ -165,18 +156,19 @@ namespace Catalyst.Node.Core
             try
             {
                 kernel.NodeIdentity = PeerIdentifier.BuildPeerId(
-                    kernel.NodeOptions.PeerSettings.PublicKey.ToBytesForRlpEncoding(),
-                    EndpointBuilder.BuildNewEndPoint(
-                        kernel.NodeOptions.PeerSettings.BindAddress,
-                        kernel.NodeOptions.PeerSettings.Port
-                    )
-                );
+                        kernel.NodeOptions.PeerSettings.PublicKey.ToBytesForRlpEncoding(),
+                        EndpointBuilder.BuildNewEndPoint(
+                                kernel.NodeOptions.PeerSettings.BindAddress,
+                                kernel.NodeOptions.PeerSettings.Port
+                            )
+                    );
             }
             catch (ArgumentNullException e)
             {
                 LogException.Message("Catalyst.Helpers.Network GetInstance", e);
                 throw;
             }
+
             return kernel;
         }
     }
@@ -185,6 +177,14 @@ namespace Catalyst.Node.Core
     {
         private static Kernel _instance;
         private static readonly object Mutex = new object();
+        public IModuleRegistrar ConsensusService;
+        public IModuleRegistrar ContractService;
+
+        public IModuleRegistrar DfsService;
+        public IModuleRegistrar GossipService;
+        public IModuleRegistrar LedgerService;
+        public IModuleRegistrar MempoolService;
+        public IModuleRegistrar P2PService;
 
         /// <summary>
         ///     Private kernel constructor.
@@ -202,14 +202,13 @@ namespace Catalyst.Node.Core
         public IContainer Container { get; set; }
         public NodeOptions NodeOptions { get; set; }
         public PeerIdentifier NodeIdentity { get; set; }
-        
-        public Autofac.Core.Registration.IModuleRegistrar DfsService;
-        public Autofac.Core.Registration.IModuleRegistrar P2PService;
-        public Autofac.Core.Registration.IModuleRegistrar GossipService;
-        public Autofac.Core.Registration.IModuleRegistrar LedgerService;
-        public Autofac.Core.Registration.IModuleRegistrar MempoolService;
-        public Autofac.Core.Registration.IModuleRegistrar ContractService;
-        public Autofac.Core.Registration.IModuleRegistrar ConsensusService;
+
+        /// <summary>
+        /// </summary>
+        public void Dispose()
+        {
+            Container?.Dispose();
+        }
 
         /// <summary>
         ///     Get a thread safe kernel singleton.
@@ -219,8 +218,7 @@ namespace Catalyst.Node.Core
         {
             Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
             if (_instance == null)
-            {
-             lock (Mutex)
+                lock (Mutex)
                 {
                     if (_instance == null)
                     {
@@ -233,10 +231,10 @@ namespace Catalyst.Node.Core
                             LogException.Message("RunConfigStartUp", e);
                             throw;
                         }
-                        
+
                         try
                         {
-                            _instance = new Kernel(nodeOptions, containerBuilder.Build());   
+                            _instance = new Kernel(nodeOptions, containerBuilder.Build());
                         }
                         catch (Exception e)
                         {
@@ -244,13 +242,12 @@ namespace Catalyst.Node.Core
                             throw;
                         }
                     }
-                }   
-            }
+                }
+
             return _instance;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="nodeOptions"></param>
         /// <returns></returns>
@@ -284,7 +281,8 @@ namespace Catalyst.Node.Core
                 try
                 {
                     // make config with new system folder
-                    Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network));
+                    Fs.CopySkeletonConfigs(nodeOptions.DataDir,
+                        Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network));
                 }
                 catch (ArgumentNullException e)
                 {
@@ -305,12 +303,13 @@ namespace Catalyst.Node.Core
             else
             {
                 // dir does exist, check config exits
-                if (!Fs.CheckConfigExists(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network)))
-                {
+                if (!Fs.CheckConfigExists(nodeOptions.DataDir,
+                        Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network)))
                     try
                     {
                         // make config with new system folder
-                        Fs.CopySkeletonConfigs(nodeOptions.DataDir, Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network));
+                        Fs.CopySkeletonConfigs(nodeOptions.DataDir,
+                            Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network));
                     }
                     catch (ArgumentNullException e)
                     {
@@ -327,12 +326,10 @@ namespace Catalyst.Node.Core
                         LogException.Message(e.Message, e);
                         throw;
                     }
-                }
-            }            
+            }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public void Shutdown()
         {
@@ -341,21 +338,12 @@ namespace Catalyst.Node.Core
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Dispose(object sender, LifetimeScopeEndingEventArgs e)
         {
             Dispose();
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
-            Container?.Dispose();
         }
     }
 }

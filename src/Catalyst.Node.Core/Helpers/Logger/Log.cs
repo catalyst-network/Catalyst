@@ -20,15 +20,14 @@ namespace Catalyst.Node.Core.Helpers.Logger
         {
             Console.WriteLine(BitConverter.ToString(byteArrMsg));
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="col"></param>
         /// <typeparam name="T"></typeparam>
         public static void PrintCollection<T>(IEnumerable col)
         {
-            foreach(var item in col)
+            foreach (var item in col)
                 Console.WriteLine(item); // Replace this with your version of printing
         }
     }

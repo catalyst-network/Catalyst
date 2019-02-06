@@ -22,9 +22,8 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
         public void ShouldMultiply(string first, string second, string expected)
         {
             (decimal.Parse(first) * (BigDecimal) decimal.Parse(second))
-                .ToString().Should().Be(expected);
+               .ToString().Should().Be(expected);
         }
-
 
         [Theory]
         [InlineData("1234567812345678.12345678", "12345678.12345678", "15241576832799933607683.3208352565279684")]
@@ -42,7 +41,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
         public void ShouldDivide(string expected, string denominator, string numerator)
         {
             (BigDecimal.Parse(numerator) / decimal.Parse(denominator))
-                .ToString().Should().Be(expected);
+               .ToString().Should().Be(expected);
         }
 
         [Theory]
@@ -67,11 +66,11 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
         public void ShouldCastToDecimal()
         {
             ((decimal) (BigDecimal) 200.002m)
-                .Should().Be(200.002m);
+               .Should().Be(200.002m);
             ((decimal) BigDecimal.Parse("15241576832799933607683.3208352565279684"))
-                .Should().Be(15241576832799933607683.320835m);
+               .Should().Be(15241576832799933607683.320835m);
             ((decimal) BigDecimal.Parse("152415768327999.3208352565279684"))
-                .Should().Be(152415768327999.32083525652797m);
+               .Should().Be(152415768327999.32083525652797m);
         }
 
         [Fact]
@@ -79,9 +78,9 @@ namespace Catalyst.Node.UnitTests.Helpers.Util
         {
             ((double) (BigDecimal) 200.002m).Should().Be(200.002);
             ((double) BigDecimal.Parse("15241576832799933607683.3208352565279684"))
-                .Should().Be(15241576832799933607683.320835);
+               .Should().Be(15241576832799933607683.320835);
             ((double) BigDecimal.Parse("152415768327999.3208352565279684"))
-                .Should().Be(152415768327999.320835);
+               .Should().Be(152415768327999.320835);
         }
 
         [Fact]

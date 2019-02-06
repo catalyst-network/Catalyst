@@ -18,7 +18,6 @@ namespace Catalyst.Node.Core.Modules.P2P.Listeners
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -26,7 +25,7 @@ namespace Catalyst.Node.Core.Modules.P2P.Listeners
         {
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
