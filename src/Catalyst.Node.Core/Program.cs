@@ -32,8 +32,6 @@ namespace Catalyst.Node.Core
                                     // Disable services
                                     var disableDfs = cli.Option("--disable-dfs", "disable dfs service",
                                         CommandOptionType.NoValue);
-                                    var disablePeer = cli.Option("--disable-peer", "disable peer service",
-                                        CommandOptionType.NoValue);
                                     var disableGossip = cli.Option("--disable-gossip", "disable gossip service",
                                         CommandOptionType.NoValue);
                                     var disableLedger = cli.Option("--disable-ledger", "disable ledger service",
@@ -102,10 +100,9 @@ namespace Catalyst.Node.Core
                                                       // conditionally build NodeOptions object with enabled modules
                                                       var nodeOptions =
                                                           new NodeOptionsBuilder(env, dataDir, network, platform)
+                                                             .LoadPeerSettings()
                                                              .LoadDfsSettings()
                                                              .When(() => !disableDfs.HasValue())
-                                                             .LoadPeerSettings()
-                                                             .When(() => !disablePeer.HasValue())
                                                              .LoadGossipSettings()
                                                              .When(() => !disableGossip.HasValue())
                                                              .LoadLedgerSettings()
@@ -138,8 +135,6 @@ namespace Catalyst.Node.Core
                                                       using (var kernel = new KernelBuilder(nodeOptions)
                                                                          .WithDfsModule()
                                                                          .When(() => !disableDfs.HasValue())
-                                                                         .WithPeerModule()
-                                                                         .When(() => !disablePeer.HasValue())
                                                                          .WithGossipModule()
                                                                          .When(() => !disableGossip.HasValue())
                                                                          .WithLedgerModule()

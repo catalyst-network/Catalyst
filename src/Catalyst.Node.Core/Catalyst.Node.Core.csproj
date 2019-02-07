@@ -1,56 +1,56 @@
-<Project>
-    <PropertyGroup>
-        <Title>Catalyst Node</Title>
-        <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
-        <PackageDescription>Catalyst Core Node</PackageDescription>
-        <OutputType>Exe</OutputType>
-    </PropertyGroup>
-    <Import Project="../Common.Projects.props" />
-    <ItemGroup>
-        <PackageReference Include="Akka" Version="1.3.11" />
-        <PackageReference Include="Autofac" Version="4.8.1" />
-        <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-        <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
-        <PackageReference Include="DnsClient" Version="1.2.0" />
-        <PackageReference Include="Ipfs.Api" Version="0.23.6" />
-        <PackageReference Include="Ipfs.Core" Version="0.40.0" />
-        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
-        <PackageReference Include="Networker" Version="3.0.9-rc" />
-        <PackageReference Include="Networker.Formatter.ProtobufNet" Version="3.0.9-rc" />
-        <PackageReference Include="Serilog" Version="2.7.1" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-        <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801" />
-        <PackageReference Include="Dawn.Guard" Version="1.7.0" />
-        <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
-        <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" />
-        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="Config\*.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
+﻿<Project>
+  <PropertyGroup>
+    <Title>Catalyst Node</Title>
+    <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+    <PackageDescription>Catalyst Core Node</PackageDescription>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <Import Project="../Common.Projects.props" />
+  <ItemGroup>
+    <PackageReference Include="Akka" Version="1.3.11" />
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
+    <PackageReference Include="DnsClient" Version="1.2.0" />
+    <PackageReference Include="Ipfs.Api" Version="0.23.6" />
+    <PackageReference Include="Ipfs.Core" Version="0.40.0" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+    <PackageReference Include="Networker" Version="3.0.9-rc" />
+    <PackageReference Include="Networker.Formatter.ProtobufNet" Version="3.0.9-rc" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801" />
+    <PackageReference Include="Dawn.Guard" Version="1.7.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
+    <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Config\*.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
