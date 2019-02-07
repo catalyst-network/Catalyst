@@ -1,9 +1,12 @@
 ﻿<Project>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
 
-    <Import Project="../Common.Projects.props" />
+  <Import Project="../Common.Projects.props" />
 
-    <ItemGroup>
-      <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+  </ItemGroup>
 
 </Project>
