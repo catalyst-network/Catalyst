@@ -31,27 +31,33 @@
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\BigInteger.cs" Link="Helpers\Hex\BigInteger.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexBigIntegerConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexByteConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexStringUTF8ConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" Link="Helpers\Hex\HexConverters\HexBigIntegerBigEndianConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" Link="Helpers\Hex\HexConverters\HexUTF8StringConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" Link="Helpers\Hex\HexConverters\IHexConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" Link="Helpers\Hex\HexTypes\HexBigInteger.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" Link="Helpers\Hex\HexTypes\HexType.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" Link="Helpers\Hex\HexTypes\HexTypeFactory.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" Link="Helpers\Hex\HexTypes\HexTypeJsonConverter.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" Link="Helpers\Hex\HexTypes\HexUTF8String.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" Link="Helpers\RLP\ConvertorForRLPEncodingExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" Link="Helpers\RLP\IRLPElement.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" Link="Helpers\RLP\RLP.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="Helpers\RLP\RLPCollection.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="Helpers\RLP\RLPItem.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="Helpers\RLP\RLPStringFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Config\*.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\Hex\HexConverters\Extensions\" />
+    <Folder Include="Helpers\Hex\HexTypes\" />
+    <Folder Include="Helpers\RLP\" />
   </ItemGroup>
 </Project>
