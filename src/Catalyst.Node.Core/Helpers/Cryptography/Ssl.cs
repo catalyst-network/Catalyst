@@ -4,17 +4,12 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Core.Helpers.Logger;
+using Dawn;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography
 {
     public class Ssl
     {
-        /// <summary>
-        ///     @TODO implement a way to collect password from console
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="commonName"></param>
-        /// <returns></returns>
         public static X509Certificate2 CreateCertificate(string password, string commonName)
         {
             var sanBuilder = new SubjectAlternativeNameBuilder();
@@ -51,22 +46,11 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="dataDir"></param>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
         public static X509Certificate2 LoadCert(string password, string dataDir, string fileName)
         {
             return LoadCert(password, $"{dataDir}/{fileName}");
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
         public static X509Certificate2 LoadCert(string password, string filePath)
         {
             return string.IsNullOrEmpty(password)
@@ -74,59 +58,39 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
                        : new X509Certificate2(filePath, password);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="dataDir"></param>
-        /// <param name="fileName"></param>
-        /// <param name="certificate"></param>
-        /// <returns></returns>
         public static bool WriteCertificateFile(DirectoryInfo dataDir, string fileName, byte[] certificate)
         {
-            Log.Message(dataDir.FullName + "/" + fileName);
-            File.WriteAllBytes(dataDir.FullName + "/" + fileName, certificate);
+            var fullFilePath = Path.Combine(dataDir.FullName, fileName);
+            File.WriteAllBytes(fullFilePath, certificate);
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="publicKey"></param>
-        /// <param name="signature"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
         public static bool Verify(byte[] data, X509Certificate2 publicKey, byte[] signature)
         {
-            if (data == null) throw new ArgumentNullException("data");
-            if (publicKey == null) throw new ArgumentNullException("publicKey");
-            if (signature == null) throw new ArgumentNullException("signature");
-
+            Guard.Argument(data, nameof(data)).NotNull();
+            Guard.Argument(publicKey, nameof(publicKey)).NotNull();
+            Guard.Argument(signature, nameof(signature)).NotNull();
+            
             var provider = (RSACryptoServiceProvider) publicKey.PublicKey.Key;
             return provider.VerifyData(data, new SHA1CryptoServiceProvider(), signature);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
         public static byte[] Sign(byte[] data, X509Certificate2 privateKey)
         {
-            if (data == null) throw new ArgumentNullException(nameof(data));
-            if (privateKey == null) throw new ArgumentNullException(nameof(privateKey));
-            if (!privateKey.HasPrivateKey) throw new ArgumentException("invalid certificate", nameof(privateKey));
+            Guard.Argument(data, nameof(data)).NotNull();
+            Guard.Argument(privateKey, nameof(privateKey)).NotNull()
+                 .Require(p => p.HasPrivateKey, p => "Invalid cerificate: Private key not found.");
 
             var provider = (RSACryptoServiceProvider) privateKey.PrivateKey;
             return provider.SignData(data, new SHA1CryptoServiceProvider());
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="certificate"></param>
-        /// <returns></returns>
         public X509CertificateCollection GetCertificateCollection(X509Certificate2 certificate)
         {
             return new X509Certificate2Collection
-                   {
-                       certificate
-                   };
+               {
+                   certificate
+               };
         }
     }
 }

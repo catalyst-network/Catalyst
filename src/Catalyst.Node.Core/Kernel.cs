@@ -255,25 +255,17 @@ namespace Catalyst.Node.Core
         private static void RunConfigStartUp(NodeOptions nodeOptions)
         {
             Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
+            Guard.Argument(nodeOptions.DataDir, nameof(nodeOptions.DataDir))
+                 .NotNull().NotEmpty().NotWhiteSpace();
             // check supplied data dir exists
-            if (!Fs.DataDirCheck(nodeOptions.DataDir))
+            if (!Fs.DirectoryExists(nodeOptions.DataDir))
             {
                 try
                 {
                     // not there make one
                     Fs.CreateSystemFolder(nodeOptions.DataDir);
                 }
-                catch (ArgumentNullException e)
-                {
-                    LogException.Message(e.Message, e);
-                    throw;
-                }
-                catch (ArgumentException e)
-                {
-                    LogException.Message(e.Message, e);
-                    throw;
-                }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     LogException.Message(e.Message, e);
                     throw;
