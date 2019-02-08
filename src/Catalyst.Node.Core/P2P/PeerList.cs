@@ -9,9 +9,10 @@ using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Workers;
+using Catalyst.Node.Core.Modules.P2P;
 using Dawn;
 
-namespace Catalyst.Node.Core.Modules.P2P
+namespace Catalyst.Node.Core.P2P
 {
     public class PeerList : IEnumerable<Peer>
     {
@@ -28,13 +29,13 @@ namespace Catalyst.Node.Core.Modules.P2P
             K = 42;
             WorkScheduler = worker;
             PeerBucket =
-                new ConcurrentDictionary<PeerIdentifier, Peer>(); // @TODO put this in thread safe concurrent directory
+                new ConcurrentDictionary<PeerIdentifier, Peer>();
             UnIdentifiedPeers = new ConcurrentDictionary<string, Connection>();
 
             // setup work queues for peer net.
-            WorkScheduler.QueueForever(Save, TimeSpan.FromMinutes(1));
-            WorkScheduler.QueueForever(Check, TimeSpan.FromMinutes(5));
-            WorkScheduler.QueueForever(PurgePeers, TimeSpan.FromSeconds(15));
+            WorkScheduler.QueueForever(Save, Helpers.Util.TimeExtensions.Minutes(1));
+            WorkScheduler.QueueForever(Check, Helpers.Util.TimeExtensions.Minutes(5));
+            WorkScheduler.QueueForever(PurgePeers, Helpers.Util.TimeExtensions.Minutes(15));
             //@TODO add a purge for unidentified peers every 10 seconds
             WorkScheduler.Start();
         }

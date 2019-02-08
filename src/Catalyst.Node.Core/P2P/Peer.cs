@@ -5,7 +5,7 @@ using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
 using Dawn;
 
-namespace Catalyst.Node.Core.Modules.P2P
+namespace Catalyst.Node.Core.P2P
 {
     public abstract class Peer : IDisposable
     {

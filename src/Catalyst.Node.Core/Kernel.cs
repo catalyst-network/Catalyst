@@ -14,6 +14,7 @@ using Catalyst.Node.Core.Modules.Gossip;
 using Catalyst.Node.Core.Modules.Ledger;
 using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Node.Core.Modules.P2P;
+using Catalyst.Node.Core.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
