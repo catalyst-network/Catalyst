@@ -5,6 +5,7 @@
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
     <PackageDescription>Catalyst Core Node</PackageDescription>
     <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
@@ -49,6 +50,8 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="Helpers\RLP\RLPCollection.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="Helpers\RLP\RLPItem.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="Helpers\RLP\RLPStringFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Config\*.json">
