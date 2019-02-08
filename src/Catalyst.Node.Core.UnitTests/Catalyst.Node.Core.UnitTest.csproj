@@ -1,4 +1,7 @@
 ﻿<Project>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />

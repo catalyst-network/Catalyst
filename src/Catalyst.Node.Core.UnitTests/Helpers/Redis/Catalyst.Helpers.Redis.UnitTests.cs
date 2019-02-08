@@ -40,14 +40,14 @@ namespace Catalyst.Node.UnitTests.Helpers.Redis
             for (var k = start; k < end; k++) _database.StringGet($"mykey:{k}").Should().Be(k);
         }
 
-        [Fact]
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void Connection_Should_Have_One_Endpoint()
         {
             var endpoint = _connector.Connection.GetEndPoints();
             endpoint.Length.Should().Be(1);
         }
 
-        [Fact]
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void KeyAlreadyExistUpdate()
         {
             _database.StringSet("mykey", 100).Should().BeTrue();
@@ -56,7 +56,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Redis
             _database.StringGet("mykey").Should().Be(200);
         }
 
-        [Fact]
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void KeyDoesNotExists()
         {
             var randomUnknownKey = Guid.NewGuid().ToString();
@@ -64,7 +64,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Redis
             ret.HasValue.Should().BeFalse("this random key should never have been inserted in Redis before.");
         }
 
-        [Fact]
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void MultipleClient()
         {
             const int threadNum = 5;
@@ -90,14 +90,14 @@ namespace Catalyst.Node.UnitTests.Helpers.Redis
             for (var i = 0; i < threadNum; i++) threadR[i].Join();
         }
 
-        [Fact]
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void OneWriteRead()
         {
             _database.StringSet("firstkey", 100).Should().BeTrue();
             _database.StringGet("firstkey").Should().Be(100);
         }
 
-        [Fact]
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void WriteByteArrayValue()
         {
             var bytes = Encoding.ASCII.GetBytes("abcdef");
@@ -106,7 +106,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Redis
             Encoding.ASCII.GetString(_database.StringGet("firstkey")).Should().Be("abcdef");
         }
 
-        [Fact]
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void WriteReadMany()
         {
             const int num = 15000;
@@ -115,7 +115,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Redis
             for (var i = 0; i < num; i++) _database.StringGet($"mykey:{i}").Should().Be(i);
         }
         
-        [Fact]
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public async Task KeysArePersistent()
         {
             var key = "persisted_key";
