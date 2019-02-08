@@ -4,40 +4,42 @@ using System.Net;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography
 {
     public class CertificateStore : ICertificateStore
     {
-        private readonly DirectoryInfo storageFolder;
+        private readonly DirectoryInfo _storageFolder;
 
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
 
         public IPasswordReader PasswordReader { get; }
 
         public CertificateStore(IPasswordReader passwordReader, ILogger logger)
         {
-            this.storageFolder = Fs.GetCalalytHomeDir();
-            this.PasswordReader = passwordReader;
+            _storageFolder = Fs.GetCalalytHomeDir();
+            PasswordReader = passwordReader;
+            _logger = logger;
         }
 
         public void Save(X509Certificate2 certificate, string fileName, SecureString password)
         {
-            var targetDirInfo = this.storageFolder;
+            var targetDirInfo = _storageFolder;
             if(!targetDirInfo.Exists) targetDirInfo.Create();
             var certificateInBytes = certificate.Export(X509ContentType.Pfx, password);
             string fullPathToCertificate = Path.Combine(targetDirInfo.FullName, fileName);
             File.WriteAllBytes(fullPathToCertificate, certificateInBytes);
 
-            this.logger.LogWarning("A certificate file has been created at {0}.", fullPathToCertificate);
-            this.logger.LogWarning("Please make sure this certificate is added to your local trusted root store to remove warnings.", fullPathToCertificate);
+            _logger.Warning("A certificate file has been created at {0}.", 
+                                                        fullPathToCertificate);
+            _logger.Warning("Please make sure this certificate is added to " +
+                                "your local trusted root store to remove warnings.", fullPathToCertificate);
         }
 
         public bool TryGet(string fileName, out X509Certificate2 certificate)
         {
-            var fullPath = Path.Combine(this.storageFolder.ToString(), fileName);
+            var fullPath = Path.Combine(_storageFolder.ToString(), fileName);
             var fileInfo = new FileInfo(fullPath);
             certificate = null;
 
@@ -56,7 +58,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
                     {
                         using (var passwordFromConsole = tryCount == 0 
                                      ? new SecureString()
-                                     : this.PasswordReader.ReadSecurePassword(passwordPromptMessage))
+                                     : PasswordReader.ReadSecurePassword(passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             break;
@@ -69,15 +71,15 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 
                         tryCount++;
                         if (tryCount == 1)
-                            this.logger.LogWarning("The certificate at {0} requires a password to be read.", fullPath);
+                            _logger.Warning("The certificate at {0} requires a password to be read.", fullPath);
                         else
-                            this.logger.LogWarning(ex.Message);        
+                            _logger.Warning(ex.Message);        
                     }
                 }
             }
             catch (Exception exception)
             {
-                this.logger.LogError(exception, "Failed to read certificate {0}", fullPath);
+                _logger.Error(exception, "Failed to read certificate {0}", fullPath);
                 return false;
             }
             return true;

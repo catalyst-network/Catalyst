@@ -22,7 +22,6 @@ namespace Catalyst.Node.Core.Helpers
         }
         
         public static bool DirectoryExists(string dataDir)
-        public static bool DirectoryExists(string dataDir)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             return Directory.Exists(dataDir);
