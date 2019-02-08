@@ -1,5 +1,7 @@
 public interface ICryptoContext{
 
     IKey GenerateKey();
-    void Sign(IKey key);
+    byte[] Sign(IKey key);
+
+    bool Verify(IKey key, );
 }

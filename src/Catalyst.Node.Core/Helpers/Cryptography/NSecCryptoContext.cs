@@ -1,21 +1,23 @@
 using NSec.Cryptography;
+using System;
 
 public class NSecCryptoContext : ICryptoContext{
 
     private static SignatureAlgorithm algorithm = SignatureAlgorithm.Ed25519;
 
     public IKey GenerateKey(){
-        NSec.Cryptography.Key key = Key.Create(algorithm);
+        NSec.Cryptography.Key key = NSec.Cryptography.Key.Create(algorithm);
         return new NSecKey(key);
     }
 
 
-    public void Sign (IKey key)
+    public byte[] Sign (IKey key, )
     {
         NSec.Cryptography.Key realKey = key.GetNSecFormatKey();
-        algorithm.Sign(realKey, new System.ReadOnlySpan<byte>());
-    }
-    public void Sign(NSecKey key){
+        return Sign(realKey);
         
+    }
+    private byte[] Sign(NSec.Cryptography.Key realKey, ReadOnlySpan<byte>){
+        return algorithm.Sign(realKey, new ReadOnlySpan<byte>());
     }
 }
