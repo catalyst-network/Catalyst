@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Exceptions;
@@ -30,8 +31,6 @@ namespace Catalyst.Node.Core
                                 {
                                     // Disable services
                                     var disableDfs = cli.Option("--disable-dfs", "disable dfs service",
-                                        CommandOptionType.NoValue);
-                                    var disablePeer = cli.Option("--disable-peer", "disable peer service",
                                         CommandOptionType.NoValue);
                                     var disableGossip = cli.Option("--disable-gossip", "disable gossip service",
                                         CommandOptionType.NoValue);
@@ -101,10 +100,9 @@ namespace Catalyst.Node.Core
                                                       // conditionally build NodeOptions object with enabled modules
                                                       var nodeOptions =
                                                           new NodeOptionsBuilder(env, dataDir, network, platform)
+                                                             .LoadPeerSettings()
                                                              .LoadDfsSettings()
                                                              .When(() => !disableDfs.HasValue())
-                                                             .LoadPeerSettings()
-                                                             .When(() => !disablePeer.HasValue())
                                                              .LoadGossipSettings()
                                                              .When(() => !disableGossip.HasValue())
                                                              .LoadLedgerSettings()
@@ -120,25 +118,23 @@ namespace Catalyst.Node.Core
                                                              .Build();
 
                                                       // override settings classes with cli params
-                                                      //                        if (peerPublicKey.HasValue()) nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
-                                                      //                        if (peerBindAddress.HasValue())
-                                                      //                            nodeOptions.PeerSettings.BindAddress = IPAddress.Parse(peerBindAddress.Value());
-                                                      //                        if (peerPayoutAddress.HasValue())
-                                                      //                            nodeOptions.PeerSettings.PayoutAddress = peerPayoutAddress.Value();
-                                                      //                        if (walletRpcIpOption.HasValue())
-                                                      //                            nodeOptions.WalletSettings.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
-                                                      //                        if (walletRpcPortOption.HasValue())
-                                                      //                            nodeOptions.WalletSettings.WalletRpcPort = int.Parse(walletRpcPortOption.Value());
-                                                      //                        if (peerSeedServers.HasValue())
-                                                      //                            nodeOptions.PeerSettings.SeedServers.InsertRange(0, peerSeedServers.Values);
-                                                      //                        if (peerKnownNodes.HasValue())
-                                                      //                            nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
+                                                      if (peerPublicKey.HasValue()) nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
+                                                      if (peerBindAddress.HasValue())
+                                                          nodeOptions.PeerSettings.BindAddress = IPAddress.Parse(peerBindAddress.Value());
+                                                      if (peerPayoutAddress.HasValue())
+                                                          nodeOptions.PeerSettings.PayoutAddress = peerPayoutAddress.Value();
+                                                      if (walletRpcIpOption.HasValue())
+                                                          nodeOptions.WalletSettings.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
+                                                      if (walletRpcPortOption.HasValue())
+                                                          nodeOptions.WalletSettings.WalletRpcPort = int.Parse(walletRpcPortOption.Value());
+                                                      if (peerSeedServers.HasValue())
+                                                          nodeOptions.PeerSettings.SeedServers.InsertRange(0, peerSeedServers.Values);
+                                                      if (peerKnownNodes.HasValue())
+                                                          nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
 
                                                       using (var kernel = new KernelBuilder(nodeOptions)
                                                                          .WithDfsModule()
                                                                          .When(() => !disableDfs.HasValue())
-                                                                         .WithPeerModule()
-                                                                         .When(() => !disablePeer.HasValue())
                                                                          .WithGossipModule()
                                                                          .When(() => !disableGossip.HasValue())
                                                                          .WithLedgerModule()

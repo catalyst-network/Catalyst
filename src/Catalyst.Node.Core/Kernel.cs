@@ -65,15 +65,6 @@ namespace Catalyst.Node.Core
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public KernelBuilder WithPeerModule()
-        {
-            _moduleLoader.Add(n => n.P2PService = _containerBuilder.RegisterModule(new PeerModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
         public KernelBuilder WithContractModule()
         {
             _moduleLoader.Add(n => n.ContractService = _containerBuilder.RegisterModule(new ContractModule()));
