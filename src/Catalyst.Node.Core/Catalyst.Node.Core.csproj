@@ -39,7 +39,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
     <PackageReference Include="Networker" Version="3.0.9-rc" />
     <PackageReference Include="Networker.Formatter.ProtobufNet" Version="3.0.9-rc" />
-    <PackageReference Include="NSec.Cryptography" Version="18.6.0" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801" />
@@ -57,9 +56,6 @@
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DebugType>none</DebugType>
     <DebugSymbols>False</DebugSymbols>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RestoreSources>$(RestoreSources);../nuget_packages;https://api.nuget.org/v3/index.json</RestoreSources>
   </PropertyGroup>
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\Catalyst.Node.csproj.UnmanagedRegistration.cache" />
