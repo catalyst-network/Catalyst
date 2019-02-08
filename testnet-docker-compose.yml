@@ -46,6 +46,13 @@ services:
   #      - 8080:8080
   #    image: ipfs/go-ipfs
 
+  seedDns:
+    image: samuelcolvin/dnserver
+    ports:
+      - "5053:53/udp"
+    volumes:
+      - ./devnet_dnszone.txt:/zones/zones.txt
+
   catalyst-node-tracker:
     hostname: catalyst-node-tracker
     container_name: catalyst-node-tracker

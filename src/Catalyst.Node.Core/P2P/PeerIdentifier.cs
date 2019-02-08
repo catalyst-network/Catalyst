@@ -11,7 +11,7 @@ using Dawn;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 
-namespace Catalyst.Node.Core.Modules.P2P
+namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
     ///     Peer ID's should return a unsigned 42 byte array in the following format, to produce a 336 bit key space
