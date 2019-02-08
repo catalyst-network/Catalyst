@@ -1,4 +1,7 @@
-public interface IKey{
-    
-    NSec.Cryptography.Key GetNSecFormatKey();
+namespace Catalyst.Node.Core.Helpers.Cryptography
+{
+    public interface IKey{
+        
+        Key GetNSecFormatKey();
+    }
 }
