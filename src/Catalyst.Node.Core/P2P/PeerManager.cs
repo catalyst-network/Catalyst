@@ -15,12 +15,13 @@ using Catalyst.Node.Core.Helpers.Streams;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Listeners;
 using Catalyst.Node.Core.Messages;
+using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Messages;
-using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.IPPN;
 using Dawn;
 using Org.BouncyCastle.Security;
 
-namespace Catalyst.Node.Core.Modules.P2P
+namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
     /// </summary>

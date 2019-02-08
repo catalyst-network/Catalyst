@@ -2,7 +2,7 @@
 using System.Linq;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
-using Catalyst.Protocols.Mempool;
+using Catalyst.Protocols.Transaction;
 using Dawn;
 using Google.Protobuf;
 
@@ -23,15 +23,15 @@ namespace Catalyst.Node.Core.Modules.Mempool
         public IKeyValueStore KeyValueStore { get; }
 
         /// <inheritdoc />
-        public IDictionary<Key, Tx> GetMemPoolContent()
+        public IDictionary<Key, StTx> GetMemPoolContent()
         {
             return KeyValueStore.GetSnapshot().ToDictionary(
                 p => Key.Parser.ParseFrom(p.Key),
-                p => Tx.Parser.ParseFrom(p.Value));
+                p => StTx.Parser.ParseFrom(p.Value));
         }
 
         /// <inheritdoc />
-        public bool SaveTx(Key k, Tx value)
+        public bool SaveTx(Key k, StTx value)
         {
             Guard.Argument(k, nameof(k)).NotNull();
             Guard.Argument(value, nameof(value)).NotNull();
@@ -39,10 +39,10 @@ namespace Catalyst.Node.Core.Modules.Mempool
         }
 
         /// <inheritdoc />
-        public Tx GetTx(Key k)
+        public StTx GetTx(Key k)
         {
             Guard.Argument(k, nameof(k)).NotNull();
-            return Tx.Parser.ParseFrom(KeyValueStore.Get(k.ToByteArray()));
+            return StTx.Parser.ParseFrom(KeyValueStore.Get(k.ToByteArray()));
         }
     }
 }

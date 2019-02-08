@@ -71,7 +71,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
         ///     Catalyst.Cli command service router.
         /// </summary>
         /// <param name="args"></param>
-        /// <param name="args"></param>
         /// <returns></returns>
         public virtual bool OnCommand(string[] args)
         {
