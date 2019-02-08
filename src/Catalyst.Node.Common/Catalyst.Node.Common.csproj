@@ -1,4 +1,7 @@
 ﻿<Project>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
     <PackageReference Include="Catalyst.Protocol" Version="0.0.1.381-beta" />
