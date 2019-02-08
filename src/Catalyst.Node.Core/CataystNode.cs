@@ -42,15 +42,6 @@ namespace Catalyst.Node.Core
                 Kernel.NodeIdentity
             );
 
-            //            var server = new ServerBuilder()
-            //                .UseTcp(kernel.NodeOptions.PeerSettings.Port)
-            //                .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
-            //                .UseUdp(kernel.NodeOptions.PeerSettings.Port)
-            //                .RegisterPacketHandlerModule<DefaultPacketHandlerModule>()
-            //                .UseProtobufNet()
-            //                .Build();
-            //            server.Start();
-
             Task.Run(async () =>
                          await PeerManager.InboundConnectionListener(
                              new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
