@@ -2,7 +2,7 @@ using System;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 
-namespace Catalyst.Node.Core.Modules.P2P.Events
+namespace Catalyst.Node.Core.Events
 {
     public class NewUnIdentifiedConnectionEventArgs : EventArgs
     {

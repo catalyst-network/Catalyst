@@ -1,36 +1,39 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Core", "Catalyst.Node.Core\Catalyst.Node.Core.csproj", "{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Core", "Catalyst.Node.Core\Catalyst.Node.Core.csproj", "{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Core.UnitTest", "Catalyst.Node.Core.UnitTests\Catalyst.Node.Core.UnitTest.csproj", "{8E7033A3-C758-460F-A551-E58BC7DE464D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Core.UnitTest", "Catalyst.Node.Core.UnitTests\Catalyst.Node.Core.UnitTest.csproj", "{8E7033A3-C758-460F-A551-E58BC7DE464D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Common", "Catalyst.Node.Common\Catalyst.Node.Common.csproj", "{E03E56AF-8B05-41D1-AA57-A4FE965B794E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Common", "Catalyst.Node.Common\Catalyst.Node.Common.csproj", "{E03E56AF-8B05-41D1-AA57-A4FE965B794E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Common.UnitTests", "Catalyst.Node.Common.UnitTests\Catalyst.Node.Common.UnitTests.csproj", "{3EF81EDA-CA6C-46EB-A561-DEE52B4DD168}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{93E23E42-2699-4265-B6D0-EEE61612ADE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{93E23E42-2699-4265-B6D0-EEE61612ADE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Protocol", "Catalyst.Protocol\Catalyst.Protocol.csproj", "{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Protocol", "Catalyst.Protocol\Catalyst.Protocol.csproj", "{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C509045-8F0C-4864-9FC2-4ABD4AABCB08}"
-ProjectSection(SolutionItems) = preProject
-	..\Alpine.Dockerfile = ..\Alpine.Dockerfile
-	..\dev-docker-compose.yml = ..\dev-docker-compose.yml
-	..\Dockerfile = ..\Dockerfile
-	..\entrypoint.sh = ..\entrypoint.sh
-	..\osx-Dockerfile = ..\osx-Dockerfile
-	..\pi-docker-compose.yml = ..\pi-docker-compose.yml
-	..\README.md = ..\README.md
-	..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
-	..\Vagrantfile = ..\Vagrantfile
-	..\.gitignore = ..\.gitignore
-	..\.dockerignore = ..\.dockerignore
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		..\.dockerignore = ..\.dockerignore
+		..\.gitignore = ..\.gitignore
+		..\Alpine.Dockerfile = ..\Alpine.Dockerfile
+		Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
+		Common.Projects.props = Common.Projects.props
+		Common.UnitTests.props = Common.UnitTests.props
+		..\dev-docker-compose.yml = ..\dev-docker-compose.yml
+		..\Dockerfile = ..\Dockerfile
+		..\entrypoint.sh = ..\entrypoint.sh
+		..\osx-Dockerfile = ..\osx-Dockerfile
+		..\pi-docker-compose.yml = ..\pi-docker-compose.yml
+		..\README.md = ..\README.md
+		..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
+		..\Vagrantfile = ..\Vagrantfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,13 +44,10 @@ Global
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-	
 		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Debug|x64.Build.0 = Debug|Any CPU
 		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -58,9 +58,9 @@ Global
 		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Release|x64.Build.0 = Release|Any CPU
 		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Release|x86.ActiveCfg = Release|Any CPU
 		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Release|x86.Build.0 = Release|Any CPU
-		{A16198A3-FFC8-4A96-81C7-C7D45F5FECF6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Debug|x64.Build.0 = Debug|Any CPU
 		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -71,7 +71,18 @@ Global
 		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Release|x64.Build.0 = Release|Any CPU
 		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Release|x86.ActiveCfg = Release|Any CPU
 		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Release|x86.Build.0 = Release|Any CPU
-		{3BD5BCD4-2FA5-4A8A-BBB9-74C10B3D870E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Release|x64.Build.0 = Release|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Release|x86.Build.0 = Release|Any CPU
 		{E03E56AF-8B05-41D1-AA57-A4FE965B794E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E03E56AF-8B05-41D1-AA57-A4FE965B794E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E03E56AF-8B05-41D1-AA57-A4FE965B794E}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -120,8 +131,11 @@ Global
 		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|x64.Build.0 = Release|Any CPU
 		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|x86.ActiveCfg = Release|Any CPU
 		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|x86.Build.0 = Release|Any CPU
-		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
-
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}
+	EndGlobalSection
 EndGlobal

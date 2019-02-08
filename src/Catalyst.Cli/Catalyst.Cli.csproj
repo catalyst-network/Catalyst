@@ -1,56 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <Title>Catalyst CLI</Title>
-        <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
-        <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>
-        <Copyright>MIT</Copyright>
-        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-        <PackageLicenseUrl>http://github.com/atlascity/catalyst-cli/LICENSE.md</PackageLicenseUrl>
-        <PackageProjectUrl>http://github.com/atlascity/catalyst-cli/</PackageProjectUrl>
-        <RepositoryUrl>http://github.com/atlascity/catalyst-cli/</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-        <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
-        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
-        <LangVersion>7.2</LangVersion>
-        <RootNamespace>Catalyst.Cli</RootNamespace>
-        <PackageId>Catalyst.Cli</PackageId>
-        <AssemblyName>Catalyst.Cli</AssemblyName>
-        <Deterministic>true</Deterministic>
-        <Optimize>true</Optimize>
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
-        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-        <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
-        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.8.1" />
-        <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="config.shell.json" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include=".\config.shell.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-        </Content>
-    </ItemGroup>
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <ItemGroup>
-            <PluginAssembly Include="$(SolutionDir)\Cli\bin\$(ConfigurationName)\**\Cli.dll" />
-        </ItemGroup>
-        <Copy SourceFiles="@(PluginAssembly)" DestinationFolder="$(OutDir)" />
-    </Target>
-    <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <DebugType>none</DebugType>
-        <DebugSymbols>False</DebugSymbols>
-    </PropertyGroup>
+﻿<Project>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Title>Catalyst CLI</Title>
+    <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+    <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>
+    <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <Import Project="../Common.Projects.props" />
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="config.shell.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

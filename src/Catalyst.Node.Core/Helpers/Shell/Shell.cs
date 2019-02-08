@@ -7,7 +7,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
 {
     public sealed class Shell : ShellBase, IAds
     {
-
         /// <summary>
         /// </summary>
         public Shell()
@@ -54,17 +53,17 @@ namespace Catalyst.Node.Core.Helpers.Shell
             switch (args[2].ToLower())
             {
                 case "start":
-//                    Atlas.StartRpc();
+                    //                    Atlas.StartRpc();
                     return true;
                 case "stop":
-//                    Atlas.StopRpc();
+                    //                    Atlas.StopRpc();
                     return true;
                 case "status":
                     return false;
-//                    return RpcStatus(args);
+                //                    return RpcStatus(args);
                 case "restart":
-//                    Catalyst.StopRpc();
-//                    Catalyst.StartRpc();
+                    //                    Catalyst.StopRpc();
+                    //                    Catalyst.StartRpc();
                     return true;
                 default:
                     return CommandNotFound(args);
@@ -80,17 +79,17 @@ namespace Catalyst.Node.Core.Helpers.Shell
             switch (args[2].ToLower())
             {
                 case "start":
-//                    Catalyst.StartDfs();
+                    //                    Catalyst.StartDfs();
                     return true;
                 case "stop":
                     return false;
-//                    return DfsStop(args);
+                //                    return DfsStop(args);
                 case "status":
                     return false;
-//                    return DfsStatus(args);
+                //                    return DfsStatus(args);
                 case "restart":
                     return false;
-//                    return DfsTestart(args);
+                //                    return DfsTestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -106,16 +105,16 @@ namespace Catalyst.Node.Core.Helpers.Shell
             {
                 case "start":
                     return false;
-//                    return WalletStart(args);
+                //                    return WalletStart(args);
                 case "stop":
                     return false;
-//                    return WalletStop(args);
+                //                    return WalletStop(args);
                 case "status":
                     return false;
-//                    return WalletStatus(args);
+                //                    return WalletStatus(args);
                 case "restart":
                     return false;
-//                    return WalletRestart(args);
+                //                    return WalletRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -130,17 +129,17 @@ namespace Catalyst.Node.Core.Helpers.Shell
             switch (args[2].ToLower())
             {
                 case "start":
-//                    Catalyst.StartPeer();
+                    //                    Catalyst.StartPeer();
                     return true;
                 case "stop":
                     return false;
-//                    return PeerStop(args);
+                //                    return PeerStop(args);
                 case "status":
                     return false;
-//                    return PeerStatus(args);
+                //                    return PeerStatus(args);
                 case "restart":
                     return false;
-//                    return PeerRestart(args);
+                //                    return PeerRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -156,16 +155,16 @@ namespace Catalyst.Node.Core.Helpers.Shell
             {
                 case "start":
                     return false;
-//                    return GossipStart(args);
+                //                    return GossipStart(args);
                 case "stop":
                     return false;
-//                    return GossipStop(args);
+                //                    return GossipStop(args);
                 case "status":
                     return false;
-//                    return GossipStatus(args);
+                //                    return GossipStatus(args);
                 case "restart":
                     return false;
-//                    return GossipRestart(args);
+                //                    return GossipRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -184,16 +183,16 @@ namespace Catalyst.Node.Core.Helpers.Shell
                     ShowPrompt = true;
                     //system.StartConsensus(Program.Wallet);
                     return false;
-//                    return ConsensusStart(args);
+                //                    return ConsensusStart(args);
                 case "stop":
                     return false;
-//                    return ConsensusStop(args);
+                //                    return ConsensusStop(args);
                 case "status":
                     return false;
-//                    return ConsensusStatus(args);
+                //                    return ConsensusStatus(args);
                 case "restart":
                     return false;
-//                    return ConsensusRestart(args);
+                //                    return ConsensusRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -409,7 +408,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
             return false;
         }
 
-
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -458,7 +456,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         public override bool OnGetConfig()
         {
-//            Log.Message(Atlas.Kernel.Settings.SerializeSettings());
+            //            Log.Message(Atlas.Kernel.Settings.SerializeSettings());
             return true;
         }
 
@@ -492,7 +490,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
             //@TODO put this in a start node local function
             var assembly = Assembly.LoadFile(@"../../Catalyst.Node/bin/**/CatalystSystem.dll");
 
-//         var atlasSystem =  CatalystSystem.GetInstance(new NodeOptions());
+            //         var atlasSystem =  CatalystSystem.GetInstance(new NodeOptions());
 #endif
             return true;
         }

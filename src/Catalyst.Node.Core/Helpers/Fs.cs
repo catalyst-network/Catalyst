@@ -10,17 +10,17 @@ namespace Catalyst.Node.Core.Helpers
         /// <summary>
         ///     Gets current home directory.
         /// </summary>
-        /// <param name="platform"></param>
         /// <returns></returns>
         public static DirectoryInfo GetUserHomeDir()
         {
-            var dir = Environment.OSVersion.Platform == PlatformID.Unix || //@TODO hook this into platform detection helper.
-                      Environment.OSVersion.Platform == PlatformID.MacOSX
-                ? Environment.GetEnvironmentVariable("HOME")
-                : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+            var dir =
+                Environment.OSVersion.Platform == PlatformID.Unix || //@TODO hook this into platform detection helper.
+                Environment.OSVersion.Platform == PlatformID.MacOSX
+                    ? Environment.GetEnvironmentVariable("HOME")
+                    : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
 
             Guard.Argument(dir, nameof(dir)).NotNull().NotEmpty();
-            
+
             return new DirectoryInfo(dir);
         }
 
@@ -46,18 +46,18 @@ namespace Catalyst.Node.Core.Helpers
             }
             catch (ArgumentNullException e)
             {
-                 LogException.Message(e.Message, e);
-                 throw;
+                LogException.Message(e.Message, e);
+                throw;
             }
             catch (ArgumentException e)
             {
                 LogException.Message(e.Message, e);
-                throw;       
+                throw;
             }
             catch (IOException e)
             {
                 LogException.Message(e.Message, e);
-                throw;          
+                throw;
             }
         }
 
@@ -65,8 +65,13 @@ namespace Catalyst.Node.Core.Helpers
         /// </summary>
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
+        /// <param name="configDir"></param>
+        /// <param name="modulesFiles"></param>
         /// <returns></returns>
-        public static void CopySkeletonConfigs(string dataDir, string network, string configDir = "Config", string modulesFiles = "comonents.json")
+        public static void CopySkeletonConfigs(string dataDir,
+            string network,
+            string configDir = "Config",
+            string modulesFiles = "comonents.json")
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
@@ -74,7 +79,7 @@ namespace Catalyst.Node.Core.Helpers
             Guard.Argument(modulesFiles, nameof(modulesFiles)).NotNull().NotEmpty().NotWhiteSpace();
             try
             {
-                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{modulesFiles}", dataDir);                
+                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{modulesFiles}", dataDir);
             }
             catch (ArgumentNullException e)
             {
@@ -84,13 +89,14 @@ namespace Catalyst.Node.Core.Helpers
             catch (ArgumentException e)
             {
                 LogException.Message(e.Message, e);
-                throw;       
+                throw;
             }
             catch (IOException e)
             {
                 LogException.Message(e.Message, e);
-                throw;          
+                throw;
             }
+
             try
             {
                 File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{network}.json", dataDir);
@@ -103,12 +109,12 @@ namespace Catalyst.Node.Core.Helpers
             catch (ArgumentException e)
             {
                 LogException.Message(e.Message, e);
-                throw;       
+                throw;
             }
             catch (IOException e)
             {
                 LogException.Message(e.Message, e);
-                throw;          
+                throw;
             }
         }
 

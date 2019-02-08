@@ -8,9 +8,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
     public class Dfs : IDisposable, IDfs
     {
         private readonly IIpfs _ipfs;
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="ipfs"></param>
         public Dfs(IIpfs ipfs)
@@ -19,7 +18,13 @@ namespace Catalyst.Node.Core.Modules.Dfs
         }
 
         /// <summary>
-        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            _ipfs.DestroyIpfsClient();
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="ipfsVersionApi"></param>
         /// <param name="connectRetries"></param>
@@ -29,7 +34,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
@@ -39,21 +43,12 @@ namespace Catalyst.Node.Core.Modules.Dfs
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
         public Task<string> ReadAllTextAsync(string filename)
         {
             return _ipfs.ReadAllTextAsync(filename);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
-            _ipfs.DestroyIpfsClient();
         }
     }
 }

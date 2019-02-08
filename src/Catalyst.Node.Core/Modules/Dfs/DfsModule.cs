@@ -1,7 +1,7 @@
-using Dawn;
 using Autofac;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
+using Dawn;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
@@ -10,12 +10,12 @@ namespace Catalyst.Node.Core.Modules.Dfs
         /// <summary>
         /// </summary>
         /// <param name="builder"></param>
-        protected override void Load (ContainerBuilder builder)
+        protected override void Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
             builder.Register(c => new Dfs(c.Resolve<IIpfs>()))
-                .As<IDfs>()
-                .SingleInstance();
+                   .As<IDfs>()
+                   .SingleInstance();
         }
     }
 }

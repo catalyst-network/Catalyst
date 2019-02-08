@@ -1,9 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <Authors>James Kirby (james.kirby@atlascity.io)</Authors>
-    <AssemblyName>Catalyst.Node.UnitTests</AssemblyName>
-    <PackageId>Catalyst.Node.UnitTests</PackageId>
-    <RootNamespace>Catalyst.Node.UnitTests</RootNamespace>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
@@ -12,26 +9,12 @@
     <PackageReference Include="NSubstitute" Version="4.0.0" />
     <PackageReference Include="xunit.core" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\BigInteger" />
-    <Folder Include="Helpers\Cryptography" />
-    <Folder Include="Helpers\Exceptions" />
-    <Folder Include="Helpers\Hex" />
-    <Folder Include="Helpers\Ipfs" />
-    <Folder Include="Helpers\KeyValueStore" />
-    <Folder Include="Helpers\Logger" />
-    <Folder Include="Helpers\Math" />
-    <Folder Include="Helpers\Platform" />
-    <Folder Include="Helpers\Shell" />
-    <Folder Include="Modules\Consensus" />
-    <Folder Include="Modules\Contract" />
-    <Folder Include="Modules\Gossip" />
-    <Folder Include="Modules\Ledger" />
-    <Folder Include="Modules\P2P" />
-    <Folder Include="Modules\Transactions" />
+    <PackageReference Include="xunit.assert" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP.UnitTests\RLPTests.cs" />
   </ItemGroup>
 </Project>

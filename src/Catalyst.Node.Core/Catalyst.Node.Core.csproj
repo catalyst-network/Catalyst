@@ -1,31 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
   <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>  
     <Title>Catalyst Node</Title>
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
-    <PackageDescription>Catalyst Node</PackageDescription>
-    <Copyright>MIT</Copyright>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>http://github.com/atlascity/catalyst-Node/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>http://github.com/atlascity/catalyst-Node/</PackageProjectUrl>
-    <RepositoryUrl>http://github.com/atlascity/catalyst-Node/</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <AssemblyCompanyAttribute>AtlasCity.io</AssemblyCompanyAttribute>
-    <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+    <PackageDescription>Catalyst Core Node</PackageDescription>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <PackageId>Catalyst.Node</PackageId>
-    <Deterministic>true</Deterministic>
-    <Optimize>true</Optimize>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
-    <LangVersion>7.2</LangVersion>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-    <GenerateAssemblyAuthorAttribute>true</GenerateAssemblyAuthorAttribute>
-    <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
   </PropertyGroup>
+  <Import Project="../Common.Projects.props" />
   <ItemGroup>
     <PackageReference Include="Akka" Version="1.3.11" />
     <PackageReference Include="Autofac" Version="4.8.1" />
@@ -47,41 +28,36 @@
     <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".\Config\components.json;.\Config\devnet.json;.\Config\testnet.json;.\Config\mainnet.json;">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Config\components.json" />
-  </ItemGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DebugType>none</DebugType>
-    <DebugSymbols>False</DebugSymbols>
-  </PropertyGroup>
-  <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\Catalyst.Node.csproj.UnmanagedRegistration.cache" />
-  </ItemGroup>
-  <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.csproj.ResolveComReference.cache" />
-  </ItemGroup>
-  <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.pdb" />
-  </ItemGroup>
-  <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.dll.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.1\Catalyst.Node.application" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-      <Folder Include="Modules\P2P\Events" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\BigInteger.cs" Link="Helpers\Hex\BigInteger.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexBigIntegerConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexByteConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexStringUTF8ConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" Link="Helpers\Hex\HexConverters\HexBigIntegerBigEndianConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" Link="Helpers\Hex\HexConverters\HexUTF8StringConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" Link="Helpers\Hex\HexConverters\IHexConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" Link="Helpers\Hex\HexTypes\HexBigInteger.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" Link="Helpers\Hex\HexTypes\HexType.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" Link="Helpers\Hex\HexTypes\HexTypeFactory.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" Link="Helpers\Hex\HexTypes\HexTypeJsonConverter.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" Link="Helpers\Hex\HexTypes\HexUTF8String.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" Link="Helpers\RLP\ConvertorForRLPEncodingExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" Link="Helpers\RLP\IRLPElement.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" Link="Helpers\RLP\RLP.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="Helpers\RLP\RLPCollection.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="Helpers\RLP\RLPItem.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="Helpers\RLP\RLPStringFormatter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Config\*.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\Hex\HexConverters\Extensions\" />
+    <Folder Include="Helpers\Hex\HexTypes\" />
+    <Folder Include="Helpers\RLP\" />
   </ItemGroup>
 </Project>

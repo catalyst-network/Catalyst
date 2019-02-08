@@ -24,41 +24,43 @@ namespace Catalyst.Node.Core.Helpers.Workers
         public void Start()
         {
             Task.Factory.StartNew(() =>
-            {
-                ScheduledAction scheduledAction = null;
+                                  {
+                                      ScheduledAction scheduledAction = null;
 
-                while (!_cancellationTokenSource.Token.IsCancellationRequested)
-                {
-                    bool any;
-                    lock (_actions)
-                    {
-                        any = _actions.Count > 0;
-                        if (any) scheduledAction = _actions[0];
-                    }
+                                      while (!_cancellationTokenSource.Token.IsCancellationRequested)
+                                      {
+                                          bool any;
+                                          lock (_actions)
+                                          {
+                                              any = _actions.Count > 0;
+                                              if (any) scheduledAction = _actions[0];
+                                          }
 
-                    TimeSpan timeToWait;
-                    if (any)
-                    {
-                        var runTime = scheduledAction.NextExecutionDate;
-                        var dT = runTime - DateTime.UtcNow;
-                        timeToWait = dT > TimeSpan.Zero ? dT : TimeSpan.Zero;
-                    }
-                    else
-                    {
-                        timeToWait = TimeSpan.FromMilliseconds(-1);
-                    }
+                                          TimeSpan timeToWait;
+                                          if (any)
+                                          {
+                                              var runTime = scheduledAction.NextExecutionDate;
+                                              var dT = runTime - DateTime.UtcNow;
+                                              timeToWait = dT > TimeSpan.Zero ? dT : TimeSpan.Zero;
+                                          }
+                                          else
+                                          {
+                                              timeToWait = TimeSpan.FromMilliseconds(-1);
+                                          }
 
-                    if (_resetEvent.WaitOne(timeToWait, false)) continue;
+                                          if (_resetEvent.WaitOne(timeToWait, false)) continue;
 
-                    Debug.Assert(scheduledAction != null, "scheduledAction != null");
-                    scheduledAction.Execute();
-                    lock (_actions)
-                    {
-                        Remove(scheduledAction);
-                        if (scheduledAction.Repeat) QueueForever(scheduledAction.Action, scheduledAction.Interval);
-                    }
-                }
-            }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+                                          Debug.Assert(scheduledAction != null, "scheduledAction != null");
+                                          scheduledAction.Execute();
+                                          lock (_actions)
+                                          {
+                                              Remove(scheduledAction);
+                                              if (scheduledAction.Repeat)
+                                                  QueueForever(scheduledAction.Action, scheduledAction.Interval);
+                                          }
+                                      }
+                                  }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
         }
 
         /// <summary>

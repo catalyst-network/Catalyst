@@ -66,8 +66,8 @@ namespace Catalyst.Node.Core.Helpers.Util
             if (org == null) throw new ArgumentNullException(nameof(org));
             if (org.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(org));
             if (end < 0) end = org.Length + end;
-            start = System.Math.Max(0, start);
-            end = System.Math.Max(start, end);
+            start = Math.Max(0, start);
+            end = Math.Max(start, end);
 
             return org.Skip(start).Take(end - start).ToArray();
         }
@@ -131,7 +131,7 @@ namespace Catalyst.Node.Core.Helpers.Util
             if (a.Length == 0) throw new ArgumentException("Value a cannot be an empty collection.", nameof(a));
             if (b.Length == 0) throw new ArgumentException("Value b cannot be an empty collection.", nameof(b));
 
-            var length = System.Math.Min(a.Length, b.Length);
+            var length = Math.Min(a.Length, b.Length);
             var result = new byte[length];
             for (var i = 0; i < length; i++)
                 result[i] = (byte) (a[i] ^ b[i]);

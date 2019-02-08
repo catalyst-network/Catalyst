@@ -5,12 +5,8 @@ namespace Catalyst.Node.Core.Modules.Ledger
 {
     public class Ledger : IDisposable, ILedger
     {
-
         /// <summary>
-        /// 
         /// </summary>
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

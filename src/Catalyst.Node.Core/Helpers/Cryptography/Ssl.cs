@@ -14,7 +14,6 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         /// </summary>
         /// <param name="password"></param>
         /// <param name="commonName"></param>
-        /// <param name="fileName"></param>
         /// <returns></returns>
         public static X509Certificate2 CreateCertificate(string password, string commonName)
         {
@@ -48,12 +47,11 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
                 Log.Message(password);
                 return new X509Certificate2(certificate.Export(X509ContentType.Pfx, password), password,
                     X509KeyStorageFlags.Exportable);
-//                return new X509Certificate2(certificate.Export(X509ContentType.Pfx, password), password, X509KeyStorageFlags.MachineKeySet);//@TODO this doesnt work on macosx https://github.com/dotnet/corefx/issues/19508
+                //                return new X509Certificate2(certificate.Export(X509ContentType.Pfx, password), password, X509KeyStorageFlags.MachineKeySet);//@TODO this doesnt work on macosx https://github.com/dotnet/corefx/issues/19508
             }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="password"></param>
         /// <param name="dataDir"></param>
@@ -63,9 +61,8 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         {
             return LoadCert(password, $"{dataDir}/{fileName}");
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="password"></param>
         /// <param name="filePath"></param>
@@ -73,8 +70,8 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         public static X509Certificate2 LoadCert(string password, string filePath)
         {
             return string.IsNullOrEmpty(password)
-                ? new X509Certificate2(filePath)
-                : new X509Certificate2(filePath, password);
+                       ? new X509Certificate2(filePath)
+                       : new X509Certificate2(filePath, password);
         }
 
         /// <summary>
@@ -91,7 +88,6 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="data"></param>
         /// <param name="publicKey"></param>
@@ -103,37 +99,34 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             if (data == null) throw new ArgumentNullException("data");
             if (publicKey == null) throw new ArgumentNullException("publicKey");
             if (signature == null) throw new ArgumentNullException("signature");
-            
+
             var provider = (RSACryptoServiceProvider) publicKey.PublicKey.Key;
             return provider.VerifyData(data, new SHA1CryptoServiceProvider(), signature);
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="certPath"></param>
         /// <returns></returns>
         public static byte[] Sign(byte[] data, X509Certificate2 privateKey)
         {
-            if (data == null) throw new ArgumentNullException("data");
-            if (privateKey == null) throw new ArgumentNullException("privateKey");
-            if (!privateKey.HasPrivateKey) throw new ArgumentException("invalid certicate", "privateKey");
-            
+            if (data == null) throw new ArgumentNullException(nameof(data));
+            if (privateKey == null) throw new ArgumentNullException(nameof(privateKey));
+            if (!privateKey.HasPrivateKey) throw new ArgumentException("invalid certificate", nameof(privateKey));
+
             var provider = (RSACryptoServiceProvider) privateKey.PrivateKey;
             return provider.SignData(data, new SHA1CryptoServiceProvider());
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="certificate"></param>
         /// <returns></returns>
-        public X509CertificateCollection GetCertificateCollection(X509Certificate2 certificate) 
+        public X509CertificateCollection GetCertificateCollection(X509Certificate2 certificate)
         {
             return new X509Certificate2Collection
-            {
-                certificate
-            };
+                   {
+                       certificate
+                   };
         }
     }
 }
