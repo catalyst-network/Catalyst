@@ -37,7 +37,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         public abstract bool OnStopNode(string[] args);
 
-
         /// <summary>
         /// </summary>
         /// <returns></returns>

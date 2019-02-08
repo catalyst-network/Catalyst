@@ -13,7 +13,7 @@ namespace Catalyst.Cli
     {
         public const string CatalystSubfolder = ".Catalyst";
         public const string shellFileName = "shell.json";
-        
+
         private static uint Env { get; set; }
         private static uint Port { get; set; }
         private static string Network { get; set; }
@@ -34,12 +34,11 @@ namespace Catalyst.Cli
 
             var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
-            
+
             if (!Directory.Exists(catalystHomeDirectory))
                 Directory.CreateDirectory(catalystHomeDirectory);
 
             // check if user home data dir has a shell config
-            ;
             var shellFilePath = Path.Combine(catalystHomeDirectory, shellFileName);
             if (!File.Exists(shellFilePath))
                 File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/config.shell.json",
@@ -49,10 +48,12 @@ namespace Catalyst.Cli
             var builder = new ContainerBuilder();
 
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
-                context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(), $"{assembly.Name}.dll"));
+                                                         context.LoadFromAssemblyPath(
+                                                             Path.Combine(Directory.GetCurrentDirectory(),
+                                                                 $"{assembly.Name}.dll"));
 
             var shellConfig = new ConfigurationBuilder().AddJsonFile(shellFilePath)
-                .Build();
+                                                        .Build();
 
             var shellModule = new ConfigurationModule(shellConfig);
 
@@ -61,11 +62,11 @@ namespace Catalyst.Cli
             var container = builder.Build();
 
             Console.SetIn(
-                new StreamReader(
-                    Console.OpenStandardInput(bufferSize),
-                    Console.InputEncoding, false, bufferSize
-                )
-            );
+                    new StreamReader(
+                            Console.OpenStandardInput(bufferSize),
+                            Console.InputEncoding, false, bufferSize
+                        )
+                );
 
             container.Resolve<IAds>();
 

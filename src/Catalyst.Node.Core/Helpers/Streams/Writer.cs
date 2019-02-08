@@ -3,15 +3,14 @@ using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using Catalyst.Node.Core.Helpers.Logger;
-using Catalyst.Node.Core.Helpers.RLP;
 using Catalyst.Node.Core.Helpers.Util;
+using Nethereum.RLP;
 
 namespace Catalyst.Node.Core.Helpers.Streams
 {
     public static class Writer
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="sslStream"></param>
         /// <param name="data"></param>
@@ -25,7 +24,6 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
             try
             {
-
                 if (sslStream == null)
                 {
                     Log.Message("MessageWriteAsync SSL stream is null");
@@ -48,7 +46,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
                     header += payloadLength + ":";
                 }
 
-                var headerBytes = header.ToBytesForRlpEncoding();
+                var headerBytes = header.ToBytesForRLPEncoding();
 
                 var messageLen = headerBytes.Length;
                 if (payloadLength > 0) messageLen += payloadLength;

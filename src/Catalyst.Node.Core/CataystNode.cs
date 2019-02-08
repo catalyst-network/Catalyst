@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Autofac.Core.Lifetime;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
@@ -13,25 +12,19 @@ using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.Messages;
 using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Dawn;
 using DnsClient.Protocol;
-using Networker.Formatter.ProtobufNet;
-using Networker.Server;
+using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core
 {
     public class CatalystNode : IDisposable, IP2P
     {
-        private static CatalystNode Instance { get; set; }
         private static readonly object Mutex = new object();
 
         public readonly Kernel Kernel;
-        private List<IPEndPoint> SeedNodes { get; }
-        private PeerManager PeerManager { get; set; }
-        private bool Disposed { get; set; }
 
         /// <summary>
         ///     Instantiates basic CatalystSystem.
@@ -41,47 +34,47 @@ namespace Catalyst.Node.Core
             Kernel = kernel;
             SeedNodes = new List<IPEndPoint>();
             PeerManager = new PeerManager(
-                Ssl.LoadCert(Kernel.NodeOptions.PeerSettings.SslCertPassword, Kernel.NodeOptions.DataDir, Kernel.NodeOptions.PeerSettings.PfxFileName),
+                Ssl.LoadCert(Kernel.NodeOptions.PeerSettings.SslCertPassword, Kernel.NodeOptions.DataDir,
+                    Kernel.NodeOptions.PeerSettings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
                 Kernel.NodeIdentity
             );
 
-//            var server = new ServerBuilder()
-//                .UseTcp(kernel.NodeOptions.PeerSettings.Port)
-//                .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
-//                .UseUdp(kernel.NodeOptions.PeerSettings.Port)
-//                .RegisterPacketHandlerModule<DefaultPacketHandlerModule>()
-//                .UseProtobufNet()
-//                .Build();
-//            server.Start();
-        
+            //            var server = new ServerBuilder()
+            //                .UseTcp(kernel.NodeOptions.PeerSettings.Port)
+            //                .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
+            //                .UseUdp(kernel.NodeOptions.PeerSettings.Port)
+            //                .RegisterPacketHandlerModule<DefaultPacketHandlerModule>()
+            //                .UseProtobufNet()
+            //                .Build();
+            //            server.Start();
+
             Task.Run(async () =>
-                await PeerManager.InboundConnectionListener(
-                    new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
-                        Kernel.NodeOptions.PeerSettings.Port
-                    )
-                )
+                         await PeerManager.InboundConnectionListener(
+                             new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
+                                 Kernel.NodeOptions.PeerSettings.Port
+                             )
+                         )
             );
-            
+
             PeerManager.AnnounceNode += Announce;
         }
 
+        private static CatalystNode Instance { get; set; }
+        private List<IPEndPoint> SeedNodes { get; }
+        private PeerManager PeerManager { get; }
+        private bool Disposed { get; set; }
+
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="seedServers"></param>
-        internal void GetSeedNodes(List<string> seedServers)
+        public void Dispose()
         {
-            var dnsQueryAnswers = Helpers.Network.Dns.GetTxtRecords(seedServers);
-            foreach (var dnsQueryAnswer in dnsQueryAnswers)
-            {
-                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                if (answerSection != null)
-                    SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
-            }
+            Dispose(true);
+            Log.Message("disposing catalyst node");
+            GC.SuppressFinalize(this);
         }
-        
+
         /// <summary>
         ///     @TODO just to satisfy the DHT interface, need to implement
         /// </summary>
@@ -101,9 +94,8 @@ namespace Catalyst.Node.Core
         {
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -114,8 +106,8 @@ namespace Catalyst.Node.Core
         }
 
         /// <summary>
-        ///  If a corresponding value is present on the queried node, the associated data is returned.
-        ///  Otherwise the return value is the return equivalent to FindNode()
+        ///     If a corresponding value is present on the queried node, the associated data is returned.
+        ///     Otherwise the return value is the return equivalent to FindNode()
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -124,9 +116,8 @@ namespace Catalyst.Node.Core
             // @TODO just to satisfy the DHT interface, need to implement
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -134,9 +125,8 @@ namespace Catalyst.Node.Core
         {
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="queryingNode"></param>
         /// <returns></returns>
@@ -145,9 +135,22 @@ namespace Catalyst.Node.Core
         {
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
-        /// 
+        /// </summary>
+        /// <param name="seedServers"></param>
+        internal void GetSeedNodes(List<string> seedServers)
+        {
+            var dnsQueryAnswers = Dns.GetTxtRecords(seedServers);
+            foreach (var dnsQueryAnswer in dnsQueryAnswers)
+            {
+                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
+                if (answerSection != null)
+                    SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+            }
+        }
+
+        /// <summary>
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -155,7 +158,8 @@ namespace Catalyst.Node.Core
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(e, nameof(e)).NotNull();
-            var client = new TcpClient(Kernel.NodeOptions.PeerSettings.AnnounceServer.Address.ToString(), Kernel.NodeOptions.PeerSettings.AnnounceServer.Port);
+            var client = new TcpClient(Kernel.NodeOptions.PeerSettings.AnnounceServer.Address.ToString(),
+                Kernel.NodeOptions.PeerSettings.AnnounceServer.Port);
             var nwStream = client.GetStream();
             var network = new byte[1];
             network[0] = 0x01;
@@ -179,30 +183,18 @@ namespace Catalyst.Node.Core
                 {
                     if (Instance == null) Instance = new CatalystNode(kernel);
                 }
+
             return Instance;
         }
 
         /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            Log.Message("disposing catalyst node");
-            GC.SuppressFinalize(this);
-        }
-        
-        /// <summary>
-        /// 
         /// </summary>
         /// <param name="disposing"></param>
         private void Dispose(bool disposing)
         {
             if (Disposed) return;
 
-            if (disposing)
-            {
-                Kernel?.Dispose();
-            }
+            if (disposing) Kernel?.Dispose();
 
             Disposed = true;
             Log.Message("CatalystNode disposed");
