@@ -1,9 +1,6 @@
 ﻿<Project>
-
-    <Import Project="../Common.Projects.props" />
-
-    <ItemGroup>
-      <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
-    </ItemGroup>
-
+  <Import Project="../Common.Projects.props" />
+  <ItemGroup>
+    <PackageReference Include="Catalyst.Protocol" Version="0.0.1.381-beta" />
+  </ItemGroup>
 </Project>
