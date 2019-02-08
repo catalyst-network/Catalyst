@@ -14,6 +14,7 @@ using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Messages;
+using Catalyst.Node.Core.P2P;
 using Dawn;
 using DnsClient.Protocol;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;

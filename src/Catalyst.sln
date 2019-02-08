@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Common.UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{93E23E42-2699-4265-B6D0-EEE61612ADE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Protocol", "Catalyst.Protocol\Catalyst.Protocol.csproj", "{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C509045-8F0C-4864-9FC2-4ABD4AABCB08}"
 ProjectSection(SolutionItems) = preProject
 	..\Alpine.Dockerfile = ..\Alpine.Dockerfile
@@ -110,18 +108,6 @@ Global
 		{93E23E42-2699-4265-B6D0-EEE61612ADE7}.Release|x64.Build.0 = Release|Any CPU
 		{93E23E42-2699-4265-B6D0-EEE61612ADE7}.Release|x86.ActiveCfg = Release|Any CPU
 		{93E23E42-2699-4265-B6D0-EEE61612ADE7}.Release|x86.Build.0 = Release|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Debug|x64.Build.0 = Debug|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Debug|x86.Build.0 = Debug|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|x64.ActiveCfg = Release|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|x64.Build.0 = Release|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|x86.ActiveCfg = Release|Any CPU
-		{15F6F11A-7D9D-4EB1-BA6C-F49A25C54D41}.Release|x86.Build.0 = Release|Any CPU
 		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E7033A3-C758-460F-A551-E58BC7DE464D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
