@@ -1,26 +1,27 @@
 ﻿using System;
+using Dawn;
 
 namespace Catalyst.Node.Core.Helpers.Util
 {
-    internal static class TimeExtensions
+    public static class TimeExtensions
     {
         /// <summary>
         /// </summary>
-        /// <param name="seconds"></param>
+        /// <param name="minutes"></param>
         /// <returns></returns>
-        internal static TimeSpan Minutes(this int seconds)
+        public static TimeSpan Minutes(this int minutes)
         {
-            if (seconds <= 0) throw new ArgumentOutOfRangeException(nameof(seconds));
-            return TimeSpan.FromMinutes(seconds);
+            Guard.Argument(minutes, nameof(minutes)).Min(1);
+            return TimeSpan.FromMinutes(minutes);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="seconds"></param>
         /// <returns></returns>
-        internal static TimeSpan Seconds(this int seconds)
+        public static TimeSpan Seconds(this int seconds)
         {
-            if (seconds <= 0) throw new ArgumentOutOfRangeException(nameof(seconds));
+            Guard.Argument(seconds, nameof(seconds)).Min(1);
             return TimeSpan.FromSeconds(seconds);
         }
 
@@ -28,9 +29,9 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// </summary>
         /// <param name="milliseconds"></param>
         /// <returns></returns>
-        internal static TimeSpan Milliseconds(this int milliseconds)
+        public static TimeSpan Milliseconds(this int milliseconds)
         {
-            if (milliseconds <= 0) throw new ArgumentOutOfRangeException(nameof(milliseconds));
+            Guard.Argument(milliseconds, nameof(milliseconds)).Min(1);
             return TimeSpan.FromMilliseconds(milliseconds);
         }
     }

@@ -5,6 +5,7 @@ using Catalyst.Node.Common.Modules.P2P.Messages;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Messages;
+using Catalyst.Node.Core.P2P;
 using Dawn;
 
 namespace Catalyst.Node.Core.Modules.P2P.Messages
