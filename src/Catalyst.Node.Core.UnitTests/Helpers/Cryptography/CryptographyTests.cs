@@ -10,7 +10,7 @@ namespace Catalyst.Node.UnitTests.Helpers.Cryptography
         public void CreateContext(){
             ICryptoContext context = new NSecCryptoContext();
             IKey key = context.GenerateKey();
-            key.Should().BeOfType(typeof(NSecKey));
+            key.Should().BeOfType(typeof(NSecKeyWrapper));
             key.GetNSecFormatKey().Should().BeOfType(typeof(NSec.Cryptography.Key));
         }
     }

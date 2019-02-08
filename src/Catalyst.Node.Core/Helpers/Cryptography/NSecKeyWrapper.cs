@@ -1,3 +1,5 @@
+using NSec.Cryptography;
+
 namespace Catalyst.Node.Core.Helpers.Cryptography
 {
     public class NSecKeyWrapper : IKey{
