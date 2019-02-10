@@ -53,7 +53,6 @@ namespace Catalyst.Node.Core
         public DfsSettings DfsSettings { get; internal set; }
         public PeerSettings PeerSettings { get; internal set; }
         public WalletSettings WalletSettings { get; internal set; }
-        public GossipSettings GossipSettings { get; internal set; }
         public LedgerSettings LedgerSettings { get; internal set; }
         public MempoolSettings MempoolSettings { get; internal set; }
         public ContractSettings ContractSettings { get; internal set; }
@@ -225,15 +224,6 @@ namespace Catalyst.Node.Core
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public NodeOptionsBuilder LoadGossipSettings()
-        {
-            _builderActions.Add(n => n.GossipSettings = new GossipSettings(_networkConfiguration.GetSection("Gossip")));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
         public NodeOptionsBuilder LoadConsensusSettings()
         {
             _builderActions.Add(n => n.ConsensusSettings =
@@ -325,13 +315,9 @@ namespace Catalyst.Node.Core
         {
             Guard.Argument(section, nameof(section)).NotNull();
             Type = section.GetSection("Persistence").Value;
-            Chain = section.GetSection("Paths").GetSection("Chain").Value;
-            Index = section.GetSection("Paths").GetSection("Index").Value;
         }
 
         public string Type { get; set; }
-        public string Chain { get; set; }
-        public string Index { get; set; }
     }
 
     /// <summary>
@@ -390,24 +376,6 @@ namespace Catalyst.Node.Core
         public string StorageType { get; set; }
         public ushort ConnectRetries { get; set; }
         public string IpfsVersionApi { get; set; }
-    }
-
-    /// <summary>
-    ///     Gossip settings class.
-    /// </summary>
-    public class GossipSettings
-    {
-        /// <summary>
-        ///     Set attributes
-        /// </summary>
-        /// <param name="section"></param>
-        protected internal GossipSettings(IConfiguration section)
-        {
-            Guard.Argument(section, nameof(section)).NotNull();
-            Instances = section.GetSection("instances").Value;
-        }
-
-        public string Instances { get; set; }
     }
 
     /// <summary>

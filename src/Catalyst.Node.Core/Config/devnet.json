@@ -1,11 +1,7 @@
 {
   "CatalystNodeConfiguration": {
     "Ledger": {
-      "Persistence": "Catalyst.Helpers.CouchDB",
-      "Paths": {
-        "Chain": "Chain_{0}",
-        "Index": "Index_{0}"
-      }
+      "Persistence": "Catalyst.Helpers.CouchDB"
     },
     "Consensus": {
       "nDepth": 100
@@ -18,16 +14,12 @@
       "ConnectRetries": 10,
       "IpfsVersionApi": "api/v0/"
     },
-    "Gossip": {
-      "instances": 5
-    },
     "Mempool": {
       "Type" : "redis",
       "Host" : "127.0.0.1",
       "Port" : "6379"
     },
     "Peer": {
-      "PublicKey": "sik4hfbchf948fhdgf52",
       "Network": "devnet",
       "MutualAuthentication": false,
       "AcceptInvalidCerts": false,
@@ -36,7 +28,6 @@
       "BindAddress": "127.0.0.1",
       "Port": 42069,
       "MaxConnections": 10,
-      "PingInterval": 600,
       "AddressVersion": 23,
       "Magic": 4206942,
       "Announce": true,

@@ -47,7 +47,6 @@ namespace Catalyst.Node.Core
                                         CommandOptionType.NoValue);
                                     var disableRpc = cli.Option("--disable-rpc", "disable rpc service",
                                         CommandOptionType.NoValue);
-
                                     // node override options
                                     var nodeDaemon = cli.Option("-d|--node-daemon", "Run as daemon",
                                         CommandOptionType.NoValue);
@@ -57,7 +56,6 @@ namespace Catalyst.Node.Core
                                         CommandOptionType.SingleValue);
                                     var nodeNetwork = cli.Option("-n|--node-net", "Specify network",
                                         CommandOptionType.SingleValue);
-
                                     // peer override options
                                     var peerBindAddress = cli.Option("-h|--peer-bind-address", "daemon host",
                                         CommandOptionType.SingleValue);
@@ -70,7 +68,6 @@ namespace Catalyst.Node.Core
                                     var peerPayoutAddress = cli.Option("--peer-payout-address",
                                         "Specify a payout address",
                                         CommandOptionType.SingleValue);
-
                                     // wallet override options
                                     var walletRpcIpOption = cli.Option("--wallet-ip", "Specify a data directory",
                                         CommandOptionType.SingleValue);
@@ -102,19 +99,17 @@ namespace Catalyst.Node.Core
                                                           new NodeOptionsBuilder(env, dataDir, network, platform)
                                                              .LoadPeerSettings()
                                                              .LoadDfsSettings()
-                                                             .When(() => !disableDfs.HasValue())
-                                                             .LoadGossipSettings()
-                                                             .When(() => !disableGossip.HasValue())
+                                                                 .When(() => !disableDfs.HasValue())
                                                              .LoadLedgerSettings()
-                                                             .When(() => !disableLedger.HasValue())
+                                                                 .When(() => !disableLedger.HasValue())
                                                              .LoadWalletSettings()
-                                                             .When(() => !disableWallet.HasValue())
+                                                                 .When(() => !disableWallet.HasValue())
                                                              .LoadMempoolSettings()
-                                                             .When(() => !disableMempool.HasValue())
+                                                                 .When(() => !disableMempool.HasValue())
                                                              .LoadContractSettings()
-                                                             .When(() => !disbleContract.HasValue())
+                                                                 .When(() => !disbleContract.HasValue())
                                                              .LoadConsensusSettings()
-                                                             .When(() => !disbleConsensus.HasValue())
+                                                                 .When(() => !disbleConsensus.HasValue())
                                                              .Build();
 
                                                       // override settings classes with cli params
