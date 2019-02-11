@@ -16,9 +16,9 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 
         public IPasswordReader PasswordReader { get; }
 
-        public CertificateStore(IPasswordReader passwordReader, ILogger logger)
+        public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader, ILogger logger)
         {
-            _storageFolder = Fs.GetCalalytHomeDir();
+            _storageFolder = fileSystem.GetCatalystHomeDir();
             PasswordReader = passwordReader;
             _logger = logger;
         }

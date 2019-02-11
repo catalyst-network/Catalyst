@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Cryptography;
 using Xunit;
 using Xunit.Abstractions;
@@ -32,7 +33,8 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         private readonly ITest _currentTest;
         private readonly string _currentTestName;
         private readonly ITestOutputHelper _output;
-        
+        private readonly IFileSystem _fileSystem;
+
         public CertificateStoreTests(ITestOutputHelper output)
         {
             _output = output;
@@ -40,6 +42,11 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
                                    .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
                                    .GetValue(_output) as ITest);
             _currentTestName = _currentTest.TestCase.TestMethod.Method.Name;
+            var testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, _currentTestName));
+
+            _fileSystem = Substitute.For<IFileSystem>();
+            _fileSystem.GetCatalystHomeDir().Returns(testDirectory);
+
             _logger = Substitute.For<ILogger>();
             _passwordReader = Substitute.For<IPasswordReader>();
         }
@@ -58,7 +65,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         }
 
         [Fact]
-        public void CertificateStoreCanReadAndWriteCertFiles_WithoutPassword_WithouthAskingPassword()
+        public void CertificateStoreCanReadAndWriteCertFiles_WithoutPassword_WithoutAskingPassword()
         {
             Create_certificate_store();
             Ensure_no_certificate_file_exists();
@@ -75,12 +82,12 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
 
             _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(BuildSecureStringPassword());
 
-            _certificateStore = new CertificateStore(_passwordReader, _logger);
+            _certificateStore = new CertificateStore(_fileSystem, _passwordReader, _logger);
         }
 
         private void Ensure_no_certificate_file_exists()
         {
-            var dataFolder = Path.Combine(Environment.CurrentDirectory, _currentTest.DisplayName);
+            var dataFolder = Path.Combine(Environment.CurrentDirectory, _currentTestName);
             _directoryInfo = new DirectoryInfo(dataFolder);
             if(!_directoryInfo.Exists) _directoryInfo.Create();
             _directoryInfo.EnumerateFiles().Should().BeEmpty();

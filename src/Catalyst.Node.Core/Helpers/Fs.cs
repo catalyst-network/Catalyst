@@ -5,7 +5,11 @@ using Dawn;
 
 namespace Catalyst.Node.Core.Helpers
 {
-    public static class Fs
+    public interface IFileSystem {
+        DirectoryInfo GetCatalystHomeDir();
+    }
+
+    public class Fs : IFileSystem
     {
         public const string CatalystSubfolder = ".Catalyst";
         
@@ -15,7 +19,7 @@ namespace Catalyst.Node.Core.Helpers
             return homePath;
         }
 
-        public static DirectoryInfo GetCalalytHomeDir()
+        public DirectoryInfo GetCatalystHomeDir()
         {
             var path = Path.Combine(GetUserHomeDir(), CatalystSubfolder);
             return new DirectoryInfo(path);
