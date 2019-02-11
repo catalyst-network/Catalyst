@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core
                                                       // override or get default data dir
                                                       var dataDir = nodeDataDir.Value() != null
                                                                         ? nodeDataDir.Value()
-                                                                        : $"/{Fs.GetUserHomeDir()}/.Catalyst";
+                                                                        : Fs.GetCalalytHomeDir().ToString();
 
                                                       // override or get default nv
                                                       var env = nodeEnv.Value() != null
