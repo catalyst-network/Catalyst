@@ -14,6 +14,7 @@ using Catalyst.Node.Core.Modules.Gossip;
 using Catalyst.Node.Core.Modules.Ledger;
 using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Node.Core.Modules.P2P;
+using Catalyst.Node.Core.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
@@ -59,15 +60,6 @@ namespace Catalyst.Node.Core
         public KernelBuilder WithDfsModule()
         {
             _moduleLoader.Add(n => n.DfsService = _containerBuilder.RegisterModule(new DfsModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithPeerModule()
-        {
-            _moduleLoader.Add(n => n.P2PService = _containerBuilder.RegisterModule(new PeerModule()));
             return this;
         }
 

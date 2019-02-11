@@ -14,6 +14,7 @@ using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Messages;
+using Catalyst.Node.Core.P2P;
 using Dawn;
 using DnsClient.Protocol;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
@@ -40,15 +41,6 @@ namespace Catalyst.Node.Core
                 new MessageQueueManager(),
                 Kernel.NodeIdentity
             );
-
-            //            var server = new ServerBuilder()
-            //                .UseTcp(kernel.NodeOptions.PeerSettings.Port)
-            //                .SetMaximumConnections(kernel.NodeOptions.PeerSettings.MaxConnections)
-            //                .UseUdp(kernel.NodeOptions.PeerSettings.Port)
-            //                .RegisterPacketHandlerModule<DefaultPacketHandlerModule>()
-            //                .UseProtobufNet()
-            //                .Build();
-            //            server.Start();
 
             Task.Run(async () =>
                          await PeerManager.InboundConnectionListener(
@@ -110,6 +102,8 @@ namespace Catalyst.Node.Core
         ///     Otherwise the return value is the return equivalent to FindNode()
         /// </summary>
         /// <param name="k"></param>
+        /// <param name="queryingNode"></param>
+        /// <param name="targetNode"></param>
         /// <returns></returns>
         List<IPeerIdentifier> IP2P.FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
         {

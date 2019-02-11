@@ -17,4 +17,7 @@
   <ItemGroup>
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP.UnitTests\RLPTests.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\Util" />
+  </ItemGroup>
 </Project>
