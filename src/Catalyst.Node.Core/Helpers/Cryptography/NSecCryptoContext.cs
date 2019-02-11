@@ -16,11 +16,16 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         public byte[] Sign (IKey key, ReadOnlySpan<byte> data)
         {
             Key realKey = key.GetNSecFormatKey();
-            return Sign(realKey, data);
-            
-        }
-        private byte[] Sign(Key realKey, ReadOnlySpan<byte> data){
             return algorithm.Sign(realKey, new ReadOnlySpan<byte>());
         }
+
+        public bool Verify(IPublicKey key, ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature)
+        {
+            PublicKey realKey = key.GetNSecFormatPublicKey();
+            return algorithm.Verify(realKey, data, signature);
+
+        }
+        
+        
     }
 }

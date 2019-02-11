@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>  
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Title>Catalyst Node</Title>
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
     <PackageDescription>Catalyst Core Node</PackageDescription>
@@ -51,7 +51,21 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="Helpers\RLP\RLPItem.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="Helpers\RLP\RLPStringFormatter.cs" />
     <Compile Include="..\..\submodules\nsec\src\Cryptography\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="..\..\submodules\nsec\src\Interop\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Error.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>"..\..\submodules\nsec\src\Cryptography\Error.resx"</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="..\..\submodules\nsec\src\Cryptography\Error.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>"Error.cs"</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="Config\*.json">
