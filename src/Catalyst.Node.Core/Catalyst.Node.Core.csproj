@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>  
     <Title>Catalyst Node</Title>
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
     <PackageDescription>Catalyst Core Node</PackageDescription>
@@ -27,6 +27,10 @@
     <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
     <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
+    <!--NSec Dependencies-->
+    <PackageReference Include="libsodium" Version="[1.0.17]" />
+    <PackageReference Include="System.Memory" Version="4.5.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
@@ -50,21 +54,72 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="Helpers\RLP\RLPCollection.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="Helpers\RLP\RLPItem.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="Helpers\RLP\RLPStringFormatter.cs" />
-    <Compile Include="..\..\submodules\nsec\src\Cryptography\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="..\..\submodules\nsec\src\Interop\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\AeadAlgorithm.cs" Link="Helpers\NSec\Cryptography\AeadAlgorithm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Aes256Gcm.cs" Link="Helpers\NSec\Cryptography\Aes256Gcm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Algorithm.cs" Link="Helpers\NSec\Cryptography\Algorithm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Blake2b.cs" Link="Helpers\NSec\Cryptography\Blake2b.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Blake2bMac.cs" Link="Helpers\NSec\Cryptography\Blake2bMac.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Buffers\SecureMemoryManager.cs" Link="Helpers\NSec\Cryptography\Buffer\SecureMemoryManager.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Buffers\SecureMemoryPool.cs" Link="Helpers\NSec\Cryptography\Buffer\SecureMemoryPool.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\ChaCha20Poly1305.cs" Link="Helpers\NSec\Cryptography\ChaCha20Poly1305.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\CryptographicOperations.cs" Link="Helpers\NSec\Cryptography\CryptographicOperations.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Ed25519.cs" Link="Helpers\NSec\Cryptography\Ed25519.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Error.cs" Link="Helpers\NSec\Cryptography\Error.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\Armor.cs" Link="Helpers\NSec\Cryptography\Formatting\Armor.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\Ed25519PrivateKeyFormatter.cs" Link="Helpers\NSec\Cryptography\Formatting\Ed25519PrivateKeyFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\Ed25519PublicKeyFormatter.cs" Link="Helpers\NSec\Cryptography\Formatting\Ed25519PublicKeyFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\NSecKeyFormatter.cs" Link="Helpers\NSec\Cryptography\Formatting\NSecKeyFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\PrivateKeyFormatter.cs" Link="Helpers\NSec\Cryptography\Formatting\PrivateKeyFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\PublicKeyFormatter.cs" Link="Helpers\NSec\Cryptography\Formatting\PublicKeyFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\RawKeyFormatter.cs" Link="Helpers\NSec\Cryptography\Formatting\RawKeyFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\X25519PrivateKeyFormatter.cs" Link="Helpers\NSec\Cryptography\Formatting\X25519PrivateKeyFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Formatting\X25519PublicKeyFormatter.cs" Link="Helpers\NSec\Cryptography\Formatting\X25519PublicKeyFormatter.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\HashAlgorithm.cs" Link="Helpers\NSec\Cryptography\HashAlgorithm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\HkdfSha256.cs" Link="Helpers\NSec\Cryptography\HkdfSha256.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\HkdfSha512.cs" Link="Helpers\NSec\Cryptography\HkdfSha512.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\HmacSha256.cs" Link="Helpers\NSec\Cryptography\HmacSha256.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\HmacSha512.cs" Link="Helpers\NSec\Cryptography\HmacSha512.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\IncrementalHash.cs" Link="Helpers\NSec\Cryptography\IncrementalHash.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\IncrementalMac.cs" Link="Helpers\NSec\Cryptography\IncrementalMac.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Key.cs" Link="Helpers\NSec\Cryptography\Key.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\KeyAgreementAlgorithm.cs" Link="Helpers\NSec\Cryptography\KeyAgreementAlgorithm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\KeyBlobFormat.cs" Link="Helpers\NSec\Cryptography\KeyBlobFormat.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\KeyCreationParameters.cs" Link="Helpers\NSec\Cryptography\KeyCreationParameters.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\KeyDerivationAlgorithm.cs" Link="Helpers\NSec\Cryptography\KeyDerivationAlgorithm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\KeyExportPolicies.cs" Link="Helpers\NSec\Cryptography\KeyExportPolicies.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\MacAlgorithm.cs" Link="Helpers\NSec\Cryptography\MacAlgorithm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Nonce.cs" Link="Helpers\NSec\Cryptography\Nonce.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\PublicKey.cs" Link="Helpers\NSec\Cryptography\PublicKey.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\RandomGenerator.cs" Link="Helpers\NSec\Cryptography\RandomGenerator.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Sha256.cs" Link="Helpers\NSec\Cryptography\Sha256.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Sha512.cs" Link="Helpers\NSec\Cryptography\Sha512.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\SharedSecret.cs" Link="Helpers\NSec\Cryptography\SharedSecret.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\SharedSecretCreationParameters.cs" Link="Helpers\NSec\Cryptography\SharedSecretCreationParameters.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\SignatureAlgorithm.cs" Link="Helpers\NSec\Cryptography\SignatureAlgorithm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\Sodium.cs" Link="Helpers\NSec\Cryptography\Sodium.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Cryptography\X25519.cs" Link="Helpers\NSec\Cryptography\X25519.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Aes256Gcm.cs" Link="Helpers\NSec\Interop\Interop.Aes256Gcm.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Argon2i.cs" Link="Helpers\NSec\Interop\Interop.Argon2i.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Blake2b.cs" Link="Helpers\NSec\Interop\Interop.Blake2b.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.ChaCha20Poly1305.cs" Link="Helpers\NSec\Interop\Interop.ChaCha20Poly1305.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Core.cs" Link="Helpers\NSec\Interop\Interop.Core.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Ed25519.cs" Link="Helpers\NSec\Interop\Interop.Ed25519.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.HmacSha256.cs" Link="Helpers\NSec\Interop\Interop.HmacSha256.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.HmacSha512.cs" Link="Helpers\NSec\Interop\Interop.HmacSha512.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Libraries.cs" Link="Helpers\NSec\Interop\Interop.Libraries.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Nacl.XSalsa20Poly1305.cs" Link="Helpers\NSec\Interop\Interop.Nacl.XSalsa20Poly1305.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.PublicKeyBytes.cs" Link="Helpers\NSec\Interop\Interop.PublicKeyBytes.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Random.cs" Link="Helpers\NSec\Interop\Interop.Random.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Scrypt.cs" Link="Helpers\NSec\Interop\Interop.Scrypt.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Sha256.cs" Link="Helpers\NSec\Interop\Interop.Sha256.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Sha512.cs" Link="Helpers\NSec\Interop\Interop.Sha512.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Utils.cs" Link="Helpers\NSec\Interop\Interop.Utils.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Version.cs" Link="Helpers\NSec\Interop\Interop.Version.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.X25519.cs" Link="Helpers\NSec\Interop\Interop.X25519.cs" />
+    <Compile Include="..\..\submodules\nsec\src\Interop\Interop.XChaCha20Poly1305.cs" Link="Helpers\NSec\Interop\Interop.XChaCha20Poly1305.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Error.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>"..\..\submodules\nsec\src\Cryptography\Error.resx"</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="..\..\submodules\nsec\src\Cryptography\Error.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>"Error.cs"</LastGenOutput>
+    <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx">
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +130,9 @@
   <ItemGroup>
     <Folder Include="Helpers\Hex\HexConverters\Extensions\" />
     <Folder Include="Helpers\Hex\HexTypes\" />
+    <Folder Include="Helpers\NSec\Cryptography\Buffer\" />
+    <Folder Include="Helpers\NSec\Cryptography\Formatting\" />
+    <Folder Include="Helpers\NSec\Interop\" />
     <Folder Include="Helpers\RLP\" />
   </ItemGroup>
 </Project>

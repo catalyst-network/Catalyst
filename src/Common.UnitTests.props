@@ -1,7 +1,10 @@
 <Project>
-    <PropertyGroup>
-        <IsTestProject>True</IsTestProject>
-        <IsPackable>false</IsPackable>
-    </PropertyGroup>
-    <Import Project="./Common.Projects.props" />
+  <PropertyGroup>
+    <IsTestProject>True</IsTestProject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <Import Project="./Common.Projects.props" />
 </Project>
