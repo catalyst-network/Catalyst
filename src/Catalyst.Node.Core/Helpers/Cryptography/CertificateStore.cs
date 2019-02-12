@@ -4,13 +4,14 @@ using System.Net;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-//using Org.BouncyCastle.OpenSsl;
+using Dawn;
 using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography
 {
     public class CertificateStore : ICertificateStore
     {
+        private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
 
         private readonly ILogger _logger;
@@ -24,7 +25,17 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             _logger = logger;
         }
 
-        public void Save(X509Certificate2 certificate, string fileName, SecureString password)
+        public X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
+        {
+            using (var password = PasswordReader.ReadSecurePassword())
+            {
+                var certificate = BuildSelfSignedServerCertificate(password, commonName);
+                Save(certificate, filePath, password);
+                return certificate;
+            }
+        }
+
+        private void Save(X509Certificate2 certificate, string fileName, SecureString password)
         {
             var targetDirInfo = _storageFolder;
             if(!targetDirInfo.Exists) targetDirInfo.Create();
@@ -36,20 +47,6 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
                                                         fullPathToCertificate);
             _logger.Warning("Please make sure this certificate is added to " +
                                 "your local trusted root store to remove warnings.", fullPathToCertificate);
-        }
-
-        public void Save(byte[] rawCert, string fileName, SecureString password)
-        {
-            var targetDirInfo = _storageFolder;
-            if(!targetDirInfo.Exists) targetDirInfo.Create();
-            var certificateInBytes = rawCert;
-            string fullPathToCertificate = Path.Combine(targetDirInfo.FullName, fileName);
-            File.WriteAllBytes(fullPathToCertificate, certificateInBytes);
-
-            _logger.Warning("A certificate file has been created at {0}.", 
-                fullPathToCertificate);
-            _logger.Warning("Please make sure this certificate is added to " +
-                            "your local trusted root store to remove warnings.", fullPathToCertificate);
         }
 
         public bool TryGet(string fileName, out X509Certificate2 certificate)
@@ -95,21 +92,20 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             catch (Exception exception)
             {
                 _logger.Error(exception, "Failed to read certificate {0}", fullPath);
-                //return false;
-                throw;
+                return false;
             }
             return true;
         }
 
-        public X509Certificate2 BuildSelfSignedServerCertificate(SecureString password)
+        private X509Certificate2 BuildSelfSignedServerCertificate(SecureString password, string commonName = LocalHost)
         {
             var sanBuilder = new SubjectAlternativeNameBuilder();
             sanBuilder.AddIpAddress(IPAddress.Loopback);
             sanBuilder.AddIpAddress(IPAddress.IPv6Loopback);
-            sanBuilder.AddDnsName("localhost");
+            sanBuilder.AddDnsName(LocalHost);
             sanBuilder.AddDnsName(Environment.MachineName);
 
-            var distinguishedName = new X500DistinguishedName($"CN=localhost");
+            var distinguishedName = new X500DistinguishedName($"CN={commonName}");
 
             using (RSA rsa = RSA.Create(2048))
             {
@@ -125,8 +121,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
                     new X509EnhancedKeyUsageExtension(
                         new OidCollection
                         {
-                            //new Oid("1.3.6.1.5.5.7.3.1"), //server authentication
-                            new Oid("1.3.6.1.5.5.7.3.2")  //client authentication
+                            new Oid("1.3.6.1.5.5.7.3.1"), //server authentication
                         }, false));
 
                 request.CertificateExtensions.Add(sanBuilder.Build());

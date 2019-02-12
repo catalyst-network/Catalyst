@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Cryptography;
 using Xunit;
@@ -14,7 +15,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
 {
-    public class CertificateStoreTests
+    public class CertificateStoreTests : IDisposable
     {
         private string _fileWithPassName;
         private string _fileWithoutPassName;
@@ -52,26 +53,16 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         }
 
         [Fact]
-        public void CertificateStoreCanReadAndWriteCertFiles_WithPassword_ByAskingPassword()
+        public void CertificateStore_CanReadAndWriteCertFiles_WithPassword()
         {
+            //TODO: cf. issue <see cref="https://github.com/catalyst-network/Catalyst.Node/issues/2" />
+            if (Environment.OSVersion.Platform == PlatformID.Unix) return;
+
             Create_certificate_store();
             Ensure_no_certificate_file_exists();
             Create_a_certificate_file_with_password();
-            
             Read_the_certificate_file_with_password();
-            
-            The_store_should_ask_for_a_password();
-            The_certificate_from_file_should_have_the_correct_thumbprint();
-        }
-
-        [Fact]
-        public void CertificateStoreCanReadAndWriteCertFiles_WithoutPassword_WithoutAskingPassword()
-        {
-            Create_certificate_store();
-            Ensure_no_certificate_file_exists();
-            Create_a_certificate_file_without_password();
-            Read_the_certificate_file_without_password();
-            The_store_should_not_ask_for_a_password();
+            The_store_should_have_asked_for_a_password_on_creation_and_loading();
             The_certificate_from_file_should_have_the_correct_thumbprint();
         }
 
@@ -94,9 +85,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
             _directoryInfo.EnumerateFiles().Should().BeEmpty();
 
             _fileWithPassName = "test-with-pass.pfx";
-            _fileWithoutPassName = "test-without-pass.pfx";
             _certificateStore.TryGet(_fileWithPassName, out var _).Should().BeFalse();
-            _certificateStore.TryGet(_fileWithoutPassName, out var _).Should().BeFalse();
         }
 
         private SecureString BuildSecureStringPassword()
@@ -109,34 +98,13 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
 
         private void Create_a_certificate_file_with_password()
         {
-            using (var password = BuildSecureStringPassword())
-            {
-                //_createdCertificate = _certificateStore.BuildSelfSignedServerCertificate(password);
-                var rawCert = BouncyCertificateGenerator.GenerateCertificate(password);
-                _certificateStore.Save(rawCert, _fileWithPassName, password);
-            }
+            _passwordReader.ReadSecurePassword().Returns(_ => BuildSecureStringPassword());
+            _createdCertificate = _certificateStore.CreateAndSaveSelfSignedCertificate(_fileWithPassName);
         }
-
-        private void Create_a_certificate_file_without_password()
+        
+        private void The_store_should_have_asked_for_a_password_on_creation_and_loading()
         {
-            _createdCertificate = _certificateStore.BuildSelfSignedServerCertificate(new SecureString());
-            _certificateStore.Save(_createdCertificate, _fileWithoutPassName, new SecureString());
-        }
-
-        private void The_store_should_ask_for_a_password()
-        {
-            _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePassword(null);
-        }
-
-        private void The_store_should_not_ask_for_a_password()
-        {
-            _passwordReader.DidNotReceiveWithAnyArgs().ReadSecurePassword(null);
-        }
-
-        private void Read_the_certificate_file_without_password()
-        {
-            _retrievedCertificate = null;
-            _certificateStore.TryGet(_fileWithoutPassName, out _retrievedCertificate).Should().BeTrue();
+            _passwordReader.ReceivedWithAnyArgs(2).ReadSecurePassword(null);
         }
 
         private void Read_the_certificate_file_with_password()
@@ -149,6 +117,12 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         {
             _retrievedCertificate.Should().NotBeNull();
             _retrievedCertificate.Thumbprint.Should().Be(_createdCertificate.Thumbprint);
+        }
+
+        public void Dispose()
+        {
+            _createdCertificate?.Dispose();
+            _retrievedCertificate?.Dispose();
         }
     }
 }

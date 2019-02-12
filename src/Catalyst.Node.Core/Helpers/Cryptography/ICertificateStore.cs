@@ -7,8 +7,6 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
     {
         IPasswordReader PasswordReader { get; }
         bool TryGet(string fileName, out X509Certificate2 certificate);
-
-        X509Certificate2 BuildSelfSignedServerCertificate(SecureString password);
-        void Save(X509Certificate2 certificate, string fileName, SecureString password);
+        X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = null);
     }
 }
