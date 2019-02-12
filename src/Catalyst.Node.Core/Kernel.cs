@@ -49,8 +49,7 @@ namespace Catalyst.Node.Core
 
             // register components from config file
             _containerBuilder.RegisterModule(new ConfigurationModule(new ConfigurationBuilder()
-                                                                    .AddJsonFile(
-                                                                         $"{nodeOptions.DataDir}/components.json")
+                                                                    .AddJsonFile(Path.Combine(nodeOptions.DataDir, "components.json"))
                                                                     .Build()));
         }
 
@@ -217,7 +216,7 @@ namespace Catalyst.Node.Core
                     {
                         try
                         {
-                            RunConfigStartUp(nodeOptions);
+                            RunConfigStartUp(nodeOptions.DataDir, Core.NodeOptions.Networks.devnet);
                         }
                         catch (Exception e)
                         {
@@ -242,30 +241,21 @@ namespace Catalyst.Node.Core
 
         /// <summary>
         /// </summary>
-        /// <param name="nodeOptions"></param>
+        /// <param name="dataDir">Home catalyst directory</param>
+        /// <param name="networks">Network on which to run the node</param>
         /// <returns></returns>
-        private static void RunConfigStartUp(NodeOptions nodeOptions)
+        public static void RunConfigStartUp(string dataDir, NodeOptions.Networks networks)
         {
-            Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
+            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             // check supplied data dir exists
-            if (!Fs.DataDirCheck(nodeOptions.DataDir))
+            if (!Fs.DirectoryExists(dataDir))
             {
                 try
                 {
                     // not there make one
-                    Fs.CreateSystemFolder(nodeOptions.DataDir);
+                    Fs.CreateSystemFolder(dataDir);
                 }
-                catch (ArgumentNullException e)
-                {
-                    LogException.Message(e.Message, e);
-                    throw;
-                }
-                catch (ArgumentException e)
-                {
-                    LogException.Message(e.Message, e);
-                    throw;
-                }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     LogException.Message(e.Message, e);
                     throw;
@@ -274,8 +264,8 @@ namespace Catalyst.Node.Core
                 try
                 {
                     // make config with new system folder
-                    Fs.CopySkeletonConfigs(nodeOptions.DataDir,
-                        Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network));
+                    Fs.CopySkeletonConfigs(dataDir,
+                        Enum.GetName(typeof(NodeOptions.Networks), networks));
                 }
                 catch (ArgumentNullException e)
                 {
@@ -296,13 +286,13 @@ namespace Catalyst.Node.Core
             else
             {
                 // dir does exist, check config exits
-                if (!Fs.CheckConfigExists(nodeOptions.DataDir,
-                        Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network)))
+                if (!Fs.CheckConfigExists(dataDir,
+                        Enum.GetName(typeof(NodeOptions.Networks), networks)))
                     try
                     {
                         // make config with new system folder
-                        Fs.CopySkeletonConfigs(nodeOptions.DataDir,
-                            Enum.GetName(typeof(NodeOptions.Networks), nodeOptions.Network));
+                        Fs.CopySkeletonConfigs(dataDir,
+                            Enum.GetName(typeof(NodeOptions.Networks), networks));
                     }
                     catch (ArgumentNullException e)
                     {

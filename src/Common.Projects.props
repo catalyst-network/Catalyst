@@ -12,7 +12,6 @@
         <LangVersion>7.3</LangVersion>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
         <Deterministic>true</Deterministic>
-        <Optimize>true</Optimize>
         <PlatformTarget>AnyCPU</PlatformTarget>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Version)' == '' ">
@@ -23,5 +22,6 @@
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DebugType>none</DebugType>
         <DebugSymbols>False</DebugSymbols>
+        <Optimize>true</Optimize>
     </PropertyGroup>
 </Project>

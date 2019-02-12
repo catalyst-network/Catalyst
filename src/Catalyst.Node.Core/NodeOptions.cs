@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using Catalyst.Node.Core.Helpers.Network;
@@ -296,7 +297,7 @@ namespace Catalyst.Node.Core
             }
 
             return new ConfigurationBuilder()
-                  .AddJsonFile($"/{dataDir}/{networkConfigFile}")
+                  .AddJsonFile(Path.Combine(dataDir, networkConfigFile))
                   .Build()
                   .GetSection("CatalystNodeConfiguration");
         }

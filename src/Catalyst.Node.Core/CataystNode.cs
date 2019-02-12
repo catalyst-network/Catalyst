@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
+using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Cryptography;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
+using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P;
@@ -17,6 +20,7 @@ using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P;
 using Dawn;
 using DnsClient.Protocol;
+using Serilog.Core;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core
@@ -34,20 +38,32 @@ namespace Catalyst.Node.Core
         {
             Kernel = kernel;
             SeedNodes = new List<IPEndPoint>();
-            PeerManager = new PeerManager(
-                Ssl.LoadCert(Kernel.NodeOptions.PeerSettings.SslCertPassword, Kernel.NodeOptions.DataDir,
-                    Kernel.NodeOptions.PeerSettings.PfxFileName),
+
+            var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader(), Logger.None);
+            var foundCertificate = certificateStore
+               .TryGet(Kernel.NodeOptions.PeerSettings.PfxFileName, out X509Certificate2 certificate);
+
+            if (!foundCertificate) {
+                if(Environment.OSVersion.Platform == PlatformID.Unix)
+                    throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
+                                                           $"Please create a password protected certificate at {Kernel.NodeOptions.PeerSettings.PfxFileName}." +
+                                                           Environment.NewLine +
+                                                           $"cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
+                certificateStore.CreateAndSaveSelfSignedCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName);
+            }
+            
+            PeerManager = new PeerManager(certificate,
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
                 Kernel.NodeIdentity
             );
 
             Task.Run(async () =>
-                         await PeerManager.InboundConnectionListener(
-                             new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
-                                 Kernel.NodeOptions.PeerSettings.Port
-                             )
-                         )
+                 await PeerManager.InboundConnectionListener(
+                     new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
+                         Kernel.NodeOptions.PeerSettings.Port
+                     )
+                 )
             );
 
             PeerManager.AnnounceNode += Announce;
