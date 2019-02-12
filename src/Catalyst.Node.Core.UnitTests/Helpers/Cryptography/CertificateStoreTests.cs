@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.GetCatalystHomeDir().Returns(testDirectory);
 
-            _logger = Substitute.For<ILogger>();
+            _logger = Substitute.For<ILogger>();            
             _passwordReader = Substitute.For<IPasswordReader>();
         }
 
@@ -89,7 +89,8 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         {
             var dataFolder = Path.Combine(Environment.CurrentDirectory, _currentTestName);
             _directoryInfo = new DirectoryInfo(dataFolder);
-            if(!_directoryInfo.Exists) _directoryInfo.Create();
+            if(_directoryInfo.Exists) _directoryInfo.Delete(true);
+            _directoryInfo.Create();
             _directoryInfo.EnumerateFiles().Should().BeEmpty();
 
             _fileWithPassName = "test-with-pass.pfx";
@@ -110,8 +111,9 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         {
             using (var password = BuildSecureStringPassword())
             {
-                _createdCertificate = _certificateStore.BuildSelfSignedServerCertificate(password);
-                _certificateStore.Save(_createdCertificate, _fileWithPassName, password);
+                //_createdCertificate = _certificateStore.BuildSelfSignedServerCertificate(password);
+                var rawCert = BouncyCertificateGenerator.GenerateCertificate(password);
+                _certificateStore.Save(rawCert, _fileWithPassName, password);
             }
         }
 
