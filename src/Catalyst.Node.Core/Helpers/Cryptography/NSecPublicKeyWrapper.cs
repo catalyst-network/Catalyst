@@ -3,17 +3,14 @@ using NSec.Cryptography;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography
 {
-    public sealed class NSecPublicKeyWrapper : IPublicKey{
-            
-        private readonly PublicKey _key;
+    public sealed class NSecPublicKeyWrapper : KeyWrapper<PublicKey>, IPublicKey{
         
-        public NSecPublicKeyWrapper(PublicKey key){
-            _key=key;
-        }
+        public NSecPublicKeyWrapper(PublicKey key) : base(key){}
+        public NSecPublicKeyWrapper() : base(){}
         
         public PublicKey GetNSecFormatPublicKey()
         {
-            return _key;
+            return this.Key;
         }
     } 
 }

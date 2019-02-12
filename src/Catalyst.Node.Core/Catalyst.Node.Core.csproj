@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>  
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Title>Catalyst Node</Title>
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
     <PackageDescription>Catalyst Core Node</PackageDescription>
