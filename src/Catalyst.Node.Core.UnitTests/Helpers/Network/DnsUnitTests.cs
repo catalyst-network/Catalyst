@@ -4,15 +4,16 @@ using DnsClient.Protocol;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Node.UnitTests.Helpers.Network
+namespace Catalyst.Node.Core.UnitTest.Helpers.Network
 {
     public class DnsUnitTests
     {
         [Fact]
         public void MethodTest()
         {
+            Dns dns = new Dns(EndpointBuilder.BuildNewEndPoint("9.9.9.9:53"));
             var dnsQueryResponse =
-                Dns.GetTxtRecords("seed1.network.atlascity.io"); //@TODO test the list override method
+                dns.GetTxtRecords("seed1.network.atlascity.io"); //@TODO test the list override method
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
             var seedIp = answerSection.EscapedText.FirstOrDefault();
             seedIp.Should().Be("92.207.178.198:42069");

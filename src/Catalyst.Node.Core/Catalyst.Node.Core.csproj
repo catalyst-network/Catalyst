@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>  
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Title>Catalyst Node</Title>
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
     <PackageDescription>Catalyst Core Node</PackageDescription>
@@ -24,6 +24,10 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801" />
     <PackageReference Include="Dawn.Guard" Version="1.7.0" />
+    <PackageReference Include="SharpRepository.Caching.Redis" Version="2.0.2.2" />
+    <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3-prerelease" />
+    <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.1-prerelease" />
+    <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.2-prerelease" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
     <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
   </ItemGroup>

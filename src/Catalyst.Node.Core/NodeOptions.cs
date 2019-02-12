@@ -6,6 +6,8 @@ using Catalyst.Node.Core.Helpers.Network;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using SharpRepository.Repository;
+using SharpRepository.Repository.Configuration;
 
 namespace Catalyst.Node.Core
 {
@@ -36,16 +38,17 @@ namespace Catalyst.Node.Core
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
         /// <param name="platform"></param>
-        private NodeOptions(int env, string dataDir, int network, int platform)
+        /// <param name="persistenceConfiguration"></param>
+        private NodeOptions(int env, string dataDir, int network, int platform, ISharpRepositoryConfiguration persistenceConfiguration)
         {
             Env = env;
             DataDir = dataDir;
             Network = network;
             Platform = platform;
+            PersistenceConfiguration = persistenceConfiguration;
         }
 
         private static NodeOptions Instance { get; set; }
-
         public int Env { get; set; }
         public int Network { get; set; }
         public int Platform { get; set; }
@@ -53,11 +56,11 @@ namespace Catalyst.Node.Core
         public DfsSettings DfsSettings { get; internal set; }
         public PeerSettings PeerSettings { get; internal set; }
         public WalletSettings WalletSettings { get; internal set; }
-        public GossipSettings GossipSettings { get; internal set; }
         public LedgerSettings LedgerSettings { get; internal set; }
         public MempoolSettings MempoolSettings { get; internal set; }
         public ContractSettings ContractSettings { get; internal set; }
         public ConsensusSettings ConsensusSettings { get; internal set; }
+        public readonly ISharpRepositoryConfiguration PersistenceConfiguration;
 
         /// <summary>
         ///     Get a thread safe settings singleton.
@@ -66,8 +69,9 @@ namespace Catalyst.Node.Core
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
         /// <param name="platform"></param>
+        /// <param name="persistenceConfiguration"></param>
         /// <returns></returns>
-        internal static NodeOptions GetInstance(string environment, string dataDir, string network, int platform)
+        internal static NodeOptions GetInstance(string environment, string dataDir, string network, int platform, ISharpRepositoryConfiguration persistenceConfiguration)
         {
             Guard.Argument(platform, nameof(platform)).InRange(1, 3);
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
@@ -82,7 +86,8 @@ namespace Catalyst.Node.Core
                                        (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
                                        dataDir,
                                        (int) (Networks) Enum.Parse(typeof(Networks), network),
-                                       platform
+                                       platform,
+                                       persistenceConfiguration
                                    )
                                    : throw new ArgumentException();
                 }
@@ -110,7 +115,8 @@ namespace Catalyst.Node.Core
         private readonly List<Action<NodeOptions>> _builderActions;
         private readonly IConfiguration _networkConfiguration;
         private readonly NodeOptions _nodeOptions;
-
+        private ISharpRepositoryConfiguration _persistenceConfiguration;
+        
         /// <summary>
         /// </summary>
         /// <param name="env"></param>
@@ -130,7 +136,12 @@ namespace Catalyst.Node.Core
             if (!ValidEnvPram(env) || !ValidNetworkParam(network)) throw new ArgumentException();
 
             _networkConfiguration = LoadNetworkConfig(network, dataDir);
-            _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform);
+            
+            _persistenceConfiguration = RepositoryFactory.BuildSharpRepositoryConfiguation(
+                _networkConfiguration.GetSection("PersistenceConfiguration")
+            );
+
+            _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform, _persistenceConfiguration);
         }
 
         /// <summary>
@@ -219,15 +230,6 @@ namespace Catalyst.Node.Core
         public NodeOptionsBuilder LoadLedgerSettings()
         {
             _builderActions.Add(n => n.LedgerSettings = new LedgerSettings(_networkConfiguration.GetSection("Ledger")));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public NodeOptionsBuilder LoadGossipSettings()
-        {
-            _builderActions.Add(n => n.GossipSettings = new GossipSettings(_networkConfiguration.GetSection("Gossip")));
             return this;
         }
 
@@ -325,13 +327,9 @@ namespace Catalyst.Node.Core
         {
             Guard.Argument(section, nameof(section)).NotNull();
             Type = section.GetSection("Persistence").Value;
-            Chain = section.GetSection("Paths").GetSection("Chain").Value;
-            Index = section.GetSection("Paths").GetSection("Index").Value;
         }
 
         public string Type { get; set; }
-        public string Chain { get; set; }
-        public string Index { get; set; }
     }
 
     /// <summary>
@@ -390,24 +388,6 @@ namespace Catalyst.Node.Core
         public string StorageType { get; set; }
         public ushort ConnectRetries { get; set; }
         public string IpfsVersionApi { get; set; }
-    }
-
-    /// <summary>
-    ///     Gossip settings class.
-    /// </summary>
-    public class GossipSettings
-    {
-        /// <summary>
-        ///     Set attributes
-        /// </summary>
-        /// <param name="section"></param>
-        protected internal GossipSettings(IConfiguration section)
-        {
-            Guard.Argument(section, nameof(section)).NotNull();
-            Instances = section.GetSection("instances").Value;
-        }
-
-        public string Instances { get; set; }
     }
 
     /// <summary>
@@ -477,11 +457,12 @@ namespace Catalyst.Node.Core
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             Announce = bool.Parse(section.GetSection("Announce").Value);
             SslCertPassword = section.GetSection("SslCertPassword").Value;
-            MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
+            MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
             AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
+            DnsServer = EndpointBuilder.BuildNewEndPoint(section.GetSection("DnsServer").Value);
             KnownNodes = section.GetSection("KnownNodes").GetChildren().Select(p => p.Value).ToList();
             SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
             AnnounceServer =
@@ -492,6 +473,7 @@ namespace Catalyst.Node.Core
         public string PayoutAddress { get; set; }
         public string PublicKey { get; set; }
         public bool Announce { get; set; }
+        public IPEndPoint DnsServer { get; set; }
         public IPEndPoint AnnounceServer { get; set; }
         public bool MutualAuthentication { get; set; }
         public bool AcceptInvalidCerts { get; set; }

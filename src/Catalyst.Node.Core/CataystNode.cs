@@ -12,7 +12,6 @@ using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P;
 using Dawn;
@@ -27,14 +26,16 @@ namespace Catalyst.Node.Core
 
         public readonly Kernel Kernel;
 
+        public Dns Dns;
+
         /// <summary>
         ///     Instantiates basic CatalystSystem.
         /// </summary>
         private CatalystNode(Kernel kernel)
         {
             Kernel = kernel;
-            SeedNodes = new List<IPEndPoint>();
-            PeerManager = new PeerManager(
+            Dns = new Dns(kernel.NodeOptions.PeerSettings.DnsServer);
+            ConnectionManager = new ConnectionManager(
                 Ssl.LoadCert(Kernel.NodeOptions.PeerSettings.SslCertPassword, Kernel.NodeOptions.DataDir,
                     Kernel.NodeOptions.PeerSettings.PfxFileName),
                 new PeerList(new ClientWorker()),
@@ -43,19 +44,18 @@ namespace Catalyst.Node.Core
             );
 
             Task.Run(async () =>
-                         await PeerManager.InboundConnectionListener(
+                         await ConnectionManager.InboundConnectionListener(
                              new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
                                  Kernel.NodeOptions.PeerSettings.Port
                              )
                          )
             );
 
-            PeerManager.AnnounceNode += Announce;
+            ConnectionManager.AnnounceNode += Announce;
         }
 
         private static CatalystNode Instance { get; set; }
-        private List<IPEndPoint> SeedNodes { get; }
-        private PeerManager PeerManager { get; }
+        private ConnectionManager ConnectionManager { get; }
         private bool Disposed { get; set; }
 
         /// <summary>
@@ -128,20 +128,6 @@ namespace Catalyst.Node.Core
         List<IPeerIdentifier> IP2P.PeerExchange(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="seedServers"></param>
-        internal void GetSeedNodes(List<string> seedServers)
-        {
-            var dnsQueryAnswers = Dns.GetTxtRecords(seedServers);
-            foreach (var dnsQueryAnswer in dnsQueryAnswers)
-            {
-                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                if (answerSection != null)
-                    SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
-            }
         }
 
         /// <summary>

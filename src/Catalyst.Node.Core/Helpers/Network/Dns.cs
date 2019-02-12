@@ -8,11 +8,22 @@ namespace Catalyst.Node.Core.Helpers.Network
 {
     public class Dns
     {
+        private IPEndPoint DnsServer { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dnsServer"></param>
+        public Dns(IPEndPoint dnsServer)
+        {
+            DnsServer = dnsServer;
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="hostnames"></param>
         /// <returns></returns>
-        public static IList<IDnsQueryResponse> GetTxtRecords(List<string> hostnames)
+        public IList<IDnsQueryResponse> GetTxtRecords(List<string> hostnames)
         {
             Guard.Argument(hostnames, nameof(hostnames)).NotEmpty().NotNull().DoesNotContainNull();
             var recordList = new List<IDnsQueryResponse>();
@@ -25,7 +36,7 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        public static IDnsQueryResponse GetTxtRecords(Uri hostname)
+        public IDnsQueryResponse GetTxtRecords(Uri hostname)
         {
             Guard.Argument(hostname, nameof(hostname)).NotNull().Http();
             return GetTxtRecords(hostname.Host);
@@ -35,7 +46,7 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        public static IDnsQueryResponse GetTxtRecords(string hostname)
+        public IDnsQueryResponse GetTxtRecords(string hostname)
         {
             Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
             return Query(hostname, QueryType.TXT);
@@ -45,7 +56,7 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        public static IDnsQueryResponse GetARecords(string hostname)
+        public IDnsQueryResponse GetARecords(string hostname)
         {
             Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
             return Query(hostname, QueryType.A);
@@ -56,11 +67,10 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// <param name="hostname"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static IDnsQueryResponse Query(string hostname, QueryType type)
+        private IDnsQueryResponse Query(string hostname, QueryType type)
         {
             Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
-            var endpoint = new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53); //@TODO get these from settings
-            var client = new LookupClient(endpoint);
+            var client = new LookupClient(DnsServer.Address, DnsServer.Port);
             return client.Query(hostname, type);
         }
     }
