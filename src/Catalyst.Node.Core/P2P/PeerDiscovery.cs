@@ -4,6 +4,7 @@ using System.Net;
 using Catalyst.Node.Core.Helpers.Network;
 using DnsClient.Protocol;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Configuration;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core.P2P
@@ -19,11 +20,12 @@ namespace Catalyst.Node.Core.P2P
         /// 
         /// </summary>
         /// <param name="dns"></param>
-        public PeerDiscovery(Dns dns)
+        /// <param name="repositoryConfiguration"></param>
+        public PeerDiscovery(Dns dns, ISharpRepositoryConfiguration repositoryConfiguration)
         {
             Dns = dns;
             SeedNodes = new List<IPEndPoint>();
-            _peerRepository = RepositoryFactory.GetInstance<Peer, int>("PeerRepository");
+            _peerRepository = RepositoryFactory.GetInstance<Peer, int>(repositoryConfiguration, "PeerRepository");
         }
         
         /// <summary>
