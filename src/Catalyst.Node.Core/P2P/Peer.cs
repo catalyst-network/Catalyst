@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using Catalyst.Node.Common;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
@@ -7,7 +8,7 @@ using Dawn;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public abstract class Peer : IDisposable
+    public abstract class Peer : EntityBase, IDisposable
     {
         /// <summary>
         /// </summary>

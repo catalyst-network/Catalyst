@@ -1,12 +1,5 @@
 {
   "CatalystNodeConfiguration": {
-    "Ledger": {
-      "Persistence": "Catalyst.Helpers.CouchDB",
-      "Paths": {
-        "Chain": "Chain_{0}",
-        "Index": "Index_{0}"
-      }
-    },
     "Consensus": {
       "nDepth": 100
     },
@@ -17,9 +10,6 @@
       "StorageType": "Catalyst.Helpers.Ipfs",
       "ConnectRetries": 10,
       "IpfsVersionApi": "api/v0/"
-    },
-    "Gossip": {
-      "instances": 5
     },
     "Mempool": {
       "Type" : "redis",
@@ -35,7 +25,6 @@
       "BindAddress": "127.0.0.1",
       "Port": 42069,
       "MaxConnections": 10,
-      "PingInterval": 600,
       "AddressVersion": 23,
       "Magic": 4206942,
       "Announce": true,
@@ -51,6 +40,57 @@
     "Rpc": {
       "BindAddress": "127.0.0.1",
       "Port": 42042
+    },
+    "Persistence": {
+      "sharpRepository": {
+        "repositories": {
+          "default": "inMemoryNoCaching",
+          "inMemory": {
+            "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository"
+          },
+          "mongoDb": {
+            "factory": "SharpRepository.MongoDbRepository.MongoDbConfigRepositoryFactory, SharpRepository.MongoDbRepository",
+            "connectionString": "mongodb:://127.0.0.1"
+          },
+          "inMemoryNoCaching": {
+            "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository",
+            "cachingStrategy": "none",
+            "cachingProvider": "noCachingProvider"
+          }
+        },
+        "cachingProviders": {
+          "default": "inMemoryProvider",
+          "inMemoryProvider": {
+            "factory": "SharpRepository.Repository.Caching.InMemoryConfigCachingProviderFactory, SharpRepository.Repository"
+          },
+          "noCachingProvider": {
+            "factory": "SharpRepository.Repository.Caching.NoCachingConfigCachingProviderFactory, SharpRepository.Repository"
+          }
+        },
+        "cachingStrategies": {
+          "default": "standard",
+          "standard": {
+            "factory": "SharpRepository.Repository.Caching.StandardConfigCachingStrategyFactory, SharpRepository.Repository",
+            "generational": "true",
+            "writeThrough": "false"
+          },
+          "redisProvider": {
+            "factory": "SharpRepository.Caching.Redis.RedisConfigCachingProviderFactory, SharpRepository.Caching.Redis",
+            "host": "127.0.0.1",
+            "port": "6379",
+            "ssl": false,
+            "password": "",
+            "defaultDatabase": "0"
+          },
+          "timeout": {
+            "factory": "SharpRepository.Repository.Caching.TimeoutConfigCachingStrategyFactory, SharpRepository.Repository",
+            "timeout": "200"
+          },
+          "none": {
+            "factory": "SharpRepository.Repository.Caching.NoCachingConfigCachingStrategyFactory, SharpRepository.Repository"
+          }
+        }
+      }
     }
   }
 }

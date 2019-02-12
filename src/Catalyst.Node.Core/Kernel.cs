@@ -18,6 +18,8 @@ using Catalyst.Node.Core.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
+using SharpRepository.Ioc.Autofac;
+using SharpRepository.Repository;
 using IModuleRegistrar = Autofac.Core.Registration.IModuleRegistrar;
 
 namespace Catalyst.Node.Core
@@ -43,15 +45,22 @@ namespace Catalyst.Node.Core
 
             // get builder
             _containerBuilder = new ContainerBuilder();
-
+            
+            // register our persistence repository implementations
+            _containerBuilder.RegisterSharpRepository(_nodeOptions.PersistenceConfiguration);
+            
             // register our options object
             _containerBuilder.RegisterType<NodeOptions>();
 
             // register components from config file
-            _containerBuilder.RegisterModule(new ConfigurationModule(new ConfigurationBuilder()
-                                                                    .AddJsonFile(
-                                                                         $"{nodeOptions.DataDir}/components.json")
-                                                                    .Build()));
+            _containerBuilder.RegisterModule(
+                new ConfigurationModule(
+                    new ConfigurationBuilder()
+                       .AddJsonFile(
+                            $"{nodeOptions.DataDir}/components.json"
+                       ).Build()
+                )
+            );
         }
 
         /// <summary>
