@@ -1,8 +1,9 @@
 using System.Linq;
-using Catalyst.Node.Core.Helpers.Network;
+using System.Net;
 using DnsClient.Protocol;
 using FluentAssertions;
 using Xunit;
+using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core.UnitTest.Helpers.Network
 {
@@ -11,7 +12,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Network
         [Fact]
         public void MethodTest()
         {
-            Dns dns = new Dns(EndpointBuilder.BuildNewEndPoint("9.9.9.9:53"));
+            Dns dns = new Dns(new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53));
             var dnsQueryResponse =
                 dns.GetTxtRecords("seed1.network.atlascity.io"); //@TODO test the list override method
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
