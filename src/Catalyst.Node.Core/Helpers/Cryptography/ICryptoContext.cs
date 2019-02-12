@@ -6,7 +6,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 
         IKey GenerateKey();
 
-        //IPublicKey ImportPublicKey(ReadOnly);
+        IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob);
         
         byte[] Sign(IKey key, ReadOnlySpan<byte> data);
 
