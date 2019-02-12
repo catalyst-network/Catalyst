@@ -49,8 +49,7 @@ namespace Catalyst.Node.Core
 
             // register components from config file
             _containerBuilder.RegisterModule(new ConfigurationModule(new ConfigurationBuilder()
-                                                                    .AddJsonFile(
-                                                                         $"{nodeOptions.DataDir}/components.json")
+                                                                    .AddJsonFile(Path.Combine(nodeOptions.DataDir, "components.json"))
                                                                     .Build()));
         }
 

@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core
                     throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
                                                            $"Please create a password protected certificate at {Kernel.NodeOptions.PeerSettings.PfxFileName}." +
                                                            Environment.NewLine +
-                                                           $"cf. `https://github.com/Azure/azure-xplat-cli/wiki/Getting-Self-Signed-SSL-Certificates-(.pem-and-.pfx)` for instructions");
+                                                           $"cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
                 certificateStore.CreateAndSaveSelfSignedCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName);
             }
             
