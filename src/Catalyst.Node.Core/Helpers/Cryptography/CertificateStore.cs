@@ -27,7 +27,9 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 
         public X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
         {
-            using (var password = PasswordReader.ReadSecurePassword())
+            var promptMessage = "Catalyst Node needs to create an SSL certificate." +
+                                " Please enter a password to encrypt the certificate on disk:";
+            using (var password = PasswordReader.ReadSecurePassword(promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -68,9 +70,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
                 {
                     try
                     {
-                        using (var passwordFromConsole = tryCount == 0 
-                                     ? new SecureString()
-                                     : PasswordReader.ReadSecurePassword(passwordPromptMessage))
+                        using (var passwordFromConsole = PasswordReader.ReadSecurePassword(passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             break;

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Catalyst.Node.Core": {
+      "commandName": "Project",
+      "commandLineArgs": "--peer-public-key abcdefghijklmnopqrst --disable-wallet --disable-dfs --disable-gossip --disable-ledger -d"
+    }
+  }
+}

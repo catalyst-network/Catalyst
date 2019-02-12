@@ -18,7 +18,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
     public class CertificateStoreTests : IDisposable
     {
         private string _fileWithPassName;
-        private string _fileWithoutPassName;
         private DirectoryInfo _directoryInfo;
         private CertificateStore _certificateStore;
         private X509Certificate2 _createdCertificate;
@@ -35,6 +34,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         private readonly string _currentTestName;
         private readonly ITestOutputHelper _output;
         private readonly IFileSystem _fileSystem;
+        private SecureString _password;
 
         public CertificateStoreTests(ITestOutputHelper output)
         {
@@ -48,8 +48,18 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.GetCatalystHomeDir().Returns(testDirectory);
 
-            _logger = Substitute.For<ILogger>();            
+            _logger = Substitute.For<ILogger>();
+
             _passwordReader = Substitute.For<IPasswordReader>();
+        }
+
+
+        private SecureString BuildSecureStringPassword()
+        {
+            var secureString = new SecureString();
+            "password".ToList().ForEach(c => secureString.AppendChar(c));
+            secureString.MakeReadOnly();
+            return secureString;
         }
 
         [Fact]
@@ -70,9 +80,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         {
             var dataFolder = Path.Combine(Environment.CurrentDirectory, _currentTestName);
             _directoryInfo = new DirectoryInfo(dataFolder);
-
-            _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(BuildSecureStringPassword());
-
             _certificateStore = new CertificateStore(_fileSystem, _passwordReader, _logger);
         }
 
@@ -88,17 +95,9 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
             _certificateStore.TryGet(_fileWithPassName, out var _).Should().BeFalse();
         }
 
-        private SecureString BuildSecureStringPassword()
-        {
-            var secureString = new SecureString();
-            "password".ToList().ForEach(c => secureString.AppendChar(c));
-            secureString.MakeReadOnly();
-            return secureString;
-        }
-
         private void Create_a_certificate_file_with_password()
         {
-            _passwordReader.ReadSecurePassword().Returns(_ => BuildSecureStringPassword());
+            _passwordReader.ReadSecurePassword().Returns(BuildSecureStringPassword());
             _createdCertificate = _certificateStore.CreateAndSaveSelfSignedCertificate(_fileWithPassName);
         }
         
@@ -109,6 +108,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
 
         private void Read_the_certificate_file_with_password()
         {
+            _passwordReader.ReadSecurePassword().Returns(BuildSecureStringPassword());
             _retrievedCertificate = null;
             _certificateStore.TryGet(_fileWithPassName, out _retrievedCertificate).Should().BeTrue();
         }
@@ -123,6 +123,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         {
             _createdCertificate?.Dispose();
             _retrievedCertificate?.Dispose();
+            _password?.Dispose();
         }
     }
 }

@@ -53,25 +53,27 @@ namespace Catalyst.Node.Core.Helpers
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
         /// <param name="configDir"></param>
-        /// <param name="modulesFiles"></param>
+        /// <param name="modulesFile"></param>
         /// <returns></returns>
         public static void CopySkeletonConfigs(string dataDir,
             string network,
             string configDir = "Config",
-            string modulesFiles = "components.json")
+            string modulesFile = "components.json")
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(configDir, nameof(configDir)).NotNull().NotEmpty().NotWhiteSpace();
-            Guard.Argument(modulesFiles, nameof(modulesFiles)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(modulesFile, nameof(modulesFile)).NotNull().NotEmpty().NotWhiteSpace();
             try
             {
-                var sourceFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configDir, modulesFiles);
-                File.Copy(sourceFolder, dataDir);
+                var sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configDir, modulesFile);
+                var targetFile = Path.Combine(dataDir, modulesFile);
+                File.Copy(sourceFile, targetFile);
 
                 var filename = network + ".json";
-                var sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configDir, filename);
-                File.Copy(sourceFile, dataDir);
+                sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configDir, filename);
+                targetFile = Path.Combine(dataDir, filename);
+                File.Copy(sourceFile, targetFile);
             }
             catch (Exception e)
             {
