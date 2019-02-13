@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Shell;
 using Catalyst.Node.Core.Helpers.Logger;
@@ -460,13 +459,12 @@ namespace Catalyst.Node.Core.Helpers.Shell
             return true;
         }
 
-        /// <inheritdoc />
         /// <summary>
         ///     Parses flags passed with commands.
         /// </summary>
         /// <param name="args"></param>
         /// <param name="regExPattern"></param>
-        protected string ParseCmdArgs(string[] args, string regExPattern)
+        private string ParseCmdArgs(string[] args, string regExPattern)
         {
             string argValue = null;
             for (var i = 0; i < args.Length; i++)
@@ -484,13 +482,11 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected bool OnBoot()
+        private bool OnBoot()
         {
 #if DEBUG
             //@TODO put this in a start node local function
             var assembly = Assembly.LoadFile(@"../../Catalyst.Node/bin/**/CatalystSystem.dll");
-
-            //         var atlasSystem =  CatalystSystem.GetInstance(new NodeOptions());
 #endif
             return true;
         }

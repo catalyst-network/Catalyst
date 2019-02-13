@@ -1,0 +1,5 @@
+seed1.network.devdns.local  TXT     172.26.0.101:42069
+seed2.network.devdns.local  TXT     172.26.0.102:42069
+seed3.network.devdns.local  TXT     172.26.0.103:42069
+seed4.network.devdns.local  TXT     172.26.0.104:42069
+seed5.network.devdns.local  TXT     172.26.0.105:42069
