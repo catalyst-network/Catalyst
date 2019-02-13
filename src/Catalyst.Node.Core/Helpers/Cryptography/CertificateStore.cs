@@ -4,7 +4,6 @@ using System.Net;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using Dawn;
 using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
@@ -11,14 +10,12 @@ using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Cryptography;
 using Catalyst.Node.Core.Helpers.Logger;
-using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P;
 using Dawn;
-using DnsClient.Protocol;
 using Serilog.Core;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 

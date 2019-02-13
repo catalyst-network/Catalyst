@@ -137,7 +137,7 @@ namespace Catalyst.Node.Core
             if (!ValidEnvPram(env) || !ValidNetworkParam(network)) throw new ArgumentException();
 
             _networkConfiguration = LoadNetworkConfig(network, dataDir);
-            
+
             _persistenceConfiguration = RepositoryFactory.BuildSharpRepositoryConfiguation(
                 _networkConfiguration.GetSection("PersistenceConfiguration")
             );
@@ -285,7 +285,7 @@ namespace Catalyst.Node.Core
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
         /// <returns></returns>
-        private IConfiguration LoadNetworkConfig(string network, string dataDir)
+        public IConfiguration LoadNetworkConfig(string network, string dataDir)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
