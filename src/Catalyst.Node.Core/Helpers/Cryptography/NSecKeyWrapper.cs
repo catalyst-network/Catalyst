@@ -2,20 +2,25 @@ using NSec.Cryptography;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography
 {
-    public sealed class NSecKeyWrapper : KeyWrapper<Key>, IKey{
-        
+    /// <summary>
+    /// NSec specific private key wrapper
+    /// </summary>
+    public sealed class NSecKeyWrapper : IKey
+    {
 
-        public NSecKeyWrapper(Key key) : base(key){
-            
+        private readonly Key _key;
+        public NSecKeyWrapper(Key key)
+        {
+            _key = key;
         }
         public Key GetNSecFormatKey()
         {
-            return this.Key;
+            return _key;
         }
 
         public PublicKey GetNSecFormatPublicKey()
         {
-            return this.Key.PublicKey;
+            return _key.PublicKey;
         }
     } 
 }

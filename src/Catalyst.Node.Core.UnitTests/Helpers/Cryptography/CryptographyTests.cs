@@ -10,34 +10,67 @@ namespace Catalyst.Node.UnitTests.Helpers.Cryptography
 {
     public class CryptographyTests
     {
-        private readonly ITestOutputHelper output;
+        private readonly ICryptoContext _context;
 
-        public CryptographyTests(ITestOutputHelper output)
+        public CryptographyTests()
         {
-            this.output = output;
+            _context = new NSecCryptoContext();
         }
         [Fact]
-        public void TestNSecWrapperSigningVerification(){
-            ICryptoContext context = new NSecCryptoContext();
+        public void TestSigningVerification(){
             
-            IKey key = context.GenerateKey();
+            
+            IKey key = _context.GenerateKey();
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            byte[] signature = context.Sign(key, data);
-            context.Verify(key, data, signature).Should().BeTrue("signature generated with private key should verify with corresponding public key");
-
-            IKey key2 = context.GenerateKey();
-            context.Verify(key2, data, signature).Should().BeFalse("signature should not verify with incorrect key");   
+            byte[] signature = _context.Sign(key, data);
+            _context.Verify(key, data, signature).Should().BeTrue("signature generated with private key should verify with corresponding public key");
+ 
+        }
+        
+        [Fact]
+        public void TestFailureSigningVerification(){
+            
+            
+            IKey key = _context.GenerateKey();
+            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
+            byte[] signature = _context.Sign(key, data);
+            
+            IKey key2 = _context.GenerateKey();
+            _context.Verify(key2, data, signature).Should().BeFalse("signature should not verify with incorrect key");   
         }
 
         [Fact]
-        public void TestIncorrectPublicKeyImport()
+        public void TestFailurePublicKeyImport()
         {
-            ICryptoContext context = new NSecCryptoContext();
             var blob = Encoding.UTF8.GetBytes("this string is not a formatted public key");
 
-            IPublicKey publicKey = context.ImportPublicKey(blob);
-            //publicKey.Empty.Should().BeTrue();
+            IPublicKey publicKey = _context.ImportPublicKey(blob);
+            publicKey.Should().BeNull("invalid public key import should result in null value");
 
+        }
+
+        [Fact]
+        public void TestPublicKeyFormat()
+        {
+            IKey key = _context.GenerateKey();
+            byte[] blob = _context.ExportPublicKey(key);
+            
+            IPublicKey publicKey = _context.ImportPublicKey(blob);
+            publicKey.Should().NotBeNull();
+
+        }
+
+        [Fact]
+        public void TestVerifyWithImportedPublicKey()
+        {
+            IKey key = _context.GenerateKey();
+            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
+            byte[] signature = _context.Sign(key, data);
+            
+            byte[] blob = _context.ExportPublicKey(key);
+            IPublicKey importedKey = _context.ImportPublicKey(blob);
+            _context.Verify(importedKey, data, signature).Should().BeTrue("signature should verify with imported public key");
+            
         }
        
     }
