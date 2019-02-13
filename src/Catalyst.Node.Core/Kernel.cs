@@ -13,13 +13,11 @@ using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.Modules.Gossip;
 using Catalyst.Node.Core.Modules.Ledger;
 using Catalyst.Node.Core.Modules.Mempool;
-using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 using SharpRepository.Ioc.Autofac;
-using SharpRepository.Repository;
 using IModuleRegistrar = Autofac.Core.Registration.IModuleRegistrar;
 
 namespace Catalyst.Node.Core
@@ -39,9 +37,9 @@ namespace Catalyst.Node.Core
 
             // Set path to load assemblies from ** be-careful **
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
-                                                         context.LoadFromAssemblyPath(Path.Combine(
-                                                             Directory.GetCurrentDirectory(),
-                                                             $"{assembly.Name}.dll"));
+                     context.LoadFromAssemblyPath(Path.Combine(
+                         Directory.GetCurrentDirectory(),
+                         $"{assembly.Name}.dll"));
 
             // get builder
             _containerBuilder = new ContainerBuilder();
@@ -54,8 +52,8 @@ namespace Catalyst.Node.Core
 
             // register components from config file
             _containerBuilder.RegisterModule(new ConfigurationModule(new ConfigurationBuilder()
-                                                                    .AddJsonFile(Path.Combine(nodeOptions.DataDir, "components.json"))
-                                                                    .Build()));
+                    .AddJsonFile(Path.Combine(nodeOptions.DataDir, "components.json"))
+                    .Build()));
         }
 
         /// <summary>

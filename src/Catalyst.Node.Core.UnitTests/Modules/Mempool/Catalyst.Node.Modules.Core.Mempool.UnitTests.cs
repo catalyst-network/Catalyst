@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
-using Catalyst.Node.Core.Helpers;
 using Catalyst.Protocols.Transaction;
 using FluentAssertions;
 using Google.Protobuf;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Cryptography;
 using Xunit;
