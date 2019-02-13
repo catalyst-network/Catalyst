@@ -61,7 +61,7 @@ namespace Catalyst.Node.Core
                         }
                         catch (Exception e)
                         {
-                            Logger.Error("Failed to create new kernel", e);
+                            Logger.Error(e, "Failed to create new kernel");
                             throw;
                         }
                     }

@@ -160,7 +160,7 @@ namespace Catalyst.Node.Core {
             }
             catch (ArgumentNullException e)
             {
-                Logger.Error("Catalyst.Helpers.Network GetInstance", e);
+                Logger.Error(e, "Failed to build Kernel");
                 throw;
             }
 

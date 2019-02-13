@@ -147,7 +147,7 @@ namespace Catalyst.Node.Core.P2P
             }
             catch (Exception e)
             {
-                Logger.Error("AddUnidentifiedConnectionToList: TryAdd", e);
+                Logger.Error(e, "AddUnidentifiedConnectionToList: TryAdd");
                 needle.Dispose();
                 return false;
             }
@@ -162,7 +162,7 @@ namespace Catalyst.Node.Core.P2P
             catch (Exception e)
             {
                 needle.Dispose();
-                Logger.Error("AddUnidentifiedConnectionToList: Events.Raise(OnAddedUnIdentifiedConnection)", e);
+                Logger.Error(e, "AddUnidentifiedConnectionToList: Events.Raise(OnAddedUnIdentifiedConnection)");
                 return false;
             }
             finally

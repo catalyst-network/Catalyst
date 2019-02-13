@@ -45,7 +45,7 @@ namespace Catalyst.Node.Core.Helpers
             }
             catch (Exception e)
             {
-                Logger.Error($"Failed to create system folder {dataDir}", e);
+                Logger.Error(e, "Failed to create system folder {0}", dataDir);
                 throw;
             }
         }
@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.Helpers
             }
             catch (Exception e)
             {
-                Logger.Error(e.Message, e);
+                Logger.Error(e, "Failed to create skeleton configs at {0}", dataDir);
                 throw;
             }
         }

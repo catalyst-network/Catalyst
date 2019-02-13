@@ -225,7 +225,7 @@ namespace Catalyst.Node.Core.P2P
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("*** AcceptConnections Exception from ", ex);
+                    _logger.Error(ex, "*** AcceptConnections Exception from ");
                 }
         }
 

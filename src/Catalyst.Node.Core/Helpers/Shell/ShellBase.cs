@@ -244,7 +244,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 }
                 catch (SystemException ex)
                 {
-                    Logger.Error($"error: {ex}");
+                    Logger.Error(ex, "Exception raised in Shell");
                 }
             }
 

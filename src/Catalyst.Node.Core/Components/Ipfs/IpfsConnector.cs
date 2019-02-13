@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
             }
             catch (Exception e)
             {
-                Logger.Error("AddFile", e);
+                Logger.Error(e, "AddFile");
                 throw;
             }
         }
@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
             }
             catch (Exception e)
             {
-                Logger.Error("ReadAllTextAsync", e);
+                Logger.Error(e, "ReadAllTextAsync");
                 throw;
             }
         }
@@ -147,7 +147,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
             {
                 if (!IsClientConnected())
                 {
-                    Logger.Warning($"IPFS daemon not running - Trying to connect. Attempt #{retries}");
+                    Logger.Warning("IPFS daemon not running - Trying to connect. Attempt #{0}", retries);
                     "ipfs daemon".BackgroundCmd(); // invoke as extension method
                 }
                 else

@@ -13,6 +13,8 @@ namespace Catalyst.Node.Core
 {
     public static class Program
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static CatalystNode CatalystNode { get; set; }
 
         /// <summary>
@@ -176,7 +178,7 @@ namespace Catalyst.Node.Core
             }
             catch (Exception e)
             {
-                Log.Logger.Error("main app command", e);
+                Logger.Error(e, "main app command");
                 cts.Cancel();
                 CatalystNode?.Dispose();
                 return 0;

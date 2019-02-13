@@ -160,7 +160,7 @@ namespace Catalyst.Node.Core.P2P
             }
             catch (ArgumentException e)
             {
-                Logger.Error("Failed to validate Peer Id", e);
+                Logger.Error(e, "Failed to validate Peer Id");
                 return false;
             }
 

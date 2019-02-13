@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
             }
             catch (Exception e)
             {
-                _logger.Error("MessageWriteAsync", e);
+                _logger.Error(e, "MessageWriteAsync");
                 disconnectDetected = true;
                 return false;
             }
