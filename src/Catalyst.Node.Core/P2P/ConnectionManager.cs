@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
-using System.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
@@ -19,7 +18,6 @@ using Catalyst.Protocol.IPPN;
 using Dawn;
 using Org.BouncyCastle.Security;
 using Serilog;
-using Serilog.Core;
 
 namespace Catalyst.Node.Core.P2P
 {

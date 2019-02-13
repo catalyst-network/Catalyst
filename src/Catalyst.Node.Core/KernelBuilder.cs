@@ -16,6 +16,7 @@ using Catalyst.Node.Core.P2P;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 using Serilog;
+using Serilog.Events;
 using SharpRepository.Ioc.Autofac;
 
 namespace Catalyst.Node.Core {
@@ -54,8 +55,12 @@ namespace Catalyst.Node.Core {
                                                                     .AddJsonFile(Path.Combine(nodeOptions.DataDir, "components.json"))
                                                                     .Build()));
 
-            Serilog.Log.Logger = new LoggerConfiguration()
-                                .WriteTo.Console()
+            var logLevel = LogEventLevel.Information;
+            Log.Logger = new LoggerConfiguration()
+                                .WriteTo.Console(logLevel)
+                                .WriteTo.File(Path.Combine(nodeOptions.DataDir, "Catalyst.Node..log"), 
+                                     logLevel, 
+                                     rollingInterval: RollingInterval.Day)
                                 .CreateLogger();
 
             _containerBuilder.RegisterLogger();
