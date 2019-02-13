@@ -1,6 +1,5 @@
 using System;
 using Catalyst.Node.Core.Helpers.Logger;
-using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.P2P;
 using Dawn;
 

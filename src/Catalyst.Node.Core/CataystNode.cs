@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
@@ -11,15 +10,12 @@ using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Cryptography;
 using Catalyst.Node.Core.Helpers.Logger;
-using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P;
 using Dawn;
-using DnsClient.Protocol;
 using Serilog.Core;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
@@ -31,47 +27,35 @@ namespace Catalyst.Node.Core
 
         public readonly Kernel Kernel;
 
+        public Dns Dns;
+
         /// <summary>
         ///     Instantiates basic CatalystSystem.
         /// </summary>
         private CatalystNode(Kernel kernel)
         {
             Kernel = kernel;
-            SeedNodes = new List<IPEndPoint>();
-
-            var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader(), Logger.None);
-            var foundCertificate = certificateStore
-               .TryGet(Kernel.NodeOptions.PeerSettings.PfxFileName, out X509Certificate2 certificate);
-
-            if (!foundCertificate) {
-                if(Environment.OSVersion.Platform == PlatformID.Unix)
-                    throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
-                                                           $"Please create a password protected certificate at {Kernel.NodeOptions.PeerSettings.PfxFileName}." +
-                                                           Environment.NewLine +
-                                                           $"cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
-                certificateStore.CreateAndSaveSelfSignedCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName);
-            }
-            
-            PeerManager = new PeerManager(certificate,
+            Dns = new Dns(kernel.NodeOptions.PeerSettings.DnsServer);
+            ConnectionManager = new ConnectionManager(
+                GetCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
                 Kernel.NodeIdentity
             );
 
             Task.Run(async () =>
-                 await PeerManager.InboundConnectionListener(
-                     new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
-                         Kernel.NodeOptions.PeerSettings.Port
-                     )
-                 )
+                         await ConnectionManager.InboundConnectionListener(
+                             new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
+                                 Kernel.NodeOptions.PeerSettings.Port
+                             )
+                         )
             );
 
-            PeerManager.AnnounceNode += Announce;
+            ConnectionManager.AnnounceNode += Announce;
         }
 
         private static CatalystNode Instance { get; set; }
-        private List<IPEndPoint> SeedNodes { get; }
-        private PeerManager PeerManager { get; }
+        private ConnectionManager ConnectionManager { get; }
         private bool Disposed { get; set; }
 
         /// <summary>
@@ -81,6 +65,26 @@ namespace Catalyst.Node.Core
             Dispose(true);
             Log.Message("disposing catalyst node");
             GC.SuppressFinalize(this);
+        }
+
+        private X509Certificate2 GetCertificate(string pfxFilePath)
+        {
+            X509Certificate2 certificate;
+            var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader(), Logger.None);
+            var foundCertificate = certificateStore
+               .TryGet(pfxFilePath, out certificate);
+
+            if (!foundCertificate)
+            {
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
+                    throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
+                                                           $"Please create a password protected certificate at {pfxFilePath}." +
+                                                           Environment.NewLine +
+                                                           "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
+                certificate = certificateStore.CreateAndSaveSelfSignedCertificate(pfxFilePath);
+            }
+
+            return certificate;
         }
 
         /// <summary>
@@ -144,20 +148,6 @@ namespace Catalyst.Node.Core
         List<IPeerIdentifier> IP2P.PeerExchange(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="seedServers"></param>
-        internal void GetSeedNodes(List<string> seedServers)
-        {
-            var dnsQueryAnswers = Dns.GetTxtRecords(seedServers);
-            foreach (var dnsQueryAnswer in dnsQueryAnswers)
-            {
-                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                if (answerSection != null)
-                    SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
-            }
         }
 
         /// <summary>

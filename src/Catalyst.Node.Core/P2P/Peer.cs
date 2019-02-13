@@ -3,25 +3,24 @@ using System.Net;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
-using Dawn;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public abstract class Peer : IDisposable
+    public class Peer : IDisposable
     {
         /// <summary>
         /// </summary>
         /// <param name="peerIdentifier"></param>
         /// <param name="endpoint"></param>
         /// <exception cref="ArgumentException"></exception>
-        private Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
-        {
-            Guard.Argument(peerIdentifier, nameof(peerIdentifier)).NotNull();
-            Guard.Argument(EndPoint.Port, nameof(EndPoint.Port)).Min(1025).Max(123);
-            EndPoint = endpoint;
-            PeerIdentifier = peerIdentifier;
-            LastSeen = DateTimeProvider.UtcNow;
-        }
+        // public Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
+        // {
+        //     Guard.Argument(peerIdentifier, nameof(peerIdentifier)).NotNull();
+        //     Guard.Argument(EndPoint.Port, nameof(EndPoint.Port)).Min(1025).Max(123);
+        //     EndPoint = endpoint;
+        //     PeerIdentifier = peerIdentifier;
+        //     LastSeen = DateTimeProvider.UtcNow;
+        // }
 
         private int Reputation { get; set; }
         private bool Disposed { get; set; }

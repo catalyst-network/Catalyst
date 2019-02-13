@@ -15,7 +15,6 @@ using Catalyst.Node.Core.Helpers.Streams;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Listeners;
 using Catalyst.Node.Core.Messages;
-using Catalyst.Node.Core.Modules.P2P;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Protocol.IPPN;
 using Dawn;
@@ -25,7 +24,7 @@ namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
     /// </summary>
-    public class PeerManager : IDisposable
+    public class ConnectionManager : IDisposable
     {
         private readonly MessageReplyWaitManager _messageReplyManager;
         private int _activeConnections;
@@ -36,7 +35,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="peerList"></param>
         /// <param name="messageQueueManager"></param>
         /// <param name="nodeIdentity"></param>
-        public PeerManager(X509Certificate2 sslCertificate,
+        public ConnectionManager(X509Certificate2 sslCertificate,
             PeerList peerList,
             MessageQueueManager messageQueueManager,
             PeerIdentifier nodeIdentity)

@@ -9,7 +9,6 @@ using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.Modules.P2P;
 using Dawn;
 
 namespace Catalyst.Node.Core.P2P
