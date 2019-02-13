@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Shell;
 using Catalyst.Node.Core.Helpers.Logger;
