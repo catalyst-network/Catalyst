@@ -43,8 +43,7 @@ namespace Catalyst.Node.Core
                 GetCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
-                Kernel.NodeIdentity,
-                Kernel.Container.Resolve<ILogger>()
+                Kernel.NodeIdentity
             );
 
             Task.Run(async () =>

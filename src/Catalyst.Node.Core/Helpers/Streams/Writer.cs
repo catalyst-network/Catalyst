@@ -10,7 +10,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
 {
     public static class Writer
     {
-        private static ILogger _logger = Log.Logger.ForContext(typeof(Writer));
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// </summary>
@@ -28,14 +28,14 @@ namespace Catalyst.Node.Core.Helpers.Streams
             {
                 if (sslStream == null)
                 {
-                    _logger.Warning("MessageWriteAsync SSL stream is null");
+                    Logger.Warning("MessageWriteAsync SSL stream is null");
                     disconnectDetected = true;
                     return false;
                 }
 
                 var header = "";
 
-                foreach (int i in messageDescriptor) _logger.Information(i.ToString());
+                foreach (int i in messageDescriptor) Logger.Information(i.ToString());
 
                 if (data == null || data.Length < 1)
                 {
@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
             }
             catch (Exception e)
             {
-                _logger.Error(e, "MessageWriteAsync");
+                Logger.Error(e, "MessageWriteAsync");
                 disconnectDetected = true;
                 return false;
             }

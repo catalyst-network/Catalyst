@@ -29,7 +29,6 @@ namespace Catalyst.Node.Core.P2P
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ILogger _logger;
         private readonly MessageReplyWaitManager _messageReplyManager;
         private int _activeConnections;
 
@@ -42,10 +41,8 @@ namespace Catalyst.Node.Core.P2P
         public ConnectionManager(X509Certificate2 sslCertificate,
             PeerList peerList,
             MessageQueueManager messageQueueManager,
-            PeerIdentifier nodeIdentity,
-            ILogger logger)
+            PeerIdentifier nodeIdentity)
         {
-            _logger = logger;
             PeerList = peerList;
             _activeConnections = 0;
             AcceptInvalidCerts = true;
@@ -71,7 +68,7 @@ namespace Catalyst.Node.Core.P2P
         public void Dispose()
         {
             Dispose(true);
-            _logger.Verbose("disposing network class");
+            Logger.Verbose("disposing network class");
             GC.SuppressFinalize(this);
         }
 
@@ -85,7 +82,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="eventArgs"></param>
         private void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs eventArgs)
         {
-            _logger.Information("Starting Challenge Request");
+            Logger.Information("Starting Challenge Request");
 
             var challengeRequest = new PeerProtocol.Types.ChallengeRequest();
             var random = new SecureRandom();
@@ -96,7 +93,7 @@ namespace Catalyst.Node.Core.P2P
             var requestMessage = MessageFactory.RequestFactory(1, 3, eventArgs.Connection, challengeRequest);
 
             _messageReplyManager.Add(requestMessage);
-            _logger.Information("trace msg handler");
+            Logger.Information("trace msg handler");
         }
 
         /// <summary>
@@ -118,7 +115,7 @@ namespace Catalyst.Node.Core.P2P
 
                     if (!connection.IsConnected())
                     {
-                        _logger.Warning("*** Data receiver can not attach to connection");
+                        Logger.Warning("*** Data receiver can not attach to connection");
                         break;
                     }
 
@@ -141,14 +138,14 @@ namespace Catalyst.Node.Core.P2P
                         lock (MessageQueueManager._receivedMessageQueue)
                         {
                             MessageQueueManager._receivedMessageQueue.Enqueue(message);
-                            _logger.Debug("messages in queue: " + MessageQueueManager._receivedMessageQueue.Count);
+                            Logger.Debug("messages in queue: " + MessageQueueManager._receivedMessageQueue.Count);
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to receive data for connection {0}:{1}",
+                Logger.Error(e, "Failed to receive data for connection {0}:{1}",
                     connection.EndPoint.Address, connection.EndPoint.Port);
                 throw;
             }
@@ -171,16 +168,16 @@ namespace Catalyst.Node.Core.P2P
 
             //@TODO put in try catch
             Listener.Start();
-            _logger.Information("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
+            Logger.Information("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
 
             try
             {
-                _logger.Debug($"Raising {nameof(AnnounceNodeEventArgs)} for node {NodeIdentity}");
+                Logger.Debug($"Raising {nameof(AnnounceNodeEventArgs)} for node {NodeIdentity}");
                 await Events.Events.AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
             }
             catch (ArgumentNullException e)
             {
-                _logger.Error(e, "Events.Raise(AnnounceNodeEventArgs)");
+                Logger.Error(e, "Events.Raise(AnnounceNodeEventArgs)");
             }
 
             while (!Token.IsCancellationRequested)
@@ -207,7 +204,7 @@ namespace Catalyst.Node.Core.P2P
                         }
                         catch (Exception e)
                         {
-                            _logger.Error(e, "Failed to get peer connection for {0}", connection.EndPoint);
+                            Logger.Error(e, "Failed to get peer connection for {0}", connection.EndPoint);
                             DisconnectConnection(connection);
                             continue;
                         }
@@ -225,7 +222,7 @@ namespace Catalyst.Node.Core.P2P
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "*** AcceptConnections Exception from ");
+                    Logger.Error(ex, "*** AcceptConnections Exception from ");
                 }
         }
 
@@ -258,7 +255,7 @@ namespace Catalyst.Node.Core.P2P
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to build connection to {0}:{1}", ip, port);
+                Logger.Error(e, "Failed to build connection to {0}:{1}", ip, port);
             }
         }
 
@@ -344,7 +341,7 @@ namespace Catalyst.Node.Core.P2P
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to disconnect peer at {0}", connection?.EndPoint?.ToString() ?? "unknown");
+                Logger.Error(e, "Failed to disconnect peer at {0}", connection?.EndPoint?.ToString() ?? "unknown");
                 return false;
             }
             finally
