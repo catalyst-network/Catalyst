@@ -40,7 +40,7 @@ namespace Catalyst.Node.Core
             Kernel = kernel;
             Dns = new Dns(kernel.NodeOptions.PeerSettings.DnsServer);
             ConnectionManager = new ConnectionManager(
-                GetCertificate(),
+                GetCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
                 Kernel.NodeIdentity
@@ -70,21 +70,21 @@ namespace Catalyst.Node.Core
             GC.SuppressFinalize(this);
         }
 
-        private X509Certificate2 GetCertificate()
+        private X509Certificate2 GetCertificate(string pfxFilePath)
         {
             X509Certificate2 certificate;
             var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader(), Logger.None);
             var foundCertificate = certificateStore
-               .TryGet(Kernel.NodeOptions.PeerSettings.PfxFileName, out certificate);
+               .TryGet(pfxFilePath, out certificate);
 
             if (!foundCertificate)
             {
                 if (Environment.OSVersion.Platform == PlatformID.Unix)
                     throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
-                                                           $"Please create a password protected certificate at {Kernel.NodeOptions.PeerSettings.PfxFileName}." +
+                                                           $"Please create a password protected certificate at {pfxFilePath}." +
                                                            Environment.NewLine +
-                                                           $"cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
-                certificate = certificateStore.CreateAndSaveSelfSignedCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName);
+                                                           "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
+                certificate = certificateStore.CreateAndSaveSelfSignedCertificate(pfxFilePath);
             }
 
             return certificate;
