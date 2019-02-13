@@ -3,6 +3,9 @@ using NSec.Cryptography;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography
 {
+    /// <summary>
+    /// Provides NSec crypto operations on wrapped keys.
+    /// </summary>
     public sealed class NSecCryptoContext : ICryptoContext{
 
         private readonly SignatureAlgorithm _algorithm = SignatureAlgorithm.Ed25519;
@@ -16,7 +19,12 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         {
             var nsecKey = new PublicKey(_algorithm);
             bool imported = PublicKey.TryImport(_algorithm, blob, KeyBlobFormat.PkixPublicKey, out nsecKey);
-            return imported ? new NSecPublicKeyWrapper(nsecKey) : new NSecPublicKeyWrapper();
+            return imported ? new NSecPublicKeyWrapper(nsecKey) : null;
+        }
+        
+        public byte[] ExportPublicKey(IPublicKey key)
+        {
+            return key?.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey);  
         }
 
         public byte[] Sign (IKey key, ReadOnlySpan<byte> data)
