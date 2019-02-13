@@ -3,18 +3,68 @@ version: '3'
 networks:
   devNet:
   pubSubNetwork:
+  seedNet:
+    ipam:
+      config:
+        - subnet: 172.26.0.0/24
 
 services:
 
-  catalyst-node:
+  catalyst-seed-node-1:
     hostname: catalyst-node
     image: adlnode.azurecr.io/catalyst:testnet
     networks:
-      - devNet
+      seedNet:
+        ipv4_address: 172.26.0.101
+      devNet:
     depends_on:
       - catalyst-node-mempool-redis
       - catalyst-node-tracker
-
+        
+  catalyst-seed-node-2:
+    hostname: catalyst-node
+    image: adlnode.azurecr.io/catalyst:testnet
+    networks:
+      seedNet:
+        ipv4_address: 172.26.0.102
+      devNet:
+    depends_on:
+      - catalyst-node-mempool-redis
+      - catalyst-node-tracker
+      
+  catalyst-seed-node-3:
+    hostname: catalyst-node
+    image: adlnode.azurecr.io/catalyst:testnet
+    networks:
+      seedNet:
+        ipv4_address: 172.26.0.103
+      devNet:
+    depends_on:
+      - catalyst-node-mempool-redis
+      - catalyst-node-tracker
+      
+  catalyst-seed-node-4:
+    hostname: catalyst-node
+    image: adlnode.azurecr.io/catalyst:testnet
+    networks:
+      seedNet:
+        ipv4_address: 172.26.0.104
+      devNet:
+    depends_on:
+      - catalyst-node-mempool-redis
+      - catalyst-node-tracker
+      
+  catalyst-seed-node-5:
+    hostname: catalyst-node
+    image: adlnode.azurecr.io/catalyst:testnet
+    networks:
+      seedNet:
+        ipv4_address: 172.26.0.105
+      devNet:
+    depends_on:
+      - catalyst-node-mempool-redis
+      - catalyst-node-tracker    
+  
   catalyst-node-mempool-redis:
     hostname: catalyst-node-mempool-redis
     container_name: catalyst-node-mempool-redis
@@ -46,6 +96,13 @@ services:
   #      - 8080:8080
   #    image: ipfs/go-ipfs
 
+  seedDns:
+    image: samuelcolvin/dnserver
+    ports:
+      - "5053:53/udp"
+    volumes:
+      - ./devnet_dnszone.txt:/zones/zones.txt
+
   catalyst-node-tracker:
     hostname: catalyst-node-tracker
     container_name: catalyst-node-tracker
@@ -62,8 +119,6 @@ services:
     hostname: catalyst-node-tracker-pubsub-redis
     container_name: catalyst-node-tracker-pubsub-redis
     image: redis:alpine
-    ports:
-      - "6379:6379"
     networks:
       - pubSubNetwork
 

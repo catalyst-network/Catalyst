@@ -6,7 +6,7 @@
 
 <hr/>
 
-##Setup
+## Setup
 
 To get started remember to pull the associated submodules into the project
 

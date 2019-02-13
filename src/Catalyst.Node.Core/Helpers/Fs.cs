@@ -5,30 +5,27 @@ using Dawn;
 
 namespace Catalyst.Node.Core.Helpers
 {
-    public static class Fs
+    public interface IFileSystem {
+        DirectoryInfo GetCatalystHomeDir();
+    }
+
+    public class Fs : IFileSystem
     {
-        /// <summary>
-        ///     Gets current home directory.
-        /// </summary>
-        /// <returns></returns>
-        public static DirectoryInfo GetUserHomeDir()
+        public const string CatalystSubfolder = ".Catalyst";
+        
+        private static string GetUserHomeDir()
         {
-            var dir =
-                Environment.OSVersion.Platform == PlatformID.Unix || //@TODO hook this into platform detection helper.
-                Environment.OSVersion.Platform == PlatformID.MacOSX
-                    ? Environment.GetEnvironmentVariable("HOME")
-                    : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
-
-            Guard.Argument(dir, nameof(dir)).NotNull().NotEmpty();
-
-            return new DirectoryInfo(dir);
+            var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            return homePath;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="dataDir"></param>
-        /// <returns></returns>
-        public static bool DataDirCheck(string dataDir)
+        public DirectoryInfo GetCatalystHomeDir()
+        {
+            var path = Path.Combine(GetUserHomeDir(), CatalystSubfolder);
+            return new DirectoryInfo(path);
+        }
+        
+        public static bool DirectoryExists(string dataDir)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             return Directory.Exists(dataDir);
@@ -44,17 +41,7 @@ namespace Catalyst.Node.Core.Helpers
             {
                 Directory.CreateDirectory(dataDir);
             }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message(e.Message, e);
-                throw;
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message(e.Message, e);
-                throw;
-            }
-            catch (IOException e)
+            catch (Exception e)
             {
                 LogException.Message(e.Message, e);
                 throw;
@@ -66,52 +53,29 @@ namespace Catalyst.Node.Core.Helpers
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
         /// <param name="configDir"></param>
-        /// <param name="modulesFiles"></param>
+        /// <param name="modulesFile"></param>
         /// <returns></returns>
         public static void CopySkeletonConfigs(string dataDir,
             string network,
             string configDir = "Config",
-            string modulesFiles = "comonents.json")
+            string modulesFile = "components.json")
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(configDir, nameof(configDir)).NotNull().NotEmpty().NotWhiteSpace();
-            Guard.Argument(modulesFiles, nameof(modulesFiles)).NotNull().NotEmpty().NotWhiteSpace();
+            Guard.Argument(modulesFile, nameof(modulesFile)).NotNull().NotEmpty().NotWhiteSpace();
             try
             {
-                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{modulesFiles}", dataDir);
-            }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message(e.Message, e);
-                throw;
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message(e.Message, e);
-                throw;
-            }
-            catch (IOException e)
-            {
-                LogException.Message(e.Message, e);
-                throw;
-            }
+                var sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configDir, modulesFile);
+                var targetFile = Path.Combine(dataDir, modulesFile);
+                File.Copy(sourceFile, targetFile);
 
-            try
-            {
-                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}/{configDir}/{network}.json", dataDir);
+                var filename = network + ".json";
+                sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configDir, filename);
+                targetFile = Path.Combine(dataDir, filename);
+                File.Copy(sourceFile, targetFile);
             }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message(e.Message, e);
-                throw;
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message(e.Message, e);
-                throw;
-            }
-            catch (IOException e)
+            catch (Exception e)
             {
                 LogException.Message(e.Message, e);
                 throw;
@@ -119,7 +83,7 @@ namespace Catalyst.Node.Core.Helpers
         }
 
         /// <summary>
-        ///     Checks a config exists for a network in given location
+        /// Checks a config exists for a network in given location
         /// </summary>
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
@@ -128,7 +92,8 @@ namespace Catalyst.Node.Core.Helpers
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
-            return File.Exists(dataDir + "/" + network + ".json");
+            var filePath = Path.Combine(dataDir, network + ".json");
+            return File.Exists(filePath);
         }
     }
 }

@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
-using Catalyst.Node.Core.Helpers;
-using Catalyst.Protocols.Mempool;
+using Catalyst.Protocols.Transaction;
 using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
@@ -23,23 +21,23 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
             _memPool = new Core.Modules.Mempool.Mempool(_keyValueStore);
 
             _key = new Key {HashedSignature = "hashed_signature"};
-            _transaction = new Tx
+            _transaction = new StTx
                            {
                                Amount = 1,
                                Signature = "signature",
                                AddressDest = "address_dest",
                                AddressSource = "address_source",
-                               Updated = new Tx.Types.Timestamp {Nanos = 100, Seconds = 30}
+                               Updated = new StTx.Types.Timestamp {Nanos = 100, Seconds = 30}
                            };
         }
 
         private readonly Core.Modules.Mempool.Mempool _memPool;
 
         private readonly Key _key;
-        private readonly Tx _transaction;
+        private readonly StTx _transaction;
         private readonly IKeyValueStore _keyValueStore;
 
-        private void AddKeyValueStoreEntryExpectation(Key key, Tx tx)
+        private void AddKeyValueStoreEntryExpectation(Key key, StTx tx)
         {
             _keyValueStore.Get(Arg.Is<byte[]>(bytes => bytes.SequenceEqual(key.ToByteArray())))
                           .Returns(tx.ToByteArray());
@@ -62,11 +60,11 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
 
             public void Writer()
             {
-                Tx transaction;
+                StTx transaction;
                 lock (Locker)
                 {
                     var id = Thread.CurrentThread.ManagedThreadId;
-                    transaction = new Tx {Amount = (uint) id};
+                    transaction = new StTx {Amount = (uint) id};
 
                     if (FirstThreadId == null)
                     {
@@ -121,7 +119,7 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
             for (var i = 0; i < numTx; i++)
             {
                 var key = new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"};
-                var transaction = new Tx {Amount = (uint) i};
+                var transaction = new StTx {Amount = (uint) i};
                 _memPool.SaveTx(key, transaction);
                 AddKeyValueStoreEntryExpectation(key, transaction);
             }
