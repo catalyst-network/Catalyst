@@ -5,7 +5,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Core.Helpers.Logger;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.IO
 {
@@ -101,15 +101,9 @@ namespace Catalyst.Node.Core.Helpers.IO
 
                 return sslStream;
             }
-            catch (IOException e)
-            {
-                LogException.Message("CreateTlsStream: IOException", e);
-                sslStream.Dispose();
-                return null;
-            }
             catch (Exception e)
             {
-                LogException.Message("CreateTlsStream: Exception", e);
+                Log.Error("CreateTlsStream: Exception", e);
                 sslStream.Dispose();
                 return null;
             }

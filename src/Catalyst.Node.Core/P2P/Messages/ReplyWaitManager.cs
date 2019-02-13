@@ -2,16 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Node.Common.Modules.P2P.Messages;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Messages;
 using Catalyst.Node.Core.P2P;
 using Dawn;
+using Serilog;
 
 namespace Catalyst.Node.Core.Modules.P2P.Messages
 {
     internal class MessageReplyWaitManager
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly object LockObject = new object();
         private readonly Dictionary<ulong, MessageReplyWait> _internal = new Dictionary<ulong, MessageReplyWait>();
         private readonly IMessageSender _messageSender;
@@ -84,8 +86,8 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
                 {
                     if (!replyWait.IsTimeout)
                     {
-                        Log.Message(
-                            $"Timeout message attempt {{0}} for {{1}} sent to {{2}} correlation {{3}} {replyWait.Attempts} {replyWait.Message.Connection.EndPoint} {replyWait.Sent.ToLocalTime()} {replyWait.CorrelationId}");
+                        Logger.Debug("Timeout message attempt {0} for {1} sent to {2} correlation {3}",
+                        replyWait.Attempts, replyWait.Message.Connection.EndPoint, replyWait.Sent.ToLocalTime(), replyWait.CorrelationId);
                         continue;
                     }
 
@@ -98,8 +100,8 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
                     else
                     {
                         replyWait.Sent = DateTimeProvider.UtcNow;
-                        Log.Message(
-                            $"Retrying message attempt {{0}} for {{1}} sent to {{2}} correlation {{3}} {replyWait.Attempts} {replyWait.Message.Connection.EndPoint} {replyWait.Sent.ToLocalTime()} {replyWait.CorrelationId}");
+                        Logger.Debug("Retrying message attempt {0} for {1} sent to {2} correlation {3}",
+                            replyWait.Attempts, replyWait.Message.Connection.EndPoint, replyWait.Sent.ToLocalTime(), replyWait.CorrelationId);
                         _messageSender.Send(replyWait.Message.Connection, replyWait.Message.ProtoMessage);
                     }
                 }

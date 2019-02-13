@@ -4,18 +4,19 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Autofac;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Cryptography;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P;
 using Dawn;
+using Serilog;
 using Serilog.Core;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
@@ -23,6 +24,8 @@ namespace Catalyst.Node.Core
 {
     public class CatalystNode : IDisposable, IP2P
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly object Mutex = new object();
 
         public readonly Kernel Kernel;
@@ -40,7 +43,8 @@ namespace Catalyst.Node.Core
                 GetCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
-                Kernel.NodeIdentity
+                Kernel.NodeIdentity,
+                Kernel.Container.Resolve<ILogger>()
             );
 
             Task.Run(async () =>
@@ -63,14 +67,14 @@ namespace Catalyst.Node.Core
         public void Dispose()
         {
             Dispose(true);
-            Log.Message("disposing catalyst node");
+            Logger.Verbose("disposing catalyst node");
             GC.SuppressFinalize(this);
         }
 
         private X509Certificate2 GetCertificate(string pfxFilePath)
         {
             X509Certificate2 certificate;
-            var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader(), Logger.None);
+            var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader());
             var foundCertificate = certificateStore
                .TryGet(pfxFilePath, out certificate);
 
@@ -163,9 +167,9 @@ namespace Catalyst.Node.Core
             var nwStream = client.GetStream();
             var network = new byte[1];
             network[0] = 0x01;
-            Log.ByteArr(network);
+            Logger.Debug(string.Join(" ", network));
             var announcePackage = ByteUtil.Merge(network, Kernel.NodeIdentity.Id);
-            Log.ByteArr(announcePackage);
+            Logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
         }
@@ -178,11 +182,11 @@ namespace Catalyst.Node.Core
         public static CatalystNode GetInstance(Kernel kernel)
         {
             Guard.Argument(kernel, nameof(kernel)).NotNull();
-            if (Instance == null)
-                lock (Mutex)
-                {
-                    if (Instance == null) Instance = new CatalystNode(kernel);
-                }
+            if (Instance != null) return Instance;
+            lock (Mutex)
+            {
+                if (Instance == null) Instance = new CatalystNode(kernel);
+            }
 
             return Instance;
         }
@@ -197,7 +201,7 @@ namespace Catalyst.Node.Core
             if (disposing) Kernel?.Dispose();
 
             Disposed = true;
-            Log.Message("CatalystNode disposed");
+            Logger.Verbose("CatalystNode disposed");
         }
     }
 }

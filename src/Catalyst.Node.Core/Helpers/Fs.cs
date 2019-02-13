@@ -1,7 +1,7 @@
 using System;
 using System.IO;
-using Catalyst.Node.Core.Helpers.Logger;
 using Dawn;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers
 {
@@ -11,6 +11,8 @@ namespace Catalyst.Node.Core.Helpers
 
     public class Fs : IFileSystem
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public const string CatalystSubfolder = ".Catalyst";
         
         private static string GetUserHomeDir()
@@ -43,7 +45,7 @@ namespace Catalyst.Node.Core.Helpers
             }
             catch (Exception e)
             {
-                LogException.Message(e.Message, e);
+                Logger.Error($"Failed to create system folder {dataDir}", e);
                 throw;
             }
         }
@@ -77,7 +79,7 @@ namespace Catalyst.Node.Core.Helpers
             }
             catch (Exception e)
             {
-                LogException.Message(e.Message, e);
+                Logger.Error(e.Message, e);
                 throw;
             }
         }

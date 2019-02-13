@@ -3,12 +3,13 @@ using System.Reflection;
 using System.Security;
 using System.Text;
 using Catalyst.Node.Common.Shell;
-using Catalyst.Node.Core.Helpers.Logger;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Shell
 {
     public abstract class ShellBase : IShell
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public virtual string Prompt => "ADS";
         protected bool ShowPrompt { private get; set; } = true;
         private static string ServiceName => "Catalyst Distributed Shell";
@@ -61,9 +62,9 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 "\tclear\n" +
                 "\texit\n";
 
-            Log.Message(normalCmds);
+            Logger.Information(normalCmds);
 
-            if (advancedCmds != "") Log.Message(advancedCmds);
+            if (advancedCmds != "") Logger.Information(advancedCmds);
             return true;
         }
 
@@ -84,7 +85,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
                     Console.Clear();
                     return true;
                 case "exit":
-                    Log.Message("exit trace");
+                    Logger.Information("exit trace");
                     return false;
                 default:
                     return CommandNotFound(args);
@@ -145,8 +146,8 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
             var sb = new StringBuilder();
             ConsoleKeyInfo key;
-            Log.Message(prompt);
-            Log.Message(": ");
+            Logger.Information(prompt);
+            Logger.Information(": ");
 
             Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -156,14 +157,14 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 if (t.IndexOf(key.KeyChar) != -1)
                 {
                     sb.Append(key.KeyChar);
-                    Log.Message('*'.ToString());
+                    Logger.Information('*'.ToString());
                 }
                 else if (key.Key == ConsoleKey.Backspace && sb.Length > 0)
                 {
                     sb.Length--;
-                    Log.Message(key.KeyChar.ToString());
-                    Log.Message(' '.ToString());
-                    Log.Message(key.KeyChar.ToString());
+                    Logger.Information(key.KeyChar.ToString());
+                    Logger.Information(' '.ToString());
+                    Logger.Information(key.KeyChar.ToString());
                 }
             } while (key.Key != ConsoleKey.Enter);
 
@@ -181,8 +182,8 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
             var securePwd = new SecureString();
             ConsoleKeyInfo key;
-            Log.Message(prompt);
-            Log.Message(": ");
+            Logger.Information(prompt);
+            Logger.Information(": ");
 
             Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -192,14 +193,14 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 if (t.IndexOf(key.KeyChar) != -1)
                 {
                     securePwd.AppendChar(key.KeyChar);
-                    Log.Message('*'.ToString());
+                    Logger.Information('*'.ToString());
                 }
                 else if (key.Key == ConsoleKey.Backspace && securePwd.Length > 0)
                 {
                     securePwd.RemoveAt(securePwd.Length - 1);
-                    Log.Message(key.KeyChar.ToString());
-                    Log.Message(' '.ToString());
-                    Log.Message(key.KeyChar.ToString());
+                    Logger.Information(key.KeyChar.ToString());
+                    Logger.Information(' '.ToString());
+                    Logger.Information(key.KeyChar.ToString());
                 }
             } while (key.Key != ConsoleKey.Enter);
 
@@ -219,14 +220,14 @@ namespace Catalyst.Node.Core.Helpers.Shell
             Console.OutputEncoding = Encoding.Unicode;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             var ver = Assembly.GetEntryAssembly().GetName().Version;
-            Log.Message($"{ServiceName} Version: {ver}");
+            Logger.Information($"{ServiceName} Version: {ver}");
 
             while (running)
             {
                 if (ShowPrompt)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkBlue;
-                    Log.Message($"{Prompt}> ");
+                    Logger.Information($"{Prompt}> ");
                 }
 
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -243,8 +244,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 }
                 catch (SystemException ex)
                 {
-                    Log.Message($"error: {ex}");
-                    Log.Message("error");
+                    Logger.Error($"error: {ex}");
                 }
             }
 
@@ -258,7 +258,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         public bool CommandNotFound(string[] args)
         {
-            Log.Message("error: command not found " + args);
+            Logger.Error("error: command not found " + args);
             return true;
         }
     }

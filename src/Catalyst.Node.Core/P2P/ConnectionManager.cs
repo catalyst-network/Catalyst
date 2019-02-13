@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Streams;
 using Catalyst.Node.Core.Helpers.Util;
@@ -19,6 +18,8 @@ using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Protocol.IPPN;
 using Dawn;
 using Org.BouncyCastle.Security;
+using Serilog;
+using Serilog.Core;
 
 namespace Catalyst.Node.Core.P2P
 {
@@ -26,6 +27,9 @@ namespace Catalyst.Node.Core.P2P
     /// </summary>
     public class ConnectionManager : IDisposable
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private readonly ILogger _logger;
         private readonly MessageReplyWaitManager _messageReplyManager;
         private int _activeConnections;
 
@@ -38,8 +42,10 @@ namespace Catalyst.Node.Core.P2P
         public ConnectionManager(X509Certificate2 sslCertificate,
             PeerList peerList,
             MessageQueueManager messageQueueManager,
-            PeerIdentifier nodeIdentity)
+            PeerIdentifier nodeIdentity,
+            ILogger logger)
         {
+            _logger = logger;
             PeerList = peerList;
             _activeConnections = 0;
             AcceptInvalidCerts = true;
@@ -65,7 +71,7 @@ namespace Catalyst.Node.Core.P2P
         public void Dispose()
         {
             Dispose(true);
-            Log.Message("disposing network class");
+            _logger.Verbose("disposing network class");
             GC.SuppressFinalize(this);
         }
 
@@ -79,7 +85,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="eventArgs"></param>
         private void AddedConnectionHandler(object sender, NewUnIdentifiedConnectionEventArgs eventArgs)
         {
-            Log.Message("Starting Challenge Request");
+            _logger.Information("Starting Challenge Request");
 
             var challengeRequest = new PeerProtocol.Types.ChallengeRequest();
             var random = new SecureRandom();
@@ -90,7 +96,7 @@ namespace Catalyst.Node.Core.P2P
             var requestMessage = MessageFactory.RequestFactory(1, 3, eventArgs.Connection, challengeRequest);
 
             _messageReplyManager.Add(requestMessage);
-            Log.Message("trace msg handler");
+            _logger.Information("trace msg handler");
         }
 
         /// <summary>
@@ -98,7 +104,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="connection"></param>
         /// <param name="cancelToken"></param>
         /// <returns></returns>
-        private async Task<bool> DataReceiver(Connection connection, CancellationToken cancelToken)
+        private async Task DataReceiver(Connection connection, CancellationToken cancelToken)
         {
             Guard.Argument(connection, nameof(connection)).NotNull();
 
@@ -112,7 +118,7 @@ namespace Catalyst.Node.Core.P2P
 
                     if (!connection.IsConnected())
                     {
-                        Log.Message("*** Data receiver can not attach to connection");
+                        _logger.Warning("*** Data receiver can not attach to connection");
                         break;
                     }
 
@@ -135,31 +141,21 @@ namespace Catalyst.Node.Core.P2P
                         lock (MessageQueueManager._receivedMessageQueue)
                         {
                             MessageQueueManager._receivedMessageQueue.Enqueue(message);
-                            Log.Message("messages in queue: " + MessageQueueManager._receivedMessageQueue.Count);
+                            _logger.Debug("messages in queue: " + MessageQueueManager._receivedMessageQueue.Count);
                         }
                     }
                 }
             }
-            catch (OperationCanceledException e)
-            {
-                LogException.Message(
-                    "*** Data receiver cancelled " + connection.EndPoint.Address + ":" + connection.EndPoint.Port +
-                    " disconnected", e);
-                throw;
-            }
             catch (Exception e)
             {
-                LogException.Message(
-                    "*** Data receiver exception " + connection.EndPoint.Address + ":" + connection.EndPoint.Port +
-                    " disconnected", e);
+                _logger.Error(e, "Failed to receive data for connection {0}:{1}",
+                    connection.EndPoint.Address, connection.EndPoint.Port);
                 throw;
             }
             finally
             {
                 await Task.Run(() => DisconnectConnection(connection), Token);
             }
-
-            return true;
         }
 
         /// <summary>
@@ -175,15 +171,16 @@ namespace Catalyst.Node.Core.P2P
 
             //@TODO put in try catch
             Listener.Start();
-            Log.Message("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
+            _logger.Information("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
 
             try
             {
+                _logger.Debug($"Raising {nameof(AnnounceNodeEventArgs)} for node {NodeIdentity}");
                 await Events.Events.AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
             }
             catch (ArgumentNullException e)
             {
-                LogException.Message("InboundConnectionListener: Events.Raise(AnnounceNodeEventArgs)", e);
+                _logger.Error(e, "Events.Raise(AnnounceNodeEventArgs)");
             }
 
             while (!Token.IsCancellationRequested)
@@ -192,34 +189,16 @@ namespace Catalyst.Node.Core.P2P
                     var tcpClient = await Listener.AcceptTcpClientAsync();
                     tcpClient.LingerState.Enabled = false;
 
-                    try
+                    if (PeerList.CheckIfIpBanned(tcpClient))
                     {
-                        if (PeerList.CheckIfIpBanned(tcpClient))
-                        {
-                            // incoming endpoint is in banned list so peace out bro! ☮ ☮ ☮ ☮ 
-                            tcpClient.Dispose();
-                            continue;
-                        }
-                    }
-                    catch (ArgumentNullException e)
-                    {
+                        // incoming endpoint is in banned list so peace out bro! ☮ ☮ ☮ ☮ 
                         tcpClient.Dispose();
-                        LogException.Message("InboundConnectionListener: CheckIfIpBanned", e);
                         continue;
                     }
 
-                    Connection connection;
-                    try
-                    {
-                        connection = StartPeerConnection(tcpClient);
-                        if (connection == null) continue;
-                    }
-                    catch (Exception e)
-                    {
-                        LogException.Message("InboundConnectionListener: StartPeerConnection", e);
-                        continue;
-                    }
-
+                    var connection = StartPeerConnection(tcpClient);
+                    if (connection == null) continue;
+                    
                     using (connection)
                     {
                         try
@@ -228,34 +207,25 @@ namespace Catalyst.Node.Core.P2P
                         }
                         catch (Exception e)
                         {
+                            _logger.Error(e, "Failed to get peer connection for {0}", connection.EndPoint);
                             DisconnectConnection(connection);
-                            LogException.Message("InboundConnectionListener: GetPeerConnectionTlsStream", e);
                             continue;
                         }
 
-                        await Task.Run(async () => await DataReceiver(connection, Token), Token);
+                        await DataReceiver(connection, Token);
                     }
-                }
-                catch (AuthenticationException e)
-                {
-                    LogException.Message("InboundConnectionListener AuthenticationException", e);
-                }
-                catch (ObjectDisposedException ex)
-                {
-                    //                    Log.Message("*** AcceptConnections ObjectDisposedException from " + ListenerIpAddress + Environment.NewLine +ex);
                 }
                 catch (SocketException ex)
                 {
                     switch (ex.Message)
                     {
                         case "An existing connection was forcibly closed by the remote host":
-                            //                            Log.Message("*** AcceptConnections SocketException " + ListenerIpAddress + " closed the connection.");
                             break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    LogException.Message("*** AcceptConnections Exception from ", ex);
+                    _logger.Error("*** AcceptConnections Exception from ", ex);
                 }
         }
 
@@ -272,173 +242,23 @@ namespace Catalyst.Node.Core.P2P
             if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
             if (!Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
 
-            WaitHandle asyncClientWaitHandle = null;
-
             try
             {
                 using (var tcpClient = new TcpClient())
                 {
-                    IPEndPoint targetEndpoint;
-                    try
-                    {
-                        targetEndpoint = EndpointBuilder.BuildNewEndPoint(ip, port);
-                    }
-                    catch (ArgumentNullException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: BuildNewEndPoint", e);
-                        return;
-                    }
-                    catch (ArgumentOutOfRangeException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: BuildNewEndPoint", e);
-                        return;
-                    }
-
+                    var targetEndpoint = EndpointBuilder.BuildNewEndPoint(ip, port);
+                    
                     IAsyncResult asyncClient;
-                    try
-                    {
-                        asyncClient = tcpClient.BeginConnect(targetEndpoint.Address, targetEndpoint.Port, null, null);
-                        asyncClientWaitHandle = asyncClient.AsyncWaitHandle;
-                    }
-                    catch (ArgumentNullException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: BeginConnect", e);
-                        return;
-                    }
-                    catch (SocketException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: BeginConnect", e);
-                        return;
-                    }
-                    catch (ObjectDisposedException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: BeginConnect", e);
-                        return;
-                    }
-                    catch (SecurityException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: BeginConnect", e);
-                        return;
-                    }
+                    var timeoutCancelationSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                    tcpClient.ConnectAsync(ip, port).Wait(timeoutCancelationSource.Token);
+                    var connection = StartPeerConnection(tcpClient);
 
-                    try
-                    {
-                        if (!asyncClient.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
-                        {
-                            tcpClient.Close();
-                            throw new TimeoutException("Timeout connecting to " + targetEndpoint.Address + ":" +
-                                                       targetEndpoint.Port);
-                        }
-                    }
-                    catch (ArgumentOutOfRangeException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: WaitOne", e);
-                        return;
-                    }
-                    catch (ObjectDisposedException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: WaitOne", e);
-                        return;
-                    }
-                    catch (AbandonedMutexException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: WaitOne", e);
-                        return;
-                    }
-                    catch (InvalidOperationException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: WaitOne", e);
-                        return;
-                    }
-                    catch (OverflowException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: FromSeconds", e);
-                        return;
-                    }
-                    catch (ArgumentException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: FromSeconds", e);
-                        return;
-                    }
-
-                    try
-                    {
-                        tcpClient.EndConnect(asyncClient);
-                    }
-                    catch (ArgumentNullException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-                    catch (ArgumentException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-                    catch (SocketException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-                    catch (ObjectDisposedException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-                    catch (InvalidOperationException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-
-                    Connection connection;
-                    try
-                    {
-                        connection = StartPeerConnection(tcpClient);
-                    }
-                    catch (ArgumentNullException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-                    catch (ObjectDisposedException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-                    catch (InvalidOperationException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-
-                    try
-                    {
-                        connection = GetPeerConnectionTlsStream(connection, 2, targetEndpoint);
-                    }
-                    catch (ArgumentNullException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-                    catch (InvalidOperationException e)
-                    {
-                        LogException.Message("BuildOutBoundConnection: EndConnect", e);
-                        return;
-                    }
-
-                    if (await DataReceiver(connection, Token)) return;
-                    throw new Exception("*** FinalizeConnection unable to add peer " + connection.EndPoint.Address +
-                                        connection.EndPoint.Port);
+                    await DataReceiver(connection, Token);
                 }
             }
             catch (Exception e)
             {
-                LogException.Message("BuildOutBoundConnection: GetPeerConnectionTlsStream", e);
-            }
-            finally
-            {
-                asyncClientWaitHandle?.Close();
+                _logger.Error(e, "Failed to build connection to {0}:{1}", ip, port);
             }
         }
 
@@ -451,41 +271,10 @@ namespace Catalyst.Node.Core.P2P
         {
             if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
 
-            Connection connection;
-
-            try
-            {
-                connection = new Connection(tcpClient);
-            }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message("StartPeerConnection: Connection", e);
-                throw;
-            }
-            catch (ObjectDisposedException e)
-            {
-                LogException.Message("StartPeerConnection: Connection", e);
-                throw;
-            }
-            catch (InvalidOperationException e)
-            {
-                LogException.Message("StartPeerConnection: Connection", e);
-                throw;
-            }
-
-            int activeCount;
-            try
-            {
-                activeCount = Interlocked.Increment(ref _activeConnections);
-            }
-            catch (NullReferenceException e)
-            {
-                LogException.Message("StartPeerConnection: Interlocked.Increment", e);
-                throw;
-            }
-
-            Log.Message("*** Connection created for " + connection.EndPoint.Address + connection.EndPoint.Port +
-                        " (now " + activeCount + " connections)");
+            var connection = new Connection(tcpClient);
+            var activeCount = Interlocked.Increment(ref _activeConnections);
+            Log.Information("*** Connection to {0}:{1} created. {2} connections in total.", 
+                connection.EndPoint.Address, connection.EndPoint.Port, activeCount);
             return connection;
         }
 
@@ -532,7 +321,7 @@ namespace Catalyst.Node.Core.P2P
         private bool DisconnectConnection(Connection connection)
         {
             if (connection == null) throw new ArgumentNullException(nameof(connection));
-
+            
             try
             {
                 // first check our unidentified connections
@@ -555,13 +344,13 @@ namespace Catalyst.Node.Core.P2P
             }
             catch (Exception e)
             {
-                LogException.Message("DisconnectConnection: RemoveUnidentifiedConnectionFromList", e);
+                _logger.Error(e, "Failed to disconnect peer at {0}", connection?.EndPoint?.ToString() ?? "unknown");
                 return false;
             }
             finally
             {
                 var activeCount = Interlocked.Decrement(ref _activeConnections);
-                Log.Message("***** Connection successfully disconnected connected (now " + activeCount +
+                Log.Information("***** Connection successfully disconnected connected (now " + activeCount +
                             " connections active)");
             }
         }
@@ -594,7 +383,7 @@ namespace Catalyst.Node.Core.P2P
             }
 
             Disposed = true;
-            Log.Message("Catalyst.Helpers.Network class disposed");
+            Logger.Verbose("Catalyst.Helpers.Network class disposed");
         }
     }
 }

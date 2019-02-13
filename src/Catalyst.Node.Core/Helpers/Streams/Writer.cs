@@ -2,14 +2,16 @@ using System;
 using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
 using Nethereum.RLP;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Streams
 {
     public static class Writer
     {
+        private static ILogger _logger = Log.Logger.ForContext(typeof(Writer));
+
         /// <summary>
         /// </summary>
         /// <param name="sslStream"></param>
@@ -26,14 +28,14 @@ namespace Catalyst.Node.Core.Helpers.Streams
             {
                 if (sslStream == null)
                 {
-                    Log.Message("MessageWriteAsync SSL stream is null");
+                    _logger.Warning("MessageWriteAsync SSL stream is null");
                     disconnectDetected = true;
                     return false;
                 }
 
                 var header = "";
 
-                foreach (int i in messageDescriptor) Log.Message(i.ToString());
+                foreach (int i in messageDescriptor) _logger.Information(i.ToString());
 
                 if (data == null || data.Length < 1)
                 {
@@ -64,34 +66,9 @@ namespace Catalyst.Node.Core.Helpers.Streams
                 sslStream.Flush();
                 return true;
             }
-            catch (ObjectDisposedException objDipInner)
-            {
-                disconnectDetected = true;
-                LogException.Message("*** MessageWriteAsync server disconnected (obj disposed exception)", objDipInner);
-                return false;
-            }
-            catch (SocketException sockInner)
-            {
-                disconnectDetected = true;
-                LogException.Message("*** MessageWriteAsync server disconnected (socket exception): ", sockInner);
-                return false;
-            }
-            catch (InvalidOperationException invOpInner)
-            {
-                LogException.Message("*** MessageWriteAsync server disconnected (invalid operation exception): ",
-                    invOpInner);
-                disconnectDetected = true;
-                return false;
-            }
-            catch (IOException ioInner)
-            {
-                LogException.Message("*** MessageWriteAsync server disconnected (IO exception): ", ioInner);
-                disconnectDetected = true;
-                return false;
-            }
             catch (Exception e)
             {
-                LogException.Message("MessageWriteAsync", e);
+                _logger.Error("MessageWriteAsync", e);
                 disconnectDetected = true;
                 return false;
             }

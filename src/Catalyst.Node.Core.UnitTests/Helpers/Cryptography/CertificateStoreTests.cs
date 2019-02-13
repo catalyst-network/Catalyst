@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         {
             var dataFolder = Path.Combine(Environment.CurrentDirectory, _currentTestName);
             _directoryInfo = new DirectoryInfo(dataFolder);
-            _certificateStore = new CertificateStore(_fileSystem, _passwordReader, _logger);
+            _certificateStore = new CertificateStore(_fileSystem, _passwordReader);
         }
 
         private void Ensure_no_certificate_file_exists()
