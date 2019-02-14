@@ -11,7 +11,6 @@ assignees: CAT-OPS
 
 Issue tracker is **ONLY** used for reporting bugs. Use [stackoverflow](https://stackoverflow.com) for supporting issues.
 
-* [ ] Can you reproduce the problem in safe mode?
 * [ ] Are you running the latest version?
 * [ ] Did you check the debugging guide?
 * [ ] Did you check the FAQs on Discuss?
