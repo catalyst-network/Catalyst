@@ -1,8 +1,8 @@
 ---
 name: Pull request template
 about: Use when creating a pull request to codebase
-title: ''
-labels: ''
+title: 'Pull Request'
+labels: 'pull request'
 assignees: nshCore, CAT-OPS
 
 ---
