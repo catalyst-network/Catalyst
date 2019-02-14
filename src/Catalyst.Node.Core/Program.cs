@@ -1,17 +1,20 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
+using Autofac;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Exceptions;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Shell;
 using McMaster.Extensions.CommandLineUtils;
+using Serilog;
 
 namespace Catalyst.Node.Core
 {
     public static class Program
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static CatalystNode CatalystNode { get; set; }
 
         /// <summary>
@@ -20,7 +23,7 @@ namespace Catalyst.Node.Core
         /// <param name="args"></param>
         public static int Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += LogUnhandledException;
 
             var cli = new CommandLineApplication();
             var cts = new CancellationTokenSource();
@@ -175,13 +178,30 @@ namespace Catalyst.Node.Core
             }
             catch (Exception e)
             {
-                LogException.Message("main app command", e);
+                Logger.Error(e, "main app command");
                 cts.Cancel();
                 CatalystNode?.Dispose();
                 return 0;
             }
 
             return 1;
+        }
+
+        public static void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            try
+            {
+                Log.Logger.Fatal("Unhandled exception, Terminating", e);
+            }
+            catch
+            {
+                using (var fs = new FileStream("error.log", FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var writer = new StreamWriter(fs))
+                {
+                    writer.WriteLine(e.ExceptionObject.ToString());
+                    writer.WriteLine($"IsTerminating: {e.IsTerminating}");
+                }
+            }
         }
     }
 }

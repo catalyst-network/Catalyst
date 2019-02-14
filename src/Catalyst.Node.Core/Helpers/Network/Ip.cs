@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Catalyst.Node.Core.Helpers.Logger;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {
@@ -60,35 +60,7 @@ namespace Catalyst.Node.Core.Helpers.Network
         public static IPAddress ValidateIp(string ip)
         {
             if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
-
-            IPAddress validIp;
-            try
-            {
-                validIp = IPAddress.Parse(ip);
-            }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message("Catalyst.Catalyst.Helpers.Network.Ip.ValidateIp", e);
-                throw;
-            }
-            catch (FormatException e)
-            {
-                LogException.Message("Catalyst.Catalyst.Helpers.Network.Ip.ValidateIp", e);
-                throw;
-            }
-            catch (SocketException e)
-            {
-                LogException.Message("Catalyst.Catalyst.Helpers.Network.Ip.ValidateIp", e);
-                throw;
-            }
-            catch (Exception e)
-            {
-                LogException.Message("Catalyst.Catalyst.Helpers.Network.Ip.ValidateIp", e);
-                throw;
-            }
-
-            if (validIp == null) throw new ArgumentNullException(nameof(ip));
-            return validIp;
+            return IPAddress.Parse(ip);
         }
     }
 }

@@ -1,6 +1,6 @@
 using System;
 using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.Helpers.Logger;
+using Serilog;
 
 namespace Catalyst.Node.Core.Events
 {
@@ -13,7 +13,6 @@ namespace Catalyst.Node.Core.Events
         public NewUnIdentifiedConnectionEventArgs(Connection connection)
         {
             if (connection == null) throw new ArgumentNullException(nameof(connection));
-            Log.Message("NewUnIdentifiedConnectionEventArgs");
             Connection = connection;
         }
 

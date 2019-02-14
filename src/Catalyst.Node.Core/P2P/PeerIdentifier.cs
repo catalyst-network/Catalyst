@@ -1,15 +1,16 @@
 using System;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Util;
 using Dawn;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
@@ -22,6 +23,8 @@ namespace Catalyst.Node.Core.P2P
     /// </summary>
     public class PeerIdentifier : IPeerIdentifier
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// </summary>
         /// <param name="id"></param>
@@ -44,7 +47,7 @@ namespace Catalyst.Node.Core.P2P
         public static PeerIdentifier BuildPeerId(byte[] publicKey, IPEndPoint endPoint)
         {
             Guard.Argument(endPoint, nameof(endPoint)).NotNull();
-            Log.Message(publicKey.Length.ToString());
+            Logger.Information(publicKey.Length.ToString());
             Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty().MaxCount(20).MinCount(20);
 
             // init blank nodeId
@@ -112,7 +115,8 @@ namespace Catalyst.Node.Core.P2P
                 Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4); //@TODO hook into byte util
             else
                 ipChunk = ipBytes;
-            Log.ByteArr(ipBytes);
+
+            Logger.Debug(string.Join(" ", ipChunk));
 
             return ipChunk;
         }
@@ -125,8 +129,9 @@ namespace Catalyst.Node.Core.P2P
         private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
         {
             Guard.Argument(endPoint, nameof(endPoint)).NotNull();
-            Log.ByteArr(endPoint.Port.ToBytesForRLPEncoding());
-            return endPoint.Port.ToBytesForRLPEncoding();
+            var buildClientPortChunk = endPoint.Port.ToBytesForRLPEncoding();
+            Logger.Debug(string.Join(" ", buildClientPortChunk));
+            return buildClientPortChunk;
         }
 
         /// <summary>
@@ -147,60 +152,15 @@ namespace Catalyst.Node.Core.P2P
             try
             {
                 ValidatePeerIdLength(peerId);
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message("ValidatePeerIdLength", e);
-                return false;
-            }
-
-            try
-            {
                 ValidateClientId(peerId);
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message("ValidateClientId", e);
-                return false;
-            }
-
-            try
-            {
                 ValidateClientVersion(peerId);
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message("ValidateClientVersion", e);
-                return false;
-            }
-
-            try
-            {
                 ValidateClientIp(peerId);
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message("ValidateClientIp", e);
-                return false;
-            }
-
-            try
-            {
                 ValidateClientPort(peerId);
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message("ValidateClientPort", e);
-                return false;
-            }
-
-            try
-            {
                 ValidateClientPubKey(peerId);
             }
             catch (ArgumentException e)
             {
-                LogException.Message("ValidateClientPubKey", e);
+                Logger.Error(e, "Failed to validate Peer Id");
                 return false;
             }
 
