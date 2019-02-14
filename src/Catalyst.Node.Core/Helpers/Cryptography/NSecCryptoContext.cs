@@ -17,8 +17,8 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 
         public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob)
         {
-            var nsecKey = new PublicKey(_algorithm);
-            bool imported = PublicKey.TryImport(_algorithm, blob, KeyBlobFormat.PkixPublicKey, out nsecKey);
+            bool imported = PublicKey.TryImport(_algorithm, blob,
+                KeyBlobFormat.PkixPublicKey, out PublicKey nsecKey);
             return imported ? new NSecPublicKeyWrapper(nsecKey) : null;
         }
         
@@ -37,7 +37,6 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         {
             PublicKey realKey = key.GetNSecFormatPublicKey();
             return _algorithm.Verify(realKey, data, signature);
-
         }
         
         
