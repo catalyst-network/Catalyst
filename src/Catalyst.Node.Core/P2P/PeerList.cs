@@ -7,14 +7,16 @@ using System.Net;
 using System.Net.Sockets;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Workers;
 using Dawn;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
     public class PeerList : IEnumerable<Peer>
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         internal readonly ConcurrentDictionary<PeerIdentifier, Peer> PeerBucket;
         internal readonly ConcurrentDictionary<string, Connection> UnIdentifiedPeers;
 
@@ -90,7 +92,7 @@ namespace Catalyst.Node.Core.P2P
 
             foreach (var curr in peers)
             {
-                Log.Message(curr.Key);
+                Logger.Information(curr.Key);
                 ret.Add(curr.Key);
             }
 
@@ -118,59 +120,54 @@ namespace Catalyst.Node.Core.P2P
                     // already have a connection in our unidentified list, check if result is actually connected
                     if (connection.IsConnected())
                     {
-                        Log.Message("*** Active connection already exists for " + connection.EndPoint.Address +
+                        Logger.Debug("*** Active connection already exists for " + connection.EndPoint.Address +
                                     connection.EndPoint.Port);
                         return false;
                     }
 
-                    try
+                    // connection is stale so remove it
+                    if (!RemoveUnidentifiedConnectionFromList(connection))
                     {
-                        // connection is stale so remove it
-                        if (!RemoveUnidentifiedConnectionFromList(connection))
-                            throw new Exception("Cant remove stale connection");
-
-                        Log.Message("Removed stale connection for  " + connection.EndPoint.Address +
-                                    connection.EndPoint.Port);
-                    }
-                    catch (ArgumentNullException e)
-                    {
-                        LogException.Message("AddUnidentifiedConnectionToList: RemoveUnidentifiedConnectionFromList",
-                            e);
+                        Logger.Warning("Cant remove stale connection");
                         needle.Dispose();
                         return false;
                     }
-                }
-            }
-            catch (ArgumentException e)
-            {
-                LogException.Message("AddUnidentifiedConnectionToList: TryGetValue", e);
-                needle.Dispose();
-                return false;
-            }
 
-            try
-            {
+                    Logger.Debug("Removed stale connection for  " + connection.EndPoint.Address +
+                                connection.EndPoint.Port);
+                }
+
                 if (!UnIdentifiedPeers.TryAdd(needle.EndPoint.Address + ":" + needle.EndPoint.Port, needle))
-                    throw new Exception("Can not add unidentified connection to the list");
+                {
+                    Logger.Warning("Can not add unidentified connection to the list");
+                    needle.Dispose();
+                    return false;
+                }
+            
             }
             catch (Exception e)
             {
-                LogException.Message("AddUnidentifiedConnectionToList: TryAdd", e);
+                Logger.Error(e, "AddUnidentifiedConnectionToList: TryAdd");
                 needle.Dispose();
                 return false;
             }
 
             try
             {
-                Log.Message("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port +
+                Logger.Information("*** Unidentified connection " + needle.EndPoint.Address + needle.EndPoint.Port +
                             " added to unidentified peer list)");
                 Events.Events.AsyncRaiseEvent(OnAddedUnIdentifiedConnection, this,
                     new NewUnIdentifiedConnectionEventArgs(needle));
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
-                LogException.Message("AddUnidentifiedConnectionToList: Events.Raise(OnAddedUnIdentifiedConnection)", e);
+                needle.Dispose();
+                Logger.Error(e, "AddUnidentifiedConnectionToList: Events.Raise(OnAddedUnIdentifiedConnection)");
                 return false;
+            }
+            finally
+            {
+                needle.Dispose();
             }
 
             return true;
@@ -190,18 +187,18 @@ namespace Catalyst.Node.Core.P2P
                 if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.EndPoint.Port,
                     out var removedConnection))
                 {
-                    Log.Message("***** Successfully removed " + removedConnection.EndPoint.Address +
+                    Logger.Information("***** Successfully removed " + removedConnection.EndPoint.Address +
                                 removedConnection.EndPoint.Port);
                     return true;
                 }
 
-                Log.Message("*** unable to find connection " + connection.EndPoint.Address + ":" +
+                Logger.Information("*** unable to find connection " + connection.EndPoint.Address + ":" +
                             connection.EndPoint.Port);
                 return false;
             }
             catch (ArgumentNullException e)
             {
-                LogException.Message("RemoveUnidentifiedConnectionToList", e);
+                Logger.Information(e, "Failed to remove unidentified connection from peer list.");
                 return false;
             }
         }
@@ -217,12 +214,12 @@ namespace Catalyst.Node.Core.P2P
             try
             {
                 if (!PeerBucket.TryRemove(peer.PeerIdentifier, out var removedPeer)) return false;
-                Log.Message("***** Successfully removed " + removedPeer.PeerIdentifier + " from peer bucket");
+                Logger.Information("***** Successfully removed " + removedPeer.PeerIdentifier + " from peer bucket");
                 return true;
             }
             catch (ArgumentNullException e)
             {
-                LogException.Message("RemovePeerFromBucket", e);
+                Logger.Error(e, "RemovePeerFromBucket");
                 return false;
             }
         }
@@ -231,7 +228,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         private void Check()
         {
-            Log.Message("Checking peer list");
+            Logger.Debug("Checking peer list");
             if (!IsCritical) return;
             // @TODO go back to peer tracker and ask for more peers
         }
@@ -249,7 +246,7 @@ namespace Catalyst.Node.Core.P2P
             if (BannedIps?.Count > 0)
                 if (!BannedIps.Contains(ipAddress))
                 {
-                    Log.Message("*** Rejecting connection from " + ipAddress + " (not permitted)");
+                    Logger.Information("*** Rejecting connection from " + ipAddress + " (not permitted)");
                     tcpClient.Dispose();
                     return true;
                 }
@@ -270,7 +267,7 @@ namespace Catalyst.Node.Core.P2P
 
             if (PeerBucket.ContainsKey(peerInfo.PeerIdentifier))
             {
-                Log.Message("peer with same ID already exists. Touching it.");
+                Logger.Information("peer with same ID already exists. Touching it.");
                 var peer = PeerBucket[peerInfo.PeerIdentifier];
                 peer.EndPoint = peerInfo.EndPoint;
                 peer.Touch();
@@ -280,7 +277,7 @@ namespace Catalyst.Node.Core.P2P
             if (PeerBucket.Count >= 256) PurgePeers();
 
             PeerBucket.TryAdd(peerInfo.PeerIdentifier, peerInfo);
-            Log.Message("{0} added" + peerInfo);
+            Logger.Information("{0} added" + peerInfo);
 
             //            if (!Equals(peerInfo.Known, false) && IsRegisteredConnection(peerId))
             //            {

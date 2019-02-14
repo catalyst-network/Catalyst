@@ -10,18 +10,17 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 {
     public class CertificateStore : ICertificateStore
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
 
-        private readonly ILogger _logger;
-
         public IPasswordReader PasswordReader { get; }
 
-        public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader, ILogger logger)
+        public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader)
         {
             _storageFolder = fileSystem.GetCatalystHomeDir();
             PasswordReader = passwordReader;
-            _logger = logger;
         }
 
         public X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
@@ -44,9 +43,9 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             string fullPathToCertificate = Path.Combine(targetDirInfo.FullName, fileName);
             File.WriteAllBytes(fullPathToCertificate, certificateInBytes);
 
-            _logger.Warning("A certificate file has been created at {0}.", 
+            Logger.Warning("A certificate file has been created at {0}.", 
                                                         fullPathToCertificate);
-            _logger.Warning("Please make sure this certificate is added to " +
+            Logger.Warning("Please make sure this certificate is added to " +
                                 "your local trusted root store to remove warnings.", fullPathToCertificate);
         }
 
@@ -82,15 +81,15 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 
                         tryCount++;
                         if (tryCount == 1)
-                            _logger.Warning("The certificate at {0} requires a password to be read.", fullPath);
+                            Logger.Warning("The certificate at {0} requires a password to be read.", fullPath);
                         else
-                            _logger.Warning(ex.Message);        
+                            Logger.Warning(ex.Message);        
                     }
                 }
             }
             catch (Exception exception)
             {
-                _logger.Error(exception, "Failed to read certificate {0}", fullPath);
+                Logger.Error(exception, "Failed to read certificate {0}", fullPath);
                 return false;
             }
             return true;

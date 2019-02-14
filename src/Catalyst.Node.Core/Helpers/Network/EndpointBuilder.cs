@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
 using System.Net;
-using Catalyst.Node.Core.Helpers.Logger;
 using Dawn;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {
@@ -58,17 +58,8 @@ namespace Catalyst.Node.Core.Helpers.Network
             Guard.Argument(ip, nameof(ip)).NotNull();
             Guard.Argument(port, nameof(port)).Min(1025).Max(65535);
 
-            IPAddress validatedIp;
-            try
-            {
-                validatedIp = Ip.ValidateIp(ip);
-            }
-            catch (ArgumentNullException e)
-            {
-                LogException.Message("BuildNewEndPoint", e);
-                throw;
-            }
-
+            var validatedIp = Ip.ValidateIp(ip);
+            
             return BuildNewEndPoint(validatedIp, port);
         }
     }

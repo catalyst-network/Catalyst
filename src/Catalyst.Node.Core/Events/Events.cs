@@ -1,11 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using Dawn;
+using Serilog;
 
 namespace Catalyst.Node.Core.Events
 {
     public static class Events
     {
+        private static readonly ILogger Logger = Log.Logger
+            .ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
         /// </summary>
         /// <param name="handler"></param>
@@ -17,7 +20,9 @@ namespace Catalyst.Node.Core.Events
             Guard.Argument(args, nameof(args)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(handler, nameof(handler)).NotNull();
-            return Task.Factory.StartNew(() => { handler(sender, args); });
+            var asyncRaiseEvent = Task.Factory.StartNew(() => { handler(sender, args); });
+            Logger.Debug("Raised async event of type {0}", typeof(T));
+            return asyncRaiseEvent;
         }
     }
 }

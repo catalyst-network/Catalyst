@@ -3,10 +3,10 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Logger;
 using Ipfs.Api;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
 namespace Catalyst.Node.Core.Components.Ipfs
 {
@@ -16,6 +16,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
     /// </summary>
     public class IpfsConnector : IDisposable, IIpfs
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static IpfsClient _client;
         private string _defaultApiEndPoint;
         public int ConnectRetries { get; set; }
@@ -82,7 +83,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
             }
             catch (Exception e)
             {
-                LogException.Message("AddFile", e);
+                Logger.Error(e, "AddFile");
                 throw;
             }
         }
@@ -103,7 +104,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
             }
             catch (Exception e)
             {
-                LogException.Message("ReadAllTextAsync", e);
+                Logger.Error(e, "ReadAllTextAsync");
                 throw;
             }
         }
@@ -125,7 +126,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
                 var x = _client.DoCommandAsync("id", default).Result;
                 var j = JObject.Parse(x);
 
-                Log.Message("Started IPFS peer ID = " + (j["ID"] != null ? $"{j["ID"]}" : "field not found"));
+                Logger.Information("Started IPFS peer ID = " + (j["ID"] != null ? $"{j["ID"]}" : "field not found"));
             }
             catch (Exception)
             {
@@ -141,16 +142,17 @@ namespace Catalyst.Node.Core.Components.Ipfs
         private void TryToConnectClient(int connectRetries)
         {
             var retries = 1;
-            Log.Message($"Connect retries {connectRetries}");
+            Logger.Debug($"Connect retries {connectRetries}");
             while (retries <= connectRetries)
             {
                 if (!IsClientConnected())
                 {
-                    Log.Message($"IPFS daemon not running - Trying to connect. Attempt #{retries}");
+                    Logger.Warning("IPFS daemon not running - Trying to connect. Attempt #{0}", retries);
                     "ipfs daemon".BackgroundCmd(); // invoke as extension method
                 }
                 else
                 {
+                    Logger.Information("IPFS daemon connected");
                     return;
                 }
 

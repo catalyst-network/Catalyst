@@ -3,8 +3,8 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using Catalyst.Node.Common.Modules.P2P.Messages;
-using Catalyst.Node.Core.Helpers.Logger;
 using Dawn;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.IO
 {
@@ -12,6 +12,8 @@ namespace Catalyst.Node.Core.Helpers.IO
     /// </summary>
     public sealed class Connection : IConnection
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// </summary>
         /// <param name="tcpClient"></param>
@@ -33,7 +35,7 @@ namespace Catalyst.Node.Core.Helpers.IO
         /// </summary>
         public void Dispose()
         {
-            Log.Message("disposing connection");
+            Logger.Verbose("disposing connection");
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -70,7 +72,7 @@ namespace Catalyst.Node.Core.Helpers.IO
 
             Disposed = true;
             Connected = false;
-            Log.Message("connection disposed");
+            Logger.Verbose("connection disposed");
         }
     }
 }
