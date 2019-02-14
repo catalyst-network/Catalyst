@@ -48,6 +48,7 @@ We will consider your request but it may be closed if it's something we're not a
 
 ### Context (Environment)
 <!--- How has this issue affected you? What are you trying to accomplish? -->
+<!--- Please describe the hardware you are running the solution on (for example run dxdiag on windows). -->
 <!--- Providing context helps us come up with a solution that is most useful in the real world -->
 
 <!--- Provide a general summary of the issue in the Title above -->
