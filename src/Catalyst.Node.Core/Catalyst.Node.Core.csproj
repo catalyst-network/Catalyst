@@ -32,7 +32,7 @@
     <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
     <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
     <!--NSec Dependencies-->
-    <PackageReference Include="libsodium" Version="[1.0.17]" />
+    <PackageReference Include="libsodium" Version="1.0.17" />
     <PackageReference Include="System.Memory" Version="4.5.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
   </ItemGroup>
@@ -123,8 +123,7 @@
     <Compile Include="..\..\submodules\nsec\src\Interop\Interop.XChaCha20Poly1305.cs" Link="Helpers\NSec\Interop\Interop.XChaCha20Poly1305.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx">
-    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Config\*.json">
