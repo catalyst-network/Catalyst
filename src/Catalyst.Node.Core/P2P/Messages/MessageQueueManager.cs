@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Net;
 using Catalyst.Node.Common.Modules.P2P.Messages;
 using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.Helpers.Logger;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Node.Core.Modules.P2P.Messages
 {
     public class MessageQueueManager : IMessageSender
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         //        private readonly IMessageListener _listener;
         private readonly List<IPAddress> _blackList;
         internal readonly Queue<Message> _receivedMessageQueue;
@@ -181,7 +183,7 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
         /// <param name="ip"></param>
         public void BlockIp(IPAddress ip)
         {
-            Log.Message("Blocking IP {0}" + ip);
+            Logger.Verbose("Blocking IP {0}" + ip);
             _blackList.Add(ip);
         }
     }

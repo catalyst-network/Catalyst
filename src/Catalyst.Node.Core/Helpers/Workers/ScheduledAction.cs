@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Catalyst.Node.Core.Helpers.Logger;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Workers
 {
     internal class ScheduledAction : IComparable<ScheduledAction>
     {
-        private static readonly Queue<ScheduledAction> Pool = new Queue<ScheduledAction>();
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private static readonly Queue<ScheduledAction> Pool = new Queue<ScheduledAction>();
+        
         /// <summary>
         /// </summary>
         private ScheduledAction() { }
@@ -33,7 +35,7 @@ namespace Catalyst.Node.Core.Helpers.Workers
         /// </summary>
         public void Execute()
         {
-            Log.Message("excecuting scheduled action");
+            Logger.Debug("excecuting scheduled action");
             Action();
         }
 

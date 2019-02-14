@@ -1,7 +1,8 @@
 using System;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.P2P;
+using Common.Logging;
 using Dawn;
+using Serilog;
 
 namespace Catalyst.Node.Core.Events
 {
@@ -15,7 +16,6 @@ namespace Catalyst.Node.Core.Events
         public AnnounceNodeEventArgs(PeerIdentifier nodeIdentity)
         {
             Guard.Argument(nodeIdentity, nameof(nodeIdentity)).NotNull();
-            Log.Message($"AnnounceNodeEventArgs {nodeIdentity.Id}");
             NodeIdentity = nodeIdentity;
         }
 
