@@ -1,16 +1,19 @@
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Shell;
-using Catalyst.Node.Core.Helpers.Logger;
+using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Shell
 {
     public sealed class Shell : ShellBase, IAds
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// </summary>
         public Shell()
         {
-            Log.Message("Koopa Catalyst.Helpers.Shell Start");
+            Logger.Information("Koopa Catalyst.Helpers.Shell Start");
             RunConsole();
         }
 
@@ -360,7 +363,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         public bool OnStartNodeLocal(string[] args)
         {
-            Log.Message("Not implemented.");
+            Logger.Error("Not implemented.");
             return false;
         }
 
@@ -370,7 +373,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         public bool OnStartNodeRemote(string[] args)
         {
-            Log.Message("Not implemented.");
+            Logger.Error("Not implemented.");
             return false;
         }
 
@@ -379,7 +382,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         public override bool OnStartWork(string[] args)
         {
-            Log.Message("Not implemented.");
+            Logger.Error("Not implemented.");
             return false;
         }
 
@@ -412,7 +415,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         public override bool OnStopWork(string[] args)
         {
-            Log.Message("Not implemented.");
+            Logger.Error("Not implemented.");
             return false;
         }
 

@@ -23,7 +23,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         private X509Certificate2 _retrievedCertificate;
 
         private readonly IPasswordReader _passwordReader;
-        private readonly ILogger _logger;
 
         /// <summary>
         /// This can for instance be used to find the name of the test currently using the
@@ -46,8 +45,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
 
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.GetCatalystHomeDir().Returns(testDirectory);
-
-            _logger = Substitute.For<ILogger>();
 
             _passwordReader = Substitute.For<IPasswordReader>();
         }
@@ -79,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         {
             var dataFolder = Path.Combine(Environment.CurrentDirectory, _currentTestName);
             _directoryInfo = new DirectoryInfo(dataFolder);
-            _certificateStore = new CertificateStore(_fileSystem, _passwordReader, _logger);
+            _certificateStore = new CertificateStore(_fileSystem, _passwordReader);
         }
 
         private void Ensure_no_certificate_file_exists()

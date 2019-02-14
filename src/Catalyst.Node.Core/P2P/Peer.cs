@@ -1,13 +1,15 @@
 using System;
 using System.Net;
 using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.Helpers.Logger;
 using Catalyst.Node.Core.Helpers.Util;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
     public class Peer : IDisposable
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// </summary>
         /// <param name="peerIdentifier"></param>
@@ -36,7 +38,7 @@ namespace Catalyst.Node.Core.P2P
         public void Dispose()
         {
             Dispose(true);
-            Log.Message("disposing peer class");
+            Logger.Verbose("disposing peer class");
             GC.SuppressFinalize(this);
         }
 
@@ -71,11 +73,11 @@ namespace Catalyst.Node.Core.P2P
 
             if (disposing)
             {
-                //                Connection.Dispose();
+                //Connection.Dispose();
             }
 
             Disposed = true;
-            Log.Message($"Peer {PeerIdentifier.Id} disposed");
+            Logger.Verbose($"Peer {PeerIdentifier.Id} disposed");
         }
     }
 }

@@ -1,15 +1,17 @@
 using System;
 using System.Text;
-using Catalyst.Node.Core.Helpers.Logger;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using Serilog;
+using Serilog.Core;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography
 {
     public class Ec
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly SecureRandom SecureRandom = new SecureRandom();
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         /// <param name="msg"></param>
         /// <param name="privKey"></param>
         /// <returns></returns>
-        public static string SignData(string msg, AsymmetricKeyParameter privKey)
+        public string SignData(string msg, AsymmetricKeyParameter privKey)
         {
             try
             {
@@ -47,7 +49,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             }
             catch (Exception exc)
             {
-                Log.Message("Signing Failed: " + exc);
+                Logger.Warning(exc ,"Signing of message {0} failed", msg);
                 return null;
             }
         }
@@ -72,7 +74,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             }
             catch (Exception exc)
             {
-                Log.Message("Verification failed with the error: " + exc);
+                Logger.Warning(exc, "Verification of signature {0} failed with the error", signature);
                 return false;
             }
         }
