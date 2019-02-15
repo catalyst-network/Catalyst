@@ -20,10 +20,10 @@ namespace Catalyst.Node.UnitTests.Helpers.Cryptography
         public void TestSigningVerification(){
             
             
-            IKey key = _context.GenerateKey();
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            byte[] signature = _context.Sign(key, data);
-            _context.Verify(key, data, signature).Should().BeTrue("signature generated with private key should verify with corresponding public key");
+            byte[] signature = _context.Sign(privateKey, data);
+            _context.Verify(privateKey, data, signature).Should().BeTrue("signature generated with private key should verify with corresponding public key");
  
         }
         
@@ -31,11 +31,11 @@ namespace Catalyst.Node.UnitTests.Helpers.Cryptography
         public void TestFailureSigningVerification(){
             
             
-            IKey key = _context.GenerateKey();
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            byte[] signature = _context.Sign(key, data);
+            byte[] signature = _context.Sign(privateKey, data);
             
-            IKey key2 = _context.GenerateKey();
+            IPrivateKey key2 = _context.GeneratePrivateKey();
             _context.Verify(key2, data, signature).Should().BeFalse("signature should not verify with incorrect key");   
         }
 
@@ -50,24 +50,54 @@ namespace Catalyst.Node.UnitTests.Helpers.Cryptography
         }
 
         [Fact]
-        public void TestPublicKeyFormat()
+        public void TestPublicKeyImport()
         {
-            IKey key = _context.GenerateKey();
-            byte[] blob = _context.ExportPublicKey(key);
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            byte[] blob = _context.ExportPublicKey(privateKey);
             
             IPublicKey publicKey = _context.ImportPublicKey(blob);
-            publicKey.Should().NotBeNull();
+            publicKey.Should().NotBeNull("public key should be importable from a valid blob");
 
+        }
+        
+        [Fact]
+        public void TestFailurePrivateKeyImport()
+        {
+            var blob = Encoding.UTF8.GetBytes("this string is not a formatted private key");
+
+            IPrivateKey privateKey = _context.ImportPrivateKey(blob);
+            privateKey.Should().BeNull("invalid private key import should result in null value");
+
+        }
+
+        [Fact]
+        public void TestPrivateKeyImport()
+        {
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            byte[] blob = _context.ExportPrivateKey(privateKey);
+            
+            IPublicKey importedPrivateKey = _context.ImportPrivateKey(blob);
+            importedPrivateKey.Should().NotBeNull("private key should be importable from a valid blob");
+
+        }
+
+        [Fact]
+        public void TestPublicKeyFromPrivateKey()
+        {
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            IPublicKey publicKey = _context.GetPublicKey(privateKey);
+            publicKey.Should().NotBeNull(" a valid public key should be created from a private key");
+            
         }
 
         [Fact]
         public void TestVerifyWithImportedPublicKey()
         {
-            IKey key = _context.GenerateKey();
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            byte[] signature = _context.Sign(key, data);
+            byte[] signature = _context.Sign(privateKey, data);
             
-            byte[] blob = _context.ExportPublicKey(key);
+            byte[] blob = _context.ExportPublicKey(privateKey);
             IPublicKey importedKey = _context.ImportPublicKey(blob);
             _context.Verify(importedKey, data, signature).Should().BeTrue("signature should verify with imported public key");
             

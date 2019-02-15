@@ -5,15 +5,15 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
     /// <summary>
     /// NSec specific private key wrapper
     /// </summary>
-    public sealed class NSecKeyWrapper : IKey
+    public sealed class NSecPrivateKeyWrapper : IPrivateKey
     {
 
         private readonly Key _key;
-        public NSecKeyWrapper(Key key)
+        public NSecPrivateKeyWrapper(Key key)
         {
             _key = key;
         }
-        public Key GetNSecFormatKey()
+        public Key GetNSecFormatPrivateKey()
         {
             return _key;
         }

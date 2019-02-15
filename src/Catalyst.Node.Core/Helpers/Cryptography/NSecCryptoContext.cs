@@ -10,15 +10,15 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
 
         private readonly SignatureAlgorithm _algorithm = SignatureAlgorithm.Ed25519;
 
-        public IKey GenerateKey(){
+        public IPrivateKey GeneratePrivateKey(){
             Key key = Key.Create(_algorithm);
-            return new NSecKeyWrapper(key);
+            return new NSecPrivateKeyWrapper(key);
         }
 
         public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob)
         {
             bool imported = PublicKey.TryImport(_algorithm, blob,
-                KeyBlobFormat.PkixPublicKey, out PublicKey nsecKey);
+                KeyBlobFormat.PkixPublicKey, out var nsecKey);
             return imported ? new NSecPublicKeyWrapper(nsecKey) : null;
         }
         
@@ -27,9 +27,21 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             return key?.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey);  
         }
 
-        public byte[] Sign (IKey key, ReadOnlySpan<byte> data)
+        public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob)
         {
-            Key realKey = key.GetNSecFormatKey();
+            bool imported = Key.TryImport(_algorithm, blob,
+                KeyBlobFormat.PkixPrivateKey, out var nsecKey);
+            return imported ? new NSecPrivateKeyWrapper(nsecKey) : null;
+        }
+
+        public byte[] ExportPrivateKey(IPrivateKey key)
+        {
+            return key?.GetNSecFormatPrivateKey().Export(KeyBlobFormat.PkixPrivateKey); 
+        }
+
+        public byte[] Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
+        {
+            Key realKey = privateKey.GetNSecFormatPrivateKey();
             return _algorithm.Sign(realKey, data);
         }
 
@@ -38,7 +50,11 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             PublicKey realKey = key.GetNSecFormatPublicKey();
             return _algorithm.Verify(realKey, data, signature);
         }
-        
-        
+
+        public IPublicKey GetPublicKey(IPrivateKey key)
+        {
+            PublicKey realPublicKey = key.GetNSecFormatPublicKey();
+            return new NSecPublicKeyWrapper(realPublicKey);
+        }
     }
 }
