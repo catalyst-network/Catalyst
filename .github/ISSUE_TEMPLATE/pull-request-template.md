@@ -18,6 +18,7 @@ assignees: nshCore, CAT-OPS
 7. [ ] Does your change require a change to the documentation.
 8. [ ] I have updated the documentation accordingly.
 9. [ ] Have you added an explanation of what your changes do and why you'd like us to include them?
+10. [ ] Have you inserted a keyword and link to the issues the PR closes in its descriptions (ex `closes #1`) ?
 
 * **What kind of change does this PR introduce?** (Bug fix, feature, docs update, ...)
 
