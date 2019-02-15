@@ -484,18 +484,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
 
         /// <summary>
         /// </summary>
-        /// <returns></returns>
-        private bool OnBoot()
-        {
-#if DEBUG
-            //@TODO put this in a start node local function
-            var assembly = Assembly.LoadFile(@"../../Catalyst.Node/bin/**/CatalystSystem.dll");
-#endif
-            return true;
-        }
-
-        /// <summary>
-        /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
         private static bool OnGetDelta(string[] args)
