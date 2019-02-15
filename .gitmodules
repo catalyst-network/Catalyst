@@ -1,3 +1,6 @@
 [submodule "submodules/Nethereum"]
 	path = submodules/Nethereum
 	url = https://github.com/atlascity/Nethereum.git
+[submodule "submodules/nsec"]
+	path = submodules/nsec
+	url = https://github.com/atlascity/nsec.git
