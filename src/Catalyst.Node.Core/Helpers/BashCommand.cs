@@ -21,9 +21,15 @@ namespace Catalyst.Node.Core.Helpers
         /// </remarks>
         public static void BackgroundCmd(this string cmd)
         {
-            if (string.IsNullOrEmpty(cmd)) throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
+            if (string.IsNullOrEmpty(cmd))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
+            }
+
             if (string.IsNullOrWhiteSpace(cmd))
+            {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
+            }
             var escapedArgs = cmd.Replace("\"", "\\\"");
 
             var process = new Process
@@ -56,9 +62,15 @@ namespace Catalyst.Node.Core.Helpers
         /// </remarks>
         public static string WaitForCmd(this string cmd)
         {
-            if (string.IsNullOrEmpty(cmd)) throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
+            if (string.IsNullOrEmpty(cmd))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
+            }
+
             if (string.IsNullOrWhiteSpace(cmd))
+            {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
+            }
             var escapedArgs = cmd.Replace("\"", "\\\"");
 
             var process = new Process
@@ -75,7 +87,10 @@ namespace Catalyst.Node.Core.Helpers
             process.Start();
 
             var result = process.StandardOutput.ReadToEnd();
-            if (process.WaitForExit(10000)) return result;
+            if (process.WaitForExit(10000))
+            {
+                return result;
+            }
 
             process.Kill();
             throw new InvalidOperationException();

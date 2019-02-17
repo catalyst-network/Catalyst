@@ -18,7 +18,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         }
 
         private uint sessionType => 0;
-        public override string Prompt => "koopa";
+        protected override string Prompt => "koopa";
         private static string ServiceName => "ADS Advanced Catalyst.Helpers.Shell";
 
         /// <summary>
@@ -439,7 +439,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool OnGetInfo()
+        protected override bool OnGetInfo()
         {
             return true;
         }
@@ -447,7 +447,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool OnGetVersion()
+        protected override bool OnGetVersion()
         {
             return true;
         }
@@ -456,7 +456,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool OnGetConfig()
+        protected override bool OnGetConfig()
         {
             //            Log.Message(Atlas.Kernel.Settings.SerializeSettings());
             return true;
@@ -495,7 +495,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         ///     Get stats about the underlying mempool implementation
         /// </summary>
         /// <returns>Boolean</returns>
-        public override bool OnGetMempool()
+        protected override bool OnGetMempool()
         {
             return false;
         }
