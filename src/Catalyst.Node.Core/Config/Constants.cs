@@ -7,11 +7,11 @@ namespace Catalyst.Node.Core.Config
 {
     public class Constants
     {
-        public const string ConfigFolder = "Config";
-        public const string ComponentsJsonConfigFile = "components.json";
-        public const string SerilogJsonConfigFile = "serilog.json";
-        private const string NetworkConfigFilePattern = "{0}.json";
-        public const string CatalystSubFolder = ".Catalyst";
+        public static string ConfigFolder => "Config";
+        public static string ComponentsJsonConfigFile => "components.json";
+        public static string SerilogJsonConfigFile => "serilog.json";
+        private static string NetworkConfigFilePattern => "{0}.json";
+        public static string CatalystSubFolder => ".Catalyst";
 
         public static string NetworkConfigFile(NodeOptions.Networks network)
         {
