@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.Helpers.IO
                         );
                         break;
                     case 2:
-                        throw new Exception("need endpoint for outbound connections");
+                        throw new ArgumentNullException(nameof(endPoint), "need endpoint for outbound connections");
                     default:
                         throw new Exception(
                             "logically you should never get here, so here is a un-useful error message");

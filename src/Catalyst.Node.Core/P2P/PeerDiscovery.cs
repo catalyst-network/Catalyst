@@ -38,7 +38,9 @@ namespace Catalyst.Node.Core.P2P
             {
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
+                {
                     SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                }
             }
         }
     }
