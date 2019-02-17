@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.P2P
 
             if (disposing)
             {
-                //Connection.Dispose();
+                Connection.Dispose();
             }
 
             Disposed = true;

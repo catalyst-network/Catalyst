@@ -311,10 +311,10 @@ namespace Catalyst.Node.Core.P2P
             PeerBucket.TryAdd(peerInfo.PeerIdentifier, peerInfo);
             Logger.Information("{0} added" + peerInfo);
 
-            //            if (!Equals(peerInfo.Known, false) && IsRegisteredConnection(peerId))
-            //            {
-            //                PeerBucket.Remove(peerId);
-            //            }
+            // if (!Equals(peerInfo.Known, false) && IsRegisteredConnection(peerId))
+            // {
+            //     PeerBucket.Remove(peerId);
+            // }
             return true;
         }
 

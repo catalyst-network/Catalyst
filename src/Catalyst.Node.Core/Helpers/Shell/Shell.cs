@@ -55,17 +55,12 @@ namespace Catalyst.Node.Core.Helpers.Shell
             switch (args[2].ToLower())
             {
                 case "start":
-                    //                    Atlas.StartRpc();
                     return true;
                 case "stop":
-                    //                    Atlas.StopRpc();
                     return true;
                 case "status":
                     return false;
-                //                    return RpcStatus(args);
                 case "restart":
-                    //                    Catalyst.StopRpc();
-                    //                    Catalyst.StartRpc();
                     return true;
                 default:
                     return CommandNotFound(args);
@@ -81,17 +76,13 @@ namespace Catalyst.Node.Core.Helpers.Shell
             switch (args[2].ToLower())
             {
                 case "start":
-                    //                    Catalyst.StartDfs();
                     return true;
                 case "stop":
                     return false;
-                //                    return DfsStop(args);
                 case "status":
                     return false;
-                //                    return DfsStatus(args);
                 case "restart":
                     return false;
-                //                    return DfsTestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -107,16 +98,12 @@ namespace Catalyst.Node.Core.Helpers.Shell
             {
                 case "start":
                     return false;
-                //                    return WalletStart(args);
                 case "stop":
                     return false;
-                //                    return WalletStop(args);
                 case "status":
                     return false;
-                //                    return WalletStatus(args);
                 case "restart":
                     return false;
-                //                    return WalletRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -131,17 +118,13 @@ namespace Catalyst.Node.Core.Helpers.Shell
             switch (args[2].ToLower())
             {
                 case "start":
-                    //                    Catalyst.StartPeer();
                     return true;
                 case "stop":
                     return false;
-                //                    return PeerStop(args);
                 case "status":
                     return false;
-                //                    return PeerStatus(args);
                 case "restart":
                     return false;
-                //                    return PeerRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -157,16 +140,12 @@ namespace Catalyst.Node.Core.Helpers.Shell
             {
                 case "start":
                     return false;
-                //                    return GossipStart(args);
                 case "stop":
                     return false;
-                //                    return GossipStop(args);
                 case "status":
                     return false;
-                //                    return GossipStatus(args);
                 case "restart":
                     return false;
-                //                    return GossipRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -183,18 +162,13 @@ namespace Catalyst.Node.Core.Helpers.Shell
             {
                 case "start":
                     ShowPrompt = true;
-                    //system.StartConsensus(Program.Wallet);
                     return false;
-                //                    return ConsensusStart(args);
                 case "stop":
                     return false;
-                //                    return ConsensusStop(args);
                 case "status":
                     return false;
-                //                    return ConsensusStatus(args);
                 case "restart":
                     return false;
-                //                    return ConsensusRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -458,8 +432,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         protected override bool OnGetConfig()
         {
-            //            Log.Message(Atlas.Kernel.Settings.SerializeSettings());
-            return true;
+            return false;
         }
 
         /// <summary>
