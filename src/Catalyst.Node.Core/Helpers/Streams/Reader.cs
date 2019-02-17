@@ -25,7 +25,10 @@ namespace Catalyst.Node.Core.Helpers.Streams
             var timeout = false;
             const int sleepInterval = 25;
 
-            if (!sslStream.CanRead) throw new InvalidOperationException("can not read stream");
+            if (!sslStream.CanRead)
+            {
+                throw new InvalidOperationException("can not read stream");
+            }
 
             // start reading header
             using (var headerMs = new MemoryStream())
