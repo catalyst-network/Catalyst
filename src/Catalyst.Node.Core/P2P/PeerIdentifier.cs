@@ -117,7 +117,8 @@ namespace Catalyst.Node.Core.P2P
             var address = Ip.GetPublicIp();
             var ipBytes = address.GetAddressBytes();
 
-            if (ipBytes.Length == 4) {
+            if (ipBytes.Length == 4)
+            {
                 Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
             }
             else
