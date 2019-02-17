@@ -216,6 +216,8 @@ namespace Catalyst.Node.Core.P2P
                     {
                         case "An existing connection was forcibly closed by the remote host":
                             break;
+                        default:
+                            throw new InvalidOperationException("Unexpected message");
                     }
                 }
                 catch (Exception ex)
