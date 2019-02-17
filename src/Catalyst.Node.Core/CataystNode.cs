@@ -30,15 +30,7 @@ namespace Catalyst.Node.Core
 
         public readonly Kernel Kernel;
 
-        public Dns Dns
-        {
-            get => Dns;
-            set
-            {
-                Guard.Argument(value, nameof(value));
-                Dns = value ;
-            }
-        }
+        public readonly Dns Dns;
 
         /// <summary>
         ///     Instantiates basic CatalystSystem.
