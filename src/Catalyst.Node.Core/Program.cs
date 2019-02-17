@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using Autofac;
+using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Shell;
@@ -100,7 +101,8 @@ namespace Catalyst.Node.Core
                                           out NodeOptions.Networks networkOption))
                                       networkOption = NodeOptions.Networks.devnet;
 
-                                  Kernel.RunConfigStartUp(dataDir, networkOption);
+                                  var fs = new Fs();
+                                  new ConfigCopier(fs).RunConfigStartUp(dataDir, networkOption);
                                   // conditionally build NodeOptions object with enabled modules
                                   var nodeOptions =
                                       new NodeOptionsBuilder(env, dataDir, network, platform)

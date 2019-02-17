@@ -2,9 +2,6 @@ using Catalyst.Node.Core.Helpers.Cryptography;
 using FluentAssertions;
 using Xunit;
 using System.Text;
-using System;
-using NSec.Cryptography;
-using Xunit.Abstractions;
 
 namespace Catalyst.Node.UnitTests.Helpers.Cryptography
 {
