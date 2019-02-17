@@ -264,7 +264,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        protected bool CommandNotFound(string[] args)
+        protected static bool CommandNotFound(string[] args)
         {
             Logger.Error("error: command not found " + args);
             return true;
