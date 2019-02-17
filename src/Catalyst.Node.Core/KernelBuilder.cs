@@ -37,9 +37,7 @@ namespace Catalyst.Node.Core {
 
             // Set path to load assemblies from ** be-careful **
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
-                                                         context.LoadFromAssemblyPath(Path.Combine(
-                                                             Directory.GetCurrentDirectory(),
-                                                             $"{assembly.Name}.dll"));
+                context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(),$"{assembly.Name}.dll"));
 
             // get builder
             _containerBuilder = new ContainerBuilder();
@@ -51,13 +49,18 @@ namespace Catalyst.Node.Core {
             _containerBuilder.RegisterType<NodeOptions>();
 
             // register components from config file
-            _containerBuilder.RegisterModule(new ConfigurationModule(new ConfigurationBuilder()
-                                                                    .AddJsonFile(Path.Combine(nodeOptions.DataDir, "components.json"))
-                                                                    .Build()));
+            var configurationModule = new ConfigurationModule(
+                new ConfigurationBuilder()
+                   .AddJsonFile(Path.Combine(nodeOptions.DataDir, Config.Constants.ComponentsJsonConfigFile))
+                   .AddJsonFile(Path.Combine(nodeOptions.DataDir, Config.Constants.SerilogJsonConfigFile))
+                   .Build());
+
+            _containerBuilder.RegisterModule(configurationModule);
 
             var logLevel = LogEventLevel.Information;
-            Log.Logger = new LoggerConfiguration()
-                                .WriteTo.Console(logLevel)
+            var loggerConfiguration = new LoggerConfiguration()
+               .ReadFrom.Configuration(configurationModule.Configuration);
+            Log.Logger = loggerConfiguration
                                 .WriteTo.File(Path.Combine(nodeOptions.DataDir, "Catalyst.Node..log"), 
                                      logLevel, 
                                      rollingInterval: RollingInterval.Day)
