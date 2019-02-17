@@ -142,7 +142,10 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
         public void Receive(IPEndPoint endPoint, byte[] message, int count)
         {
             var ip = endPoint.Address;
-            if (IsBlocked(ip)) return;
+            if (IsBlocked(ip))
+            {
+                return;
+            }
             IncrementRequestByIp(ip);
 
             //            var package = new Message(endPoint, message, count);

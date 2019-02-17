@@ -56,7 +56,9 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             certificate = null;
 
             if (!fileInfo.Exists)
+            {
                 return false;
+            }
 
             try
             {
@@ -77,13 +79,19 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
                     catch (CryptographicException ex)
                     {
                         if (!ex.Message.Contains("password", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             throw;
+                        }
 
                         tryCount++;
                         if (tryCount == 1)
+                        {
                             Logger.Warning("The certificate at {0} requires a password to be read.", fullPath);
+                        }
                         else
-                            Logger.Warning(ex.Message);        
+                        {
+                            Logger.Warning(ex.Message);    
+                        }       
                     }
                 }
             }

@@ -124,7 +124,10 @@ namespace Catalyst.Node.Core.P2P
                         await Task.Delay(30, Token);
                         streamReadCounter += streamReadCounter;
                         // count how many times we try reading header && content so we don't get stuck in here.
-                        if (streamReadCounter == 5) break;
+                        if (streamReadCounter == 5)
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -192,7 +195,10 @@ namespace Catalyst.Node.Core.P2P
                     }
 
                     var connection = StartPeerConnection(tcpClient);
-                    if (connection == null) continue;
+                    if (connection == null)
+                    {
+                        continue;
+                    }
                     
                     using (connection)
                     {
@@ -236,8 +242,15 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="AuthenticationException"></exception>
         public async void BuildOutBoundConnection(string ip, int port)
         {
-            if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
-            if (!Ip.ValidPortRange(port)) throw new ArgumentOutOfRangeException(nameof(port));
+            if (string.IsNullOrEmpty(ip))
+            {
+                throw new ArgumentNullException(nameof(ip));
+            }
+
+            if (!Ip.ValidPortRange(port))
+            {
+                throw new ArgumentOutOfRangeException(nameof(port));
+            }
 
             try
             {
@@ -266,7 +279,10 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private Connection StartPeerConnection(TcpClient tcpClient)
         {
-            if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
+            if (tcpClient == null)
+            {
+                throw new ArgumentNullException(nameof(tcpClient));
+            }
 
             var connection = new Connection(tcpClient);
             var activeCount = Interlocked.Increment(ref _activeConnections);
@@ -285,7 +301,10 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private Connection GetPeerConnectionTlsStream(Connection connection, int direction, IPEndPoint endPoint = null)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
 
             connection.SslStream = TlsStream.GetTlsStream(
                 connection.TcpClient.GetStream(),
@@ -297,7 +316,9 @@ namespace Catalyst.Node.Core.P2P
             );
 
             if (connection.SslStream == null || connection.SslStream.GetType() != typeof(SslStream))
+            {
                 throw new ArgumentNullException(nameof(SslStream));
+            }
 
             if (!PeerList.AddUnidentifiedConnectionToList(connection))
             {
@@ -317,7 +338,10 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private bool DisconnectConnection(Connection connection)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
             
             try
             {
@@ -325,7 +349,10 @@ namespace Catalyst.Node.Core.P2P
                 if (!PeerList.RemoveUnidentifiedConnectionFromList(connection))
                 {
                     // its not in our unidentified list so now check the peer bucket
-                    if (!PeerList.FindPeerFromConnection(connection, out var peer)) return false;
+                    if (!PeerList.FindPeerFromConnection(connection, out var peer))
+                    {
+                        return false;
+                    }
                     if (PeerList.RemovePeerFromBucket(peer))
                     {
                         peer.Dispose();
@@ -357,7 +384,10 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         private void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {
@@ -371,12 +401,20 @@ namespace Catalyst.Node.Core.P2P
                 }
 
                 if (PeerList.UnIdentifiedPeers?.Count > 0)
+                {
                     foreach (var peer in PeerList.UnIdentifiedPeers)
-                        peer.Value.Dispose();
+                    {
+                        peer.Value.Dispose();                           
+                    }
+                }
 
                 if (PeerList.PeerBucket?.Count > 0)
+                {
                     foreach (var peer in PeerList.PeerBucket)
-                        peer.Value.Dispose();
+                    {
+                        peer.Value.Dispose();                           
+                    }
+                }
             }
 
             Disposed = true;

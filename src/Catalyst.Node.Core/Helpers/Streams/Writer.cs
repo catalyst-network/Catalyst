@@ -51,7 +51,10 @@ namespace Catalyst.Node.Core.Helpers.Streams
                 var headerBytes = header.ToBytesForRLPEncoding();
 
                 var messageLen = headerBytes.Length;
-                if (payloadLength > 0) messageLen += payloadLength;
+                if (payloadLength > 0)
+                {
+                    messageLen += payloadLength;
+                }
 
                 var message = new byte[messageLen]; //@TODO hook into new byte mthod
 
@@ -60,7 +63,9 @@ namespace Catalyst.Node.Core.Helpers.Streams
                 Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
 
                 if (data != null && data.Length > 0)
+                {
                     Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
+                }
 
                 sslStream.Write(message, 0, message.Length);
                 sslStream.Flush();
@@ -74,7 +79,10 @@ namespace Catalyst.Node.Core.Helpers.Streams
             }
             finally
             {
-                if (disconnectDetected) sslStream?.Dispose();
+                if (disconnectDetected)
+                {
+                    sslStream?.Dispose();
+                }
             }
         }
     }
