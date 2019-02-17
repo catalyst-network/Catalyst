@@ -30,16 +30,6 @@ namespace Catalyst.Node.Core.Helpers.IO
             NetworkStream networkStream,
             int direction,
             X509Certificate sslCertificate,
-            bool acceptInvalidCerts
-        )
-        {
-            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, false);
-        }
-
-        public static SslStream GetTlsStream(
-            NetworkStream networkStream,
-            int direction,
-            X509Certificate sslCertificate,
             bool acceptInvalidCerts,
             bool mutuallyAuthenticate = false
         )
