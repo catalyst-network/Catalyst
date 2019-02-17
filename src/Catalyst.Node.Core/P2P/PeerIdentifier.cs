@@ -30,7 +30,10 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="id"></param>
         public PeerIdentifier(byte[] id)
         {
-            if (!ValidatePeerId(id)) throw new ArgumentException("Peer identifier is invalid.");
+            if (!ValidatePeerId(id))
+            {
+                throw new ArgumentException("Peer identifier is invalid.");
+            }
 
             Id = id;
         }

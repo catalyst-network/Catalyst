@@ -30,8 +30,8 @@ namespace Catalyst.Node.Core
 
         public readonly Kernel Kernel;
 
-        public Dns Dns;
-
+       public readonly Dns Dns;
+       
         /// <summary>
         ///     Instantiates basic CatalystSystem.
         /// </summary>

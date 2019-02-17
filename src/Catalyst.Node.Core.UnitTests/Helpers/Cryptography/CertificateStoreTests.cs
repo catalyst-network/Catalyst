@@ -40,7 +40,10 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         public void CertificateStore_CanReadAndWriteCertFiles_WithPassword()
         {
             //TODO: cf. issue <see cref="https://github.com/catalyst-network/Catalyst.Node/issues/2" />
-            if (Environment.OSVersion.Platform == PlatformID.Unix) return;
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                return;
+            }
 
             Create_certificate_store();
             Ensure_no_certificate_file_exists();

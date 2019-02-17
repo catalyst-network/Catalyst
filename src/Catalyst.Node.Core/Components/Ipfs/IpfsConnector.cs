@@ -52,11 +52,18 @@ namespace Catalyst.Node.Core.Components.Ipfs
         public void DestroyIpfsClient()
         {
             var localByName = Process.GetProcessesByName("ipfs");
-            if (localByName.Length == 1) localByName[0].Kill(); // kill daemon process
+            if (localByName.Length == 1) {
+                localByName[0].Kill(); // kill daemon process
+            }
 
             if (_client != null)
-                if (IsClientConnected()) // if still connected then operation failed
+            {
+                if (IsClientConnected())
+                {
                     throw new InvalidOperationException();
+                }                
+            }
+
             _client = null;
         }
 
@@ -117,7 +124,10 @@ namespace Catalyst.Node.Core.Components.Ipfs
         /// </returns>
         public bool IsClientConnected()
         {
-            if (_client == null) throw new ArgumentNullException();
+            if (_client == null)
+            {
+                throw new ArgumentNullException();
+            }
 
             try
             {
