@@ -80,18 +80,20 @@ namespace Catalyst.Node.Core
             Guard.Argument(environment, nameof(environment)).NotNull().NotEmpty().NotWhiteSpace();
 
             if (Instance == null)
+            {
                 lock (Mutex)
                 {
                     Instance = Instance == null
-                                   ? new NodeOptions(
-                                       (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
-                                       dataDir,
-                                       (int) (Networks) Enum.Parse(typeof(Networks), network),
-                                       platform,
-                                       persistenceConfiguration
-                                   )
-                                   : throw new ArgumentException();
-                }
+                        ? new NodeOptions(
+                            (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
+                            dataDir,
+                            (int) (Networks) Enum.Parse(typeof(Networks), network),
+                            platform,
+                            persistenceConfiguration
+                        )
+                        : throw new ArgumentException();
+                }   
+            }
 
             return Instance;
         }
@@ -116,8 +118,7 @@ namespace Catalyst.Node.Core
         private readonly List<Action<NodeOptions>> _builderActions;
         private readonly IConfiguration _networkConfiguration;
         private readonly NodeOptions _nodeOptions;
-        private ISharpRepositoryConfiguration _persistenceConfiguration;
-        
+
         /// <summary>
         /// </summary>
         /// <param name="env"></param>
@@ -134,15 +135,18 @@ namespace Catalyst.Node.Core
 
             _builderActions = new List<Action<NodeOptions>>();
 
-            if (!ValidEnvPram(env) || !ValidNetworkParam(network)) throw new ArgumentException();
+            if (!ValidEnvPram(env) || !ValidNetworkParam(network))
+            {
+                throw new ArgumentException();
+            }
 
             _networkConfiguration = LoadNetworkConfig(network, dataDir);
 
-            _persistenceConfiguration = RepositoryFactory.BuildSharpRepositoryConfiguation(
+            var persistenceConfiguration = RepositoryFactory.BuildSharpRepositoryConfiguation(
                 _networkConfiguration.GetSection("PersistenceConfiguration")
             );
 
-            _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform, _persistenceConfiguration);
+            _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform, persistenceConfiguration);
         }
 
         /// <summary>

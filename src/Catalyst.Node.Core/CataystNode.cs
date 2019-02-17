@@ -30,7 +30,7 @@ namespace Catalyst.Node.Core
 
         public readonly Kernel Kernel;
 
-       public readonly Dns Dns;
+        private readonly Dns Dns;
        
         /// <summary>
         ///     Instantiates basic CatalystSystem.
@@ -80,10 +80,12 @@ namespace Catalyst.Node.Core
             if (!foundCertificate)
             {
                 if (Environment.OSVersion.Platform == PlatformID.Unix)
+                {
                     throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
-                                                           $"Please create a password protected certificate at {pfxFilePath}." +
-                                                           Environment.NewLine +
-                                                           "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
+                        $"Please create a password protected certificate at {pfxFilePath}." +
+                        Environment.NewLine +
+                        "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");                    
+                }
                 certificate = certificateStore.CreateAndSaveSelfSignedCertificate(pfxFilePath);
             }
 
@@ -181,10 +183,16 @@ namespace Catalyst.Node.Core
         public static CatalystNode GetInstance(Kernel kernel)
         {
             Guard.Argument(kernel, nameof(kernel)).NotNull();
-            if (Instance != null) return Instance;
+            if (Instance != null)
+            {
+                return Instance;
+            }
             lock (Mutex)
             {
-                if (Instance == null) Instance = new CatalystNode(kernel);
+                if (Instance == null)
+                {
+                    Instance = new CatalystNode(kernel);
+                }
             }
 
             return Instance;
@@ -195,9 +203,15 @@ namespace Catalyst.Node.Core
         /// <param name="disposing"></param>
         private void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
-            if (disposing) Kernel?.Dispose();
+            if (disposing)
+            {
+                Kernel?.Dispose();
+            }
 
             Disposed = true;
             Logger.Verbose("CatalystNode disposed");

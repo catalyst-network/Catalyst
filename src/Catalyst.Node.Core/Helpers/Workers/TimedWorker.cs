@@ -48,7 +48,10 @@ namespace Catalyst.Node.Core.Helpers.Workers
                                               timeToWait = TimeSpan.FromMilliseconds(-1);
                                           }
 
-                                          if (_resetEvent.WaitOne(timeToWait, false)) continue;
+                                          if (_resetEvent.WaitOne(timeToWait, false))
+                                          {
+                                              continue;
+                                          }
 
                                           Debug.Assert(scheduledAction != null, "scheduledAction != null");
                                           scheduledAction.Execute();
@@ -56,7 +59,9 @@ namespace Catalyst.Node.Core.Helpers.Workers
                                           {
                                               Remove(scheduledAction);
                                               if (scheduledAction.Repeat)
+                                              {
                                                   QueueForever(scheduledAction.Action, scheduledAction.Interval);
+                                              }
                                           }
                                       }
                                   }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning,
@@ -91,7 +96,10 @@ namespace Catalyst.Node.Core.Helpers.Workers
                 var pos = _actions.BinarySearch(scheduledAction);
                 _actions.RemoveAt(pos);
                 scheduledAction.Release();
-                if (pos == 0) _resetEvent.Set();
+                if (pos == 0)
+                {
+                    _resetEvent.Set();
+                }
             }
         }
 
@@ -106,7 +114,10 @@ namespace Catalyst.Node.Core.Helpers.Workers
                 pos = pos >= 0 ? pos : ~pos;
                 _actions.Insert(pos, scheduledAction);
 
-                if (pos == 0) _resetEvent.Set();
+                if (pos == 0)
+                {
+                    _resetEvent.Set();
+                }
             }
         }
 
