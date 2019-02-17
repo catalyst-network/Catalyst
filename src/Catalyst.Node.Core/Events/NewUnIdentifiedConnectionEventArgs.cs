@@ -12,7 +12,10 @@ namespace Catalyst.Node.Core.Events
         /// <exception cref="ArgumentNullException"></exception>
         public NewUnIdentifiedConnectionEventArgs(Connection connection)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
             Connection = connection;
         }
 

@@ -38,7 +38,10 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
         private void Save(X509Certificate2 certificate, string fileName, SecureString password)
         {
             var targetDirInfo = _storageFolder;
-            if(!targetDirInfo.Exists) targetDirInfo.Create();
+            if (!targetDirInfo.Exists)
+            {
+                targetDirInfo.Create();
+            }
             var certificateInBytes = certificate.Export(X509ContentType.Pfx, password);
             string fullPathToCertificate = Path.Combine(targetDirInfo.FullName, fileName);
             File.WriteAllBytes(fullPathToCertificate, certificateInBytes);
@@ -103,7 +106,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             return true;
         }
 
-        private X509Certificate2 BuildSelfSignedServerCertificate(SecureString password, string commonName = LocalHost)
+        private static X509Certificate2 BuildSelfSignedServerCertificate(SecureString password, string commonName = LocalHost)
         {
             var sanBuilder = new SubjectAlternativeNameBuilder();
             sanBuilder.AddIpAddress(IPAddress.Loopback);

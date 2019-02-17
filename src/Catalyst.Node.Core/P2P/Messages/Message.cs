@@ -2,7 +2,7 @@ using System;
 using Catalyst.Node.Core.Helpers.IO;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.Modules.P2P.Messages
+namespace Catalyst.Node.Core.P2P.Messages
 {
     public class Message
     {
@@ -13,11 +13,25 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
         /// <param name="messageDescriptor"></param>
         public Message(Connection connection, IMessage message, byte[] messageDescriptor)
         {
-            if (messageDescriptor == null) throw new ArgumentNullException(nameof(messageDescriptor));
+            if (messageDescriptor == null)
+            {
+                throw new ArgumentNullException(nameof(messageDescriptor));
+            }
+
             if (messageDescriptor.Length == 0)
+            {
                 throw new ArgumentException("Value cannot be an empty collection.", nameof(messageDescriptor));
-            if (message != null) ProtoMessage = message;
-            if (connection != null) Connection = connection;
+            }
+
+            if (message != null)
+            {
+                ProtoMessage = message;
+            }
+
+            if (connection != null)
+            {
+                Connection = connection;
+            }
             MessageDescriptor = messageDescriptor;
         }
 
@@ -29,8 +43,15 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
         /// <param name="type"></param>
         public Message(Connection connection, IMessage message, byte network, byte type)
         {
-            if (connection != null) Connection = connection;
-            if (message != null) ProtoMessage = message;
+            if (connection != null)
+            {
+                Connection = connection;
+            }
+
+            if (message != null)
+            {
+                ProtoMessage = message;
+            }
             MessageDescriptor = BuildMsgDescriptor(network, type);
         }
 

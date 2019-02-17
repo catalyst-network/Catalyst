@@ -100,7 +100,10 @@ namespace Catalyst.Node.Core.P2P
         private static string PadVersionString(string version)
         {
             Guard.Argument(version, nameof(version)).NotNull().NotEmpty().NotWhiteSpace();
-            while (version.Length < 2) version = version.PadLeft(2, '0');
+            while (version.Length < 2)
+            {
+                version = version.PadLeft(2, '0');
+            }
             return version;
         }
 
@@ -114,9 +117,9 @@ namespace Catalyst.Node.Core.P2P
             var address = Ip.GetPublicIp();
             var ipBytes = address.GetAddressBytes();
 
-            if (ipBytes.Length == 4) {
+            if (ipBytes.Length == 4)
+            {
                 Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
-                
             }
             else
             {
