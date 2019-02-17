@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
                 if (timeout)
                 {
-                    throw new Exception("MessageReadAsync timeout exceeded while reading header after reading");
+                    throw new TimeoutException("MessageReadAsync timeout exceeded while reading header after reading");
                 }
 
                 var headerBytes = headerMs.ToArray();

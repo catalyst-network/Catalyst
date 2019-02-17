@@ -363,7 +363,7 @@ namespace Catalyst.Node.Core.P2P
         /// <summary>
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        private void Save()
+        private static void Save()
         {
             // save peer list from DB
             throw new NotImplementedException();
@@ -372,7 +372,7 @@ namespace Catalyst.Node.Core.P2P
         /// <summary>
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public void Load()
+        public static void Load()
         {
             // load peer list from DB
             throw new NotImplementedException();
@@ -381,7 +381,7 @@ namespace Catalyst.Node.Core.P2P
         /// <summary>
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public void PurgeUnidentified()
+        public static void PurgeUnidentified()
         {
             throw new NotImplementedException();
         }
