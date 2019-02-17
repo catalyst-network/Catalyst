@@ -64,7 +64,10 @@ namespace Catalyst.Node.Core.Helpers.Shell
 
             Logger.Information(normalCmds);
 
-            if (advancedCmds != "") Logger.Information(advancedCmds);
+            if (advancedCmds != "")
+            {
+                Logger.Information(advancedCmds);
+            }
             return true;
         }
 

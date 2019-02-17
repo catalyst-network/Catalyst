@@ -73,10 +73,16 @@ namespace Catalyst.Node.Core.P2P
         {
             Guard.Argument(connection, nameof(connection)).NotNull();
 
-            if (FindPeerFromConnection(connection, out var foundPeer)) foundConnection = foundPeer.Connection;
+            if (FindPeerFromConnection(connection, out var foundPeer))
+            {
+                foundConnection = foundPeer.Connection;
+            }
 
             if (UnIdentifiedPeers.TryGetValue(connection.EndPoint.Address + ":" + connection.EndPoint.Port,
-                out var unidentifiedConnection)) foundConnection = unidentifiedConnection;
+                out var unidentifiedConnection))
+            {
+                foundConnection = unidentifiedConnection;
+            }
 
             throw new KeyNotFoundException();
         }
@@ -116,7 +122,10 @@ namespace Catalyst.Node.Core.P2P
                 if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.EndPoint.Port,
                     out var connection))
                 {
-                    if (connection == null) throw new ArgumentNullException(nameof(connection));
+                    if (connection == null)
+                    {
+                        throw new ArgumentNullException(nameof(connection));
+                    }
                     // already have a connection in our unidentified list, check if result is actually connected
                     if (connection.IsConnected())
                     {
@@ -181,7 +190,10 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         internal bool RemoveUnidentifiedConnectionFromList(Connection connection)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
             try
             {
                 if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.EndPoint.Port,
@@ -210,10 +222,16 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentNullException"></exception>
         internal bool RemovePeerFromBucket(Peer peer)
         {
-            if (peer == null) throw new ArgumentNullException(nameof(peer));
+            if (peer == null)
+            {
+                throw new ArgumentNullException(nameof(peer));
+            }
             try
             {
-                if (!PeerBucket.TryRemove(peer.PeerIdentifier, out var removedPeer)) return false;
+                if (!PeerBucket.TryRemove(peer.PeerIdentifier, out var removedPeer))
+                {
+                    return false;
+                }
                 Logger.Information("***** Successfully removed " + removedPeer.PeerIdentifier + " from peer bucket");
                 return true;
             }
@@ -229,7 +247,10 @@ namespace Catalyst.Node.Core.P2P
         private void Check()
         {
             Logger.Debug("Checking peer list");
-            if (!IsCritical) return;
+            if (!IsCritical)
+            {
+                return;
+            }
             // @TODO go back to peer tracker and ask for more peers
         }
 
@@ -240,16 +261,21 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentNullException"></exception>
         internal bool CheckIfIpBanned(TcpClient tcpClient)
         {
-            if (tcpClient == null) throw new ArgumentNullException(nameof(tcpClient));
+            if (tcpClient == null)
+            {
+                throw new ArgumentNullException(nameof(tcpClient));
+            }
             var ipAddress = ((IPEndPoint) tcpClient.Client.RemoteEndPoint).Address;
 
             if (BannedIps?.Count > 0)
+            {
                 if (!BannedIps.Contains(ipAddress))
                 {
                     Logger.Information("*** Rejecting connection from " + ipAddress + " (not permitted)");
                     tcpClient.Dispose();
                     return true;
-                }
+                }   
+            }
 
             return false;
         }
@@ -263,7 +289,10 @@ namespace Catalyst.Node.Core.P2P
             // we also need to look in our unidentified list
             //@TODO we should pass in connection as we need to establish a relationship between the connection and the peer
 
-            if (peerInfo == null) throw new ArgumentNullException(nameof(peerInfo));
+            if (peerInfo == null)
+            {
+                throw new ArgumentNullException(nameof(peerInfo));
+            }
 
             if (PeerBucket.ContainsKey(peerInfo.PeerIdentifier))
             {
@@ -274,7 +303,10 @@ namespace Catalyst.Node.Core.P2P
                 return false;
             }
 
-            if (PeerBucket.Count >= 256) PurgePeers();
+            if (PeerBucket.Count >= 256)
+            {
+                PurgePeers();
+            }
 
             PeerBucket.TryAdd(peerInfo.PeerIdentifier, peerInfo);
             Logger.Information("{0} added" + peerInfo);
@@ -300,8 +332,15 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentNullException"></exception>
         public void UpdatePeer(PeerIdentifier peerId)
         {
-            if (peerId == null) throw new ArgumentNullException(nameof(peerId));
-            if (PeerBucket.ContainsKey(peerId)) PeerBucket[peerId].Touch();
+            if (peerId == null)
+            {
+                throw new ArgumentNullException(nameof(peerId));
+            }
+
+            if (PeerBucket.ContainsKey(peerId))
+            {
+                PeerBucket[peerId].Touch();
+            }
         }
 
         /// <summary>
@@ -310,8 +349,15 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentNullException"></exception>
         public void Punish(Peer peer)
         {
-            if (peer == null) throw new ArgumentNullException(nameof(peer));
-            if (PeerBucket.ContainsKey(peer.PeerIdentifier)) PeerBucket[peer.PeerIdentifier].DecreaseReputation();
+            if (peer == null)
+            {
+                throw new ArgumentNullException(nameof(peer));
+            }
+
+            if (PeerBucket.ContainsKey(peer.PeerIdentifier))
+            {
+                PeerBucket[peer.PeerIdentifier].DecreaseReputation();
+            }
         }
 
         /// <summary>
@@ -346,8 +392,12 @@ namespace Catalyst.Node.Core.P2P
         {
             var peersInfo = new List<Peer>(PeerBucket.Values);
             foreach (var peerInfo in peersInfo)
-                if (peerInfo.IsAwolBot) //@TODO check if connected
+            {
+                if (peerInfo.IsAwolBot)
+                {
                     PeerBucket.TryRemove(peerInfo.PeerIdentifier, out _);
+                }                
+            }
         }
 
         /// <summary>
@@ -386,11 +436,13 @@ namespace Catalyst.Node.Core.P2P
         {
             // iterate peer bucket to find a peer with connection value matches connection param
             foreach (var item in PeerBucket.Values)
+            {
                 if (Equals(item.Connection.EndPoint, connection.EndPoint))
                 {
                     peer = item;
                     return true;
-                }
+                }   
+            }
 
             throw new KeyNotFoundException();
         }

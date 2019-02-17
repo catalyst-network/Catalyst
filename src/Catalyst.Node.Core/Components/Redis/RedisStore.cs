@@ -22,7 +22,9 @@ namespace Catalyst.Node.Core.Components.Redis
         {
             Guard.Argument(when, nameof(when)).NotNull().NotEmpty().NotWhiteSpace();
             if (!Enum.TryParse(when, out _when))
+            {
                 throw new ArgumentException($"Invalid When setting format:{when}");
+            }
         }
 
         public void Connect(IPEndPoint endPoint)
