@@ -92,7 +92,7 @@ namespace Catalyst.Node.Core.Helpers.Platform
 
             if (platform == 0)
             {
-                throw new Exception();
+                throw new ArgumentException();
             }
 
             return platform;

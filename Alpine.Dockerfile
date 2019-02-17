@@ -4,7 +4,7 @@ WORKDIR /srv/
 COPY ./ ./
 WORKDIR /srv/src
 RUN dotnet restore
-WORKDIR Catalyst.Node
+WORKDIR ./Catalyst.Node
 RUN dotnet publish -c release -o out --self-contained --runtime linux-x64 --framework netcoreapp2.1
 
 # test application

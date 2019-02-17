@@ -315,7 +315,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         ///     @TODO need some auth against the node
         /// </summary>
         /// <returns></returns>
-        private bool OnConnectNode(string[] args)
+        private static bool OnConnectNode(string[] args)
         {
             var ip = args[2];
             var port = args[3];
