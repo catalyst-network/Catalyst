@@ -1,9 +1,10 @@
+using System;
 using Dawn;
 using StackExchange.Redis;
 
 namespace Catalyst.Node.Core.Components.Redis
 {
-    public class RedisConnector : IRedisConnector
+    public class RedisConnector : IDisposable, IRedisConnector
     {
         public RedisConnector(string connectionParam)
         {

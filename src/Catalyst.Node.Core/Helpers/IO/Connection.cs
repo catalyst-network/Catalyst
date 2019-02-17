@@ -10,7 +10,7 @@ namespace Catalyst.Node.Core.Helpers.IO
 {
     /// <summary>
     /// </summary>
-    public sealed class Connection : IConnection
+    public sealed class Connection : IDisposable, IConnection
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -30,14 +30,6 @@ namespace Catalyst.Node.Core.Helpers.IO
         public TcpClient TcpClient { get; }
         public IPEndPoint EndPoint { get; set; }
         public SslStream SslStream { set; get; }
-
-        /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            Logger.Verbose("disposing connection");
-            Dispose(true);
-        }
 
         /// <summary>
         /// </summary>
@@ -66,8 +58,16 @@ namespace Catalyst.Node.Core.Helpers.IO
 
         /// <summary>
         /// </summary>
+        public void Dispose()
+        {
+            Logger.Verbose("disposing connection");
+            Dispose(true);
+        }
+        
+        /// <summary>
+        /// </summary>
         /// <param name="disposing"></param>
-        private void Dispose(bool disposing)
+        public void Dispose(bool disposing)
         {
             if (Disposed)
             {

@@ -179,7 +179,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public SecureString ReadSecureString(string prompt)
+        public static SecureString ReadSecureString(string prompt)
         {
             const string t =
                 " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
