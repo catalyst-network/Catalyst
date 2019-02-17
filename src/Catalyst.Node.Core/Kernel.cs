@@ -14,13 +14,12 @@ namespace Catalyst.Node.Core
 
         private static Kernel _instance;
         private static readonly object Mutex = new object();
-        public IModuleRegistrar ConsensusService;
-        public IModuleRegistrar ContractService;
-
-        public IModuleRegistrar DfsService;
-        public IModuleRegistrar GossipService;
-        public IModuleRegistrar LedgerService;
-        public IModuleRegistrar MempoolService;
+        public IModuleRegistrar ConsensusService { get; internal set; }
+        public IModuleRegistrar ContractService { get; internal set; }
+        public IModuleRegistrar DfsService { get; internal set; }
+        public IModuleRegistrar GossipService { get; internal set; }
+        public IModuleRegistrar LedgerService { get; internal set; }
+        public IModuleRegistrar MempoolService { get; internal set; }
 
         /// <summary>
         ///     Private kernel constructor.
