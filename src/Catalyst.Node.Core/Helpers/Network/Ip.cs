@@ -17,7 +17,7 @@ namespace Catalyst.Node.Core.Helpers.Network
             var url = "http://checkip.dyndns.org";
             var req = WebRequest.Create(url);
             var resp = req.GetResponse();
-            var sr = new StreamReader(resp.GetResponseStream() ?? throw new Exception());
+            var sr = new StreamReader(resp.GetResponseStream() ?? throw new ArgumentNullException());
             var response = sr.ReadToEnd().Trim();
             var a = response.Split(':');
             var a2 = a[1].Substring(1);
