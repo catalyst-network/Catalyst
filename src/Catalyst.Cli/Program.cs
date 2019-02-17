@@ -36,13 +36,15 @@ namespace Catalyst.Cli
             var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
 
             if (!Directory.Exists(catalystHomeDirectory))
+            {
                 Directory.CreateDirectory(catalystHomeDirectory);
+            }
 
             // check if user home data dir has a shell config
             var shellFilePath = Path.Combine(catalystHomeDirectory, shellFileName);
-            if (!File.Exists(shellFilePath))
+            if (!File.Exists(shellFilePath)) {
                 File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.shell.json"),
-                    shellFilePath);
+                    shellFilePath);}
 
             // resolve config from autofac
             var builder = new ContainerBuilder();

@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IP2P.Ping(IPeerIdentifier queryingNode)
+        public bool Ping(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -107,7 +107,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IP2P.Store(string k, byte[] v)
+        public bool Store(string k, byte[] v)
         {
             throw new NotImplementedException();
         }
@@ -117,7 +117,7 @@ namespace Catalyst.Node.Core
         /// <param name="k"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        dynamic IP2P.FindValue(string k)
+        public dynamic FindValue(string k)
         {
             throw new NotImplementedException();
         }
@@ -130,7 +130,7 @@ namespace Catalyst.Node.Core
         /// <param name="queryingNode"></param>
         /// <param name="targetNode"></param>
         /// <returns></returns>
-        List<IPeerIdentifier> IP2P.FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
+        public List<IPeerIdentifier> FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
         {
             // @TODO just to satisfy the DHT interface, need to implement
             throw new NotImplementedException();
@@ -140,7 +140,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        List<IPeerIdentifier> IP2P.GetPeers(IPeerIdentifier queryingNode)
+        public List<IPeerIdentifier> GetPeers(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -150,7 +150,7 @@ namespace Catalyst.Node.Core
         /// <param name="queryingNode"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        List<IPeerIdentifier> IP2P.PeerExchange(IPeerIdentifier queryingNode)
+        public List<IPeerIdentifier> PeerExchange(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -159,7 +159,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public void Announce(object sender, AnnounceNodeEventArgs e)
+        private void Announce(object sender, AnnounceNodeEventArgs e)
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(e, nameof(e)).NotNull();

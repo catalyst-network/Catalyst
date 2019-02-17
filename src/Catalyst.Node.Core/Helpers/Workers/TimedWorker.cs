@@ -33,7 +33,10 @@ namespace Catalyst.Node.Core.Helpers.Workers
                                           lock (_actions)
                                           {
                                               any = _actions.Count > 0;
-                                              if (any) scheduledAction = _actions[0];
+                                              if (any)
+                                              {
+                                                  scheduledAction = _actions[0];
+                                              }
                                           }
 
                                           TimeSpan timeToWait;

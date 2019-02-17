@@ -471,6 +471,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         {
             string argValue = null;
             for (var i = 0; i < args.Length; i++)
+            {
                 switch (args[i])
                 {
                     case var dataDir when new Regex(@"[regExPattern]+").IsMatch(args[i]):
@@ -478,7 +479,8 @@ namespace Catalyst.Node.Core.Helpers.Shell
                         break;
                     default:
                         return null;
-                }
+                }   
+            }
             return argValue;
         }
 
