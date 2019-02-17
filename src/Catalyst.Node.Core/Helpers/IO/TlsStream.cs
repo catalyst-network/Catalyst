@@ -26,28 +26,6 @@ namespace Catalyst.Node.Core.Helpers.IO
             return true;
         }
 
-        public static SslStream GetTlsStream(
-            NetworkStream networkStream,
-            int direction,
-            X509Certificate sslCertificate,
-            bool acceptInvalidCerts,
-            bool mutuallyAuthenticate = false
-        )
-        {
-            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, mutuallyAuthenticate, null);
-        }
-
-        public static SslStream GetTlsStream(
-            NetworkStream networkStream,
-            int direction,
-            X509Certificate sslCertificate,
-            bool acceptInvalidCerts,
-            IPEndPoint endPoint
-        )
-        {
-            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, false, endPoint);
-        }
-        
         /// <summary>
         ///     inbound connections = 1, outbound connections = 2
         /// </summary>
@@ -66,8 +44,8 @@ namespace Catalyst.Node.Core.Helpers.IO
             int direction,
             X509Certificate sslCertificate,
             bool acceptInvalidCerts,
-            bool mutuallyAuthenticate,
-            IPEndPoint endPoint
+            bool mutuallyAuthenticate = false,
+            IPEndPoint endPoint = null
         )
         {
             if (networkStream == null)
@@ -90,7 +68,6 @@ namespace Catalyst.Node.Core.Helpers.IO
             {
                 switch (direction)
                 {
-                    //@TODO see if we want this async?
                     case 1:
                         sslStream.AuthenticateAsServer(sslCertificate, true, SslProtocols.Tls12, false);
                         break;
