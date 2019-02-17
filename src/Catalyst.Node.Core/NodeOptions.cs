@@ -61,7 +61,7 @@ namespace Catalyst.Node.Core
         public MempoolSettings MempoolSettings { get; internal set; }
         public ContractSettings ContractSettings { get; internal set; }
         public ConsensusSettings ConsensusSettings { get; internal set; }
-        public readonly ISharpRepositoryConfiguration PersistenceConfiguration;
+        internal readonly ISharpRepositoryConfiguration PersistenceConfiguration;
 
         /// <summary>
         ///     Get a thread safe settings singleton.
