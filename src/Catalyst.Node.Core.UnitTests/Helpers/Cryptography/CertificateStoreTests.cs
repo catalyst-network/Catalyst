@@ -1,20 +1,18 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Cryptography;
+using Catalyst.Node.Core.UnitTest.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
 using NSubstitute;
 using FluentAssertions;
-using Serilog;
 
 namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
 {
-    public class CertificateStoreTests : IDisposable
+    public class CertificateStoreTests : FileSystemBasedTest, IDisposable
     {
         private string _fileWithPassName;
         private DirectoryInfo _directoryInfo;
@@ -24,28 +22,8 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
 
         private readonly IPasswordReader _passwordReader;
 
-        /// <summary>
-        /// This can for instance be used to find the name of the test currently using the
-        /// class by calling this.CurrentTest.DisplayName
-        /// </summary>
-        private readonly ITest _currentTest;
-        private readonly string _currentTestName;
-        private readonly ITestOutputHelper _output;
-        private readonly IFileSystem _fileSystem;
-        private SecureString _password;
-
-        public CertificateStoreTests(ITestOutputHelper output)
+        public CertificateStoreTests(ITestOutputHelper output) : base(output)
         {
-            _output = output;
-            _currentTest = (_output?.GetType()
-                                   .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
-                                   .GetValue(_output) as ITest);
-            _currentTestName = _currentTest.TestCase.TestMethod.Method.Name;
-            var testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, _currentTestName));
-
-            _fileSystem = Substitute.For<IFileSystem>();
-            _fileSystem.GetCatalystHomeDir().Returns(testDirectory);
-
             _passwordReader = Substitute.For<IPasswordReader>();
         }
 
@@ -115,11 +93,11 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
             _retrievedCertificate.Thumbprint.Should().Be(_createdCertificate.Thumbprint);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             _createdCertificate?.Dispose();
             _retrievedCertificate?.Dispose();
-            _password?.Dispose();
         }
     }
 }
