@@ -115,6 +115,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
                 var buffer = new byte[bufferSize]; // @TODO hook into new byte method
 
                 while ((read = sslStream.Read(buffer, 0, buffer.Length)) > 0)
+                {
                     if (read > 0)
                     {
                         dataMs.Write(buffer, 0, read);
@@ -153,7 +154,8 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
                         currentTimeout += sleepInterval;
                         Task.Delay(sleepInterval);
-                    }
+                    }   
+                }
 
                 if (timeout)
                 {

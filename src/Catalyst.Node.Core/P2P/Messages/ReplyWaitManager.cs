@@ -5,6 +5,7 @@ using Catalyst.Node.Common.Modules.P2P.Messages;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Messages;
 using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.P2P.Messages;
 using Dawn;
 using Serilog;
 
@@ -76,11 +77,13 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
             lock (LockObject)
             {
                 if (_internal.ContainsKey(correlationId))
+                {
                     if (Equals(_internal[correlationId].Message.Connection.EndPoint, endPoint))
                     {
                         _internal.Remove(correlationId);
                         return true;
-                    }
+                    }   
+                }
             }
 
             return false;

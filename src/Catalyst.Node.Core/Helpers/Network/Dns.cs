@@ -27,7 +27,10 @@ namespace Catalyst.Node.Core.Helpers.Network
         {
             Guard.Argument(hostnames, nameof(hostnames)).NotEmpty().NotNull().DoesNotContainNull();
             var recordList = new List<IDnsQueryResponse>();
-            foreach (var hostname in hostnames) recordList.Add(GetTxtRecords(hostname));
+            foreach (var hostname in hostnames)
+            {
+                recordList.Add(GetTxtRecords(hostname));
+            }
 
             return recordList;
         }

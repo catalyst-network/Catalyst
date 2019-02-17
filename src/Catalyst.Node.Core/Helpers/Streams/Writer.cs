@@ -35,7 +35,10 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
                 var header = "";
 
-                foreach (int i in messageDescriptor) Logger.Information(i.ToString());
+                foreach (int i in messageDescriptor)
+                {
+                    Logger.Information(i.ToString());
+                }
 
                 if (data == null || data.Length < 1)
                 {

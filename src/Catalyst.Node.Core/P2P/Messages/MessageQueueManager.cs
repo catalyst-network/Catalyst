@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Catalyst.Node.Common.Modules.P2P.Messages;
 using Catalyst.Node.Core.Helpers.IO;
+using Catalyst.Node.Core.P2P.Messages;
 using Google.Protobuf;
 using Serilog;
 

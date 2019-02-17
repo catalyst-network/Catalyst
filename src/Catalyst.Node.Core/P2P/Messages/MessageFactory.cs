@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Modules.P2P.Messages;
+using Catalyst.Node.Core.P2P.Messages;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Messages
