@@ -30,7 +30,10 @@ namespace Catalyst.Node.Core.Config
             var networkAsString = Enum.GetName(typeof(NodeOptions.Networks), network);
 
             var dataDirInfo = new DirectoryInfo(dataDir);
-            if (!dataDirInfo.Exists) dataDirInfo.Create();
+            if (!dataDirInfo.Exists)
+            {
+                dataDirInfo.Create();
+            }
 
             var existingConfigs = dataDirInfo.EnumerateFiles("*.json")
                .Select(fi => fi.Name);
@@ -48,7 +51,9 @@ namespace Catalyst.Node.Core.Config
                 : StringComparer.InvariantCulture;
 
             foreach (var fileName in requiredConfigFiles.Except(existingConfigs, filenameComparer))
+            {
                 CopyConfigFileToFolder(dataDir, fileName);
+            }
         }
 
         public void CopyConfigFileToFolder(string targetFolder, string fileName,
@@ -56,7 +61,10 @@ namespace Catalyst.Node.Core.Config
         {
             var sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigFolder, fileName);
             var targetFile = Path.Combine(targetFolder, fileName);
-            if (!overwrite && File.Exists(targetFile)) return;
+            if (!overwrite && File.Exists(targetFile))
+            {
+                return;
+            }
             File.Copy(sourceFile, targetFile, overwrite);
         }
     }

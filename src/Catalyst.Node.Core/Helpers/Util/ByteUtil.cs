@@ -77,9 +77,20 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         public static byte[] Slice(this byte[] org, int start, int end = int.MaxValue)
         {
-            if (org == null) throw new ArgumentNullException(nameof(org));
-            if (org.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(org));
-            if (end < 0) end = org.Length + end;
+            if (org == null)
+            {
+                throw new ArgumentNullException(nameof(org));
+            }
+
+            if (org.Length == 0)
+            {
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(org));
+            }
+
+            if (end < 0)
+            {
+                end = org.Length + end;
+            }
             start = Math.Max(0, start);
             end = Math.Max(start, end);
 
@@ -93,10 +104,15 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         public static byte[] InitialiseEmptyByteArray(int length)
         {
-            if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length));
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
             var returnArray = new byte[length];
             for (var i = 0; i < length; i++)
+            {
                 returnArray[i] = 0x00;
+            }
             return returnArray;
         }
 
@@ -106,19 +122,38 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         private static IEnumerable<byte> MergeToEnum(params byte[][] arrays)
         {
-            if (arrays == null) throw new ArgumentNullException(nameof(arrays));
-            if (arrays.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
+            if (arrays == null)
+            {
+                throw new ArgumentNullException(nameof(arrays));
+            }
+
+            if (arrays.Length == 0)
+            {
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
+            }
+
             foreach (var a in arrays)
-            foreach (var b in a)
-                yield return b;
+            {
+                foreach (var b in a)
+                {
+                    yield return b;
+                }
+            }
         }
 
         /// <param name="arrays"> - arrays to merge </param>
         /// <returns> - merged array </returns>
         public static byte[] Merge(params byte[][] arrays)
         {
-            if (arrays == null) throw new ArgumentNullException(nameof(arrays));
-            if (arrays.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
+            if (arrays == null)
+            {
+                throw new ArgumentNullException(nameof(arrays));
+            }
+
+            if (arrays.Length == 0)
+            {
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
+            }
             return MergeToEnum(arrays).ToArray();
         }
 
@@ -128,8 +163,15 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         public static string ByteToString(byte[] array)
         {
-            if (array == null) throw new ArgumentNullException(nameof(array));
-            if (array.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(array));
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(array));
+            }
             return Encoding.UTF8.GetString(array);
         }
 
@@ -140,15 +182,32 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         public static byte[] XOR(this byte[] a, byte[] b)
         {
-            if (a == null) throw new ArgumentNullException(nameof(a));
-            if (b == null) throw new ArgumentNullException(nameof(b));
-            if (a.Length == 0) throw new ArgumentException("Value a cannot be an empty collection.", nameof(a));
-            if (b.Length == 0) throw new ArgumentException("Value b cannot be an empty collection.", nameof(b));
+            if (a == null)
+            {
+                throw new ArgumentNullException(nameof(a));
+            }
+
+            if (b == null)
+            {
+                throw new ArgumentNullException(nameof(b));
+            }
+
+            if (a.Length == 0)
+            {
+                throw new ArgumentException("Value a cannot be an empty collection.", nameof(a));
+            }
+
+            if (b.Length == 0)
+            {
+                throw new ArgumentException("Value b cannot be an empty collection.", nameof(b));
+            }
 
             var length = Math.Min(a.Length, b.Length);
             var result = new byte[length];
             for (var i = 0; i < length; i++)
+            {
                 result[i] = (byte) (a[i] ^ b[i]);
+            }
             return result;
         }
     }
