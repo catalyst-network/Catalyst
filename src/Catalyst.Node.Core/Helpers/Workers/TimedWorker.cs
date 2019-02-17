@@ -39,12 +39,14 @@ namespace Catalyst.Node.Core.Helpers.Workers
                                               }
                                           }
 
-                                          TimeSpan timeToWait;
+                                          TimeSpan timeToWait = TimeSpan.Zero;
                                           if (any)
                                           {
-                                              var runTime = scheduledAction.NextExecutionDate;
-                                              var dT = runTime - DateTime.UtcNow;
-                                              timeToWait = dT > TimeSpan.Zero ? dT : TimeSpan.Zero;
+                                              if (scheduledAction != null) {
+                                                  var runTime = scheduledAction.NextExecutionDate;
+                                                  var dT = runTime - DateTime.UtcNow;
+                                                  timeToWait = dT > TimeSpan.Zero ? dT : TimeSpan.Zero;
+                                              }
                                           }
                                           else
                                           {
