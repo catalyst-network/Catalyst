@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.IO;
 using System.Net.Security;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
             var timeout = false;
             const int sleepInterval = 25;
 
-            if (!sslStream.CanRead) throw new Exception("cant read stream");
+            if (!sslStream.CanRead) throw new InvalidOperationException("can not read stream");
 
             // start reading header
             using (var headerMs = new MemoryStream())
@@ -82,7 +83,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
                 // if goes into null we return null and wait and go back in this causes a dos see connection manager DataReciever()
                 if (headerBytes == null || headerBytes.Length < 1) return null;
                 if (!long.TryParse(ByteUtil.ByteToString(headerBytes).Replace(":", ""), out contentLength))
-                    throw new Exception("MessageReadAsync malformed message, message header not an integer");
+                    throw new ArgumentException("MessageReadAsync malformed message, message header not an integer");
             }
 
             using (var dataMs = new MemoryStream())
@@ -128,13 +129,13 @@ namespace Catalyst.Node.Core.Helpers.Streams
                     }
 
                 if (timeout)
-                    throw new Exception("MessageReadAsync timeout exceeded while reading header after reading");
+                    throw new TimeoutException("MessageReadAsync timeout exceeded while reading header after reading");
                 contentBytes = dataMs.ToArray();
             }
 
             if (contentBytes == null || contentBytes.Length < 1) return null;
             if (contentBytes.Length != contentLength)
-                throw new Exception("message descriptor error,  bytes does not match header value");
+                throw new InvalidOperationException("message descriptor error: bytes does not match header value");
             return contentBytes;
         }
     }
