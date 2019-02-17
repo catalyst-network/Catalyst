@@ -28,7 +28,7 @@ namespace Catalyst.Node.Core
 
         private static readonly object Mutex = new object();
 
-        public readonly Kernel Kernel;
+        protected internal readonly Kernel Kernel;
 
         private readonly Dns Dns;
        
