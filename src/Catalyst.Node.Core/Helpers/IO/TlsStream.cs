@@ -26,6 +26,38 @@ namespace Catalyst.Node.Core.Helpers.IO
             return true;
         }
 
+        public static SslStream GetTlsStream(
+            NetworkStream networkStream,
+            int direction,
+            X509Certificate sslCertificate,
+            bool acceptInvalidCerts
+        )
+        {
+            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, false);
+        }
+
+        public static SslStream GetTlsStream(
+            NetworkStream networkStream,
+            int direction,
+            X509Certificate sslCertificate,
+            bool acceptInvalidCerts,
+            bool mutuallyAuthenticate = false
+        )
+        {
+            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, mutuallyAuthenticate, null);
+        }
+
+        public static SslStream GetTlsStream(
+            NetworkStream networkStream,
+            int direction,
+            X509Certificate sslCertificate,
+            bool acceptInvalidCerts,
+            IPEndPoint endPoint
+        )
+        {
+            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, false, endPoint);
+        }
+        
         /// <summary>
         ///     inbound connections = 1, outbound connections = 2
         /// </summary>
@@ -44,12 +76,19 @@ namespace Catalyst.Node.Core.Helpers.IO
             int direction,
             X509Certificate sslCertificate,
             bool acceptInvalidCerts,
-            bool mutuallyAuthenticate = false,
-            IPEndPoint endPoint = null
+            bool mutuallyAuthenticate,
+            IPEndPoint endPoint
         )
         {
-            if (networkStream == null) throw new ArgumentNullException(nameof(networkStream));
-            if (sslCertificate == null) throw new ArgumentNullException(nameof(sslCertificate));
+            if (networkStream == null)
+            {
+                throw new ArgumentNullException(nameof(networkStream));
+            }
+
+            if (sslCertificate == null)
+            {
+                throw new ArgumentNullException(nameof(sslCertificate));
+            }
 
             var certificateCollection = new X509CertificateCollection {sslCertificate};
 

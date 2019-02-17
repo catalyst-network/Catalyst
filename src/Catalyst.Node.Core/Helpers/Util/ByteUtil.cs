@@ -28,8 +28,15 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         public static byte[] CombineByteArr(params byte[][] arrays)
         {
-            if (arrays == null) throw new ArgumentNullException(nameof(arrays));
-            if (arrays.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
+            if (arrays == null)
+            {
+                throw new ArgumentNullException(nameof(arrays));
+            }
+
+            if (arrays.Length == 0)
+            {
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
+            }
             var rv = new byte[arrays.Sum(a => a.Length)];
             var offset = 0;
             foreach (var array in arrays)
@@ -46,8 +53,15 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// </summary>
         public static byte[] AppendByte(byte[] bytes, byte b)
         {
-            if (bytes == null) throw new ArgumentNullException(nameof(bytes));
-            if (bytes.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(bytes));
+            if (bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
+            if (bytes.Length == 0)
+            {
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(bytes));
+            }
             var result = new byte[bytes.Length + 1];
             Array.Copy(bytes, result, bytes.Length);
             result[result.Length - 1] = b;
