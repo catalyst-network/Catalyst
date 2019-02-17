@@ -8,7 +8,7 @@ using StackExchange.Redis.Extensions.Newtonsoft;
 
 namespace Catalyst.Node.Core.Components.Redis
 {
-    public class RedisStore : IRedisStore
+    public class RedisStore : IDisposable, IRedisStore
     {
         private readonly When _when;
         private IRedisConnector _redisConnector;
