@@ -184,7 +184,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidatePeerIdLength(byte[] peerId)
+        private static void ValidatePeerIdLength(byte[] peerId)
         {
             if (peerId.Length != 42)
             {
@@ -224,7 +224,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidateClientIp(byte[] peerId)
+        private static void ValidateClientIp(byte[] peerId)
         {
             if (Ip.ValidateIp(new IPAddress(peerId.Slice(4, 20)).ToString()).GetType() != typeof(IPAddress))
             {
@@ -236,7 +236,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidateClientPort(byte[] peerId)
+        private static void ValidateClientPort(byte[] peerId)
         {
             if (!Ip.ValidPortRange(peerId.Slice(20, 22).ToIntFromRLPDecoded()))
             {

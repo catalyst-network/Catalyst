@@ -28,7 +28,7 @@ namespace Catalyst.Node.Core
 
         private static readonly object Mutex = new object();
 
-        public readonly Kernel Kernel;
+        protected internal readonly Kernel Kernel;
 
         private readonly Dns Dns;
        
@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core
             GC.SuppressFinalize(this);
         }
 
-        private X509Certificate2 GetCertificate(string pfxFilePath)
+        private static X509Certificate2 GetCertificate(string pfxFilePath)
         {
             X509Certificate2 certificate;
             var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader());
