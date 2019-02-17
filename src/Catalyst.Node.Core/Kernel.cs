@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core
                         {
                             var fs = new Fs();
                             var configCopier = new ConfigCopier(fs);
-                            configCopier.RunConfigStartUp(nodeOptions.DataDir, Core.NodeOptions.Networks.devnet);
+                            configCopier.RunConfigStartUp(nodeOptions.DataDir, NodeOptions.Networks.devnet);
                             _instance = new Kernel(nodeOptions, containerBuilder.Build());
                         }
                         catch (Exception e)
@@ -81,14 +81,19 @@ namespace Catalyst.Node.Core
         {
             Dispose(true);
             Logger.Verbose("disposing catalyst kernel");
-            GC.SuppressFinalize(this);
         }
 
         private void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
-            if (disposing) Container?.Dispose();
+            if (disposing)
+            {
+                Container?.Dispose();
+            }
 
             Disposed = true;
             Logger.Verbose("Catalyst kernel disposed");

@@ -98,8 +98,10 @@ namespace Catalyst.Node.Core
                                                     ? nodeNetwork.Value()
                                                     : "devnet";
                                   if (!Enum.TryParse(network,
-                                          out NodeOptions.Networks networkOption))
+                                      out NodeOptions.Networks networkOption))
+                                  {
                                       networkOption = NodeOptions.Networks.devnet;
+                                  }
 
                                   var fs = new Fs();
                                   new ConfigCopier(fs).RunConfigStartUp(dataDir, networkOption);
@@ -122,19 +124,40 @@ namespace Catalyst.Node.Core
                                          .Build();
 
                                   // override settings classes with cli params
-                                  if (peerPublicKey.HasValue()) nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
+                                  if (peerPublicKey.HasValue())
+                                  {
+                                      nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
+                                  }
+
                                   if (peerBindAddress.HasValue())
+                                  {
                                       nodeOptions.PeerSettings.BindAddress = IPAddress.Parse(peerBindAddress.Value());
+                                  }
+
                                   if (peerPayoutAddress.HasValue())
+                                  {
                                       nodeOptions.PeerSettings.PayoutAddress = peerPayoutAddress.Value();
+                                  }
+
                                   if (walletRpcIpOption.HasValue())
+                                  {
                                       nodeOptions.WalletSettings.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
+                                  }
+
                                   if (walletRpcPortOption.HasValue())
+                                  {
                                       nodeOptions.WalletSettings.WalletRpcPort = int.Parse(walletRpcPortOption.Value());
+                                  }
+
                                   if (peerSeedServers.HasValue())
+                                  {
                                       nodeOptions.PeerSettings.SeedServers.InsertRange(0, peerSeedServers.Values);
+                                  }
+
                                   if (peerKnownNodes.HasValue())
+                                  {
                                       nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
+                                  }
 
                                   using (var kernel = new KernelBuilder(nodeOptions)
                                                      .WithDfsModule()

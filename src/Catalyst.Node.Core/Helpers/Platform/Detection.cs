@@ -78,12 +78,22 @@ namespace Catalyst.Node.Core.Helpers.Platform
             var platform = 0;
 
             if (IsLinux)
+            {
                 platform = 1;
+            }
             else if (IsMacOsX)
+            {
                 platform = 2;
-            else if (IsWindows) platform = 3;
+            }
+            else if (IsWindows)
+            {
+                platform = 3;
+            }
 
-            if (platform == 0) throw new Exception();
+            if (platform == 0)
+            {
+                throw new Exception();
+            }
 
             return platform;
         }
@@ -95,7 +105,9 @@ namespace Catalyst.Node.Core.Helpers.Platform
         {
             // Supported platform has already been detected
             if (_isWindows || _isLinux || _isMacOsX)
+            {
                 return;
+            }
 
             var winDir = Environment.GetEnvironmentVariable("windir");
             if (!string.IsNullOrEmpty(winDir) && winDir.Contains(@"\") && Directory.Exists(winDir))
@@ -106,10 +118,13 @@ namespace Catalyst.Node.Core.Helpers.Platform
             {
                 var osType = File.ReadAllText(@"/proc/sys/kernel/ostype");
                 if (osType.StartsWith("Linux", StringComparison.OrdinalIgnoreCase))
+                {
                     _isLinux = true;
-                else
+                }
+                else {
                     throw new UnsupportedPlatformException(
                         $"Catalyst Catalyst.Node is not supported on \"{osType}\" platform");
+                }
             }
             else if (File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
             {

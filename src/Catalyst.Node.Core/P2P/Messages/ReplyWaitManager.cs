@@ -39,13 +39,18 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void Add(Message message)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
             var correlationId = ByteUtil.GenerateCorrelationId();
 
             lock (LockObject)
             {
                 if (!_internal.ContainsKey(correlationId))
+                {
                     _internal.Add(correlationId, new MessageReplyWait(message, correlationId));
+                }
             }
         }
 
@@ -58,8 +63,15 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public bool VerifyExpected(IPEndPoint endPoint, ulong correlationId)
         {
-            if (endPoint == null) throw new ArgumentNullException(nameof(endPoint));
-            if (correlationId <= 0) throw new ArgumentOutOfRangeException(nameof(correlationId));
+            if (endPoint == null)
+            {
+                throw new ArgumentNullException(nameof(endPoint));
+            }
+
+            if (correlationId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(correlationId));
+            }
 
             lock (LockObject)
             {
