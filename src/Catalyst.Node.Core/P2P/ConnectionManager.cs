@@ -182,6 +182,7 @@ namespace Catalyst.Node.Core.P2P
             }
 
             while (!Token.IsCancellationRequested)
+            {
                 try
                 {
                     var tcpClient = await Listener.AcceptTcpClientAsync();
@@ -229,7 +230,8 @@ namespace Catalyst.Node.Core.P2P
                 catch (Exception ex)
                 {
                     Logger.Error(ex, "*** AcceptConnections Exception from ");
-                }
+                }   
+            }
         }
 
         /// <summary>

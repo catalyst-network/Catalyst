@@ -69,7 +69,10 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="disposing"></param>
         private void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {

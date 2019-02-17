@@ -69,7 +69,10 @@ namespace Catalyst.Node.Core.Helpers.IO
         /// <param name="disposing"></param>
         private void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {

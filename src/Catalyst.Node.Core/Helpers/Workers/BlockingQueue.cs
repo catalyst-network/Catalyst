@@ -25,7 +25,9 @@ namespace Catalyst.Node.Core.Helpers.Workers
             lock (_queueLock)
             {
                 if (_queue.Count > 0)
+                {
                     return _queue.Dequeue();
+                }
             }
 
             _resetEvent.WaitOne();

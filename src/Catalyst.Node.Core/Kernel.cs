@@ -54,6 +54,7 @@ namespace Catalyst.Node.Core
             Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
             Guard.Argument(containerBuilder, nameof(containerBuilder)).NotNull();
             if (_instance == null)
+            {
                 lock (Mutex)
                 {
                     if (_instance == null)
@@ -71,7 +72,8 @@ namespace Catalyst.Node.Core
                             throw;
                         }
                     }
-                }
+                }   
+            }
 
             return _instance;
         }
