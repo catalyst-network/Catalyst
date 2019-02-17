@@ -106,7 +106,7 @@ namespace Catalyst.Node.Core.Helpers.Cryptography
             return true;
         }
 
-        private X509Certificate2 BuildSelfSignedServerCertificate(SecureString password, string commonName = LocalHost)
+        private static X509Certificate2 BuildSelfSignedServerCertificate(SecureString password, string commonName = LocalHost)
         {
             var sanBuilder = new SubjectAlternativeNameBuilder();
             sanBuilder.AddIpAddress(IPAddress.Loopback);
