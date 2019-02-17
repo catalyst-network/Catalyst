@@ -1,5 +1,10 @@
 using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
 using Autofac;
+using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.P2P;
 using Dawn;
@@ -55,7 +60,9 @@ namespace Catalyst.Node.Core
                     {
                         try
                         {
-                            RunConfigStartUp(nodeOptions.DataDir, Core.NodeOptions.Networks.devnet);
+                            var fs = new Fs();
+                            var configCopier = new ConfigCopier(fs);
+                            configCopier.RunConfigStartUp(nodeOptions.DataDir, Core.NodeOptions.Networks.devnet);
                             _instance = new Kernel(nodeOptions, containerBuilder.Build());
                         }
                         catch (Exception e)
@@ -69,32 +76,11 @@ namespace Catalyst.Node.Core
             return _instance;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="dataDir">Home catalyst directory</param>
-        /// <param name="networks">Network on which to run the node</param>
-        /// <returns></returns>
-        public static void RunConfigStartUp(string dataDir, NodeOptions.Networks networks)
-        {
-            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-
-            if (Fs.CheckConfigExists(dataDir, Enum.GetName(typeof(NodeOptions.Networks), networks)))
-                return;
-            // check supplied data dir exists
-            if (!Fs.DirectoryExists(dataDir))
-            {
-                // not there make one
-                Fs.CreateSystemFolder(dataDir);
-            }
-            // make config with new system folder
-            Fs.CopySkeletonConfigs(dataDir,Enum.GetName(typeof(NodeOptions.Networks), networks));
-        }
-
         /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
-            Logger.Debug("disposing catalyst kernel");
+            Logger.Verbose("disposing catalyst kernel");
             GC.SuppressFinalize(this);
         }
 
@@ -105,7 +91,7 @@ namespace Catalyst.Node.Core
             if (disposing) Container?.Dispose();
 
             Disposed = true;
-            Logger.Debug("Catalyst kernel disposed");
+            Logger.Verbose("Catalyst kernel disposed");
         }
     }
 }
