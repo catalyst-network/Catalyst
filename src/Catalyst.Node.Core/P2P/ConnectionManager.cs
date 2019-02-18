@@ -169,12 +169,15 @@ namespace Catalyst.Node.Core.P2P
 
             //@TODO put in try catch
             Listener.Start();
-            Logger.Information("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
+            Logger.Information("Peer server starting on {0}:{1}", 
+                ipEndPoint.Address, ipEndPoint.Port);
 
             try
             {
-                Logger.Debug($"Raising {nameof(AnnounceNodeEventArgs)} for node {NodeIdentity}");
-                await Events.Events.AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
+                Logger.Debug("Raising {0} for node {1}", 
+                    nameof(AnnounceNodeEventArgs), NodeIdentity);
+                await Events.Events.AsyncRaiseEvent(AnnounceNode, this,
+                    new AnnounceNodeEventArgs(NodeIdentity));
             }
             catch (ArgumentNullException e)
             {
@@ -213,18 +216,16 @@ namespace Catalyst.Node.Core.P2P
                             DisconnectConnection(connection);
                             continue;
                         }
-
                         await DataReceiver(connection, Token);
                     }
                 }
                 catch (SocketException ex)
                 {
-                    switch (ex.Message)
+                    if (ex.Message == "An existing connection was forcibly closed by the remote host") 
+                    { /* do nothing */ }
+                    else
                     {
-                        case "An existing connection was forcibly closed by the remote host":
-                            break;
-                        default:
-                            throw new InvalidOperationException("Unexpected message");
+                        throw new InvalidOperationException("Unexpected message");
                     }
                 }
                 catch (Exception ex)
