@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
+using Org.BouncyCastle.Asn1.Pkcs;
 using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Network
@@ -12,18 +14,16 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public static IPAddress GetPublicIp()
+        public static async Task<IPAddress> GetPublicIpAsync()
         {
-            var url = "http://checkip.dyndns.org";
+            const string url = "https://ipecho.net/plain";
             var req = WebRequest.Create(url);
-            var resp = req.GetResponse();
-            var sr = new StreamReader(resp.GetResponseStream() ?? throw new InvalidOperationException());
-            var response = sr.ReadToEnd().Trim();
-            var a = response.Split(':');
-            var a2 = a[1].Substring(1);
-            var a3 = a2.Split('<');
-            var a4 = a3[0];
-            return IPAddress.Parse(a4);
+            using (var response = await req.GetResponseAsync())
+            using (var reader = new StreamReader(response.GetResponseStream()))
+            {
+                var responseContent = await reader.ReadToEndAsync();
+                return IPAddress.Parse(responseContent);
+            }
         }
 
         /// <summary>
