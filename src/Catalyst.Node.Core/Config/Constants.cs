@@ -16,7 +16,7 @@ namespace Catalyst.Node.Core.Config
         public static string NetworkConfigFile(NodeOptions.Networks network)
         {
             var networkAsString = Enum.GetName(typeof(NodeOptions.Networks), network);
-            return string.Format(NetworkConfigFilePattern, network);
+            return string.Format(NetworkConfigFilePattern, networkAsString);
         }
 
         public static string NetworkConfigFile(string network)
