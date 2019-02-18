@@ -1,4 +1,3 @@
-using System;
 using NSec.Cryptography;
 
 namespace Catalyst.Node.Core.Helpers.Cryptography

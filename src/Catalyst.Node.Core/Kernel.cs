@@ -1,11 +1,6 @@
 using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
 using Autofac;
 using Catalyst.Node.Core.Config;
-using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.P2P;
 using Dawn;
 using IModuleRegistrar = Autofac.Core.Registration.IModuleRegistrar;
@@ -61,8 +56,7 @@ namespace Catalyst.Node.Core
                     {
                         try
                         {
-                            var fs = new Fs();
-                            var configCopier = new ConfigCopier(fs);
+                            var configCopier = new ConfigCopier();
                             configCopier.RunConfigStartUp(nodeOptions.DataDir, NodeOptions.Networks.devnet);
                             _instance = new Kernel(nodeOptions, containerBuilder.Build());
                         }

@@ -69,22 +69,17 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="connection"></param>
         /// <param name="foundConnection"></param>
         /// <returns></returns>
-        public bool SearchLists(Connection connection, out Connection foundConnection)
+        public bool IsKnownConnection(Connection connection)
         {
             Guard.Argument(connection, nameof(connection)).NotNull();
 
-            if (FindPeerFromConnection(connection, out var foundPeer))
-            {
-                foundConnection = foundPeer.Connection;
-            }
-
-            if (UnIdentifiedPeers.TryGetValue(connection.EndPoint.Address + ":" + connection.EndPoint.Port,
-                out var unidentifiedConnection))
-            {
-                foundConnection = unidentifiedConnection;
-            }
-
-            throw new KeyNotFoundException();
+            var foundPeerFromConnection = FindPeerFromConnection(connection, out var _);
+            
+            var endPoint = connection.EndPoint.Address + ":" + connection.EndPoint.Port;
+            var foundUnidentifiedConnection = UnIdentifiedPeers.TryGetValue(endPoint,
+                out var _);
+            
+            return foundPeerFromConnection || foundUnidentifiedConnection;
         }
 
         /// <summary>
