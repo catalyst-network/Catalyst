@@ -1,23 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using Catalyst.Node.Core.Helpers;
 using Dawn;
 
 namespace Catalyst.Node.Core.Config
 {
     public class ConfigCopier
     {
-        private readonly IFileSystem _fs;
-
-        public ConfigCopier(IFileSystem fs)
-        {
-            _fs = fs;
-        }
-
         /// <summary>
         /// Finds out which config files are missing from the catalyst home directory and
         /// copies them over if needed.

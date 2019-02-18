@@ -1,6 +1,5 @@
 using System;
 using Catalyst.Node.Core.Helpers.IO;
-using Serilog;
 
 namespace Catalyst.Node.Core.Events
 {

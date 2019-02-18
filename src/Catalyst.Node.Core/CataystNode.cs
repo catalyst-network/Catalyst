@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Autofac;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
@@ -17,7 +16,6 @@ using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P;
 using Dawn;
 using Serilog;
-using Serilog.Core;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core

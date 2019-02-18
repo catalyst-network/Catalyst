@@ -1,29 +1,62 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Serilog;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {
     public static class Ip
     {
+        public static readonly ReadOnlyCollection<string> DefaultIpEchoUrls;
+
+        static Ip()
+        {
+            DefaultIpEchoUrls = new List<string>
+            {
+                "https://api.ipify.org",
+                "https://ipecho.net/plain",
+                "https://ifconfig.co/ip",
+                "https://ipv4bot.whatismyipaddress.com"
+            }.AsReadOnly();
+        }
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public static IPAddress GetPublicIp()
+        public static async Task<IPAddress> GetPublicIpAsync(IObservable<string> ipEchoUrls = null)
         {
-            var url = "http://checkip.dyndns.org";
-            var req = WebRequest.Create(url);
-            var resp = req.GetResponse();
-            var sr = new StreamReader(resp.GetResponseStream() ?? throw new InvalidOperationException());
-            var response = sr.ReadToEnd().Trim();
-            var a = response.Split(':');
-            var a2 = a[1].Substring(1);
-            var a3 = a2.Split('<');
-            var a4 = a3[0];
-            return IPAddress.Parse(a4);
+            //TODO : Build a server-less function to avoid relying on these sites
+            var defaultedIpEchoUrls = ipEchoUrls ?? DefaultIpEchoUrls.ToObservable();
+
+            var echoedIp = await defaultedIpEchoUrls
+               .Select((url, i) => Observable.FromAsync(async () => await TryGetExternalIpFromEchoUrl(url)))
+               .Merge()
+               .FirstAsync(t => t != null);
+            
+            return echoedIp;
+        }
+
+        private static async Task<IPAddress> TryGetExternalIpFromEchoUrl(string url)
+        {
+            try
+            {
+                var req = WebRequest.Create(url);
+                using (var response = await req.GetResponseAsync())
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var responseContent = (await reader.ReadToEndAsync()).Trim();
+                    return IPAddress.Parse(responseContent);
+                }
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>

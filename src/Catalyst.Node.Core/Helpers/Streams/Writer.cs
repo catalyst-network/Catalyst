@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Net.Security;
-using System.Net.Sockets;
 using Catalyst.Node.Core.Helpers.Util;
 using Nethereum.RLP;
 using Serilog;
@@ -61,13 +59,14 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
                 var message = new byte[messageLen]; //@TODO hook into new byte mthod
 
-                data = ByteUtil.CombineByteArr(messageDescriptor, data);
+                var dataWithDescriptor = ByteUtil.CombineByteArr(messageDescriptor, data);
 
                 Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
 
-                if (data != null && data.Length > 0)
+                if (dataWithDescriptor != null && dataWithDescriptor.Length > 0)
                 {
-                    Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
+                    Buffer.BlockCopy(dataWithDescriptor, 0, message, headerBytes.Length, 
+                        dataWithDescriptor.Length);
                 }
 
                 sslStream.Write(message, 0, message.Length);
