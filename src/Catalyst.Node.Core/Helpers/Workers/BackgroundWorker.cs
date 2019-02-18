@@ -39,10 +39,17 @@ namespace Catalyst.Node.Core.Helpers.Workers
             _queue.Add(action);
         }
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
+            if (!disposing) return;
             _cancellationTokenSource?.Dispose();
             _queue?.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
