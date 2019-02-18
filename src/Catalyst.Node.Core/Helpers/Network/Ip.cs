@@ -16,7 +16,6 @@ namespace Catalyst.Node.Core.Helpers.Network
         {
             DefaultIpEchoUrls = new[]
             {
-                "http://fail.com",
                 "https://api.ipify.org",
                 "https://ipecho.net/plain",
                 "https://ifconfig.co/ip",
