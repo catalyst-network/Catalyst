@@ -165,14 +165,19 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 else if (key.Key == ConsoleKey.Backspace && sb.Length > 0)
                 {
                     sb.Length--;
-                    Logger.Information(key.KeyChar.ToString());
-                    Logger.Information(' '.ToString());
-                    Logger.Information(key.KeyChar.ToString());
+                    ShellLogKey(key);
                 }
             } while (key.Key != ConsoleKey.Enter);
 
             Console.ForegroundColor = ConsoleColor.White;
             return sb.ToString();
+        }
+
+        private static void ShellLogKey(ConsoleKeyInfo key)
+        {
+            Logger.Information(key.KeyChar.ToString());
+            Logger.Information(' '.ToString());
+            Logger.Information(key.KeyChar.ToString());
         }
 
         /// <summary>
@@ -201,9 +206,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 else if (key.Key == ConsoleKey.Backspace && securePwd.Length > 0)
                 {
                     securePwd.RemoveAt(securePwd.Length - 1);
-                    Logger.Information(key.KeyChar.ToString());
-                    Logger.Information(' '.ToString());
-                    Logger.Information(key.KeyChar.ToString());
+                    ShellLogKey(key);
                 }
             } while (key.Key != ConsoleKey.Enter);
 
