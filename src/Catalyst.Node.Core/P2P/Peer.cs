@@ -25,22 +25,12 @@ namespace Catalyst.Node.Core.P2P
         // }
 
         private int Reputation { get; set; }
-        private bool Disposed { get; set; }
         public DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
         public Connection Connection { get; set; }
         public PeerIdentifier PeerIdentifier { get; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
-
-        /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            Logger.Verbose("disposing peer class");
-            GC.SuppressFinalize(this);
-        }
 
         /// <summary>
         /// </summary>
@@ -64,23 +54,11 @@ namespace Catalyst.Node.Core.P2P
             Reputation--;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="disposing"></param>
-        private void Dispose(bool disposing)
+        public void Dispose()
         {
-            if (Disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                Connection.Dispose();
-            }
-
-            Disposed = true;
-            Logger.Verbose($"Peer {PeerIdentifier.Id} disposed");
+            Connection?.Dispose();
+            Logger.Verbose("Connection to peer {0} Disposed.", 
+                PeerIdentifier?.Id?.ToString() ?? "unknown");
         }
     }
 }
