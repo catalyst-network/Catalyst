@@ -18,8 +18,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
 
         public ConfigCopierTests(ITestOutputHelper output) : base(output)
         {
-            _configCopier = new ConfigCopier(_fileSystem);
-
+            _configCopier = new ConfigCopier();
         }
 
         [Fact]
@@ -42,7 +41,8 @@ namespace Catalyst.Node.Core.UnitTest.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RunConfigStartUp_Should_Not_Overwrite_Network_File()
         {
-            RunConfigStartUp_Should_Not_Overwrite_Existing_Files(Constants.NetworkConfigFile(NodeOptions.Networks.mainnet));
+            RunConfigStartUp_Should_Not_Overwrite_Existing_Files(
+                Constants.NetworkConfigFile(NodeOptions.Networks.mainnet));
         }
 
         [Fact]

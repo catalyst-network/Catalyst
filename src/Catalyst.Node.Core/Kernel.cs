@@ -61,8 +61,7 @@ namespace Catalyst.Node.Core
                     {
                         try
                         {
-                            var fs = new Fs();
-                            var configCopier = new ConfigCopier(fs);
+                            var configCopier = new ConfigCopier();
                             configCopier.RunConfigStartUp(nodeOptions.DataDir, NodeOptions.Networks.devnet);
                             _instance = new Kernel(nodeOptions, containerBuilder.Build());
                         }

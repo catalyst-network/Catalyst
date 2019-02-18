@@ -11,13 +11,6 @@ namespace Catalyst.Node.Core.Config
 {
     public class ConfigCopier
     {
-        private readonly IFileSystem _fs;
-
-        public ConfigCopier(IFileSystem fs)
-        {
-            _fs = fs;
-        }
-
         /// <summary>
         /// Finds out which config files are missing from the catalyst home directory and
         /// copies them over if needed.
