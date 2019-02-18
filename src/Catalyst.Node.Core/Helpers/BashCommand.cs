@@ -12,14 +12,7 @@ namespace Catalyst.Node.Core.Helpers
     /// </remarks>
     public static class BashCommand
     {
-        /// <summary>
-        ///     Run a bash command in background. It can be invoked an extension method.
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <remarks>
-        ///     It assumes the operating system it has a bash shell
-        /// </remarks>
-        public static void BackgroundCmd(this string cmd)
+        private static string EscapeArgs(this string cmd)
         {
             if (string.IsNullOrEmpty(cmd))
             {
@@ -30,7 +23,19 @@ namespace Catalyst.Node.Core.Helpers
             {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
             }
-            var escapedArgs = cmd.Replace("\"", "\\\"");
+            return cmd.Replace("\"", "\\\"");
+
+        }
+        /// <summary>
+        ///     Run a bash command in background. It can be invoked an extension method.
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <remarks>
+        ///     It assumes the operating system it has a bash shell
+        /// </remarks>
+        public static void BackgroundCmd(this string cmd)
+        {
+            var escapedArgs = EscapeArgs(cmd);
 
             var process = new Process
                           {
@@ -62,16 +67,7 @@ namespace Catalyst.Node.Core.Helpers
         /// </remarks>
         public static string WaitForCmd(this string cmd)
         {
-            if (string.IsNullOrEmpty(cmd))
-            {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
-            }
-
-            if (string.IsNullOrWhiteSpace(cmd))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
-            }
-            var escapedArgs = cmd.Replace("\"", "\\\"");
+            var escapedArgs = EscapeArgs(cmd);
 
             var process = new Process
                           {
