@@ -185,10 +185,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         internal bool RemoveUnidentifiedConnectionFromList(Connection connection)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
+            Guard.Argument(connection, nameof(connection)).NotNull();
             try
             {
                 if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.EndPoint.Port,
