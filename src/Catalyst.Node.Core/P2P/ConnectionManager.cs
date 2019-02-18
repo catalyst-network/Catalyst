@@ -242,7 +242,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="TimeoutException"></exception>
         /// <exception cref="AuthenticationException"></exception>
-        public async void BuildOutBoundConnection(string ip, int port)
+        public async Task BuildOutBoundConnection(string ip, int port)
         {
             if (string.IsNullOrEmpty(ip))
             {
