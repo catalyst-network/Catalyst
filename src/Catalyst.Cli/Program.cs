@@ -11,15 +11,8 @@ namespace Catalyst.Cli
 {
     public class Program
     {
-        public static string CatalystSubfolder => ".Catalyst";
-        public static string ShellFileName => "shell.json";
-
-        private static uint Env { get; set; }
-        private static uint Port { get; set; }
-        private static string Network { get; set; }
-        private static IPAddress Host { get; set; }
-        private static string DataDir { get; set; }
-        private static uint MaxOutConnections { get; set; }
+        private static string CatalystSubfolder => ".Catalyst";
+        private static string ShellFileName => "shell.json";
 
         /// <summary>
         ///     Main cli loop
