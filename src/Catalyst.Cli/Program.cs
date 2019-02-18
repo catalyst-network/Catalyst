@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Cli
 {
-    public class Program
+    public static class Program
     {
         private static string CatalystSubfolder => ".Catalyst";
         private static string ShellFileName => "shell.json";
