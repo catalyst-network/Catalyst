@@ -1,10 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace Catalyst.Node.Core.Helpers.Workers
 {
-    internal class BlockingQueue<T>
+    internal class BlockingQueue<T> : IDisposable
     {
+        public void Dispose()
+        {
+            _resetEvent?.Dispose();
+        }
+
         private readonly Queue<T> _queue = new Queue<T>();
         private readonly object _queueLock = new object();
         private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
