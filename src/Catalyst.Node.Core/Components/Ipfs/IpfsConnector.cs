@@ -17,7 +17,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
     public class IpfsConnector : IDisposable, IIpfs
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static IpfsClient _client;
+        private IpfsClient _client;
         private string _defaultApiEndPoint;
         public int ConnectRetries { get; set; }
 
