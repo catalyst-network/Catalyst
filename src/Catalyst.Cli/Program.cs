@@ -11,8 +11,8 @@ namespace Catalyst.Cli
 {
     public class Program
     {
-        public const string CatalystSubfolder = ".Catalyst";
-        public const string shellFileName = "shell.json";
+        public static string CatalystSubfolder => ".Catalyst";
+        public static string ShellFileName => "shell.json";
 
         private static uint Env { get; set; }
         private static uint Port { get; set; }
@@ -29,9 +29,6 @@ namespace Catalyst.Cli
         {
             const int bufferSize = 1024 * 67 + 128;
 
-            //TODO: Log exception to file
-            //AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
-
             var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
 
@@ -41,7 +38,7 @@ namespace Catalyst.Cli
             }
 
             // check if user home data dir has a shell config
-            var shellFilePath = Path.Combine(catalystHomeDirectory, shellFileName);
+            var shellFilePath = Path.Combine(catalystHomeDirectory, ShellFileName);
             if (!File.Exists(shellFilePath)) {
                 File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.shell.json"),
                     shellFilePath);}

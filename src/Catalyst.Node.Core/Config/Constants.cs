@@ -5,7 +5,7 @@ using Dawn;
 
 namespace Catalyst.Node.Core.Config
 {
-    public class Constants
+    public static class Constants
     {
         public static string ConfigFolder => "Config";
         public static string ComponentsJsonConfigFile => "components.json";

@@ -126,7 +126,7 @@ namespace Catalyst.Node.Core {
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public KernelBuilder WithWalletModule()
+        public static KernelBuilder WithWalletModule()
         {
             throw new NotImplementedException();
         }
