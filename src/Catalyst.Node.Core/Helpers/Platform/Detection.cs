@@ -139,7 +139,7 @@ namespace Catalyst.Node.Core.Helpers.Platform
 
     /// <summary>
     /// </summary>
-    internal class UnsupportedPlatformException : Exception
+    public class UnsupportedPlatformException : Exception
     {
         /// <summary>
         ///     Initializes new instance of UnsupportedPlatformException class
