@@ -3,24 +3,58 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {
     public static class Ip
     {
+        public static readonly string[] DefaultIpEchoUrls;
+
+        static Ip()
+        {
+            DefaultIpEchoUrls = new[]
+            {
+                "http://fail.com",
+                "https://api.ipify.org",
+                "https://ipecho.net/plain",
+                "https://ifconfig.co/ip",
+                "https://ipv4bot.whatismyipaddress.com"
+            };
+        }
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public static async Task<IPAddress> GetPublicIpAsync()
+        public static async Task<IPAddress> GetPublicIpAsync(IObservable<string> ipEchoUrls = null)
         {
-            const string url = "https://ipecho.net/plain";
-            var req = WebRequest.Create(url);
-            using (var response = await req.GetResponseAsync())
-            using (var reader = new StreamReader(response.GetResponseStream()))
+            //TODO : Build a server-less function to avoid relying on this site
+            ipEchoUrls = ipEchoUrls ?? DefaultIpEchoUrls.ToObservable();
+            
+            var echoedIp = await ipEchoUrls
+               .Select((url, i) => Observable.FromAsync(async () => await TryGetExternalIpFromEchoUrl(url)))
+               .Merge()
+               .FirstAsync(t => t != null);
+            
+            return echoedIp;
+        }
+
+        private static async Task<IPAddress> TryGetExternalIpFromEchoUrl(string url)
+        {
+            try
             {
-                var responseContent = await reader.ReadToEndAsync();
-                return IPAddress.Parse(responseContent);
+                var req = WebRequest.Create(url);
+                using (var response = await req.GetResponseAsync())
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var responseContent = (await reader.ReadToEndAsync()).Trim();
+                    return IPAddress.Parse(responseContent);
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
 
