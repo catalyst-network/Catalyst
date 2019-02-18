@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,17 +12,17 @@ namespace Catalyst.Node.Core.Helpers.Network
 {
     public static class Ip
     {
-        public static readonly string[] DefaultIpEchoUrls;
+        public static readonly ReadOnlyCollection<string> DefaultIpEchoUrls;
 
         static Ip()
         {
-            DefaultIpEchoUrls = new[]
+            DefaultIpEchoUrls = new List<string>
             {
                 "https://api.ipify.org",
                 "https://ipecho.net/plain",
                 "https://ifconfig.co/ip",
                 "https://ipv4bot.whatismyipaddress.com"
-            };
+            }.AsReadOnly();
         }
 
         /// <summary>
@@ -28,10 +30,10 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// <returns></returns>
         public static async Task<IPAddress> GetPublicIpAsync(IObservable<string> ipEchoUrls = null)
         {
-            //TODO : Build a server-less function to avoid relying on this site
-            ipEchoUrls = ipEchoUrls ?? DefaultIpEchoUrls.ToObservable();
-            
-            var echoedIp = await ipEchoUrls
+            //TODO : Build a server-less function to avoid relying on these sites
+            var defaultedIpEchoUrls = ipEchoUrls ?? DefaultIpEchoUrls.ToObservable();
+
+            var echoedIp = await defaultedIpEchoUrls
                .Select((url, i) => Observable.FromAsync(async () => await TryGetExternalIpFromEchoUrl(url)))
                .Merge()
                .FirstAsync(t => t != null);
