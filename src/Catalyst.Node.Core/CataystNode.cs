@@ -28,15 +28,13 @@ namespace Catalyst.Node.Core
 
         protected internal readonly Kernel Kernel;
 
-        private readonly Dns Dns;
-       
         /// <summary>
         ///     Instantiates basic CatalystSystem.
         /// </summary>
         private CatalystNode(Kernel kernel)
         {
             Kernel = kernel;
-            Dns = new Dns(kernel.NodeOptions.PeerSettings.DnsServer);
+            new Dns(kernel.NodeOptions.PeerSettings.DnsServer);
             ConnectionManager = new ConnectionManager(
                 GetCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName),
                 new PeerList(new ClientWorker()),
