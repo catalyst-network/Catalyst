@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using FluentAssertions;

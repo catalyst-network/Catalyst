@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Net.Security;
-using System.Net.Sockets;
 using Catalyst.Node.Core.Helpers.Util;
 using Nethereum.RLP;
 using Serilog;

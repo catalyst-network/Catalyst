@@ -4,8 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Org.BouncyCastle.Asn1.Pkcs;
-using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {

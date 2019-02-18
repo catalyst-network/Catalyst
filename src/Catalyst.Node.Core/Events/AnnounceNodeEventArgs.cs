@@ -1,8 +1,6 @@
 using System;
 using Catalyst.Node.Core.P2P;
-using Common.Logging;
 using Dawn;
-using Serilog;
 
 namespace Catalyst.Node.Core.Events
 {

@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Net;
 using Dawn;
-using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {

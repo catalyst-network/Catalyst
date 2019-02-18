@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Threading;
-using Autofac;
 using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Platform;

@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Reflection;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common;

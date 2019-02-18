@@ -1,6 +1,5 @@
 using System;
 using Catalyst.Node.Core.Helpers.Util;
-using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P.Messages;
 
 namespace Catalyst.Node.Core.Messages

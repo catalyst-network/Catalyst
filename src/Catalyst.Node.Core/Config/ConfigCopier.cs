@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using Catalyst.Node.Core.Helpers;
 using Dawn;
 
 namespace Catalyst.Node.Core.Config
