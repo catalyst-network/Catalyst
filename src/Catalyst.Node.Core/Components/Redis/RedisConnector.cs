@@ -18,10 +18,18 @@ namespace Catalyst.Node.Core.Components.Redis
         /// <inheritdoc />
         public IDatabase Database => Connection.GetDatabase();
 
-        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Connection?.Dispose();
+            }
+        }
+
         public void Dispose()
         {
-            Connection?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
