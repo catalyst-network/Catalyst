@@ -18,15 +18,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IpfsClient _client;
-        private string _defaultApiEndPoint;
-        public int ConnectRetries { get; set; }
-
-        /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            DestroyIpfsClient();
-        }
+        private string _defaultApiEndPoint = "127.0.0.1";
 
         // <summary>
         //   Start IPFS daemon and set client and settings to null
@@ -172,6 +164,17 @@ namespace Catalyst.Node.Core.Components.Ipfs
             // If it could not connect after a few attempt then throw
             // an invalid operation exception and backup
             throw new InvalidOperationException("Failed to connect with IPFS daemon");
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing) { DestroyIpfsClient(); }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
