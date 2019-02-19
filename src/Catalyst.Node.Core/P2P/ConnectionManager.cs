@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
@@ -18,7 +19,6 @@ using Catalyst.Protocol.IPPN;
 using Dawn;
 using Org.BouncyCastle.Security;
 using Serilog;
-
 namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
@@ -29,6 +29,7 @@ namespace Catalyst.Node.Core.P2P
 
         private readonly MessageReplyWaitManager _messageReplyManager;
         private int _activeConnections;
+        private bool _disposed;
 
         /// <summary>
         /// </summary>
@@ -51,7 +52,6 @@ namespace Catalyst.Node.Core.P2P
             _messageReplyManager = new MessageReplyWaitManager(MessageQueueManager, PeerList);
         }
 
-        private bool Disposed { get; set; }
         internal PeerList PeerList { get; }
         private TcpListener Listener { get; set; }
         private CancellationToken Token { get; set; }
@@ -60,15 +60,6 @@ namespace Catalyst.Node.Core.P2P
         private X509Certificate2 SslCertificate { get; }
         private MessageQueueManager MessageQueueManager { get; }
         private CancellationTokenSource CancellationToken { get; set; }
-
-        /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            Logger.Verbose("disposing network class");
-            GC.SuppressFinalize(this);
-        }
 
         /// <summary>
         /// </summary>
@@ -382,46 +373,20 @@ namespace Catalyst.Node.Core.P2P
             }
         }
 
-        /// <summary>
-        ///     dispose server and background workers.
-        /// </summary>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (Disposed)
-            {
-                return;
-            }
+            if (!disposing || _disposed) return;
+            SslCertificate?.Dispose();
+            CancellationToken?.Dispose();
+            PeerList?.UnIdentifiedPeers?.ToList().ForEach(p => p.Value?.Dispose());
+            PeerList?.PeerBucket?.ToList().ForEach(p => p.Value?.Dispose());
+            _disposed = true;
+        }
 
-            if (disposing)
-            {
-                CancellationToken.Cancel();
-                CancellationToken.Dispose();
-
-                if (Listener?.Server != null)
-                {
-                    Listener.Server.Close();
-                    Listener.Server.Dispose();
-                }
-
-                if (PeerList.UnIdentifiedPeers?.Count > 0)
-                {
-                    foreach (var peer in PeerList.UnIdentifiedPeers)
-                    {
-                        peer.Value.Dispose();                           
-                    }
-                }
-
-                if (PeerList.PeerBucket?.Count > 0)
-                {
-                    foreach (var peer in PeerList.PeerBucket)
-                    {
-                        peer.Value.Dispose();                           
-                    }
-                }
-            }
-
-            Disposed = true;
-            Logger.Verbose("Catalyst.Helpers.Network class disposed");
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
