@@ -236,15 +236,8 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="AuthenticationException"></exception>
         public async Task BuildOutBoundConnection(string ip, int port)
         {
-            if (string.IsNullOrEmpty(ip))
-            {
-                throw new ArgumentNullException(nameof(ip));
-            }
-
-            if (!Ip.ValidPortRange(port))
-            {
-                throw new ArgumentOutOfRangeException(nameof(port));
-            }
+            Guard.Argument(ip, nameof(ip)).NotNull().NotEmpty();
+            Guard.Argument(port, nameof(port)).Require(Ip.ValidPortRange);
 
             try
             {
@@ -273,10 +266,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private Connection StartPeerConnection(TcpClient tcpClient)
         {
-            if (tcpClient == null)
-            {
-                throw new ArgumentNullException(nameof(tcpClient));
-            }
+            Guard.Argument(tcpClient, nameof(tcpClient)).NotNull();
 
             var connection = new Connection(tcpClient);
             var activeCount = Interlocked.Increment(ref _activeConnections);
@@ -295,10 +285,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private Connection GetPeerConnectionTlsStream(Connection connection, int direction, IPEndPoint endPoint = null)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
+            Guard.Argument(connection, nameof(connection)).NotNull();
 
             connection.SslStream = TlsStream.GetTlsStream(
                 connection.TcpClient.GetStream(),
@@ -332,44 +319,41 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private bool DisconnectConnection(Connection connection)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
+            Guard.Argument(connection, nameof(connection)).NotNull();
             
             try
             {
                 // first check our unidentified connections
-                if (!PeerList.RemoveUnidentifiedConnectionFromList(connection))
+                if (PeerList.RemoveUnidentifiedConnectionFromList(connection)) 
+                    return true;
+                // its not in our unidentified list so now check the peer bucket
+                if (!PeerList.FindPeerFromConnection(connection, out var peer))
                 {
-                    // its not in our unidentified list so now check the peer bucket
-                    if (!PeerList.FindPeerFromConnection(connection, out var peer))
-                    {
-                        return false;
-                    }
-                    if (PeerList.RemovePeerFromBucket(peer))
-                    {
-                        peer.Dispose();
-                    }
-                    else
-                    {
-                        connection.Dispose();
-                        return false;
-                    }
+                    return false;
+                }
+                if (PeerList.TryRemovePeerFromBucket(peer))
+                {
+                    peer.Dispose();
+                }
+                else
+                {
+                    connection.Dispose();
+                    return false;
                 }
 
                 return true;
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Failed to disconnect peer at {0}", connection?.EndPoint?.ToString() ?? "unknown");
+                Logger.Error(e, "Failed to disconnect peer at {0}", 
+                    connection?.EndPoint?.ToString() ?? "unknown");
                 return false;
             }
             finally
             {
                 var activeCount = Interlocked.Decrement(ref _activeConnections);
-                Log.Information("***** Connection successfully disconnected connected (now " + activeCount +
-                            " connections active)");
+                Log.Information("***** Connection successfully disconnected connected (now {0} connections active)",
+                    activeCount);
             }
         }
 
