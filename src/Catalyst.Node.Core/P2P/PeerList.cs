@@ -13,7 +13,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public class PeerList : IEnumerable<Peer>
+    public class PeerList : IEnumerable<Peer>, IDisposable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -130,7 +130,7 @@ namespace Catalyst.Node.Core.P2P
                     }
 
                     // connection is stale so remove it
-                    if (!RemoveUnidentifiedConnectionFromList(connection))
+                    if (!TryRemoveUnidentifiedConnectionFromList(connection))
                     {
                         Logger.Warning("Cant remove stale connection");
                         needle.Dispose();
@@ -183,24 +183,22 @@ namespace Catalyst.Node.Core.P2P
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        internal bool RemoveUnidentifiedConnectionFromList(Connection connection)
+        internal bool TryRemoveUnidentifiedConnectionFromList(Connection connection)
         {
             Guard.Argument(connection, nameof(connection)).NotNull();
             try
             {
-                if (UnIdentifiedPeers.TryRemove(connection.EndPoint.Address + ":" + connection.EndPoint.Port,
-                    out var removedConnection))
+                var endPointAsString = $"{connection.EndPoint.Address}:{connection.EndPoint.Port}";
+                if (UnIdentifiedPeers.TryRemove(endPointAsString, out var removedConnection))
                 {
-                    Logger.Information("***** Successfully removed " + removedConnection.EndPoint.Address +
-                                removedConnection.EndPoint.Port);
+                    Logger.Information("***** Successfully removed {0}", endPointAsString);
                     return true;
                 }
 
-                Logger.Information("*** unable to find connection " + connection.EndPoint.Address + ":" +
-                            connection.EndPoint.Port);
+                Logger.Information("*** unable to find connection {0}",endPointAsString);
                 return false;
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
                 Logger.Information(e, "Failed to remove unidentified connection from peer list.");
                 return false;
@@ -411,11 +409,9 @@ namespace Catalyst.Node.Core.P2P
             // iterate peer bucket to find a peer with connection value matches connection param
             foreach (var item in PeerBucket.Values)
             {
-                if (Equals(item.Connection.EndPoint, connection.EndPoint))
-                {
-                    peer = item;
-                    return true;
-                }   
+                if (!Equals(item.Connection.EndPoint, connection.EndPoint)) continue;
+                peer = item;
+                return true;
             }
 
             throw new KeyNotFoundException();
@@ -426,6 +422,21 @@ namespace Catalyst.Node.Core.P2P
         public void Clear()
         {
             PeerBucket.Clear();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                UnIdentifiedPeers?.ToList().ForEach(p => p.Value?.Dispose());
+                PeerBucket?.ToList().ForEach(p => p.Value?.Dispose());
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

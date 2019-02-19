@@ -324,7 +324,7 @@ namespace Catalyst.Node.Core.P2P
             try
             {
                 // first check our unidentified connections
-                if (PeerList.RemoveUnidentifiedConnectionFromList(connection)) 
+                if (PeerList.TryRemoveUnidentifiedConnectionFromList(connection)) 
                     return true;
                 // its not in our unidentified list so now check the peer bucket
                 if (!PeerList.FindPeerFromConnection(connection, out var peer))
@@ -362,8 +362,7 @@ namespace Catalyst.Node.Core.P2P
             if (!disposing || _disposed) return;
             SslCertificate?.Dispose();
             CancellationToken?.Dispose();
-            PeerList?.UnIdentifiedPeers?.ToList().ForEach(p => p.Value?.Dispose());
-            PeerList?.PeerBucket?.ToList().ForEach(p => p.Value?.Dispose());
+            PeerList?.Dispose();
             _disposed = true;
         }
 

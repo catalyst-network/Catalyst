@@ -18,7 +18,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IpfsClient _client;
-        private string _defaultApiEndPoint = "127.0.0.1";
+        private const string DefaultApiEndPoint = "127.0.0.1";
 
         // <summary>
         //   Start IPFS daemon and set client and settings to null
@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.Components.Ipfs
         /// </remarks>
         public string AddFile(string filename)
         {
-            var cmd = $"curl -F \"file=@{filename}\" {_defaultApiEndPoint}add";
+            var cmd = $"curl -F \"file=@{filename}\" {DefaultApiEndPoint}add";
 
             try
             {

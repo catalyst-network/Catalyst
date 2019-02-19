@@ -41,9 +41,11 @@ namespace Catalyst.Node.Core.Helpers.Workers
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) return;
-            _cancellationTokenSource?.Dispose();
-            _queue?.Dispose();
+            if (disposing)
+            {
+                _cancellationTokenSource?.Dispose();
+                _queue?.Dispose();
+            }
         }
 
         public void Dispose()
