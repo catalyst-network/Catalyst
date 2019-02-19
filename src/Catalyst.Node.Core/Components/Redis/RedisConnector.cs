@@ -29,7 +29,6 @@ namespace Catalyst.Node.Core.Components.Redis
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

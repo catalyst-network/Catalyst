@@ -114,18 +114,13 @@ namespace Catalyst.Node.Core.P2P
 
             try
             {
-                if (UnIdentifiedPeers.TryGetValue(needle.EndPoint.Address + ":" + needle.EndPoint.Port,
-                    out var connection))
+                var endPointAsString = $"{needle.EndPoint.Address}:{needle.EndPoint.Port}";
+                if (UnIdentifiedPeers.TryGetValue(endPointAsString, out var connection))
                 {
-                    if (connection == null)
-                    {
-                        throw new ArgumentNullException(nameof(connection));
-                    }
                     // already have a connection in our unidentified list, check if result is actually connected
                     if (connection.IsConnected())
                     {
-                        Logger.Debug("*** Active connection already exists for " + connection.EndPoint.Address +
-                                    connection.EndPoint.Port);
+                        Logger.Debug("*** Active connection already exists for {0}", endPointAsString);
                         return false;
                     }
 
@@ -137,11 +132,10 @@ namespace Catalyst.Node.Core.P2P
                         return false;
                     }
 
-                    Logger.Debug("Removed stale connection for  " + connection.EndPoint.Address +
-                                connection.EndPoint.Port);
+                    Logger.Debug("Removed stale connection for {0}", endPointAsString);
                 }
 
-                if (!UnIdentifiedPeers.TryAdd(needle.EndPoint.Address + ":" + needle.EndPoint.Port, needle))
+                if (!UnIdentifiedPeers.TryAdd(endPointAsString, needle))
                 {
                     Logger.Warning("Can not add unidentified connection to the list");
                     needle.Dispose();

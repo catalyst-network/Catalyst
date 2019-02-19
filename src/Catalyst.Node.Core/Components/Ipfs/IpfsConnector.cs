@@ -174,7 +174,6 @@ namespace Catalyst.Node.Core.Components.Ipfs
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

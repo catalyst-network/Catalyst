@@ -144,7 +144,6 @@ namespace Catalyst.Node.Core.Helpers.Workers
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }
