@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.Helpers.Workers
 {
-    internal class BackgroundWorker : IWorker
+    internal class BackgroundWorker : IWorker, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly BlockingQueue<Action> _queue;
@@ -19,14 +19,14 @@ namespace Catalyst.Node.Core.Helpers.Workers
         public void Start()
         {
             Task.Factory.StartNew(() =>
-                                  {
-                                      while (!_cancellationTokenSource.Token.IsCancellationRequested)
-                                      {
-                                          var action = _queue.Take();
-                                          action();
-                                      }
-                                  }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
+              {
+                  while (!_cancellationTokenSource.Token.IsCancellationRequested)
+                  {
+                      var action = _queue.Take();
+                      action();
+                  }
+              }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning,
+            TaskScheduler.Default);
         }
 
         public void Stop()
@@ -37,6 +37,20 @@ namespace Catalyst.Node.Core.Helpers.Workers
         public void Queue(Action action)
         {
             _queue.Add(action);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _cancellationTokenSource?.Dispose();
+                _queue?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

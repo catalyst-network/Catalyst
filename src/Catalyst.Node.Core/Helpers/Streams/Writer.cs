@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
                 var message = new byte[messageLen]; //@TODO hook into new byte mthod
 
-                var dataWithDescriptor = ByteUtil.CombineByteArr(messageDescriptor, data);
+                var dataWithDescriptor = ByteUtil.CombineByteArrays(messageDescriptor, data);
 
                 Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
 

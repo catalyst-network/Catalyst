@@ -61,9 +61,18 @@ namespace Catalyst.Node.Core.Components.Redis
             return sut.GetInfo();
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _redisConnector?.Dispose();
+            }
+        }
+
         public void Dispose()
         {
-            _redisConnector?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

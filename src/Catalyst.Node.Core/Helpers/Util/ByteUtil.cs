@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Dawn;
 
 namespace Catalyst.Node.Core.Helpers.Util
 {
@@ -26,17 +27,10 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// </summary>
         /// <param name="arrays"></param>
         /// <returns></returns>
-        public static byte[] CombineByteArr(params byte[][] arrays)
+        public static byte[] CombineByteArrays(params byte[][] arrays)
         {
-            if (arrays == null)
-            {
-                throw new ArgumentNullException(nameof(arrays));
-            }
+            Guard.Argument(arrays, nameof(arrays)).NotNull().NotEmpty();
 
-            if (arrays.Length == 0)
-            {
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
-            }
             var rv = new byte[arrays.Sum(a => a.Length)];
             var offset = 0;
             foreach (var array in arrays)
@@ -53,15 +47,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// </summary>
         public static byte[] AppendByte(byte[] bytes, byte b)
         {
-            if (bytes == null)
-            {
-                throw new ArgumentNullException(nameof(bytes));
-            }
-
-            if (bytes.Length == 0)
-            {
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(bytes));
-            }
+            Guard.Argument(bytes, nameof(bytes)).NotNull().NotEmpty();
+            
             var result = new byte[bytes.Length + 1];
             Array.Copy(bytes, result, bytes.Length);
             result[result.Length - 1] = b;
@@ -75,26 +62,13 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static byte[] Slice(this byte[] org, int start, int end = int.MaxValue)
+        public static byte[] Slice(this byte[] bytes, int start, int end = int.MaxValue)
         {
-            if (org == null)
-            {
-                throw new ArgumentNullException(nameof(org));
-            }
+            Guard.Argument(bytes, nameof(bytes)).NotNull().NotEmpty();
+            Guard.Argument(start, nameof(start)).NotNegative();
+            Guard.Argument(end, nameof(end)).InRange(start, int.MaxValue);
 
-            if (org.Length == 0)
-            {
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(org));
-            }
-
-            if (end < 0)
-            {
-                end = org.Length + end;
-            }
-            start = Math.Max(0, start);
-            end = Math.Max(start, end);
-
-            return org.Skip(start).Take(end - start).ToArray();
+            return bytes.Skip(start).Take(end - start).ToArray();
         }
 
         /// <summary>
@@ -104,10 +78,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         public static byte[] InitialiseEmptyByteArray(int length)
         {
-            if (length <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length));
-            }
+            Guard.Argument(length, nameof(length)).Positive().NotZero();
+
             var returnArray = new byte[length];
             for (var i = 0; i < length; i++)
             {
@@ -122,15 +94,7 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         private static IEnumerable<byte> MergeToEnum(params byte[][] arrays)
         {
-            if (arrays == null)
-            {
-                throw new ArgumentNullException(nameof(arrays));
-            }
-
-            if (arrays.Length == 0)
-            {
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
-            }
+            Guard.Argument(arrays, nameof(arrays)).NotNull().NotEmpty();
 
             foreach (var a in arrays)
             {
@@ -145,15 +109,6 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns> - merged array </returns>
         public static byte[] Merge(params byte[][] arrays)
         {
-            if (arrays == null)
-            {
-                throw new ArgumentNullException(nameof(arrays));
-            }
-
-            if (arrays.Length == 0)
-            {
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(arrays));
-            }
             return MergeToEnum(arrays).ToArray();
         }
 
@@ -161,18 +116,10 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static string ByteToString(byte[] array)
+        public static string ByteToString(byte[] bytes)
         {
-            if (array == null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            if (array.Length == 0)
-            {
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(array));
-            }
-            return Encoding.UTF8.GetString(array);
+            Guard.Argument(bytes, nameof(bytes)).NotNull().NotEmpty();
+            return Encoding.UTF8.GetString(bytes);
         }
 
         /// <summary>
@@ -182,25 +129,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         /// <returns></returns>
         public static byte[] XOR(this byte[] a, byte[] b)
         {
-            if (a == null)
-            {
-                throw new ArgumentNullException(nameof(a));
-            }
-
-            if (b == null)
-            {
-                throw new ArgumentNullException(nameof(b));
-            }
-
-            if (a.Length == 0)
-            {
-                throw new ArgumentException("Value a cannot be an empty collection.", nameof(a));
-            }
-
-            if (b.Length == 0)
-            {
-                throw new ArgumentException("Value b cannot be an empty collection.", nameof(b));
-            }
+            Guard.Argument(a, nameof(a)).NotNull().NotEmpty();
+            Guard.Argument(b, nameof(b)).NotNull().NotEmpty();
 
             var length = Math.Min(a.Length, b.Length);
             var result = new byte[length];
