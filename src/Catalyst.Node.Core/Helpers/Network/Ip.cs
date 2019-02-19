@@ -67,11 +67,7 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// <returns></returns>
         public static bool ValidPortRange(int port)
         {
-            if (port < 1025 || port > 65535)
-            {
-                return false;
-            }
-            return true;
+            return 1025 <= port && port <= 65535;
         }
 
         /// <summary>
