@@ -27,6 +27,7 @@ namespace Catalyst.Node.Core
         private static readonly object Mutex = new object();
 
         protected internal readonly Kernel Kernel;
+        private bool _disposed;
 
         /// <summary>
         ///     Instantiates basic CatalystSystem.
@@ -43,11 +44,11 @@ namespace Catalyst.Node.Core
             );
 
             Task.Run(async () =>
-                         await ConnectionManager.InboundConnectionListener(
-                             new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
-                                 Kernel.NodeOptions.PeerSettings.Port
-                             )
-                         )
+                 await ConnectionManager.InboundConnectionListener(
+                     new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
+                         Kernel.NodeOptions.PeerSettings.Port
+                     )
+                 )
             );
 
             ConnectionManager.AnnounceNode += Announce;
@@ -55,16 +56,6 @@ namespace Catalyst.Node.Core
 
         private static CatalystNode Instance { get; set; }
         private ConnectionManager ConnectionManager { get; }
-        private bool Disposed { get; set; }
-
-        /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            Logger.Verbose("disposing catalyst node");
-            GC.SuppressFinalize(this);
-        }
 
         private static X509Certificate2 GetCertificate(string pfxFilePath)
         {
@@ -194,23 +185,22 @@ namespace Catalyst.Node.Core
             return Instance;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="disposing"></param>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (Disposed)
+            if (disposing && !_disposed)
             {
-                return;
-            }
-
-            if (disposing)
-            {
+                Logger.Verbose("Disposing of CatalystNode");
                 Kernel?.Dispose();
+                ConnectionManager?.Dispose();
+                Logger.Verbose("CatalystNode disposed");
+                _disposed = true;
             }
+        }
 
-            Disposed = true;
-            Logger.Verbose("CatalystNode disposed");
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
