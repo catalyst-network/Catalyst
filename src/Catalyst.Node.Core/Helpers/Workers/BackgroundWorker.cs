@@ -19,14 +19,14 @@ namespace Catalyst.Node.Core.Helpers.Workers
         public void Start()
         {
             Task.Factory.StartNew(() =>
-                                  {
-                                      while (!_cancellationTokenSource.Token.IsCancellationRequested)
-                                      {
-                                          var action = _queue.Take();
-                                          action();
-                                      }
-                                  }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
+              {
+                  while (!_cancellationTokenSource.Token.IsCancellationRequested)
+                  {
+                      var action = _queue.Take();
+                      action();
+                  }
+              }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning,
+            TaskScheduler.Default);
         }
 
         public void Stop()

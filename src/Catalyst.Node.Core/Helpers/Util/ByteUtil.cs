@@ -65,13 +65,8 @@ namespace Catalyst.Node.Core.Helpers.Util
         public static byte[] Slice(this byte[] bytes, int start, int end = int.MaxValue)
         {
             Guard.Argument(bytes, nameof(bytes)).NotNull().NotEmpty();
-            
-            if (end < 0)
-            {
-                end = bytes.Length + end;
-            }
-            start = Math.Max(0, start);
-            end = Math.Max(start, end);
+            Guard.Argument(start, nameof(start)).NotNegative();
+            Guard.Argument(end, nameof(end)).InRange(start, int.MaxValue);
 
             return bytes.Skip(start).Take(end - start).ToArray();
         }
