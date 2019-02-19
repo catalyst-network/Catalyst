@@ -54,11 +54,20 @@ namespace Catalyst.Node.Core.P2P
             Reputation--;
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Connection?.Dispose();
+                Logger.Verbose("Connection to peer {0} Disposed.", 
+                    PeerIdentifier?.Id?.ToString() ?? "unknown");
+            }
+        }
+
         public void Dispose()
         {
-            Connection?.Dispose();
-            Logger.Verbose("Connection to peer {0} Disposed.", 
-                PeerIdentifier?.Id?.ToString() ?? "unknown");
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
