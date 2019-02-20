@@ -14,6 +14,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             builder.Register(c => new Consensus())
                    .As<IConsensus>()
                    .SingleInstance();
+            base.Load(builder);
         }
     }
 }

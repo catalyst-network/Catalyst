@@ -13,9 +13,7 @@ namespace Catalyst.Node.Core.Modules.Gossip
         protected override void Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.Register(c => new Gossip())
-                   .As<IGossip>()
-                   .SingleInstance();
+            builder.RegisterType<NameProvider1>().As<INameProvider>();
         }
     }
 }

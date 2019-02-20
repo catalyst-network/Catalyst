@@ -17,5 +17,10 @@
         }
       ]
     }
-  ]
+  ],
+  "modules": [
+    {
+      "type": "Catalyst.Node.Core.Modules.Gossip.GossipModule"
+    }
+  ] 
 }
