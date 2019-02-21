@@ -72,15 +72,6 @@ namespace Catalyst.Node.Core {
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public KernelBuilder WithDfsModule()
-        {
-            _moduleLoader.Add(n => n.DfsService = _containerBuilder.RegisterModule(new DfsModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
         public KernelBuilder WithContractModule()
         {
             _moduleLoader.Add(n => n.ContractService = _containerBuilder.RegisterModule(new ContractModule()));

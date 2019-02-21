@@ -18,7 +18,13 @@
         "nameProvider": 1
       }
     },
-    { "type": "Catalyst.Node.Core.Modules.Dfs.DfsModule" },
+    {
+      "type": "Catalyst.Node.Core.Modules.Dfs.DfsModule",
+      "parameters": {
+        "connectRetries": 10,
+        "apiPath": "api/v0/"
+      }
+    },
     { "type": "Catalyst.Node.Core.Modules.Consensus.ConsensusModule" },
     { "type": "Catalyst.Node.Core.Modules.Contract.ContractModule" },
     { "type": "Catalyst.Node.Core.Modules.Ledger.LedgerModule" },

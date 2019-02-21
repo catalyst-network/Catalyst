@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core
         ///     Main cli loop
         /// </summary>
         /// <param name="args"></param>
-        public static int Main2(string[] args)
+        public static int Main_Old(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += LogUnhandledException;
 
@@ -125,8 +125,6 @@ namespace Catalyst.Node.Core
                                   var nodeOptions =
                                       new NodeOptionsBuilder(env, dataDir, network, platform)
                                          .LoadPeerSettings()
-                                         .LoadDfsSettings()
-                                             .When(() => !disableDfs.HasValue())
                                          .LoadLedgerSettings()
                                              .When(() => !disableLedger.HasValue())
                                          .LoadWalletSettings()
@@ -176,8 +174,6 @@ namespace Catalyst.Node.Core
                                   }
 
                                   using (var kernel = new KernelBuilder(nodeOptions)
-                                                     .WithDfsModule()
-                                                     .When(() => !disableDfs.HasValue())
                                                      .WithLedgerModule()
                                                      .When(() => !disableLedger.HasValue())
                                                      .WithMempoolModule()
@@ -233,8 +229,7 @@ namespace Catalyst.Node.Core
                 //Enable after checking safety implications, if plugins become important.
                 //AssemblyLoadContext.Default.Resolving += TryLoadAssemblyFromExecutionDirectory;
 
-                //TODO: allow targeting different fold
-                //er using CommandLine
+                //TODO: allow targeting different folder using CommandLine
                 var targetConfigFolder = new Fs().GetCatalystHomeDir().FullName;
                 var network = NodeOptions.Networks.devnet;
 
@@ -281,7 +276,7 @@ namespace Catalyst.Node.Core
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.Logger.Error(e, "Catalyst.Node failed to start.");
                 Environment.ExitCode = 1;
             }
 

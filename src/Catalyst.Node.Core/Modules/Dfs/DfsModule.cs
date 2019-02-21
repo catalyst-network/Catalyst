@@ -1,12 +1,20 @@
+using System.Collections.Generic;
 using Autofac;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
 using Dawn;
+using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
     public class DfsModule : Module
     {
+        private readonly IpfsDfs.ISettings _settings;
+
+        public DfsModule(ushort connectRetries, string apiPath)
+        {
+            _settings = new IpfsDfs.Settings(connectRetries, apiPath);
+        }
         /// <summary>
         /// </summary>
         /// <param name="builder"></param>
@@ -14,7 +22,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
             builder.RegisterType<IpfsConnector>().As<IIpfs>().InstancePerDependency();
-            builder.RegisterType<Dfs>().As<IDfs>().SingleInstance();
+            builder.RegisterInstance<IpfsDfs.ISettings>(_settings);
+            builder.RegisterType<IpfsDfs>().As<IDfs>().SingleInstance();
         }
     }
 }

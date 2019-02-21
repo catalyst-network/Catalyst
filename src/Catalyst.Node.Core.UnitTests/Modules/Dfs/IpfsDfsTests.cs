@@ -1,20 +1,25 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Catalyst.Node.Common;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json;
+using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Node.UnitTests.Modules.Dfs
+namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
-    public class UT_Dfs
+    public class IpfsDfsTests
     {
         private static readonly IpfsConnector Ipfs = new IpfsConnector();
-        private static TestDfsSettings _settings;
+        private static IpfsDfs.ISettings _settings;
 
         private static readonly Random Random;
+        private IIpfs _ipfsConnector;
+        private IpfsDfs _ipfsDfs;
 
         private static string RandomString(int length)
         {
@@ -22,15 +27,54 @@ namespace Catalyst.Node.UnitTests.Modules.Dfs
             return new string(Enumerable.Repeat(chars, length).Select(s => s[Random.Next(s.Length)]).ToArray());
         }
 
-        static UT_Dfs()
+        static IpfsDfsTests()
         {
             Random = new Random();
         }
 
-        public UT_Dfs()
+        public IpfsDfsTests()
         {
-            _settings = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 10, IpfsVersionApi = "api/v0/"};
-            Ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
+            _settings = Substitute.For<IpfsDfs.ISettings>();
+            _ipfsConnector = Substitute.For<IIpfs>();
+
+            _ipfsDfs = new IpfsDfs(_ipfsConnector, _settings);
+        }
+
+        [Fact]
+        public void Start_should_use_correct_settings()
+        {
+            var connectRetries = (ushort)123;
+            _settings.ConnectRetries.Returns(connectRetries);
+            var versionAlpha = "version 12.alpha";
+            _settings.IpfsVersionApi.Returns(versionAlpha);
+
+            _ipfsDfs.Start();
+
+            _ipfsConnector.Received(1).CreateIpfsClient(versionAlpha, connectRetries);
+        }
+
+        [Fact]
+        public void Dispose_should_destroy_underlying_client()
+        {
+            _ipfsDfs.Dispose();
+            _ipfsConnector.Received(1).DestroyIpfsClient();
+        }
+
+        [Fact]
+        public void AddFile_should_call_underlying_client()
+        {
+            var filename = RandomString(23);
+            _ipfsDfs.AddFile(filename);
+            _ipfsConnector.Received(1).AddFile(filename);
+        }
+
+
+        [Fact]
+        public async Task ReadAllTextAsync_should_call_underlying_client()
+        {
+            var filename = RandomString(23);
+            await _ipfsDfs.ReadAllTextAsync(filename);
+            await _ipfsConnector.Received(1).ReadAllTextAsync(filename);
         }
 
         [Fact(Skip="We will probably use a native .Net IPFS client")]
@@ -134,9 +178,9 @@ namespace Catalyst.Node.UnitTests.Modules.Dfs
         {
             new Action(() =>
             {
-                var x = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 0, IpfsVersionApi = "api/v0/"};
+                //var x = new TestDfsSettings {StorageType = "Ipfs", ConnectRetries = 0, IpfsVersionApi = "api/v0/"};
                 Ipfs.DestroyIpfsClient();
-                Ipfs.CreateIpfsClient(x.IpfsVersionApi, x.ConnectRetries);
+                //Ipfs.CreateIpfsClient(x.IpfsVersionApi, x.ConnectRetries);
             }).Should().Throw<InvalidOperationException>("Failed to connect with IPFS daemon");
 
         }
@@ -156,13 +200,6 @@ namespace Catalyst.Node.UnitTests.Modules.Dfs
                 var hash2 = Ipfs.AddFile(tmpFile); // retrieve the hash back, does not add
                 hash1.Should().Be(hash2);
             }
-        }
-
-        private class TestDfsSettings
-        {
-            public string StorageType { get; set; }
-            public ushort ConnectRetries { get; set; }
-            public string IpfsVersionApi { get; set; }
         }
     }
 }

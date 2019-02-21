@@ -6,11 +6,6 @@
     "Contract": {
       "StorageType": "Catalyst.Helpers.Ipfs"
     },
-    "Dfs": {
-      "StorageType": "Catalyst.Helpers.Ipfs",
-      "ConnectRetries": 10,
-      "IpfsVersionApi": "api/v0/"
-    },
     "Mempool": {
       "Type" : "redis",
       "Host" : "127.0.0.1",
