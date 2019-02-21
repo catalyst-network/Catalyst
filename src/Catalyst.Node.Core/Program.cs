@@ -246,9 +246,9 @@ namespace Catalyst.Node.Core
                 //Add .Net Core services (if any) first
                 //serviceCollection.AddLogging().AddDistributedMemoryCache();
 
-                var containerBuilder = new ContainerBuilder();
                 // register components from config file
                 var configurationModule = new ConfigurationModule(config);
+                var containerBuilder = new ContainerBuilder();
                 containerBuilder.RegisterModule(configurationModule);
 
                 var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);

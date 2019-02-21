@@ -20,13 +20,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
             _settings = settings;
         }
 
-        /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            _ipfs.DestroyIpfsClient();
-        }
-
         public void Start()
         {
             _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
@@ -64,6 +57,19 @@ namespace Catalyst.Node.Core.Modules.Dfs
             }
             public ushort ConnectRetries { get; set; }
             public string IpfsVersionApi { get; set; }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _ipfs.DestroyIpfsClient();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }
