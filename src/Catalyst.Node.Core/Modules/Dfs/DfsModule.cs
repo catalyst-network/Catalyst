@@ -13,9 +13,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
         protected override void Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.Register(c => new Dfs(c.Resolve<IIpfs>()))
-                   .As<IDfs>()
-                   .SingleInstance();
+            builder.RegisterType<IpfsConnector>().As<IIpfs>().InstancePerDependency();
+            builder.RegisterType<Dfs>().As<IDfs>().SingleInstance();
         }
     }
 }

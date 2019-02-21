@@ -8,19 +8,20 @@
           "type": "Catalyst.Node.Common.IKeyValueStore, Catalyst.Node.Common"
         }
       ]
-    },
-    {
-      "type": "Catalyst.Node.Core.Components.Ipfs.IpfsConnector, Catalyst.Node.Core",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.IIpfs, Catalyst.Node.Common"
-        }
-      ]
     }
   ],
+  //simply comment modules that you don't need.
   "modules": [
     {
-      "type": "Catalyst.Node.Core.Modules.Gossip.GossipModule"
-    }
+      "type": "Catalyst.Node.Core.Modules.Gossip.GossipModule",
+      "parameters": {
+        "nameProvider": 1
+      }
+    },
+    { "type": "Catalyst.Node.Core.Modules.Dfs.DfsModule" },
+    { "type": "Catalyst.Node.Core.Modules.Consensus.ConsensusModule" },
+    { "type": "Catalyst.Node.Core.Modules.Contract.ContractModule" },
+    { "type": "Catalyst.Node.Core.Modules.Ledger.LedgerModule" },
+    { "type": "Catalyst.Node.Core.Modules.Mempool.MempoolModule" }
   ] 
 }

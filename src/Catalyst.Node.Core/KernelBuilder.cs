@@ -108,15 +108,6 @@ namespace Catalyst.Node.Core {
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public KernelBuilder WithGossipModule()
-        {
-            _moduleLoader.Add(n => n.GossipService = _containerBuilder.RegisterModule(new GossipModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
         public KernelBuilder WithConsensusModule()
         {
             _moduleLoader.Add(n => n.ConsensusService = _containerBuilder.RegisterModule(new ConsensusModule()));

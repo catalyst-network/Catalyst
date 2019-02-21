@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using Catalyst.Node.Core.Components.Ipfs;
+using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json;

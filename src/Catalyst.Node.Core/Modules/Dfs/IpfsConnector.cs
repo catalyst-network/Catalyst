@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
 
-namespace Catalyst.Node.Core.Components.Ipfs
+namespace Catalyst.Node.Core.Modules.Dfs
 {
     /// <summary>
     ///     Wrapper for some of the Catalyst.Components.Ipfs methods.
