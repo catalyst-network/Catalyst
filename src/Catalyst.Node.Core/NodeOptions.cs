@@ -54,7 +54,6 @@ namespace Catalyst.Node.Core
         public int Network { get; set; }
         public int Platform { get; set; }
         public string DataDir { get; set; }
-        public DfsSettings DfsSettings { get; internal set; }
         public PeerSettings PeerSettings { get; internal set; }
         public WalletSettings WalletSettings { get; internal set; }
         public LedgerSettings LedgerSettings { get; internal set; }
@@ -189,15 +188,6 @@ namespace Catalyst.Node.Core
                 default:
                     throw new ArgumentException();
             }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public NodeOptionsBuilder LoadDfsSettings()
-        {
-            _builderActions.Add(n => n.DfsSettings = new DfsSettings(_networkConfiguration.GetSection("Dfs")));
-            return this;
         }
 
         /// <summary>
@@ -374,26 +364,9 @@ namespace Catalyst.Node.Core
     }
 
     /// <summary>
-    ///     Dfs settings class.
+    ///     IpfsDfs settings class.
     /// </summary>
-    public class DfsSettings
-    {
-        /// <summary>
-        ///     Set attributes
-        /// </summary>
-        /// <param name="section"></param>
-        protected internal DfsSettings(IConfiguration section)
-        {
-            Guard.Argument(section, nameof(section)).NotNull();
-            StorageType = section.GetSection("StorageType").Value;
-            ConnectRetries = ushort.Parse(section.GetSection("ConnectRetries").Value);
-            IpfsVersionApi = section.GetSection("IpfsVersionApi").Value;
-        }
 
-        public string StorageType { get; set; }
-        public ushort ConnectRetries { get; set; }
-        public string IpfsVersionApi { get; set; }
-    }
 
     /// <summary>
     ///     wallet settings class.
