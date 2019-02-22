@@ -16,18 +16,27 @@ namespace Catalyst.Node.Core.Modules.Dfs
     /// </summary>
     public class IpfsConnector : IDisposable, IIpfs
     {
+        protected readonly string _ipfsVersionApi;
+        private readonly int _connectRetries;
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IpfsClient _client;
+        private readonly string _name;
         private const string DefaultApiEndPoint = "127.0.0.1";
+
+        public IpfsConnector(string apiPath, int connectRetries, string name)
+        {
+            _ipfsVersionApi = apiPath;
+            _connectRetries = connectRetries;
+        }
 
         // <summary>
         //   Start IPFS daemon and set client and settings to null
         // </summary>
-        public void CreateIpfsClient(string ipfsVersionApi, int connectRetries)
+        public void CreateIpfsClient()
         {
             if (_client != null)
             {
-                TryToConnectClient(connectRetries); // just to validate that connection with daemon is alive too
+                TryToConnectClient(_connectRetries); // just to validate that connection with daemon is alive too
                 return;
             }
 
@@ -35,8 +44,10 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
             //_defaultApiEndPoint = IpfsClient.DefaultApiUri + ipfsVersionApi;
 
-            TryToConnectClient(connectRetries);
+            TryToConnectClient(_connectRetries);
         }
+
+        public string Name => _name;
 
         /// <summary>
         ///     Stop IPFS daemon and set client and settings to null
@@ -176,4 +187,5 @@ namespace Catalyst.Node.Core.Modules.Dfs
             Dispose(true);
         }
     }
+
 }

@@ -1,0 +1,27 @@
+﻿{
+  "defaultAssembly": "Catalyst.Node.Core",
+  "components": [
+    {
+      "type": "Catalyst.Node.Core.Modules.Dfs.IpfsDfs",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Modules.IDfs, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.Dfs.IpfsConnector",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.IIpfs, Catalyst.Node.Common"
+        }
+      ],
+      "parameters": {
+        "connectRetries": 10,
+        "apiPath": "api/v0/"
+      },
+      "instanceScope": "perdependency",
+      "ownership": "lifetimescope"
+    }
+  ]
+}

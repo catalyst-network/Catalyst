@@ -21,8 +21,7 @@
     {
       "type": "Catalyst.Node.Core.Modules.Dfs.DfsModule",
       "parameters": {
-        "connectRetries": 10,
-        "apiPath": "api/v0/"
+        "configFile": "Modules\\Dfs\\config.json"
       }
     },
     { "type": "Catalyst.Node.Core.Modules.Consensus.ConsensusModule" },

@@ -4,6 +4,7 @@ namespace Catalyst.Node.Common
 {
     public interface IIpfs
     {
+        string Name { get; }
         /// <summary>
         /// </summary>
         void DestroyIpfsClient();
@@ -12,7 +13,7 @@ namespace Catalyst.Node.Common
         /// </summary>
         /// <param name="ipfsVersionApi"></param>
         /// <param name="connectRetries"></param>
-        void CreateIpfsClient(string ipfsVersionApi, int connectRetries);
+        void CreateIpfsClient();
 
         /// <summary>
         /// </summary>

@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+using System;
+using System.IO;
 using Autofac;
-using Catalyst.Node.Common;
-using Catalyst.Node.Common.Modules;
+using Autofac.Configuration;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
@@ -10,10 +10,15 @@ namespace Catalyst.Node.Core.Modules.Dfs
     public class DfsModule : Module
     {
         private readonly IpfsDfs.ISettings _settings;
+        private ConfigurationModule _configurationModule;
 
-        public DfsModule(ushort connectRetries, string apiPath)
+        public DfsModule(string configFile)
         {
-            _settings = new IpfsDfs.Settings(connectRetries, apiPath);
+            var configFileFullPath = Path.Combine(Environment.CurrentDirectory, configFile);
+            var config = new ConfigurationBuilder()
+               .AddJsonFile(configFileFullPath)
+               .Build();
+            _configurationModule = new ConfigurationModule(config);
         }
         /// <summary>
         /// </summary>
@@ -21,9 +26,9 @@ namespace Catalyst.Node.Core.Modules.Dfs
         protected override void Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.RegisterType<IpfsConnector>().As<IIpfs>().InstancePerDependency();
-            builder.RegisterInstance<IpfsDfs.ISettings>(_settings);
-            builder.RegisterType<IpfsDfs>().As<IDfs>().SingleInstance();
+            builder.RegisterModule(_configurationModule);
+            //builder.RegisterType<IpfsConnector>().As<Owned<IIpfs>>().InstancePerDependency();
+            //builder.RegisterType<IpfsDfs>().As<IDfs>().SingleInstance();
         }
     }
 }

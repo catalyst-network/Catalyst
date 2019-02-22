@@ -8,21 +8,19 @@ namespace Catalyst.Node.Core.Modules.Dfs
     public class IpfsDfs : IDisposable, IDfs
     {
         private readonly IIpfs _ipfs;
-        private readonly ISettings _settings;
 
         /// <summary>
         /// </summary>
         /// <param name="ipfs"></param>
         /// <param name="settings"></param>
-        public IpfsDfs(IIpfs ipfs, ISettings settings)
+        public IpfsDfs(IIpfs ipfs)
         {
             _ipfs = ipfs;
-            _settings = settings;
         }
 
         public void Start()
         {
-            _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
+            _ipfs.CreateIpfsClient();
         }
 
         /// <summary>
