@@ -10,7 +10,7 @@ namespace Catalyst.Node.Common.UnitTests.Exceptions
     public class UnsupportedPlatformExceptionTest
     {
         [Fact]
-        public void Test_UnsupportedPlatformException_Message_Excepcted()
+        public static void Test_UnsupportedPlatformException_Message_Excepcted()
         {
             var expectedMessage = "Do not support XYZ";
             var unsupportedPlatformEx = new UnsupportedPlatformException(expectedMessage);
@@ -18,14 +18,14 @@ namespace Catalyst.Node.Common.UnitTests.Exceptions
         }
 
         [Fact]
-        public void Test_UnsupportedException_Throws_Exception_When_Message_Null()
+        public static void Test_UnsupportedException_Throws_Exception_When_Message_Null()
         {
             Assert.Throws<ArgumentNullException>(() => 
                 new UnsupportedPlatformException(null));
         }
 
         [Fact]
-        public void Test_UnsupportedPlatformException_deserialization()
+        public static void Test_UnsupportedPlatformException_deserialization()
         {
             var expectedMessage = "Do not support XYZ";
             var unsupportedPlatformEx = new UnsupportedPlatformException(expectedMessage);
