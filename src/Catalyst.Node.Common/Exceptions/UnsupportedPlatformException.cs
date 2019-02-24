@@ -5,18 +5,19 @@ using System.Security.Permissions;
 namespace Catalyst.Node.Common.Exceptions
 {
     /// <summary>
+    ///     Throw when an error occurs because of a unsupported platform issue.
     /// </summary>
     [Serializable]
-    public class UnsupportedPlatformException : Exception, ISerializable
+    public class UnsupportedPlatformException : Exception
     {
         /// <summary>
-        ///     Initializes new instance of UnsupportedPlatformException class
+        ///     Initializes new instance of UnsupportedPlatformException class.
         /// </summary>
         /// <param name="message"></param>
         public UnsupportedPlatformException(string message) : base(message) { }
         
         /// <summary>
-        ///      Protected constructor used for deserialization/ 
+        ///      Protected constructor used for deserialization.
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
@@ -30,7 +31,7 @@ namespace Catalyst.Node.Common.Exceptions
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand,SerializationFormatter=true)]
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter=true)]
         public override void GetObjectData( SerializationInfo info, 
             StreamingContext context ) 
         {
