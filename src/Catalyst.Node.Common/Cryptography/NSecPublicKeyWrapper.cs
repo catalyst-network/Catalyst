@@ -1,5 +1,3 @@
-using System;
-using Catalyst.Node.Common.Cryptography;
 using NSec.Cryptography;
 
 namespace Catalyst.Node.Common.Cryptography

@@ -1,10 +1,10 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using Dawn;
 using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.IO
@@ -70,15 +70,8 @@ namespace Catalyst.Node.Core.Helpers.IO
             IPEndPoint endPoint
         )
         {
-            if (networkStream == null)
-            {
-                throw new ArgumentNullException(nameof(networkStream));
-            }
-
-            if (sslCertificate == null)
-            {
-                throw new ArgumentNullException(nameof(sslCertificate));
-            }
+            Guard.Argument(networkStream, nameof(networkStream)).NotNull();
+            Guard.Argument(sslCertificate, nameof(sslCertificate)).NotNull();
 
             var certificateCollection = new X509CertificateCollection {sslCertificate};
 

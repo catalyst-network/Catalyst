@@ -8,8 +8,6 @@ namespace Catalyst.Node.Core.Helpers
 {
     public class Fs : IFileSystem
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
         private static string GetUserHomeDir()
         {
             var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);

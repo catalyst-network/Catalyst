@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
@@ -18,7 +19,6 @@ using Catalyst.Protocol.IPPN;
 using Dawn;
 using Org.BouncyCastle.Security;
 using Serilog;
-
 namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
@@ -29,6 +29,7 @@ namespace Catalyst.Node.Core.P2P
 
         private readonly MessageReplyWaitManager _messageReplyManager;
         private int _activeConnections;
+        private bool _disposed;
 
         /// <summary>
         /// </summary>
@@ -51,7 +52,6 @@ namespace Catalyst.Node.Core.P2P
             _messageReplyManager = new MessageReplyWaitManager(MessageQueueManager, PeerList);
         }
 
-        private bool Disposed { get; set; }
         internal PeerList PeerList { get; }
         private TcpListener Listener { get; set; }
         private CancellationToken Token { get; set; }
@@ -60,15 +60,6 @@ namespace Catalyst.Node.Core.P2P
         private X509Certificate2 SslCertificate { get; }
         private MessageQueueManager MessageQueueManager { get; }
         private CancellationTokenSource CancellationToken { get; set; }
-
-        /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            Logger.Verbose("disposing network class");
-            GC.SuppressFinalize(this);
-        }
 
         /// <summary>
         /// </summary>
@@ -169,12 +160,15 @@ namespace Catalyst.Node.Core.P2P
 
             //@TODO put in try catch
             Listener.Start();
-            Logger.Information("Peer server starting on " + ipEndPoint.Address + ":" + ipEndPoint.Port);
+            Logger.Information("Peer server starting on {0}:{1}", 
+                ipEndPoint.Address, ipEndPoint.Port);
 
             try
             {
-                Logger.Debug($"Raising {nameof(AnnounceNodeEventArgs)} for node {NodeIdentity}");
-                await Events.Events.AsyncRaiseEvent(AnnounceNode, this, new AnnounceNodeEventArgs(NodeIdentity));
+                Logger.Debug("Raising {0} for node {1}", 
+                    nameof(AnnounceNodeEventArgs), NodeIdentity);
+                await Events.Events.AsyncRaiseEvent(AnnounceNode, this,
+                    new AnnounceNodeEventArgs(NodeIdentity));
             }
             catch (ArgumentNullException e)
             {
@@ -213,18 +207,16 @@ namespace Catalyst.Node.Core.P2P
                             DisconnectConnection(connection);
                             continue;
                         }
-
                         await DataReceiver(connection, Token);
                     }
                 }
                 catch (SocketException ex)
                 {
-                    switch (ex.Message)
+                    if (ex.Message == "An existing connection was forcibly closed by the remote host") 
+                    { /* do nothing */ }
+                    else
                     {
-                        case "An existing connection was forcibly closed by the remote host":
-                            break;
-                        default:
-                            throw new InvalidOperationException("Unexpected message");
+                        throw new InvalidOperationException("Unexpected message");
                     }
                 }
                 catch (Exception ex)
@@ -242,17 +234,10 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="TimeoutException"></exception>
         /// <exception cref="AuthenticationException"></exception>
-        public async void BuildOutBoundConnection(string ip, int port)
+        public async Task BuildOutBoundConnection(string ip, int port)
         {
-            if (string.IsNullOrEmpty(ip))
-            {
-                throw new ArgumentNullException(nameof(ip));
-            }
-
-            if (!Ip.ValidPortRange(port))
-            {
-                throw new ArgumentOutOfRangeException(nameof(port));
-            }
+            Guard.Argument(ip, nameof(ip)).NotNull().NotEmpty();
+            Guard.Argument(port, nameof(port)).Require(Ip.ValidPortRange);
 
             try
             {
@@ -281,10 +266,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private Connection StartPeerConnection(TcpClient tcpClient)
         {
-            if (tcpClient == null)
-            {
-                throw new ArgumentNullException(nameof(tcpClient));
-            }
+            Guard.Argument(tcpClient, nameof(tcpClient)).NotNull();
 
             var connection = new Connection(tcpClient);
             var activeCount = Interlocked.Increment(ref _activeConnections);
@@ -303,10 +285,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private Connection GetPeerConnectionTlsStream(Connection connection, int direction, IPEndPoint endPoint = null)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
+            Guard.Argument(connection, nameof(connection)).NotNull();
 
             connection.SslStream = TlsStream.GetTlsStream(
                 connection.TcpClient.GetStream(),
@@ -340,87 +319,57 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="Exception"></exception>
         private bool DisconnectConnection(Connection connection)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
+            Guard.Argument(connection, nameof(connection)).NotNull();
             
             try
             {
                 // first check our unidentified connections
-                if (!PeerList.RemoveUnidentifiedConnectionFromList(connection))
+                if (PeerList.TryRemoveUnidentifiedConnectionFromList(connection)) 
+                    return true;
+                // its not in our unidentified list so now check the peer bucket
+                if (!PeerList.FindPeerFromConnection(connection, out var peer))
                 {
-                    // its not in our unidentified list so now check the peer bucket
-                    if (!PeerList.FindPeerFromConnection(connection, out var peer))
-                    {
-                        return false;
-                    }
-                    if (PeerList.RemovePeerFromBucket(peer))
-                    {
-                        peer.Dispose();
-                    }
-                    else
-                    {
-                        connection.Dispose();
-                        return false;
-                    }
+                    return false;
+                }
+                if (PeerList.TryRemovePeerFromBucket(peer))
+                {
+                    peer.Dispose();
+                }
+                else
+                {
+                    connection.Dispose();
+                    return false;
                 }
 
                 return true;
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Failed to disconnect peer at {0}", connection?.EndPoint?.ToString() ?? "unknown");
+                Logger.Error(e, "Failed to disconnect peer at {0}", 
+                    connection?.EndPoint?.ToString() ?? "unknown");
                 return false;
             }
             finally
             {
                 var activeCount = Interlocked.Decrement(ref _activeConnections);
-                Log.Information("***** Connection successfully disconnected connected (now " + activeCount +
-                            " connections active)");
+                Log.Information("***** Connection successfully disconnected connected (now {0} connections active)",
+                    activeCount);
             }
         }
 
-        /// <summary>
-        ///     dispose server and background workers.
-        /// </summary>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (Disposed)
-            {
-                return;
-            }
+            if (!disposing || _disposed) return;
+            SslCertificate?.Dispose();
+            CancellationToken?.Dispose();
+            PeerList?.Dispose();
+            _disposed = true;
+        }
 
-            if (disposing)
-            {
-                CancellationToken.Cancel();
-                CancellationToken.Dispose();
-
-                if (Listener?.Server != null)
-                {
-                    Listener.Server.Close();
-                    Listener.Server.Dispose();
-                }
-
-                if (PeerList.UnIdentifiedPeers?.Count > 0)
-                {
-                    foreach (var peer in PeerList.UnIdentifiedPeers)
-                    {
-                        peer.Value.Dispose();                           
-                    }
-                }
-
-                if (PeerList.PeerBucket?.Count > 0)
-                {
-                    foreach (var peer in PeerList.PeerBucket)
-                    {
-                        peer.Value.Dispose();                           
-                    }
-                }
-            }
-
-            Disposed = true;
-            Logger.Verbose("Catalyst.Helpers.Network class disposed");
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
