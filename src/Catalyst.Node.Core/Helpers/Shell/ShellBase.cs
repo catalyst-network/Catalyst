@@ -9,7 +9,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
 {
     public abstract class ShellBase : IShell
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         protected virtual string Prompt => "ADS";
         protected static bool ShowPrompt { private get; set; } = true;
         private static string ServiceName => "Catalyst Distributed Shell";

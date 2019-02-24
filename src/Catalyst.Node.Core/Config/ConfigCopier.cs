@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Catalyst.Node.Core.Helpers;
 using Dawn;
+using Catalyst.Node.Common;
 
 namespace Catalyst.Node.Core.Config
 {
