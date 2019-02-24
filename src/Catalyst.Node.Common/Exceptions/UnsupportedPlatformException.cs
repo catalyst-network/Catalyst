@@ -1,10 +1,12 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Catalyst.Node.Common.Exceptions
 {
     /// <summary>
     /// </summary>
-    public class UnsupportedPlatformException : Exception
+    [Serializable]
+    public class UnsupportedPlatformException : Exception, ISerializable
     {
         /// <summary>
         ///     Initializes new instance of UnsupportedPlatformException class
