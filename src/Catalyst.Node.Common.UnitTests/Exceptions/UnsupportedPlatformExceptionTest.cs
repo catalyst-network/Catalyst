@@ -7,10 +7,10 @@ using Catalyst.Node.Common.Exceptions;
 
 namespace Catalyst.Node.Common.UnitTests.Exceptions
 {
-    public class UnsupportedPlatformExceptionTest
+    public static class UnsupportedPlatformExceptionTest
     {
         [Fact]
-        public static void Test_UnsupportedPlatformException_Message_Excepcted()
+        public static void Test_UnsupportedPlatformException_Message_Expected()
         {
             var expectedMessage = "Do not support XYZ";
             var unsupportedPlatformEx = new UnsupportedPlatformException(expectedMessage);
