@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using Dawn;
 
 namespace Catalyst.Node.Common.Exceptions
 {
@@ -14,7 +15,10 @@ namespace Catalyst.Node.Common.Exceptions
         ///     Initializes new instance of UnsupportedPlatformException class.
         /// </summary>
         /// <param name="message"></param>
-        public UnsupportedPlatformException(string message) : base(message) { }
+        public UnsupportedPlatformException(string message) : base(message)
+        { 
+            Guard.Argument(message, nameof(message)).NotNull();
+        }
         
         /// <summary>
         ///      Protected constructor used for deserialization.
@@ -32,7 +36,7 @@ namespace Catalyst.Node.Common.Exceptions
         /// <param name="info"></param>
         /// <param name="context"></param>
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter=true)]
-        public override void GetObjectData( SerializationInfo info, 
+        public override void GetObjectData(SerializationInfo info, 
             StreamingContext context ) 
         {
             base.GetObjectData( info, context );
