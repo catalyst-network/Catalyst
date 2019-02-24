@@ -3,7 +3,7 @@ using Catalyst.Node.Common.Cryptography;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
+namespace Catalyst.Node.Common.UnitTests.Cryptography
 {
     public class CryptographyTests
     {

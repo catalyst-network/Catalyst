@@ -1,6 +1,6 @@
-﻿namespace Catalyst.Node.Core.UnitTest.TestUtils
+﻿namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
-    internal class Traits
+    public class Traits
     {
         public const string TestType = "TestType";
         public const string IntegrationTest = "IntegrationTest";
