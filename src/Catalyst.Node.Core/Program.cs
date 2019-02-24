@@ -11,7 +11,6 @@ using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Shell;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
@@ -97,9 +96,6 @@ namespace Catalyst.Node.Core
 
                         cli.OnExecute(() =>
                               {
-                                  // get some basic required params
-                                  var platform = Detection.Os();
-
                                   // override or get default data dir
                                   var dataDir = nodeDataDir.Value() != null
                                                     ? nodeDataDir.Value()
@@ -123,7 +119,7 @@ namespace Catalyst.Node.Core
                                   new ConfigCopier().RunConfigStartUp(dataDir, networkOption);
                                   // conditionally build NodeOptions object with enabled modules
                                   var nodeOptions =
-                                      new NodeOptionsBuilder(env, dataDir, network, platform)
+                                      new NodeOptionsBuilder(env, dataDir, network)
                                          .LoadPeerSettings()
                                          .LoadLedgerSettings()
                                              .When(() => !disableLedger.HasValue())
