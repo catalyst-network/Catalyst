@@ -8,10 +8,11 @@ namespace Catalyst.Node.Common.Exceptions
     [Serializable]
     public class UnsupportedPlatformException : Exception, ISerializable
     {
-        /// <summary>
-        ///     Initializes new instance of UnsupportedPlatformException class
-        /// </summary>
-        /// <param name="message"></param>
-        public UnsupportedPlatformException(string message) : base(message) { }
+        public UnsupportedPlatformException(string pfxfileName)
+            : base(String.Format("Catalyst network currently doesn't support on the fly creation of self signed certificate. Please create a password protected certificate at {0}." +
+                Environment.NewLine +
+                "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions", pfxfileName))
+        {
+        }
     }
 }
