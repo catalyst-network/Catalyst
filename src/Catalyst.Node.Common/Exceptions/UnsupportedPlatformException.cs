@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace Catalyst.Node.Common.Exceptions
 {
@@ -8,11 +9,32 @@ namespace Catalyst.Node.Common.Exceptions
     [Serializable]
     public class UnsupportedPlatformException : Exception, ISerializable
     {
-        public UnsupportedPlatformException(string pfxfileName)
-            : base(String.Format("Catalyst network currently doesn't support on the fly creation of self signed certificate. Please create a password protected certificate at {0}." +
-                Environment.NewLine +
-                "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions", pfxfileName))
+        /// <summary>
+        ///     Initializes new instance of UnsupportedPlatformException class
+        /// </summary>
+        /// <param name="message"></param>
+        public UnsupportedPlatformException(string message) : base(message) { }
+        
+        /// <summary>
+        ///      Protected constructor used for deserialization/ 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected UnsupportedPlatformException(SerializationInfo info, 
+            StreamingContext context ) :
+            base( info, context )
+        { }
+        
+        /// <summary>
+        ///     GetObjectData performs a custom serialization.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        [SecurityPermissionAttribute(SecurityAction.Demand,SerializationFormatter=true)]
+        public override void GetObjectData( SerializationInfo info, 
+            StreamingContext context ) 
         {
+            base.GetObjectData( info, context );
         }
     }
 }
