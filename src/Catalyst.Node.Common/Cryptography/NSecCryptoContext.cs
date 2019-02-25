@@ -1,7 +1,7 @@
 using System;
 using NSec.Cryptography;
 
-namespace Catalyst.Node.Core.Helpers.Cryptography
+namespace Catalyst.Node.Common.Cryptography
 {
     /// <summary>
     /// Provides NSec crypto operations on wrapped keys.

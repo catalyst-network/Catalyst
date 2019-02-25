@@ -1,7 +1,8 @@
 using System;
 using System.Security;
+using Catalyst.Node.Common.Cryptography;
 
-namespace Catalyst.Node.Core.Helpers.Cryptography 
+namespace Catalyst.Node.Common.Cryptography 
 {
     public class ConsolePasswordReader : IPasswordReader
     {

@@ -1,9 +1,9 @@
-using Catalyst.Node.Core.Helpers.Cryptography;
+using System.Text;
+using Catalyst.Node.Common.Cryptography;
 using FluentAssertions;
 using Xunit;
-using System.Text;
 
-namespace Catalyst.Node.UnitTests.Helpers.Cryptography
+namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
 {
     public class CryptographyTests
     {

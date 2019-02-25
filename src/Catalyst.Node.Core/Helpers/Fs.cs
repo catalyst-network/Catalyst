@@ -2,13 +2,10 @@ using System;
 using System.IO;
 using Catalyst.Node.Core.Config;
 using Serilog;
+using Catalyst.Node.Common;
 
 namespace Catalyst.Node.Core.Helpers
 {
-    public interface IFileSystem {
-        DirectoryInfo GetCatalystHomeDir();
-    }
-
     public class Fs : IFileSystem
     {
         private static string GetUserHomeDir()

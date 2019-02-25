@@ -8,6 +8,7 @@ using FluentAssertions;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
+using Catalyst.Node.Common;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
