@@ -16,7 +16,6 @@ using Catalyst.Node.Core.P2P;
 using Dawn;
 using Serilog;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
-using Catalyst.Node.Common.Exceptions;
 
 namespace Catalyst.Node.Core
 {
