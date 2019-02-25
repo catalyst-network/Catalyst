@@ -64,14 +64,24 @@ namespace Catalyst.Node.UnitTests.Helpers.Cryptography
         public void TestFailurePrivateKeyImport()
         {
             var blob = Encoding.UTF8.GetBytes("this string is not a formatted private key");
+            
+            Action act = () => _context.ImportPrivateKey(blob);
 
-            IPrivateKey privateKey = _context.ImportPrivateKey(blob);
-            privateKey.Should().BeNull("invalid private key import should result in null value");
+            act.Should().Throw<ArgumentNullException>("invalid private key import should result in null value");
 
         }
 
         [Fact]
-        public void TestPrivateKeyImport()
+        public void TestPrivateKeyExport()
+        {
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            byte[] blob = _context.ExportPrivateKey(privateKey);
+            blob.Should().NotBeNull("newly generated private key should be exportable once");
+
+        }
+        
+        [Fact]
+        public void TestPrivateKeyImportFromExported()
         {
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             byte[] blob = _context.ExportPrivateKey(privateKey);
@@ -79,6 +89,17 @@ namespace Catalyst.Node.UnitTests.Helpers.Cryptography
             IPublicKey importedPrivateKey = _context.ImportPrivateKey(blob);
             importedPrivateKey.Should().NotBeNull("private key should be importable from a valid blob");
 
+        }
+
+        [Fact]
+        public void TestFailurePrivateKeySecondExport()
+        {
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            byte[] blob = _context.ExportPrivateKey(privateKey);
+            byte[] blob2 = _context.ExportPrivateKey(privateKey);
+            blob.Should().BeNull("newly generated private key should not be exportable more than once");
+            
+            
         }
 
         [Fact]
