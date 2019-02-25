@@ -2,6 +2,7 @@
 using System.Linq;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Modules.Mempool;
 using Catalyst.Protocols.Transaction;
 using Dawn;
 using Google.Protobuf;

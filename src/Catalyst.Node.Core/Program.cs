@@ -9,6 +9,11 @@ using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Modules.Consensus;
+using Catalyst.Node.Common.Modules.Contract;
+using Catalyst.Node.Common.Modules.Dfs;
+using Catalyst.Node.Common.Modules.Gossip;
+using Catalyst.Node.Common.Modules.Ledger;
 using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Shell;
@@ -170,14 +175,6 @@ namespace Catalyst.Node.Core
                                   }
 
                                   using (var kernel = new KernelBuilder(nodeOptions)
-                                                     .WithLedgerModule()
-                                                     .When(() => !disableLedger.HasValue())
-                                                     .WithMempoolModule()
-                                                     .When(() => !disableMempool.HasValue())
-                                                     .WithContractModule()
-                                                     .When(() => !disbleContract.HasValue())
-                                                     .WithConsensusModule()
-                                                     .When(() => !disbleConsensus.HasValue())
                                                      .Build()
                                   )
                                   {
@@ -260,15 +257,9 @@ namespace Catalyst.Node.Core
                 {
                     var serviceProvider = new AutofacServiceProvider(scope);
                     var gossipSingleton = serviceProvider.GetService<IGossip>();
-                    var dfsSingleton = serviceProvider.GetService<IDfs>();
-                    var contractSingleton = serviceProvider.GetService<IContract>();
-                    var consensusSingleton = serviceProvider.GetService<IConsensus>();
-                    var ledgerSingleton = serviceProvider.GetService<ILedger>();
                     Log.Logger.Information("Gossip singleton is named {0}", gossipSingleton.Name);
-                    
                 }
-
-                 Environment.ExitCode = 0;
+                Environment.ExitCode = 0;
             }
             catch (Exception e)
             {

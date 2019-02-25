@@ -13,21 +13,40 @@
   //simply comment modules that you don't need.
   "modules": [
     {
-      "type": "Catalyst.Node.Core.Modules.Gossip.GossipModule",
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
-        "nameProvider": 1
+        "configFilePath": "Config/Modules/gossip.json"
       }
     },
     {
-      "type": "Catalyst.Node.Core.Modules.Dfs.DfsModule",
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
-        "connectRetries": 10,
-        "apiPath": "api/v0/"
+        "configFilePath": "Config/Modules/dfs.json"
       }
     },
-    { "type": "Catalyst.Node.Core.Modules.Consensus.ConsensusModule" },
-    { "type": "Catalyst.Node.Core.Modules.Contract.ContractModule" },
-    { "type": "Catalyst.Node.Core.Modules.Ledger.LedgerModule" },
-    { "type": "Catalyst.Node.Core.Modules.Mempool.MempoolModule" }
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/consensus.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/contract.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/ledger.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/mempool.json"
+      }
+    }
   ] 
 }

@@ -1,4 +1,4 @@
-using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Modules.Consensus;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {

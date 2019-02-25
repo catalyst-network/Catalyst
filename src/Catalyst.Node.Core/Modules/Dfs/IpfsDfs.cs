@@ -1,72 +1,30 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common;
-using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Modules.Dfs;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
     public class IpfsDfs : IDisposable, IDfs
     {
-        private readonly IIpfs _ipfs;
-        private readonly ISettings _settings;
+        /// <inheritdoc />
+        public async Task StartAsync(CancellationToken cancellationToken = default) { await Task.CompletedTask; }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="ipfs"></param>
-        /// <param name="settings"></param>
-        public IpfsDfs(IIpfs ipfs, ISettings settings)
-        {
-            _ipfs = ipfs;
-            _settings = settings;
-        }
+        /// <inheritdoc />
+        public async Task<string> AddFileAsync(string filename, CancellationToken cancellationToken = default) { return await Task.FromResult(null as string); }
 
-        public void Start()
-        {
-            _ipfs.CreateIpfsClient(_settings.IpfsVersionApi, _settings.ConnectRetries);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        public string AddFile(string filename)
-        {
-            return _ipfs.AddFile(filename);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        public Task<string> ReadAllTextAsync(string filename)
-        {
-            return _ipfs.ReadAllTextAsync(filename);
-        }
-
-        public interface ISettings {
-            ushort ConnectRetries { get; }
-            string IpfsVersionApi { get; }
-        }
-
-        public class Settings : ISettings
-        {
-            protected internal Settings(ushort connectRetries, string apiVersion)
-            {
-                ConnectRetries = connectRetries;
-                IpfsVersionApi = apiVersion;
-            }
-            public ushort ConnectRetries { get; set; }
-            public string IpfsVersionApi { get; set; }
-        }
+        /// <inheritdoc />
+        public async Task<string> ReadAllTextAsync(string filename, CancellationToken cancellationToken = default) { return await Task.FromResult(null as string); }
 
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _ipfs.DestroyIpfsClient();
+
             }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);

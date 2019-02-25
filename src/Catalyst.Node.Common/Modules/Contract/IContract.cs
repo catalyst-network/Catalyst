@@ -1,13 +1,7 @@
 using System;
 
-namespace Catalyst.Node.Common.Modules
+namespace Catalyst.Node.Common.Modules.Contract
 {
-    public enum ContractType
-    {
-        Standard,
-        External
-    }
-
     public interface IContract
     {
         Guid Identity { get; set; }

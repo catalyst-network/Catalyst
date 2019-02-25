@@ -1,0 +1,21 @@
+﻿{
+  "defaultAssembly": "Catalyst.Node.Core",
+  "components": [
+    {
+      "type": "Catalyst.Node.Core.Modules.Gossip.Gossip",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Modules.Gossip.IGossip, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.Gossip.NameProvider1",
+      "services": [
+        {
+          "type": "Catalyst.Node.Core.Modules.Gossip.INameProvider"
+        }
+      ]
+    }
+  ]
+}
