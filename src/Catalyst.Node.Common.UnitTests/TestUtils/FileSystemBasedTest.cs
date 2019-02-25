@@ -3,14 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Catalyst.Node.Core.Helpers;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Node.Common;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils
+namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
     /// <summary>
     /// A base test class that can be used to offer inheriting tests a folder on which

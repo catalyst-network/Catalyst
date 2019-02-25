@@ -40,12 +40,11 @@ namespace Catalyst.Node.Core
         /// <param name="network"></param>
         /// <param name="platform"></param>
         /// <param name="persistenceConfiguration"></param>
-        private NodeOptions(int env, string dataDir, int network, int platform, ISharpRepositoryConfiguration persistenceConfiguration)
+        private NodeOptions(int env, string dataDir, int network, ISharpRepositoryConfiguration persistenceConfiguration)
         {
             Env = env;
             DataDir = dataDir;
             Network = network;
-            Platform = platform;
             PersistenceConfiguration = persistenceConfiguration;
         }
 
@@ -71,9 +70,8 @@ namespace Catalyst.Node.Core
         /// <param name="platform"></param>
         /// <param name="persistenceConfiguration"></param>
         /// <returns></returns>
-        internal static NodeOptions GetInstance(string environment, string dataDir, string network, int platform, ISharpRepositoryConfiguration persistenceConfiguration)
+        internal static NodeOptions GetInstance(string environment, string dataDir, string network, ISharpRepositoryConfiguration persistenceConfiguration)
         {
-            Guard.Argument(platform, nameof(platform)).InRange(1, 3);
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(environment, nameof(environment)).NotNull().NotEmpty().NotWhiteSpace();
@@ -87,7 +85,6 @@ namespace Catalyst.Node.Core
                             (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
                             dataDir,
                             (int) (Networks) Enum.Parse(typeof(Networks), network),
-                            platform,
                             persistenceConfiguration
                         )
                         : throw new ArgumentException();
@@ -123,11 +120,9 @@ namespace Catalyst.Node.Core
         /// <param name="env"></param>
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
-        /// <param name="platform"></param>
         /// <exception cref="ArgumentException"></exception>
-        public NodeOptionsBuilder(string env, string dataDir, string network, int platform)
+        public NodeOptionsBuilder(string env, string dataDir, string network)
         {
-            Guard.Argument(platform, nameof(platform)).InRange(1, 3);
             Guard.Argument(env, nameof(env)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
@@ -145,7 +140,7 @@ namespace Catalyst.Node.Core
                 _networkConfiguration.GetSection("PersistenceConfiguration")
             );
 
-            _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform, persistenceConfiguration);
+            _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, persistenceConfiguration);
         }
 
         /// <summary>
