@@ -42,9 +42,7 @@
     <None Update="Config\*.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Modules\Dfs\config.json">
+    <None Update="Config\Modules\*.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

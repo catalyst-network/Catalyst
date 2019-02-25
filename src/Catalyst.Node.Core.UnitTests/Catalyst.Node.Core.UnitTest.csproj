@@ -22,5 +22,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\Util\" />
+    <Folder Include="Modules\Dfs\" />
   </ItemGroup>
 </Project>

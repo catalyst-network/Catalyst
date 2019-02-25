@@ -1,0 +1,14 @@
+﻿{
+  "defaultAssembly": "Catalyst.Node.Core",
+  "components": [
+    {
+      "type": "Catalyst.Node.Core.Modules.Ledger.Ledger",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Modules.Ledger.ILedger, Catalyst.Node.Common",
+          "type": "Catalyst.Node.Common.Modules.Ledger.ILedger, Catalyst.Node.Common"
+        }
+      ]
+    }
+  ]
+}
