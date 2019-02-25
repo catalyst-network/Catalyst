@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using Catalyst.Node.Core.Config;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 
 namespace Catalyst.Node.Core.UnitTest.Config
 {

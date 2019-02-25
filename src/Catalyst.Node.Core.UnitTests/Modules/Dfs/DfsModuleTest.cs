@@ -6,6 +6,7 @@ using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using FluentAssertions;
 using Xunit;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {

@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Serilog;
 
-namespace Catalyst.Node.Core.Helpers.Cryptography
+namespace Catalyst.Node.Common.Cryptography
 {
     public class CertificateStore : ICertificateStore
     {

@@ -1,6 +1,6 @@
 using System.Security;
 
-namespace Catalyst.Node.Core.Helpers.Cryptography {
+namespace Catalyst.Node.Common.Cryptography {
     public interface IPasswordReader
     {
         SecureString ReadSecurePassword(string passwordContext = "Please enter your password");
