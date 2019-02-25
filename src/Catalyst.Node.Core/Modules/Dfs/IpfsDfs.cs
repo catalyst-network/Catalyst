@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Modules.Dfs;
 
@@ -6,31 +7,14 @@ namespace Catalyst.Node.Core.Modules.Dfs
 {
     public class IpfsDfs : IDisposable, IDfs
     {
-        private readonly object _ipfs;
+        /// <inheritdoc />
+        public async Task StartAsync(CancellationToken cancellationToken = default) { await Task.CompletedTask; }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="ipfs"></param>
-        /// <param name="settings"></param>
-        public IpfsDfs()
-        {
-        }
+        /// <inheritdoc />
+        public async Task<string> AddFileAsync(string filename, CancellationToken cancellationToken = default) { return await Task.FromResult(null as string); }
 
-        public void Start()
-        {
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        public string AddFile(string filename) { return null; }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        public Task<string> ReadAllTextAsync(string filename) { return Task.FromResult(null as string); }
+        /// <inheritdoc />
+        public async Task<string> ReadAllTextAsync(string filename, CancellationToken cancellationToken = default) { return await Task.FromResult(null as string); }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -40,6 +24,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
