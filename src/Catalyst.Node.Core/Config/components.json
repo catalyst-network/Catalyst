@@ -15,37 +15,37 @@
     {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
-        "configFilePath": "Config\\Modules\\gossip.json"
+        "configFilePath": "Config/Modules/gossip.json"
       }
     },
     {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
-        "configFilePath": "Config\\Modules\\dfs.json"
+        "configFilePath": "Config/Modules/dfs.json"
       }
     },
     {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
-        "configFilePath": "Config\\Modules\\consensus.json"
+        "configFilePath": "Config/Modules/consensus.json"
       }
     },
     {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
-        "configFilePath": "Config\\Modules\\contract.json"
+        "configFilePath": "Config/Modules/contract.json"
       }
     },
     {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
-        "configFilePath": "Config\\Modules\\ledger.json"
+        "configFilePath": "Config/Modules/ledger.json"
       }
     },
     {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
-        "configFilePath": "Config\\Modules\\mempool.json"
+        "configFilePath": "Config/Modules/mempool.json"
       }
     }
   ] 
