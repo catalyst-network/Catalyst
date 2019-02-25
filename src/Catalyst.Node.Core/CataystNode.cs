@@ -9,7 +9,6 @@ using Catalyst.Node.Common.Cryptography;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Common.Cryptography;
 using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
