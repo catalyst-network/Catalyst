@@ -27,6 +27,7 @@ ProjectSection(SolutionItems) = preProject
 	Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
 	Common.UnitTests.props = Common.UnitTests.props
 	Common.Projects.props = Common.Projects.props
+	..\COPYING = ..\COPYING
 EndProjectSection
 EndProject
 Global
