@@ -1,25 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using Catalyst.Node.Common;
-using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Common.Modules.Mempool;
+using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Protocols.Transaction;
 using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Serilog;
+using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Node.UnitTests.Modules.Mempool
 {
     public class UT_Mempool
     {
+        private readonly Core.Modules.Mempool.Mempool _memPool;
+
+        private readonly IRepository<StTxModel> _keyValueStore;
+        private readonly Key _key;
+        private readonly StTx _transaction;
+        private ILogger _logger;
+
         public UT_Mempool()
         {
-            _keyValueStore = Substitute.For<IKeyValueStore>();
-            _memPool = new Core.Modules.Mempool.Mempool(_keyValueStore);
+            _keyValueStore = Substitute.For<IRepository<StTxModel>>();
+            _logger = Substitute.For<ILogger>();
+            _memPool = new Core.Modules.Mempool.Mempool(_keyValueStore, _logger);
 
             _key = new Key {HashedSignature = "hashed_signature"};
             _transaction = new StTx
@@ -32,27 +43,27 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
                            };
         }
 
-        private readonly Core.Modules.Mempool.Mempool _memPool;
-
-        private readonly Key _key;
-        private readonly StTx _transaction;
-        private readonly IKeyValueStore _keyValueStore;
-
-        private void AddKeyValueStoreEntryExpectation(Key key, StTx tx)
+        private static void AddKeyValueStoreEntryExpectation(Key key, StTx tx, IRepository<StTxModel> keyValueStore)
         {
-            _keyValueStore.Get(Arg.Is<byte[]>(bytes => bytes.SequenceEqual(key.ToByteArray())))
-                          .Returns(tx.ToByteArray());
+            var record = new StTxModel() {Key = key, Transaction = tx};
+            keyValueStore.TryFind(Arg.Is<Expression<Func<StTxModel, bool>>>(e => 
+            e.Key.ToByteArray().Equals(key.ToByteArray())), out Arg.Any<StTxModel>())
+                .Returns(a =>
+                {
+                    a[1] = tx;
+                    return true;
+                });
         }
 
         private class ProducerConsumer
         {
             private static readonly object Locker = new object();
             private readonly Key _key;
-            private readonly IKeyValueStore _keyValueStore;
+            private readonly IRepository<StTxModel> _keyValueStore;
             private readonly IMempool _memPool;
             public int? FirstThreadId;
 
-            public ProducerConsumer(IMempool memPool, Key key, IKeyValueStore keyValueStore)
+            public ProducerConsumer(IMempool memPool, Key key, IRepository<StTxModel> keyValueStore)
             {
                 _memPool = memPool;
                 _key = key;
@@ -70,8 +81,7 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
                     if (FirstThreadId == null)
                     {
                         FirstThreadId = id;
-                        _keyValueStore.Get(Arg.Is<byte[]>(bytes => bytes.SequenceEqual(_key.ToByteArray())))
-                                      .Returns(transaction.ToByteArray());
+                        AddKeyValueStoreEntryExpectation(_key, transaction, _keyValueStore);
                     }
 
                     Thread.Sleep(5); //milliseconds
@@ -101,7 +111,7 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
         public void Get_should_retrieve_a_saved_transaction()
         {
             _memPool.SaveTx(_key, _transaction);
-            _keyValueStore.Get(null).ReturnsForAnyArgs(_transaction.ToByteArray());
+            AddKeyValueStoreEntryExpectation(_key, _transaction, _keyValueStore);
 
             var transactionFromMemPool = _memPool.GetTx(_key);
 
@@ -122,7 +132,7 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
                 var key = new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"};
                 var transaction = new StTx {Amount = (uint) i};
                 _memPool.SaveTx(key, transaction);
-                AddKeyValueStoreEntryExpectation(key, transaction);
+                AddKeyValueStoreEntryExpectation(key, transaction, _keyValueStore);
             }
 
             for (var i = 0; i < numTx; i++)
@@ -136,7 +146,8 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
         [Fact]
         public void GetNonExistentKey()
         {
-            _keyValueStore.Get(null).ThrowsForAnyArgs(new KeyNotFoundException());
+            _keyValueStore.TryFind(Arg.Any<Expression<Func<StTxModel, bool>>>(), out Arg.Any<StTxModel>())
+               .ThrowsForAnyArgs(new KeyNotFoundException());
             new Action(() => _memPool.GetTx(new Key {HashedSignature = "just_a_short_key_for_easy_search:0"}))
                .Should().Throw<KeyNotFoundException>();
         }
@@ -149,7 +160,7 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
             _memPool.SaveTx(key, _transaction);
             //This is really testing the underlying IKeyValueStore behavior...
             var tx = _transaction;
-            AddKeyValueStoreEntryExpectation(key, tx);
+            AddKeyValueStoreEntryExpectation(key, tx, _keyValueStore);
 
             _transaction.Amount = 100;
             _memPool.SaveTx(key, _transaction);

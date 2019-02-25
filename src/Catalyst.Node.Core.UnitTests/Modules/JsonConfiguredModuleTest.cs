@@ -32,9 +32,9 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         [InlineData(typeof(IDfs), typeof(IpfsDfs))]
         [InlineData(typeof(IGossip), typeof(Gossip))]
         [InlineData(typeof(ILedger), typeof(Ledger))]
-        [InlineData(typeof(IMempool), typeof(Mempool))]
+        //[InlineData(typeof(IMempool), typeof(Core.Modules.Mempool.Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
+        private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
             var resolvedType = Container.Resolve(interfaceType);
             resolvedType.Should().NotBeNull();

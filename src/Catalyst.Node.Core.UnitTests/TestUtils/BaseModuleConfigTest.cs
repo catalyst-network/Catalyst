@@ -1,5 +1,8 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Autofac.Configuration;
+using Autofac.Core;
+using Common.Logging.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils {
@@ -7,7 +10,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
     {
         protected IContainer Container;
 
-        public BaseModuleConfigTest(string configFileUnderTest)
+        protected BaseModuleConfigTest(string configFileUnderTest, Action<ContainerBuilder> extraRegistrations = null)
         {
             var configuration = new ConfigurationBuilder()
                .AddJsonFile(configFileUnderTest)
@@ -16,6 +19,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
             var configurationModule = new ConfigurationModule(configuration);
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(configurationModule);
+            extraRegistrations?.Invoke(containerBuilder);
             Container = containerBuilder.Build();
         }
     }
