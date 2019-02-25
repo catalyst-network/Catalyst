@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Catalyst.Node.Core.Modules.Gossip
+﻿namespace Catalyst.Node.Core.Modules.Gossip
 {
+    //This is just intended as a demo of how autofac can be used to resolve from config
     public interface INameProvider
     {
         string Name { get; }

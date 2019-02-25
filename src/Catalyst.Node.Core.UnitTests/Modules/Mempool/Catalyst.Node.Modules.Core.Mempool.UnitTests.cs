@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Modules.Mempool;
 using Catalyst.Protocols.Transaction;
 using FluentAssertions;
 using Google.Protobuf;

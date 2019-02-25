@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Catalyst.Protocols.Transaction;
 
-namespace Catalyst.Node.Common.Modules
+namespace Catalyst.Node.Common.Modules.Mempool
 {
     public interface IMempool
     {

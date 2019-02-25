@@ -71,50 +71,6 @@ namespace Catalyst.Node.Core {
 
         /// <summary>
         /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithContractModule()
-        {
-            _moduleLoader.Add(n => n.ContractService = _containerBuilder.RegisterModule(new ContractModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithMempoolModule()
-        {
-            _moduleLoader.Add(n => n.MempoolService = _containerBuilder.RegisterModule(new MempoolModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithLedgerModule()
-        {
-            _moduleLoader.Add(n => n.LedgerService = _containerBuilder.RegisterModule(new LedgerModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithConsensusModule()
-        {
-            _moduleLoader.Add(n => n.ConsensusService = _containerBuilder.RegisterModule(new ConsensusModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public static KernelBuilder WithWalletModule()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
         public KernelBuilder When(Func<bool> condition)
