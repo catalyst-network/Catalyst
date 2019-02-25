@@ -1,6 +1,6 @@
 using NSec.Cryptography;
 
-namespace Catalyst.Node.Core.Helpers.Cryptography
+namespace Catalyst.Node.Common.Cryptography
 {
     /// <summary>
     /// NSec specific public key wrapper.
