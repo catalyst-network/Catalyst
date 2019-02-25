@@ -4,9 +4,9 @@ using System.Linq;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
+using Catalyst.Node.Common.Cryptography;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Node.Common.Cryptography;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using NSubstitute;
 

@@ -16,17 +16,14 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         [Fact]
         public void TestSigningVerification(){
             
-            
             IKey key = _context.GenerateKey();
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
             byte[] signature = _context.Sign(key, data);
             _context.Verify(key, data, signature).Should().BeTrue("signature generated with private key should verify with corresponding public key");
- 
         }
         
         [Fact]
         public void TestFailureSigningVerification(){
-            
             
             IKey key = _context.GenerateKey();
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
@@ -43,7 +40,6 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
 
             IPublicKey publicKey = _context.ImportPublicKey(blob);
             publicKey.Should().BeNull("invalid public key import should result in null value");
-
         }
 
         [Fact]
@@ -54,7 +50,6 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             
             IPublicKey publicKey = _context.ImportPublicKey(blob);
             publicKey.Should().NotBeNull();
-
         }
 
         [Fact]
@@ -66,10 +61,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             
             byte[] blob = _context.ExportPublicKey(key);
             IPublicKey importedKey = _context.ImportPublicKey(blob);
-            _context.Verify(importedKey, data, signature).Should().BeTrue("signature should verify with imported public key");
-            
+            _context.Verify(importedKey, data, signature).Should().BeTrue("signature should verify with imported public key");       
         }
-       
     }
-    
 }

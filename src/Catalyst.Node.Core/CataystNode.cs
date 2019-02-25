@@ -9,6 +9,10 @@ using Catalyst.Node.Common.Cryptography;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers;
+<<<<<<< HEAD
+=======
+using Catalyst.Node.Core.Helpers.Platform;
+>>>>>>> 13925dab790a8e1db288d28e8c531c289ba5c057
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P.Messages;
