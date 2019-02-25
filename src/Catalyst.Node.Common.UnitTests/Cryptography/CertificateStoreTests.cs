@@ -3,14 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using FluentAssertions;
 using Catalyst.Node.Common.Cryptography;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using NSubstitute;
-using FluentAssertions;
 
-namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
+namespace Catalyst.Node.Common.UnitTests.Cryptography
 {
     public class CertificateStoreTests : FileSystemBasedTest, IDisposable
     {
@@ -26,7 +26,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Cryptography
         {
             _passwordReader = Substitute.For<IPasswordReader>();
         }
-
 
         private SecureString BuildSecureStringPassword()
         {

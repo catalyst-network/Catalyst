@@ -5,9 +5,9 @@ using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Node.Core.Helpers.Network;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using FluentAssertions;
 using Xunit;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 
 namespace Catalyst.Node.Core.UnitTest.Helpers.Network
 {

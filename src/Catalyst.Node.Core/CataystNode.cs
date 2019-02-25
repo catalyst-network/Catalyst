@@ -9,7 +9,6 @@ using Catalyst.Node.Common.Cryptography;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P.Messages;
@@ -68,7 +67,7 @@ namespace Catalyst.Node.Core
             {
                 if (Environment.OSVersion.Platform == PlatformID.Unix)
                 {
-                    throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
+                    throw new PlatformNotSupportedException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
                         $"Please create a password protected certificate at {pfxFilePath}." +
                         Environment.NewLine +
                         "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");                    

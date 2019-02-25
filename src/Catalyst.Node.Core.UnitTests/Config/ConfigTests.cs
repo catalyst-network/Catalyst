@@ -15,7 +15,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
         public void Config_Should_Contain_a_valid_storage_module(string network)
         {
             var dataDir = Path.Combine(Environment.CurrentDirectory, "Config");
-            var optionBuilder = new NodeOptionsBuilder("debug", dataDir, network, 1);
+            var optionBuilder = new NodeOptionsBuilder("debug", dataDir, network);
             var networkConfiguration = optionBuilder.LoadNetworkConfig(network, dataDir);
             var configurationSection = networkConfiguration.GetSection("PersistenceConfiguration");
             var persistenceConfiguration = RepositoryFactory.BuildSharpRepositoryConfiguation(configurationSection);
