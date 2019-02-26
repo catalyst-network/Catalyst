@@ -4,20 +4,18 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Autofac;
 using Catalyst.Node.Common;
+using Catalyst.Node.Common.Cryptography;
 using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Modules.P2P;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Cryptography;
-using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
 using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P;
 using Dawn;
 using Serilog;
-using Serilog.Core;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core
@@ -28,9 +26,8 @@ namespace Catalyst.Node.Core
 
         private static readonly object Mutex = new object();
 
-        public readonly Kernel Kernel;
-
-        public Dns Dns;
+        protected internal readonly Kernel Kernel;
+        private bool _disposed;
 
         /// <summary>
         ///     Instantiates basic CatalystSystem.
@@ -38,7 +35,7 @@ namespace Catalyst.Node.Core
         private CatalystNode(Kernel kernel)
         {
             Kernel = kernel;
-            Dns = new Dns(kernel.NodeOptions.PeerSettings.DnsServer);
+            new Dns(kernel.NodeOptions.PeerSettings.DnsServer);
             ConnectionManager = new ConnectionManager(
                 GetCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName),
                 new PeerList(new ClientWorker()),
@@ -47,11 +44,11 @@ namespace Catalyst.Node.Core
             );
 
             Task.Run(async () =>
-                         await ConnectionManager.InboundConnectionListener(
-                             new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
-                                 Kernel.NodeOptions.PeerSettings.Port
-                             )
-                         )
+                 await ConnectionManager.InboundConnectionListener(
+                     new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
+                         Kernel.NodeOptions.PeerSettings.Port
+                     )
+                 )
             );
 
             ConnectionManager.AnnounceNode += Announce;
@@ -59,18 +56,8 @@ namespace Catalyst.Node.Core
 
         private static CatalystNode Instance { get; set; }
         private ConnectionManager ConnectionManager { get; }
-        private bool Disposed { get; set; }
 
-        /// <summary>
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            Logger.Verbose("disposing catalyst node");
-            GC.SuppressFinalize(this);
-        }
-
-        private X509Certificate2 GetCertificate(string pfxFilePath)
+        private static X509Certificate2 GetCertificate(string pfxFilePath)
         {
             X509Certificate2 certificate;
             var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader());
@@ -80,10 +67,12 @@ namespace Catalyst.Node.Core
             if (!foundCertificate)
             {
                 if (Environment.OSVersion.Platform == PlatformID.Unix)
-                    throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
-                                                           $"Please create a password protected certificate at {pfxFilePath}." +
-                                                           Environment.NewLine +
-                                                           "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
+                {
+                    throw new PlatformNotSupportedException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
+                        $"Please create a password protected certificate at {pfxFilePath}." +
+                        Environment.NewLine +
+                        "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");                    
+                }
                 certificate = certificateStore.CreateAndSaveSelfSignedCertificate(pfxFilePath);
             }
 
@@ -95,7 +84,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IP2P.Ping(IPeerIdentifier queryingNode)
+        public bool Ping(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -105,7 +94,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        bool IP2P.Store(string k, byte[] v)
+        public bool Store(string k, byte[] v)
         {
             throw new NotImplementedException();
         }
@@ -115,7 +104,7 @@ namespace Catalyst.Node.Core
         /// <param name="k"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        dynamic IP2P.FindValue(string k)
+        public dynamic FindValue(string k)
         {
             throw new NotImplementedException();
         }
@@ -128,7 +117,7 @@ namespace Catalyst.Node.Core
         /// <param name="queryingNode"></param>
         /// <param name="targetNode"></param>
         /// <returns></returns>
-        List<IPeerIdentifier> IP2P.FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
+        public List<IPeerIdentifier> FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
         {
             // @TODO just to satisfy the DHT interface, need to implement
             throw new NotImplementedException();
@@ -138,7 +127,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        List<IPeerIdentifier> IP2P.GetPeers(IPeerIdentifier queryingNode)
+        public List<IPeerIdentifier> GetPeers(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -148,7 +137,7 @@ namespace Catalyst.Node.Core
         /// <param name="queryingNode"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        List<IPeerIdentifier> IP2P.PeerExchange(IPeerIdentifier queryingNode)
+        public List<IPeerIdentifier> PeerExchange(IPeerIdentifier queryingNode)
         {
             throw new NotImplementedException();
         }
@@ -157,7 +146,7 @@ namespace Catalyst.Node.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public void Announce(object sender, AnnounceNodeEventArgs e)
+        private void Announce(object sender, AnnounceNodeEventArgs e)
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(e, nameof(e)).NotNull();
@@ -181,26 +170,37 @@ namespace Catalyst.Node.Core
         public static CatalystNode GetInstance(Kernel kernel)
         {
             Guard.Argument(kernel, nameof(kernel)).NotNull();
-            if (Instance != null) return Instance;
+            if (Instance != null)
+            {
+                return Instance;
+            }
             lock (Mutex)
             {
-                if (Instance == null) Instance = new CatalystNode(kernel);
+                if (Instance == null)
+                {
+                    Instance = new CatalystNode(kernel);
+                }
             }
 
             return Instance;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="disposing"></param>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (disposing && !_disposed)
+            {
+                Logger.Verbose("Disposing of CatalystNode");
+                Kernel?.Dispose();
+                ConnectionManager?.Dispose();
+                Logger.Verbose("CatalystNode disposed");
+                _disposed = true;
+            }
+        }
 
-            if (disposing) Kernel?.Dispose();
-
-            Disposed = true;
-            Logger.Verbose("CatalystNode disposed");
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

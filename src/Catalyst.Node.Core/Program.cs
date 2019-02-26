@@ -1,27 +1,49 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading;
 using Autofac;
+using Autofac.Configuration;
+using Autofac.Extensions.DependencyInjection;
+using AutofacSerilogIntegration;
+using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Modules.Consensus;
+using Catalyst.Node.Common.Modules.Contract;
+using Catalyst.Node.Common.Modules.Dfs;
+using Catalyst.Node.Common.Modules.Gossip;
+using Catalyst.Node.Common.Modules.Ledger;
+using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Platform;
 using Catalyst.Node.Core.Helpers.Shell;
 using McMaster.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Catalyst.Node.Core
 {
     public static class Program
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Logger;
+        private static readonly string LifetimeTag;
+        private static readonly string ExecutionDirectory;
 
+        static Program()
+        {
+            var declaringType = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType;
+            Logger = Log.Logger.ForContext(declaringType);
+            LifetimeTag = declaringType.AssemblyQualifiedName;
+            ExecutionDirectory = Path.GetDirectoryName(declaringType.Assembly.Location);
+        }
         private static CatalystNode CatalystNode { get; set; }
 
         /// <summary>
         ///     Main cli loop
         /// </summary>
         /// <param name="args"></param>
-        public static int Main(string[] args)
+        public static int Main_Old(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += LogUnhandledException;
 
@@ -79,13 +101,10 @@ namespace Catalyst.Node.Core
 
                         cli.OnExecute(() =>
                               {
-                                  // get some basic required params
-                                  var platform = Detection.Os();
-
                                   // override or get default data dir
                                   var dataDir = nodeDataDir.Value() != null
                                                     ? nodeDataDir.Value()
-                                                    : (new Fs()).GetCatalystHomeDir().ToString();
+                                                    : new Fs().GetCatalystHomeDir().ToString();
 
                                   // override or get default nv
                                   var env = nodeEnv.Value() != null
@@ -97,16 +116,16 @@ namespace Catalyst.Node.Core
                                                     ? nodeNetwork.Value()
                                                     : "devnet";
                                   if (!Enum.TryParse(network,
-                                          out NodeOptions.Networks networkOption))
+                                      out NodeOptions.Networks networkOption))
+                                  {
                                       networkOption = NodeOptions.Networks.devnet;
+                                  }
 
-                                  Kernel.RunConfigStartUp(dataDir, networkOption);
+                                  new ConfigCopier().RunConfigStartUp(dataDir, networkOption);
                                   // conditionally build NodeOptions object with enabled modules
                                   var nodeOptions =
-                                      new NodeOptionsBuilder(env, dataDir, network, platform)
+                                      new NodeOptionsBuilder(env, dataDir, network)
                                          .LoadPeerSettings()
-                                         .LoadDfsSettings()
-                                             .When(() => !disableDfs.HasValue())
                                          .LoadLedgerSettings()
                                              .When(() => !disableLedger.HasValue())
                                          .LoadWalletSettings()
@@ -120,33 +139,42 @@ namespace Catalyst.Node.Core
                                          .Build();
 
                                   // override settings classes with cli params
-                                  if (peerPublicKey.HasValue()) nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
+                                  if (peerPublicKey.HasValue())
+                                  {
+                                      nodeOptions.PeerSettings.PublicKey = peerPublicKey.Value();
+                                  }
+
                                   if (peerBindAddress.HasValue())
+                                  {
                                       nodeOptions.PeerSettings.BindAddress = IPAddress.Parse(peerBindAddress.Value());
+                                  }
+
                                   if (peerPayoutAddress.HasValue())
+                                  {
                                       nodeOptions.PeerSettings.PayoutAddress = peerPayoutAddress.Value();
+                                  }
+
                                   if (walletRpcIpOption.HasValue())
+                                  {
                                       nodeOptions.WalletSettings.WalletRpcIp = IPAddress.Parse(walletRpcIpOption.Value());
+                                  }
+
                                   if (walletRpcPortOption.HasValue())
+                                  {
                                       nodeOptions.WalletSettings.WalletRpcPort = int.Parse(walletRpcPortOption.Value());
+                                  }
+
                                   if (peerSeedServers.HasValue())
+                                  {
                                       nodeOptions.PeerSettings.SeedServers.InsertRange(0, peerSeedServers.Values);
+                                  }
+
                                   if (peerKnownNodes.HasValue())
+                                  {
                                       nodeOptions.PeerSettings.KnownNodes.InsertRange(0, peerKnownNodes.Values);
+                                  }
 
                                   using (var kernel = new KernelBuilder(nodeOptions)
-                                                     .WithDfsModule()
-                                                     .When(() => !disableDfs.HasValue())
-                                                     .WithGossipModule()
-                                                     .When(() => !disableGossip.HasValue())
-                                                     .WithLedgerModule()
-                                                     .When(() => !disableLedger.HasValue())
-                                                     .WithMempoolModule()
-                                                     .When(() => !disableMempool.HasValue())
-                                                     .WithContractModule()
-                                                     .When(() => !disbleContract.HasValue())
-                                                     .WithConsensusModule()
-                                                     .When(() => !disbleConsensus.HasValue())
                                                      .Build()
                                   )
                                   {
@@ -185,6 +213,78 @@ namespace Catalyst.Node.Core
             }
 
             return 1;
+        }
+
+        public static int Main(string[] args)
+        {
+            try
+            {
+                //Enable after checking safety implications, if plugins become important.
+                //AssemblyLoadContext.Default.Resolving += TryLoadAssemblyFromExecutionDirectory;
+
+                //TODO: allow targeting different folder using CommandLine
+                var targetConfigFolder = new Fs().GetCatalystHomeDir().FullName;
+                var network = NodeOptions.Networks.devnet;
+
+                var configCopier = new ConfigCopier();
+                configCopier.RunConfigStartUp(targetConfigFolder, network, overwrite:true);
+
+                var config = new ConfigurationBuilder()
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ComponentsJsonConfigFile))
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
+                   .Build();
+
+                //.Net Core service collection
+                var serviceCollection = new ServiceCollection();
+                //Add .Net Core services (if any) first
+                //serviceCollection.AddLogging().AddDistributedMemoryCache();
+
+                // register components from config file
+                var configurationModule = new ConfigurationModule(config);
+                var containerBuilder = new ContainerBuilder();
+                containerBuilder.RegisterModule(configurationModule);
+
+                var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
+                Log.Logger = loggerConfiguration.WriteTo
+                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"), rollingInterval: RollingInterval.Day)
+                   .CreateLogger();
+                containerBuilder.RegisterLogger();
+
+                var container = containerBuilder.Build();
+                using (var scope = container.BeginLifetimeScope(LifetimeTag, 
+                    //Add .Net Core serviceCollection to the Autofac container.
+                    b => { b.Populate(serviceCollection, LifetimeTag); }))
+                {
+                    var serviceProvider = new AutofacServiceProvider(scope);
+                    var gossipSingleton = serviceProvider.GetService<IGossip>();
+                    Log.Logger.Information("Gossip singleton is named {0}", gossipSingleton.Name);
+                }
+                Environment.ExitCode = 0;
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e, "Catalyst.Node failed to start.");
+                Environment.ExitCode = 1;
+            }
+
+            return Environment.ExitCode;
+        }
+
+        public static Assembly TryLoadAssemblyFromExecutionDirectory(AssemblyLoadContext context,
+            AssemblyName assemblyName)
+        {
+            try
+            {
+                var assemblyFilePath = Path.Combine(ExecutionDirectory, $"{assemblyName.Name}.dll");
+                Logger.Debug("Resolving assembly {0} from file {1}", assemblyName, assemblyFilePath);
+                var assembly = context.LoadFromAssemblyPath(assemblyFilePath);
+                return assembly;
+            }
+            catch (Exception e)
+            {
+                Logger.Warning(e, "Failed to load assembly {0} from file {1}.", e);
+                return null;
+            }
         }
 
         public static void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)

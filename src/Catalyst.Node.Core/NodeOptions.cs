@@ -40,12 +40,11 @@ namespace Catalyst.Node.Core
         /// <param name="network"></param>
         /// <param name="platform"></param>
         /// <param name="persistenceConfiguration"></param>
-        private NodeOptions(int env, string dataDir, int network, int platform, ISharpRepositoryConfiguration persistenceConfiguration)
+        private NodeOptions(int env, string dataDir, int network, ISharpRepositoryConfiguration persistenceConfiguration)
         {
             Env = env;
             DataDir = dataDir;
             Network = network;
-            Platform = platform;
             PersistenceConfiguration = persistenceConfiguration;
         }
 
@@ -54,14 +53,13 @@ namespace Catalyst.Node.Core
         public int Network { get; set; }
         public int Platform { get; set; }
         public string DataDir { get; set; }
-        public DfsSettings DfsSettings { get; internal set; }
         public PeerSettings PeerSettings { get; internal set; }
         public WalletSettings WalletSettings { get; internal set; }
         public LedgerSettings LedgerSettings { get; internal set; }
         public MempoolSettings MempoolSettings { get; internal set; }
         public ContractSettings ContractSettings { get; internal set; }
         public ConsensusSettings ConsensusSettings { get; internal set; }
-        public readonly ISharpRepositoryConfiguration PersistenceConfiguration;
+        internal readonly ISharpRepositoryConfiguration PersistenceConfiguration;
 
         /// <summary>
         ///     Get a thread safe settings singleton.
@@ -72,26 +70,26 @@ namespace Catalyst.Node.Core
         /// <param name="platform"></param>
         /// <param name="persistenceConfiguration"></param>
         /// <returns></returns>
-        internal static NodeOptions GetInstance(string environment, string dataDir, string network, int platform, ISharpRepositoryConfiguration persistenceConfiguration)
+        internal static NodeOptions GetInstance(string environment, string dataDir, string network, ISharpRepositoryConfiguration persistenceConfiguration)
         {
-            Guard.Argument(platform, nameof(platform)).InRange(1, 3);
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(environment, nameof(environment)).NotNull().NotEmpty().NotWhiteSpace();
 
             if (Instance == null)
+            {
                 lock (Mutex)
                 {
                     Instance = Instance == null
-                                   ? new NodeOptions(
-                                       (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
-                                       dataDir,
-                                       (int) (Networks) Enum.Parse(typeof(Networks), network),
-                                       platform,
-                                       persistenceConfiguration
-                                   )
-                                   : throw new ArgumentException();
-                }
+                        ? new NodeOptions(
+                            (int) (Enviroments) Enum.Parse(typeof(Enviroments), environment),
+                            dataDir,
+                            (int) (Networks) Enum.Parse(typeof(Networks), network),
+                            persistenceConfiguration
+                        )
+                        : throw new ArgumentException();
+                }   
+            }
 
             return Instance;
         }
@@ -116,33 +114,33 @@ namespace Catalyst.Node.Core
         private readonly List<Action<NodeOptions>> _builderActions;
         private readonly IConfiguration _networkConfiguration;
         private readonly NodeOptions _nodeOptions;
-        private ISharpRepositoryConfiguration _persistenceConfiguration;
-        
+
         /// <summary>
         /// </summary>
         /// <param name="env"></param>
         /// <param name="dataDir"></param>
         /// <param name="network"></param>
-        /// <param name="platform"></param>
         /// <exception cref="ArgumentException"></exception>
-        public NodeOptionsBuilder(string env, string dataDir, string network, int platform)
+        public NodeOptionsBuilder(string env, string dataDir, string network)
         {
-            Guard.Argument(platform, nameof(platform)).InRange(1, 3);
             Guard.Argument(env, nameof(env)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
             Guard.Argument(network, nameof(network)).NotNull().NotEmpty().NotWhiteSpace();
 
             _builderActions = new List<Action<NodeOptions>>();
 
-            if (!ValidEnvPram(env) || !ValidNetworkParam(network)) throw new ArgumentException();
+            if (!ValidEnvPram(env) || !ValidNetworkParam(network))
+            {
+                throw new ArgumentException();
+            }
 
             _networkConfiguration = LoadNetworkConfig(network, dataDir);
 
-            _persistenceConfiguration = RepositoryFactory.BuildSharpRepositoryConfiguation(
+            var persistenceConfiguration = RepositoryFactory.BuildSharpRepositoryConfiguation(
                 _networkConfiguration.GetSection("PersistenceConfiguration")
             );
 
-            _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, platform, _persistenceConfiguration);
+            _nodeOptions = NodeOptions.GetInstance(env, dataDir, network, persistenceConfiguration);
         }
 
         /// <summary>
@@ -185,15 +183,6 @@ namespace Catalyst.Node.Core
                 default:
                     throw new ArgumentException();
             }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public NodeOptionsBuilder LoadDfsSettings()
-        {
-            _builderActions.Add(n => n.DfsSettings = new DfsSettings(_networkConfiguration.GetSection("Dfs")));
-            return this;
         }
 
         /// <summary>
@@ -370,26 +359,9 @@ namespace Catalyst.Node.Core
     }
 
     /// <summary>
-    ///     Dfs settings class.
+    ///     IpfsDfs settings class.
     /// </summary>
-    public class DfsSettings
-    {
-        /// <summary>
-        ///     Set attributes
-        /// </summary>
-        /// <param name="section"></param>
-        protected internal DfsSettings(IConfiguration section)
-        {
-            Guard.Argument(section, nameof(section)).NotNull();
-            StorageType = section.GetSection("StorageType").Value;
-            ConnectRetries = ushort.Parse(section.GetSection("ConnectRetries").Value);
-            IpfsVersionApi = section.GetSection("IpfsVersionApi").Value;
-        }
 
-        public string StorageType { get; set; }
-        public ushort ConnectRetries { get; set; }
-        public string IpfsVersionApi { get; set; }
-    }
 
     /// <summary>
     ///     wallet settings class.

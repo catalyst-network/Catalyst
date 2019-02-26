@@ -9,9 +9,9 @@ namespace Catalyst.Node.Core.Helpers.Shell
 {
     public abstract class ShellBase : IShell
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public virtual string Prompt => "ADS";
-        protected bool ShowPrompt { private get; set; } = true;
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        protected virtual string Prompt => "ADS";
+        protected static bool ShowPrompt { private get; set; } = true;
         private static string ServiceName => "Catalyst Distributed Shell";
 
         /// <summary>
@@ -64,7 +64,10 @@ namespace Catalyst.Node.Core.Helpers.Shell
 
             Logger.Information(normalCmds);
 
-            if (advancedCmds != "") Logger.Information(advancedCmds);
+            if (advancedCmds != "")
+            {
+                Logger.Information(advancedCmds);
+            }
             return true;
         }
 
@@ -116,25 +119,25 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public abstract bool OnGetInfo();
+        protected abstract bool OnGetInfo();
 
         /// <summary>
         ///     Prints the current loaded settings.
         /// </summary>
         /// <returns></returns>
-        public abstract bool OnGetConfig();
+        protected abstract bool OnGetConfig();
 
         /// <summary>
         ///     Prints the current node version.
         /// </summary>
         /// <returns></returns>
-        public abstract bool OnGetVersion();
+        protected abstract bool OnGetVersion();
 
         /// <summary>
         ///     Prints stats about the mempool implementation.
         /// </summary>
         /// <returns></returns>
-        public abstract bool OnGetMempool();
+        protected abstract bool OnGetMempool();
 
         /// <summary>
         /// </summary>
@@ -162,9 +165,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 else if (key.Key == ConsoleKey.Backspace && sb.Length > 0)
                 {
                     sb.Length--;
-                    Logger.Information(key.KeyChar.ToString());
-                    Logger.Information(' '.ToString());
-                    Logger.Information(key.KeyChar.ToString());
+                    ShellLogKey(key);
                 }
             } while (key.Key != ConsoleKey.Enter);
 
@@ -172,11 +173,18 @@ namespace Catalyst.Node.Core.Helpers.Shell
             return sb.ToString();
         }
 
+        private static void ShellLogKey(ConsoleKeyInfo key)
+        {
+            Logger.Information(key.KeyChar.ToString());
+            Logger.Information(' '.ToString());
+            Logger.Information(key.KeyChar.ToString());
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public SecureString ReadSecureString(string prompt)
+        public static SecureString ReadSecureString(string prompt)
         {
             const string t =
                 " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
@@ -198,9 +206,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 else if (key.Key == ConsoleKey.Backspace && securePwd.Length > 0)
                 {
                     securePwd.RemoveAt(securePwd.Length - 1);
-                    Logger.Information(key.KeyChar.ToString());
-                    Logger.Information(' '.ToString());
-                    Logger.Information(key.KeyChar.ToString());
+                    ShellLogKey(key);
                 }
             } while (key.Key != ConsoleKey.Enter);
 
@@ -232,11 +238,16 @@ namespace Catalyst.Node.Core.Helpers.Shell
 
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 var line = Console.ReadLine()?.Trim();
-                if (line == null) break;
+                if (line == null)
+                {
+                    break;
+                }
                 Console.ForegroundColor = ConsoleColor.White;
                 var args = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
                 if (args.Length == 0)
+                {
                     continue;
+                }
 
                 try
                 {
@@ -256,7 +267,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool CommandNotFound(string[] args)
+        protected static bool CommandNotFound(string[] args)
         {
             Logger.Error("error: command not found " + args);
             return true;

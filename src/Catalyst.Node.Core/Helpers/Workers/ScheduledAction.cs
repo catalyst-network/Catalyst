@@ -25,7 +25,10 @@ namespace Catalyst.Node.Core.Helpers.Workers
         /// <returns></returns>
         public int CompareTo(ScheduledAction other)
         {
-            if (other == this) return 0;
+            if (other == this)
+            {
+                return 0;
+            }
 
             var diff = NextExecutionDate.CompareTo(other.NextExecutionDate);
             return diff >= 0 ? 1 : -1;

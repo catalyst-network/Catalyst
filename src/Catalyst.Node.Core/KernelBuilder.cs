@@ -37,9 +37,7 @@ namespace Catalyst.Node.Core {
 
             // Set path to load assemblies from ** be-careful **
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
-                                                         context.LoadFromAssemblyPath(Path.Combine(
-                                                             Directory.GetCurrentDirectory(),
-                                                             $"{assembly.Name}.dll"));
+                context.LoadFromAssemblyPath(Path.Combine(Directory.GetCurrentDirectory(),$"{assembly.Name}.dll"));
 
             // get builder
             _containerBuilder = new ContainerBuilder();
@@ -51,81 +49,24 @@ namespace Catalyst.Node.Core {
             _containerBuilder.RegisterType<NodeOptions>();
 
             // register components from config file
-            _containerBuilder.RegisterModule(new ConfigurationModule(new ConfigurationBuilder()
-                                                                    .AddJsonFile(Path.Combine(nodeOptions.DataDir, "components.json"))
-                                                                    .Build()));
+            var configurationModule = new ConfigurationModule(
+                new ConfigurationBuilder()
+                   .AddJsonFile(Path.Combine(nodeOptions.DataDir, Config.Constants.ComponentsJsonConfigFile))
+                   .AddJsonFile(Path.Combine(nodeOptions.DataDir, Config.Constants.SerilogJsonConfigFile))
+                   .Build());
+
+            _containerBuilder.RegisterModule(configurationModule);
 
             var logLevel = LogEventLevel.Information;
-            Log.Logger = new LoggerConfiguration()
-                                .WriteTo.Console(logLevel)
+            var loggerConfiguration = new LoggerConfiguration()
+               .ReadFrom.Configuration(configurationModule.Configuration);
+            Log.Logger = loggerConfiguration
                                 .WriteTo.File(Path.Combine(nodeOptions.DataDir, "Catalyst.Node..log"), 
                                      logLevel, 
                                      rollingInterval: RollingInterval.Day)
                                 .CreateLogger();
 
             _containerBuilder.RegisterLogger();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithDfsModule()
-        {
-            _moduleLoader.Add(n => n.DfsService = _containerBuilder.RegisterModule(new DfsModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithContractModule()
-        {
-            _moduleLoader.Add(n => n.ContractService = _containerBuilder.RegisterModule(new ContractModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithMempoolModule()
-        {
-            _moduleLoader.Add(n => n.MempoolService = _containerBuilder.RegisterModule(new MempoolModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithLedgerModule()
-        {
-            _moduleLoader.Add(n => n.LedgerService = _containerBuilder.RegisterModule(new LedgerModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithGossipModule()
-        {
-            _moduleLoader.Add(n => n.GossipService = _containerBuilder.RegisterModule(new GossipModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithConsensusModule()
-        {
-            _moduleLoader.Add(n => n.ConsensusService = _containerBuilder.RegisterModule(new ConsensusModule()));
-            return this;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public KernelBuilder WithWalletModule()
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

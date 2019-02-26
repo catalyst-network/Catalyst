@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Net.Security;
-using System.Net.Sockets;
 using Catalyst.Node.Core.Helpers.Util;
 using Nethereum.RLP;
 using Serilog;
@@ -35,7 +33,10 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
                 var header = "";
 
-                foreach (int i in messageDescriptor) Logger.Information(i.ToString());
+                foreach (int i in messageDescriptor)
+                {
+                    Logger.Information(i.ToString());
+                }
 
                 if (data == null || data.Length < 1)
                 {
@@ -51,16 +52,22 @@ namespace Catalyst.Node.Core.Helpers.Streams
                 var headerBytes = header.ToBytesForRLPEncoding();
 
                 var messageLen = headerBytes.Length;
-                if (payloadLength > 0) messageLen += payloadLength;
+                if (payloadLength > 0)
+                {
+                    messageLen += payloadLength;
+                }
 
                 var message = new byte[messageLen]; //@TODO hook into new byte mthod
 
-                data = ByteUtil.CombineByteArr(messageDescriptor, data);
+                var dataWithDescriptor = ByteUtil.CombineByteArrays(messageDescriptor, data);
 
                 Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
 
-                if (data != null && data.Length > 0)
-                    Buffer.BlockCopy(data, 0, message, headerBytes.Length, data.Length);
+                if (dataWithDescriptor != null && dataWithDescriptor.Length > 0)
+                {
+                    Buffer.BlockCopy(dataWithDescriptor, 0, message, headerBytes.Length, 
+                        dataWithDescriptor.Length);
+                }
 
                 sslStream.Write(message, 0, message.Length);
                 sslStream.Flush();
@@ -74,7 +81,10 @@ namespace Catalyst.Node.Core.Helpers.Streams
             }
             finally
             {
-                if (disconnectDetected) sslStream?.Dispose();
+                if (disconnectDetected)
+                {
+                    sslStream?.Dispose();
+                }
             }
         }
     }

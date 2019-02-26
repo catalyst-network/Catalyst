@@ -15,9 +15,13 @@
     <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Node.Common.UnitTests\Catalyst.Node.Common.UnitTests.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP.UnitTests\RLPTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\Util\" />
+    <Folder Include="Modules\Dfs\" />
   </ItemGroup>
 </Project>

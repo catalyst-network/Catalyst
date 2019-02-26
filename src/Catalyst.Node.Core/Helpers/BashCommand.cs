@@ -12,6 +12,20 @@ namespace Catalyst.Node.Core.Helpers
     /// </remarks>
     public static class BashCommand
     {
+        private static string EscapeArgs(this string cmd)
+        {
+            if (string.IsNullOrEmpty(cmd))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
+            }
+
+            if (string.IsNullOrWhiteSpace(cmd))
+            {
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
+            }
+            return cmd.Replace("\"", "\\\"");
+
+        }
         /// <summary>
         ///     Run a bash command in background. It can be invoked an extension method.
         /// </summary>
@@ -21,10 +35,7 @@ namespace Catalyst.Node.Core.Helpers
         /// </remarks>
         public static void BackgroundCmd(this string cmd)
         {
-            if (string.IsNullOrEmpty(cmd)) throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
-            if (string.IsNullOrWhiteSpace(cmd))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
-            var escapedArgs = cmd.Replace("\"", "\\\"");
+            var escapedArgs = EscapeArgs(cmd);
 
             var process = new Process
                           {
@@ -56,10 +67,7 @@ namespace Catalyst.Node.Core.Helpers
         /// </remarks>
         public static string WaitForCmd(this string cmd)
         {
-            if (string.IsNullOrEmpty(cmd)) throw new ArgumentException("Value cannot be null or empty.", nameof(cmd));
-            if (string.IsNullOrWhiteSpace(cmd))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(cmd));
-            var escapedArgs = cmd.Replace("\"", "\\\"");
+            var escapedArgs = EscapeArgs(cmd);
 
             var process = new Process
                           {
@@ -75,7 +83,10 @@ namespace Catalyst.Node.Core.Helpers
             process.Start();
 
             var result = process.StandardOutput.ReadToEnd();
-            if (process.WaitForExit(10000)) return result;
+            if (process.WaitForExit(10000))
+            {
+                return result;
+            }
 
             process.Kill();
             throw new InvalidOperationException();

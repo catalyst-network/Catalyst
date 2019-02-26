@@ -1,11 +1,9 @@
-using System.Reflection;
 using System.Text.RegularExpressions;
-using Catalyst.Node.Common.Shell;
 using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Shell
 {
-    public sealed class Shell : ShellBase, IAds
+    public sealed class Shell : ShellBase
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -17,15 +15,13 @@ namespace Catalyst.Node.Core.Helpers.Shell
             RunConsole();
         }
 
-        private uint sessionType => 0;
-        public override string Prompt => "koopa";
-        private static string ServiceName => "ADS Advanced Catalyst.Helpers.Shell";
+        protected override string Prompt => "koopa";
 
         /// <summary>
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnServiceCommand(string[] args)
+        public static bool OnServiceCommand(string[] args)
         {
             switch (args[1].ToLower())
             {
@@ -50,22 +46,17 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnRpcCommand(string[] args)
+        public static bool OnRpcCommand(string[] args)
         {
             switch (args[2].ToLower())
             {
                 case "start":
-                    //                    Atlas.StartRpc();
                     return true;
                 case "stop":
-                    //                    Atlas.StopRpc();
                     return true;
                 case "status":
                     return false;
-                //                    return RpcStatus(args);
                 case "restart":
-                    //                    Catalyst.StopRpc();
-                    //                    Catalyst.StartRpc();
                     return true;
                 default:
                     return CommandNotFound(args);
@@ -76,22 +67,18 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnDfsCommand(string[] args)
+        internal static bool OnDfsCommand(string[] args)
         {
             switch (args[2].ToLower())
             {
                 case "start":
-                    //                    Catalyst.StartDfs();
                     return true;
                 case "stop":
                     return false;
-                //                    return DfsStop(args);
                 case "status":
                     return false;
-                //                    return DfsStatus(args);
                 case "restart":
                     return false;
-                //                    return DfsTestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -101,22 +88,18 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnWalletCommand(string[] args)
+        private static bool OnWalletCommand(string[] args)
         {
             switch (args[2].ToLower())
             {
                 case "start":
                     return false;
-                //                    return WalletStart(args);
                 case "stop":
                     return false;
-                //                    return WalletStop(args);
                 case "status":
                     return false;
-                //                    return WalletStatus(args);
                 case "restart":
                     return false;
-                //                    return WalletRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -126,22 +109,18 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnPeerCommand(string[] args)
+        private static bool OnPeerCommand(string[] args)
         {
             switch (args[2].ToLower())
             {
                 case "start":
-                    //                    Catalyst.StartPeer();
                     return true;
                 case "stop":
                     return false;
-                //                    return PeerStop(args);
                 case "status":
                     return false;
-                //                    return PeerStatus(args);
                 case "restart":
                     return false;
-                //                    return PeerRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -151,22 +130,18 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnGossipCommand(string[] args)
+        private static bool OnGossipCommand(string[] args)
         {
             switch (args[2].ToLower())
             {
                 case "start":
                     return false;
-                //                    return GossipStart(args);
                 case "stop":
                     return false;
-                //                    return GossipStop(args);
                 case "status":
                     return false;
-                //                    return GossipStatus(args);
                 case "restart":
                     return false;
-                //                    return GossipRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -177,24 +152,19 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnConsensusCommand(string[] args)
+        private static bool OnConsensusCommand(string[] args)
         {
             switch (args[2].ToLower())
             {
                 case "start":
                     ShowPrompt = true;
-                    //system.StartConsensus(Program.Wallet);
                     return false;
-                //                    return ConsensusStart(args);
                 case "stop":
                     return false;
-                //                    return ConsensusStop(args);
                 case "status":
                     return false;
-                //                    return ConsensusStatus(args);
                 case "restart":
                     return false;
-                //                    return ConsensusRestart(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -218,7 +188,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 "\tservice rpc stop\n" +
                 "\tservice rpc status\n" +
                 "\tservice rpc restart\n" +
-                "Dfs Commands:\n" +
+                "IpfsDfs Commands:\n" +
                 "\tdfs file put\n" +
                 "\tdfs file get\n" +
                 "\tservice dfs start\n" +
@@ -315,13 +285,10 @@ namespace Catalyst.Node.Core.Helpers.Shell
         ///     @TODO need some auth against the node
         /// </summary>
         /// <returns></returns>
-        private bool OnConnectNode(string[] args)
+        private static bool OnConnectNode(string[] args)
         {
             var ip = args[2];
             var port = args[3];
-
-            var channelTarget = ip + ":" + port;
-
             return true;
         }
 
@@ -361,7 +328,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnStartNodeLocal(string[] args)
+        private static bool OnStartNodeLocal(string[] args)
         {
             Logger.Error("Not implemented.");
             return false;
@@ -371,7 +338,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnStartNodeRemote(string[] args)
+        private static bool OnStartNodeRemote(string[] args)
         {
             Logger.Error("Not implemented.");
             return false;
@@ -406,7 +373,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <returns></returns>
         public override bool OnStopNode(string[] args)
         {
-            //            Atlas.Dispose();
             return false;
         }
 
@@ -439,7 +405,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool OnGetInfo()
+        protected override bool OnGetInfo()
         {
             return true;
         }
@@ -447,7 +413,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool OnGetVersion()
+        protected override bool OnGetVersion()
         {
             return true;
         }
@@ -456,10 +422,9 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool OnGetConfig()
+        protected override bool OnGetConfig()
         {
-            //            Log.Message(Atlas.Kernel.Settings.SerializeSettings());
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -470,15 +435,17 @@ namespace Catalyst.Node.Core.Helpers.Shell
         private string ParseCmdArgs(string[] args, string regExPattern)
         {
             string argValue = null;
-            for (var i = 0; i < args.Length; i++)
-                switch (args[i])
+            foreach (var t in args)
+            {
+                switch (t)
                 {
-                    case var dataDir when new Regex(@"[regExPattern]+").IsMatch(args[i]):
-                        argValue = args[i].Replace(regExPattern, "");
+                    case var dataDir when new Regex(@"[regExPattern]+").IsMatch(t):
+                        argValue = t.Replace(regExPattern, "");
                         break;
                     default:
                         return null;
                 }
+            }
             return argValue;
         }
 
@@ -495,7 +462,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         ///     Get stats about the underlying mempool implementation
         /// </summary>
         /// <returns>Boolean</returns>
-        public override bool OnGetMempool()
+        protected override bool OnGetMempool()
         {
             return false;
         }

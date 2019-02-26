@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Net;
 using Dawn;
-using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {
@@ -19,20 +18,30 @@ namespace Catalyst.Node.Core.Helpers.Network
         public static IPEndPoint BuildNewEndPoint(string endPoint)
         {
             var ep = endPoint.Split(':');
-            if (ep.Length < 2) throw new FormatException("Invalid endpoint format");
+            if (ep.Length < 2)
+            {
+                throw new FormatException("Invalid endpoint format");
+            }
             IPAddress ip;
             if (ep.Length > 2)
             {
                 if (!IPAddress.TryParse(string.Join(":", ep, 0, ep.Length - 1), out ip))
+                {
                     throw new FormatException("Invalid ip address");
+                }
             }
             else
             {
-                if (!IPAddress.TryParse(ep[0], out ip)) throw new FormatException("Invalid ip address");
+                if (!IPAddress.TryParse(ep[0], out ip))
+                {
+                    throw new FormatException("Invalid ip address");
+                }
             }
 
             if (!int.TryParse(ep[ep.Length - 1], NumberStyles.None, NumberFormatInfo.CurrentInfo, out var port))
+            {
                 throw new FormatException("Invalid port");
+            }
             return BuildNewEndPoint(ip, port);
         }
 

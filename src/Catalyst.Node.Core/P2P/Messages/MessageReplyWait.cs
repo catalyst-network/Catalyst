@@ -1,6 +1,6 @@
 using System;
 using Catalyst.Node.Core.Helpers.Util;
-using Catalyst.Node.Core.Modules.P2P.Messages;
+using Catalyst.Node.Core.P2P.Messages;
 
 namespace Catalyst.Node.Core.Messages
 {
@@ -12,8 +12,15 @@ namespace Catalyst.Node.Core.Messages
         /// <param name="magicCookie"></param>
         public MessageReplyWait(Message message, ulong magicCookie)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            if (magicCookie <= 0) throw new ArgumentOutOfRangeException(nameof(magicCookie));
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            if (magicCookie <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(magicCookie));
+            }
             Attempts = 0;
             Message = message;
             MagicCookie = magicCookie;

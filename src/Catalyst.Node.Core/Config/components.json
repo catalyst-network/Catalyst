@@ -8,14 +8,45 @@
           "type": "Catalyst.Node.Common.IKeyValueStore, Catalyst.Node.Common"
         }
       ]
+    }
+  ],
+  //simply comment modules that you don't need.
+  "modules": [
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/gossip.json"
+      }
     },
     {
-      "type": "Catalyst.Node.Core.Components.Ipfs.IpfsConnector, Catalyst.Node.Core",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.IIpfs, Catalyst.Node.Common"
-        }
-      ]
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/dfs.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/consensus.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/contract.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/ledger.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/mempool.json"
+      }
     }
-  ]
+  ] 
 }

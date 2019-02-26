@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Runtime.Loader;
 using Autofac;
 using Autofac.Configuration;
@@ -9,17 +8,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Cli
 {
-    public class Program
+    public static class Program
     {
-        public const string CatalystSubfolder = ".Catalyst";
-        public const string shellFileName = "shell.json";
-
-        private static uint Env { get; set; }
-        private static uint Port { get; set; }
-        private static string Network { get; set; }
-        private static IPAddress Host { get; set; }
-        private static string DataDir { get; set; }
-        private static uint MaxOutConnections { get; set; }
+        private static string CatalystSubfolder => ".Catalyst";
+        private static string ShellFileName => "shell.json";
 
         /// <summary>
         ///     Main cli loop
@@ -29,20 +21,19 @@ namespace Catalyst.Cli
         {
             const int bufferSize = 1024 * 67 + 128;
 
-            //TODO: Log exception to file
-            //AppDomain.CurrentDomain.UnhandledException += Unhandled.UnhandledException;
-
             var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
 
             if (!Directory.Exists(catalystHomeDirectory))
+            {
                 Directory.CreateDirectory(catalystHomeDirectory);
+            }
 
             // check if user home data dir has a shell config
-            var shellFilePath = Path.Combine(catalystHomeDirectory, shellFileName);
-            if (!File.Exists(shellFilePath))
+            var shellFilePath = Path.Combine(catalystHomeDirectory, ShellFileName);
+            if (!File.Exists(shellFilePath)) {
                 File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.shell.json"),
-                    shellFilePath);
+                    shellFilePath);}
 
             // resolve config from autofac
             var builder = new ContainerBuilder();

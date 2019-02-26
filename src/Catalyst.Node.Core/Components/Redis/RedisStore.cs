@@ -8,7 +8,7 @@ using StackExchange.Redis.Extensions.Newtonsoft;
 
 namespace Catalyst.Node.Core.Components.Redis
 {
-    public class RedisStore : IRedisStore
+    public class RedisStore : IDisposable, IRedisStore
     {
         private readonly When _when;
         private IRedisConnector _redisConnector;
@@ -22,7 +22,9 @@ namespace Catalyst.Node.Core.Components.Redis
         {
             Guard.Argument(when, nameof(when)).NotNull().NotEmpty().NotWhiteSpace();
             if (!Enum.TryParse(when, out _when))
+            {
                 throw new ArgumentException($"Invalid When setting format:{when}");
+            }
         }
 
         public void Connect(IPEndPoint endPoint)
@@ -59,9 +61,18 @@ namespace Catalyst.Node.Core.Components.Redis
             return sut.GetInfo();
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _redisConnector?.Dispose();
+            }
+        }
+
         public void Dispose()
         {
-            _redisConnector?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

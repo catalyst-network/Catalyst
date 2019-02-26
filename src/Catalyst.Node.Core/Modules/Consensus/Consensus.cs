@@ -1,10 +1,8 @@
-using System;
-using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Modules.Consensus;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
-    public class Consensus : IDisposable, IConsensus
+    public class Consensus : IConsensus
     {
-        public void Dispose() { }
     }
 }

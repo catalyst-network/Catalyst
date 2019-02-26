@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Catalyst.Node.Common.Modules.P2P.Messages;
 using Catalyst.Node.Core.Helpers.IO;
+using Catalyst.Node.Core.P2P.Messages;
 using Google.Protobuf;
 using Serilog;
 
@@ -142,7 +143,10 @@ namespace Catalyst.Node.Core.Modules.P2P.Messages
         public void Receive(IPEndPoint endPoint, byte[] message, int count)
         {
             var ip = endPoint.Address;
-            if (IsBlocked(ip)) return;
+            if (IsBlocked(ip))
+            {
+                return;
+            }
             IncrementRequestByIp(ip);
 
             //            var package = new Message(endPoint, message, count);

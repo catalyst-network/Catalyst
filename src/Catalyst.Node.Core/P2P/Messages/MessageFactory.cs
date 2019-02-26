@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.Modules.P2P.Messages;
+using Catalyst.Node.Core.P2P.Messages;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Messages
@@ -28,9 +28,20 @@ namespace Catalyst.Node.Core.Messages
         /// <returns></returns>
         public static Message RequestFactory(byte network, byte messageId, Connection connection, IMessage message)
         {
-            if (network <= 0) throw new ArgumentOutOfRangeException(nameof(network));
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
-            if (messageId <= 0) throw new ArgumentOutOfRangeException(nameof(messageId));
+            if (network <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(network));
+            }
+
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
+
+            if (messageId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(messageId));
+            }
 
             return new Message(connection, message, network, messageId);
         }

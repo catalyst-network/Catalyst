@@ -1,10 +1,10 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using Dawn;
 using Serilog;
 
 namespace Catalyst.Node.Core.Helpers.IO
@@ -26,6 +26,28 @@ namespace Catalyst.Node.Core.Helpers.IO
             return true;
         }
 
+        public static SslStream GetTlsStream(
+            NetworkStream networkStream,
+            int direction,
+            X509Certificate sslCertificate,
+            bool acceptInvalidCerts,
+            bool mutuallyAuthenticate = false
+        )
+        {
+            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, mutuallyAuthenticate, null);
+        }
+
+        public static SslStream GetTlsStream(
+            NetworkStream networkStream,
+            int direction,
+            X509Certificate sslCertificate,
+            bool acceptInvalidCerts,
+            IPEndPoint endPoint
+        )
+        {
+            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, false, endPoint);
+        }
+        
         /// <summary>
         ///     inbound connections = 1, outbound connections = 2
         /// </summary>
@@ -44,12 +66,12 @@ namespace Catalyst.Node.Core.Helpers.IO
             int direction,
             X509Certificate sslCertificate,
             bool acceptInvalidCerts,
-            bool mutuallyAuthenticate = false,
-            IPEndPoint endPoint = null
+            bool mutuallyAuthenticate,
+            IPEndPoint endPoint
         )
         {
-            if (networkStream == null) throw new ArgumentNullException(nameof(networkStream));
-            if (sslCertificate == null) throw new ArgumentNullException(nameof(sslCertificate));
+            Guard.Argument(networkStream, nameof(networkStream)).NotNull();
+            Guard.Argument(sslCertificate, nameof(sslCertificate)).NotNull();
 
             var certificateCollection = new X509CertificateCollection {sslCertificate};
 
@@ -61,7 +83,6 @@ namespace Catalyst.Node.Core.Helpers.IO
             {
                 switch (direction)
                 {
-                    //@TODO see if we want this async?
                     case 1:
                         sslStream.AuthenticateAsServer(sslCertificate, true, SslProtocols.Tls12, false);
                         break;
@@ -75,7 +96,7 @@ namespace Catalyst.Node.Core.Helpers.IO
                         );
                         break;
                     case 2:
-                        throw new Exception("need endpoint for outbound connections");
+                        throw new ArgumentNullException(nameof(endPoint), "need endpoint for outbound connections");
                     default:
                         throw new Exception(
                             "logically you should never get here, so here is a un-useful error message");

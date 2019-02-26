@@ -7,32 +7,32 @@ namespace Catalyst.Node.Core.Helpers.Util
     {
         /// <summary>
         /// </summary>
-        /// <param name="minutes"></param>
+        /// <param name="mins"></param>
         /// <returns></returns>
-        public static TimeSpan Minutes(this int minutes)
+        public static TimeSpan Minutes(this int mins)
         {
-            Guard.Argument(minutes, nameof(minutes)).Min(1);
-            return TimeSpan.FromMinutes(minutes);
+            Guard.Argument(mins, nameof(mins)).Min(1);
+            return TimeSpan.FromMinutes(mins);
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="seconds"></param>
+        /// <param name="secs"></param>
         /// <returns></returns>
-        public static TimeSpan Seconds(this int seconds)
+        public static TimeSpan Seconds(this int secs)
         {
-            Guard.Argument(seconds, nameof(seconds)).Min(1);
-            return TimeSpan.FromSeconds(seconds);
+            Guard.Argument(secs, nameof(secs)).Min(1);
+            return TimeSpan.FromSeconds(secs);
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="milliseconds"></param>
+        /// <param name="milliSecs"></param>
         /// <returns></returns>
-        public static TimeSpan Milliseconds(this int milliseconds)
+        public static TimeSpan Milliseconds(this int milliSecs)
         {
-            Guard.Argument(milliseconds, nameof(milliseconds)).Min(1);
-            return TimeSpan.FromMilliseconds(milliseconds);
+            Guard.Argument(milliSecs, nameof(milliSecs)).Min(1);
+            return TimeSpan.FromMilliseconds(milliSecs);
         }
     }
 }

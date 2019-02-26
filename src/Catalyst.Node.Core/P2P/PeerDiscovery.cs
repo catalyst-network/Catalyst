@@ -11,7 +11,7 @@ namespace Catalyst.Node.Core.P2P
 {
     public class PeerDiscovery
     {
-        private Dns Dns;
+        private readonly Dns _dns;
         private List<IPEndPoint> SeedNodes { get; }
 
         private readonly IRepository<Peer, int> _peerRepository;
@@ -23,7 +23,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="repositoryConfiguration"></param>
         public PeerDiscovery(Dns dns, ISharpRepositoryConfiguration repositoryConfiguration)
         {
-            Dns = dns;
+            _dns = dns;
             SeedNodes = new List<IPEndPoint>();
             _peerRepository = RepositoryFactory.GetInstance<Peer, int>(repositoryConfiguration, "PeerRepository");
         }
@@ -33,12 +33,14 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="seedServers"></param>
         internal void GetSeedNodes(List<string> seedServers)
         {
-            var dnsQueryAnswers = Dns.GetTxtRecords(seedServers);
+            var dnsQueryAnswers = _dns.GetTxtRecords(seedServers);
             foreach (var dnsQueryAnswer in dnsQueryAnswers)
             {
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
+                {
                     SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                }
             }
         }
     }

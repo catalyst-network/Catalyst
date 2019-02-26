@@ -1,9 +1,10 @@
+using System;
 using Dawn;
 using StackExchange.Redis;
 
 namespace Catalyst.Node.Core.Components.Redis
 {
-    public class RedisConnector : IRedisConnector
+    public class RedisConnector : IDisposable, IRedisConnector
     {
         public RedisConnector(string connectionParam)
         {
@@ -17,10 +18,17 @@ namespace Catalyst.Node.Core.Components.Redis
         /// <inheritdoc />
         public IDatabase Database => Connection.GetDatabase();
 
-        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Connection?.Dispose();
+            }
+        }
+
         public void Dispose()
         {
-            Connection?.Dispose();
+            Dispose(true);
         }
     }
 }

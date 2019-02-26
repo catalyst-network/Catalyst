@@ -24,7 +24,10 @@ namespace Catalyst.Node.Core.Helpers.Streams
             var timeout = false;
             const int sleepInterval = 25;
 
-            if (!sslStream.CanRead) throw new Exception("cant read stream");
+            if (!sslStream.CanRead)
+            {
+                throw new InvalidOperationException("can not read stream");
+            }
 
             // start reading header
             using (var headerMs = new MemoryStream())
@@ -59,7 +62,10 @@ namespace Catalyst.Node.Core.Helpers.Streams
                     if (bytesRead > 1)
                     {
                         // check if end of headers reached
-                        if (headerBuffer[0] == 58) break;
+                        if (headerBuffer[0] == 58)
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -75,14 +81,22 @@ namespace Catalyst.Node.Core.Helpers.Streams
                 }
 
                 if (timeout)
-                    throw new Exception("MessageReadAsync timeout exceeded while reading header after reading");
+                {
+                    throw new TimeoutException("MessageReadAsync timeout exceeded while reading header after reading");
+                }
 
                 var headerBytes = headerMs.ToArray();
 
                 // if goes into null we return null and wait and go back in this causes a dos see connection manager DataReciever()
-                if (headerBytes == null || headerBytes.Length < 1) return null;
+                if (headerBytes == null || headerBytes.Length < 1)
+                {
+                    return null;
+                }
+
                 if (!long.TryParse(ByteUtil.ByteToString(headerBytes).Replace(":", ""), out contentLength))
-                    throw new Exception("MessageReadAsync malformed message, message header not an integer");
+                {
+                    throw new ArgumentException("MessageReadAsync malformed message, message header not an integer");
+                }
             }
 
             using (var dataMs = new MemoryStream())
@@ -92,11 +106,15 @@ namespace Catalyst.Node.Core.Helpers.Streams
                 long bufferSize = 2048;
                 var bytesRemaining = contentLength;
 
-                if (bufferSize > bytesRemaining) bufferSize = bytesRemaining;
+                if (bufferSize > bytesRemaining)
+                {
+                    bufferSize = bytesRemaining;
+                }
 
                 var buffer = new byte[bufferSize]; // @TODO hook into new byte method
 
                 while ((read = sslStream.Read(buffer, 0, buffer.Length)) > 0)
+                {
                     if (read > 0)
                     {
                         dataMs.Write(buffer, 0, read);
@@ -108,12 +126,22 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
                         // reduce buffer size if number of bytes remaining is
                         // less than the pre-defined buffer size of 2KB
-                        if (bytesRemaining < bufferSize) bufferSize = bytesRemaining;
+                        if (bytesRemaining < bufferSize)
+                        {
+                            bufferSize = bytesRemaining;
+                        }
                         buffer = new byte[bufferSize]; // @TODO hook into new byte method
 
                         // check if read fully
-                        if (bytesRemaining == 0) break;
-                        if (bytesRead == contentLength) break;
+                        if (bytesRemaining == 0)
+                        {
+                            break;
+                        }
+
+                        if (bytesRead == contentLength)
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -125,16 +153,25 @@ namespace Catalyst.Node.Core.Helpers.Streams
 
                         currentTimeout += sleepInterval;
                         Task.Delay(sleepInterval);
-                    }
+                    }   
+                }
 
                 if (timeout)
-                    throw new Exception("MessageReadAsync timeout exceeded while reading header after reading");
+                {
+                    throw new TimeoutException("MessageReadAsync timeout exceeded while reading header after reading");
+                }
                 contentBytes = dataMs.ToArray();
             }
 
-            if (contentBytes == null || contentBytes.Length < 1) return null;
+            if (contentBytes == null || contentBytes.Length < 1)
+            {
+                return null;
+            }
+
             if (contentBytes.Length != contentLength)
-                throw new Exception("message descriptor error,  bytes does not match header value");
+            {
+                throw new InvalidOperationException("message descriptor error: bytes does not match header value");
+            }
             return contentBytes;
         }
     }

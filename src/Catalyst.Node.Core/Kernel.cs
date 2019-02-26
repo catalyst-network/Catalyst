@@ -1,6 +1,6 @@
 using System;
 using Autofac;
-using Catalyst.Node.Core.Helpers;
+using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.P2P;
 using Dawn;
 using IModuleRegistrar = Autofac.Core.Registration.IModuleRegistrar;
@@ -14,13 +14,12 @@ namespace Catalyst.Node.Core
 
         private static Kernel _instance;
         private static readonly object Mutex = new object();
-        public IModuleRegistrar ConsensusService;
-        public IModuleRegistrar ContractService;
-
-        public IModuleRegistrar DfsService;
-        public IModuleRegistrar GossipService;
-        public IModuleRegistrar LedgerService;
-        public IModuleRegistrar MempoolService;
+        public IModuleRegistrar ConsensusService { get; internal set; }
+        public IModuleRegistrar ContractService { get; internal set; }
+        public IModuleRegistrar DfsService { get; internal set; }
+        public IModuleRegistrar GossipService { get; internal set; }
+        public IModuleRegistrar LedgerService { get; internal set; }
+        public IModuleRegistrar MempoolService { get; internal set; }
 
         /// <summary>
         ///     Private kernel constructor.
@@ -50,13 +49,15 @@ namespace Catalyst.Node.Core
             Guard.Argument(nodeOptions, nameof(nodeOptions)).NotNull();
             Guard.Argument(containerBuilder, nameof(containerBuilder)).NotNull();
             if (_instance == null)
+            {
                 lock (Mutex)
                 {
                     if (_instance == null)
                     {
                         try
                         {
-                            RunConfigStartUp(nodeOptions.DataDir, Core.NodeOptions.Networks.devnet);
+                            var configCopier = new ConfigCopier();
+                            configCopier.RunConfigStartUp(nodeOptions.DataDir, NodeOptions.Networks.devnet);
                             _instance = new Kernel(nodeOptions, containerBuilder.Build());
                         }
                         catch (Exception e)
@@ -65,48 +66,33 @@ namespace Catalyst.Node.Core
                             throw;
                         }
                     }
-                }
+                }   
+            }
 
             return _instance;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="dataDir">Home catalyst directory</param>
-        /// <param name="networks">Network on which to run the node</param>
-        /// <returns></returns>
-        public static void RunConfigStartUp(string dataDir, NodeOptions.Networks networks)
-        {
-            Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-
-            if (Fs.CheckConfigExists(dataDir, Enum.GetName(typeof(NodeOptions.Networks), networks)))
-                return;
-            // check supplied data dir exists
-            if (!Fs.DirectoryExists(dataDir))
-            {
-                // not there make one
-                Fs.CreateSystemFolder(dataDir);
-            }
-            // make config with new system folder
-            Fs.CopySkeletonConfigs(dataDir,Enum.GetName(typeof(NodeOptions.Networks), networks));
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
-            Logger.Debug("disposing catalyst kernel");
-            GC.SuppressFinalize(this);
+            Logger.Verbose("disposing catalyst kernel");
         }
 
         private void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
-            if (disposing) Container?.Dispose();
+            if (disposing)
+            {
+                Container?.Dispose();
+            }
 
             Disposed = true;
-            Logger.Debug("Catalyst kernel disposed");
+            Logger.Verbose("Catalyst kernel disposed");
         }
     }
 }
