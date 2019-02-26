@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using Catalyst.Node.Common.Modules.Mempool;
 using Catalyst.Protocols.Transaction;
 using Dawn;
-using DnsClient.Protocol;
-using Google.Protobuf;
 using Serilog;
-using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.Modules.Mempool

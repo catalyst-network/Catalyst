@@ -1,8 +1,6 @@
 ﻿using System;
 using Autofac;
 using Autofac.Configuration;
-using Autofac.Core;
-using Common.Logging.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils {

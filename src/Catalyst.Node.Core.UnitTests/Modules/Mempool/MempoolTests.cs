@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
-using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules.Mempool;
 using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Protocols.Transaction;
 using FluentAssertions;
-using Google.Protobuf;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
@@ -17,7 +13,7 @@ using Xunit;
 
 namespace Catalyst.Node.UnitTests.Modules.Mempool
 {
-    public class UT_Mempool
+    public class MempoolTests
     {
         private readonly Core.Modules.Mempool.Mempool _memPool;
 
@@ -26,7 +22,7 @@ namespace Catalyst.Node.UnitTests.Modules.Mempool
         private readonly StTx _transaction;
         private ILogger _logger;
 
-        public UT_Mempool()
+        public MempoolTests()
         {
             _keyValueStore = Substitute.For<IRepository<StTxModel, Key>>();
             _logger = Substitute.For<ILogger>();

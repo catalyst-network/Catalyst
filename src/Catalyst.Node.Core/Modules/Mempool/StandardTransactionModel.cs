@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Catalyst.Protocols.Transaction;
+﻿using Catalyst.Protocols.Transaction;
 
 namespace Catalyst.Node.Core.Modules.Mempool
 {

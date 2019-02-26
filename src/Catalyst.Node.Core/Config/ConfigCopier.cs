@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Dawn;
-using Catalyst.Node.Common;
 
 namespace Catalyst.Node.Core.Config
 {
