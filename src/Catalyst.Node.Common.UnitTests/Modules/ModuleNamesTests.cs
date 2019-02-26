@@ -8,7 +8,7 @@ namespace Catalyst.Node.Common.UnitTests.Modules
     public class ModuleNamesTests
     {
         [Fact]
-        public void All_should_return_all_declared_names()
+        public static void All_should_return_all_declared_names()
         {
             var allModuleNames = ModuleNames.All;
              

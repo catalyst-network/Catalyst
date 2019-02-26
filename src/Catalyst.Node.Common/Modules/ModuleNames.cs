@@ -9,6 +9,8 @@ namespace Catalyst.Node.Common.Modules
 {
     public class ModuleNames
     {
+        protected ModuleNames() {}
+
         static ModuleNames()
         {
             _publicConstantStringsFromThisClass = new Lazy<IList<string>>(() =>
@@ -21,12 +23,12 @@ namespace Catalyst.Node.Common.Modules
             }, LazyThreadSafetyMode.PublicationOnly);
         }
 
-        public const string Consensus = "Consensus";
-        public const string Contract = "Contract";
-        public const string Dfs = "Dfs";
-        public const string Gossip = "Gossip";
-        public const string Ledger = "Ledger";
-        public const string Mempool = "Mempool";
+        public static readonly string Consensus = "Consensus";
+        public static readonly string Contract = "Contract";
+        public static readonly string Dfs = "Dfs";
+        public static readonly string Gossip = "Gossip";
+        public static readonly string Ledger = "Ledger";
+        public static readonly string Mempool = "Mempool";
 
         private static Lazy<IList<string>> _publicConstantStringsFromThisClass;
         public static IList<string> All => _publicConstantStringsFromThisClass.Value;
