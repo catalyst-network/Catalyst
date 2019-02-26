@@ -12,28 +12,28 @@ namespace Catalyst.Node.Common.Cryptography
         IPrivateKey GeneratePrivateKey();
         
         /// <summary>
-        /// Creates wrapped public key from keyblob. Returns null if failed.
+        /// Creates wrapped public key from keyblob.
         /// </summary>
         /// <param name="blob"></param>
         /// <returns></returns>
         IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob);
         
         /// <summary>
-        /// Creates keyblob from public key. Returns null if failed.
+        /// Creates keyblob from public key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         byte[] ExportPublicKey(IPublicKey key);
         
         /// <summary>
-        /// Creates wrapped private key from keyblob. Returns null if failed.
+        /// Creates wrapped private key from keyblob.
         /// </summary>
         /// <param name="blob"></param>
         /// <returns></returns>
         IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob);
         
         /// <summary>
-        /// Creates keyblob from private key. Returns null if failed.
+        /// Creates keyblob from private key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
