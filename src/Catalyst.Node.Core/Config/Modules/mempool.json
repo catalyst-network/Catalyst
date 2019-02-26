@@ -10,10 +10,10 @@
       ]
     }
     //{
-    //  "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1, SharpRepository.InMemoryRepository",
+    //  "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Node.Core.Modules.Mempool.StTxModel, Catalyst.Node.Core], [Catalyst.Protocols.Transaction.Key, Catalyst.Protocols.Transaction]], SharpRepository.InMemoryRepository",
     //  "services": [
     //    {
-    //      "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.Modules.Mempool.StTxModel, Catalyst.Node.Core]], SharpRepository.Repository"
+    //      "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Node.Core.Modules.Mempool.StTxModel, Catalyst.Node.Core], [Catalyst.Protocols.Transaction.Key, Catalyst.Protocols.Transaction]], SharpRepository.Repository"
     //    }
     //  ]
     //}

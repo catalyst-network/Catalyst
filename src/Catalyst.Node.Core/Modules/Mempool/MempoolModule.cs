@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Autofac;
+﻿using Autofac;
+using Catalyst.Protocols.Transaction;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
@@ -14,7 +12,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<InMemoryRepository<StTxModel>>().As<IRepository<StTxModel>>();
+            builder.RegisterType<InMemoryRepository<StTxModel, Key>>().As<IRepository<StTxModel, Key>>();
         }
     }
 }

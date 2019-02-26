@@ -9,6 +9,7 @@ using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Node.Core.UnitTest.TestUtils;
+using Catalyst.Protocols.Transaction;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
@@ -27,7 +28,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
         public static void PerformExtraRegistrations(ContainerBuilder builder)
         {
-            builder.RegisterType<InMemoryRepository<StTxModel>>().As<IRepository<StTxModel>>();
+            builder.RegisterType<InMemoryRepository<StTxModel, Key>>().As<IRepository<StTxModel, Key>>();
             builder.RegisterInstance(Substitute.For<ILogger>()).As<ILogger>();
         }
 
