@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Catalyst.Node.Common.Cryptography;
 using FluentAssertions;
@@ -16,30 +17,20 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         [Fact]
         public void TestSigningVerification(){
             
-<<<<<<< HEAD:src/Catalyst.Node.Core.UnitTests/Helpers/Cryptography/CryptographyTests.cs
             
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
             byte[] signature = _context.Sign(privateKey, data);
             _context.Verify(privateKey, data, signature).Should().BeTrue("signature generated with private key should verify with corresponding public key");
  
-=======
-            IKey key = _context.GenerateKey();
-            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            byte[] signature = _context.Sign(key, data);
-            _context.Verify(key, data, signature).Should().BeTrue("signature generated with private key should verify with corresponding public key");
->>>>>>> develop:src/Catalyst.Node.Common.UnitTests/Cryptography/CryptographyTests.cs
         }
         
         [Fact]
         public void TestFailureSigningVerification(){
             
-<<<<<<< HEAD:src/Catalyst.Node.Core.UnitTests/Helpers/Cryptography/CryptographyTests.cs
-            
+
             IPrivateKey privateKey = _context.GeneratePrivateKey();
-=======
-            IKey key = _context.GenerateKey();
->>>>>>> develop:src/Catalyst.Node.Common.UnitTests/Cryptography/CryptographyTests.cs
+
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
             byte[] signature = _context.Sign(privateKey, data);
             
@@ -52,8 +43,9 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         {
             var blob = Encoding.UTF8.GetBytes("this string is not a formatted public key");
 
-            IPublicKey publicKey = _context.ImportPublicKey(blob);
-            publicKey.Should().BeNull("invalid public key import should result in null value");
+            Action act = () => _context.ImportPublicKey(blob);
+
+            act.Should().Throw<System.FormatException>().WithMessage("The key BLOB is not in the correct format.");
         }
 
         [Fact]
@@ -63,12 +55,9 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             byte[] blob = _context.ExportPublicKey(privateKey);
             
             IPublicKey publicKey = _context.ImportPublicKey(blob);
-<<<<<<< HEAD:src/Catalyst.Node.Core.UnitTests/Helpers/Cryptography/CryptographyTests.cs
+
             publicKey.Should().NotBeNull("public key should be importable from a valid blob");
 
-=======
-            publicKey.Should().NotBeNull();
->>>>>>> develop:src/Catalyst.Node.Common.UnitTests/Cryptography/CryptographyTests.cs
         }
         
         [Fact]
@@ -78,7 +67,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             
             Action act = () => _context.ImportPrivateKey(blob);
 
-            act.Should().Throw<ArgumentNullException>("invalid private key import should result in null value");
+            act.Should().Throw<System.FormatException>().WithMessage("The key BLOB is not in the correct format.");
 
         }
 
@@ -107,10 +96,10 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         {
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             byte[] blob = _context.ExportPrivateKey(privateKey);
-            byte[] blob2 = _context.ExportPrivateKey(privateKey);
-            blob.Should().BeNull("newly generated private key should not be exportable more than once");
-            
-            
+            Action action = () =>  _context.ExportPrivateKey(privateKey);
+            action.Should().Throw<System.InvalidOperationException>().WithMessage("The key can be exported only once.");
+
+
         }
 
         [Fact]
