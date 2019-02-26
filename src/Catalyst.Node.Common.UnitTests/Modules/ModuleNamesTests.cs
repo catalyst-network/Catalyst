@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Catalyst.Node.Common.UnitTests.Modules
 {
-    public class ModuleNamesTests
+    public static class ModuleNamesTests
     {
         [Fact]
         public static void All_should_return_all_declared_names()
