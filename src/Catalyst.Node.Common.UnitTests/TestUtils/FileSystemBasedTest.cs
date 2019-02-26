@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,7 +36,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 //get a unique folder for this run
                 _currentTestName 
-              + $"_{_currentTest.TestCase.TestMethodArguments?.GetHashCode() ?? 0}"
+              + $"_{GetHashFromItems(_currentTest.TestCase.TestMethodArguments):D8}"
               + $"_{DateTime.Now:yyMMddHHmmssff}"));
 
             _testDirectory.Exists.Should().BeFalse();
@@ -48,7 +50,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         {
             if (disposing)
             {
-                var regex = new Regex(_currentTestName + @"_([\d]{14})");
+                var regex = new Regex(_currentTestName + @"_([\d]{8})_([\d]{14})");
                 var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
                    .Where(d =>
                     {
@@ -66,6 +68,20 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public static int GetHashFromItems<T>(IEnumerable<T> items)
+        {
+            if (items == null) return 0;
+            unchecked
+            {
+                var hash = 19;
+                foreach (var obj in items)
+                {
+                    hash = hash * 31 + obj.GetHashCode();
+                }
+                return hash;
+            }
         }
     }
 }
