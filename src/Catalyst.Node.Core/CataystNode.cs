@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Cryptography;
 using Catalyst.Node.Common.Modules.P2P;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers;
 using Catalyst.Node.Core.Helpers.Util;

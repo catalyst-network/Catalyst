@@ -11,7 +11,7 @@ using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 
-namespace Catalyst.Node.UnitTests.Modules.Mempool
+namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 {
     public class MempoolTests
     {

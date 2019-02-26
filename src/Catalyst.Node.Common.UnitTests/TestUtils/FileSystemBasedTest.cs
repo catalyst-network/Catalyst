@@ -33,7 +33,9 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             _currentTestName = _currentTest.TestCase.TestMethod.Method.Name;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 //get a unique folder for this run
-                _currentTestName + $"_{DateTime.Now:yyMMddHHmmssff}"));
+                _currentTestName 
+              + $"_{_currentTest.TestCase.TestMethodArguments?.GetHashCode() ?? 0}"
+              + $"_{DateTime.Now:yyMMddHHmmssff}"));
 
             _testDirectory.Exists.Should().BeFalse();
             _testDirectory.Create();

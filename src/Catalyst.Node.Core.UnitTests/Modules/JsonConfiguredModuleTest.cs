@@ -25,7 +25,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules
     public class JsonConfiguredModuleTest : BaseModuleConfigTest
     {
         public JsonConfiguredModuleTest() 
-            : base(Path.Combine(Constants.ConfigFolder, Constants.ComponentsJsonConfigFile),
+            : base(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
                 PerformExtraRegistrations) {}
 
         public static void PerformExtraRegistrations(ContainerBuilder builder)

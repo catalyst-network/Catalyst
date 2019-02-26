@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Catalyst.Node.Core.Config;
 using FluentAssertions;
@@ -11,8 +13,19 @@ namespace Catalyst.Node.Core.UnitTest.Config
     public class ConfigCopierTests : FileSystemBasedTest
     {
         private ConfigCopier _configCopier;
+        public static List<object[]> ModulesFiles;
+        static ConfigCopierTests()
+        {
+            ModulesFiles = Constants.AllModuleFiles.Select(m => new object[] { m, NodeOptions.Networks.testnet }).ToList();
+            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.mainnet), NodeOptions.Networks.mainnet });
+            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.testnet), NodeOptions.Networks.testnet });
+            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.devnet), NodeOptions.Networks.devnet });
+            ModulesFiles.Add(new object[] { Constants.SerilogJsonConfigFile, NodeOptions.Networks.devnet });
+            ModulesFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, NodeOptions.Networks.devnet });
+        }
 
-        public ConfigCopierTests(ITestOutputHelper output) : base(output)
+
+    public ConfigCopierTests(ITestOutputHelper output) : base(output)
         {
             _configCopier = new ConfigCopier();
         }
@@ -24,69 +37,67 @@ namespace Catalyst.Node.Core.UnitTest.Config
             var currentDirectory = _fileSystem.GetCatalystHomeDir();
             currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
 
+            var modulesDirectory = new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
+
             var network = NodeOptions.Networks.devnet;
             _configCopier.RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network);
-
-            currentDirectory.EnumerateFiles()
-               .Select(f => f.Name).ToList().Should().BeEquivalentTo(expectedFileList);
+            var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
+            configFiles.Should().BeEquivalentTo(expectedFileList);
         }
 
-        [Fact]
+        [Theory]
+        [MemberData(nameof(ModulesFiles))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Not_Overwrite_Network_File()
+        public void RunConfigStartUp_Should_Not_Overwrite_A_Module_File(string moduleFileName, NodeOptions.Networks network)
         {
-            RunConfigStartUp_Should_Not_Overwrite_Existing_Files(
-                Constants.NetworkConfigFile(NodeOptions.Networks.mainnet));
+            RunConfigStartUp_Should_Not_Overwrite_Existing_Files(moduleFileName, network);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Not_Overwrite_Serilog_File()
-        {
-            RunConfigStartUp_Should_Not_Overwrite_Existing_Files(Constants.SerilogJsonConfigFile);
-        }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Not_Overwrite_Components_File()
-        {
-            RunConfigStartUp_Should_Not_Overwrite_Existing_Files(Constants.ComponentsJsonConfigFile);
-        }
-
-
-        private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName)
+        private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, NodeOptions.Networks network = NodeOptions.Networks.testnet)
         {
             var currentDirectory = _fileSystem.GetCatalystHomeDir();
             currentDirectory.Create(); currentDirectory.Refresh();
-            var existingFileInfo = new FileInfo(fileName);
+            var existingFileInfo = new FileInfo(Path.Combine(currentDirectory.FullName, fileName));
+            if(!existingFileInfo.Directory.Exists) existingFileInfo.Directory.Create();
             existingFileInfo.Create(); existingFileInfo.Refresh();
+
+            var modulesDirectory = new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
             currentDirectory.Exists.Should().BeTrue("otherwise the test is not relevant");
             existingFileInfo.Exists.Should().BeTrue("otherwise the test is not relevant");
 
-            var network = NodeOptions.Networks.testnet;
             _configCopier.RunConfigStartUp(currentDirectory.FullName, network);
 
-            var expectedFileList = GetExpectedFileList(network);
+            var expectedFileList = GetExpectedFileList(network).ToList();
+            var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
 
-            currentDirectory.EnumerateFiles()
-               .Select(f => f.Name).ToList().Should().BeEquivalentTo(expectedFileList);
+            configFiles.Should().BeEquivalentTo(expectedFileList);
 
             existingFileInfo.Length.Should().Be(0,
                 "the bogus file should not have been overwritten");
         }
 
-        private static string[] GetExpectedFileList(NodeOptions.Networks network)
+        private static IEnumerable<string> EnumerateConfigFiles(DirectoryInfo currentDirectory,
+            DirectoryInfo modulesDirectory)
         {
-            var expectedFileList = new[]
+            var filesOnDisk = currentDirectory.EnumerateFiles()
+               .Select(f => f.Name)
+               .Concat(modulesDirectory.EnumerateFiles()
+                   .Select(f => Path.Combine(Constants.ModulesSubFolder, f.Name)));
+            return filesOnDisk;
+        }
+
+        private IEnumerable<string> GetExpectedFileList(NodeOptions.Networks network)
+        {
+            var requiredConfigFiles = new[]
             {
-                Constants.SerilogJsonConfigFile,
+                Constants.NetworkConfigFile(network),
                 Constants.ComponentsJsonConfigFile,
-                Constants.NetworkConfigFile(network)
-            };
-            return expectedFileList;
+                Constants.SerilogJsonConfigFile
+            }.Concat(Constants.AllModuleFiles);
+            return requiredConfigFiles;
         }
     }
 }

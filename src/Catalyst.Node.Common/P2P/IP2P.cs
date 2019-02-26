@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Catalyst.Node.Common.Modules.P2P
+namespace Catalyst.Node.Common.P2P
 {
     public interface IP2P
     {

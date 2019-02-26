@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
         {
             Guard.Argument(key, nameof(key)).NotNull();
             Guard.Argument(transaction, nameof(transaction)).NotNull();
-            return SaveTx(new StTxModel() {Key = key, Transaction = transaction});
+            return SaveTx(new StTxModel {Key = key, Transaction = transaction});
 
         }
 
