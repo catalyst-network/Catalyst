@@ -92,6 +92,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         public void TestFailurePrivateKeySecondExport()
         {
             IPrivateKey privateKey = _context.GeneratePrivateKey();
+            _context.ExportPrivateKey(privateKey);
             
             Action action = () =>  _context.ExportPrivateKey(privateKey);
             action.Should().Throw<System.InvalidOperationException>("The key can be exported only once.");
