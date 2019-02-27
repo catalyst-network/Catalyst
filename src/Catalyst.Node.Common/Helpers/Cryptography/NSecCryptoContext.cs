@@ -14,7 +14,7 @@ namespace Catalyst.Node.Common.Cryptography
 
         public IPrivateKey GeneratePrivateKey(){
             //Newly generated private keys can be exported once.
-            var keyParams = new KeyCreationParameters(){ExportPolicy = KeyExportPolicies.AllowPlaintextArchiving}; 
+            var keyParams = new KeyCreationParameters{ExportPolicy = KeyExportPolicies.AllowPlaintextArchiving}; 
             var key = Key.Create(_algorithm, keyParams);
             return new NSecPrivateKeyWrapper(key);
         }
