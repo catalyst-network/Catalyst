@@ -1,5 +1,4 @@
 using System;
-using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Common.Modules.Contract;
 
 namespace Catalyst.Node.Core.Modules.Contract

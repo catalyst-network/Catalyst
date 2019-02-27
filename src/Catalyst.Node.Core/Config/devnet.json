@@ -6,11 +6,6 @@
     "Contract": {
       "StorageType": "Catalyst.Helpers.Ipfs"
     },
-    "Mempool": {
-      "Type" : "redis",
-      "Host" : "127.0.0.1",
-      "Port" : "6379"
-    },
     "Peer": {
       "DnsServer": "127.0.0.1:5053",
       "Network": "devnet",

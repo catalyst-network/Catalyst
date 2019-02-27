@@ -1,4 +1,3 @@
-using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Common.Modules.Gossip;
 
 namespace Catalyst.Node.Core.Modules.Gossip
