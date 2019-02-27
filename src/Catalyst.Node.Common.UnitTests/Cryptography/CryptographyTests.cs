@@ -47,7 +47,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             var blob = Encoding.UTF8.GetBytes("this string is not a formatted public key");
 
             Action action = () => _context.ImportPublicKey(blob);
-            action.Should().Throw<System.FormatException>().WithMessage("The key BLOB is not in the correct format.");
+            action.Should().Throw<System.FormatException>("The key BLOB is not in the correct format.");
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             var blob = Encoding.UTF8.GetBytes("this string is not a formatted private key");
             
             Action action = () => _context.ImportPrivateKey(blob);
-            action.Should().Throw<System.FormatException>().WithMessage("The key BLOB is not in the correct format.");
+            action.Should().Throw<System.FormatException>("The key BLOB is not in the correct format.");
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             byte[] blob = _context.ExportPrivateKey(privateKey);
             
             Action action = () =>  _context.ExportPrivateKey(privateKey);
-            action.Should().Throw<System.InvalidOperationException>().WithMessage("The key can be exported only once.");
+            action.Should().Throw<System.InvalidOperationException>("The key can be exported only once.");
         }
 
         [Fact]
