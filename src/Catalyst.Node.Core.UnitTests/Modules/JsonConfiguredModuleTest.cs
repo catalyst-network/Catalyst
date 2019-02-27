@@ -14,9 +14,10 @@ using Catalyst.Node.Core.Modules.Contract;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.Modules.Gossip;
 using Catalyst.Node.Core.Modules.Ledger;
-using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using FluentAssertions;
+using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Modules
@@ -24,7 +25,13 @@ namespace Catalyst.Node.Core.UnitTest.Modules
     public class JsonConfiguredModuleTest : BaseModuleConfigTest
     {
         public JsonConfiguredModuleTest() 
-            : base(Path.Combine(Constants.ConfigFolder, Constants.ComponentsJsonConfigFile)) {}
+            : base(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+                PerformExtraRegistrations) {}
+
+        public static void PerformExtraRegistrations(ContainerBuilder builder)
+        {
+            builder.RegisterInstance(Substitute.For<ILogger>()).As<ILogger>();
+        }
 
         [Theory]
         [InlineData(typeof(IConsensus), typeof(Consensus))]
@@ -32,13 +39,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         [InlineData(typeof(IDfs), typeof(IpfsDfs))]
         [InlineData(typeof(IGossip), typeof(Gossip))]
         [InlineData(typeof(ILedger), typeof(Ledger))]
-        [InlineData(typeof(IMempool), typeof(Mempool))]
+        [InlineData(typeof(IMempool), typeof(Core.Modules.Mempool.Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
+        private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
             var resolvedType = Container.Resolve(interfaceType);
             resolvedType.Should().NotBeNull();
             resolvedType.Should().BeOfType(resolutionType);
         }
+
     }
 }

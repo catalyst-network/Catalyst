@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Catalyst.Node.Common.Modules;
 using Dawn;
-using Catalyst.Node.Common;
 
 namespace Catalyst.Node.Core.Config
 {
@@ -21,7 +21,6 @@ namespace Catalyst.Node.Core.Config
         public void RunConfigStartUp(string dataDir, NodeOptions.Networks network, bool overwrite = OverwriteFilesByDefault)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-            var networkAsString = Enum.GetName(typeof(NodeOptions.Networks), network);
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
@@ -29,14 +28,25 @@ namespace Catalyst.Node.Core.Config
                 dataDirInfo.Create();
             }
 
-            var existingConfigs = dataDirInfo.EnumerateFiles("*.json").Select(fi => fi.Name);
+            var modulesFolderInfo = new DirectoryInfo(Path.Combine(dataDir, Constants.ModulesSubFolder));
+            if (!modulesFolderInfo.Exists)
+            {
+                modulesFolderInfo.Create();
+            }
+
+            const string jsonSearchPattern = "*.json";
+            var existingConfigs = dataDirInfo
+               .EnumerateFiles(jsonSearchPattern, SearchOption.TopDirectoryOnly)
+               .Select(fi => fi.Name).Concat(
+                    modulesFolderInfo.EnumerateFiles(jsonSearchPattern)
+                       .Select(m => Path.Combine(Constants.ModulesSubFolder, m.Name)));
 
             var requiredConfigFiles = new[]
             {
                 Constants.NetworkConfigFile(network),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile
-            };
+            }.Concat(Constants.AllModuleFiles);
 
             //TODO: think about case sensitivity of the environment we are in, this is oversimplified
             var filenameComparer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
@@ -56,7 +66,7 @@ namespace Catalyst.Node.Core.Config
         private void CopyConfigFileToFolder(string targetFolder, string fileName,
             bool overwrite = OverwriteFilesByDefault)
         {
-            var sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigFolder, fileName);
+            var sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, fileName);
             var targetFile = Path.Combine(targetFolder, fileName);
             if (!overwrite && File.Exists(targetFile))
             {
