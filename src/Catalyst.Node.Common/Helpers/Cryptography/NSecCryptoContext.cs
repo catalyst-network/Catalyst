@@ -8,9 +8,9 @@ namespace Catalyst.Node.Common.Cryptography
     /// </summary>
     public sealed class NSecCryptoContext : ICryptoContext
     {
-        private readonly SignatureAlgorithm _algorithm = SignatureAlgorithm.Ed25519;
-        private readonly KeyBlobFormat _publicKeyFormat = KeyBlobFormat.PkixPublicKey;
-        private readonly KeyBlobFormat _privateKeyFormat = KeyBlobFormat.PkixPrivateKey;
+        private static readonly SignatureAlgorithm _algorithm = SignatureAlgorithm.Ed25519;
+        private static readonly KeyBlobFormat _publicKeyFormat = KeyBlobFormat.PkixPublicKey;
+        private static readonly KeyBlobFormat _privateKeyFormat = KeyBlobFormat.PkixPrivateKey;
 
         public IPrivateKey GeneratePrivateKey(){
             //Newly generated private keys can be exported once.
