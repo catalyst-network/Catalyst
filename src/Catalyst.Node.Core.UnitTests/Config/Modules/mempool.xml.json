@@ -2,12 +2,15 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "SharpRepository.MongoDbRepository.MongoDbRepository`2[[Catalyst.Node.Core.Modules.Mempool.StTxModel, Catalyst.Node.Core], [Catalyst.Protocols.Transaction.Key, Catalyst.Protocol]], SharpRepository.MongoDbRepository",
+      "type": "SharpRepository.XmlRepository.XmlRepository`2[[Catalyst.Node.Core.Modules.Mempool.StTxModel, Catalyst.Node.Core], [Catalyst.Protocols.Transaction.Key, Catalyst.Protocol]], SharpRepository.XmlRepository",
       "services": [
         {
           "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Node.Core.Modules.Mempool.StTxModel, Catalyst.Node.Core], [Catalyst.Protocols.Transaction.Key, Catalyst.Protocol]], SharpRepository.Repository"
         }
-      ]
+      ],
+      "parameters": {
+        "storagePath" : "[@replace-this@]" 
+      }
     },
     {
       "type": "Catalyst.Node.Core.Modules.Mempool.Mempool",
