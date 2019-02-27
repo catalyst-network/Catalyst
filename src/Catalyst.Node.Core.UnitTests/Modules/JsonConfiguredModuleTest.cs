@@ -30,7 +30,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules
 
         public static void PerformExtraRegistrations(ContainerBuilder builder)
         {
-            //builder.RegisterType<InMemoryRepository<StTxModel, Key>>().As<IRepository<StTxModel, Key>>();
             builder.RegisterInstance(Substitute.For<ILogger>()).As<ILogger>();
         }
 
