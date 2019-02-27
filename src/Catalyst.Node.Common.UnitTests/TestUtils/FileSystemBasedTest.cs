@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +8,6 @@ using FluentAssertions;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Node.Common;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
@@ -36,7 +34,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 //get a unique folder for this run
                 _currentTestName 
-              + $"_{GetHashFromItems(_currentTest.TestCase.TestMethodArguments):D8}"
+              + $"_{GetHashFromItems(_currentTest.TestCase.TestMethodArguments):D10}"
               + $"_{DateTime.Now:yyMMddHHmmssff}"));
 
             _testDirectory.Exists.Should().BeFalse();
@@ -44,13 +42,15 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.GetCatalystHomeDir().Returns(_testDirectory);
+
+            _output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                var regex = new Regex(_currentTestName + @"_([\d]{8})_([\d]{14})");
+                var regex = new Regex(_currentTestName + @"_([\d]{10})_([\d]{14})");
                 var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
                    .Where(d =>
                     {
@@ -59,8 +59,20 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
                     })
                    .ToList();
 
-                oldDirectories
-                   .ForEach(d => d.Delete(true));
+                oldDirectories.ForEach(TryDeleteFolder);
+            }
+        }
+
+        private static void TryDeleteFolder(DirectoryInfo d)
+        {
+            try
+            {
+                d.Delete(true);
+            }
+            catch (Exception)
+            {
+                //no big deal is this doesn't work once in a while, only worry if
+                //this happens all the time.
             }
         }
 
@@ -70,7 +82,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             GC.SuppressFinalize(this);
         }
 
-        public static int GetHashFromItems<T>(IEnumerable<T> items)
+        public static uint GetHashFromItems<T>(IEnumerable<T> items)
         {
             if (items == null) return 0;
             unchecked
@@ -80,7 +92,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
                 {
                     hash = hash * 31 + obj.GetHashCode();
                 }
-                return hash;
+                return (uint)hash;
             }
         }
     }

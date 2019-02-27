@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Catalyst.Node.Core.Config;
@@ -13,15 +12,15 @@ namespace Catalyst.Node.Core.UnitTest.Config
     public class ConfigCopierTests : FileSystemBasedTest
     {
         private ConfigCopier _configCopier;
-        public static List<object[]> ModulesFiles;
+        public static List<object[]> ConfigFiles;
         static ConfigCopierTests()
         {
-            ModulesFiles = Constants.AllModuleFiles.Select(m => new object[] { m, NodeOptions.Networks.testnet }).ToList();
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.mainnet), NodeOptions.Networks.mainnet });
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.testnet), NodeOptions.Networks.testnet });
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.devnet), NodeOptions.Networks.devnet });
-            ModulesFiles.Add(new object[] { Constants.SerilogJsonConfigFile, NodeOptions.Networks.devnet });
-            ModulesFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, NodeOptions.Networks.devnet });
+            ConfigFiles = Constants.AllModuleFiles.Select(m => new object[] { m, NodeOptions.Networks.testnet }).ToList();
+            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.mainnet), NodeOptions.Networks.mainnet });
+            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.testnet), NodeOptions.Networks.testnet });
+            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.devnet), NodeOptions.Networks.devnet });
+            ConfigFiles.Add(new object[] { Constants.SerilogJsonConfigFile, NodeOptions.Networks.devnet });
+            ConfigFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, NodeOptions.Networks.devnet });
         }
 
 
@@ -48,9 +47,9 @@ namespace Catalyst.Node.Core.UnitTest.Config
         }
 
         [Theory]
-        [MemberData(nameof(ModulesFiles))]
+        [MemberData(nameof(ConfigFiles))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Not_Overwrite_A_Module_File(string moduleFileName, NodeOptions.Networks network)
+        public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName, NodeOptions.Networks network)
         {
             RunConfigStartUp_Should_Not_Overwrite_Existing_Files(moduleFileName, network);
         }
