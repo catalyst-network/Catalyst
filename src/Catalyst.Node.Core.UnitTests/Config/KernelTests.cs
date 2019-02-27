@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Config;
 using FluentAssertions;
 using Xunit;
@@ -16,12 +17,12 @@ namespace Catalyst.Node.Core.UnitTest.Config
         public static List<object[]> ModulesFiles;
         static ConfigCopierTests()
         {
-            ModulesFiles = Constants.AllModuleFiles.Select(m => new object[] { m, NodeOptions.Networks.testnet }).ToList();
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.mainnet), NodeOptions.Networks.mainnet });
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.testnet), NodeOptions.Networks.testnet });
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.devnet), NodeOptions.Networks.devnet });
-            ModulesFiles.Add(new object[] { Constants.SerilogJsonConfigFile, NodeOptions.Networks.devnet });
-            ModulesFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, NodeOptions.Networks.devnet });
+            ModulesFiles = Constants.AllModuleFiles.Select(m => new object[] { m, Network.Test }).ToList();
+            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Main), Network.Main });
+            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Test), Network.Test });
+            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Dev), Network.Dev });
+            ModulesFiles.Add(new object[] { Constants.SerilogJsonConfigFile, Network.Dev });
+            ModulesFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, Network.Dev });
         }
 
 
@@ -39,7 +40,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
 
             var modulesDirectory = new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
-            var network = NodeOptions.Networks.devnet;
+            var network = Network.Dev;
             _configCopier.RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network);
@@ -50,13 +51,14 @@ namespace Catalyst.Node.Core.UnitTest.Config
         [Theory]
         [MemberData(nameof(ModulesFiles))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Not_Overwrite_A_Module_File(string moduleFileName, NodeOptions.Networks network)
+        public void RunConfigStartUp_Should_Not_Overwrite_A_Module_File(string moduleFileName, Network network)
         {
             RunConfigStartUp_Should_Not_Overwrite_Existing_Files(moduleFileName, network);
         }
 
-        private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, NodeOptions.Networks network = NodeOptions.Networks.testnet)
+        private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, Network network)
         {
+            network = network ?? Network.Dev;
             var currentDirectory = _fileSystem.GetCatalystHomeDir();
             currentDirectory.Create(); currentDirectory.Refresh();
             var existingFileInfo = new FileInfo(Path.Combine(currentDirectory.FullName, fileName));
@@ -89,7 +91,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
             return filesOnDisk;
         }
 
-        private IEnumerable<string> GetExpectedFileList(NodeOptions.Networks network)
+        private IEnumerable<string> GetExpectedFileList(Network network)
         {
             var requiredConfigFiles = new[]
             {

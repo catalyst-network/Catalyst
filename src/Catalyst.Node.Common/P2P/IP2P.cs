@@ -4,6 +4,8 @@ namespace Catalyst.Node.Common.P2P
 {
     public interface IP2P
     {
+        IPeerSettings Settings { get; }
+
         /// <summary>
         /// </summary>
         /// <returns></returns>

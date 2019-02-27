@@ -5,6 +5,7 @@ using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
 using Catalyst.Node.Common.Cryptography;
+using Catalyst.Node.Common.Helpers.Cryptography;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -68,7 +69,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             _directoryInfo.EnumerateFiles().Should().BeEmpty();
 
             _fileWithPassName = "test-with-pass.pfx";
-            _certificateStore.TryGet(_fileWithPassName, out var _).Should().BeFalse();
+            _certificateStore.GetCertificateFromFile(_fileWithPassName).Should().BeNull();
         }
 
         private void Create_a_certificate_file_with_password()
@@ -86,7 +87,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         {
             _passwordReader.ReadSecurePassword().Returns(BuildSecureStringPassword());
             _retrievedCertificate = null;
-            _certificateStore.TryGet(_fileWithPassName, out _retrievedCertificate).Should().BeTrue();
+            _certificateStore.GetCertificateFromFile(_fileWithPassName).Should().NotBeNull();
         }
 
         private void The_certificate_from_file_should_have_the_correct_thumbprint()

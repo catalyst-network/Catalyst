@@ -1,16 +1,18 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Node.Common.Cryptography;
 using Serilog;
 
-namespace Catalyst.Node.Common.Cryptography
+namespace Catalyst.Node.Common.Helpers.Cryptography
 {
     public class CertificateStore : ICertificateStore
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
@@ -21,6 +23,23 @@ namespace Catalyst.Node.Common.Cryptography
         {
             _storageFolder = fileSystem.GetCatalystHomeDir();
             PasswordReader = passwordReader;
+        }
+
+        public X509Certificate2 GetCertificateFromFile(string pfxFilePath)
+        {
+            var foundCertificate = TryGet(pfxFilePath, out var certificate);
+            if (foundCertificate) return certificate;
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                throw new PlatformNotSupportedException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
+                    $"Please create a password protected certificate at {pfxFilePath}." +
+                    Environment.NewLine +
+                    "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
+            }
+            certificate = CreateAndSaveSelfSignedCertificate(pfxFilePath);
+
+            return certificate;
         }
 
         public X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
@@ -52,7 +71,7 @@ namespace Catalyst.Node.Common.Cryptography
                                 "your local trusted root store to remove warnings.", fullPathToCertificate);
         }
 
-        public bool TryGet(string fileName, out X509Certificate2 certificate)
+        private bool TryGet(string fileName, out X509Certificate2 certificate)
         {
             var fullPath = Path.Combine(_storageFolder.ToString(), fileName);
             var fileInfo = new FileInfo(fullPath);

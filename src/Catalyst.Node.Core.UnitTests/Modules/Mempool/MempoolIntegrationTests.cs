@@ -5,6 +5,7 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Modules.Mempool;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Modules.Mempool;
@@ -39,7 +40,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             var config = new ConfigurationBuilder()
                .AddJsonFile(alteredComponentsFile)
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NodeOptions.Networks.devnet)))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
             ConfigureContainerBuilder(config);
 

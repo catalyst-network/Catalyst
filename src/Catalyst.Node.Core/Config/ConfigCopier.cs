@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.P2P;
 using Dawn;
 
 namespace Catalyst.Node.Core.Config
@@ -18,7 +19,7 @@ namespace Catalyst.Node.Core.Config
         /// <param name="dataDir">Home catalyst directory</param>
         /// <param name="network">Network on which to run the node</param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        public void RunConfigStartUp(string dataDir, NodeOptions.Networks network, bool overwrite = OverwriteFilesByDefault)
+        public void RunConfigStartUp(string dataDir, Network network, bool overwrite = OverwriteFilesByDefault)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
