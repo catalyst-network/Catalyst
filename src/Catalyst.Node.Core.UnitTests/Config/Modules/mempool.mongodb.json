@@ -1,4 +1,4 @@
-﻿{
+{
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
@@ -9,14 +9,6 @@
         }
       ]
     },
-    //{
-    //  "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Node.Core.Modules.Mempool.StTxModel, Catalyst.Node.Core], [Catalyst.Protocols.Transaction.Key, Catalyst.Protocol]], SharpRepository.InMemoryRepository",
-    //  "services": [
-    //    {
-    //      "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Node.Core.Modules.Mempool.StTxModel, Catalyst.Node.Core], [Catalyst.Protocols.Transaction.Key, Catalyst.Protocol]], SharpRepository.Repository"
-    //    }
-    //  ]
-    //},
     {
       "type": "Catalyst.Node.Core.Modules.Mempool.Mempool",
       "services": [

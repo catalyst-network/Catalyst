@@ -24,4 +24,12 @@
     <Folder Include="Helpers\Util\" />
     <Folder Include="Modules\Dfs\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Config\Modules\mempool.inmemory.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Config\Modules\mempool.mongodb.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
