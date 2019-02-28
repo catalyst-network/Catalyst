@@ -6,30 +6,56 @@ namespace Catalyst.Node.Common.Cryptography
     /// <summary>
     /// Provides NSec crypto operations on wrapped keys.
     /// </summary>
-    public sealed class NSecCryptoContext : ICryptoContext{
+    public sealed class NSecCryptoContext : ICryptoContext
+    {
+        private static readonly SignatureAlgorithm _algorithm = SignatureAlgorithm.Ed25519;
+        private static readonly KeyBlobFormat _publicKeyFormat = KeyBlobFormat.PkixPublicKey;
+        private static readonly KeyBlobFormat _privateKeyFormat = KeyBlobFormat.PkixPrivateKey;
 
-        private readonly SignatureAlgorithm _algorithm = SignatureAlgorithm.Ed25519;
-
-        public IKey GenerateKey(){
-            Key key = Key.Create(_algorithm);
-            return new NSecKeyWrapper(key);
+        public IPrivateKey GeneratePrivateKey(){
+            //Newly generated private keys can be exported once.
+            var keyParams = new KeyCreationParameters{ExportPolicy = KeyExportPolicies.AllowPlaintextArchiving}; 
+            var key = Key.Create(_algorithm, keyParams);
+            return new NSecPrivateKeyWrapper(key);
         }
 
         public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob)
         {
-            bool imported = PublicKey.TryImport(_algorithm, blob,
-                KeyBlobFormat.PkixPublicKey, out PublicKey nsecKey);
-            return imported ? new NSecPublicKeyWrapper(nsecKey) : null;
+            var nSecKey = PublicKey.Import(_algorithm, blob, _publicKeyFormat);
+            return new NSecPublicKeyWrapper(nSecKey);
         }
         
+        /// <summary>
+        /// Exports public key. Can throw unhandled exception or return null.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public byte[] ExportPublicKey(IPublicKey key)
         {
-            return key?.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey);  
+            return key?.GetNSecFormatPublicKey().Export(_publicKeyFormat);  
         }
 
-        public byte[] Sign (IKey key, ReadOnlySpan<byte> data)
+        public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob)
         {
-            Key realKey = key.GetNSecFormatKey();
+            var nSecKey = Key.Import(_algorithm, blob, _privateKeyFormat);
+            return new NSecPrivateKeyWrapper(nSecKey);
+        }
+
+        /// <summary>
+        /// Exports private key. Can throw unhandled exception or return null.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public byte[] ExportPrivateKey(IPrivateKey key)
+        {
+            return key?.GetNSecFormatPrivateKey().Export(_privateKeyFormat);  
+
+
+        }
+
+        public byte[] Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
+        {
+            Key realKey = privateKey.GetNSecFormatPrivateKey();
             return _algorithm.Sign(realKey, data);
         }
 
@@ -38,7 +64,11 @@ namespace Catalyst.Node.Common.Cryptography
             PublicKey realKey = key.GetNSecFormatPublicKey();
             return _algorithm.Verify(realKey, data, signature);
         }
-        
-        
+
+        public IPublicKey GetPublicKey(IPrivateKey key)
+        {
+            PublicKey realPublicKey = key.GetNSecFormatPublicKey();
+            return new NSecPublicKeyWrapper(realPublicKey);
+        }
     }
 }
