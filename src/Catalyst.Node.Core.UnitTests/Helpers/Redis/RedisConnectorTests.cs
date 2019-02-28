@@ -26,7 +26,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Redis
 
         private static readonly IPEndPoint EndPoint = EndpointBuilder.BuildNewEndPoint("127.0.0.1", 6379);
 
-        private readonly IConnectionMultiplexer _connectionMultiplexer;
         private readonly RedisConnector _connector;
         private readonly IDatabase _database;
 

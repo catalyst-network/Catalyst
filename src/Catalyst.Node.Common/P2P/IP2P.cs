@@ -4,17 +4,29 @@ namespace Catalyst.Node.Common.P2P
 {
     public interface IP2P
     {
+        /// <summary>
+        /// The peer's identifier on the network.
+        /// <see href="https://github.com/catalyst-network/protcol-blueprint/blob/master/PeerProtocol.md#peer-identifiers"/>
+        /// </summary>
+        IPeerIdentifier Identifier { get; }
+
+        /// <summary>
+        /// All settings needed by the peer component to connect and act on the network.
+        /// </summary>
         IPeerSettings Settings { get; }
 
         /// <summary>
+        /// Ping the peer identified by <see cref="targetNode"/> to check its status on the network.
         /// </summary>
-        /// <returns></returns>
-        bool Ping(IPeerIdentifier queryingNode);
+        /// <param name="targetNode">Identifier of the node supposed to reply to the ping request.</param>
+        /// <returns>true if the target replied successfully</returns>
+        bool Ping(IPeerIdentifier targetNode);
 
         /// <summary>
+        /// Request the node at <see cref="targetNode"/> for a list of peers.
         /// </summary>
-        /// <param name="queryingNode"></param>
-        /// <param name="targetNode"></param>
+        /// <param name="queryingNode">Identifier of the node making the request.</param>
+        /// <param name="targetNode">Identifier of the node supposed to reply to the request with a list of peers.</param>
         /// <returns></returns>
         List<IPeerIdentifier> FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode);
 
@@ -31,15 +43,15 @@ namespace Catalyst.Node.Common.P2P
         bool Store(string k, byte[] v);
 
         /// <summary>
-        ///     If a corresponding value is present on the queried node, the associated data is returned.
-        ///     Otherwise the return value is the return equivalent to FindNode()
+        /// If a corresponding value is present on the queried node, the associated data is returned.
+        /// Otherwise the return value is the return equivalent to FindNode()
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
         dynamic FindValue(string k);
 
         /// <summary>
-        ///     Reflects back current nodes peer bucket
+        /// Reflects back current nodes peer bucket
         /// </summary>
         /// <param name="queryingNode"></param>
         /// <returns></returns>

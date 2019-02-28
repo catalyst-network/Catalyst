@@ -22,7 +22,7 @@ namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
     /// </summary>
-    public class ConnectionManager : IDisposable
+    public class ConnectionManager : IDisposable, IConnectionManager
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

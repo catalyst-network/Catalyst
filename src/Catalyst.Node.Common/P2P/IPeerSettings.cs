@@ -5,7 +5,7 @@ namespace Catalyst.Node.Common.P2P
 {
     public interface IPeerSettings
     {
-        string Network { get; }
+        Network Network { get; }
         string PayoutAddress { get; }
         string PublicKey { get; }
         bool Announce { get; }
@@ -15,8 +15,9 @@ namespace Catalyst.Node.Common.P2P
         bool AcceptInvalidCerts { get; }
         ushort MaxConnections { get; }
         int Port { get; }
-        int Magic { get; }
         IPAddress BindAddress { get; }
+        IPEndPoint EndPoint { get; }
+        int Magic { get; }
         string PfxFileName { get; }
         List<string> KnownNodes { get; }
         List<string> SeedServers { get; }

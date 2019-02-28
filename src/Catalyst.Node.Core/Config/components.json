@@ -2,12 +2,24 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "Catalyst.Node.Core.Components.Redis.RedisStore, Catalyst.Node.Core",
+      "type": "Catalyst.Node.Core.Components.Redis.RedisStore",
       "services": [
         {
           "type": "Catalyst.Node.Common.IKeyValueStore, Catalyst.Node.Common"
         }
       ]
+    },
+    {
+      "type": "Catalyst.Node.Core.CatalystNode",
+      "services": {
+        "type": "Catalyst.Node.Common.ICatalyst, Catalyst.Node.Common"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Helpers.Cryptography.CertificateStore",
+      "services": {
+        "type": "Catalyst.Node.Core.Helpers.Cryptography.ICertificateStore, Catalyst.Node.Common"
+      }
     }
   ],
   //simply comment modules that you don't need.

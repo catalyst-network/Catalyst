@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Loader;
-using System.Threading;
 using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
@@ -12,8 +10,6 @@ using Catalyst.Node.Common.Modules.Gossip;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Shell;
-using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -81,8 +77,9 @@ namespace Catalyst.Node.Core
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var serviceProvider = new AutofacServiceProvider(scope);
-                    var gossipSingleton = serviceProvider.GetService<IGossip>();
-                    Log.Logger.Information("Gossip singleton is named {0}", gossipSingleton.Name);
+                    var containedNode = container.Resolve<CatalystNode>();
+                    var node = serviceProvider.GetService<CatalystNode>();
+                    //Log.Logger.Information("Gossip singleton is named {0}", gossipSingleton.Name);
                 }
                 Environment.ExitCode = 0;
             }

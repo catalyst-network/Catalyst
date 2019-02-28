@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
-using Catalyst.Node.Common;
-using Catalyst.Node.Common.Cryptography;
+using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Modules.Consensus;
 using Catalyst.Node.Common.Modules.Contract;
 using Catalyst.Node.Common.Modules.Dfs;
@@ -24,7 +20,7 @@ using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core
 {
-    public class CatalystNode : IDisposable
+    public class CatalystNode : IDisposable, ICatalystNode
     {
         private readonly IP2P _p2p;
         private readonly IConsensus _consensus;
@@ -34,13 +30,10 @@ namespace Catalyst.Node.Core
         private readonly IMempool _mempool;
         private readonly IContract _contract;
         private readonly IGossip _gossip;
-
-        private bool _disposed;
         private readonly PeerIdentifier _peerIdentifier;
 
-        /// <summary>
-        ///     Instantiates basic CatalystSystem.
-        /// </summary>
+        private bool _disposed;
+
         public CatalystNode(IP2P p2p,
             ICertificateStore certificateStore,
             IConsensus consensus, 
@@ -61,8 +54,6 @@ namespace Catalyst.Node.Core
             _gossip = gossip;
 
             var dns = new Dns(p2p.Settings.DnsServer);
-            var ipEndPoint = new IPEndPoint(p2p.Settings.BindAddress, p2p.Settings.Port);
-            _peerIdentifier = new PeerIdentifier(Encoding.UTF8.GetBytes(p2p.Settings.PublicKey), ipEndPoint);
             ConnectionManager = new ConnectionManager(certificateStore.ReadOrCreateCertificateFile(p2p.Settings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
@@ -72,54 +63,19 @@ namespace Catalyst.Node.Core
 
             Task.Run(async () =>
             {
-                await ConnectionManager.InboundConnectionListener(ipEndPoint);
+                await ConnectionManager.InboundConnectionListener(p2p.Settings.EndPoint);
             });
 
             ConnectionManager.AnnounceNode += Announce;
         }
 
-        private static CatalystNode Instance { get; set; }
-        private ConnectionManager ConnectionManager { get; }
+        public ConnectionManager ConnectionManager { get; }
 
-        
-        /// <summary>
-        ///     If a corresponding value is present on the queried node, the associated data is returned.
-        ///     Otherwise the return value is the return equivalent to FindNode()
-        /// </summary>
-        /// <param name="k"></param>
-        /// <param name="queryingNode"></param>
-        /// <param name="targetNode"></param>
-        /// <returns></returns>
-        public List<IPeerIdentifier> FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
-        {
-            // @TODO just to satisfy the DHT interface, need to implement
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public List<IPeerIdentifier> GetPeers(IPeerIdentifier queryingNode)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="queryingNode"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public List<IPeerIdentifier> PeerExchange(IPeerIdentifier queryingNode)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        private void Announce(object sender, AnnounceNodeEventArgs e)
+        public void Announce(object sender, AnnounceNodeEventArgs e)
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(e, nameof(e)).NotNull();
