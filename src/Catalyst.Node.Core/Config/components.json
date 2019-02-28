@@ -18,10 +18,42 @@
       ]
     },
     {
+      "type": "Catalyst.Node.Core.P2P.PeerSettings",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.P2P.IPeerSettings, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.P2P.P2PService",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.P2P.IP2P, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
       "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
       "services": [
         {
           "type": "Catalyst.Node.Common.Helpers.Cryptography.ICertificateStore, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Helpers.Cryptography.IPasswordReader, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.Helpers.FileSystem",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.IFileSystem, Catalyst.Node.Common"
         }
       ]
     }

@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.P2P;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Node.Core.P2P
 {
@@ -14,7 +15,7 @@ namespace Catalyst.Node.Core.P2P
             Settings = settings;
 
             var ipEndPoint = new IPEndPoint(Settings.BindAddress, Settings.Port);
-            Identifier = new PeerIdentifier(Encoding.UTF8.GetBytes(Settings.PublicKey), ipEndPoint);
+            Identifier = new PeerIdentifier(Settings.PublicKey.HexToByteArray(), ipEndPoint);
         }
 
         public IPeerIdentifier Identifier { get; }

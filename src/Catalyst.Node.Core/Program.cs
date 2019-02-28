@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
+using Catalyst.Node.Common;
 using Catalyst.Node.Common.Modules.Gossip;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Config;
@@ -40,7 +41,7 @@ namespace Catalyst.Node.Core
                 //AssemblyLoadContext.Default.Resolving += TryLoadAssemblyFromExecutionDirectory;
 
                 //TODO: allow targeting different folder using CommandLine
-                var targetConfigFolder = new Fs().GetCatalystHomeDir().FullName;
+                var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
                 var network = Network.Dev;
 
                 var configCopier = new ConfigCopier();
@@ -71,14 +72,15 @@ namespace Catalyst.Node.Core
                 var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
+                containerBuilder.RegisterInstance<IConfigurationRoot>(config);
+
                 var container = containerBuilder.Build();
                 using (var scope = container.BeginLifetimeScope(LifetimeTag, 
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var serviceProvider = new AutofacServiceProvider(scope);
-                    var containedNode = container.Resolve<CatalystNode>();
-                    var node = serviceProvider.GetService<CatalystNode>();
+                    var node = container.Resolve<ICatalystNode>();
                     //Log.Logger.Information("Gossip singleton is named {0}", gossipSingleton.Name);
                 }
                 Environment.ExitCode = 0;

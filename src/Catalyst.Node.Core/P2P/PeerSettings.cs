@@ -18,9 +18,10 @@ namespace Catalyst.Node.Core.P2P
         ///     Set attributes
         /// </summary>
         /// <param name="section"></param>
-        protected internal PeerSettings(IConfiguration section)
+        public PeerSettings(IConfigurationRoot rootSection)
         {
-            Guard.Argument(section, nameof(section)).NotNull();
+            Guard.Argument(rootSection, nameof(rootSection)).NotNull();
+            var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
             PublicKey = section.GetSection("PublicKey").Value;
             Port = int.Parse(section.GetSection("Port").Value);
