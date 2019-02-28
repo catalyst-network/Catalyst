@@ -12,6 +12,7 @@ using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Protocols.Transaction;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using NSec.Cryptography;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
@@ -28,12 +29,26 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
         public MempoolIntegrationTests(ITestOutputHelper output) : base(output) {}
 
-        [Theory]
-        [InlineData("mempool.inmemory.json")]
-        //TODO: this needs to be a different kind of InMemory repo to keep pipelines simple
-        //[InlineData("mempool.mongodb.json")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Mempool_with_InMemoryRepo_can_save_and_retrieve(string mempoolModuleFile)
+        public async Task Mempool_with_XmlRepo_can_save_and_retrieve()
+        {
+            var mempoolConfigFile = "mempool.xml.json";   
+            var resultFile = await PointXmlConfigToLocalTestFolder(mempoolConfigFile);
+            await Mempool_can_save_and_retrieve(new FileInfo(resultFile));
+        }
+
+
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task Mempool_with_InMemoryRepo_can_save_and_retrieve()
+        {
+            var fi = new FileInfo(Path.Combine(Constants.ConfigSubFolder, Constants.ModulesSubFolder, "mempool.inmemory.json"));
+            await Mempool_can_save_and_retrieve(fi);
+        }
+
+        private async Task Mempool_can_save_and_retrieve(FileInfo mempoolModuleFile)
         {
             var alteredComponentsFile = await CreateAlteredConfigForMempool(mempoolModuleFile);
 
@@ -60,7 +75,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                 retrievedTransaction.Should().Be(transactionToSave.Transaction);
                 retrievedTransaction.Signature.Should().Be(guid);
             }
-
         }
 
         private StTxModel GetStTxModel(uint amount = 1, string signature = "signature") {
@@ -91,15 +105,25 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             _containerBuilder.RegisterSharpRepository(repoFactory);
         }
 
-        private async Task<string> CreateAlteredConfigForMempool(string mempoolConfigFile)
+        private async Task<string> CreateAlteredConfigForMempool(FileInfo mempoolConfigFile)
         {
-            var originalContent = await 
-                File.ReadAllTextAsync(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile));
+            var originalContent = await File.ReadAllTextAsync(mempoolConfigFile.FullName);
             var newContent =
-                originalContent.Replace("mempool.json", mempoolConfigFile);
-            var newJsonPath = Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, $"components.{mempoolConfigFile}");
+                originalContent.Replace("\"Config/Modules/mempool.json\"", JsonConvert.ToString(mempoolConfigFile.FullName));
+            var newJsonPath = Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, $"components.{mempoolConfigFile.Name}");
             File.WriteAllText(newJsonPath, newContent);
             return newJsonPath;
+        }
+
+        private async Task<string> PointXmlConfigToLocalTestFolder(string mempoolConfigFile)
+        {
+            var originalContent = await
+                File.ReadAllTextAsync(Path.Combine(Constants.ConfigSubFolder, Constants.ModulesSubFolder, mempoolConfigFile));
+            var newContent =
+                originalContent.Replace("[@replace-this@]", _fileSystem.GetCatalystHomeDir().Name);
+            var jsonTestingFile = Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, mempoolConfigFile);
+            File.WriteAllText(jsonTestingFile, newContent);
+            return jsonTestingFile;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Catalyst.Node.Common.P2P;
@@ -14,19 +13,19 @@ namespace Catalyst.Node.Core.UnitTest.Config
     public class ConfigCopierTests : FileSystemBasedTest
     {
         private ConfigCopier _configCopier;
-        public static List<object[]> ModulesFiles;
+        public static List<object[]> ConfigFiles;
         static ConfigCopierTests()
         {
-            ModulesFiles = Constants.AllModuleFiles.Select(m => new object[] { m, Network.Test }).ToList();
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Main), Network.Main });
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Test), Network.Test });
-            ModulesFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Dev), Network.Dev });
-            ModulesFiles.Add(new object[] { Constants.SerilogJsonConfigFile, Network.Dev });
-            ModulesFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, Network.Dev });
+            ConfigFiles = Constants.AllModuleFiles.Select(m => new object[] { m, Network.Test }).ToList();
+            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Main), Network.Main });
+            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Test), Network.Test });
+            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Dev), Network.Dev });
+            ConfigFiles.Add(new object[] { Constants.SerilogJsonConfigFile, Network.Dev });
+            ConfigFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, Network.Dev });
         }
 
 
-    public ConfigCopierTests(ITestOutputHelper output) : base(output)
+        public ConfigCopierTests(ITestOutputHelper output) : base(output)
         {
             _configCopier = new ConfigCopier();
         }
@@ -49,9 +48,9 @@ namespace Catalyst.Node.Core.UnitTest.Config
         }
 
         [Theory]
-        [MemberData(nameof(ModulesFiles))]
+        [MemberData(nameof(ConfigFiles))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Not_Overwrite_A_Module_File(string moduleFileName, Network network)
+        public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName, Network network)
         {
             RunConfigStartUp_Should_Not_Overwrite_Existing_Files(moduleFileName, network);
         }

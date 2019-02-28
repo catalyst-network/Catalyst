@@ -38,12 +38,12 @@ namespace Catalyst.Node.Core
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool _disposed;
-        private PeerIdentifier _peerIdentifier;
+        private readonly PeerIdentifier _peerIdentifier;
 
         /// <summary>
         ///     Instantiates basic CatalystSystem.
         /// </summary>
-        private CatalystNode(IP2P p2p,
+        public CatalystNode(IP2P p2p,
             ICertificateStore certificateStore,
             IConsensus consensus, 
             IDfs dfs,
@@ -151,7 +151,6 @@ namespace Catalyst.Node.Core
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

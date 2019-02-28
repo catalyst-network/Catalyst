@@ -5,12 +5,12 @@ namespace Catalyst.Node.Common.Modules
 {
     public class ModuleName : Enumeration
     {
-        public static ModuleName Consensus = new ConsensusType();
-        public static ModuleName Contract = new ContractType();
-        public static ModuleName Dfs = new DfsType();
-        public static ModuleName Gossip = new GossipType();
-        public static ModuleName Ledger = new LedgerType();
-        public static ModuleName Mempool = new MempoolType();
+        public static readonly ModuleName Consensus = new ConsensusType();
+        public static readonly ModuleName Contract = new ContractType();
+        public static readonly ModuleName Dfs = new DfsType();
+        public static readonly ModuleName Gossip = new GossipType();
+        public static readonly ModuleName Ledger = new LedgerType();
+        public static readonly ModuleName Mempool = new MempoolType();
 
         protected ModuleName(int id, string name) : base(id, name) {}
 

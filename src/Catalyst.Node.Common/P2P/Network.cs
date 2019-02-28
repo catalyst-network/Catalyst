@@ -4,9 +4,9 @@ namespace Catalyst.Node.Common.P2P
 {
     public abstract class Network : Enumeration
     {
-        public static Network Main = new MainNet();
-        public static Network Test = new TestNet();
-        public static Network Dev = new DevNet();
+        public static readonly Network Main = new MainNet();
+        public static readonly Network Test = new TestNet();
+        public static readonly Network Dev = new DevNet();
 
         protected Network(int id, string name) : base(id, name) {}
 
