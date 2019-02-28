@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Cryptography;
@@ -35,7 +34,6 @@ namespace Catalyst.Node.Core
         private readonly IMempool _mempool;
         private readonly IContract _contract;
         private readonly IGossip _gossip;
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool _disposed;
         private readonly PeerIdentifier _peerIdentifier;
@@ -65,7 +63,7 @@ namespace Catalyst.Node.Core
             var dns = new Dns(p2p.Settings.DnsServer);
             var ipEndPoint = new IPEndPoint(p2p.Settings.BindAddress, p2p.Settings.Port);
             _peerIdentifier = new PeerIdentifier(Encoding.UTF8.GetBytes(p2p.Settings.PublicKey), ipEndPoint);
-            ConnectionManager = new ConnectionManager(certificateStore.GetCertificateFromFile(p2p.Settings.PfxFileName),
+            ConnectionManager = new ConnectionManager(certificateStore.ReadOrCreateCertificateFile(p2p.Settings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
                 //Todo: use NSec here to convert key to bytes
@@ -130,9 +128,9 @@ namespace Catalyst.Node.Core
             var nwStream = client.GetStream();
             var network = new byte[1];
             network[0] = 0x01;
-            Logger.Debug(string.Join(" ", network));
+            _logger.Debug(string.Join(" ", network));
             var announcePackage = ByteUtil.Merge(network, _peerIdentifier.Id);
-            Logger.Debug(string.Join(" ", announcePackage));
+            _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
         }
@@ -141,9 +139,9 @@ namespace Catalyst.Node.Core
         {
             if (disposing && !_disposed)
             {
-                Logger.Verbose("Disposing of CatalystNode");
+                _logger.Verbose("Disposing of CatalystNode");
                 ConnectionManager?.Dispose();
-                Logger.Verbose("CatalystNode disposed");
+                _logger.Verbose("CatalystNode disposed");
                 _disposed = true;
             }
         }

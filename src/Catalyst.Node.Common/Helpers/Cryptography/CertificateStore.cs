@@ -17,15 +17,15 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
 
-        public IPasswordReader PasswordReader { get; }
+        private readonly IPasswordReader _passwordReader;
 
         public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader)
         {
             _storageFolder = fileSystem.GetCatalystHomeDir();
-            PasswordReader = passwordReader;
+            _passwordReader = passwordReader;
         }
 
-        public X509Certificate2 GetCertificateFromFile(string pfxFilePath)
+        public X509Certificate2 ReadOrCreateCertificateFile(string pfxFilePath)
         {
             var foundCertificate = TryGet(pfxFilePath, out var certificate);
             if (foundCertificate) return certificate;
@@ -42,11 +42,11 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             return certificate;
         }
 
-        public X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
+        private X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
         {
             var promptMessage = "Catalyst Node needs to create an SSL certificate." +
                                 " Please enter a password to encrypt the certificate on disk:";
-            using (var password = PasswordReader.ReadSecurePassword(promptMessage))
+            using (var password = _passwordReader.ReadSecurePassword(promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -92,7 +92,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                 {
                     try
                     {
-                        using (var passwordFromConsole = PasswordReader.ReadSecurePassword(passwordPromptMessage))
+                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             break;

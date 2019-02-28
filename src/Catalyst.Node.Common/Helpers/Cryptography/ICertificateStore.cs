@@ -5,8 +5,6 @@ namespace Catalyst.Node.Common.Cryptography
 {
     public interface ICertificateStore
     {
-        IPasswordReader PasswordReader { get; }
-        X509Certificate2 GetCertificateFromFile(string fileName);
-        X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = null);
+        X509Certificate2 ReadOrCreateCertificateFile(string fileName);
     }
 }

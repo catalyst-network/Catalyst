@@ -46,6 +46,19 @@ namespace Catalyst.Node.Common.Helpers
             return typeMatches && valueMatches;
         }
 
+        protected bool Equals(Enumeration other)
+        {
+            return string.Equals(Name, other.Name) && Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ Id;
+            }
+        }
+
         public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
     }
 }

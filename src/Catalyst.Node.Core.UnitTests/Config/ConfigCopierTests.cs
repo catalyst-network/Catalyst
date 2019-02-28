@@ -12,8 +12,8 @@ namespace Catalyst.Node.Core.UnitTest.Config
 {
     public class ConfigCopierTests : FileSystemBasedTest
     {
-        private ConfigCopier _configCopier;
-        public static List<object[]> ConfigFiles;
+        private readonly ConfigCopier _configCopier;
+        public static readonly List<object[]> ConfigFiles;
         static ConfigCopierTests()
         {
             ConfigFiles = Constants.AllModuleFiles.Select(m => new object[] { m, Network.Test }).ToList();

@@ -9,11 +9,11 @@ using FluentAssertions;
 using StackExchange.Redis;
 using Xunit;
 
-namespace Catalyst.Node.UnitTests.Helpers.Redis
+namespace Catalyst.Node.Core.UnitTest.Helpers.Redis
 {
-    public class UT_RedisConnector : IDisposable
+    public class RedisConnectorTests : IDisposable
     {
-        public UT_RedisConnector()
+        public RedisConnectorTests()
         {
             _connector = new RedisConnector(EndPoint.ToString());
             _database = _connector.Database;
