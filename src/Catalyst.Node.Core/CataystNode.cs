@@ -31,7 +31,6 @@ namespace Catalyst.Node.Core
         private readonly IMempool _mempool;
         private readonly IContract _contract;
         private readonly IGossip _gossip;
-        private readonly PeerIdentifier _peerIdentifier;
 
         private bool _disposed;
 
@@ -58,8 +57,7 @@ namespace Catalyst.Node.Core
             ConnectionManager = new ConnectionManager(certificateStore.ReadOrCreateCertificateFile(p2p.Settings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),
-                //Todo: use NSec here to convert key to bytes
-                _peerIdentifier
+                _p2p.Identifier
             );
 
             Task.Run(async () =>
@@ -71,7 +69,6 @@ namespace Catalyst.Node.Core
         }
 
         public ConnectionManager ConnectionManager { get; }
-
 
         /// <summary>
         /// </summary>
@@ -86,7 +83,7 @@ namespace Catalyst.Node.Core
             var network = new byte[1];
             network[0] = 0x01;
             _logger.Debug(string.Join(" ", network));
-            var announcePackage = ByteUtil.Merge(network, _peerIdentifier.Id);
+            var announcePackage = ByteUtil.Merge(network, _p2p.Identifier.Id);
             _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();

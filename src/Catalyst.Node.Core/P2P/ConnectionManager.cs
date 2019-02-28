@@ -6,6 +6,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Node.Common;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.IO;
 using Catalyst.Node.Core.Helpers.Network;
@@ -38,7 +39,7 @@ namespace Catalyst.Node.Core.P2P
         public ConnectionManager(X509Certificate2 sslCertificate,
             PeerList peerList,
             MessageQueueManager messageQueueManager,
-            PeerIdentifier nodeIdentity)
+            IPeerIdentifier nodeIdentity)
         {
             PeerList = peerList;
             _activeConnections = 0;
@@ -54,7 +55,7 @@ namespace Catalyst.Node.Core.P2P
         private TcpListener Listener { get; set; }
         private CancellationToken Token { get; set; }
         private bool AcceptInvalidCerts { get; }
-        private PeerIdentifier NodeIdentity { get; }
+        private IPeerIdentifier NodeIdentity { get; }
         private X509Certificate2 SslCertificate { get; }
         private MessageQueueManager MessageQueueManager { get; }
         private CancellationTokenSource CancellationToken { get; set; }

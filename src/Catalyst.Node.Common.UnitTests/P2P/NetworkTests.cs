@@ -21,7 +21,7 @@ namespace Catalyst.Node.Common.UnitTests.P2P
 
         [Theory]
         [MemberData(nameof(NetworksAndExpectations))]
-        public void Network_can_be_parsed_from_string(string value, Network expectedNetwork)
+        public static void Network_can_be_parsed_from_string(string value, Network expectedNetwork)
         {
             var parsed = Enumeration.Parse<Network>(value);
             parsed.Should().Be(expectedNetwork);

@@ -59,8 +59,6 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
             
             IPublicKey publicKey = _context.ImportPublicKey(blob);
             publicKey.Should().NotBeNull("public key should be importable from a valid blob");
-
-            var keyAsString = blob.ToHex();
         }
         
         [Fact]
