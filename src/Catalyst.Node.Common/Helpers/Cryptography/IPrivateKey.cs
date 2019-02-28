@@ -5,8 +5,8 @@ namespace Catalyst.Node.Common.Cryptography
     /// <summary>
     /// Wrapper for private key.
     /// </summary>
-    public interface IKey : IPublicKey{
+    public interface IPrivateKey : IPublicKey{
         
-        Key GetNSecFormatKey();
+        Key GetNSecFormatPrivateKey();
     }
 }
