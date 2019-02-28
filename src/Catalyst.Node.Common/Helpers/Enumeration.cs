@@ -9,7 +9,7 @@ namespace Catalyst.Node.Common.Helpers
     /// <summary>
     /// <see href="https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/enumeration-classes-over-enum-types"/>
     /// </summary>
-    public abstract class Enumeration : IComparable
+    public abstract class Enumeration : IEquatable<Enumeration>
     {
         public string Name { get; }
         public int Id { get; }
@@ -18,6 +18,7 @@ namespace Catalyst.Node.Common.Helpers
 
         protected Enumeration(int id, string name)
         {
+            Guard.Argument(name, nameof(name)).NotNull();
             Id = id;
             Name = name;
         }
@@ -53,32 +54,20 @@ namespace Catalyst.Node.Common.Helpers
             return fields.Select(f => f.GetValue(null)).Cast<T>();
         }
 
+        #region Equality members
+        public bool Equals(Enumeration other) { throw new NotImplementedException(); }
+
         public override bool Equals(object obj)
         {
-            var otherValue = obj as Enumeration;
-
-            if (otherValue == null)
-                return false;
-
-            var typeMatches = GetType().Equals(obj.GetType());
-            var valueMatches = Id.Equals(otherValue.Id);
-
-            return typeMatches && valueMatches;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Enumeration)obj);
         }
 
-        protected bool Equals(Enumeration other)
-        {
-            return string.Equals(Name, other.Name) && Id == other.Id;
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ Id;
-            }
-        }
-
-        public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
+        public override int GetHashCode() { throw new NotImplementedException(); }
+        public static bool operator ==(Enumeration left, Enumeration right) { return Equals(left, right); }
+        public static bool operator !=(Enumeration left, Enumeration right) { return !Equals(left, right); }
+        #endregion
     }
 }

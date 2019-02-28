@@ -11,15 +11,19 @@
     },
     {
       "type": "Catalyst.Node.Core.CatalystNode",
-      "services": {
-        "type": "Catalyst.Node.Common.ICatalyst, Catalyst.Node.Common"
-      }
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.ICatalystNode, Catalyst.Node.Common"
+        }
+      ]
     },
     {
-      "type": "Catalyst.Node.Core.Helpers.Cryptography.CertificateStore",
-      "services": {
-        "type": "Catalyst.Node.Core.Helpers.Cryptography.ICertificateStore, Catalyst.Node.Common"
-      }
+      "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Helpers.Cryptography.ICertificateStore, Catalyst.Node.Common"
+        }
+      ]
     }
   ],
   //simply comment modules that you don't need.

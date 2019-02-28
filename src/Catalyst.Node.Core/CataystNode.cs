@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Catalyst.Node.Common;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Modules.Consensus;
 using Catalyst.Node.Common.Modules.Contract;
@@ -12,8 +13,8 @@ using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.Modules.P2P.Messages;
 using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.P2P.Messages;
 using Dawn;
 using Serilog;
 using Dns = Catalyst.Node.Core.Helpers.Network.Dns;

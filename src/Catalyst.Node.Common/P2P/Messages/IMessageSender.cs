@@ -1,6 +1,6 @@
 using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Modules.P2P.Messages
+namespace Catalyst.Node.Common.P2P.Messages
 {
     public interface IMessageSender
     {

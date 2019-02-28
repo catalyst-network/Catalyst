@@ -12,8 +12,7 @@ using Catalyst.Node.Core.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Streams;
 using Catalyst.Node.Core.Helpers.Util;
 using Catalyst.Node.Core.Listeners;
-using Catalyst.Node.Core.Messages;
-using Catalyst.Node.Core.Modules.P2P.Messages;
+using Catalyst.Node.Core.P2P.Messages;
 using Catalyst.Protocol.IPPN;
 using Dawn;
 using Org.BouncyCastle.Security;
@@ -22,7 +21,7 @@ namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
     /// </summary>
-    public class ConnectionManager : IDisposable, IConnectionManager
+    public class ConnectionManager : IDisposable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

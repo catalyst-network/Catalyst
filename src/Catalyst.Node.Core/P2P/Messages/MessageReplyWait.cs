@@ -1,8 +1,7 @@
 using System;
 using Catalyst.Node.Core.Helpers.Util;
-using Catalyst.Node.Core.P2P.Messages;
 
-namespace Catalyst.Node.Core.Messages
+namespace Catalyst.Node.Core.P2P.Messages
 {
     public class MessageReplyWait
     {

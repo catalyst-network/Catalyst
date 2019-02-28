@@ -1,7 +1,6 @@
 using System;
-using Catalyst.Node.Common.Cryptography;
 
-namespace Catalyst.Node.Common.Cryptography
+namespace Catalyst.Node.Common.Helpers.Cryptography
 {
     public interface ICryptoContext{
         

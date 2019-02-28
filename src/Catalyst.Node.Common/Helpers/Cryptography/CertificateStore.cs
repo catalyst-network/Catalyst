@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Cryptography;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Cryptography
