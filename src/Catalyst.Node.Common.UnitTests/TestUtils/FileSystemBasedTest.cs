@@ -56,7 +56,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         {
             if (disposing)
             {
-                var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
+                var regex = new Regex(_currentTestName + @"_([\d]{10})_(?<timestamp>[\d]{14})");
                 var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
                    .Where(d => DirectoryIsForATestRunOlderThanAMinute(d.Name, regex))
                    .ToList();
