@@ -7,7 +7,6 @@ using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common;
-using Catalyst.Node.Common.Modules.Gossip;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Config;
 using Catalyst.Node.Core.Helpers;
@@ -81,7 +80,6 @@ namespace Catalyst.Node.Core
                 {
                     var serviceProvider = new AutofacServiceProvider(scope);
                     var node = container.Resolve<ICatalystNode>();
-                    //Log.Logger.Information("Gossip singleton is named {0}", gossipSingleton.Name);
                 }
                 Environment.ExitCode = 0;
             }
