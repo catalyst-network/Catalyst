@@ -22,11 +22,10 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         protected readonly string _currentTestName;
         protected readonly ITestOutputHelper _output;
         protected readonly IFileSystem _fileSystem;
-        private DirectoryInfo _testDirectory;
+        private readonly DirectoryInfo _testDirectory;
 
-        public FileSystemBasedTest(ITestOutputHelper output)
+        protected FileSystemBasedTest(ITestOutputHelper output)
         {
-            var stacktrace = Environment.StackTrace;
             _output = output;
             _currentTest = (_output?.GetType()
                .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)

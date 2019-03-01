@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Catalyst.Node.Common.UnitTests.P2P
 {
-    public class NetworkTests
+    public static class NetworkTests
     {
         public static List<object[]> NetworksAndExpectations { get; set; }
 
