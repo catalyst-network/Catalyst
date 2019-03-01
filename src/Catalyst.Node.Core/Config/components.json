@@ -2,10 +2,58 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "Catalyst.Node.Core.Components.Redis.RedisStore, Catalyst.Node.Core",
+      "type": "Catalyst.Node.Core.Components.Redis.RedisStore",
       "services": [
         {
           "type": "Catalyst.Node.Common.IKeyValueStore, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.CatalystNode",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.ICatalystNode, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.P2P.PeerSettings",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.P2P.IPeerSettings, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.P2P.P2PService",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.P2P.IP2P, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Helpers.Cryptography.ICertificateStore, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Helpers.Cryptography.IPasswordReader, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.Helpers.FileSystem",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.IFileSystem, Catalyst.Node.Common"
         }
       ]
     }

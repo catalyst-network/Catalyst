@@ -5,7 +5,7 @@ using Catalyst.Node.Common;
 
 namespace Catalyst.Node.Core.Helpers
 {
-    public class Fs : IFileSystem
+    public class FileSystem : IFileSystem
     {
         private static string GetUserHomeDir()
         {

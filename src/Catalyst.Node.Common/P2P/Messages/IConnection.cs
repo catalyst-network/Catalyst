@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 
-namespace Catalyst.Node.Common.Modules.P2P.Messages
+namespace Catalyst.Node.Common.P2P.Messages
 {
     public interface IConnection : IDisposable
     {

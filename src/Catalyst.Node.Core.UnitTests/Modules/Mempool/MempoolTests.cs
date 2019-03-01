@@ -30,13 +30,13 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
             _key = new Key {HashedSignature = "hashed_signature"};
             _transaction = new StTx
-                           {
-                               Amount = 1,
-                               Signature = "signature",
-                               AddressDest = "address_dest",
-                               AddressSource = "address_source",
-                               Updated = new StTx.Types.Timestamp {Nanos = 100, Seconds = 30}
-                           };
+                   {
+                       Amount = 1,
+                       Signature = "signature",
+                       AddressDest = "address_dest",
+                       AddressSource = "address_source",
+                       Updated = new StTx.Types.Timestamp {Nanos = 100, Seconds = 30}
+                   };
         }
 
         private static void AddKeyValueStoreEntryExpectation(Key key, StTx tx, IRepository<StTxModel, Key> keyValueStore)

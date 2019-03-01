@@ -37,7 +37,7 @@ namespace Catalyst.Node.Core.P2P
             Id = id;
         }
 
-        public byte[] Id { set; get; }
+        public byte[] Id { get; }
 
         /// <summary>
         ///     method to build our peerId
@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="endPoint"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static PeerIdentifier BuildPeerId(byte[] publicKey, IPEndPoint endPoint)
+        public PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
         {
             Guard.Argument(endPoint, nameof(endPoint)).NotNull();
             Logger.Information(publicKey.Length.ToString());
@@ -70,7 +70,12 @@ namespace Catalyst.Node.Core.P2P
             // copy client public key chunk
             Buffer.BlockCopy(publicKey, 0, peerId, 22, 20);
 
-            return new PeerIdentifier(peerId);
+            if (!ValidatePeerId(peerId))
+            {
+                throw new ArgumentException("Peer identifier is invalid.");
+            }
+
+            Id = peerId;
         }
 
         /// <summary>
