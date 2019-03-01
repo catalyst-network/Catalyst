@@ -13,17 +13,17 @@ namespace Catalyst.Node.Core.UnitTest.Config
     public class ConfigCopierTests : FileSystemBasedTest
     {
         private readonly ConfigCopier _configCopier;
-        public static readonly List<object[]> ConfigFiles;
-        static ConfigCopierTests()
+        private class ConfigFilesOverwriteTestData : TheoryData<string, Network>
         {
-            ConfigFiles = Constants.AllModuleFiles.Select(m => new object[] { m, Network.Test }).ToList();
-            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Main), Network.Main });
-            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Test), Network.Test });
-            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(Network.Dev), Network.Dev });
-            ConfigFiles.Add(new object[] { Constants.SerilogJsonConfigFile, Network.Dev });
-            ConfigFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, Network.Dev });
+            public ConfigFilesOverwriteTestData()
+            {
+                Add(Constants.NetworkConfigFile(Network.Main), Network.Main);
+                Add(Constants.NetworkConfigFile(Network.Test), Network.Test);
+                Add(Constants.NetworkConfigFile(Network.Dev), Network.Dev);
+                Add(Constants.SerilogJsonConfigFile, Network.Dev);
+                Add(Constants.ComponentsJsonConfigFile, Network.Dev);
+            }
         }
-
 
         public ConfigCopierTests(ITestOutputHelper output) : base(output)
         {
@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
         }
 
         [Theory]
-        [MemberData(nameof(ConfigFiles))]
+        [ClassData(typeof(ConfigFilesOverwriteTestData))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName, Network network)
         {

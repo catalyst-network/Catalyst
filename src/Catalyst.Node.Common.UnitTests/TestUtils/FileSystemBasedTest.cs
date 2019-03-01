@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,24 +23,19 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         protected readonly ITestOutputHelper _output;
         protected readonly IFileSystem _fileSystem;
         private DirectoryInfo _testDirectory;
-        private DateTime _testStartTime;
 
         public FileSystemBasedTest(ITestOutputHelper output)
         {
+            var stacktrace = Environment.StackTrace;
             _output = output;
             _currentTest = (_output?.GetType()
                .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
                .GetValue(_output) as ITest);
             _currentTestName = _currentTest.TestCase.TestMethod.Method.Name;
-            _testStartTime = DateTime.Now;
-            var testCaseTestMethodArguments = _currentTest.TestCase.TestMethodArguments;
-                //?? _currentTest.TestCase.TestMethod.Method.GetParameters()
+            var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 //get a unique folder for this run
-                _currentTestName 
-              //+ $"_{GetHashFromItems(testCaseTestMethodArguments):D10}"
-              + $"_{Guid.NewGuid().ToString().Replace("-", "").Substring(0,10)}"
-              + $"_{_testStartTime:yyMMddHHmmssff}"));
+                _currentTestName + $"_{testStartTime:yyMMddHHmmssffff}"));
 
             _testDirectory.Exists.Should().BeFalse();
             _testDirectory.Create();
@@ -54,37 +48,17 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                var regex = new Regex(_currentTestName + @"_([\d]{10})_(?<timestamp>[\d]{14})");
-                var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
-                   .Where(d => DirectoryIsForATestRunOlderThanAMinute(d.Name, regex))
-                   .ToList();
-                oldDirectories.ForEach(TryDeleteFolder);
-            }
+            if (!disposing) return;
+
+            var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
+            var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
+               .Where(d => regex.IsMatch(d.Name) 
+                 && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
+               .ToList();
+            oldDirectories.ForEach(TryDeleteFolder);
         }
 
-        private bool DirectoryIsForATestRunOlderThanAMinute(string directoryName, Regex regex)
-        {
-            var isDirectoryForTheCurrentRun = _testDirectory.Name != directoryName;
-            if (isDirectoryForTheCurrentRun) return false;
 
-            try
-            {
-                var match = regex.Match(directoryName);
-                var oldFolderTimeStamp = DateTime.ParseExact(match.Groups["timestamp"].Value, "yyMMddHHmmssff",
-                    CultureInfo.InvariantCulture);
-                
-                var isDirectoryForAPreviousRunOfThisTest = match.Success
-                    && _testStartTime.CompareTo(oldFolderTimeStamp.AddMinutes(1)) > 0;
-
-                return isDirectoryForAPreviousRunOfThisTest;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
 
         private static void TryDeleteFolder(DirectoryInfo d)
         {
@@ -102,7 +76,6 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         public static uint GetHashFromItems<T>(IEnumerable<T> items)
