@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
-using Catalyst.Node.Common.Cryptography;
+using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Modules.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Events;

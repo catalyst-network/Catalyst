@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-using Catalyst.Node.Common.Cryptography;
+using Catalyst.Node.Common.Helpers.Cryptography;
 using FluentAssertions;
 using Xunit;
 
