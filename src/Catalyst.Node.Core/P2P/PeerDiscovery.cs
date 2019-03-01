@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Catalyst.Node.Core.Helpers.Network;
 using DnsClient.Protocol;
 using SharpRepository.Repository;
@@ -31,9 +32,9 @@ namespace Catalyst.Node.Core.P2P
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        internal void GetSeedNodes(List<string> seedServers)
+        internal async Task GetSeedNodes(List<string> seedServers)
         {
-            var dnsQueryAnswers = _dns.GetTxtRecords(seedServers);
+            var dnsQueryAnswers = await _dns.GetTxtRecords(seedServers);
             foreach (var dnsQueryAnswer in dnsQueryAnswers)
             {
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();

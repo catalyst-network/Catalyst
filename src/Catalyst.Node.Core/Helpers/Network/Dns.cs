@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using Dawn;
 using DnsClient;
 
@@ -23,13 +24,13 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// </summary>
         /// <param name="hostnames"></param>
         /// <returns></returns>
-        public IList<IDnsQueryResponse> GetTxtRecords(List<string> hostnames)
+        public async Task<IList<IDnsQueryResponse>> GetTxtRecords(List<string> hostnames)
         {
             Guard.Argument(hostnames, nameof(hostnames)).NotEmpty().NotNull().DoesNotContainNull();
             var recordList = new List<IDnsQueryResponse>();
             foreach (var hostname in hostnames)
             {
-                recordList.Add(GetTxtRecords(hostname));
+                recordList.Add(await GetTxtRecords(hostname));
             }
 
             return recordList;
@@ -39,30 +40,30 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        public IDnsQueryResponse GetTxtRecords(Uri hostname)
+        public async Task<IDnsQueryResponse> GetTxtRecords(Uri hostname)
         {
             Guard.Argument(hostname, nameof(hostname)).NotNull().Http();
-            return GetTxtRecords(hostname.Host);
+            return await GetTxtRecords(hostname.Host);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        public IDnsQueryResponse GetTxtRecords(string hostname)
+        public async Task<IDnsQueryResponse> GetTxtRecords(string hostname)
         {
             Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
-            return Query(hostname, QueryType.TXT);
+            return await Query(hostname, QueryType.TXT);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        public IDnsQueryResponse GetARecords(string hostname)
+        public async Task<IDnsQueryResponse> GetARecords(string hostname)
         {
             Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
-            return Query(hostname, QueryType.A);
+            return await Query(hostname, QueryType.A);
         }
 
         /// <summary>
@@ -70,11 +71,11 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// <param name="hostname"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private IDnsQueryResponse Query(string hostname, QueryType type)
+        private async Task<IDnsQueryResponse> Query(string hostname, QueryType type)
         {
             Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
             var client = new LookupClient(DnsServer.Address, DnsServer.Port);
-            return client.Query(hostname, type);
+            return await client.QueryAsync(hostname, type);
         }
     }
 }
