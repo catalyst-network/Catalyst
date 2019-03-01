@@ -98,8 +98,8 @@
     <Compile Include="..\..\submodules\nsec\src\Interop\Interop.XChaCha20Poly1305.cs" Link="Helpers\NSec\Interop\Interop.XChaCha20Poly1305.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx" >
-        <LogicalName>NSec.Cryptography.Error.resources</LogicalName>
+    <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx">
+      <LogicalName>NSec.Cryptography.Error.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
