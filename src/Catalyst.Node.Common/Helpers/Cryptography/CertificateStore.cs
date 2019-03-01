@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -10,24 +11,41 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
 {
     public class CertificateStore : ICertificateStore
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
 
-        public IPasswordReader PasswordReader { get; }
+        private readonly IPasswordReader _passwordReader;
 
         public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader)
         {
             _storageFolder = fileSystem.GetCatalystHomeDir();
-            PasswordReader = passwordReader;
+            _passwordReader = passwordReader;
         }
 
-        public X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
+        public X509Certificate2 ReadOrCreateCertificateFile(string pfxFilePath)
+        {
+            var foundCertificate = TryGet(pfxFilePath, out var certificate);
+            if (foundCertificate) return certificate;
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                throw new PlatformNotSupportedException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
+                    $"Please create a password protected certificate at {pfxFilePath}." +
+                    Environment.NewLine +
+                    "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
+            }
+            certificate = CreateAndSaveSelfSignedCertificate(pfxFilePath);
+
+            return certificate;
+        }
+
+        private X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
         {
             var promptMessage = "Catalyst Node needs to create an SSL certificate." +
                                 " Please enter a password to encrypt the certificate on disk:";
-            using (var password = PasswordReader.ReadSecurePassword(promptMessage))
+            using (var password = _passwordReader.ReadSecurePassword(promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -52,7 +70,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                                 "your local trusted root store to remove warnings.", fullPathToCertificate);
         }
 
-        public bool TryGet(string fileName, out X509Certificate2 certificate)
+        private bool TryGet(string fileName, out X509Certificate2 certificate)
         {
             var fullPath = Path.Combine(_storageFolder.ToString(), fileName);
             var fileInfo = new FileInfo(fullPath);
@@ -73,7 +91,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                 {
                     try
                     {
-                        using (var passwordFromConsole = PasswordReader.ReadSecurePassword(passwordPromptMessage))
+                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             break;

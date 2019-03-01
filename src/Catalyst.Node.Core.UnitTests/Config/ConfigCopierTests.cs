@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Config;
 using FluentAssertions;
 using Xunit;
@@ -11,20 +12,20 @@ namespace Catalyst.Node.Core.UnitTest.Config
 {
     public class ConfigCopierTests : FileSystemBasedTest
     {
-        private ConfigCopier _configCopier;
-        public static List<object[]> ConfigFiles;
-        static ConfigCopierTests()
+        private readonly ConfigCopier _configCopier;
+        private class ConfigFilesOverwriteTestData : TheoryData<string, Network>
         {
-            ConfigFiles = Constants.AllModuleFiles.Select(m => new object[] { m, NodeOptions.Networks.testnet }).ToList();
-            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.mainnet), NodeOptions.Networks.mainnet });
-            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.testnet), NodeOptions.Networks.testnet });
-            ConfigFiles.Add(new object[] { Constants.NetworkConfigFile(NodeOptions.Networks.devnet), NodeOptions.Networks.devnet });
-            ConfigFiles.Add(new object[] { Constants.SerilogJsonConfigFile, NodeOptions.Networks.devnet });
-            ConfigFiles.Add(new object[] { Constants.ComponentsJsonConfigFile, NodeOptions.Networks.devnet });
+            public ConfigFilesOverwriteTestData()
+            {
+                Add(Constants.NetworkConfigFile(Network.Main), Network.Main);
+                Add(Constants.NetworkConfigFile(Network.Test), Network.Test);
+                Add(Constants.NetworkConfigFile(Network.Dev), Network.Dev);
+                Add(Constants.SerilogJsonConfigFile, Network.Dev);
+                Add(Constants.ComponentsJsonConfigFile, Network.Dev);
+            }
         }
 
-
-    public ConfigCopierTests(ITestOutputHelper output) : base(output)
+        public ConfigCopierTests(ITestOutputHelper output) : base(output)
         {
             _configCopier = new ConfigCopier();
         }
@@ -38,7 +39,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
 
             var modulesDirectory = new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
-            var network = NodeOptions.Networks.devnet;
+            var network = Network.Dev;
             _configCopier.RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network);
@@ -47,15 +48,16 @@ namespace Catalyst.Node.Core.UnitTest.Config
         }
 
         [Theory]
-        [MemberData(nameof(ConfigFiles))]
+        [ClassData(typeof(ConfigFilesOverwriteTestData))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName, NodeOptions.Networks network)
+        public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName, Network network)
         {
             RunConfigStartUp_Should_Not_Overwrite_Existing_Files(moduleFileName, network);
         }
 
-        private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, NodeOptions.Networks network = NodeOptions.Networks.testnet)
+        private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, Network network)
         {
+            network = network ?? Network.Dev;
             var currentDirectory = _fileSystem.GetCatalystHomeDir();
             currentDirectory.Create(); currentDirectory.Refresh();
             var existingFileInfo = new FileInfo(Path.Combine(currentDirectory.FullName, fileName));
@@ -88,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
             return filesOnDisk;
         }
 
-        private IEnumerable<string> GetExpectedFileList(NodeOptions.Networks network)
+        private IEnumerable<string> GetExpectedFileList(Network network)
         {
             var requiredConfigFiles = new[]
             {

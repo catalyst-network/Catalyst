@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.P2P;
 using Ipfs.Api;
 
 namespace Catalyst.Node.Core.Config
@@ -16,13 +18,12 @@ namespace Catalyst.Node.Core.Config
         private static string JsonFilePattern => "{0}.json";
         public static string CatalystSubFolder => ".Catalyst";
 
-        public static IEnumerable<string> AllModuleFiles => ModuleNames.All
-               .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.ToLower())));
+        public static IEnumerable<string> AllModuleFiles => Enumeration.GetAll<ModuleName>()
+               .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
 
-        public static string NetworkConfigFile(NodeOptions.Networks network)
+        public static string NetworkConfigFile(Network network)
         {
-            var networkAsString = Enum.GetName(typeof(NodeOptions.Networks), network);
-            return string.Format(JsonFilePattern, networkAsString);
+            return string.Format(JsonFilePattern, network.Name);
         }
     }
 }

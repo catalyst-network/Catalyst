@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
-using Catalyst.Node.Common.Modules.P2P.Messages;
+using Catalyst.Node.Common.P2P.Messages;
 using Dawn;
 using Serilog;
 
