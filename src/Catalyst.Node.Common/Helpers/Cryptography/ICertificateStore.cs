@@ -1,7 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Cryptography;
 
-namespace Catalyst.Node.Common.Cryptography
+namespace Catalyst.Node.Common.Helpers.Cryptography
 {
     public interface ICertificateStore
     {
