@@ -54,27 +54,24 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
 
         private void Create_certificate_store()
         {
-            var dataFolder = Path.Combine(Environment.CurrentDirectory, _currentTestName);
+            var dataFolder = _fileSystem.GetCatalystHomeDir().FullName;
             _directoryInfo = new DirectoryInfo(dataFolder);
             _certificateStore = new CertificateStore(_fileSystem, _passwordReader);
         }
 
         private void Ensure_no_certificate_file_exists()
         {
-            var dataFolder = Path.Combine(Environment.CurrentDirectory, _currentTestName);
-            _directoryInfo = new DirectoryInfo(dataFolder);
+            _directoryInfo = _fileSystem.GetCatalystHomeDir();
             if(_directoryInfo.Exists) _directoryInfo.Delete(true);
             _directoryInfo.Create();
             _directoryInfo.EnumerateFiles().Should().BeEmpty();
-
-            _fileWithPassName = "test-with-pass.pfx";
-            _certificateStore.TryGet(_fileWithPassName, out var _).Should().BeFalse();
         }
 
         private void Create_a_certificate_file_with_password()
         {
+            _fileWithPassName = "test-with-pass.pfx";
             _passwordReader.ReadSecurePassword().Returns(BuildSecureStringPassword());
-            _createdCertificate = _certificateStore.CreateAndSaveSelfSignedCertificate(_fileWithPassName);
+            _createdCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
         
         private void The_store_should_have_asked_for_a_password_on_creation_and_loading()
@@ -85,8 +82,7 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         private void Read_the_certificate_file_with_password()
         {
             _passwordReader.ReadSecurePassword().Returns(BuildSecureStringPassword());
-            _retrievedCertificate = null;
-            _certificateStore.TryGet(_fileWithPassName, out _retrievedCertificate).Should().BeTrue();
+            _retrievedCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 
         private void The_certificate_from_file_should_have_the_correct_thumbprint()

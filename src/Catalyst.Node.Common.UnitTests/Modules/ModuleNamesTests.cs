@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Modules;
 using FluentAssertions;
 using Xunit;
@@ -10,7 +12,7 @@ namespace Catalyst.Node.Common.UnitTests.Modules
         [Fact]
         public static void All_should_return_all_declared_names()
         {
-            var allModuleNames = ModuleNames.All;
+            var allModuleNames = Enumeration.GetAll<ModuleName>().Select(m => m.Name);
              
             var expectedList = new List<string>
                 { "Consensus", "Contract", "Dfs", "Gossip", "Ledger", "Mempool" };

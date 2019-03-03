@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Catalyst.Node.Common.Modules.P2P.Messages;
+using Catalyst.Node.Common.P2P.Messages;
 using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.P2P.Messages;
 using Google.Protobuf;
 using Serilog;
 
-namespace Catalyst.Node.Core.Modules.P2P.Messages
+namespace Catalyst.Node.Core.P2P.Messages
 {
     public class MessageQueueManager : IMessageSender
     {

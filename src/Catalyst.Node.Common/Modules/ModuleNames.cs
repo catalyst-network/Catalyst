@@ -1,36 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading;
+﻿using System.Collections.Generic;
+using Catalyst.Node.Common.Helpers;
 
 namespace Catalyst.Node.Common.Modules
 {
-    public class ModuleNames
+    public class ModuleName : Enumeration
     {
-        protected ModuleNames() {}
+        public static readonly ModuleName Consensus = new ConsensusType();
+        public static readonly ModuleName Contract = new ContractType();
+        public static readonly ModuleName Dfs = new DfsType();
+        public static readonly ModuleName Gossip = new GossipType();
+        public static readonly ModuleName Ledger = new LedgerType();
+        public static readonly ModuleName Mempool = new MempoolType();
 
-        static ModuleNames()
-        {
-            _publicConstantStringsFromThisClass = new Lazy<IList<string>>(() =>
-            {
-                var inheritedPublicStatic = BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-                var moduleNames = typeof(ModuleNames)
-                   .GetFields(inheritedPublicStatic).Where(f => f.FieldType == typeof(string))
-                   .Select(f => f.GetValue(null).ToString()).ToList();
-                return moduleNames;
-            }, LazyThreadSafetyMode.PublicationOnly);
-        }
+        protected ModuleName(int id, string name) : base(id, name) {}
 
-        public static readonly string Consensus = "Consensus";
-        public static readonly string Contract = "Contract";
-        public static readonly string Dfs = "Dfs";
-        public static readonly string Gossip = "Gossip";
-        public static readonly string Ledger = "Ledger";
-        public static readonly string Mempool = "Mempool";
-
-        private static Lazy<IList<string>> _publicConstantStringsFromThisClass;
-        public static IList<string> All => _publicConstantStringsFromThisClass.Value;
+        private class ConsensusType : ModuleName { public ConsensusType() : base(1, "Consensus") { } }
+        private class ContractType : ModuleName { public ContractType() : base(1, "Contract") { } }
+        private class DfsType : ModuleName { public DfsType() : base(1, "Dfs") { } }
+        private class GossipType : ModuleName { public GossipType() : base(1, "Gossip") { } }
+        private class LedgerType : ModuleName { public LedgerType() : base(1, "Ledger") { } }
+        private class MempoolType : ModuleName { public MempoolType() : base(1, "Mempool") { } }
     }
 }
