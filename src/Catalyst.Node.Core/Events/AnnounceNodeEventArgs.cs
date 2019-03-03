@@ -1,5 +1,5 @@
 using System;
-using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Common;
 using Dawn;
 
 namespace Catalyst.Node.Core.Events
@@ -11,12 +11,12 @@ namespace Catalyst.Node.Core.Events
         /// </summary>
         /// <param name="nodeIdentity"></param>
         /// <exception cref="T:System.ArgumentNullException"></exception>
-        public AnnounceNodeEventArgs(PeerIdentifier nodeIdentity)
+        public AnnounceNodeEventArgs(IPeerIdentifier nodeIdentity)
         {
             Guard.Argument(nodeIdentity, nameof(nodeIdentity)).NotNull();
             NodeIdentity = nodeIdentity;
         }
 
-        private PeerIdentifier NodeIdentity { get; }
+        private IPeerIdentifier NodeIdentity { get; }
     }
 }

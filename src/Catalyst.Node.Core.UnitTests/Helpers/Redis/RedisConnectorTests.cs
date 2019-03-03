@@ -9,11 +9,11 @@ using FluentAssertions;
 using StackExchange.Redis;
 using Xunit;
 
-namespace Catalyst.Node.UnitTests.Helpers.Redis
+namespace Catalyst.Node.Core.UnitTest.Helpers.Redis
 {
-    public class UT_RedisConnector : IDisposable
+    public class RedisConnectorTests : IDisposable
     {
-        public UT_RedisConnector()
+        public RedisConnectorTests()
         {
             _connector = new RedisConnector(EndPoint.ToString());
             _database = _connector.Database;
@@ -26,7 +26,6 @@ namespace Catalyst.Node.UnitTests.Helpers.Redis
 
         private static readonly IPEndPoint EndPoint = EndpointBuilder.BuildNewEndPoint("127.0.0.1", 6379);
 
-        private readonly IConnectionMultiplexer _connectionMultiplexer;
         private readonly RedisConnector _connector;
         private readonly IDatabase _database;
 

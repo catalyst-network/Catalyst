@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using FluentAssertions;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Xunit;
 
 namespace Catalyst.Node.Common.UnitTests.Cryptography

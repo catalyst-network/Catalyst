@@ -22,20 +22,19 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         protected readonly string _currentTestName;
         protected readonly ITestOutputHelper _output;
         protected readonly IFileSystem _fileSystem;
-        private DirectoryInfo _testDirectory;
+        private readonly DirectoryInfo _testDirectory;
 
-        public FileSystemBasedTest(ITestOutputHelper output)
+        protected FileSystemBasedTest(ITestOutputHelper output)
         {
             _output = output;
             _currentTest = (_output?.GetType()
                .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
                .GetValue(_output) as ITest);
             _currentTestName = _currentTest.TestCase.TestMethod.Method.Name;
+            var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 //get a unique folder for this run
-                _currentTestName 
-              + $"_{GetHashFromItems(_currentTest.TestCase.TestMethodArguments):D10}"
-              + $"_{DateTime.Now:yyMMddHHmmssff}"));
+                _currentTestName + $"_{testStartTime:yyMMddHHmmssffff}"));
 
             _testDirectory.Exists.Should().BeFalse();
             _testDirectory.Create();
@@ -48,20 +47,17 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                var regex = new Regex(_currentTestName + @"_([\d]{10})_([\d]{14})");
-                var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
-                   .Where(d =>
-                    {
-                        return _testDirectory.Name != d.Name
-                         && regex.IsMatch(d.Name);
-                    })
-                   .ToList();
+            if (!disposing) return;
 
-                oldDirectories.ForEach(TryDeleteFolder);
-            }
+            var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
+            var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
+               .Where(d => regex.IsMatch(d.Name) 
+                 && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
+               .ToList();
+            oldDirectories.ForEach(TryDeleteFolder);
         }
+
+
 
         private static void TryDeleteFolder(DirectoryInfo d)
         {
@@ -79,7 +75,6 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         public static uint GetHashFromItems<T>(IEnumerable<T> items)
