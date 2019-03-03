@@ -7,7 +7,6 @@ namespace Catalyst.Node.Core.Helpers.Network
 {
     public interface IDns
     {
-        IPEndPoint DnsServer { get; set; }
         
         /// <summary>
         /// 

@@ -8,7 +8,7 @@ namespace Catalyst.Node.Core.Helpers.Network
 {
     public sealed class Dns : IDns
     {
-        public IPEndPoint DnsServer { get; set; }
+        private IPEndPoint DnsServer { get; }
 
         /// <summary>
         /// 
