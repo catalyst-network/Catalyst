@@ -1,5 +1,5 @@
 using System;
-using Catalyst.Node.Common.Cryptography;
+using Catalyst.Node.Common.Helpers.Cryptography;
 
 namespace Catalyst.Node.Common.Helpers.Keystore
 {
