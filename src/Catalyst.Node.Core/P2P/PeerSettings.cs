@@ -45,7 +45,6 @@ namespace Catalyst.Node.Core.P2P
         public string PayoutAddress { get; set; }
         public string PublicKey { get; set; }
         public bool Announce { get; set; }
-        //public IPEndPoint DnsServer { get; set; }
         public IPEndPoint AnnounceServer { get; set; }
         public bool MutualAuthentication { get; set; }
         public bool AcceptInvalidCerts { get; set; }

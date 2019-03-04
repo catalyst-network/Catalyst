@@ -29,11 +29,11 @@ namespace Catalyst.Node.Core.Helpers.Network
             _client = client;
         }
 
-        public async Task<IList<IDnsQueryResponse>> GetTxtRecords(List<string> hostnames)
+        public async Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames)
         {
             Guard.Argument(hostnames, nameof(hostnames))
-               .NotEmpty()
                .NotNull()
+               .NotEmpty()
                .DoesNotContainNull();
             
             var queries = hostnames.Select(GetTxtRecords).ToArray();

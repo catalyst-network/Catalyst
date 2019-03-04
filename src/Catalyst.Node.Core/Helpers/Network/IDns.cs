@@ -12,7 +12,7 @@ namespace Catalyst.Node.Core.Helpers.Network
         /// </summary>
         /// <param name="hostnames"></param>
         /// <returns></returns>
-        Task<IList<IDnsQueryResponse>> GetTxtRecords(List<string> hostnames);
+        Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames);
         
         /// <summary>
         /// 
