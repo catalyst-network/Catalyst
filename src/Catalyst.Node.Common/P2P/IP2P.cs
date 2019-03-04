@@ -5,8 +5,13 @@ namespace Catalyst.Node.Common.P2P
     public interface IP2P
     {
         /// <summary>
+        /// Optional: a discovery mechanism
+        /// </summary>
+        IPeerDiscovery Discovery { get; }
+
+        /// <summary>
         /// The peer's identifier on the network.
-        /// <see href="https://github.com/catalyst-network/protcol-blueprint/blob/master/PeerProtocol.md#peer-identifiers"/>
+        /// <see href="https://github.com/catalyst-network/protocol-blueprint/blob/master/PeerProtocol.md#peer-identifiers"/>
         /// </summary>
         IPeerIdentifier Identifier { get; }
 

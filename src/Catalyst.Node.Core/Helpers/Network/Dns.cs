@@ -1,80 +1,72 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Dawn;
 using DnsClient;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {
-    public class Dns
+    //Allow passing in the ipAddress as a string in DI config files.
+    public class InjectableLookupClient : LookupClient
     {
-        private IPEndPoint DnsServer { get; set; }
+        public InjectableLookupClient(string ipAddress, int port)
+            :base(IPAddress.Parse(ipAddress), port) {}
+    }
+
+    public sealed class Dns : IDns
+    {
+        private readonly ILookupClient _client;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dnsServer"></param>
-        public Dns(IPEndPoint dnsServer)
+        /// <param name="client"></param>
+        public Dns(ILookupClient client)
         {
-            DnsServer = dnsServer;
+            Guard.Argument(client, nameof(client)).NotNull();
+            _client = client;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="hostnames"></param>
-        /// <returns></returns>
-        public IList<IDnsQueryResponse> GetTxtRecords(List<string> hostnames)
+        public async Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames)
         {
-            Guard.Argument(hostnames, nameof(hostnames)).NotEmpty().NotNull().DoesNotContainNull();
-            var recordList = new List<IDnsQueryResponse>();
-            foreach (var hostname in hostnames)
+            Guard.Argument(hostnames, nameof(hostnames))
+               .NotNull()
+               .NotEmpty()
+               .DoesNotContainNull();
+            
+            var queries = hostnames.Select(GetTxtRecords).ToArray();
+            var responses = await Task.WhenAll(queries);
+
+            return responses.Where(c => c != null).ToList();
+        }
+
+        public async Task<IDnsQueryResponse> GetTxtRecords(string hostname)
+        {
+            Guard.Argument(hostname, nameof(hostname))
+               .NotNull()
+               .NotEmpty()
+               .NotWhiteSpace();
+               
+            return await Query(hostname, QueryType.TXT);
+        }
+
+        private async Task<IDnsQueryResponse> Query(string hostname, QueryType type)
+        {
+            Guard.Argument(hostname, nameof(hostname))
+               .NotNull()
+               .NotEmpty()
+               .NotWhiteSpace();
+
+            try
             {
-                recordList.Add(GetTxtRecords(hostname));
+                return await _client.QueryAsync(hostname, type);
             }
-
-            return recordList;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="hostname"></param>
-        /// <returns></returns>
-        public IDnsQueryResponse GetTxtRecords(Uri hostname)
-        {
-            Guard.Argument(hostname, nameof(hostname)).NotNull().Http();
-            return GetTxtRecords(hostname.Host);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="hostname"></param>
-        /// <returns></returns>
-        public IDnsQueryResponse GetTxtRecords(string hostname)
-        {
-            Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
-            return Query(hostname, QueryType.TXT);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="hostname"></param>
-        /// <returns></returns>
-        public IDnsQueryResponse GetARecords(string hostname)
-        {
-            Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
-            return Query(hostname, QueryType.A);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="hostname"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private IDnsQueryResponse Query(string hostname, QueryType type)
-        {
-            Guard.Argument(hostname, nameof(hostname)).NotNull().NotEmpty().NotWhiteSpace();
-            var client = new LookupClient(DnsServer.Address, DnsServer.Port);
-            return client.Query(hostname, type);
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
     }
 }
