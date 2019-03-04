@@ -47,6 +47,12 @@
       "parameters": {
         "configFilePath": "Config/Modules/mempool.json"
       }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/authentication.json"
+      }
     }
   ] 
 }
