@@ -17,7 +17,6 @@ using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messages;
 using Dawn;
 using Serilog;
-using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core
 {
@@ -31,7 +30,7 @@ namespace Catalyst.Node.Core
         private readonly IMempool _mempool;
         private readonly IContract _contract;
         private readonly IGossip _gossip;
-
+        
         private bool _disposed;
 
         public CatalystNode(IP2P p2p,
@@ -53,7 +52,6 @@ namespace Catalyst.Node.Core
             _contract = contract;
             _gossip = gossip;
 
-            var dns = new Dns(p2p.Settings.DnsServer);
             ConnectionManager = new ConnectionManager(certificateStore.ReadOrCreateCertificateFile(p2p.Settings.PfxFileName),
                 new PeerList(new ClientWorker()),
                 new MessageQueueManager(),

@@ -2,31 +2,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Helpers.Network;
 using DnsClient.Protocol;
 using SharpRepository.Repository;
-using SharpRepository.Repository.Configuration;
-using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public class PeerDiscovery
+    public class PeerDiscovery : IPeerDiscovery
     {
-        private readonly Dns _dns;
+        private readonly IDns _dns;
         private List<IPEndPoint> SeedNodes { get; }
 
-        private readonly IRepository<Peer, int> _peerRepository;
+        private readonly IRepository<Peer> _peerRepository;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dns"></param>
         /// <param name="repositoryConfiguration"></param>
-        public PeerDiscovery(Dns dns, ISharpRepositoryConfiguration repositoryConfiguration)
+        public PeerDiscovery(IDns dns, IRepository<Peer> repository)
         {
             _dns = dns;
             SeedNodes = new List<IPEndPoint>();
-            _peerRepository = RepositoryFactory.GetInstance<Peer, int>(repositoryConfiguration, "PeerRepository");
+            _peerRepository = repository;
         }
         
         /// <summary>

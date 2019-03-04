@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Dawn;
@@ -6,17 +7,26 @@ using DnsClient;
 
 namespace Catalyst.Node.Core.Helpers.Network
 {
+    //Allow passing in the ipAddress as a string in DI config files.
+    public class InjectableLookupClient : LookupClient
+    {
+        public InjectableLookupClient(string ipAddress, int port)
+            :base(IPAddress.Parse(ipAddress), port) {}
+    }
+
     public sealed class Dns : IDns
     {
-        private IPEndPoint DnsServer { get; }
+        private readonly ILookupClient _client;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dnsServer"></param>
-        public Dns(IPEndPoint dnsServer)
+        /// <param name="client"></param>
+        public Dns(ILookupClient client)
         {
-            DnsServer = dnsServer;
+            Guard.Argument(client, nameof(client)).NotNull();
+            _client = client;
         }
 
         public async Task<IList<IDnsQueryResponse>> GetTxtRecords(List<string> hostnames)
@@ -26,12 +36,10 @@ namespace Catalyst.Node.Core.Helpers.Network
                .NotNull()
                .DoesNotContainNull();
             
-            var recordList = new List<IDnsQueryResponse>();
-            foreach (var hostname in hostnames)
-            {
-                recordList.Add(await GetTxtRecords(hostname));
-            }
-            return recordList;
+            var queries = hostnames.Select(GetTxtRecords).ToArray();
+            var responses = await Task.WhenAll(queries);
+
+            return responses.Where(c => c != null).ToList();
         }
 
         public async Task<IDnsQueryResponse> GetTxtRecords(string hostname)
@@ -50,9 +58,15 @@ namespace Catalyst.Node.Core.Helpers.Network
                .NotNull()
                .NotEmpty()
                .NotWhiteSpace();
-            
-            var client = new LookupClient(DnsServer.Address, DnsServer.Port);
-            return await client.QueryAsync(hostname, type);
+
+            try
+            {
+                return await _client.QueryAsync(hostname, type);
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
     }
 }

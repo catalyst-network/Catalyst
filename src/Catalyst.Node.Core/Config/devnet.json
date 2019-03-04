@@ -7,7 +7,6 @@
       "StorageType": "Catalyst.Helpers.Ipfs"
     },
     "Peer": {
-      "DnsServer": "127.0.0.1:5053",
       "Network": "devnet",
       "MutualAuthentication": false,
       "AcceptInvalidCerts": false,
