@@ -67,7 +67,6 @@ namespace Catalyst.Node.Core.P2P
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

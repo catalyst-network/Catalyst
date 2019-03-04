@@ -35,7 +35,6 @@ namespace Catalyst.Node.Core.P2P
             MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
             AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
-            DnsServer = EndpointBuilder.BuildNewEndPoint(section.GetSection("DnsServer").Value);
             KnownNodes = section.GetSection("KnownNodes").GetChildren().Select(p => p.Value).ToList();
             SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
             AnnounceServer =
@@ -46,7 +45,6 @@ namespace Catalyst.Node.Core.P2P
         public string PayoutAddress { get; set; }
         public string PublicKey { get; set; }
         public bool Announce { get; set; }
-        public IPEndPoint DnsServer { get; set; }
         public IPEndPoint AnnounceServer { get; set; }
         public bool MutualAuthentication { get; set; }
         public bool AcceptInvalidCerts { get; set; }

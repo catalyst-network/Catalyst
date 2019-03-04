@@ -9,7 +9,6 @@ namespace Catalyst.Node.Common.P2P
         string PayoutAddress { get; }
         string PublicKey { get; }
         bool Announce { get; }
-        IPEndPoint DnsServer { get; }
         IPEndPoint AnnounceServer { get; }
         bool MutualAuthentication { get; }
         bool AcceptInvalidCerts { get; }
