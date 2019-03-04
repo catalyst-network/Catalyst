@@ -39,10 +39,7 @@
         {
           "type": "Catalyst.Node.Core.Helpers.Network.IDns"
         }
-      ],
-      "parameters": {
-        "configFilePath": "Config/Modules/gossip.json"
-      }
+      ]
     },
     {
       "type": "Catalyst.Node.Core.Helpers.Network.InjectableLookupClient",
@@ -100,9 +97,10 @@
   //simply comment modules that you don't need.
   "modules": [
     {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "type": "Catalyst.Node.Core.Modules.Gossip.GossipParameterisedModule",
       "parameters": {
-        "configFilePath": "Config/Modules/gossip.json"
+        "configFilePath": "Config/Modules/gossip.json",
+        "numberProvider": 2 
       }
     },
     {
