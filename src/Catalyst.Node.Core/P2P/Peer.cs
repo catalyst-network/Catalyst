@@ -1,7 +1,7 @@
 using System;
 using System.Net;
-using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.Helpers.Util;
+using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Helpers.Util;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
@@ -10,25 +10,11 @@ namespace Catalyst.Node.Core.P2P
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// </summary>
-        /// <param name="peerIdentifier"></param>
-        /// <param name="endpoint"></param>
-        /// <exception cref="ArgumentException"></exception>
-        // public Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
-        // {
-        //     Guard.Argument(peerIdentifier, nameof(peerIdentifier)).NotNull();
-        //     Guard.Argument(EndPoint.Port, nameof(EndPoint.Port)).Min(1025).Max(123);
-        //     EndPoint = endpoint;
-        //     PeerIdentifier = peerIdentifier;
-        //     LastSeen = DateTimeProvider.UtcNow;
-        // }
-
         private int Reputation { get; set; }
-        public DateTime LastSeen { get; set; }
+        private DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
-        public Connection Connection { get; set; }
-        public PeerIdentifier PeerIdentifier { get; }
+        private Connection Connection { get; set; }
+        private PeerIdentifier PeerIdentifier { get; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
 
@@ -69,4 +55,6 @@ namespace Catalyst.Node.Core.P2P
             Dispose(true);
         }
     }
+
+    class PeerImpl : Peer { }
 }

@@ -5,13 +5,13 @@ using System.Text;
 using Catalyst.Node.Common.Shell;
 using Serilog;
 
-namespace Catalyst.Node.Core.Helpers.Shell
+namespace Catalyst.Node.Common.Helpers.Shell
 {
     public abstract class ShellBase : IShell
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        protected virtual string Prompt => "ADS";
-        protected static bool ShowPrompt { private get; set; } = true;
+        protected virtual string Prompt => "Koopa";
+        private static bool ShowPrompt { get; } = true;
         private static string ServiceName => "Catalyst Distributed Shell";
 
         /// <summary>

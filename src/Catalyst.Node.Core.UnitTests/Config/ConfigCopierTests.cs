@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Catalyst.Node.Common.Config;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Core.Config;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;

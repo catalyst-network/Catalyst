@@ -7,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using Dawn;
 using Serilog;
 
-namespace Catalyst.Node.Core.Helpers.IO
+namespace Catalyst.Node.Common.Helpers.IO
 {
     public static class TlsStream
     {

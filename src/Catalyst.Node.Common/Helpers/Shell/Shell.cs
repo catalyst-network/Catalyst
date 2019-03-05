@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using Serilog;
 
-namespace Catalyst.Node.Core.Helpers.Shell
+namespace Catalyst.Node.Common.Helpers.Shell
 {
     public sealed class Shell : ShellBase
     {
@@ -14,8 +14,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
             Logger.Information("Koopa Shell Start");
             RunConsole();
         }
-
-        protected override string Prompt => "koopa";
 
         /// <summary>
         /// </summary>

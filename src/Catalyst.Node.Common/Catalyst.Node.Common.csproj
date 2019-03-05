@@ -123,11 +123,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Config" />
     <Folder Include="Helpers\Hex\HexConverters\Extensions\" />
     <Folder Include="Helpers\Hex\HexTypes\" />
+    <Folder Include="Helpers\IO" />
     <Folder Include="Helpers\NSec\Cryptography\Buffer\" />
     <Folder Include="Helpers\NSec\Cryptography\Formatting\" />
     <Folder Include="Helpers\NSec\Interop\" />
     <Folder Include="Helpers\RLP\" />
+    <Folder Include="Helpers\Streams" />
+    <Folder Include="Helpers\Util" />
+    <Folder Include="Helpers\Workers" />
+    <Folder Include="Interfaces" />
   </ItemGroup>
 </Project>

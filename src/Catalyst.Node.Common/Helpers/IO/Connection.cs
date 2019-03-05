@@ -6,7 +6,7 @@ using Catalyst.Node.Common.P2P.Messages;
 using Dawn;
 using Serilog;
 
-namespace Catalyst.Node.Core.Helpers.IO
+namespace Catalyst.Node.Common.Helpers.IO
 {
     /// <summary>
     /// </summary>

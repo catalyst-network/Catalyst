@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Serilog;
 
-namespace Catalyst.Node.Core.Helpers.Workers
+namespace Catalyst.Node.Common.Helpers.Workers
 {
     internal class ScheduledAction : IComparable<ScheduledAction>
     {

@@ -20,7 +20,7 @@ namespace Catalyst.Node.Core.P2P
         /// 
         /// </summary>
         /// <param name="dns"></param>
-        /// <param name="repositoryConfiguration"></param>
+        /// <param name="repository"></param>
         public PeerDiscovery(IDns dns, IRepository<Peer> repository)
         {
             _dns = dns;
