@@ -139,7 +139,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 "\tservice rpc stop\n" +
                 "\tservice rpc status\n" +
                 "\tservice rpc restart\n" +
-                "IpfsDfs Commands:\n" +
+                "Dfs Commands:\n" +
                 "\tdfs file put\n" +
                 "\tdfs file get\n" +
                 "Wallet Commands:\n" +
