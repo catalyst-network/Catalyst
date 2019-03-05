@@ -10,11 +10,12 @@ namespace Catalyst.Node.Common.Helpers.Keystore
         
         public LocalSignatureProvider(ICryptoContext context) { this._context = context; }
         
-        public Task<byte[]> Sign(ReadOnlySpan<byte> data)
+        public Task<Signature> Sign(ReadOnlySpan<byte> data)
         {
             //get key out of keystore but just make one for now.
             IPrivateKey key = _context.GeneratePrivateKey();
-            return Task.FromResult<byte[]>(_context.Sign(key, data));
+            byte[] bytes = _context.Sign(key, data);
+            return Task.FromResult(new Signature(bytes));
         }
     }
 }

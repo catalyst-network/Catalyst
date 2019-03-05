@@ -1,9 +1,11 @@
 using System;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.Cryptography;
 
 namespace Catalyst.Node.Common.Helpers.Keystore
 {
     public interface ISignatureProvider
     {
-        Byte[] Sign(ReadOnlySpan<Byte> data);
+        Task<Signature> Sign(ReadOnlySpan<byte> data);
     }
 }
