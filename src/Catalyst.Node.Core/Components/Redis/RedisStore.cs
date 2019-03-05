@@ -18,7 +18,10 @@ namespace Catalyst.Node.Core.Components.Redis
         public RedisStore(string when)
         {
             Guard.Argument(when, nameof(when)).NotNull().NotEmpty().NotWhiteSpace();
-            if (!Enum.TryParse(when, out _when)) throw new ArgumentException($"Invalid When setting format:{when}");
+            if (!Enum.TryParse(when, out _when))
+            {
+                throw new ArgumentException($"Invalid When setting format:{when}");
+            }
         }
 
         public void Dispose()
@@ -63,7 +66,10 @@ namespace Catalyst.Node.Core.Components.Redis
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing) _redisConnector?.Dispose();
+            if (disposing)
+            {
+                _redisConnector?.Dispose();
+            }
         }
     }
 }

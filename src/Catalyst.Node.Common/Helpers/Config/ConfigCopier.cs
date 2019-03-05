@@ -22,10 +22,16 @@ namespace Catalyst.Node.Common.Helpers.Config
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
             var dataDirInfo = new DirectoryInfo(dataDir);
-            if (!dataDirInfo.Exists) dataDirInfo.Create();
+            if (!dataDirInfo.Exists)
+            {
+                dataDirInfo.Create();
+            }
 
             var modulesFolderInfo = new DirectoryInfo(Path.Combine(dataDir, Constants.ModulesSubFolder));
-            if (!modulesFolderInfo.Exists) modulesFolderInfo.Create();
+            if (!modulesFolderInfo.Exists)
+            {
+                modulesFolderInfo.Create();
+            }
 
             const string jsonSearchPattern = "*.json";
             var existingConfigs = dataDirInfo
@@ -59,7 +65,10 @@ namespace Catalyst.Node.Common.Helpers.Config
         {
             var sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, fileName);
             var targetFile = Path.Combine(targetFolder, fileName);
-            if (!overwrite && File.Exists(targetFile)) return;
+            if (!overwrite && File.Exists(targetFile))
+            {
+                return;
+            }
             File.Copy(sourceFile, targetFile, overwrite);
         }
     }

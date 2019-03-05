@@ -33,7 +33,10 @@ namespace Catalyst.Node.Common.Helpers.Workers
                     lock (_actions)
                     {
                         any = _actions.Count > 0;
-                        if (any) scheduledAction = _actions[0];
+                        if (any)
+                        {
+                            scheduledAction = _actions[0];
+                        }
                     }
 
                     var timeToWait = TimeSpan.Zero;
@@ -51,14 +54,20 @@ namespace Catalyst.Node.Common.Helpers.Workers
                         timeToWait = TimeSpan.FromMilliseconds(-1);
                     }
 
-                    if (_resetEvent.WaitOne(timeToWait, false)) continue;
+                    if (_resetEvent.WaitOne(timeToWait, false))
+                    {
+                        continue;
+                    }
 
                     Debug.Assert(scheduledAction != null, "scheduledAction != null");
                     scheduledAction.Execute();
                     lock (_actions)
                     {
                         Remove(scheduledAction);
-                        if (scheduledAction.Repeat) QueueForever(scheduledAction.Action, scheduledAction.Interval);
+                        if (scheduledAction.Repeat)
+                        {
+                            QueueForever(scheduledAction.Action, scheduledAction.Interval);
+                        }
                     }
                 }
             }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
@@ -92,7 +101,10 @@ namespace Catalyst.Node.Common.Helpers.Workers
                 var pos = _actions.BinarySearch(scheduledAction);
                 _actions.RemoveAt(pos);
                 scheduledAction.Release();
-                if (pos == 0) _resetEvent.Set();
+                if (pos == 0)
+                {
+                    _resetEvent.Set();
+                }
             }
         }
 
@@ -107,7 +119,10 @@ namespace Catalyst.Node.Common.Helpers.Workers
                 pos = pos >= 0 ? pos : ~pos;
                 _actions.Insert(pos, scheduledAction);
 
-                if (pos == 0) _resetEvent.Set();
+                if (pos == 0)
+                {
+                    _resetEvent.Set();
+                }
             }
         }
 

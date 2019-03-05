@@ -23,7 +23,10 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                         break;
 
                     case ConsoleKey.Backspace:
-                        if (pwd.Length == 0) continue;
+                        if (pwd.Length == 0)
+                        {
+                            continue;
+                        }
                         pwd.RemoveAt(pwd.Length - 1);
                         Console.Write("\b \b");
                         break;

@@ -46,7 +46,10 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         private void Ensure_no_certificate_file_exists()
         {
             _directoryInfo = _fileSystem.GetCatalystHomeDir();
-            if (_directoryInfo.Exists) _directoryInfo.Delete(true);
+            if (_directoryInfo.Exists)
+            {
+                _directoryInfo.Delete(true);
+            }
             _directoryInfo.Create();
             _directoryInfo.EnumerateFiles().Should().BeEmpty();
         }
@@ -86,7 +89,10 @@ namespace Catalyst.Node.Common.UnitTests.Cryptography
         public void CertificateStore_CanReadAndWriteCertFiles_WithPassword()
         {
             //TODO: cf. issue <see cref="https://github.com/catalyst-network/Catalyst.Node/issues/2" />
-            if (Environment.OSVersion.Platform == PlatformID.Unix) return;
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                return;
+            }
 
             Create_certificate_store();
             Ensure_no_certificate_file_exists();

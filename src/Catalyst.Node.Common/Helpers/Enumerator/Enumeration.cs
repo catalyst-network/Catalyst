@@ -31,7 +31,10 @@ namespace Catalyst.Node.Common.Helpers.Enumerator
             StringComparison comparison = StringComparison.InvariantCultureIgnoreCase) where T : Enumeration
         {
             parsed = null;
-            if (value == null) return false;
+            if (value == null)
+            {
+                return false;
+            }
             parsed = GetAll<T>().SingleOrDefault(e => e.Name.Equals(value, comparison));
             return parsed != null;
         }
@@ -41,10 +44,12 @@ namespace Catalyst.Node.Common.Helpers.Enumerator
         {
             Guard.Argument(value, nameof(value)).NotNull();
             var allValues = GetAll<T>();
-            var result = allValues.SingleOrDefault(e => e.Name.Equals(value, comparison));
-            if (result == null)
+            var enumerable = allValues as T[] ?? allValues.ToArray();
+            var result = enumerable.SingleOrDefault(e => e.Name.Equals(value, comparison));
+            if (result == null) {
                 throw new FormatException($"Failed to parse {value} into a {typeof(T).Name}, " +
-                    $"admitted values are {string.Join(", ", allValues.Select(v => v.Name))}");
+                    $"admitted values are {string.Join(", ", enumerable.Select(v => v.Name))}");
+            }
             return result;
         }
 
@@ -63,9 +68,21 @@ namespace Catalyst.Node.Common.Helpers.Enumerator
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+            
             return Equals((Enumeration) obj);
         }
 

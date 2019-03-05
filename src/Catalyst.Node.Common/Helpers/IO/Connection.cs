@@ -37,13 +37,21 @@ namespace Catalyst.Node.Common.Helpers.IO
         /// <returns></returns>
         public bool IsConnected()
         {
-            if (TcpClient == null) throw new ArgumentNullException(nameof(TcpClient));
+            if (TcpClient == null)
+            {
+                throw new ArgumentNullException(nameof(TcpClient));
+            }
 
-            if (!TcpClient.Connected) return false;
+            if (!TcpClient.Connected)
+            {
+                return false;
+            }
 
             if (!TcpClient.Client.Poll(0, SelectMode.SelectWrite) ||
                 TcpClient.Client.Poll(0, SelectMode.SelectError))
+            {
                 return false;
+            }
 
             var buffer = new byte[1]; // @TODO hook into new byte array method && determine buffer length
             return TcpClient.Client.Receive(buffer, SocketFlags.Peek) != 0;
@@ -60,9 +68,12 @@ namespace Catalyst.Node.Common.Helpers.IO
         /// <summary>
         /// </summary>
         /// <param name="disposing"></param>
-        public void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (Disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {

@@ -126,38 +126,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Redis
             _database.StringGet("firstkey").Should().Be(100);
         }
 
-        //TODO : find a better way to simulate disconnection, kill process is forbidden and might 
-        //run while other tests are trying to use the Redis cache.
-        [Fact(Skip = "cf todo")]
-        public void Reconnect()
-        {
-            // var localByName = Process.GetProcessesByName("redis-server");
-            // if (localByName.Length > 0) localByName[0].Kill(); // kill daemon process
-            //
-            // // redis-server is down
-            // Process.GetProcessesByName("redis-server").Should().BeEmpty();
-            //
-            // try
-            // {
-            //     new Action(() => _memPool.SaveTx(_key, _transaction))
-            //        .Should().Throw<Exception>("It should throw an exception if server is down");
-            // }
-            // catch (Exception)
-            // {
-            //     "redis-server".BackgroundCmd(); // restart
-            // }
-            //
-            // localByName = Process.GetProcessesByName("redis-server");
-            // localByName.Should().NotBeNullOrEmpty();
-            //
-            // new Action(() =>
-            //            {
-            //                _memPool.SaveTx(_key, _transaction);
-            //                var transaction = _memPool.GetTx(_key);
-            //                transaction.Signature.Should().Be("signature");
-            //            }).Should().NotThrow("It should have reconnected automatically");
-        }
-
         [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void WriteByteArrayValue()
         {

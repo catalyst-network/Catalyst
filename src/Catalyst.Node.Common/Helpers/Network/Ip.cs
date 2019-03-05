@@ -88,7 +88,10 @@ namespace Catalyst.Node.Common.Helpers.Network
         /// <exception cref="ArgumentNullException"></exception>
         public static IPAddress ValidateIp(string ip)
         {
-            if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
+            if (string.IsNullOrEmpty(ip))
+            {
+                throw new ArgumentNullException(nameof(ip));
+            }
             return IPAddress.Parse(ip);
         }
     }

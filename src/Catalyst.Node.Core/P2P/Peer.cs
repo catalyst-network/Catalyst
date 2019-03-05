@@ -47,6 +47,4 @@ namespace Catalyst.Node.Core.P2P
             }
         }
     }
-
-    internal class PeerImpl : Peer { }
 }

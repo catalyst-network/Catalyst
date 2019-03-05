@@ -22,7 +22,10 @@ namespace Catalyst.Node.Core.Components.Redis
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing) Connection?.Dispose();
+            if (disposing)
+            {
+                Connection?.Dispose();
+            }
         }
     }
 }

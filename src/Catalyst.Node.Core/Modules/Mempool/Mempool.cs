@@ -56,7 +56,10 @@ namespace Catalyst.Node.Core.Modules.Mempool
             Guard.Argument(keyedTransaction, nameof(keyedTransaction)).NotNull();
             try
             {
-                if (_transactionStore.TryGet(keyedTransaction.Key, out _)) return false;
+                if (_transactionStore.TryGet(keyedTransaction.Key, out _))
+                {
+                    return false;
+                }
                 _transactionStore.Add(keyedTransaction);
                 return true;
             }

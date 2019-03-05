@@ -43,7 +43,10 @@ namespace Catalyst.Node.Core.UnitTest.Config
             currentDirectory.Create();
             currentDirectory.Refresh();
             var existingFileInfo = new FileInfo(Path.Combine(currentDirectory.FullName, fileName));
-            if (!existingFileInfo.Directory.Exists) existingFileInfo.Directory.Create();
+            if (existingFileInfo.Directory != null && !existingFileInfo.Directory.Exists)
+            {
+                existingFileInfo.Directory.Create();
+            }
             existingFileInfo.Create();
             existingFileInfo.Refresh();
 

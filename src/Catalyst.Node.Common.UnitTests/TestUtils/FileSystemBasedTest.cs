@@ -50,14 +50,19 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) return;
+            if (!disposing)
+            {
+                return;
+            }
 
             var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
-            var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
-               .Where(d => regex.IsMatch(d.Name)
-                 && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
-               .ToList();
-            oldDirectories.ForEach(TryDeleteFolder);
+            if (_testDirectory.Parent != null) {
+                var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
+                   .Where(d => regex.IsMatch(d.Name)
+                     && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
+                   .ToList();
+                oldDirectories.ForEach(TryDeleteFolder);
+            }
         }
 
         private static void TryDeleteFolder(DirectoryInfo d)
@@ -75,11 +80,17 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         public static uint GetHashFromItems<T>(IEnumerable<T> items)
         {
-            if (items == null) return 0;
+            if (items == null)
+            {
+                return 0;
+            }
             unchecked
             {
                 var hash = 19;
-                foreach (var obj in items) hash = hash * 31 + obj.GetHashCode();
+                foreach (var obj in items)
+                {
+                    hash = hash * 31 + obj.GetHashCode();
+                }
                 return (uint) hash;
             }
         }

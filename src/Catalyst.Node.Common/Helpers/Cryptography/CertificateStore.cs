@@ -27,14 +27,19 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         public X509Certificate2 ReadOrCreateCertificateFile(string pfxFilePath)
         {
             var foundCertificate = TryGet(pfxFilePath, out var certificate);
-            if (foundCertificate) return certificate;
+            
+            if (foundCertificate)
+            {
+                return certificate;
+            }
 
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            if (Environment.OSVersion.Platform == PlatformID.Unix) {
                 throw new PlatformNotSupportedException(
                     "Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
                     $"Please create a password protected certificate at {pfxFilePath}." +
                     Environment.NewLine +
                     "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
+            }
             certificate = CreateAndSaveSelfSignedCertificate(pfxFilePath);
 
             return certificate;
@@ -55,7 +60,10 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         private void Save(X509Certificate2 certificate, string fileName, SecureString password)
         {
             var targetDirInfo = _storageFolder;
-            if (!targetDirInfo.Exists) targetDirInfo.Create();
+            if (!targetDirInfo.Exists)
+            {
+                targetDirInfo.Create();
+            }
             var certificateInBytes = certificate.Export(X509ContentType.Pfx, password);
             var fullPathToCertificate = Path.Combine(targetDirInfo.FullName, fileName);
             File.WriteAllBytes(fullPathToCertificate, certificateInBytes);
@@ -72,7 +80,10 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             var fileInfo = new FileInfo(fullPath);
             certificate = null;
 
-            if (!fileInfo.Exists) return false;
+            if (!fileInfo.Exists)
+            {
+                return false;
+            }
 
             try
             {
@@ -92,13 +103,20 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                     }
                     catch (CryptographicException ex)
                     {
-                        if (!ex.Message.Contains("password", StringComparison.InvariantCultureIgnoreCase)) throw;
+                        if (!ex.Message.Contains("password", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            throw;
+                        }
 
                         tryCount++;
                         if (tryCount == 1)
+                        {
                             Logger.Warning("The certificate at {0} requires a password to be read.", fullPath);
+                        }
                         else
+                        {
                             Logger.Warning(ex.Message);
+                        }
                     }
             }
             catch (Exception exception)
