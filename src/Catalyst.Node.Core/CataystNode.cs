@@ -12,9 +12,6 @@ using Catalyst.Node.Common.Modules.Mempool;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.Util;
-using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.P2P.Messages;
 using Dawn;
 using Serilog;
 
@@ -51,22 +48,7 @@ namespace Catalyst.Node.Core
             _mempool = mempool;
             _contract = contract;
             _gossip = gossip;
-
-            ConnectionManager = new ConnectionManager(certificateStore.ReadOrCreateCertificateFile(p2p.Settings.PfxFileName),
-                new PeerList(new ClientWorker()),
-                new MessageQueueManager(),
-                _p2p.Identifier
-            );
-
-            Task.Run(async () =>
-            {
-                await ConnectionManager.InboundConnectionListener(p2p.Settings.EndPoint);
-            });
-
-            ConnectionManager.AnnounceNode += Announce;
         }
-
-        public ConnectionManager ConnectionManager { get; }
 
         /// <summary>
         /// </summary>
@@ -92,9 +74,8 @@ namespace Catalyst.Node.Core
             if (disposing && !_disposed)
             {
                 _logger.Verbose("Disposing of CatalystNode");
-                ConnectionManager?.Dispose();
-                _logger.Verbose("CatalystNode disposed");
                 _disposed = true;
+                _logger.Verbose("CatalystNode disposed");
             }
         }
 
