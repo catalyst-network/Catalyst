@@ -2,18 +2,17 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Catalyst.Node.Common.P2P;
 using Dawn;
 
-namespace Catalyst.Node.Common.Config
+namespace Catalyst.Node.Common.Helpers.Config
 {
     public class ConfigCopier
     {
         private const bool OverwriteFilesByDefault = false;
 
         /// <summary>
-        /// Finds out which config files are missing from the catalyst home directory and
-        /// copies them over if needed.
+        ///     Finds out which config files are missing from the catalyst home directory and
+        ///     copies them over if needed.
         /// </summary>
         /// <param name="dataDir">Home catalyst directory</param>
         /// <param name="network">Network on which to run the node</param>
@@ -23,16 +22,10 @@ namespace Catalyst.Node.Common.Config
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
             var dataDirInfo = new DirectoryInfo(dataDir);
-            if (!dataDirInfo.Exists)
-            {
-                dataDirInfo.Create();
-            }
+            if (!dataDirInfo.Exists) dataDirInfo.Create();
 
             var modulesFolderInfo = new DirectoryInfo(Path.Combine(dataDir, Constants.ModulesSubFolder));
-            if (!modulesFolderInfo.Exists)
-            {
-                modulesFolderInfo.Create();
-            }
+            if (!modulesFolderInfo.Exists) modulesFolderInfo.Create();
 
             const string jsonSearchPattern = "*.json";
             var existingConfigs = dataDirInfo
@@ -57,21 +50,16 @@ namespace Catalyst.Node.Common.Config
                 ? requiredConfigFiles
                 : requiredConfigFiles.Except(existingConfigs, filenameComparer);
 
-            foreach (var fileName in filesToCopy)
-            {
-                CopyConfigFileToFolder(dataDir, fileName, overwrite);
-            }
+            foreach (var fileName in filesToCopy) CopyConfigFileToFolder(dataDir, fileName, overwrite);
         }
 
-        private void CopyConfigFileToFolder(string targetFolder, string fileName,
+        private void CopyConfigFileToFolder(string targetFolder,
+            string fileName,
             bool overwrite = OverwriteFilesByDefault)
         {
             var sourceFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, fileName);
             var targetFile = Path.Combine(targetFolder, fileName);
-            if (!overwrite && File.Exists(targetFile))
-            {
-                return;
-            }
+            if (!overwrite && File.Exists(targetFile)) return;
             File.Copy(sourceFile, targetFile, overwrite);
         }
     }

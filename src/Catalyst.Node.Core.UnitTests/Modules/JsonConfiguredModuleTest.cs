@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using Autofac;
-using Catalyst.Node.Common.Config;
+using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Modules.Consensus;
 using Catalyst.Node.Common.Modules.Contract;
 using Catalyst.Node.Common.Modules.Dfs;
@@ -24,11 +24,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules
 {
     public class JsonConfiguredModuleTest : BaseModuleConfigTest
     {
-        public JsonConfiguredModuleTest() 
+        public JsonConfiguredModuleTest()
             : base(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
-                PerformExtraRegistrations) {}
+                PerformExtraRegistrations) { }
 
-        public static void PerformExtraRegistrations(ContainerBuilder builder)
+        private static void PerformExtraRegistrations(ContainerBuilder builder)
         {
             builder.RegisterInstance(Substitute.For<ILogger>()).As<ILogger>();
         }
@@ -47,6 +47,5 @@ namespace Catalyst.Node.Core.UnitTest.Modules
             resolvedType.Should().NotBeNull();
             resolvedType.Should().BeOfType(resolutionType);
         }
-
     }
 }

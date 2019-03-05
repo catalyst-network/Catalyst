@@ -1,4 +1,4 @@
-namespace Catalyst.Node.Common.Shell
+namespace Catalyst.Node.Common.Interfaces
 {
     public interface IShell
     {

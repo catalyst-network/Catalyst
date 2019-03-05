@@ -1,4 +1,5 @@
 using System;
+using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Common.Helpers.Workers
 {
@@ -18,10 +19,7 @@ namespace Catalyst.Node.Common.Helpers.Workers
         /// <summary>
         /// </summary>
         /// <param name="action"></param>
-        public void Queue(Action action)
-        {
-            _backgroundWorker.Queue(action);
-        }
+        public void Queue(Action action) { _backgroundWorker.Queue(action); }
 
         /// <summary>
         /// </summary>

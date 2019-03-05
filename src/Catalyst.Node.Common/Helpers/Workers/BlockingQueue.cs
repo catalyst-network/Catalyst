@@ -6,11 +6,6 @@ namespace Catalyst.Node.Common.Helpers.Workers
 {
     internal class BlockingQueue<T> : IDisposable
     {
-        public void Dispose()
-        {
-            _resetEvent?.Dispose();
-        }
-
         private readonly Queue<T> _queue = new Queue<T>();
         private readonly object _queueLock = new object();
         private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
@@ -26,14 +21,13 @@ namespace Catalyst.Node.Common.Helpers.Workers
             }
         }
 
+        public void Dispose() { _resetEvent?.Dispose(); }
+
         public T Take()
         {
             lock (_queueLock)
             {
-                if (_queue.Count > 0)
-                {
-                    return _queue.Dequeue();
-                }
+                if (_queue.Count > 0) return _queue.Dequeue();
             }
 
             _resetEvent.WaitOne();

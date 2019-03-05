@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.Loader;
 using Autofac;
 using Autofac.Configuration;
-using Catalyst.Node.Common.Shell;
+using Catalyst.Node.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Cli
@@ -24,27 +24,24 @@ namespace Catalyst.Cli
             var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
 
-            if (!Directory.Exists(catalystHomeDirectory))
-            {
-                Directory.CreateDirectory(catalystHomeDirectory);
-            }
+            if (!Directory.Exists(catalystHomeDirectory)) Directory.CreateDirectory(catalystHomeDirectory);
 
             // check if user home data dir has a shell config
             var shellFilePath = Path.Combine(catalystHomeDirectory, ShellFileName);
-            if (!File.Exists(shellFilePath)) {
+            if (!File.Exists(shellFilePath))
                 File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.shell.json"),
-                    shellFilePath);}
+                    shellFilePath);
 
             // resolve config from autofac
             var builder = new ContainerBuilder();
 
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
-                                                         context.LoadFromAssemblyPath(
-                                                             Path.Combine(Directory.GetCurrentDirectory(),
-                                                                 $"{assembly.Name}.dll"));
+                context.LoadFromAssemblyPath(
+                    Path.Combine(Directory.GetCurrentDirectory(),
+                        $"{assembly.Name}.dll"));
 
             var shellConfig = new ConfigurationBuilder().AddJsonFile(shellFilePath)
-                                                        .Build();
+               .Build();
 
             var shellModule = new ConfigurationModule(shellConfig);
 
@@ -53,11 +50,11 @@ namespace Catalyst.Cli
             var container = builder.Build();
 
             Console.SetIn(
-                    new StreamReader(
-                            Console.OpenStandardInput(bufferSize),
-                            Console.InputEncoding, false, bufferSize
-                        )
-                );
+                new StreamReader(
+                    Console.OpenStandardInput(bufferSize),
+                    Console.InputEncoding, false, bufferSize
+                )
+            );
 
             container.Resolve<IAds>();
 

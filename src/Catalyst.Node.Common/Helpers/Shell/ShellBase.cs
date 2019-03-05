@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Security;
 using System.Text;
-using Catalyst.Node.Common.Shell;
+using Catalyst.Node.Common.Interfaces;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Shell
@@ -64,10 +64,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
             Logger.Information(normalCmds);
 
-            if (advancedCmds != "")
-            {
-                Logger.Information(advancedCmds);
-            }
+            if (advancedCmds != "") Logger.Information(advancedCmds);
             return true;
         }
 
@@ -238,16 +235,10 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 var line = Console.ReadLine()?.Trim();
-                if (line == null)
-                {
-                    break;
-                }
+                if (line == null) break;
                 Console.ForegroundColor = ConsoleColor.White;
                 var args = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-                if (args.Length == 0)
-                {
-                    continue;
-                }
+                if (args.Length == 0) continue;
 
                 try
                 {

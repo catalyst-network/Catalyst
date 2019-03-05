@@ -3,9 +3,9 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Catalyst.Node.Common;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
@@ -22,22 +22,17 @@ namespace Catalyst.Node.Core.P2P
     /// </summary>
     public class PeerIdentifier : IPeerIdentifier
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// </summary>
         /// <param name="id"></param>
         private PeerIdentifier(byte[] id)
         {
-            if (!ValidatePeerId(id))
-            {
-                throw new ArgumentException("Peer identifier is invalid.");
-            }
+            if (!ValidatePeerId(id)) throw new ArgumentException("Peer identifier is invalid.");
 
             Id = id;
         }
-
-        public byte[] Id { get; }
 
         /// <summary>
         ///     method to build our peerId
@@ -70,22 +65,18 @@ namespace Catalyst.Node.Core.P2P
             // copy client public key chunk
             Buffer.BlockCopy(publicKey, 0, peerId, 22, 20);
 
-            if (!ValidatePeerId(peerId))
-            {
-                throw new ArgumentException("Peer identifier is invalid.");
-            }
+            if (!ValidatePeerId(peerId)) throw new ArgumentException("Peer identifier is invalid.");
 
             Id = peerId;
         }
+
+        public byte[] Id { get; }
 
         /// <summary>
         ///     Get hex of this client
         /// </summary>
         /// <returns></returns>
-        private static byte[] BuildClientIdChunk()
-        {
-            return Encoding.UTF8.GetBytes("AC");
-        }
+        private static byte[] BuildClientIdChunk() { return Encoding.UTF8.GetBytes("AC"); }
 
         /// <summary>
         ///     We only care about the major ass string! 🍑 🍑 🍑
@@ -104,10 +95,7 @@ namespace Catalyst.Node.Core.P2P
         private static string PadVersionString(string version)
         {
             Guard.Argument(version, nameof(version)).NotNull().NotEmpty().NotWhiteSpace();
-            while (version.Length < 2)
-            {
-                version = version.PadLeft(2, '0');
-            }
+            while (version.Length < 2) version = version.PadLeft(2, '0');
             return version;
         }
 
@@ -122,13 +110,9 @@ namespace Catalyst.Node.Core.P2P
             var ipBytes = address.GetAddressBytes();
 
             if (ipBytes.Length == 4)
-            {
                 Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
-            }
             else
-            {
                 ipChunk = ipBytes;
-            }
 
             Logger.Debug(string.Join(" ", ipChunk));
 
@@ -156,15 +140,12 @@ namespace Catalyst.Node.Core.P2P
         public bool ValidatePeerId(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
-                 .NotNull()
-                 .NotEmpty()
-                 .MinCount(42)
-                 .MaxCount(42);
+               .NotNull()
+               .NotEmpty()
+               .MinCount(42)
+               .MaxCount(42);
 
-            if (peerId == null)
-            {
-                throw new ArgumentNullException(nameof(peerId));
-            }
+            if (peerId == null) throw new ArgumentNullException(nameof(peerId));
 
             try
             {
@@ -190,10 +171,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentException"></exception>
         private static void ValidatePeerIdLength(byte[] peerId)
         {
-            if (peerId.Length != 42)
-            {
-                throw new ArgumentException("peerId must be 42 bytes");
-            }
+            if (peerId.Length != 42) throw new ArgumentException("peerId must be 42 bytes");
         }
 
         /// <summary>
@@ -204,9 +182,7 @@ namespace Catalyst.Node.Core.P2P
         {
             //@TODO have a known list of clients.
             if (!Regex.IsMatch(ByteUtil.ByteToString(peerId.Slice(0, 2)), @"^[a-zA-Z]+$"))
-            {
                 throw new ArgumentException("ClientID not valid");
-            }
         }
 
         /// <summary>
@@ -219,9 +195,7 @@ namespace Catalyst.Node.Core.P2P
                .IsTheSameHex(
                     PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString())
                        .ToHexUTF8()))
-            {
                 throw new ArgumentException("clientVersion not valid");
-            }
         }
 
         /// <summary>
@@ -231,9 +205,7 @@ namespace Catalyst.Node.Core.P2P
         private static void ValidateClientIp(byte[] peerId)
         {
             if (Ip.ValidateIp(new IPAddress(peerId.Slice(4, 20)).ToString()).GetType() != typeof(IPAddress))
-            {
                 throw new ArgumentException("clientIp not valid");
-            }
         }
 
         /// <summary>
@@ -243,9 +215,7 @@ namespace Catalyst.Node.Core.P2P
         private static void ValidateClientPort(byte[] peerId)
         {
             if (!Ip.ValidPortRange(peerId.Slice(20, 22).ToIntFromRLPDecoded()))
-            {
                 throw new ArgumentException("clientPort not valid");
-            }
         }
 
         /// <summary>
@@ -254,10 +224,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentException"></exception>
         private void ValidateClientPubKey(byte[] peerId)
         {
-            if (peerId.Slice(22, 42).Length != 20)
-            {
-                throw new ArgumentException("clientPubKey not valid");
-            }
+            if (peerId.Slice(22, 42).Length != 20) throw new ArgumentException("clientPubKey not valid");
         }
     }
 }

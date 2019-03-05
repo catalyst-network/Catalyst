@@ -1,45 +1,45 @@
 using System;
 
-namespace Catalyst.Node.Common.Helpers.Cryptography
+namespace Catalyst.Node.Common.Interfaces
 {
-    public interface ICryptoContext{
-        
+    public interface ICryptoContext
+    {
         /// <summary>
-        /// Generates a wrapped private key using underlying crypto context.
+        ///     Generates a wrapped private key using underlying crypto context.
         /// </summary>
         /// <returns></returns>
         IPrivateKey GeneratePrivateKey();
-        
+
         /// <summary>
-        /// Creates wrapped public key from keyblob.
+        ///     Creates wrapped public key from keyblob.
         /// </summary>
         /// <param name="blob"></param>
         /// <returns></returns>
         IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob);
-        
+
         /// <summary>
-        /// Creates keyblob from public key.
+        ///     Creates keyblob from public key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         byte[] ExportPublicKey(IPublicKey key);
-        
+
         /// <summary>
-        /// Creates wrapped private key from keyblob.
+        ///     Creates wrapped private key from keyblob.
         /// </summary>
         /// <param name="blob"></param>
         /// <returns></returns>
         IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob);
-        
+
         /// <summary>
-        /// Creates keyblob from private key.
+        ///     Creates keyblob from private key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         byte[] ExportPrivateKey(IPrivateKey key);
-        
+
         /// <summary>
-        /// Creates signature using data and provided private key. 
+        ///     Creates signature using data and provided private key.
         /// </summary>
         /// <param name="privateKey"></param>
         /// <param name="data"></param>
@@ -49,7 +49,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         bool Verify(IPublicKey key, ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature);
 
         /// <summary>
-        /// Given a private key returns corresponding public key.
+        ///     Given a private key returns corresponding public key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>

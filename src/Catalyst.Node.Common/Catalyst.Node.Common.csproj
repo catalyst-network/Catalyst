@@ -123,7 +123,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Config" />
+    <Folder Include="Helpers\Enumerator" />
+    <Folder Include="Helpers\Events" />
+    <Folder Include="Helpers\FileSystem" />
     <Folder Include="Helpers\Hex\HexConverters\Extensions\" />
     <Folder Include="Helpers\Hex\HexTypes\" />
     <Folder Include="Helpers\IO" />
@@ -134,6 +136,5 @@
     <Folder Include="Helpers\Streams" />
     <Folder Include="Helpers\Util" />
     <Folder Include="Helpers\Workers" />
-    <Folder Include="Interfaces" />
   </ItemGroup>
 </Project>

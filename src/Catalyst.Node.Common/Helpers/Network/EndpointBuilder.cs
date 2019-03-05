@@ -18,30 +18,20 @@ namespace Catalyst.Node.Common.Helpers.Network
         public static IPEndPoint BuildNewEndPoint(string endPoint)
         {
             var ep = endPoint.Split(':');
-            if (ep.Length < 2)
-            {
-                throw new FormatException("Invalid endpoint format");
-            }
+            if (ep.Length < 2) throw new FormatException("Invalid endpoint format");
             IPAddress ip;
             if (ep.Length > 2)
             {
                 if (!IPAddress.TryParse(string.Join(":", ep, 0, ep.Length - 1), out ip))
-                {
                     throw new FormatException("Invalid ip address");
-                }
             }
             else
             {
-                if (!IPAddress.TryParse(ep[0], out ip))
-                {
-                    throw new FormatException("Invalid ip address");
-                }
+                if (!IPAddress.TryParse(ep[0], out ip)) throw new FormatException("Invalid ip address");
             }
 
             if (!int.TryParse(ep[ep.Length - 1], NumberStyles.None, NumberFormatInfo.CurrentInfo, out var port))
-            {
                 throw new FormatException("Invalid port");
-            }
             return BuildNewEndPoint(ip, port);
         }
 
@@ -68,7 +58,7 @@ namespace Catalyst.Node.Common.Helpers.Network
             Guard.Argument(port, nameof(port)).Min(1025).Max(65535);
 
             var validatedIp = Ip.ValidateIp(ip);
-            
+
             return BuildNewEndPoint(validatedIp, port);
         }
     }

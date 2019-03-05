@@ -1,5 +1,5 @@
 using System;
-using Catalyst.Node.Common;
+using Catalyst.Node.Common.Interfaces;
 using Dawn;
 
 namespace Catalyst.Node.Core.Events

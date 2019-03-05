@@ -14,8 +14,8 @@ namespace Catalyst.Node.Core.Modules.Mempool
     /// </summary>
     public class Mempool : IMempool
     {
-        private readonly IRepository<StTxModel, Key> _transactionStore;
         private readonly ILogger _logger;
+        private readonly IRepository<StTxModel, Key> _transactionStore;
 
         /// <inheritdoc />
         public Mempool(IRepository<StTxModel, Key> transactionStore, ILogger logger)
@@ -40,24 +40,6 @@ namespace Catalyst.Node.Core.Modules.Mempool
             Guard.Argument(key, nameof(key)).NotNull();
             Guard.Argument(transaction, nameof(transaction)).NotNull();
             return SaveTx(new StTxModel {Key = key, Transaction = transaction});
-
-        }
-
-        /// <inheritdoc />
-        public bool SaveTx(StTxModel keyedTransaction)
-        {
-            Guard.Argument(keyedTransaction, nameof(keyedTransaction)).NotNull();
-            try
-            {
-                if(_transactionStore.TryGet(keyedTransaction.Key, out var _)) return false;
-                _transactionStore.Add(keyedTransaction);
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, "Failed to add standard transaction to mempool");
-                return false;
-            }
         }
 
         /// <inheritdoc />
@@ -66,6 +48,23 @@ namespace Catalyst.Node.Core.Modules.Mempool
             Guard.Argument(key, nameof(key)).NotNull();
             var found = _transactionStore.Get(key);
             return found.Transaction;
+        }
+
+        /// <inheritdoc />
+        public bool SaveTx(StTxModel keyedTransaction)
+        {
+            Guard.Argument(keyedTransaction, nameof(keyedTransaction)).NotNull();
+            try
+            {
+                if (_transactionStore.TryGet(keyedTransaction.Key, out _)) return false;
+                _transactionStore.Add(keyedTransaction);
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Failed to add standard transaction to mempool");
+                return false;
+            }
         }
     }
 }

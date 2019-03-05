@@ -19,10 +19,7 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Redis
             _database = _connector.Database;
         }
 
-        public void Dispose()
-        {
-            _connector.Dispose();
-        }
+        public void Dispose() { _connector.Dispose(); }
 
         private static readonly IPEndPoint EndPoint = EndpointBuilder.BuildNewEndPoint("127.0.0.1", 6379);
 
@@ -64,6 +61,39 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Redis
         }
 
         [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
+        public async Task KeysArePersistent()
+        {
+            var key = "persisted_key";
+            var value = "persisted_value";
+            await _database.KeyDeleteAsync(key);
+            (await _database.StringGetAsync(key)).HasValue.Should().BeFalse("we just deleted that key");
+
+            await _database.StringSetAsync(key, value);
+
+            await Task.Delay(500); // after 500ms the changes is saved
+
+            var redisValue = await _database.StringGetAsync(key);
+            redisValue.HasValue.Should().BeTrue();
+            redisValue.Should().Be(value);
+
+            await _connector.Connection.CloseAsync();
+            _connector.Connection.IsConnected.Should().BeFalse();
+            _connector.Dispose();
+            await Task.Delay(500);
+
+            using (var newConnector = new RedisConnector(EndPoint.ToString()))
+            {
+                var database = newConnector.Database;
+                var persistedValue = await database.StringGetAsync(key);
+                persistedValue.HasValue.Should().BeTrue();
+                persistedValue.Should().Be(value);
+
+                //do some cleaning
+                await database.KeyDeleteAsync(key);
+            }
+        }
+
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
         public void MultipleClient()
         {
             const int threadNum = 5;
@@ -96,57 +126,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Redis
             _database.StringGet("firstkey").Should().Be(100);
         }
 
-        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
-        public void WriteByteArrayValue()
-        {
-            var bytes = Encoding.ASCII.GetBytes("abcdef");
-
-            _database.StringSet("firstkey", bytes).Should().BeTrue();
-            Encoding.ASCII.GetString(_database.StringGet("firstkey")).Should().Be("abcdef");
-        }
-
-        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
-        public void WriteReadMany()
-        {
-            const int num = 15000;
-            for (var i = 0; i < num; i++) _database.StringSet($"mykey:{i}", i);
-
-            for (var i = 0; i < num; i++) _database.StringGet($"mykey:{i}").Should().Be(i);
-        }
-        
-        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
-        public async Task KeysArePersistent()
-        {
-            var key = "persisted_key";
-            var value = "persisted_value";
-            await _database.KeyDeleteAsync(key);
-            (await _database.StringGetAsync(key)).HasValue.Should().BeFalse("we just deleted that key");
-            
-            await _database.StringSetAsync(key, value);
-            
-            await Task.Delay(500); // after 500ms the changes is saved
-
-            var redisValue = (await _database.StringGetAsync(key));
-            redisValue.HasValue.Should().BeTrue();
-            redisValue.Should().Be(value);
-
-            await _connector.Connection.CloseAsync();
-            _connector.Connection.IsConnected.Should().BeFalse();
-            _connector.Dispose();
-            await Task.Delay(500);
-
-            using (var newConnector = new RedisConnector(EndPoint.ToString()))
-            {
-                var database = newConnector.Database;
-                var persistedValue = await database.StringGetAsync(key);
-                persistedValue.HasValue.Should().BeTrue();
-                persistedValue.Should().Be(value);
-                
-                //do some cleaning
-                await database.KeyDeleteAsync(key);
-            }
-        }
-        
         //TODO : find a better way to simulate disconnection, kill process is forbidden and might 
         //run while other tests are trying to use the Redis cache.
         [Fact(Skip = "cf todo")]
@@ -177,6 +156,24 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Redis
             //                var transaction = _memPool.GetTx(_key);
             //                transaction.Signature.Should().Be("signature");
             //            }).Should().NotThrow("It should have reconnected automatically");
+        }
+
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
+        public void WriteByteArrayValue()
+        {
+            var bytes = Encoding.ASCII.GetBytes("abcdef");
+
+            _database.StringSet("firstkey", bytes).Should().BeTrue();
+            Encoding.ASCII.GetString(_database.StringGet("firstkey")).Should().Be("abcdef");
+        }
+
+        [Fact(Skip = "This is an integration test which relies on having a running Redis local instance.")]
+        public void WriteReadMany()
+        {
+            const int num = 15000;
+            for (var i = 0; i < num; i++) _database.StringSet($"mykey:{i}", i);
+
+            for (var i = 0; i < num; i++) _database.StringGet($"mykey:{i}").Should().Be(i);
         }
     }
 }

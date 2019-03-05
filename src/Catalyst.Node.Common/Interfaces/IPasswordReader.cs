@@ -1,6 +1,6 @@
 using System.Security;
 
-namespace Catalyst.Node.Common.Helpers.Cryptography
+namespace Catalyst.Node.Common.Interfaces
 {
     public interface IPasswordReader
     {

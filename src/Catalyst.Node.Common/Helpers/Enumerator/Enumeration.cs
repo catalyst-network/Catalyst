@@ -1,19 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Dawn;
 
-namespace Catalyst.Node.Common.Helpers
+namespace Catalyst.Node.Common.Helpers.Enumerator
 {
     /// <summary>
-    /// <see href="https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/enumeration-classes-over-enum-types"/>
+    ///     <see
+    ///         href="https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/enumeration-classes-over-enum-types" />
     /// </summary>
     public abstract class Enumeration : IEquatable<Enumeration>
     {
-        public string Name { get; }
-        public int Id { get; }
-
         protected Enumeration() { }
 
         protected Enumeration(int id, string name)
@@ -23,9 +21,13 @@ namespace Catalyst.Node.Common.Helpers
             Name = name;
         }
 
-        public override string ToString() => Name;
+        public string Name { get; }
+        private int Id { get; }
 
-        public static bool TryParse<T>(string value, out T parsed, 
+        public override string ToString() { return Name; }
+
+        public static bool TryParse<T>(string value,
+            out T parsed,
             StringComparison comparison = StringComparison.InvariantCultureIgnoreCase) where T : Enumeration
         {
             parsed = null;
@@ -40,8 +42,9 @@ namespace Catalyst.Node.Common.Helpers
             Guard.Argument(value, nameof(value)).NotNull();
             var allValues = GetAll<T>();
             var result = allValues.SingleOrDefault(e => e.Name.Equals(value, comparison));
-            if(result == null) throw new FormatException($"Failed to parse {value} into a {typeof(T).Name}, " +
-                $"admitted values are {string.Join(", ", allValues.Select(v => v.Name))}");
+            if (result == null)
+                throw new FormatException($"Failed to parse {value} into a {typeof(T).Name}, " +
+                    $"admitted values are {string.Join(", ", allValues.Select(v => v.Name))}");
             return result;
         }
 
@@ -55,19 +58,21 @@ namespace Catalyst.Node.Common.Helpers
         }
 
         #region Equality members
+
         public bool Equals(Enumeration other) { throw new NotImplementedException(); }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Enumeration)obj);
+            if (obj.GetType() != GetType()) return false;
+            return Equals((Enumeration) obj);
         }
 
         public override int GetHashCode() { throw new NotImplementedException(); }
         public static bool operator ==(Enumeration left, Enumeration right) { return Equals(left, right); }
         public static bool operator !=(Enumeration left, Enumeration right) { return !Equals(left, right); }
+
         #endregion
     }
 }

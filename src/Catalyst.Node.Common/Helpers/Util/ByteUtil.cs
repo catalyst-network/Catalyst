@@ -48,7 +48,7 @@ namespace Catalyst.Node.Common.Helpers.Util
         public static byte[] AppendByte(byte[] bytes, byte b)
         {
             Guard.Argument(bytes, nameof(bytes)).NotNull().NotEmpty();
-            
+
             var result = new byte[bytes.Length + 1];
             Array.Copy(bytes, result, bytes.Length);
             result[result.Length - 1] = b;
@@ -81,10 +81,7 @@ namespace Catalyst.Node.Common.Helpers.Util
             Guard.Argument(length, nameof(length)).Positive().NotZero();
 
             var returnArray = new byte[length];
-            for (var i = 0; i < length; i++)
-            {
-                returnArray[i] = 0x00;
-            }
+            for (var i = 0; i < length; i++) returnArray[i] = 0x00;
             return returnArray;
         }
 
@@ -97,20 +94,13 @@ namespace Catalyst.Node.Common.Helpers.Util
             Guard.Argument(arrays, nameof(arrays)).NotNull().NotEmpty();
 
             foreach (var a in arrays)
-            {
-                foreach (var b in a)
-                {
-                    yield return b;
-                }
-            }
+            foreach (var b in a)
+                yield return b;
         }
 
         /// <param name="arrays"> - arrays to merge </param>
         /// <returns> - merged array </returns>
-        public static byte[] Merge(params byte[][] arrays)
-        {
-            return MergeToEnum(arrays).ToArray();
-        }
+        public static byte[] Merge(params byte[][] arrays) { return MergeToEnum(arrays).ToArray(); }
 
         /// <summary>
         /// </summary>
@@ -134,10 +124,7 @@ namespace Catalyst.Node.Common.Helpers.Util
 
             var length = Math.Min(a.Length, b.Length);
             var result = new byte[length];
-            for (var i = 0; i < length; i++)
-            {
-                result[i] = (byte) (a[i] ^ b[i]);
-            }
+            for (var i = 0; i < length; i++) result[i] = (byte) (a[i] ^ b[i]);
             return result;
         }
     }

@@ -1,4 +1,4 @@
-namespace Catalyst.Node.Common
+namespace Catalyst.Node.Common.Interfaces
 {
     public interface IPeerIdentifier
     {

@@ -12,6 +12,8 @@ namespace Catalyst.Node.Core.Components.Redis
             Connection = ConnectionMultiplexer.ConnectAsync(connectionParam).GetAwaiter().GetResult();
         }
 
+        public void Dispose() { Dispose(true); }
+
         /// <inheritdoc />
         public IConnectionMultiplexer Connection { get; }
 
@@ -20,15 +22,7 @@ namespace Catalyst.Node.Core.Components.Redis
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                Connection?.Dispose();
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
+            if (disposing) Connection?.Dispose();
         }
     }
 }
