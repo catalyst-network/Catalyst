@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Net;
 using Dawn;
 
-namespace Catalyst.Node.Core.Helpers.Network
+namespace Catalyst.Node.Common.Helpers.Network
 {
     /// <summary>
     /// </summary>

@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Core.Helpers.Network;
+using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
-using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
-using Catalyst.Node.Common.UnitTests.TestUtils;
 using NSubstitute.ExceptionExtensions;
+using Xunit;
+using Dns = Catalyst.Node.Common.Helpers.Network.Dns;
 
-namespace Catalyst.Node.Core.UnitTest.Helpers.Network
+namespace Catalyst.Node.Common.UnitTests.Helpers.Network
 {
     public class DnsUnitTests
     {
