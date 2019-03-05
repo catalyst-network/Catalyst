@@ -1,6 +1,5 @@
 using System;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Helpers.Util;
