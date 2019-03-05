@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace Catalyst.Node.Core.Helpers.Network
+namespace Catalyst.Node.Common.Helpers.Network
 {
     public static class Ip
     {
@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.Helpers.Network
             {
                 var req = WebRequest.Create(url);
                 using (var response = await req.GetResponseAsync())
-                using (var reader = new StreamReader(response.GetResponseStream()))
+                using (var reader = new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
                 {
                     var responseContent = (await reader.ReadToEndAsync()).Trim();
                     return IPAddress.Parse(responseContent);

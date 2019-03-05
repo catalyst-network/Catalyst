@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common;
-using Catalyst.Node.Core.Helpers.Network;
+using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Core.Helpers.Util;
 using Dawn;
 using Nethereum.Hex.HexConvertors.Extensions;
