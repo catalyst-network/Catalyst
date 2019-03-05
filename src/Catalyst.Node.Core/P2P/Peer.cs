@@ -14,7 +14,7 @@ namespace Catalyst.Node.Core.P2P
         private DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
         private Connection Connection { get; set; }
-        private PeerIdentifier PeerIdentifier { get; }
+        private PeerIdentifier PeerIdentifier { get; set; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
 
