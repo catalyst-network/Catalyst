@@ -129,5 +129,6 @@
     <Folder Include="Helpers\NSec\Cryptography\Formatting\" />
     <Folder Include="Helpers\NSec\Interop\" />
     <Folder Include="Helpers\RLP\" />
+    <Folder Include="Interfaces" />
   </ItemGroup>
 </Project>
