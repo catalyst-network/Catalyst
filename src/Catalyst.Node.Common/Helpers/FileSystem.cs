@@ -1,9 +1,8 @@
 using System;
 using System.IO;
-using Catalyst.Node.Core.Config;
-using Catalyst.Node.Common;
+using Catalyst.Node.Common.Config;
 
-namespace Catalyst.Node.Core.Helpers
+namespace Catalyst.Node.Common.Helpers
 {
     public class FileSystem : IFileSystem
     {

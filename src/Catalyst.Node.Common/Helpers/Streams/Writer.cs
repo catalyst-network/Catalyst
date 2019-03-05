@@ -1,10 +1,10 @@
 using System;
 using System.Net.Security;
-using Catalyst.Node.Core.Helpers.Util;
+using Catalyst.Node.Common.Helpers.Util;
 using Nethereum.RLP;
 using Serilog;
 
-namespace Catalyst.Node.Core.Helpers.Streams
+namespace Catalyst.Node.Common.Helpers.Streams
 {
     public static class Writer
     {

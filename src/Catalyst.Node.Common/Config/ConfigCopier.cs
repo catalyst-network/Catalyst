@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Common.P2P;
 using Dawn;
 
-namespace Catalyst.Node.Core.Config
+namespace Catalyst.Node.Common.Config
 {
     public class ConfigCopier
     {

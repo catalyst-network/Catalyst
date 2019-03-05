@@ -89,7 +89,7 @@
       ]
     },
     {
-      "type": "Catalyst.Node.Core.Helpers.FileSystem",
+      "type": "Catalyst.Node.Common.Helpers.FileSystem, Catalyst.Node.Common",
       "services": [
         {
           "type": "Catalyst.Node.Common.IFileSystem, Catalyst.Node.Common"

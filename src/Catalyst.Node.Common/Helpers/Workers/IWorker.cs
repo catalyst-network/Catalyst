@@ -1,6 +1,6 @@
 using System;
 
-namespace Catalyst.Node.Core.Helpers.Workers
+namespace Catalyst.Node.Common.Helpers.Workers
 {
     public interface IWorker
     {
