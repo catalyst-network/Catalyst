@@ -11,7 +11,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         public Shell()
         {
-            Logger.Information("Koopa Catalyst.Helpers.Shell Start");
+            Logger.Information("Koopa Shell Start");
             RunConsole();
         }
 
@@ -21,7 +21,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static bool OnServiceCommand(string[] args)
+        private static bool OnServiceCommand(string[] args)
         {
             switch (args[1].ToLower())
             {
@@ -33,10 +33,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
                     return OnWalletCommand(args);
                 case "peer":
                     return OnPeerCommand(args);
-                case "gossip":
-                    return OnGossipCommand(args);
-                case "consensus":
-                    return OnConsensusCommand(args);
                 default:
                     return CommandNotFound(args);
             }
@@ -46,7 +42,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static bool OnRpcCommand(string[] args)
+        private static bool OnRpcCommand(string[] args)
         {
             switch (args[2].ToLower())
             {
@@ -67,7 +63,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        internal static bool OnDfsCommand(string[] args)
+        private static bool OnDfsCommand(string[] args)
         {
             switch (args[2].ToLower())
             {
@@ -128,52 +124,8 @@ namespace Catalyst.Node.Core.Helpers.Shell
 
         /// <summary>
         /// </summary>
-        /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnGossipCommand(string[] args)
-        {
-            switch (args[2].ToLower())
-            {
-                case "start":
-                    return false;
-                case "stop":
-                    return false;
-                case "status":
-                    return false;
-                case "restart":
-                    return false;
-                default:
-                    return CommandNotFound(args);
-            }
-        }
-
-        /// <summary>
-        ///     Starts the Catalyst consensus module.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static bool OnConsensusCommand(string[] args)
-        {
-            switch (args[2].ToLower())
-            {
-                case "start":
-                    ShowPrompt = true;
-                    return false;
-                case "stop":
-                    return false;
-                case "status":
-                    return false;
-                case "restart":
-                    return false;
-                default:
-                    return CommandNotFound(args);
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public bool OnHelpCommand()
+        private bool OnHelpCommand()
         {
             var advancedCmds =
                 "Advanced Commands:\n" +
@@ -272,17 +224,13 @@ namespace Catalyst.Node.Core.Helpers.Shell
                     return OnWalletCommand(args);
                 case "peer":
                     return OnPeerCommand(args);
-                case "gossip":
-                    return OnGossipCommand(args);
-                case "consensus":
-                    return OnConsensusCommand(args);
                 default:
                     return base.OnCommand(args);
             }
         }
 
         /// <summary>
-        ///     @TODO need some auth against the node
+        /// 
         /// </summary>
         /// <returns></returns>
         private static bool OnConnectNode(string[] args)

@@ -219,7 +219,7 @@ namespace Catalyst.Node.Core.Helpers.Shell
         ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
-        public bool RunConsole()
+        protected bool RunConsole()
         {
             var running = true;
 
