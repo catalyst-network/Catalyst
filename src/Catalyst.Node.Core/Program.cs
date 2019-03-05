@@ -7,9 +7,9 @@ using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common;
+using Catalyst.Node.Common.Config;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Core.Config;
-using Catalyst.Node.Core.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -80,6 +80,7 @@ namespace Catalyst.Node.Core
                 {
                     var serviceProvider = new AutofacServiceProvider(scope);
                     var node = container.Resolve<ICatalystNode>();
+                    //@TODO hit a start func
                 }
                 Environment.ExitCode = 0;
             }
