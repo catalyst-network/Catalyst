@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Dawn;
 using Serilog;
 
-namespace Catalyst.Node.Core.Events
+namespace Catalyst.Node.Common.Events
 {
     public static class Events
     {

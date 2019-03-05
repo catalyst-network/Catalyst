@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Dawn;
 
-namespace Catalyst.Node.Core.Helpers.Util
+namespace Catalyst.Node.Common.Helpers.Util
 {
     public static class TimeExtensions
     {

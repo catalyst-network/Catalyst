@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Catalyst.Node.Core.Helpers.Workers
+namespace Catalyst.Node.Common.Helpers.Workers
 {
     internal class BackgroundWorker : IWorker, IDisposable
     {

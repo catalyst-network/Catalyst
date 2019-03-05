@@ -1,5 +1,5 @@
 using System;
-using Catalyst.Node.Core.Helpers.IO;
+using Catalyst.Node.Common.Helpers.IO;
 using Dawn;
 
 namespace Catalyst.Node.Core.Events
@@ -12,6 +12,6 @@ namespace Catalyst.Node.Core.Events
             Connection = connection;
         }
 
-        internal Connection Connection { get; }
+        private Connection Connection { get; }
     }
 }

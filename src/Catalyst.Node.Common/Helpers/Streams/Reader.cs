@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Net.Security;
 using System.Threading.Tasks;
-using Catalyst.Node.Core.Helpers.Util;
+using Catalyst.Node.Common.Helpers.Util;
 
-namespace Catalyst.Node.Core.Helpers.Streams
+namespace Catalyst.Node.Common.Helpers.Streams
 {
     public static class Reader
     {

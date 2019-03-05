@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Dawn;
 
-namespace Catalyst.Node.Core.Helpers.Util
+namespace Catalyst.Node.Common.Helpers.Util
 {
     public static class ByteUtil
     {
