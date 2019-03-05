@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Core.Helpers.Network;
 using DnsClient.Protocol;
 using SharpRepository.Repository;
 

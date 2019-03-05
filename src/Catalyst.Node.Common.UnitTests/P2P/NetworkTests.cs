@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Catalyst.Node.Common.P2P;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.P2P;
 using FluentAssertions;
 using Xunit;
 

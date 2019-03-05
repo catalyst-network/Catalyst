@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DnsClient;
 
-namespace Catalyst.Node.Core.Helpers.Network
+namespace Catalyst.Node.Common.Helpers.Network
 {
     public interface IDns
     {

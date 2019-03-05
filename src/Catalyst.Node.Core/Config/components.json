@@ -34,10 +34,10 @@
       ]
     },
     {
-      "type": "Catalyst.Node.Core.Helpers.Network.Dns",
+      "type": "Catalyst.Node.Common.Helpers.Network.Dns, Catalyst.Node.Common",
       "services": [
         {
-          "type": "Catalyst.Node.Core.Helpers.Network.IDns"
+          "type": "Catalyst.Node.Common.Helpers.Network.IDns, Catalyst.Node.Common"
         }
       ],
       "parameters": {
@@ -45,7 +45,7 @@
       }
     },
     {
-      "type": "Catalyst.Node.Core.Helpers.Network.InjectableLookupClient",
+      "type": "Catalyst.Node.Common.Helpers.Network.InjectableLookupClient, Catalyst.Node.Common",
       "services": [
         {
           "type": "DnsClient.ILookupClient, DnsClient"

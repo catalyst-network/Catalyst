@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Dawn;
 using DnsClient;
 
-namespace Catalyst.Node.Core.Helpers.Network
+namespace Catalyst.Node.Common.Helpers.Network
 {
     //Allow passing in the ipAddress as a string in DI config files.
     public class InjectableLookupClient : LookupClient

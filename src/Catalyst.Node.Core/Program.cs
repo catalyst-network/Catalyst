@@ -80,6 +80,7 @@ namespace Catalyst.Node.Core
                 {
                     var serviceProvider = new AutofacServiceProvider(scope);
                     var node = container.Resolve<ICatalystNode>();
+                    //@TODO hit a start func
                 }
                 Environment.ExitCode = 0;
             }

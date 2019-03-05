@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Modules;
 using Catalyst.Node.Common.P2P;
-using Ipfs.Api;
 
 namespace Catalyst.Node.Core.Config
 {

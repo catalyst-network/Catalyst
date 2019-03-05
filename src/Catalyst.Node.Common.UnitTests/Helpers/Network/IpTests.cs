@@ -4,12 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Catalyst.Node.Core.Helpers.Network;
+using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using FluentAssertions;
 using Xunit;
-using Catalyst.Node.Common.UnitTests.TestUtils;
 
-namespace Catalyst.Node.Core.UnitTest.Helpers.Network
+namespace Catalyst.Node.Common.UnitTests.Helpers.Network
 {
     public class IpTests
     {
@@ -51,8 +51,6 @@ namespace Catalyst.Node.Core.UnitTest.Helpers.Network
 
             myIp.Should().NotBe(default(IPAddress));
             stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3));
-            
         }
-        
     }
 }
