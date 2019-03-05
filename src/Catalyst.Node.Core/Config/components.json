@@ -26,10 +26,49 @@
       ]
     },
     {
+      "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.P2P.IPeerDiscovery, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.Helpers.Network.Dns",
+      "services": [
+        {
+          "type": "Catalyst.Node.Core.Helpers.Network.IDns"
+        }
+      ],
+      "parameters": {
+        "configFilePath": "Config/Modules/gossip.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Helpers.Network.InjectableLookupClient",
+      "services": [
+        {
+          "type": "DnsClient.ILookupClient, DnsClient"
+        }
+      ],
+      "parameters": {
+        "ipAddress": "127.0.0.1",
+        "port": 5053
+      }
+    },
+    {
       "type": "Catalyst.Node.Core.P2P.P2PService",
       "services": [
         {
           "type": "Catalyst.Node.Common.P2P.IP2P, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Core.P2P.Peer, Catalyst.Node.Core]], SharpRepository.InMemoryRepository",
+      "services": [
+        {
+          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.P2P.Peer, Catalyst.Node.Core]], SharpRepository.Repository"
         }
       ]
     },

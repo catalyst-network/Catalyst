@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Catalyst.Node.Common;
 using Catalyst.Node.Common.P2P;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -10,14 +9,17 @@ namespace Catalyst.Node.Core.P2P
 {
     public class P2PService : IP2P
     {
-        public P2PService(IPeerSettings settings)
+        public P2PService(IPeerSettings settings, IPeerDiscovery peerDiscovery)
         {
+            Discovery = peerDiscovery;
             Settings = settings;
 
             var ipEndPoint = new IPEndPoint(Settings.BindAddress, Settings.Port);
             Identifier = new PeerIdentifier(Settings.PublicKey.HexToByteArray(), ipEndPoint);
         }
 
+
+        public IPeerDiscovery Discovery { get; }
         public IPeerIdentifier Identifier { get; }
         public IPeerSettings Settings { get; }
 
