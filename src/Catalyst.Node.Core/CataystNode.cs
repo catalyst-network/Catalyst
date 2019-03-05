@@ -62,6 +62,9 @@ namespace Catalyst.Node.Core
             {
                 await ConnectionManager.InboundConnectionListener(p2p.Settings.EndPoint);
             });
+            while (true){}
+
+            ;
 
             ConnectionManager.AnnounceNode += Announce;
         }
