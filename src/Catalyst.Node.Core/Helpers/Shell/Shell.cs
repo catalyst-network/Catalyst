@@ -143,10 +143,6 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 "IpfsDfs Commands:\n" +
                 "\tdfs file put\n" +
                 "\tdfs file get\n" +
-                "\tservice dfs start\n" +
-                "\tservice dfs stop\n" +
-                "\tservice dfs status\n" +
-                "\tservice dfs restart\n" +
                 "Wallet Commands:\n" +
                 "\twallet create\n" +
                 "\twallet list\n" +
@@ -176,25 +172,10 @@ namespace Catalyst.Node.Core.Helpers.Shell
                 "\tpeer node info\n" +
                 "\tpeer node count\n" +
                 "\tpeer node connect\n" +
-                "\tservice peer start\n" +
-                "\tservice peer stop\n" +
-                "\tservice peer status\n" +
-                "\tservice peer restart\n" +
-                "Gossip Commands:\n" +
-                "\tgossip broadcast transaction\n" +
-                "\tgossip broadcast delta\n" +
-                "\tservice gossip start\n" +
-                "\tservice gossip stop\n" +
-                "\tservice gossip status\n" +
-                "\tservice gossip restart\n" +
                 "Consensus Commands:\n" +
                 "\tvote fee transaction\n" +
                 "\tvote fee dfs\n" +
-                "\tvote fee contract\n" +
-                "\tservice consensus start\n" +
-                "\tservice consensus stop\n" +
-                "\tservice consensus status\n" +
-                "\tservice consensus restart\n";
+                "\tvote fee contract\n";
             return base.OnHelpCommand(advancedCmds);
         }
 
