@@ -4,6 +4,3 @@
 [submodule "submodules/nsec"]
 	path = submodules/nsec
 	url = https://github.com/atlascity/nsec.git
-[submodule "submodules/bc-csharp"]
-	path = submodules/bc-csharp
-	url = https://github.com/atlascity/bc-csharp.git
