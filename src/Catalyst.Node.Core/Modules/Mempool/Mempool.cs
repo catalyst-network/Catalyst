@@ -1,5 +1,4 @@
-#region LICENSE
-/**
+﻿/**
 * Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
@@ -17,7 +16,6 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
-#endregion
 
 ﻿using System;
 using System.Collections.Generic;
