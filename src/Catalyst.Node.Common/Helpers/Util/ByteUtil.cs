@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2019 Catalyst Network
-*
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
-*
-* Catalyst.Node is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-* 
-* Catalyst.Node is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-* 
-* You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (c) 2019 Catalyst Network
+ *
+ * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+ *
+ * Catalyst.Node is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Catalyst.Node is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
@@ -64,12 +64,12 @@ namespace Catalyst.Node.Common.Helpers.Util
         /// <summary>
         ///     Creates a copy of bytes and appends b to the end of it
         /// </summary>
-        public static byte[] AppendByte(byte[] bytes, byte b)
+        public static byte[] AppendByte(byte[] array, byte b)
         {
-            Guard.Argument(bytes, nameof(bytes)).NotNull().NotEmpty();
+            Guard.Argument(array, nameof(array)).NotNull().NotEmpty();
 
-            var result = new byte[bytes.Length + 1];
-            Array.Copy(bytes, result, bytes.Length);
+            var result = new byte[array.Length + 1];
+            Array.Copy(array, result, array.Length);
             result[result.Length - 1] = b;
             return result;
         }
@@ -77,17 +77,17 @@ namespace Catalyst.Node.Common.Helpers.Util
         /// <summary>
         ///     Slice a section from byte array
         /// </summary>
-        /// <param name="org"></param>
+        /// <param name="array"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static byte[] Slice(this byte[] bytes, int start, int end = int.MaxValue)
+        public static byte[] Slice(this byte[] array, int start, int end = int.MaxValue)
         {
-            Guard.Argument(bytes, nameof(bytes)).NotNull().NotEmpty();
+            Guard.Argument(array, nameof(array)).NotNull().NotEmpty();
             Guard.Argument(start, nameof(start)).NotNegative();
             Guard.Argument(end, nameof(end)).InRange(start, int.MaxValue);
 
-            return bytes.Skip(start).Take(end - start).ToArray();
+            return array.Skip(start).Take(end - start).ToArray();
         }
 
         /// <summary>
@@ -125,10 +125,10 @@ namespace Catalyst.Node.Common.Helpers.Util
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static string ByteToString(byte[] bytes)
+        public static string ByteToString(byte[] array)
         {
-            Guard.Argument(bytes, nameof(bytes)).NotNull().NotEmpty();
-            return Encoding.UTF8.GetString(bytes);
+            Guard.Argument(array, nameof(array)).NotNull().NotEmpty();
+            return Encoding.UTF8.GetString(array);
         }
 
         /// <summary>
