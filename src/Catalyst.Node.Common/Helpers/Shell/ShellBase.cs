@@ -36,7 +36,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
             AppCulture = new CultureInfo("es-GB", false);
         }
 
-        private string Prompt => "Koopa";
+        private static string Prompt => "Koopa";
         private static bool ShowPrompt { get; } = true;
         private static string ServiceName => "Catalyst Distributed Shell";
         internal static CultureInfo AppCulture { get; set; }

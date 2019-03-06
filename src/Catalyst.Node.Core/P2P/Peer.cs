@@ -51,7 +51,6 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         public void DecreaseReputation()
         {
-            //@TODO check if this is bellow ban threshold
             Reputation--;
         }
 
