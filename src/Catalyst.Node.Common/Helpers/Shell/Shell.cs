@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Serilog;
-using System.Globalization;
 using Dawn;
 
 namespace Catalyst.Node.Common.Helpers.Shell
@@ -10,14 +9,11 @@ namespace Catalyst.Node.Common.Helpers.Shell
     public sealed class Shell : ShellBase
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private static CultureInfo AppCulture { get; set; }
-
         /// <summary>
         /// </summary>
         public Shell()
         {
             Logger.Information("Koopa Shell Start");
-            AppCulture = new CultureInfo("es-GB", false);
             RunConsole();
         }
 
@@ -187,7 +183,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public override bool OnCommand(string[] args)
+        protected override bool OnCommand(string[] args)
         {
             switch (args[0].ToLower(AppCulture))
             {
