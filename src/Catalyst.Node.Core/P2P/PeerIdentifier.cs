@@ -74,7 +74,7 @@ namespace Catalyst.Node.Core.P2P
             Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty().MaxCount(20).MinCount(20);
 
             // init blank nodeId
-            var peerId = new byte[42]; //@TODO hook into new byte method
+            var peerId = ByteUtil.InitialiseEmptyByteArray(42);
 
             // copy client id chunk
             Buffer.BlockCopy(BuildClientIdChunk(), 0, peerId, 0, 2);
@@ -105,7 +105,10 @@ namespace Catalyst.Node.Core.P2P
         ///     Get hex of this client
         /// </summary>
         /// <returns></returns>
-        private static byte[] BuildClientIdChunk() { return Encoding.UTF8.GetBytes("AC"); }
+        private static byte[] BuildClientIdChunk()
+        {
+            return Encoding.UTF8.GetBytes("AC");
+        }
 
         /// <summary>
         ///     We only care about the major ass string! 🍑 🍑 🍑
@@ -231,7 +234,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidateClientVersion(byte[] peerId)
+        private static void ValidateClientVersion(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
                .NotNull()
@@ -282,7 +285,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidateClientPubKey(byte[] peerId)
+        private static void ValidateClientPubKey(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
                .NotNull()
