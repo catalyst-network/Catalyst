@@ -29,7 +29,7 @@ using StackExchange.Redis.Extensions.Newtonsoft;
 
 namespace Catalyst.Node.Core.Components.Redis
 {
-    public class RedisStore : IDisposable, IRedisStore
+    public class RedisStore : IRedisStore
     {
         private readonly When _when;
         private IRedisConnector _redisConnector;
@@ -43,12 +43,6 @@ namespace Catalyst.Node.Core.Components.Redis
             {
                 throw new ArgumentException($"Invalid When setting format:{when}");
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         public void Connect(IPEndPoint endPoint)
@@ -83,6 +77,11 @@ namespace Catalyst.Node.Core.Components.Redis
             var sut = new StackExchangeRedisCacheClient(_redisConnector.Connection, serializer);
 
             return sut.GetInfo();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
