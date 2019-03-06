@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Reflection;
-using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.Util;
 using Serilog;
 
@@ -14,7 +13,6 @@ namespace Catalyst.Node.Core.P2P
         private int Reputation { get; set; }
         private DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
-        private Connection Connection { get; set; }
         private PeerIdentifier PeerIdentifier { get; set; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
@@ -41,7 +39,6 @@ namespace Catalyst.Node.Core.P2P
         {
             if (disposing)
             {
-                Connection?.Dispose();
                 Logger.Verbose("Connection to peer {0} Disposed.",
                     PeerIdentifier?.Id?.ToString() ?? "unknown");
             }
