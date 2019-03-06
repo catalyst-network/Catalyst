@@ -147,7 +147,7 @@ namespace Catalyst.Node.Common.Helpers.Util
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static byte[] XOR(this byte[] a, byte[] b)
+        public static byte[] Xor(this byte[] a, byte[] b)
         {
             Guard.Argument(a, nameof(a)).NotNull().NotEmpty();
             Guard.Argument(b, nameof(b)).NotNull().NotEmpty();
