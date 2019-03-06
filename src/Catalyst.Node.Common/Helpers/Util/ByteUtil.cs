@@ -101,7 +101,10 @@ namespace Catalyst.Node.Common.Helpers.Util
             Guard.Argument(length, nameof(length)).Positive().NotZero();
 
             var returnArray = new byte[length];
-            for (var i = 0; i < length; i++) returnArray[i] = 0x00;
+            for (var i = 0; i < length; i++)
+            {
+                returnArray[i] = 0x00;
+            }
             return returnArray;
         }
 
