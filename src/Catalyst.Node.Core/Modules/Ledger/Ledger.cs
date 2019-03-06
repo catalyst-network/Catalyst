@@ -2,7 +2,5 @@
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {
-    public class Ledger : ILedger
-    {
-    }
+    public class Ledger : ILedger { }
 }

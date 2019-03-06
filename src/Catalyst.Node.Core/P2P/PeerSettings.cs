@@ -1,23 +1,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Enumerator;
 using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.P2P;
+using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
-    /// Peer settings class.
+    ///     Peer settings class.
     /// </summary>
     public class PeerSettings : IPeerSettings
     {
         /// <summary>
         ///     Set attributes
         /// </summary>
-        /// <param name="section"></param>
+        /// <param name="rootSection"></param>
         public PeerSettings(IConfigurationRoot rootSection)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();

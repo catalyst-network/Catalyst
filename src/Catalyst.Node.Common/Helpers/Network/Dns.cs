@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using DnsClient;
 
@@ -11,7 +13,7 @@ namespace Catalyst.Node.Common.Helpers.Network
     public class InjectableLookupClient : LookupClient
     {
         public InjectableLookupClient(string ipAddress, int port)
-            :base(IPAddress.Parse(ipAddress), port) {}
+            : base(IPAddress.Parse(ipAddress), port) { }
     }
 
     public sealed class Dns : IDns
@@ -19,7 +21,6 @@ namespace Catalyst.Node.Common.Helpers.Network
         private readonly ILookupClient _client;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="dnsServer"></param>
         /// <param name="client"></param>
@@ -35,7 +36,7 @@ namespace Catalyst.Node.Common.Helpers.Network
                .NotNull()
                .NotEmpty()
                .DoesNotContainNull();
-            
+
             var queries = hostnames.Select(GetTxtRecords).ToArray();
             var responses = await Task.WhenAll(queries);
 
@@ -48,7 +49,7 @@ namespace Catalyst.Node.Common.Helpers.Network
                .NotNull()
                .NotEmpty()
                .NotWhiteSpace();
-               
+
             return await Query(hostname, QueryType.TXT);
         }
 
@@ -63,7 +64,7 @@ namespace Catalyst.Node.Common.Helpers.Network
             {
                 return await _client.QueryAsync(hostname, type);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return null;
             }

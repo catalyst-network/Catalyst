@@ -1,7 +1,8 @@
 using System;
 using System.Security;
+using Catalyst.Node.Common.Interfaces;
 
-namespace Catalyst.Node.Common.Helpers.Cryptography 
+namespace Catalyst.Node.Common.Helpers.Cryptography
 {
     public class ConsolePasswordReader : IPasswordReader
     {
@@ -9,11 +10,11 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
         {
             Console.WriteLine(passwordContext);
-            SecureString pwd = new SecureString();
-            bool waitForInput = true;
+            var pwd = new SecureString();
+            var waitForInput = true;
             while (waitForInput)
             {
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                var keyInfo = Console.ReadKey(true);
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.Enter:
@@ -35,8 +36,8 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                         Console.Write(@"*");
                         break;
                 }
-
             }
+
             pwd.MakeReadOnly();
             return pwd;
         }

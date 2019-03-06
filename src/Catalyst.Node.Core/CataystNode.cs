@@ -1,15 +1,13 @@
 using System;
 using System.Net.Sockets;
-using Catalyst.Node.Common;
-using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Modules.Consensus;
 using Catalyst.Node.Common.Modules.Contract;
 using Catalyst.Node.Common.Modules.Dfs;
 using Catalyst.Node.Common.Modules.Gossip;
 using Catalyst.Node.Common.Modules.Ledger;
 using Catalyst.Node.Common.Modules.Mempool;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Events;
 using Dawn;
 using Serilog;
@@ -18,25 +16,25 @@ namespace Catalyst.Node.Core
 {
     public class CatalystNode : IDisposable, ICatalystNode
     {
-        private readonly IP2P _p2p;
         private readonly IConsensus _consensus;
+        private readonly IContract _contract;
         private readonly IDfs _dfs;
+        private readonly IGossip _gossip;
         private readonly ILedger _ledger;
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
-        private readonly IContract _contract;
-        private readonly IGossip _gossip;
-        
+        private readonly IP2P _p2p;
+
         private bool _disposed;
 
         public CatalystNode(IP2P p2p,
             ICertificateStore certificateStore,
-            IConsensus consensus, 
+            IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
             ILogger logger,
             IMempool mempool = null,
-            IContract contract = null, 
+            IContract contract = null,
             IGossip gossip = null)
         {
             _p2p = p2p;
@@ -48,6 +46,8 @@ namespace Catalyst.Node.Core
             _contract = contract;
             _gossip = gossip;
         }
+
+        public void Dispose() { Dispose(true); }
 
         /// <summary>
         /// </summary>
@@ -76,11 +76,6 @@ namespace Catalyst.Node.Core
                 _disposed = true;
                 _logger.Verbose("CatalystNode disposed");
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

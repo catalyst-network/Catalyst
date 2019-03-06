@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
@@ -17,10 +17,6 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
 {
     public class DnsUnitTests
     {
-        private readonly IDns _dns;
-        private readonly ILookupClient _lookupClient;
-        private readonly IPEndPoint _ipEndPoint;
-
         public DnsUnitTests()
         {
             _lookupClient = Substitute.For<ILookupClient>();
@@ -28,37 +24,9 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
             _dns = new Dns(_lookupClient);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task GetTxtRecords_should_return_seeds_for_realz()
-        {
-            var trueClient = new LookupClient(_ipEndPoint);
-            Dns dns = new Dns(trueClient);
-            var dnsQueryResponse =
-                await dns.GetTxtRecords("seed1.network.atlascity.io");
-            var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
-            var seedIp = answerSection.EscapedText.FirstOrDefault();
-            seedIp.Should().Be("92.207.178.198:42069");
-        }
-
-        [Fact]
-        public async Task Dns_GetTxtRecords_should_return_IDnsQueryResponse_from_lookup_client()
-        {
-            
-            var seed = "hoy";
-            var value = "hey";
-            var domainName = "domain.com"; 
-
-            CreateFakeLookupResult(domainName, seed, value);
-
-            var txtRecords = await _dns.GetTxtRecords(domainName);
-
-            txtRecords.Should().BeAssignableTo<IDnsQueryResponse>();
-            txtRecords.Answers.Count.Should().Be(1);
-            txtRecords.Answers.First().DomainName.Value.Should().Be($"{domainName}.");
-            ((TxtRecord) txtRecords.Answers.First()).EscapedText.Should().BeEquivalentTo(seed);
-            ((TxtRecord) txtRecords.Answers.First()).Text.Should().BeEquivalentTo(value);
-        }
+        private readonly IDns _dns;
+        private readonly ILookupClient _lookupClient;
+        private readonly IPEndPoint _ipEndPoint;
 
         private void CreateFakeLookupResult(string domainName, string seed, string value)
         {
@@ -70,19 +38,8 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
             };
 
             queryResponse.Answers.Returns(answers);
-            _lookupClient.QueryAsync(Arg.Is<string>(domainName), Arg.Any<QueryType>())
+            _lookupClient.QueryAsync(Arg.Is(domainName), Arg.Any<QueryType>())
                .Returns(Task.FromResult(queryResponse));
-        }
-
-        [Fact]
-        public async Task Dns_GetTxtRecords_When_Lookup_Throws_should_return_null()
-        {
-            _lookupClient.QueryAsync(Arg.Any<string>(), Arg.Any<QueryType>())
-               .Throws(new InvalidOperationException("failed"));
-
-            var txtRecords = await _dns.GetTxtRecords("www.internet.com");
-
-            txtRecords.Should().BeNull();
         }
 
         [Fact]
@@ -105,7 +62,8 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
         }
 
         [Fact]
-        public async Task Dns_GetTxtRecords_from_list_should_return_IDnsQueryResponse_for_valid_list_of_strings_param_even_when_one_lookup_is_null()
+        public async Task
+            Dns_GetTxtRecords_from_list_should_return_IDnsQueryResponse_for_valid_list_of_strings_param_even_when_one_lookup_is_null()
         {
             var urlList = new List<string>();
             var domain1 = "seed1.network.atlascity.io";
@@ -117,7 +75,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
 
             CreateFakeLookupResult(domain1, "seed1", "value1");
 
-            _lookupClient.QueryAsync(Arg.Is<string>(domain2), Arg.Any<QueryType>())
+            _lookupClient.QueryAsync(Arg.Is(domain2), Arg.Any<QueryType>())
                .Throws(new InvalidOperationException("failed"));
 
             var responses = await _dns.GetTxtRecords(urlList);
@@ -125,6 +83,48 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
             responses.Count.Should().Be(1);
             responses.Should().Contain(r => r.Answers[0].DomainName.Value.StartsWith(domain1));
             responses.Should().NotContainNulls();
+        }
+
+        [Fact]
+        public async Task Dns_GetTxtRecords_should_return_IDnsQueryResponse_from_lookup_client()
+        {
+            var seed = "hoy";
+            var value = "hey";
+            var domainName = "domain.com";
+
+            CreateFakeLookupResult(domainName, seed, value);
+
+            var txtRecords = await _dns.GetTxtRecords(domainName);
+
+            txtRecords.Should().BeAssignableTo<IDnsQueryResponse>();
+            txtRecords.Answers.Count.Should().Be(1);
+            txtRecords.Answers.First().DomainName.Value.Should().Be($"{domainName}.");
+            ((TxtRecord) txtRecords.Answers.First()).EscapedText.Should().BeEquivalentTo(seed);
+            ((TxtRecord) txtRecords.Answers.First()).Text.Should().BeEquivalentTo(value);
+        }
+
+        [Fact]
+        public async Task Dns_GetTxtRecords_When_Lookup_Throws_should_return_null()
+        {
+            _lookupClient.QueryAsync(Arg.Any<string>(), Arg.Any<QueryType>())
+               .Throws(new InvalidOperationException("failed"));
+
+            var txtRecords = await _dns.GetTxtRecords("www.internet.com");
+
+            txtRecords.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task GetTxtRecords_should_return_seeds_for_realz()
+        {
+            var trueClient = new LookupClient(_ipEndPoint);
+            var dns = new Dns(trueClient);
+            var dnsQueryResponse =
+                await dns.GetTxtRecords("seed1.network.atlascity.io");
+            var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
+            var seedIp = answerSection.EscapedText.FirstOrDefault();
+            seedIp.Should().Be("92.207.178.198:42069");
         }
     }
 }

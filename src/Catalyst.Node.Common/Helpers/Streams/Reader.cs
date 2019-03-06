@@ -153,7 +153,7 @@ namespace Catalyst.Node.Common.Helpers.Streams
 
                         currentTimeout += sleepInterval;
                         Task.Delay(sleepInterval);
-                    }   
+                    }
                 }
 
                 if (timeout)

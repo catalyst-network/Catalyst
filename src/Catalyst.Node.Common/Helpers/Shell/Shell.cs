@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Serilog;
 
@@ -5,7 +6,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 {
     public sealed class Shell : ShellBase
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// </summary>
@@ -138,7 +139,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 "\tservice rpc stop\n" +
                 "\tservice rpc status\n" +
                 "\tservice rpc restart\n" +
-                "IpfsDfs Commands:\n" +
+                "Dfs Commands:\n" +
                 "\tdfs file put\n" +
                 "\tdfs file get\n" +
                 "Wallet Commands:\n" +
@@ -209,7 +210,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         private static bool OnConnectNode(string[] args)
@@ -298,10 +298,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool OnStopNode(string[] args)
-        {
-            return false;
-        }
+        public override bool OnStopNode(string[] args) { return false; }
 
         /// <summary>
         /// </summary>
@@ -332,27 +329,18 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override bool OnGetInfo()
-        {
-            return true;
-        }
+        protected override bool OnGetInfo() { return true; }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override bool OnGetVersion()
-        {
-            return true;
-        }
+        protected override bool OnGetVersion() { return true; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override bool OnGetConfig()
-        {
-            return false;
-        }
+        protected override bool OnGetConfig() { return false; }
 
         /// <summary>
         ///     Parses flags passed with commands.
@@ -363,7 +351,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         {
             string argValue = null;
             foreach (var t in args)
-            {
                 switch (t)
                 {
                     case var dataDir when new Regex(@"[regExPattern]+").IsMatch(t):
@@ -372,7 +359,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
                     default:
                         return null;
                 }
-            }
             return argValue;
         }
 
@@ -380,27 +366,18 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnGetDelta(string[] args)
-        {
-            return false;
-        }
+        private static bool OnGetDelta(string[] args) { return false; }
 
         /// <summary>
         ///     Get stats about the underlying mempool implementation
         /// </summary>
         /// <returns>Boolean</returns>
-        protected override bool OnGetMempool()
-        {
-            return false;
-        }
+        protected override bool OnGetMempool() { return false; }
 
         /// <summary>
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnMessageCommand(string[] args)
-        {
-            return false;
-        }
+        private static bool OnMessageCommand(string[] args) { return false; }
     }
 }

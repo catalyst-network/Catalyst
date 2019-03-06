@@ -37,7 +37,7 @@ namespace Catalyst.Node.Common.Helpers.Network
                .Select((url, i) => Observable.FromAsync(async () => await TryGetExternalIpFromEchoUrl(url)))
                .Merge()
                .FirstAsync(t => t != null);
-            
+
             return echoedIp;
         }
 
@@ -47,7 +47,8 @@ namespace Catalyst.Node.Common.Helpers.Network
             {
                 var req = WebRequest.Create(url);
                 using (var response = await req.GetResponseAsync())
-                using (var reader = new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
+                using (var reader =
+                    new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
                 {
                     var responseContent = (await reader.ReadToEndAsync()).Trim();
                     return IPAddress.Parse(responseContent);
@@ -65,10 +66,7 @@ namespace Catalyst.Node.Common.Helpers.Network
         /// </summary>
         /// <param name="port"></param>
         /// <returns></returns>
-        public static bool ValidPortRange(int port)
-        {
-            return 1025 <= port && port <= 65535;
-        }
+        public static bool ValidPortRange(int port) { return 1025 <= port && port <= 65535; }
 
         /// <summary>
         /// </summary>
@@ -77,9 +75,9 @@ namespace Catalyst.Node.Common.Helpers.Network
         public static IPAddress BuildIPAddress(string ipOrHost)
         {
             return IPAddress.TryParse(ipOrHost, out var address)
-                       ? address
-                       : System.Net.Dns.GetHostAddressesAsync(ipOrHost).Result
-                               .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
+                ? address
+                : System.Net.Dns.GetHostAddressesAsync(ipOrHost).Result
+                   .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
         }
 
         /// <summary>

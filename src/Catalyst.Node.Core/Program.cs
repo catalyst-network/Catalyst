@@ -6,10 +6,9 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
-using Catalyst.Node.Common;
-using Catalyst.Node.Common.Config;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.P2P;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.FileSystem;
+using Catalyst.Node.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -26,7 +25,7 @@ namespace Catalyst.Node.Core
 
         static Program()
         {
-            var declaringType = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType;
+            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
             Logger = Log.Logger.ForContext(declaringType);
             LifetimeTag = declaringType.AssemblyQualifiedName;
             ExecutionDirectory = Path.GetDirectoryName(declaringType.Assembly.Location);
@@ -44,7 +43,7 @@ namespace Catalyst.Node.Core
                 var network = Network.Dev;
 
                 var configCopier = new ConfigCopier();
-                configCopier.RunConfigStartUp(targetConfigFolder, network, overwrite:true);
+                configCopier.RunConfigStartUp(targetConfigFolder, network, true);
 
                 var config = new ConfigurationBuilder()
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.NetworkConfigFile(network)))
@@ -62,19 +61,21 @@ namespace Catalyst.Node.Core
                 var containerBuilder = new ContainerBuilder();
                 containerBuilder.RegisterModule(configurationModule);
 
-                var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
+                var loggerConfiguration =
+                    new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
                 Log.Logger = loggerConfiguration.WriteTo
                    .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"), rollingInterval: RollingInterval.Day)
                    .CreateLogger();
                 containerBuilder.RegisterLogger();
 
-                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
+                var repoFactory =
+                    RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
-                containerBuilder.RegisterInstance<IConfigurationRoot>(config);
+                containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
-                using (var scope = container.BeginLifetimeScope(LifetimeTag, 
+                using (var scope = container.BeginLifetimeScope(LifetimeTag,
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
@@ -82,6 +83,7 @@ namespace Catalyst.Node.Core
                     var node = container.Resolve<ICatalystNode>();
                     //@TODO hit a start func
                 }
+
                 Environment.ExitCode = 0;
             }
             catch (Exception e)

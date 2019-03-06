@@ -1,11 +1,13 @@
 ﻿using Catalyst.Protocols.Transaction;
+using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.Modules.Mempool
 {
     public class StTxModel
     {
-        [SharpRepository.Repository.RepositoryPrimaryKey]
+        [RepositoryPrimaryKey]
         public Key Key { get; set; }
+
         public StTx Transaction { get; set; }
     }
 }

@@ -15,13 +15,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 {
     public class MempoolTests
     {
-        private readonly Core.Modules.Mempool.Mempool _memPool;
-
-        private readonly IRepository<StTxModel, Key> _keyValueStore;
-        private readonly Key _key;
-        private readonly StTx _transaction;
-        private ILogger _logger;
-
         public MempoolTests()
         {
             _keyValueStore = Substitute.For<IRepository<StTxModel, Key>>();
@@ -30,24 +23,34 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
             _key = new Key {HashedSignature = "hashed_signature"};
             _transaction = new StTx
-                   {
-                       Amount = 1,
-                       Signature = "signature",
-                       AddressDest = "address_dest",
-                       AddressSource = "address_source",
-                       Updated = new StTx.Types.Timestamp {Nanos = 100, Seconds = 30}
-                   };
+            {
+                Amount = 1,
+                Signature = "signature",
+                AddressDest = "address_dest",
+                AddressSource = "address_source",
+                Updated = new StTx.Types.Timestamp {Nanos = 100, Seconds = 30}
+            };
         }
 
-        private static void AddKeyValueStoreEntryExpectation(Key key, StTx tx, IRepository<StTxModel, Key> keyValueStore)
+        private readonly Core.Modules.Mempool.Mempool _memPool;
+
+        private readonly IRepository<StTxModel, Key> _keyValueStore;
+        private readonly Key _key;
+        private readonly StTx _transaction;
+        private readonly ILogger _logger;
+
+        private static void AddKeyValueStoreEntryExpectation(Key key,
+            StTx tx,
+            IRepository<StTxModel, Key> keyValueStore)
         {
-            var record = new StTxModel() {Key = key.Clone(), Transaction = tx.Clone()};
+            var record = new StTxModel {Key = key.Clone(), Transaction = tx.Clone()};
             keyValueStore.Get(Arg.Is<Key>(k => k.Equals(key)))
-                .Returns(record);
+               .Returns(record);
             keyValueStore.TryGet(Arg.Is<Key>(k => k.Equals(key)), out Arg.Any<StTxModel>())
-                .Returns(ci =>
+               .Returns(ci =>
                 {
-                    ci[1] = record; return true;
+                    ci[1] = record;
+                    return true;
                 });
         }
 

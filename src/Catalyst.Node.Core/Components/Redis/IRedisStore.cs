@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Catalyst.Node.Common;
+using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Core.Components.Redis
 {

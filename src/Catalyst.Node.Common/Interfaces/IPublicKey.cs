@@ -1,13 +1,12 @@
 using NSec.Cryptography;
 
-namespace Catalyst.Node.Common.Helpers.Cryptography
+namespace Catalyst.Node.Common.Interfaces
 {
     /// <summary>
-    /// Wrapper for public key.
+    ///     Wrapper for public key.
     /// </summary>
     public interface IPublicKey
     {
         PublicKey GetNSecFormatPublicKey();
-
     }
 }

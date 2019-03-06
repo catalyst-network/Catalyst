@@ -10,6 +10,7 @@
     {
         public string Name => "Gossip1";
     }
+
     public class NameProvider2 : INameProvider
     {
         public string Name => "Gossip2";

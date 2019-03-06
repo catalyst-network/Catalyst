@@ -13,10 +13,7 @@ namespace Catalyst.Node.Core.Components.Redis
         private readonly When _when;
         private IRedisConnector _redisConnector;
 
-        public RedisStore(When when = When.NotExists)
-        {
-            _when = when;
-        }
+        public RedisStore(When when = When.NotExists) { _when = when; }
 
         public RedisStore(string when)
         {
@@ -25,6 +22,12 @@ namespace Catalyst.Node.Core.Components.Redis
             {
                 throw new ArgumentException($"Invalid When setting format:{when}");
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Connect(IPEndPoint endPoint)
@@ -67,12 +70,6 @@ namespace Catalyst.Node.Core.Components.Redis
             {
                 _redisConnector?.Dispose();
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }
