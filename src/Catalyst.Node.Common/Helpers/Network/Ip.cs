@@ -91,7 +91,7 @@ namespace Catalyst.Node.Common.Helpers.Network
         /// </summary>
         /// <param name="ipOrHost"></param>
         /// <returns></returns>
-        public static IPAddress BuildIPAddress(string ipOrHost)
+        public static IPAddress BuildIpAddress(string ipOrHost)
         {
             return IPAddress.TryParse(ipOrHost, out var address)
                 ? address
