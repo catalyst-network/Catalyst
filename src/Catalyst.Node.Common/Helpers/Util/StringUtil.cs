@@ -3,7 +3,7 @@ using Dawn;
 
 namespace Catalyst.Node.Common.Helpers.Util
 {
-    public class StringUtil
+    public static class StringUtil
     {
         public static bool StringComparatorException(string stringA, string stringB)
         {
