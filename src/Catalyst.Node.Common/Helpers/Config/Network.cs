@@ -2,7 +2,7 @@ using Catalyst.Node.Common.Helpers.Enumerator;
 
 namespace Catalyst.Node.Common.Helpers.Config
 {
-    public abstract class Network : Enumeration
+    public class Network : Enumeration
     {
         public static readonly Network Main = new MainNet();
         public static readonly Network Test = new TestNet();
