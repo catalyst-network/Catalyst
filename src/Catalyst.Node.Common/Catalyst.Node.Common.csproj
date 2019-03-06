@@ -133,6 +133,5 @@
     <Folder Include="Helpers\NSec\Interop\" />
     <Folder Include="Helpers\RLP\" />
     <Folder Include="Helpers\Util" />
-    <Folder Include="Helpers\Workers" />
   </ItemGroup>
 </Project>
