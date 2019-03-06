@@ -50,6 +50,10 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="id"></param>
         private PeerIdentifier(byte[] id)
         {
+            Guard.Argument(id)
+               .NotNull()
+               .NotEmpty();
+            
             if (!ValidatePeerId(id))
             {
                 throw new ArgumentException("Peer identifier is invalid.");
@@ -117,15 +121,17 @@ namespace Catalyst.Node.Core.P2P
 
         /// <summary>
         /// </summary>
-        /// <param name="version"></param>
+        /// <param name="unPaddedVersion"></param>
         /// <returns></returns>
-        private static string PadVersionString(string version)
+        private static string PadVersionString(string unPaddedVersion)
         {
-            Guard.Argument(version, nameof(version)).NotNull().NotEmpty().NotWhiteSpace();
-            while (version.Length < 2)
+            Guard.Argument(unPaddedVersion, nameof(unPaddedVersion)).NotNull().NotEmpty().NotWhiteSpace();
+            string version = null;
+            while (unPaddedVersion.Length < 2)
             {
-                version = version.PadLeft(2, '0');
+                version = unPaddedVersion.PadLeft(2, '0');
             }
+            Guard.Argument(version).NotNull();
             return version;
         }
 

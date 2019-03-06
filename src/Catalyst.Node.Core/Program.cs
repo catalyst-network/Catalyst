@@ -100,7 +100,7 @@ namespace Catalyst.Node.Core
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                    var serviceProvider = new AutofacServiceProvider(scope);
+                    var serviceProvider = new AutofacServiceProvider(scope); //@TODO why initialised and null?
                     var node = container.Resolve<ICatalystNode>();
                     //@TODO hit a start func
                 }
