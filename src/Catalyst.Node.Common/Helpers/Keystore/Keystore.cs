@@ -1,20 +1,21 @@
 using System.IO;
 using Nethereum.Hex.HexConvertors.Extensions;
-//using Nethereum.KeyStore;
+using Nethereum.KeyStore;
 
 namespace Catalyst.Node.Common.Helpers.Keystore
 {
     public class Keystore
     {
-        /*
+        
         public void CreateKeystoreFile(string password, byte[] privateKey, string address)
         {
             
             
             var service = new KeyStoreService();
-            var json = service.EncryptAndGenerateKeyStoreAsJson(password, privateKey, address);
+            //var json = service.EncryptAndGenerateKeyStoreAsJson(password, privateKey, address);
+            var json = service.EncryptAndGenerateDefaultKeyStoreAsJson(password, privateKey, address);
 
-            fileName = service.GenerateUTCFileName(address);
+            var fileName = service.GenerateUTCFileName(address);
 
             using (var newfile = File.CreateText(fileName))
             {            
@@ -22,6 +23,6 @@ namespace Catalyst.Node.Common.Helpers.Keystore
                 newfile.Flush();
             }
         }
-        */
+        
     }
 }
