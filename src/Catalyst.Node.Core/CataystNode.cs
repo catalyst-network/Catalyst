@@ -66,12 +66,18 @@ namespace Catalyst.Node.Core
             _gossip = gossip;
         }
 
-        public void Dispose() { Dispose(true); }
-
+        public void Start()
+        {
+            while (true)
+            {
+                
+            }
+        }
+        
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public void Announce(object sender, AnnounceNodeEventArgs e)
+        private void Announce(object sender, AnnounceNodeEventArgs e)
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(e, nameof(e)).NotNull();
@@ -85,6 +91,11 @@ namespace Catalyst.Node.Core
             _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)

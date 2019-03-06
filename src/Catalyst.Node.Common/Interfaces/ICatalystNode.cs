@@ -19,5 +19,8 @@
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface ICatalystNode { }
+    public interface ICatalystNode
+    {
+        void Start();
+    }
 }
