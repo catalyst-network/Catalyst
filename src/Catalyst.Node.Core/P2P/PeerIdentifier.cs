@@ -177,7 +177,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="peerId"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        private bool ValidatePeerId(byte[] peerId)
+        private static bool ValidatePeerId(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
                .NotNull()
