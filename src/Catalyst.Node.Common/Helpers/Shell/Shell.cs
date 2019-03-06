@@ -1,18 +1,23 @@
+using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Serilog;
+using System.Globalization;
+using Dawn;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
     public sealed class Shell : ShellBase
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static CultureInfo AppCulture { get; set; }
 
         /// <summary>
         /// </summary>
         public Shell()
         {
             Logger.Information("Koopa Shell Start");
+            AppCulture = new CultureInfo("es-GB", false);
             RunConsole();
         }
 
@@ -22,7 +27,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private static bool OnServiceCommand(string[] args)
         {
-            switch (args[1].ToLower())
+            switch (args[1].ToLower(AppCulture))
             {
                 case "rpc":
                     return OnRpcCommand(args);
@@ -43,16 +48,16 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private static bool OnRpcCommand(string[] args)
         {
-            switch (args[2].ToLower())
+            switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    return true;
+                    throw new NotImplementedException();
                 case "stop":
-                    return true;
+                    throw new NotImplementedException();
                 case "status":
-                    return false;
+                    throw new NotImplementedException();
                 case "restart":
-                    return true;
+                    throw new NotImplementedException();
                 default:
                     return CommandNotFound(args);
             }
@@ -64,16 +69,16 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private static bool OnDfsCommand(string[] args)
         {
-            switch (args[2].ToLower())
+            switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    return true;
+                    throw new NotImplementedException();
                 case "stop":
-                    return false;
+                    throw new NotImplementedException();
                 case "status":
-                    return false;
+                    throw new NotImplementedException();
                 case "restart":
-                    return false;
+                    throw new NotImplementedException();
                 default:
                     return CommandNotFound(args);
             }
@@ -85,16 +90,16 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private static bool OnWalletCommand(string[] args)
         {
-            switch (args[2].ToLower())
+            switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    return false;
+                    throw new NotImplementedException();
                 case "stop":
-                    return false;
+                    throw new NotImplementedException();
                 case "status":
-                    return false;
+                    throw new NotImplementedException();
                 case "restart":
-                    return false;
+                    throw new NotImplementedException();
                 default:
                     return CommandNotFound(args);
             }
@@ -106,16 +111,16 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private static bool OnPeerCommand(string[] args)
         {
-            switch (args[2].ToLower())
+            switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    return true;
+                    throw new NotImplementedException();
                 case "stop":
-                    return false;
+                    throw new NotImplementedException();
                 case "status":
-                    return false;
+                    throw new NotImplementedException();
                 case "restart":
-                    return false;
+                    throw new NotImplementedException();
                 default:
                     return CommandNotFound(args);
             }
@@ -184,7 +189,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public override bool OnCommand(string[] args)
         {
-            switch (args[0].ToLower())
+            switch (args[0].ToLower(AppCulture))
             {
                 case "connect":
                     return OnConnectNode(args);
@@ -214,9 +219,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private static bool OnConnectNode(string[] args)
         {
-            var ip = args[2];
-            var port = args[3];
-            return true;
+            Guard.Argument(args).Contains(typeof(string));
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -224,7 +228,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public override bool OnStart(string[] args)
         {
-            switch (args[1].ToLower())
+            switch (args[1].ToLower(AppCulture))
             {
                 case "node":
                     return OnStartNode(args);
@@ -240,7 +244,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public override bool OnStartNode(string[] args)
         {
-            switch (args[1].ToLower())
+            switch (args[1].ToLower(AppCulture))
             {
                 case "local":
                     return OnStartNodeLocal(args);
@@ -257,8 +261,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private static bool OnStartNodeLocal(string[] args)
         {
-            Logger.Error("Not implemented.");
-            return false;
+            Guard.Argument(args).Contains(typeof(string));
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -267,8 +271,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private static bool OnStartNodeRemote(string[] args)
         {
-            Logger.Error("Not implemented.");
-            return false;
+            Guard.Argument(args).Contains(typeof(string));
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -276,15 +280,16 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public override bool OnStartWork(string[] args)
         {
-            Logger.Error("Not implemented.");
-            return false;
+            Guard.Argument(args).Contains(typeof(string));
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// </summary>
         public override bool OnStop(string[] args)
         {
-            switch (args[1].ToLower())
+            Guard.Argument(args).Contains(typeof(string));
+            switch (args[1].ToLower(AppCulture))
             {
                 case "node":
                     return OnStopNode(args);
@@ -298,15 +303,19 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool OnStopNode(string[] args) { return false; }
+        public override bool OnStopNode(string[] args)
+        {
+            Guard.Argument(args).Contains(typeof(string));
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
         public override bool OnStopWork(string[] args)
         {
-            Logger.Error("Not implemented.");
-            return false;
+            Guard.Argument(args).Contains(typeof(string));
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -315,7 +324,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public bool OnGetCommand(string[] args)
         {
-            switch (args[1].ToLower())
+            Guard.Argument(args).Contains(typeof(string));
+            switch (args[1].ToLower(AppCulture))
             {
                 case "delta":
                     return OnGetDelta(args);
@@ -329,18 +339,27 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override bool OnGetInfo() { return true; }
+        protected override bool OnGetInfo()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override bool OnGetVersion() { return true; }
+        protected override bool OnGetVersion()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override bool OnGetConfig() { return false; }
+        protected override bool OnGetConfig()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         ///     Parses flags passed with commands.
@@ -366,18 +385,29 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnGetDelta(string[] args) { return false; }
+        private static bool OnGetDelta(string[] args)
+        {
+            Guard.Argument(args).Contains(typeof(string));
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         ///     Get stats about the underlying mempool implementation
         /// </summary>
         /// <returns>Boolean</returns>
-        protected override bool OnGetMempool() { return false; }
+        protected override bool OnGetMempool()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnMessageCommand(string[] args) { return false; }
+        private static bool OnMessageCommand(string[] args)
+        {
+            Guard.Argument(args).Contains(typeof(string));
+            throw new NotImplementedException();
+        }
     }
 }
