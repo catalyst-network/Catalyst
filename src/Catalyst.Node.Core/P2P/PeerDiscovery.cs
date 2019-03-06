@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.P2P;
+using Catalyst.Node.Common.Interfaces;
 using DnsClient.Protocol;
 using SharpRepository.Repository;
 
@@ -12,12 +12,10 @@ namespace Catalyst.Node.Core.P2P
     public class PeerDiscovery : IPeerDiscovery
     {
         private readonly IDns _dns;
-        private List<IPEndPoint> SeedNodes { get; }
 
         private readonly IRepository<Peer> _peerRepository;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="dns"></param>
         /// <param name="repository"></param>
@@ -27,7 +25,9 @@ namespace Catalyst.Node.Core.P2P
             SeedNodes = new List<IPEndPoint>();
             _peerRepository = repository;
         }
-        
+
+        private List<IPEndPoint> SeedNodes { get; }
+
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>

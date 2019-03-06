@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Net;
+using Catalyst.Node.Common.Helpers.Config;
 
-namespace Catalyst.Node.Common.P2P
+namespace Catalyst.Node.Common.Interfaces
 {
     public interface IPeerSettings
     {

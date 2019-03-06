@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Catalyst.Node.Common.Interfaces;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
@@ -12,24 +13,24 @@ using Xunit.Abstractions;
 namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
     /// <summary>
-    /// A base test class that can be used to offer inheriting tests a folder on which
-    /// to create files, logs, etc.
+    ///     A base test class that can be used to offer inheriting tests a folder on which
+    ///     to create files, logs, etc.
     /// </summary>
     [Trait(Traits.TestType, Traits.IntegrationTest)]
     public abstract class FileSystemBasedTest : IDisposable
     {
         protected readonly ITest _currentTest;
         protected readonly string _currentTestName;
-        protected readonly ITestOutputHelper _output;
         protected readonly IFileSystem _fileSystem;
+        protected readonly ITestOutputHelper _output;
         private readonly DirectoryInfo _testDirectory;
 
         protected FileSystemBasedTest(ITestOutputHelper output)
         {
             _output = output;
-            _currentTest = (_output?.GetType()
+            _currentTest = _output?.GetType()
                .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
-               .GetValue(_output) as ITest);
+               .GetValue(_output) as ITest;
             _currentTestName = _currentTest.TestCase.TestMethod.Method.Name;
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
@@ -45,19 +46,24 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             _output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }
 
+        public void Dispose() { Dispose(true); }
+
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) return;
+            if (!disposing)
+            {
+                return;
+            }
 
             var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
-            var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
-               .Where(d => regex.IsMatch(d.Name) 
-                 && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
-               .ToList();
-            oldDirectories.ForEach(TryDeleteFolder);
+            if (_testDirectory.Parent != null) {
+                var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
+                   .Where(d => regex.IsMatch(d.Name)
+                     && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
+                   .ToList();
+                oldDirectories.ForEach(TryDeleteFolder);
+            }
         }
-
-
 
         private static void TryDeleteFolder(DirectoryInfo d)
         {
@@ -72,14 +78,12 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
         public static uint GetHashFromItems<T>(IEnumerable<T> items)
         {
-            if (items == null) return 0;
+            if (items == null)
+            {
+                return 0;
+            }
             unchecked
             {
                 var hash = 19;
@@ -87,7 +91,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
                 {
                     hash = hash * 31 + obj.GetHashCode();
                 }
-                return (uint)hash;
+                return (uint) hash;
             }
         }
     }

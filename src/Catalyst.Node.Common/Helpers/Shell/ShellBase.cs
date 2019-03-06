@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Security;
 using System.Text;
-using Catalyst.Node.Common.Shell;
+using Catalyst.Node.Common.Interfaces;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Shell

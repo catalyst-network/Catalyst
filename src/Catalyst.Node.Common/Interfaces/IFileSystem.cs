@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Catalyst.Node.Common
+namespace Catalyst.Node.Common.Interfaces
 {
     public interface IFileSystem
     {

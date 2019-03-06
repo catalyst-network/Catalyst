@@ -1,7 +1,7 @@
-﻿using Catalyst.Node.Common.P2P;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Enumerator;
 using FluentAssertions;
 using Xunit;
 
@@ -9,13 +9,13 @@ namespace Catalyst.Node.Common.UnitTests.P2P
 {
     public static class NetworkTests
     {
-        public static List<object[]> NetworksAndExpectations { get; set; }
-
         static NetworkTests()
         {
             NetworksAndExpectations = Enumeration.GetAll<Network>()
-               .Select(n => new[] { n.Name, n as object } ).ToList();
+               .Select(n => new[] {n.Name, n as object}).ToList();
         }
+
+        public static List<object[]> NetworksAndExpectations { get; set; }
 
         [Theory]
         [MemberData(nameof(NetworksAndExpectations))]
@@ -30,7 +30,7 @@ namespace Catalyst.Node.Common.UnitTests.P2P
         {
             var allModuleNames = Enumeration.GetAll<Network>().Select(m => m.Name);
 
-            var expectedList = new List<string> { "mainnet", "devnet", "testnet" };
+            var expectedList = new List<string> {"mainnet", "devnet", "testnet"};
 
             allModuleNames.Should().BeEquivalentTo(expectedList);
         }

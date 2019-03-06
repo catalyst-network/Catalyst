@@ -2,7 +2,7 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "Catalyst.Node.Core.Modules.Dfs.IpfsDfs",
+      "type": "Catalyst.Node.Core.Modules.Dfs.Dfs",
       "services": [
         {
           "type": "Catalyst.Node.Common.Modules.Dfs.IDfs, Catalyst.Node.Common"

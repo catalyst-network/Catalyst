@@ -1,14 +1,16 @@
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Dawn;
 using Serilog;
 
-namespace Catalyst.Node.Common.Events
+namespace Catalyst.Node.Common.Helpers.Events
 {
     public static class Events
     {
         private static readonly ILogger Logger = Log.Logger
-            .ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+           .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// </summary>
         /// <param name="handler"></param>

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Catalyst.Node.Common
+namespace Catalyst.Node.Common.Interfaces
 {
     public interface IKeyValueStore
     {

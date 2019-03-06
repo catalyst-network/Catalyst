@@ -1,5 +1,6 @@
 using System;
 using System.Net.Security;
+using System.Reflection;
 using Catalyst.Node.Common.Helpers.Util;
 using Nethereum.RLP;
 using Serilog;
@@ -8,7 +9,7 @@ namespace Catalyst.Node.Common.Helpers.Streams
 {
     public static class Writer
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// </summary>
@@ -33,10 +34,7 @@ namespace Catalyst.Node.Common.Helpers.Streams
 
                 var header = "";
 
-                foreach (int i in messageDescriptor)
-                {
-                    Logger.Information(i.ToString());
-                }
+                foreach (int i in messageDescriptor) Logger.Information(i.ToString());
 
                 if (data == null || data.Length < 1)
                 {
@@ -63,9 +61,8 @@ namespace Catalyst.Node.Common.Helpers.Streams
 
                 Buffer.BlockCopy(headerBytes, 0, message, 0, headerBytes.Length);
 
-                if (dataWithDescriptor != null && dataWithDescriptor.Length > 0)
-                {
-                    Buffer.BlockCopy(dataWithDescriptor, 0, message, headerBytes.Length, 
+                if (dataWithDescriptor != null && dataWithDescriptor.Length > 0) {
+                    Buffer.BlockCopy(dataWithDescriptor, 0, message, headerBytes.Length,
                         dataWithDescriptor.Length);
                 }
 

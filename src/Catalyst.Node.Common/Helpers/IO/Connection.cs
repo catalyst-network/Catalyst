@@ -2,7 +2,8 @@ using System;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
-using Catalyst.Node.Common.P2P.Messages;
+using System.Reflection;
+using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Serilog;
 
@@ -12,7 +13,7 @@ namespace Catalyst.Node.Common.Helpers.IO
     /// </summary>
     public sealed class Connection : IDisposable, IConnection
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// </summary>
@@ -63,11 +64,11 @@ namespace Catalyst.Node.Common.Helpers.IO
             Logger.Verbose("disposing connection");
             Dispose(true);
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="disposing"></param>
-        public void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (Disposed)
             {

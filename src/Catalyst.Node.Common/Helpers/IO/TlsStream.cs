@@ -26,28 +26,25 @@ namespace Catalyst.Node.Common.Helpers.IO
             return true;
         }
 
-        public static SslStream GetTlsStream(
-            NetworkStream networkStream,
+        public static SslStream GetTlsStream(NetworkStream networkStream,
             int direction,
             X509Certificate sslCertificate,
             bool acceptInvalidCerts,
-            bool mutuallyAuthenticate = false
-        )
+            bool mutuallyAuthenticate = false)
         {
-            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, mutuallyAuthenticate, null);
+            return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, mutuallyAuthenticate,
+                null);
         }
 
-        public static SslStream GetTlsStream(
-            NetworkStream networkStream,
+        public static SslStream GetTlsStream(NetworkStream networkStream,
             int direction,
             X509Certificate sslCertificate,
             bool acceptInvalidCerts,
-            IPEndPoint endPoint
-        )
+            IPEndPoint endPoint)
         {
             return GetTlsStream(networkStream, direction, sslCertificate, acceptInvalidCerts, false, endPoint);
         }
-        
+
         /// <summary>
         ///     inbound connections = 1, outbound connections = 2
         /// </summary>
@@ -61,14 +58,12 @@ namespace Catalyst.Node.Common.Helpers.IO
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
         /// <exception cref="AuthenticationException"></exception>
-        public static SslStream GetTlsStream(
-            NetworkStream networkStream,
+        public static SslStream GetTlsStream(NetworkStream networkStream,
             int direction,
             X509Certificate sslCertificate,
             bool acceptInvalidCerts,
             bool mutuallyAuthenticate,
-            IPEndPoint endPoint
-        )
+            IPEndPoint endPoint)
         {
             Guard.Argument(networkStream, nameof(networkStream)).NotNull();
             Guard.Argument(sslCertificate, nameof(sslCertificate)).NotNull();
@@ -76,8 +71,8 @@ namespace Catalyst.Node.Common.Helpers.IO
             var certificateCollection = new X509CertificateCollection {sslCertificate};
 
             var sslStream = acceptInvalidCerts
-                                ? new SslStream(networkStream, false, AcceptCertificate)
-                                : new SslStream(networkStream, false);
+                ? new SslStream(networkStream, false, AcceptCertificate)
+                : new SslStream(networkStream, false);
 
             try
             {
