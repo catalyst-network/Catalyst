@@ -26,7 +26,10 @@ namespace Catalyst.Node.Core.Modules.Dfs
     public class Dfs : IDfs
     {
         /// <inheritdoc />
-        public async Task StartAsync(CancellationToken cancellationToken = default) { await Task.CompletedTask; }
+        public async Task StartAsync(CancellationToken cancellationToken = default)
+        {
+            await Task.CompletedTask.ConfigureAwait(false);
+        }
 
         /// <inheritdoc />
         public async Task<string> AddFileAsync(string filename, CancellationToken cancellationToken = default)
