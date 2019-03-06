@@ -26,6 +26,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
 using Serilog;
+using Catalyst.Node.Common.Helpers.Util;
 
 namespace Catalyst.Node.Common.Helpers.Cryptography
 {
@@ -122,10 +123,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                     }
                     catch (CryptographicException ex)
                     {
-                        if (!ex.Message.Contains("password", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            throw;
-                        }
+                        StringUtil.StringComparatorException(ex.Message.ToLowerInvariant(), "password");
 
                         tryCount++;
                         if (tryCount == 1)
