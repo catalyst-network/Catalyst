@@ -1,4 +1,23 @@
-﻿using System;
+/*
+ * Copyright (c) 2019 Catalyst Network
+ *
+ * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+ *
+ * Catalyst.Node is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Catalyst.Node is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
@@ -38,7 +57,6 @@ namespace Catalyst.Node.Core
                 //Enable after checking safety implications, if plugins become important.
                 //AssemblyLoadContext.Default.Resolving += TryLoadAssemblyFromExecutionDirectory;
 
-                //TODO: allow targeting different folder using CommandLine
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
                 var network = Network.Dev;
 
@@ -79,9 +97,9 @@ namespace Catalyst.Node.Core
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                    var serviceProvider = new AutofacServiceProvider(scope);
+                    var serviceProvider = new AutofacServiceProvider(scope); //@TODO why initialised and null?
                     var node = container.Resolve<ICatalystNode>();
-                    //@TODO hit a start func
+                    node.Start();
                 }
 
                 Environment.ExitCode = 0;

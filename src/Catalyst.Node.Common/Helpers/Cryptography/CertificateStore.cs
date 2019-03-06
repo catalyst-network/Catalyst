@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2019 Catalyst Network
+ *
+ * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+ *
+ * Catalyst.Node is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Catalyst.Node is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using System;
 using System.IO;
 using System.Net;
@@ -7,6 +26,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
 using Serilog;
+using Catalyst.Node.Common.Helpers.Util;
 
 namespace Catalyst.Node.Common.Helpers.Cryptography
 {
@@ -103,10 +123,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                     }
                     catch (CryptographicException ex)
                     {
-                        if (!ex.Message.Contains("password", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            throw;
-                        }
+                        StringUtil.StringComparatorException(ex.Message.ToLowerInvariant(), "password");
 
                         tryCount++;
                         if (tryCount == 1)

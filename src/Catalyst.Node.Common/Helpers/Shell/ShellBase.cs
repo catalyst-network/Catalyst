@@ -1,18 +1,45 @@
+/*
+ * Copyright (c) 2019 Catalyst Network
+ *
+ * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+ *
+ * Catalyst.Node is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Catalyst.Node is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using System;
 using System.Reflection;
 using System.Security;
 using System.Text;
 using Catalyst.Node.Common.Interfaces;
 using Serilog;
+using System.Globalization;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
     public abstract class ShellBase : IShell
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        protected virtual string Prompt => "Koopa";
+
+        protected ShellBase()
+        {
+            AppCulture = new CultureInfo("es-GB", false);
+        }
+
+        private static string Prompt => "Koopa";
         private static bool ShowPrompt { get; } = true;
         private static string ServiceName => "Catalyst Distributed Shell";
+        internal static CultureInfo AppCulture { get; set; }
 
         /// <summary>
         /// </summary>
@@ -47,7 +74,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints a list of available cli commands.
         /// </summary>
         /// <returns></returns>
-        public bool OnHelpCommand(string advancedCmds = "")
+        protected bool OnHelpCommand(string advancedCmds = "")
         {
             var normalCmds =
                 "Normal Commands:\n" +
@@ -76,9 +103,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public virtual bool OnCommand(string[] args)
+        protected virtual bool OnCommand(string[] args)
         {
-            switch (args[0].ToLower())
+            switch (args[0].ToLower(AppCulture))
             {
                 case "get":
                     return OnGetCommand(args);
@@ -101,7 +128,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private bool OnGetCommand(string[] args)
         {
-            switch (args[1].ToLower())
+            switch (args[1].ToLower(AppCulture))
             {
                 case "info":
                     return OnGetInfo();
@@ -143,7 +170,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public string ReadPassword(string prompt)
+        public static string ReadPassword(string prompt)
         {
             const string t =
                 " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
@@ -201,7 +228,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 if (t.IndexOf(key.KeyChar) != -1)
                 {
                     securePwd.AppendChar(key.KeyChar);
-                    Logger.Information('*'.ToString());
+                    Logger.Information('*'.ToString(AppCulture));
                 }
                 else if (key.Key == ConsoleKey.Backspace && securePwd.Length > 0)
                 {

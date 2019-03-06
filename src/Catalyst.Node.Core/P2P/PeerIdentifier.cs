@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2019 Catalyst Network
+ *
+ * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+ *
+ * Catalyst.Node is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * Catalyst.Node is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using System;
 using System.Net;
 using System.Reflection;
@@ -29,6 +48,10 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="id"></param>
         private PeerIdentifier(byte[] id)
         {
+            Guard.Argument(id)
+               .NotNull()
+               .NotEmpty();
+            
             if (!ValidatePeerId(id))
             {
                 throw new ArgumentException("Peer identifier is invalid.");
@@ -51,7 +74,7 @@ namespace Catalyst.Node.Core.P2P
             Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty().MaxCount(20).MinCount(20);
 
             // init blank nodeId
-            var peerId = new byte[42]; //@TODO hook into new byte method
+            var peerId = ByteUtil.InitialiseEmptyByteArray(42);
 
             // copy client id chunk
             Buffer.BlockCopy(BuildClientIdChunk(), 0, peerId, 0, 2);
@@ -82,7 +105,10 @@ namespace Catalyst.Node.Core.P2P
         ///     Get hex of this client
         /// </summary>
         /// <returns></returns>
-        private static byte[] BuildClientIdChunk() { return Encoding.UTF8.GetBytes("AC"); }
+        private static byte[] BuildClientIdChunk()
+        {
+            return Encoding.UTF8.GetBytes("AC");
+        }
 
         /// <summary>
         ///     We only care about the major ass string! 🍑 🍑 🍑
@@ -96,15 +122,17 @@ namespace Catalyst.Node.Core.P2P
 
         /// <summary>
         /// </summary>
-        /// <param name="version"></param>
+        /// <param name="unPaddedVersion"></param>
         /// <returns></returns>
-        private static string PadVersionString(string version)
+        private static string PadVersionString(string unPaddedVersion)
         {
-            Guard.Argument(version, nameof(version)).NotNull().NotEmpty().NotWhiteSpace();
-            while (version.Length < 2)
+            Guard.Argument(unPaddedVersion, nameof(unPaddedVersion)).NotNull().NotEmpty().NotWhiteSpace();
+            string version = null;
+            while (unPaddedVersion.Length < 2)
             {
-                version = version.PadLeft(2, '0');
+                version = unPaddedVersion.PadLeft(2, '0');
             }
+            Guard.Argument(version).NotNull();
             return version;
         }
 
@@ -190,7 +218,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidateClientId(byte[] peerId)
+        private static void ValidateClientId(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
                .NotNull()
@@ -206,7 +234,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidateClientVersion(byte[] peerId)
+        private static void ValidateClientVersion(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
                .NotNull()
@@ -257,7 +285,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="peerId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidateClientPubKey(byte[] peerId)
+        private static void ValidateClientPubKey(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
                .NotNull()
