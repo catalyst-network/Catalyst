@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Core.Config;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Node.Common.UnitTests.TestUtils;
 
 namespace Catalyst.Node.Core.UnitTest.Config
 {
     public class ConfigCopierTests : FileSystemBasedTest
     {
+        public ConfigCopierTests(ITestOutputHelper output) : base(output) { _configCopier = new ConfigCopier(); }
+
         private readonly ConfigCopier _configCopier;
+
         private class ConfigFilesOverwriteTestData : TheoryData<string, Network>
         {
             public ConfigFilesOverwriteTestData()
@@ -25,32 +27,11 @@ namespace Catalyst.Node.Core.UnitTest.Config
             }
         }
 
-        public ConfigCopierTests(ITestOutputHelper output) : base(output)
-        {
-            _configCopier = new ConfigCopier();
-        }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Create_Folder_If_Needed()
-        {
-            var currentDirectory = _fileSystem.GetCatalystHomeDir();
-            currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
-
-            var modulesDirectory = new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
-
-            var network = Network.Dev;
-            _configCopier.RunConfigStartUp(currentDirectory.FullName, network);
-
-            var expectedFileList = GetExpectedFileList(network);
-            var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
-            configFiles.Should().BeEquivalentTo(expectedFileList);
-        }
-
         [Theory]
         [ClassData(typeof(ConfigFilesOverwriteTestData))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName, Network network)
+        public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName,
+            Network network)
         {
             RunConfigStartUp_Should_Not_Overwrite_Existing_Files(moduleFileName, network);
         }
@@ -59,12 +40,18 @@ namespace Catalyst.Node.Core.UnitTest.Config
         {
             network = network ?? Network.Dev;
             var currentDirectory = _fileSystem.GetCatalystHomeDir();
-            currentDirectory.Create(); currentDirectory.Refresh();
+            currentDirectory.Create();
+            currentDirectory.Refresh();
             var existingFileInfo = new FileInfo(Path.Combine(currentDirectory.FullName, fileName));
-            if(!existingFileInfo.Directory.Exists) existingFileInfo.Directory.Create();
-            existingFileInfo.Create(); existingFileInfo.Refresh();
+            if (existingFileInfo.Directory != null && !existingFileInfo.Directory.Exists)
+            {
+                existingFileInfo.Directory.Create();
+            }
+            existingFileInfo.Create();
+            existingFileInfo.Refresh();
 
-            var modulesDirectory = new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
+            var modulesDirectory =
+                new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
             currentDirectory.Exists.Should().BeTrue("otherwise the test is not relevant");
             existingFileInfo.Exists.Should().BeTrue("otherwise the test is not relevant");
@@ -99,6 +86,24 @@ namespace Catalyst.Node.Core.UnitTest.Config
                 Constants.SerilogJsonConfigFile
             }.Concat(Constants.AllModuleFiles);
             return requiredConfigFiles;
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RunConfigStartUp_Should_Create_Folder_If_Needed()
+        {
+            var currentDirectory = _fileSystem.GetCatalystHomeDir();
+            currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
+
+            var modulesDirectory =
+                new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
+
+            var network = Network.Dev;
+            _configCopier.RunConfigStartUp(currentDirectory.FullName, network);
+
+            var expectedFileList = GetExpectedFileList(network);
+            var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
+            configFiles.Should().BeEquivalentTo(expectedFileList);
         }
     }
 }

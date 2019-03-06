@@ -3,7 +3,8 @@ using Autofac;
 using Autofac.Configuration;
 using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils {
+namespace Catalyst.Node.Core.UnitTest.TestUtils
+{
     public abstract class BaseModuleConfigTest
     {
         protected IContainer Container;

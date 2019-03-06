@@ -5,7 +5,7 @@
       "type": "Catalyst.Node.Core.Components.Redis.RedisStore",
       "services": [
         {
-          "type": "Catalyst.Node.Common.IKeyValueStore, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.IKeyValueStore, Catalyst.Node.Common"
         }
       ]
     },
@@ -13,7 +13,7 @@
       "type": "Catalyst.Node.Core.CatalystNode",
       "services": [
         {
-          "type": "Catalyst.Node.Common.ICatalystNode, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.ICatalystNode, Catalyst.Node.Common"
         }
       ]
     },
@@ -21,7 +21,7 @@
       "type": "Catalyst.Node.Core.P2P.PeerSettings",
       "services": [
         {
-          "type": "Catalyst.Node.Common.P2P.IPeerSettings, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.IPeerSettings, Catalyst.Node.Common"
         }
       ]
     },
@@ -29,15 +29,15 @@
       "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
       "services": [
         {
-          "type": "Catalyst.Node.Common.P2P.IPeerDiscovery, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.IPeerDiscovery, Catalyst.Node.Common"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Core.Helpers.Network.Dns",
+      "type": "Catalyst.Node.Common.Helpers.Network.Dns, Catalyst.Node.Common",
       "services": [
         {
-          "type": "Catalyst.Node.Core.Helpers.Network.IDns"
+          "type": "Catalyst.Node.Common.Interfaces.IDns, Catalyst.Node.Common"
         }
       ],
       "parameters": {
@@ -45,7 +45,7 @@
       }
     },
     {
-      "type": "Catalyst.Node.Core.Helpers.Network.InjectableLookupClient",
+      "type": "Catalyst.Node.Common.Helpers.Network.InjectableLookupClient, Catalyst.Node.Common",
       "services": [
         {
           "type": "DnsClient.ILookupClient, DnsClient"
@@ -60,7 +60,7 @@
       "type": "Catalyst.Node.Core.P2P.P2PService",
       "services": [
         {
-          "type": "Catalyst.Node.Common.P2P.IP2P, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.IP2P, Catalyst.Node.Common"
         }
       ]
     },
@@ -76,7 +76,7 @@
       "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Helpers.Cryptography.ICertificateStore, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
         }
       ]
     },
@@ -84,15 +84,15 @@
       "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Helpers.Cryptography.IPasswordReader, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.IPasswordReader, Catalyst.Node.Common"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Core.Helpers.FileSystem",
+      "type": "Catalyst.Node.Common.Helpers.FileSystem.FileSystem, Catalyst.Node.Common",
       "services": [
         {
-          "type": "Catalyst.Node.Common.IFileSystem, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.IFileSystem, Catalyst.Node.Common"
         }
       ]
     }

@@ -1,50 +1,33 @@
 using System;
 using System.Net;
-using Catalyst.Node.Core.Helpers.IO;
-using Catalyst.Node.Core.Helpers.Util;
+using System.Reflection;
+using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Helpers.Util;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
     public class Peer : IDisposable
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        /// <summary>
-        /// </summary>
-        /// <param name="peerIdentifier"></param>
-        /// <param name="endpoint"></param>
-        /// <exception cref="ArgumentException"></exception>
-        // public Peer(PeerIdentifier peerIdentifier, IPEndPoint endpoint)
-        // {
-        //     Guard.Argument(peerIdentifier, nameof(peerIdentifier)).NotNull();
-        //     Guard.Argument(EndPoint.Port, nameof(EndPoint.Port)).Min(1025).Max(123);
-        //     EndPoint = endpoint;
-        //     PeerIdentifier = peerIdentifier;
-        //     LastSeen = DateTimeProvider.UtcNow;
-        // }
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         private int Reputation { get; set; }
-        public DateTime LastSeen { get; set; }
+        private DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
-        public Connection Connection { get; set; }
-        public PeerIdentifier PeerIdentifier { get; }
+        private Connection Connection { get; set; }
+        private PeerIdentifier PeerIdentifier { get; set; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
 
-        /// <summary>
-        /// </summary>
-        internal void Touch()
-        {
-            LastSeen = DateTimeProvider.UtcNow;
-        }
+        public void Dispose() { Dispose(true); }
 
         /// <summary>
         /// </summary>
-        public void IncreaseReputation()
-        {
-            Reputation++;
-        }
+        internal void Touch() { LastSeen = DateTimeProvider.UtcNow; }
+
+        /// <summary>
+        /// </summary>
+        public void IncreaseReputation() { Reputation++; }
 
         /// <summary>
         /// </summary>
@@ -59,14 +42,9 @@ namespace Catalyst.Node.Core.P2P
             if (disposing)
             {
                 Connection?.Dispose();
-                Logger.Verbose("Connection to peer {0} Disposed.", 
+                Logger.Verbose("Connection to peer {0} Disposed.",
                     PeerIdentifier?.Id?.ToString() ?? "unknown");
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

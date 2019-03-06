@@ -7,11 +7,13 @@
   <ItemGroup>
     <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     <PackageReference Include="Catalyst.Protocol" Version="0.0.1.381-beta" />
+    <PackageReference Include="DnsClient" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="libsodium" Version="[1.0.17]" />
     <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3-prerelease" />
     <PackageReference Include="System.Memory" Version="4.5.2" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.1.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
   </ItemGroup>
   <ItemGroup>
@@ -103,29 +105,36 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\libs\advapi32.dll">
+    <None Include="..\Build\libs\advapi32.dll">
       <Link>advapi32.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\libs\kernel32.dll">
+    <None Include="..\Build\libs\kernel32.dll">
       <Link>kernel32.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\libs\ucrtbase.dll">
+    <None Include="..\Build\libs\ucrtbase.dll">
       <Link>ucrtbase.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\libs\vcruntime140.dll">
+    <None Include="..\Build\libs\vcruntime140.dll">
       <Link>vcruntime140.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Helpers\Enumerator" />
+    <Folder Include="Helpers\Events" />
+    <Folder Include="Helpers\FileSystem" />
     <Folder Include="Helpers\Hex\HexConverters\Extensions\" />
     <Folder Include="Helpers\Hex\HexTypes\" />
+    <Folder Include="Helpers\IO" />
     <Folder Include="Helpers\NSec\Cryptography\Buffer\" />
     <Folder Include="Helpers\NSec\Cryptography\Formatting\" />
     <Folder Include="Helpers\NSec\Interop\" />
     <Folder Include="Helpers\RLP\" />
+    <Folder Include="Helpers\Streams" />
+    <Folder Include="Helpers\Util" />
+    <Folder Include="Helpers\Workers" />
   </ItemGroup>
 </Project>
