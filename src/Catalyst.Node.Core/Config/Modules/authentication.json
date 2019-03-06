@@ -13,7 +13,7 @@
       "type": "Catalyst.Node.Common.Helpers.Cryptography.NSecCryptoContext, Catalyst.Node.Common",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Helpers.Cryptography.ICryptoContext, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.ICryptoContext, Catalyst.Node.Common"
         }
       ]
     }

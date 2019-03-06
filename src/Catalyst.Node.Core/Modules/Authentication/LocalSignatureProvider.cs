@@ -1,6 +1,7 @@
 using System;
 using Catalyst.Node.Common.Modules.Authentication;
 using Catalyst.Node.Common.Helpers.Cryptography;
+using Catalyst.Node.Common.Interfaces;
 using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.Modules.Authentication

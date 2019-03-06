@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Cryptography;
 
-namespace Catalyst.Node.Common.Modules.Authentication
+namespace Catalyst.Node.Common.Interfaces
 {
     public interface ISignatureProvider
     {

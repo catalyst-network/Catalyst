@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Autofac;
-using Catalyst.Node.Common.Helpers.Cryptography;
-using Catalyst.Node.Common.Helpers.Keystore;
-using Catalyst.Node.Common.Modules.Authentication;
+using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Core.Modules.Authentication
 {

@@ -1,6 +1,6 @@
 using System;
 using Catalyst.Node.Common.Helpers.Cryptography;
-using Catalyst.Node.Common.Helpers.Keystore;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Modules.Authentication;
 using System.Threading.Tasks;
 
