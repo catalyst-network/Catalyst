@@ -2,18 +2,18 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "Catalyst.Node.Core.Modules.Authentication.Gossip",
+      "type": "Catalyst.Node.Core.Modules.Authentication.Authentication",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Modules.Gossip.IGossip, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Modules.Authentication.IAuthentication, Catalyst.Node.Common"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Core.Modules.Gossip.NameProvider1",
+      "type": "Catalyst.Node.Common.Helpers.Cryptography.NSecCryptoContext, Catalyst.Node.Common",
       "services": [
         {
-          "type": "Catalyst.Node.Core.Modules.Gossip.INameProvider"
+          "type": "Catalyst.Node.Common.Helpers.Cryptography.ICryptoContext, Catalyst.Node.Common"
         }
       ]
     }

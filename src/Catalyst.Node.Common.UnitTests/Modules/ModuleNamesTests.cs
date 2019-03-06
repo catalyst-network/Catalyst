@@ -15,7 +15,7 @@ namespace Catalyst.Node.Common.UnitTests.Modules
             var allModuleNames = Enumeration.GetAll<ModuleName>().Select(m => m.Name);
              
             var expectedList = new List<string>
-                { "Consensus", "Contract", "Dfs", "Gossip", "Ledger", "Mempool" };
+                { "Authentication", "Consensus", "Contract", "Dfs", "Gossip", "Ledger", "Mempool" };
 
             allModuleNames.Should().BeEquivalentTo(expectedList);
         }

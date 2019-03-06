@@ -1,7 +1,4 @@
 namespace Catalyst.Node.Common.Modules.Authentication
 {
-    public class IAuthentication
-    {
-        
-    }
+    public interface IAuthentication{}
 }

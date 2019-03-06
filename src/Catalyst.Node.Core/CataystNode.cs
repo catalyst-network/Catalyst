@@ -9,6 +9,7 @@ using Catalyst.Node.Common.Modules.Dfs;
 using Catalyst.Node.Common.Modules.Gossip;
 using Catalyst.Node.Common.Modules.Ledger;
 using Catalyst.Node.Common.Modules.Mempool;
+using Catalyst.Node.Common.Modules.Authentication;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.Helpers.Util;
@@ -30,6 +31,7 @@ namespace Catalyst.Node.Core
         private readonly IMempool _mempool;
         private readonly IContract _contract;
         private readonly IGossip _gossip;
+        private readonly IAuthentication _authentication;
         
         private bool _disposed;
 
@@ -39,6 +41,7 @@ namespace Catalyst.Node.Core
             IDfs dfs,
             ILedger ledger,
             ILogger logger,
+            IAuthentication authentication,
             IMempool mempool = null,
             IContract contract = null, 
             IGossip gossip = null)
@@ -48,6 +51,7 @@ namespace Catalyst.Node.Core
             _dfs = dfs;
             _ledger = ledger;
             _logger = logger;
+            _authentication = authentication;
             _mempool = mempool;
             _contract = contract;
             _gossip = gossip;

@@ -33,25 +33,6 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="Helpers\RLP\RLPCollection.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="Helpers\RLP\RLPItem.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="Helpers\RLP\RLPStringFormatter.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreService.cs" Link="Helpers\KeyStore\Properties\KeyStoreService.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreServiceBase.cs" Link="Helpers\KeyStore\Properties\KeyStoreServiceBase.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreScryptService.cs" Link="Helpers\KeyStore\Properties\KeyStoreScryptService.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStorePbkdf2Service.cs" Link="Helpers\KeyStore\Properties\KeyStorePdkdf2Service.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\IKeyStoreService.cs" Link="Helpers\KeyStore\Properties\IKeyStoreService.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\KdfParams.cs" Link="Helpers\KeyStore\Model\KdfParams.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\Pbkdf2Params.cs" Link="Helpers\KeyStore\Model\Pbkdf2Params.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\ScryptParams.cs" Link="Helpers\KeyStore\Model\ScryptParams.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\KeyStore.cs" Link="Helpers\KeyStore\Model\KeyStore.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CryptoInfo.cs" Link="Helpers\KeyStore\Model\CryptoInfo.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CipherParams.cs" Link="Helpers\KeyStore\Model\CipherParams.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\RandomBytesGenerator.cs" Link="Helpers\KeyStore\Crypto\RandomBytesGenerator.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\IRandomBytesGenerator.cs" Link="Helpers\KeyStore\Crypto\IRandomBytesGenerator.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\Scrypt.cs" Link="Helpers\KeyStore\Crypto\Scrypt.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\KeyStoreCrypto.cs" Link="Helpers\KeyStore\Crypto\KeyStoreCrypto.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\DecryptionException.cs" Link="Helpers\KeyStore\Crypto\DecryptionException.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreKdfChecker.cs" Link="Helpers\KeyStore\KeyStoreKdfChecker.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\Pbkdf2ParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\Pbkdf2ParamsDTO.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KdfParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\KdfParamsDTO.cs" />
     <Compile Include="..\..\submodules\nsec\src\Cryptography\AeadAlgorithm.cs" Link="Helpers\NSec\Cryptography\AeadAlgorithm.cs" />
     <Compile Include="..\..\submodules\nsec\src\Cryptography\Aes256Gcm.cs" Link="Helpers\NSec\Cryptography\Aes256Gcm.cs" />
     <Compile Include="..\..\submodules\nsec\src\Cryptography\Algorithm.cs" Link="Helpers\NSec\Cryptography\Algorithm.cs" />

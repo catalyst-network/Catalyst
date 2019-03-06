@@ -100,6 +100,13 @@
   //simply comment modules that you don't need.
   "modules": [
     {
+      "type": "Catalyst.Node.Core.Modules.Authentication.AuthenticationModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/authentication.json",
+        "WalletEnabled": false
+      }
+    },
+    {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
         "configFilePath": "Config/Modules/gossip.json"
@@ -133,12 +140,6 @@
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
         "configFilePath": "Config/Modules/mempool.json"
-      }
-    },
-    {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
-      "parameters": {
-        "configFilePath": "Config/Modules/authentication.json"
       }
     }
   ] 
