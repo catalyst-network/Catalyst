@@ -57,7 +57,6 @@ namespace Catalyst.Node.Core
                 //Enable after checking safety implications, if plugins become important.
                 //AssemblyLoadContext.Default.Resolving += TryLoadAssemblyFromExecutionDirectory;
 
-                //TODO: allow targeting different folder using CommandLine
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
                 var network = Network.Dev;
 
