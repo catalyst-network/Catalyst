@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core
                 {
                     var serviceProvider = new AutofacServiceProvider(scope); //@TODO why initialised and null?
                     var node = container.Resolve<ICatalystNode>();
-                    //@TODO hit a start func
+                    node.Start();
                 }
 
                 Environment.ExitCode = 0;
