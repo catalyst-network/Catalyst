@@ -35,13 +35,13 @@ namespace Catalyst.Node.Core.P2P
         public IPEndPoint EndPoint { get; set; }
         private PeerIdentifier PeerIdentifier => _peerIdentifier;
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
-        private TimeSpan InactiveFor => DateTimeProvider.UtcNow - LastSeen;
+        private TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
         public void Dispose() { Dispose(true); }
 
         /// <summary>
         /// </summary>
-        internal void Touch() { LastSeen = DateTimeProvider.UtcNow; }
+        internal void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
         /// <summary>
         /// </summary>
