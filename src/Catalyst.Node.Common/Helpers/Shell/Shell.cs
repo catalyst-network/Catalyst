@@ -383,17 +383,16 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <param name="regExPattern"></param>
         private string ParseCmdArgs(string[] args, string regExPattern)
         {
-            string argValue = null;
-            foreach (var t in args)
-                switch (t)
+            string returnArg = null;
+            foreach (var arg in args)
+            {
+                if (new Regex(@"[regExPattern]+").IsMatch(arg))
                 {
-                    case var dataDir when new Regex(@"[regExPattern]+").IsMatch(t):
-                        argValue = t.Replace(regExPattern, "");
-                        break;
-                    default:
-                        return null;
+                    returnArg = arg.Replace(regExPattern, "");
                 }
-            return argValue;
+            }
+
+            return returnArg;
         }
 
         /// <summary>
