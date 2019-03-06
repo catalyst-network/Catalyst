@@ -170,7 +170,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public string ReadPassword(string prompt)
+        public static string ReadPassword(string prompt)
         {
             const string t =
                 " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
