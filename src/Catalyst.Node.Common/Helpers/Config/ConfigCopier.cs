@@ -75,7 +75,10 @@ namespace Catalyst.Node.Common.Helpers.Config
                 ? requiredConfigFiles
                 : requiredConfigFiles.Except(existingConfigs, filenameComparer);
 
-            foreach (var fileName in filesToCopy) CopyConfigFileToFolder(dataDir, fileName, overwrite);
+            foreach (var fileName in filesToCopy)
+            {
+                CopyConfigFileToFolder(dataDir, fileName, overwrite);
+            }
         }
 
         private void CopyConfigFileToFolder(string targetFolder,
