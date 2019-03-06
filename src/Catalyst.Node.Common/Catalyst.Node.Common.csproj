@@ -5,6 +5,7 @@
   </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
+    <PackageReference Include="BouncyCastle" Version="1.8.4" />
     <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     <PackageReference Include="Catalyst.Protocol" Version="0.0.1.381-beta" />
     <PackageReference Include="DnsClient" Version="1.2.0" />
