@@ -49,7 +49,6 @@ namespace Catalyst.Node.Common.Helpers.Network
         /// <returns></returns>
         public static async Task<IPAddress> GetPublicIpAsync(IObservable<string> ipEchoUrls = null)
         {
-            //TODO : Build a server-less function to avoid relying on these sites
             var defaultedIpEchoUrls = ipEchoUrls ?? DefaultIpEchoUrls.ToObservable();
 
             var echoedIp = await defaultedIpEchoUrls
