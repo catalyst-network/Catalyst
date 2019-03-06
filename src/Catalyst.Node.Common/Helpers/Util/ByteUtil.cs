@@ -143,7 +143,10 @@ namespace Catalyst.Node.Common.Helpers.Util
 
             var length = Math.Min(a.Length, b.Length);
             var result = new byte[length];
-            for (var i = 0; i < length; i++) result[i] = (byte) (a[i] ^ b[i]);
+            for (var i = 0; i < length; i++)
+            {
+                result[i] = (byte) (a[i] ^ b[i]);
+            }
             return result;
         }
     }
