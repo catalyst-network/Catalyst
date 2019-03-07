@@ -17,10 +17,13 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace Catalyst.Node.Common.Modules.Gossip
+namespace Catalyst.Node.Common.Interfaces.Modules.KeySigner
 {
-    public interface IGossip
+    public interface IKeySigner
     {
-        string Name { get; }
+        /// <summary>
+        ///     Takes a KeyStore implementation to support both local and remote KeyStores'.
+        /// </summary>
+        IKeyStore KeyStore { get; }
     }
 }

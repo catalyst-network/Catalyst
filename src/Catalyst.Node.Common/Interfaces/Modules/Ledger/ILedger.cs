@@ -17,7 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace Catalyst.Node.Common.Modules.Consensus
+namespace Catalyst.Node.Common.Interfaces.Modules.Ledger
 {
-    public interface IConsensus { }
+    public interface ILedger { }
 }

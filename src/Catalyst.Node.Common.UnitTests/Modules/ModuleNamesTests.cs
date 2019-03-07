@@ -20,8 +20,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Node.Common.Helpers.Enumerator;
-using Catalyst.Node.Common.Modules;
-using FluentAssertions;
+ using Catalyst.Node.Common.Modules;
+ using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Node.Common.UnitTests.Modules

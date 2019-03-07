@@ -17,10 +17,10 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace Catalyst.Node.Common.Modules.Contract
+namespace Catalyst.Node.Common.Interfaces.Modules.Gossip
 {
-    public interface IContract
+    public interface IGossip
     {
-        string Address { get; set; }
+        string Name { get; }
     }
 }

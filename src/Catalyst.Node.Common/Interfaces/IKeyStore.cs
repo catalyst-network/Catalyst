@@ -17,7 +17,12 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace Catalyst.Node.Common.Modules.Ledger
+namespace Catalyst.Node.Common.Interfaces
 {
-    public interface ILedger { }
+    public interface IKeyStore
+    {
+        
+        ICryptoContext CryptoContext { get; }
+        
+    }
 }

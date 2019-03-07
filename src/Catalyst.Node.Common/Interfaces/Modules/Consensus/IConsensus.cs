@@ -17,15 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Catalyst.Node.Common.Modules.Dfs
+namespace Catalyst.Node.Common.Interfaces.Modules.Consensus
 {
-    public interface IDfs
-    {
-        Task StartAsync(CancellationToken cancellationToken = default);
-        Task<string> AddFileAsync(string filename, CancellationToken cancellationToken = default);
-        Task<string> ReadAllTextAsync(string filename, CancellationToken cancellationToken = default);
-    }
+    public interface IConsensus { }
 }

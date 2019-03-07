@@ -20,7 +20,7 @@
 using System.Collections.Generic;
 using Catalyst.Protocols.Transaction;
 
-namespace Catalyst.Node.Common.Modules.Mempool
+namespace Catalyst.Node.Common.Interfaces.Modules.Mempool
 {
     public interface IMempool
     {

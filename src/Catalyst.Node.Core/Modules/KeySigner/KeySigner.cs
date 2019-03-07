@@ -17,17 +17,19 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using Catalyst.Node.Common.Modules.KeySigner;
+using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 
 namespace Catalyst.Node.Core.Modules.KeySigner
 {
     public class KeySigner : IKeySigner
     {
 
-        public KeySigner()
+        public KeySigner(IKeyStore keyStore)
         {
-            
+            KeyStore = keyStore;
         }
-        
+
+        public IKeyStore KeyStore { get; }
     }
 }

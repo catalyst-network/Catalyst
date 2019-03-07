@@ -20,8 +20,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Node.Common.Modules.Mempool;
-using Catalyst.Protocols.Transaction;
+ using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+ using Catalyst.Protocols.Transaction;
 using Dawn;
 using Serilog;
 using SharpRepository.Repository;

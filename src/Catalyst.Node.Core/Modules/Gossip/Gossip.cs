@@ -17,7 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using Catalyst.Node.Common.Modules.Gossip;
+using Catalyst.Node.Common.Interfaces.Modules.Gossip;
 
 namespace Catalyst.Node.Core.Modules.Gossip
 {

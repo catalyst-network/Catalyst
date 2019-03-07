@@ -13,7 +13,7 @@
       "type": "Catalyst.Node.Core.Modules.Mempool.Mempool",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Modules.Mempool.IMempool, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Node.Common"
         }
       ]
     }

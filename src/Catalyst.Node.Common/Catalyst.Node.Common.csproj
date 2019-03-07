@@ -132,5 +132,12 @@
     <Folder Include="Helpers\NSec\Cryptography\Formatting\" />
     <Folder Include="Helpers\NSec\Interop\" />
     <Folder Include="Helpers\RLP\" />
+    <Folder Include="Interfaces\Modules\Consensus" />
+    <Folder Include="Interfaces\Modules\Contract" />
+    <Folder Include="Interfaces\Modules\Dfs" />
+    <Folder Include="Interfaces\Modules\Gossip" />
+    <Folder Include="Interfaces\Modules\KeySigner" />
+    <Folder Include="Interfaces\Modules\Ledger" />
+    <Folder Include="Interfaces\Modules\Mempool" />
   </ItemGroup>
 </Project>
