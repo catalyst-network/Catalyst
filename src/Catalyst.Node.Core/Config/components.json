@@ -150,6 +150,12 @@
     {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
+        "configFilePath": "Config/Modules/fran.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
         "configFilePath": "Config/Modules/ledger.json"
       }
     },

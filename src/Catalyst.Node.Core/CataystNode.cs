@@ -24,6 +24,7 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
 using Catalyst.Node.Common.Interfaces.Modules.Contract;
 using Catalyst.Node.Common.Interfaces.Modules.Dfs;
+using Catalyst.Node.Common.Interfaces.Modules.Fran;
 using Catalyst.Node.Common.Interfaces.Modules.Gossip;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
@@ -45,6 +46,7 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2p;
+        private readonly IFran _fran;
 
         private bool _disposed;
 
@@ -55,6 +57,7 @@ namespace Catalyst.Node.Core
             ILedger ledger,
             IKeySigner keySigner,
             ILogger logger,
+            IFran fran,
             IMempool mempool = null,
             IContract contract = null,
             IGossip gossip = null
@@ -69,6 +72,7 @@ namespace Catalyst.Node.Core
             _mempool = mempool;
             _contract = contract;
             _gossip = gossip;
+            _fran = fran;
         }
 
         public void Start()
