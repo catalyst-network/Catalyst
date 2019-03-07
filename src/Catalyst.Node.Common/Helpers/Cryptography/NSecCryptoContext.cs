@@ -67,5 +67,11 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             var realPublicKey = key.GetNSecFormatPublicKey();
             return new NSecPublicKeyWrapper(realPublicKey);
         }
+        //just returning public key atm for address
+        public string AddressFromKey(IPublicKey key)
+        {
+            return key.GetNSecFormatPublicKey().Export(KeyBlobFormat.RawPublicKey).ToString();
+            
+        }
     }
 }

@@ -129,8 +129,6 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CipherParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\CipherParamsDTO.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" />
-
-
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx">
