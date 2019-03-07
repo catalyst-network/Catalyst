@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core
         {
             while (true)
             {
-                
+                Console.WriteLine("*");
             }
         }
         
