@@ -25,6 +25,7 @@ using Catalyst.Node.Common.Modules.Consensus;
 using Catalyst.Node.Common.Modules.Contract;
 using Catalyst.Node.Common.Modules.Dfs;
 using Catalyst.Node.Common.Modules.Gossip;
+using Catalyst.Node.Common.Modules.KeySigner;
 using Catalyst.Node.Common.Modules.Ledger;
 using Catalyst.Node.Common.Modules.Mempool;
 using Catalyst.Node.Core.Events;
@@ -40,6 +41,7 @@ namespace Catalyst.Node.Core
         private readonly IDfs _dfs;
         private readonly IGossip _gossip;
         private readonly ILedger _ledger;
+        private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2p;
@@ -51,15 +53,18 @@ namespace Catalyst.Node.Core
             IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
+            IKeySigner keySigner,
             ILogger logger,
             IMempool mempool = null,
             IContract contract = null,
-            IGossip gossip = null)
+            IGossip gossip = null
+            )
         {
             _p2p = p2p;
             _consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
+            _keySigner = keySigner;
             _logger = logger;
             _mempool = mempool;
             _contract = contract;

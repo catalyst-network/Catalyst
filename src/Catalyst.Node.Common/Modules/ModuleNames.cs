@@ -28,6 +28,7 @@ namespace Catalyst.Node.Common.Modules
         public static readonly ModuleName Dfs = new DfsType();
         public static readonly ModuleName Gossip = new GossipType();
         public static readonly ModuleName Ledger = new LedgerType();
+        public static readonly ModuleName KeySigner = new KeySignerType();
         public static readonly ModuleName Mempool = new MempoolType();
 
         private ModuleName(int id, string name) : base(id, name) { }
@@ -55,6 +56,11 @@ namespace Catalyst.Node.Common.Modules
         private class LedgerType : ModuleName
         {
             public LedgerType() : base(1, "Ledger") { }
+        }
+        
+        private class KeySignerType : ModuleName
+        {
+            public KeySignerType() : base(1, "KeySigner") { }
         }
 
         private class MempoolType : ModuleName

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2019 Catalyst Network
  *
  * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
@@ -17,26 +17,17 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-﻿using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Node.Common.Helpers.Enumerator;
-using Catalyst.Node.Common.Modules;
-using FluentAssertions;
-using Xunit;
+using Catalyst.Node.Common.Modules.KeySigner;
 
-namespace Catalyst.Node.Common.UnitTests.Modules
+namespace Catalyst.Node.Core.Modules.KeySigner
 {
-    public static class ModuleNamesTests
+    public class KeySigner : IKeySigner
     {
-        [Fact]
-        public static void All_should_return_all_declared_names()
+
+        public KeySigner()
         {
-            var allModuleNames = Enumeration.GetAll<ModuleName>().Select(m => m.Name);
-
-            var expectedList = new List<string>
-                {"Consensus", "Contract", "Dfs", "Gossip", "Ledger", "Mempool", "KeySigner"};
-
-            allModuleNames.Should().BeEquivalentTo(expectedList);
+            
         }
+        
     }
 }
