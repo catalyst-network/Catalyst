@@ -25,5 +25,11 @@ namespace Catalyst.Node.Common.Interfaces.Modules.KeySigner
         ///     Takes a KeyStore implementation to support both local and remote KeyStores'.
         /// </summary>
         IKeyStore KeyStore { get; }
+        
+        /// <summary>
+        ///     Takes the crypto library implementation the nodes using.
+        /// </summary>
+        ICryptoContext CryptoContext { get; }
+
     }
 }

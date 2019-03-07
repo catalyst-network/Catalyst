@@ -18,15 +18,22 @@
 */
 
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 
 namespace Catalyst.Node.Common.Modules.KeySigner
 {
-    public class KeySigner
+    public class KeySigner : IKeySigner
     {
-        public KeySigner(IKeyStore keyStore)
+        private readonly IKeyStore _keyStore;
+        private readonly ICryptoContext _cryptoContext;
+
+        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext)
         {
-            KeyStore = keyStore;
+            _keyStore = keyStore;
+            _cryptoContext = cryptoContext;
         }
-        public IKeyStore KeyStore { get; }        
+
+        IKeyStore IKeySigner.KeyStore => _keyStore;
+        ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
     }
 }

@@ -19,10 +19,5 @@
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IKeyStore
-    {
-        
-        ICryptoContext CryptoContext { get; }
-        
-    }
+    public interface IKeyStore {}
 }
