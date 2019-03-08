@@ -40,13 +40,6 @@ namespace Catalyst.Node.Common.Interfaces
         IPeerSettings Settings { get; }
 
         /// <summary>
-        ///     Ping the peer identified by <see cref="targetNode" /> to check its status on the network.
-        /// </summary>
-        /// <param name="targetNode">Identifier of the node supposed to reply to the ping request.</param>
-        /// <returns>true if the target replied successfully</returns>
-        bool Ping(IPeerIdentifier targetNode);
-
-        /// <summary>
         ///     Request the node at <see cref="targetNode" /> for a list of peers.
         /// </summary>
         /// <param name="queryingNode">Identifier of the node making the request.</param>
