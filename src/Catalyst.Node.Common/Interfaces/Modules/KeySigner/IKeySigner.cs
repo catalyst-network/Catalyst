@@ -30,6 +30,10 @@ namespace Catalyst.Node.Common.Interfaces.Modules.KeySigner
         ///     Takes the crypto library implementation the nodes using.
         /// </summary>
         ICryptoContext CryptoContext { get; }
+        
+        bool Sign { get; }
+        bool Verify { get; }
+        bool ExportKey { get; }
 
     }
 }
