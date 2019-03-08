@@ -26,7 +26,7 @@ namespace Catalyst.Node.Core
         private readonly IMempool _mempool;
         private readonly IP2P _p2p;
 
-        private readonly IAuthentication _authentication;
+        private readonly ICrypto _crypto;
 
         private bool _disposed;
 
@@ -36,7 +36,7 @@ namespace Catalyst.Node.Core
             IDfs dfs,
             ILedger ledger,
             ILogger logger,
-            IAuthentication authentication,
+            ICrypto crypto,
             IMempool mempool = null,
             IContract contract = null,
             IGossip gossip = null)
@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core
             _dfs = dfs;
             _ledger = ledger;
             _logger = logger;
-            _authentication = authentication;
+            _crypto = crypto;
             _mempool = mempool;
             _contract = contract;
             _gossip = gossip;

@@ -129,6 +129,34 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CipherParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\CipherParamsDTO.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base10.cs" Link="Helpers\Multiformats.Base\Base10.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.cs" Link="Helpers\Multiformats.Base\Base16.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.Lower.cs" Link="Helpers\Multiformats.Base\Base16.Lower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.Upper.cs" Link="Helpers\Multiformats.Base\Base16.Upper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base2.cs" Link="Helpers\Multiformats.Base\Base2.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.cs" Link="Helpers\Multiformats.Base\Base32.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexLower.cs" Link="Helpers\Multiformats.Base\Base32.HexLower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexPaddedLower.cs" Link="Helpers\Multiformats.Base\Base32.HexPaddedLower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexPaddedUpper.cs" Link="Helpers\Multiformats.Base\Base32.HexPaddedUpper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexUpper.cs" Link="Helpers\Multiformats.Base\Base32.HexUpper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Lower.cs" Link="Helpers\Multiformats.Base\Base32.Lower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.PaddedLower.cs" Link="Helpers\Multiformats.Base\Base32.PaddedLower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.PaddedUpper.cs" Link="Helpers\Multiformats.Base\Base32.PaddedUpper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Upper.cs" Link="Helpers\Multiformats.Base\Base32.Upper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Z.cs" Link="Helpers\Multiformats.Base\Base32.Z.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.Btc.cs" Link="Helpers\Multiformats.Base\Base58.Btc.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.cs" Link="Helpers\Multiformats.Base\Base58.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.Flickr.cs" Link="Helpers\Multiformats.Base\Base58.Flickr.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.cs" Link="Helpers\Multiformats.Base\Base64.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Normal.cs" Link="Helpers\Multiformats.Base\Base64.Normal.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Padded.cs" Link="Helpers\Multiformats.Base\Base64.Padded.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Url.cs" Link="Helpers\Multiformats.Base\Base64.Url.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.UrlPadded.cs" Link="Helpers\Multiformats.Base\Base64.UrlPadded.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base8.cs" Link="Helpers\Multiformats.Base\Base8.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Identity.cs" Link="Helpers\Multiformats.Base\Identity.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\LetterCasing.cs" Link="Helpers\Multiformats.Base\LetterCasing.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Multibase.cs" Link="Helpers\Multiformats.Base\Multibase.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\MultibaseEncoding.cs" Link="Helpers\Multiformats.Base\MultibaseEncoding.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx">

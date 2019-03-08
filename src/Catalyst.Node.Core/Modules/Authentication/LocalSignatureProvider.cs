@@ -1,5 +1,4 @@
 using System;
-using Catalyst.Node.Common.Modules.Authentication;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Interfaces;
 using System.Threading.Tasks;
@@ -9,13 +8,17 @@ namespace Catalyst.Node.Core.Modules.Authentication
     public class LocalSignatureProvider : ISignatureProvider
     {
         private readonly ICryptoContext _context;
-        
-        public LocalSignatureProvider(ICryptoContext context) { this._context = context; }
+        private readonly IKeystore _keystore;
+
+        public LocalSignatureProvider(ICryptoContext context, IKeystore keystore)
+        {
+            this._context = context;
+            this._keystore = keystore;
+        }
         
         public Task<Signature> Sign(ReadOnlySpan<byte> data, string address, string password)
         {
-            //get key out of keystore but just make one for now.
-            IPrivateKey key = _context.GeneratePrivateKey();
+            IPrivateKey key = _keystore.RetrieveKey(address, password);
             byte[] bytes = _context.Sign(key, data);
             return Task.FromResult(new Signature(bytes));
         }

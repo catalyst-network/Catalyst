@@ -8,8 +8,7 @@ namespace Catalyst.Node.Core.Modules.Authentication
 {
     public class AuthenticationModule : JsonConfiguredModule
     {
-        private readonly ICryptoContext _context;
-        public bool WalletEnabled { get; set; }
+        public bool WalletEnabled { get;}
 
         public AuthenticationModule(string configFilePath, bool walletEnabled) 
             : base(configFilePath)
