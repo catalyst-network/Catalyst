@@ -2,7 +2,7 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "Catalyst.Node.Core.Modules.KeySigner.KeySigner",
+      "type": "Catalyst.Node.Common.Modules.KeySigner.KeySigner, Catalyst.Node.Common",
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Node.Common"
