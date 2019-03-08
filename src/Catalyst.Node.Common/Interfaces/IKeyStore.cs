@@ -19,5 +19,9 @@
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IKeyStore {}
+    public interface IKeyStore
+    {
+        void GetKey();
+        void StoreKey();
+    }
 }

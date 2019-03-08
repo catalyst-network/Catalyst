@@ -35,9 +35,12 @@ namespace Catalyst.Node.Common.Modules.KeySigner
 
         IKeyStore IKeySigner.KeyStore => _keyStore;
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
-        
-        public bool Sign { get; }
-        public bool Verify { get; }
-        public bool ExportKey { get; }
+
+        public void Sign()
+        {
+            
+        }
+        public void Verify() { throw new System.NotImplementedException(); }
+        public void ExportKey() { throw new System.NotImplementedException(); }
     }
 }

@@ -30,8 +30,6 @@ namespace Catalyst.Node.Common.Modules
         public static readonly ModuleName Ledger = new LedgerType();
         public static readonly ModuleName KeySigner = new KeySignerType();
         public static readonly ModuleName Mempool = new MempoolType();
-        public static readonly ModuleName Fran = new FranType();
-
         private ModuleName(int id, string name) : base(id, name) { }
 
         private class ConsensusType : ModuleName
@@ -67,11 +65,6 @@ namespace Catalyst.Node.Common.Modules
         private class MempoolType : ModuleName
         {
             public MempoolType() : base(1, "Mempool") { }
-        }
-        
-        private class FranType : ModuleName
-        {
-            public FranType() : base(1, "Fran") { }
         }
     }
 }

@@ -14,5 +14,8 @@ namespace Catalyst.Node.Common.Components
             _logger = logger; 
             _logger.Information("Im a remote Keystore");
         }
+
+        public void GetKey() { throw new System.NotImplementedException(); }
+        public void StoreKey() { throw new System.NotImplementedException(); }
     }
 }
