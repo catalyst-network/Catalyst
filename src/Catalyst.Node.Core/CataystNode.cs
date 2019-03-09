@@ -42,11 +42,11 @@ namespace Catalyst.Node.Core
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
-        private readonly IP2P _p2p;
+        private readonly IP2P _p2P;
         
         private bool _disposed;
 
-        public CatalystNode(IP2P p2p,
+        public CatalystNode(IP2P p2P,
             ICertificateStore certificateStore,
             IConsensus consensus,
             IDfs dfs,
@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core
             IContract contract = null
             )
         {
-            _p2p = p2p;
+            _p2P = p2P;
             _consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
@@ -82,13 +82,13 @@ namespace Catalyst.Node.Core
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(e, nameof(e)).NotNull();
-            var client = new TcpClient(_p2p.Settings.AnnounceServer.Address.ToString(),
-                _p2p.Settings.AnnounceServer.Port);
+            var client = new TcpClient(_p2P.Settings.AnnounceServer.Address.ToString(),
+                _p2P.Settings.AnnounceServer.Port);
             var nwStream = client.GetStream();
             var network = new byte[1];
             network[0] = 0x01;
             _logger.Debug(string.Join(" ", network));
-            var announcePackage = ByteUtil.Merge(network, _p2p.Identifier.Id);
+            var announcePackage = ByteUtil.Merge(network, _p2P.Identifier.Id);
             _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();

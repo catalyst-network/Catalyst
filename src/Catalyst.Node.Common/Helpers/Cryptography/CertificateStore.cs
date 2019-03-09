@@ -32,13 +32,12 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
 {
     public class CertificateStore : ICertificateStore
     {
-        private const int passwordReTries = 1;
+        private const int PasswordReTries = 1;
         private const string LocalHost = "localhost";
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
         private readonly IPasswordReader _passwordReader;
         private readonly DirectoryInfo _storageFolder;
-        private int passwordTries { get; set; } = 0;
+        private int PasswordTries { get; set; }
 
         public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader)
         {
@@ -143,8 +142,8 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
 
         private void PasswordAttemptCounter(string msg, string path)
         {
-            passwordTries++;
-            if (passwordTries == passwordReTries)
+            PasswordTries++;
+            if (PasswordTries == PasswordReTries)
             {
                 Logger.Warning("The certificate at {0} requires a password to be read.", path);
             }

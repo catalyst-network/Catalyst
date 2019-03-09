@@ -45,8 +45,15 @@ namespace Catalyst.Node.Common.Modules.KeySigner
             byte[] bytes = _cryptoContext.Sign(key, data);
             return Task.FromResult(new Signature(bytes));
         }
-        
-        public void Verify() { throw new System.NotImplementedException(); }
-        public void ExportKey() { throw new System.NotImplementedException(); }
+
+        public void Verify()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExportKey()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -30,7 +30,7 @@ using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Common.UnitTests.Cryptography
+namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 {
     public class CertificateStoreTests : FileSystemBasedTest, IDisposable
     {

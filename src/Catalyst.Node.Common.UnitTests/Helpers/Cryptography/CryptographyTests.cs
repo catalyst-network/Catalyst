@@ -24,7 +24,7 @@ using Catalyst.Node.Common.Interfaces;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Node.Common.UnitTests.Cryptography
+namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 {
     public class CryptographyTests
     {
