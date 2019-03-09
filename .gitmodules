@@ -4,3 +4,6 @@
 [submodule "submodules/nsec"]
 	path = submodules/nsec
 	url = https://github.com/atlascity/nsec.git
+[submodule "submodules/cs-multibase"]
+	path = submodules/cs-multibase
+	url = https://github.com/multiformats/cs-multibase.git
