@@ -120,9 +120,6 @@
   ],
   "modules": [
     {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule"
-    },
-    {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
         "configFilePath": "Config/Modules/dfs.json"
