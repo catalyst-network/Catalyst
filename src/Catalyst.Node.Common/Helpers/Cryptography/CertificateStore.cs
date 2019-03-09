@@ -113,6 +113,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                 var maxTries = 5;
                 var tryCount = 0;
                 while (tryCount <= maxTries)
+                {
                     try
                     {
                         using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
@@ -134,7 +135,8 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                         {
                             Logger.Warning(ex.Message);
                         }
-                    }
+                    }   
+                }
             }
             catch (Exception exception)
             {

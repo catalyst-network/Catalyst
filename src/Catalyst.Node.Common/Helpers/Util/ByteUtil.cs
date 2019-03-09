@@ -101,7 +101,10 @@ namespace Catalyst.Node.Common.Helpers.Util
             Guard.Argument(length, nameof(length)).Positive().NotZero();
 
             var returnArray = new byte[length];
-            for (var i = 0; i < length; i++) returnArray[i] = 0x00;
+            for (var i = 0; i < length; i++)
+            {
+                returnArray[i] = 0x00;
+            }
             return returnArray;
         }
 
@@ -144,7 +147,7 @@ namespace Catalyst.Node.Common.Helpers.Util
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static byte[] XOR(this byte[] a, byte[] b)
+        public static byte[] Xor(this byte[] a, byte[] b)
         {
             Guard.Argument(a, nameof(a)).NotNull().NotEmpty();
             Guard.Argument(b, nameof(b)).NotNull().NotEmpty();
