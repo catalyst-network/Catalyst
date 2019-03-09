@@ -17,7 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-﻿using Catalyst.Node.Common.Modules.Ledger;
+using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {

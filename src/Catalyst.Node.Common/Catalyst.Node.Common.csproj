@@ -13,6 +13,8 @@
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="libsodium" Version="[1.0.17]" />
     <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3-prerelease" />
+    <PackageReference Include="System.IO.Abstractions" Version="3.0.10" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="3.0.10" />
     <PackageReference Include="System.Memory" Version="4.5.2" />
     <PackageReference Include="System.Reactive.Linq" Version="4.1.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
@@ -191,5 +193,11 @@
     <Folder Include="Helpers\NSec\Cryptography\Formatting\" />
     <Folder Include="Helpers\NSec\Interop\" />
     <Folder Include="Helpers\RLP\" />
+    <Folder Include="Interfaces\Modules\Consensus" />
+    <Folder Include="Interfaces\Modules\Contract" />
+    <Folder Include="Interfaces\Modules\Dfs" />
+    <Folder Include="Interfaces\Modules\KeySigner" />
+    <Folder Include="Interfaces\Modules\Ledger" />
+    <Folder Include="Interfaces\Modules\Mempool" />
   </ItemGroup>
 </Project>

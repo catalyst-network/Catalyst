@@ -54,12 +54,6 @@ namespace Catalyst.Node.Common.Interfaces
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        bool OnGossipCommand(string[] args);
-
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
         bool OnServiceCommand(string[] args);
 
         /// <summary>

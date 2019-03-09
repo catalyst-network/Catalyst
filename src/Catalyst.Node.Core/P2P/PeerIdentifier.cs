@@ -127,6 +127,7 @@ namespace Catalyst.Node.Core.P2P
         private static string PadVersionString(string unPaddedVersion)
         {
             Guard.Argument(unPaddedVersion, nameof(unPaddedVersion)).NotNull().NotEmpty().NotWhiteSpace();
+
             string version = null;
             while (unPaddedVersion.Length < 2)
             {
@@ -177,7 +178,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="peerId"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        private bool ValidatePeerId(byte[] peerId)
+        private static bool ValidatePeerId(byte[] peerId)
         {
             Guard.Argument(peerId, nameof(peerId))
                .NotNull()

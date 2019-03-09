@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Catalyst.Node.Common.Modules.Mempool;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Protocols.Transaction;
 using FluentAssertions;

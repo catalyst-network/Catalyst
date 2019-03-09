@@ -17,7 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using Catalyst.Node.Common.Modules.Consensus;
+using Catalyst.Node.Common.Interfaces.Modules.Consensus;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
