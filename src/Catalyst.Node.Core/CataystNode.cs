@@ -46,7 +46,8 @@ namespace Catalyst.Node.Core
         
         private bool _disposed;
 
-        public CatalystNode(IP2P p2P,
+        public CatalystNode(
+            IP2P p2P,
             ICertificateStore certificateStore,
             IConsensus consensus,
             IDfs dfs,

@@ -32,7 +32,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 {
-    public class CertificateStoreTests : FileSystemBasedTest, IDisposable
+    public class CertificateStoreTests : FileSystemBasedTest
     {
         public CertificateStoreTests(ITestOutputHelper output) : base(output)
         {
@@ -107,7 +107,6 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
         [Fact]
         public void CertificateStore_CanReadAndWriteCertFiles_WithPassword()
         {
-            //TODO: cf. issue <see cref="https://github.com/catalyst-network/Catalyst.Node/issues/2" />
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
                 return;

@@ -142,7 +142,7 @@ namespace Catalyst.Node.Core.P2P
         /// <returns></returns>
         private static byte[] BuildClientIpChunk()
         {
-            var ipChunk = new byte[16]; // @TODO hook into new byte method
+            var ipChunk = ByteUtil.InitialiseEmptyByteArray(16);
             var address = Ip.GetPublicIpAsync().GetAwaiter().GetResult();
             var ipBytes = address.GetAddressBytes();
 
