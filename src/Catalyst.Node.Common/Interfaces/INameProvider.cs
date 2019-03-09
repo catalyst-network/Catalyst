@@ -17,14 +17,21 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Modules.Gossip;
-
-namespace Catalyst.Node.Core.Modules.Gossip
+﻿namespace Catalyst.Node.Common.Interfaces
 {
-    public class Gossip : IGossip
+    //This is just intended as a demo of how autofac can be used to resolve from config
+    public interface INameProvider
     {
-        public Gossip(INameProvider nameProvider) { Name = nameProvider.Name; }
-        public string Name { get; }
+        string Name { get; }
+    }
+
+    public class NameProvider1 : INameProvider
+    {
+        public string Name => "Gossip1";
+    }
+
+    public class NameProvider2 : INameProvider
+    {
+        public string Name => "Gossip2";
     }
 }
