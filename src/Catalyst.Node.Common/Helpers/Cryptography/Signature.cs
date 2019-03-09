@@ -17,13 +17,13 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using Catalyst.Node.Common.Modules.Gossip;
-
-namespace Catalyst.Node.Core.Modules.Gossip
+namespace Catalyst.Node.Common.Helpers.Cryptography
 {
-    public class Gossip : IGossip
+    public class Signature
     {
-        public Gossip(INameProvider nameProvider) { Name = nameProvider.Name; }
-        public string Name { get; }
+        public byte[] Bytes{ get; private set; }
+
+        public Signature(byte[] bytes) { Bytes = bytes; }
+
     }
 }

@@ -17,25 +17,25 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.IO;
-using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
+using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.FileSystem
+namespace Catalyst.Node.Common.Helpers.Keystore
 {
-    public class FileSystem : System.IO.Abstractions.FileSystem, IFileSystem
+    public class RemoteKeyStore : IKeyStore
     {
-        public DirectoryInfo GetCatalystHomeDir()
+        private readonly ILogger _logger;
+        public  ICryptoContext CryptoContext { get; }
+
+        public RemoteKeyStore(ICryptoContext cryptoContext, ILogger logger)
         {
-            var path = Path.Combine(GetUserHomeDir(), Constants.CatalystSubFolder);
-            return new DirectoryInfo(path);
+            CryptoContext = cryptoContext;
+            _logger = logger; 
+            _logger.Information("Im a remote Keystore");
         }
 
-        private static string GetUserHomeDir()
-        {
-            var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return homePath;
-        }
+        public IPrivateKey GetKey(IPublicKey publicKey, string password) { throw new System.NotImplementedException(); }
+        public IPrivateKey GetKey(string address, string password) { throw new System.NotImplementedException(); }
+        public bool StoreKey(IPrivateKey privateKey, string address, string password) { throw new System.NotImplementedException(); }
     }
 }

@@ -17,7 +17,11 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace Catalyst.Node.Common.Modules.Consensus
-{
-    public interface IConsensus { }
+namespace Catalyst.Node.Common.Interfaces {
+    public interface IKeyStore {
+        ICryptoContext CryptoContext { get; }
+        IPrivateKey GetKey(IPublicKey publicKey, string password);
+        IPrivateKey GetKey(string address, string password);
+        bool StoreKey(IPrivateKey privateKey, string address, string password);
+    }
 }
