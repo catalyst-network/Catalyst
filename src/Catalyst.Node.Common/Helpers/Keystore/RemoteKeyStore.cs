@@ -6,7 +6,7 @@ namespace Catalyst.Node.Common.Helpers.Keystore
     public class RemoteKeyStore : IKeyStore
     {
         private readonly ILogger _logger;
-        private  ICryptoContext CryptoContext { get; }
+        public  ICryptoContext CryptoContext { get; }
 
         public RemoteKeyStore(ICryptoContext cryptoContext, ILogger logger)
         {

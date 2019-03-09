@@ -9,7 +9,7 @@ namespace Catalyst.Node.Common.Helpers.Keystore
     public class LocalKeyStore : IKeyStore
     {
         private readonly ILogger _logger;
-        private  ICryptoContext CryptoContext { get; }
+        public ICryptoContext CryptoContext { get; }
         private KeyStoreService KeyStoreService { get; }
         private FileSystem.FileSystem FileSystem { get; }
 
