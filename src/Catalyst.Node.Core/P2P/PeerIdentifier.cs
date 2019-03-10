@@ -128,8 +128,8 @@ namespace Catalyst.Node.Core.P2P
         {
             Guard.Argument(unPaddedVersion, nameof(unPaddedVersion)).NotNull().NotEmpty().NotWhiteSpace();
 
-            string version = null;
-            while (unPaddedVersion.Length < 2)
+            string version = "";
+            while (version.Length < 2)
             {
                 version = unPaddedVersion.PadLeft(2, '0');
             }

@@ -125,9 +125,10 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                     }
                     catch (CryptographicException ex)
                     {
-                        StringUtil.StringComparatorException(ex.Message.ToLowerInvariant(), "password");
-
-                        PasswordAttemptCounter(ex.Message, fullPath);
+                        if (StringUtil.StringComparatorException(ex.Message.ToLowerInvariant(), "password"))
+                        {
+                            PasswordAttemptCounter(ex.Message, fullPath);   
+                        }
                     }   
                 }
             }

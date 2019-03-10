@@ -18,7 +18,12 @@
 */
 
 using System;
+using System.IO;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
@@ -29,6 +34,13 @@ using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
 using Dawn;
+using DotNetty.Buffers;
+using DotNetty.Codecs;
+using DotNetty.Handlers.Logging;
+using DotNetty.Handlers.Tls;
+using DotNetty.Transport.Bootstrapping;
+using DotNetty.Transport.Channels;
+using DotNetty.Transport.Libuv;
 using Serilog;
 
 namespace Catalyst.Node.Core
@@ -43,6 +55,8 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
+
+        private readonly FileSystem _fileSystem;
         
         private bool _disposed;
 
@@ -66,14 +80,40 @@ namespace Catalyst.Node.Core
             _logger = logger;
             _mempool = mempool;
             _contract = contract;
+            _fileSystem = new FileSystem();
         }
 
-        public void Start()
+        public async Task Start()
         {
-            while (true)
-            {
-                Console.WriteLine("*");
-            }
+            var dispatcher = new DispatcherEventLoopGroup();
+            IEventLoopGroup superVisorGroup = dispatcher;
+            IEventLoopGroup workerGroup = new WorkerEventLoopGroup(dispatcher);
+                
+            var tlsCertificate = new X509Certificate(Path.Combine(_fileSystem.GetCatalystHomeDir().ToString(), _p2P.Settings.PfxFileName), _p2P.Settings.SslCertPassword);
+
+            var bootstrap = new ServerBootstrap();
+            bootstrap.Group(superVisorGroup, workerGroup);
+                
+            bootstrap.Channel<TcpServerChannel>();
+
+            bootstrap
+               .Option(ChannelOption.SoBacklog, 100)
+               .Handler(new LoggingHandler("SRV-LSTN"))
+               .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
+                {
+                    IChannelPipeline pipeline = channel.Pipeline;
+                    // pipeline.AddLast("tls",  TlsHandler.Server(tlsCertificate));
+                    pipeline.AddLast(new LoggingHandler("SRV-CONN"));
+                    pipeline.AddLast("framing-enc", new LengthFieldPrepender(2));
+                    pipeline.AddLast("framing-dec", new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
+                    pipeline.AddLast("echo", new EchoServerHandler());
+                }));
+                
+            IChannel boundChannel = await bootstrap.BindAsync(_p2P.Settings.Port);
+            
+            Console.ReadLine();
+
+            await boundChannel.CloseAsync();
         }
         
         /// <summary>
@@ -108,6 +148,43 @@ namespace Catalyst.Node.Core
                 _disposed = true;
                 _logger.Verbose("CatalystNode disposed");
             }
+        }
+    }
+    
+    public class DiscardServerHandler : SimpleChannelInboundHandler<object>
+    {
+        protected override void ChannelRead0(IChannelHandlerContext context, object message)
+        {
+            Console.WriteLine(message);
+        }
+
+        public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
+        {
+            Console.WriteLine("{0}", e.ToString());
+            ctx.CloseAsync();
+        }
+    }
+    
+    public class EchoServerHandler : ChannelHandlerAdapter
+    {
+        public override void ChannelRead(IChannelHandlerContext context, object message)
+        {
+            Console.WriteLine(message);
+
+            var buffer = message as IByteBuffer;
+            if (buffer != null)
+            {
+                Console.WriteLine("Received from client: " + buffer.ToString(Encoding.UTF8));
+            }
+            context.WriteAsync(message);
+        }
+
+        public override void ChannelReadComplete(IChannelHandlerContext context) => context.Flush();
+
+        public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
+        {
+            Console.WriteLine("Exception: " + exception);
+            context.CloseAsync();
         }
     }
 }

@@ -98,8 +98,9 @@ namespace Catalyst.Node.Core
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var serviceProvider = new AutofacServiceProvider(scope); //@TODO why initialised and null?
-                    var node = container.Resolve<ICatalystNode>();
-                    node.Start();
+                    ICatalystNode node = container.Resolve<ICatalystNode>();
+
+                    node.Start().Wait();
                 }
 
                 Environment.ExitCode = 0;

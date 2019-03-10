@@ -22,7 +22,7 @@ namespace Catalyst.Node.Common.Helpers.Util
                 throw new Exception();
             }
 
-            return false;
+            return true;
         }
     }
 }
