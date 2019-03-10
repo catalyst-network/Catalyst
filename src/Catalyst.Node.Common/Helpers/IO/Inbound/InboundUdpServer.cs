@@ -34,18 +34,18 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             _supervisorGroup = supervisorGroup;
         }
 
-        private ServerBootstrap CreateUdpServer(int port)
-        {
-            var bootstrap = new Bootstrap();
-            bootstrap
-               .Group(_supervisorGroup)
-               .Channel<SocketDatagramChannel>()
-               .Option(ChannelOption.SoBroadcast, true)
-               .Handler(new LoggingHandler("SRV-LSTN"))
-               .Handler(new ActionChannelInitializer<IChannel>(channel =>
-                {
-                    channel.Pipeline.AddLast("Quote", new QuoteOfTheMomentServerHandler());
-                }));
-        }
+        // private ServerBootstrap CreateUdpServer(int port)
+        // {
+        //     var bootstrap = new Bootstrap();
+        //     bootstrap
+        //        .Group(_supervisorGroup)
+        //        .Channel<SocketDatagramChannel>()
+        //        .Option(ChannelOption.SoBroadcast, true)
+        //        .Handler(new LoggingHandler("SRV-LSTN"))
+        //        .Handler(new ActionChannelInitializer<IChannel>(channel =>
+        //         {
+        //             channel.Pipeline.AddLast("Quote", new QuoteOfTheMomentServerHandler());
+        //         }));
+        // }
     }
 }

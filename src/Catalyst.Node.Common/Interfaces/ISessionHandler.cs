@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces {
-    public interface ISessionHandler
+    public interface ISessionHandler : IChannelHandler
     {    
         void ExceptionCaught(IChannelHandlerContext context, Exception exception);
         void ChannelRegistered(IChannelHandlerContext context);

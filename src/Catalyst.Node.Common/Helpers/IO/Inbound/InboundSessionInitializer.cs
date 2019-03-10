@@ -28,18 +28,21 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     public class InboundSessionInitializer : ChannelInitializer<ISocketChannel>
     {
-        public IInboundSession InboundSession { get; }
+        private readonly IInboundSession _inboundSession;
+        private readonly ISessionHandler _sessionHandler;
         private readonly X509Certificate _x509Certificate;
 
-        public InboundSessionInitializer(IInboundSession inboundSession, X509Certificate x509Certificate)
+        public InboundSessionInitializer(IInboundSession inboundSession, ISessionHandler sessionHandler, X509Certificate x509Certificate)
         {
-            InboundSession = inboundSession;
+            _sessionHandler = sessionHandler;
+            _inboundSession = inboundSession;
             _x509Certificate = x509Certificate;
         }
         
-        public InboundSessionInitializer(IInboundSession inboundSession)
+        public InboundSessionInitializer(IInboundSession inboundSession, ISessionHandler sessionHandler)
         {
-            InboundSession = inboundSession;
+            _sessionHandler = sessionHandler;
+            _inboundSession = inboundSession;
         }
         
         protected override void InitChannel(ISocketChannel channel)
@@ -52,7 +55,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             }
             
             pipeline.AddLast(new LoggingHandler("SRV-CONN"));
-            pipeline.AddLast("echo", new InboundSessionHandler(InboundSession));
+            pipeline.AddLast("echo", _sessionHandler);
         } 
     }
 }

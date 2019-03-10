@@ -91,11 +91,12 @@ namespace Catalyst.Node.Core
         {
             Ctx = ctx;          
             var tlsCertificate = new X509Certificate(Path.Combine(_fileSystem.GetCatalystHomeDir().ToString(), _p2P.Settings.PfxFileName), _p2P.Settings.SslCertPassword);
-
+            var peerSession = new PeerSession(_logger);
             try
             {
-                _inboundTcpServer = new InboundTcpServer(_p2P.Settings.BindAddress, _p2P.Settings.Port, new PeerSession(_logger));
+                _inboundTcpServer = new InboundTcpServer(_p2P.Settings.BindAddress, _p2P.Settings.Port, peerSession, new InboundPeerSessionHandler(_logger, peerSession));
                 await _inboundTcpServer.StartAsync(tlsCertificate).ConfigureAwait(false);
+                while (!Ctx.IsCancellationRequested) ;
             }
             catch (Exception e)
             {
@@ -106,10 +107,8 @@ namespace Catalyst.Node.Core
             {
                 Task.WaitAll(_inboundTcpServer.StopAsync());
             }
-            
-            while (!Ctx.IsCancellationRequested)
 
-            await _inboundTcpServer.StopAsync().ConfigureAwait(false);
+            await _inboundTcpServer.StopAsync();
         }
         
         /// <summary>

@@ -45,16 +45,18 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         private readonly IInboundSession _inboundSession;
         private readonly IEventLoopGroup _workerEventLoopGroup;
         private readonly IEventLoopGroup _supervisorEventLoopGroup;
+        private readonly ISessionHandler _sessionHandler;
         
         /// <summary>
         ///     Creates a DotNetty tcp server.
         /// </summary>
         /// <returns></returns>
-        public InboundTcpServer(IPAddress listenAddress, int port, IInboundSession inboundSession)
+        public InboundTcpServer(IPAddress listenAddress, int port, IInboundSession inboundSession, ISessionHandler sessionHandler)
         {
             _port = port;
             _listenAddress = listenAddress;
             _inboundSession = inboundSession;
+            _sessionHandler = sessionHandler;
             _bootstrap = new ServerBootstrap();
             var dispatcher = new DispatcherEventLoopGroup();
             _supervisorEventLoopGroup = dispatcher;
@@ -69,7 +71,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public async Task StartAsync(X509Certificate x509Certificate)
         {
             Init();
-            _bootstrap.ChildHandler(new InboundSessionInitializer(_inboundSession, x509Certificate));
+            _bootstrap.ChildHandler(new InboundSessionInitializer(_inboundSession, _sessionHandler, x509Certificate));
             _channel = await _bootstrap.BindAsync(_listenAddress, _port);   
         }
 
@@ -80,7 +82,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public async Task StartAsync()
         {
             Init();
-            _bootstrap.ChildHandler(new InboundSessionInitializer(_inboundSession));
+            _bootstrap.ChildHandler(new InboundSessionInitializer(_inboundSession, _sessionHandler));
             _channel = await _bootstrap.BindAsync(_listenAddress, _port).ConfigureAwait(false);
         }
 

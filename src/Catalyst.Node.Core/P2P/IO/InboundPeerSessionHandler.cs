@@ -33,7 +33,7 @@ namespace Catalyst.Node.Core.P2P.IO
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="inboundSession"></param>
-        protected InboundPeerSessionHandler(ILogger logger, IInboundPeerSession inboundSession)
+        public InboundPeerSessionHandler(ILogger logger, IInboundPeerSession inboundSession)
         {
             _logger = logger;
             _inboundSession = inboundSession;
@@ -50,15 +50,15 @@ namespace Catalyst.Node.Core.P2P.IO
             
             // var challengeRsponseCommand = new ChallengeRsponseCommand();
             
-            var challengeResponse = await SendCommandAsync(connectCommand, channel);
+            // var challengeResponse = await SendCommandAsync(connectCommand, channel);
             
-            if (!challengeResponse.IsOk)
-            {
-                return;
-            }
+            // if (!challengeResponse.IsOk)
+            // {
+                // return;
+            // }
 
             var peer = new Peer();
-            peer.PeerIdentifier = challengeResponse.peerIdentifier;
+            // peer.PeerIdentifier = challengeResponse.peerIdentifier;
             
             //do some store in the database
             
