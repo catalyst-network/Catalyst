@@ -17,16 +17,32 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading;
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Helpers.IO
 {
-    public interface ICatalystNode
+    public abstract class SessionHandler : ChannelHandlerAdapter, ISessionHandler
     {
-        CancellationTokenSource Ctx { get; set; }
-        Task Start(CancellationTokenSource ctx);
-        void Dispose();
+        protected ILogger _logger;
+        private IInboundSession _inboundSession;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="exception"></param>
+        public override async void ExceptionCaught(IChannelHandlerContext context, Exception exception)
+        {
+            if (!context.Channel.Open)
+            {
+                return;
+            }
+            _logger.Error(exception, "Exception occured.");
+            await _inboundSession.OnError(exception);
+        }
     }
 }

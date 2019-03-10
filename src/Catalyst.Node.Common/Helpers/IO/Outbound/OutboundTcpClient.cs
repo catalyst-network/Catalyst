@@ -17,16 +17,10 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading;
-using System.Threading.Tasks;
-using DotNetty.Transport.Channels;
-
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public interface ICatalystNode
+    public class OutboundTcpClient
     {
-        CancellationTokenSource Ctx { get; set; }
-        Task Start(CancellationTokenSource ctx);
-        void Dispose();
+        
     }
 }

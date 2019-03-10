@@ -17,16 +17,36 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading;
-using System.Threading.Tasks;
-using DotNetty.Transport.Channels;
+using System;
+using System.Net;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces 
 {
-    public interface ICatalystNode
+    public interface IPeer 
     {
-        CancellationTokenSource Ctx { get; set; }
-        Task Start(CancellationTokenSource ctx);
-        void Dispose();
+        
+        int Reputation { get; set; }
+        
+        DateTime LastSeen { get; set; }
+        
+        IPEndPoint EndPoint { get; set; }
+        
+        IPeerIdentifier PeerIdentifier { get; }
+        
+        bool IsMIA { get; }
+        
+        TimeSpan InactiveFor { get; }
+        
+        /// <summary>
+        /// </summary>
+        void Touch();
+
+        /// <summary>
+        /// </summary>
+        void IncreaseReputation();
+
+        /// <summary>
+        /// </summary>
+        void DecreaseReputation();
     }
 }

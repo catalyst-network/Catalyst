@@ -193,6 +193,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Helpers\Commands" />
     <Folder Include="Helpers\Enumerator" />
     <Folder Include="Helpers\Events" />
     <Folder Include="Helpers\FileSystem" />

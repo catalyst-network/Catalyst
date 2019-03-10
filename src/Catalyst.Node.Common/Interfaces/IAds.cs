@@ -19,6 +19,9 @@
 
 namespace Catalyst.Node.Common.Interfaces
 {
+    /// <summary>
+    ///     Advanced Distributed Shell
+    /// </summary>
     public interface IAds
     {
         /// <summary>

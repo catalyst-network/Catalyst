@@ -22,8 +22,10 @@ using System.IO;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.FileSystem;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
@@ -33,6 +35,7 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
+using Catalyst.Node.Core.P2P.IO;
 using Dawn;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
@@ -55,11 +58,12 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
+        private IInboundTcpServer _inboundTcpServer;
 
-        private readonly FileSystem _fileSystem;
-        
         private bool _disposed;
-
+        private readonly FileSystem _fileSystem;
+        public CancellationTokenSource Ctx { get; set; }
+        
         public CatalystNode(
             IP2P p2P,
             ICertificateStore certificateStore,
@@ -70,7 +74,7 @@ namespace Catalyst.Node.Core
             ILogger logger,
             IMempool mempool = null,
             IContract contract = null
-            )
+        )
         {
             _p2P = p2P;
             _consensus = consensus;
@@ -83,37 +87,29 @@ namespace Catalyst.Node.Core
             _fileSystem = new FileSystem();
         }
 
-        public async Task Start()
+        public async Task Start(CancellationTokenSource ctx)
         {
-            var dispatcher = new DispatcherEventLoopGroup();
-            IEventLoopGroup superVisorGroup = dispatcher;
-            IEventLoopGroup workerGroup = new WorkerEventLoopGroup(dispatcher);
-                
+            Ctx = ctx;          
             var tlsCertificate = new X509Certificate(Path.Combine(_fileSystem.GetCatalystHomeDir().ToString(), _p2P.Settings.PfxFileName), _p2P.Settings.SslCertPassword);
 
-            var bootstrap = new ServerBootstrap();
-            bootstrap.Group(superVisorGroup, workerGroup);
-                
-            bootstrap.Channel<TcpServerChannel>();
-
-            bootstrap
-               .Option(ChannelOption.SoBacklog, 100)
-               .Handler(new LoggingHandler("SRV-LSTN"))
-               .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
-                {
-                    IChannelPipeline pipeline = channel.Pipeline;
-                    // pipeline.AddLast("tls",  TlsHandler.Server(tlsCertificate));
-                    pipeline.AddLast(new LoggingHandler("SRV-CONN"));
-                    pipeline.AddLast("framing-enc", new LengthFieldPrepender(2));
-                    pipeline.AddLast("framing-dec", new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
-                    pipeline.AddLast("echo", new EchoServerHandler());
-                }));
-                
-            IChannel boundChannel = await bootstrap.BindAsync(_p2P.Settings.Port);
+            try
+            {
+                _inboundTcpServer = new InboundTcpServer(_p2P.Settings.BindAddress, _p2P.Settings.Port, new PeerSession(_logger));
+                await _inboundTcpServer.StartAsync(tlsCertificate).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                _inboundTcpServer.Dispose();
+            }
+            finally
+            {
+                Task.WaitAll(_inboundTcpServer.StopAsync());
+            }
             
-            Console.ReadLine();
+            while (!Ctx.IsCancellationRequested)
 
-            await boundChannel.CloseAsync();
+            await _inboundTcpServer.StopAsync().ConfigureAwait(false);
         }
         
         /// <summary>
@@ -144,47 +140,10 @@ namespace Catalyst.Node.Core
         {
             if (disposing && !_disposed)
             {
-                _logger.Verbose("Disposing of CatalystNode");
+                Console.WriteLine("Disposing of CatalystNode");
                 _disposed = true;
-                _logger.Verbose("CatalystNode disposed");
+                Console.WriteLine("CatalystNode disposed");
             }
-        }
-    }
-    
-    public class DiscardServerHandler : SimpleChannelInboundHandler<object>
-    {
-        protected override void ChannelRead0(IChannelHandlerContext context, object message)
-        {
-            Console.WriteLine(message);
-        }
-
-        public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
-        {
-            Console.WriteLine("{0}", e.ToString());
-            ctx.CloseAsync();
-        }
-    }
-    
-    public class EchoServerHandler : ChannelHandlerAdapter
-    {
-        public override void ChannelRead(IChannelHandlerContext context, object message)
-        {
-            Console.WriteLine(message);
-
-            var buffer = message as IByteBuffer;
-            if (buffer != null)
-            {
-                Console.WriteLine("Received from client: " + buffer.ToString(Encoding.UTF8));
-            }
-            context.WriteAsync(message);
-        }
-
-        public override void ChannelReadComplete(IChannelHandlerContext context) => context.Flush();
-
-        public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
-        {
-            Console.WriteLine("Exception: " + exception);
-            context.CloseAsync();
         }
     }
 }

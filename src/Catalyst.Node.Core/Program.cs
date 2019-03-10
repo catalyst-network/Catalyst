@@ -21,7 +21,8 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
-using Autofac;
+ using System.Threading;
+ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
@@ -42,6 +43,11 @@ namespace Catalyst.Node.Core
         private static readonly string LifetimeTag;
         private static readonly string ExecutionDirectory;
 
+        private static ICatalystNode _node;
+        
+        private static CancellationTokenSource TokenSource { get; set; }
+        private static CancellationToken Token { get; set; }
+        
         static Program()
         {
             var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
@@ -52,6 +58,11 @@ namespace Catalyst.Node.Core
 
         public static int Main(string[] args)
         {
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+
+            TokenSource = new CancellationTokenSource();
+            Token = TokenSource.Token;
+            
             try
             {
                 //Enable after checking safety implications, if plugins become important.
@@ -98,9 +109,8 @@ namespace Catalyst.Node.Core
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var serviceProvider = new AutofacServiceProvider(scope); //@TODO why initialised and null?
-                    ICatalystNode node = container.Resolve<ICatalystNode>();
-
-                    node.Start().Wait();
+                    _node = container.Resolve<ICatalystNode>();
+                    _node.Start(TokenSource).Wait();
                 }
 
                 Environment.ExitCode = 0;
@@ -112,6 +122,14 @@ namespace Catalyst.Node.Core
             }
 
             return Environment.ExitCode;
+        }
+        
+        static void OnProcessExit (object sender, EventArgs e)
+        {
+            Console.WriteLine("Disconnecting from the Catalyst Network");
+            _node.Ctx.Cancel();
+            _node.Dispose();
+            Console.WriteLine("Node shut down, adios turd nuggets!");
         }
 
         public static Assembly TryLoadAssemblyFromExecutionDirectory(AssemblyLoadContext context,

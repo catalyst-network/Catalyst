@@ -17,16 +17,13 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Common.Interfaces
-{
-    public interface ICatalystNode
+namespace Catalyst.Node.Common.Interfaces {
+    public interface IInboundPeerSession : IInboundSession
     {
-        CancellationTokenSource Ctx { get; set; }
-        Task Start(CancellationTokenSource ctx);
-        void Dispose();
+        Task OnConnected(IPeer peer, IChannel channel);
     }
 }

@@ -17,16 +17,29 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Core.P2P.IO
 {
-    public interface ICatalystNode
+    public class PeerSession : AbstractSession, IInboundPeerSession
     {
-        CancellationTokenSource Ctx { get; set; }
-        Task Start(CancellationTokenSource ctx);
-        void Dispose();
+        public PeerSession(ILogger logger)
+        {
+            _logger = logger;
+        }
+
+        public override Task OnConnected(IPeer peer, IChannel channel)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnEventReceived(object message)
+        {
+            
+        }
     }
 }
