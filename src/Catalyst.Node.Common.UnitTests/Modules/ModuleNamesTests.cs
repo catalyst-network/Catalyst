@@ -20,8 +20,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Node.Common.Helpers.Enumerator;
-using Catalyst.Node.Common.Modules;
-using FluentAssertions;
+ using Catalyst.Node.Common.Modules;
+ using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Node.Common.UnitTests.Modules
@@ -34,7 +34,9 @@ namespace Catalyst.Node.Common.UnitTests.Modules
             var allModuleNames = Enumeration.GetAll<ModuleName>().Select(m => m.Name);
 
             var expectedList = new List<string>
-                {"Consensus", "Contract", "Dfs", "Gossip", "Ledger", "Mempool"};
+            {
+                "Consensus", "Contract", "Dfs", "Ledger", "Mempool", "KeySigner"
+            };
 
             allModuleNames.Should().BeEquivalentTo(expectedList);
         }

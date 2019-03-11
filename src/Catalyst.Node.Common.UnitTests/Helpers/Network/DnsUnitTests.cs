@@ -53,7 +53,8 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
             var answers = new List<DnsResourceRecord>
             {
                 new TxtRecord(new ResourceRecordInfo(domainName, ResourceRecordType.TXT, QueryClass.CS, 10, 32),
-                    new[] {seed}, new[] {value})
+                    new[] {seed}, new[] {value}
+                )
             };
 
             queryResponse.Answers.Returns(answers);

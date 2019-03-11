@@ -34,15 +34,44 @@
       ]
     },
     {
+      "type": "Catalyst.Node.Common.Helpers.Keystore.LocalKeyStore, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.IKeyStore, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Helpers.KeyStore.KeyStoreServiceWrapped, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Helpers.KeyStore.IKeyStoreWrapper, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Helpers.Cryptography.NSecCryptoContext, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.ICryptoContext, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.IPeerDiscovery, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
       "type": "Catalyst.Node.Common.Helpers.Network.Dns, Catalyst.Node.Common",
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.IDns, Catalyst.Node.Common"
         }
-      ],
-      "parameters": {
-        "configFilePath": "Config/Modules/gossip.json"
-      }
+      ]
     },
     {
       "type": "Catalyst.Node.Common.Helpers.Network.InjectableLookupClient, Catalyst.Node.Common",
@@ -97,14 +126,7 @@
       ]
     }
   ],
-  //simply comment modules that you don't need.
   "modules": [
-    {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
-      "parameters": {
-        "configFilePath": "Config/Modules/gossip.json"
-      }
-    },
     {
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
@@ -127,6 +149,12 @@
       "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
       "parameters": {
         "configFilePath": "Config/Modules/ledger.json"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+      "parameters": {
+        "configFilePath": "Config/Modules/keysigner.json"
       }
     },
     {

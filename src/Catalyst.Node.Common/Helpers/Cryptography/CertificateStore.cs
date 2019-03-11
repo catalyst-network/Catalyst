@@ -32,11 +32,12 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
 {
     public class CertificateStore : ICertificateStore
     {
+        private const int PasswordReTries = 1;
         private const string LocalHost = "localhost";
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
         private readonly IPasswordReader _passwordReader;
         private readonly DirectoryInfo _storageFolder;
+        private int PasswordTries { get; set; }
 
         public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader)
         {
@@ -126,15 +127,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                     {
                         StringUtil.StringComparatorException(ex.Message.ToLowerInvariant(), "password");
 
-                        tryCount++;
-                        if (tryCount == 1)
-                        {
-                            Logger.Warning("The certificate at {0} requires a password to be read.", fullPath);
-                        }
-                        else
-                        {
-                            Logger.Warning(ex.Message);
-                        }
+                        PasswordAttemptCounter(ex.Message, fullPath);
                     }   
                 }
             }
@@ -145,6 +138,19 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             }
 
             return true;
+        }
+
+        private void PasswordAttemptCounter(string msg, string path)
+        {
+            PasswordTries++;
+            if (PasswordTries == PasswordReTries)
+            {
+                Logger.Warning("The certificate at {0} requires a password to be read.", path);
+            }
+            else
+            {
+                Logger.Warning(msg);
+            }
         }
 
         private static X509Certificate2 BuildSelfSignedServerCertificate(SecureString password,

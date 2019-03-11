@@ -17,7 +17,10 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace Catalyst.Node.Common.Modules.Ledger
+namespace Catalyst.Node.Common.Interfaces.Modules.Contract
 {
-    public interface ILedger { }
+    public interface IContract
+    {
+        string Address { get; set; }
+    }
 }

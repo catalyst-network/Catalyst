@@ -127,6 +127,7 @@ namespace Catalyst.Node.Core.P2P
         private static string PadVersionString(string unPaddedVersion)
         {
             Guard.Argument(unPaddedVersion, nameof(unPaddedVersion)).NotNull().NotEmpty().NotWhiteSpace();
+
             string version = null;
             while (unPaddedVersion.Length < 2)
             {
@@ -141,7 +142,7 @@ namespace Catalyst.Node.Core.P2P
         /// <returns></returns>
         private static byte[] BuildClientIpChunk()
         {
-            var ipChunk = new byte[16]; // @TODO hook into new byte method
+            var ipChunk = ByteUtil.InitialiseEmptyByteArray(16);
             var address = Ip.GetPublicIpAsync().GetAwaiter().GetResult();
             var ipBytes = address.GetAddressBytes();
 
