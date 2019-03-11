@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="../Common.Projects.props" />
@@ -199,5 +199,10 @@
     <Folder Include="Interfaces\Modules\KeySigner" />
     <Folder Include="Interfaces\Modules\Ledger" />
     <Folder Include="Interfaces\Modules\Mempool" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

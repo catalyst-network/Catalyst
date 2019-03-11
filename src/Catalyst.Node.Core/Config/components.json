@@ -42,6 +42,14 @@
       ]
     },
     {
+      "type": "Catalyst.Node.Common.Helpers.KeyStore.KeyStoreServiceWrapped, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Helpers.KeyStore.IKeyStoreWrapper, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
       "type": "Catalyst.Node.Common.Helpers.Cryptography.NSecCryptoContext, Catalyst.Node.Common",
       "services": [
         {

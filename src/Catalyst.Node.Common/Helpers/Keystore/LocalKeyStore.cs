@@ -19,41 +19,44 @@
 
 using System;
 using System.IO;
+using Catalyst.Node.Common.Helpers.KeyStore;
 using Catalyst.Node.Common.Interfaces;
-using Nethereum.KeyStore;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Keystore
 {
     public class LocalKeyStore : IKeyStore
     {
+        private readonly ICryptoContext _cryptoContext;
+        private readonly IKeyStoreWrapper _keyStoreService;
         private readonly ILogger _logger;
-        public ICryptoContext CryptoContext { get; }
-        private KeyStoreService KeyStoreService { get; }
-        private FileSystem.FileSystem FileSystem { get; }
+        private readonly IFileSystem _fileSystem;
 
-        public LocalKeyStore(ICryptoContext cryptoContext, ILogger logger)
+        public LocalKeyStore(ICryptoContext cryptoContext, IKeyStoreWrapper keyStoreService, IFileSystem fileSystem, ILogger logger)
         {
-            CryptoContext = cryptoContext;
-            _logger = logger; 
-            KeyStoreService = new KeyStoreService();
-            FileSystem  = new FileSystem.FileSystem();
+            _cryptoContext = cryptoContext;
+            _keyStoreService = keyStoreService;
+            _logger = logger;
+            _keyStoreService = keyStoreService;
+            _fileSystem  = fileSystem;
         }
         
         public IPrivateKey GetKey(IPublicKey publicKey, string password) { throw new System.NotImplementedException(); }
 
-        public IPrivateKey GetKey(string address, string password)
+        public IPrivateKey GetKey(string fileName, string password)
         {
-            return CryptoContext.ImportPrivateKey(KeyStoreService.DecryptKeyStoreFromFile(password, address));
+            var fullFilePath = Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, fileName);
+            var decryptKeyStoreFromFile = _keyStoreService.DecryptKeyStoreFromFile(password, fullFilePath);
+            return _cryptoContext.ImportPrivateKey(new ReadOnlySpan<byte>(decryptKeyStoreFromFile));
         }
 
-        public bool StoreKey(IPrivateKey privateKey, string address, string password)
+        public bool StoreKey(IPrivateKey privateKey, string fileName, string password)
         {
-            var json = KeyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(password, CryptoContext.ExportPrivateKey(privateKey), address);
+            var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(password, _cryptoContext.ExportPrivateKey(privateKey), fileName);
 
             try
             {
-                using (var keyStoreFile = FileSystem.File.CreateText(address))
+                using (var keyStoreFile = File.CreateText(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, fileName)))
                 {
                     keyStoreFile.Write(json);
                     keyStoreFile.Flush();
