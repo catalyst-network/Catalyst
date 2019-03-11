@@ -19,7 +19,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Modules.Dfs;
+using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {

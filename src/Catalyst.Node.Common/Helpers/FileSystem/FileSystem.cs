@@ -24,7 +24,7 @@ using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Common.Helpers.FileSystem
 {
-    public class FileSystem : IFileSystem
+    public class FileSystem : System.IO.Abstractions.FileSystem, IFileSystem
     {
         public DirectoryInfo GetCatalystHomeDir()
         {

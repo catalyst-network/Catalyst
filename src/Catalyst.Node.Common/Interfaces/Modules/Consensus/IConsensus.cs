@@ -17,13 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using Catalyst.Node.Common.Modules.Gossip;
-
-namespace Catalyst.Node.Core.Modules.Gossip
+namespace Catalyst.Node.Common.Interfaces.Modules.Consensus
 {
-    public class Gossip : IGossip
-    {
-        public Gossip(INameProvider nameProvider) { Name = nameProvider.Name; }
-        public string Name { get; }
-    }
+    public interface IConsensus { }
 }

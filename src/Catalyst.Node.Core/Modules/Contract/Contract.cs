@@ -17,7 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using Catalyst.Node.Common.Modules.Contract;
+using Catalyst.Node.Common.Interfaces.Modules.Contract;
 
 namespace Catalyst.Node.Core.Modules.Contract
 {

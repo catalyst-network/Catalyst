@@ -1,10 +1,11 @@
 ﻿<Project>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
     <PackageReference Include="Dawn.Guard" Version="1.7.0" />
     <PackageReference Include="Catalyst.Protocol" Version="0.0.1.381-beta" />
     <PackageReference Include="DnsClient" Version="1.2.0" />
@@ -12,29 +13,13 @@
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="libsodium" Version="[1.0.17]" />
     <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3-prerelease" />
+    <PackageReference Include="System.IO.Abstractions" Version="3.0.10" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="3.0.10" />
     <PackageReference Include="System.Memory" Version="4.5.2" />
     <PackageReference Include="System.Reactive.Linq" Version="4.1.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\BigInteger.cs" Link="Helpers\Hex\BigInteger.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexBigIntegerConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexByteConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexStringUTF8ConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" Link="Helpers\Hex\HexConverters\HexBigIntegerBigEndianConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" Link="Helpers\Hex\HexConverters\HexUTF8StringConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" Link="Helpers\Hex\HexConverters\IHexConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" Link="Helpers\Hex\HexTypes\HexBigInteger.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" Link="Helpers\Hex\HexTypes\HexType.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" Link="Helpers\Hex\HexTypes\HexTypeFactory.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" Link="Helpers\Hex\HexTypes\HexTypeJsonConverter.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" Link="Helpers\Hex\HexTypes\HexUTF8String.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" Link="Helpers\RLP\ConvertorForRLPEncodingExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" Link="Helpers\RLP\IRLPElement.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" Link="Helpers\RLP\RLP.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="Helpers\RLP\RLPCollection.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="Helpers\RLP\RLPItem.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="Helpers\RLP\RLPStringFormatter.cs" />
     <Compile Include="..\..\submodules\nsec\src\Cryptography\AeadAlgorithm.cs" Link="Helpers\NSec\Cryptography\AeadAlgorithm.cs" />
     <Compile Include="..\..\submodules\nsec\src\Cryptography\Aes256Gcm.cs" Link="Helpers\NSec\Cryptography\Aes256Gcm.cs" />
     <Compile Include="..\..\submodules\nsec\src\Cryptography\Algorithm.cs" Link="Helpers\NSec\Cryptography\Algorithm.cs" />
@@ -98,6 +83,82 @@
     <Compile Include="..\..\submodules\nsec\src\Interop\Interop.Version.cs" Link="Helpers\NSec\Interop\Interop.Version.cs" />
     <Compile Include="..\..\submodules\nsec\src\Interop\Interop.X25519.cs" Link="Helpers\NSec\Interop\Interop.X25519.cs" />
     <Compile Include="..\..\submodules\nsec\src\Interop\Interop.XChaCha20Poly1305.cs" Link="Helpers\NSec\Interop\Interop.XChaCha20Poly1305.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\BigInteger.cs" Link="Helpers\Hex\BigInteger.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexBigIntegerConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexByteConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" Link="Helpers\Hex\HexConverters\Extensions\HexStringUTF8ConvertorExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" Link="Helpers\Hex\HexConverters\HexBigIntegerBigEndianConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" Link="Helpers\Hex\HexConverters\HexUTF8StringConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" Link="Helpers\Hex\HexConverters\IHexConvertor.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" Link="Helpers\Hex\HexTypes\HexBigInteger.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" Link="Helpers\Hex\HexTypes\HexType.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" Link="Helpers\Hex\HexTypes\HexTypeFactory.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" Link="Helpers\Hex\HexTypes\HexTypeJsonConverter.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" Link="Helpers\Hex\HexTypes\HexUTF8String.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" Link="Helpers\RLP\ConvertorForRLPEncodingExtensions.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" Link="Helpers\RLP\IRLPElement.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" Link="Helpers\RLP\RLP.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="Helpers\RLP\RLPCollection.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="Helpers\RLP\RLPItem.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="Helpers\RLP\RLPStringFormatter.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreService.cs" Link="Helpers\KeyStore\KeyStoreService.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\InvalidKdfException.cs" Link="Helpers\KeyStore\InvalidKdfException.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreServiceBase.cs" Link="Helpers\KeyStore\KeyStoreServiceBase.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreKdfChecker.cs" Link="Helpers\KeyStore\KeyStoreKdfChecker.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreScryptService.cs" Link="Helpers\KeyStore\KeyStoreScryptService.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStorePbkdf2Service.cs" Link="Helpers\KeyStore\KeyStorePdkdf2Service.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\IKeyStoreService.cs" Link="Helpers\KeyStore\IKeyStoreService.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\KdfParams.cs" Link="Helpers\KeyStore\Model\KdfParams.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\Pbkdf2Params.cs" Link="Helpers\KeyStore\Model\Pbkdf2Params.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\ScryptParams.cs" Link="Helpers\KeyStore\Model\ScryptParams.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\KeyStore.cs" Link="Helpers\KeyStore\Model\KeyStore.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CryptoInfo.cs" Link="Helpers\KeyStore\Model\CryptoInfo.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CipherParams.cs" Link="Helpers\KeyStore\Model\CipherParams.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\RandomBytesGenerator.cs" Link="Helpers\KeyStore\Crypto\RandomBytesGenerator.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\IRandomBytesGenerator.cs" Link="Helpers\KeyStore\Crypto\IRandomBytesGenerator.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\SCrypt.cs" Link="Helpers\KeyStore\Crypto\SCrypt.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\KeyStoreCrypto.cs" Link="Helpers\KeyStore\Crypto\KeyStoreCrypto.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\DecryptionException.cs" Link="Helpers\KeyStore\Crypto\DecryptionException.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\Pbkdf2ParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\Pbkdf2ParamsDTO.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KdfParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\KdfParamsDTO.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\JsonKeyStoreScryptSerialiser.cs" Link="Helpers\KeyStore\JsonDeserialisation\JsonKeyStoreScryptSerialiser.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\JsonKeyStorePbkdf2Serialiser.cs" Link="Helpers\KeyStore\JsonDeserialisation\JsonKeyStorePbkdf2Serialiser.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStorePbkdf2DTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\KeyStorePbkdf2DTO.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStoreScryptDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\KeyStoreScryptDTO.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStoreDTOBase.cs" Link="Helpers\KeyStore\JsonDeserialisation\KeyStoreDTOBase.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoPbkdf2DTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\CryptoInfoPbkdf2DTO.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoDTOBase.cs" Link="Helpers\KeyStore\JsonDeserialisation\CryptoInfoDTOBase.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CipherParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\CipherParamsDTO.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base10.cs" Link="Helpers\Multiformats.Base\Base10.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.cs" Link="Helpers\Multiformats.Base\Base16.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.Lower.cs" Link="Helpers\Multiformats.Base\Base16.Lower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.Upper.cs" Link="Helpers\Multiformats.Base\Base16.Upper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base2.cs" Link="Helpers\Multiformats.Base\Base2.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.cs" Link="Helpers\Multiformats.Base\Base32.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexLower.cs" Link="Helpers\Multiformats.Base\Base32.HexLower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexPaddedLower.cs" Link="Helpers\Multiformats.Base\Base32.HexPaddedLower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexPaddedUpper.cs" Link="Helpers\Multiformats.Base\Base32.HexPaddedUpper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexUpper.cs" Link="Helpers\Multiformats.Base\Base32.HexUpper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Lower.cs" Link="Helpers\Multiformats.Base\Base32.Lower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.PaddedLower.cs" Link="Helpers\Multiformats.Base\Base32.PaddedLower.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.PaddedUpper.cs" Link="Helpers\Multiformats.Base\Base32.PaddedUpper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Upper.cs" Link="Helpers\Multiformats.Base\Base32.Upper.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Z.cs" Link="Helpers\Multiformats.Base\Base32.Z.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.Btc.cs" Link="Helpers\Multiformats.Base\Base58.Btc.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.cs" Link="Helpers\Multiformats.Base\Base58.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.Flickr.cs" Link="Helpers\Multiformats.Base\Base58.Flickr.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.cs" Link="Helpers\Multiformats.Base\Base64.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Normal.cs" Link="Helpers\Multiformats.Base\Base64.Normal.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Padded.cs" Link="Helpers\Multiformats.Base\Base64.Padded.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Url.cs" Link="Helpers\Multiformats.Base\Base64.Url.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.UrlPadded.cs" Link="Helpers\Multiformats.Base\Base64.UrlPadded.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base8.cs" Link="Helpers\Multiformats.Base\Base8.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Identity.cs" Link="Helpers\Multiformats.Base\Identity.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\LetterCasing.cs" Link="Helpers\Multiformats.Base\LetterCasing.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Multibase.cs" Link="Helpers\Multiformats.Base\Multibase.cs" />
+    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\MultibaseEncoding.cs" Link="Helpers\Multiformats.Base\MultibaseEncoding.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx">
@@ -132,5 +193,16 @@
     <Folder Include="Helpers\NSec\Cryptography\Formatting\" />
     <Folder Include="Helpers\NSec\Interop\" />
     <Folder Include="Helpers\RLP\" />
+    <Folder Include="Interfaces\Modules\Consensus" />
+    <Folder Include="Interfaces\Modules\Contract" />
+    <Folder Include="Interfaces\Modules\Dfs" />
+    <Folder Include="Interfaces\Modules\KeySigner" />
+    <Folder Include="Interfaces\Modules\Ledger" />
+    <Folder Include="Interfaces\Modules\Mempool" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

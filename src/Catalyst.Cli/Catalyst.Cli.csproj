@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <Title>Catalyst CLI</Title>
     <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
     <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>

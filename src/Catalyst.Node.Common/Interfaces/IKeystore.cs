@@ -17,15 +17,10 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Catalyst.Node.Common.Modules.Dfs
-{
-    public interface IDfs
-    {
-        Task StartAsync(CancellationToken cancellationToken = default);
-        Task<string> AddFileAsync(string filename, CancellationToken cancellationToken = default);
-        Task<string> ReadAllTextAsync(string filename, CancellationToken cancellationToken = default);
+namespace Catalyst.Node.Common.Interfaces {
+    public interface IKeyStore {
+        IPrivateKey GetKey(IPublicKey publicKey, string password);
+        IPrivateKey GetKey(string filePath, string password);
+        bool StoreKey(IPrivateKey privateKey, string address, string password);
     }
 }

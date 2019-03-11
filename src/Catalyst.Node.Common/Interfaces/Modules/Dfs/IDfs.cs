@@ -17,10 +17,15 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace Catalyst.Node.Common.Modules.Gossip
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
 {
-    public interface IGossip
+    public interface IDfs
     {
-        string Name { get; }
+        Task StartAsync(CancellationToken cancellationToken = default);
+        Task<string> AddFileAsync(string filename, CancellationToken cancellationToken = default);
+        Task<string> ReadAllTextAsync(string filename, CancellationToken cancellationToken = default);
     }
 }

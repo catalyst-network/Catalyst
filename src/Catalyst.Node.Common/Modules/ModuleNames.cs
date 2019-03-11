@@ -26,12 +26,11 @@ namespace Catalyst.Node.Common.Modules
         public static readonly ModuleName Consensus = new ConsensusType();
         public static readonly ModuleName Contract = new ContractType();
         public static readonly ModuleName Dfs = new DfsType();
-        public static readonly ModuleName Gossip = new GossipType();
         public static readonly ModuleName Ledger = new LedgerType();
+        public static readonly ModuleName KeySigner = new KeySignerType();
         public static readonly ModuleName Mempool = new MempoolType();
-
         private ModuleName(int id, string name) : base(id, name) { }
-
+        
         private class ConsensusType : ModuleName
         {
             public ConsensusType() : base(1, "Consensus") { }
@@ -47,14 +46,14 @@ namespace Catalyst.Node.Common.Modules
             public DfsType() : base(1, "Dfs") { }
         }
 
-        private class GossipType : ModuleName
-        {
-            public GossipType() : base(1, "Gossip") { }
-        }
-
         private class LedgerType : ModuleName
         {
             public LedgerType() : base(1, "Ledger") { }
+        }
+        
+        private class KeySignerType : ModuleName
+        {
+            public KeySignerType() : base(1, "KeySigner") { }
         }
 
         private class MempoolType : ModuleName
