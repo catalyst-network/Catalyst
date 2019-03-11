@@ -17,31 +17,27 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Collections.Generic;
-using Catalyst.Protocols.Transaction;
+using System;
+using System.Threading.Tasks;
 
-namespace Catalyst.Node.Common.Modules.Mempool
+namespace Catalyst.Node.Common.Interfaces.Modules.KeySigner
 {
-    public interface IMempool
+    public interface IKeySigner
     {
         /// <summary>
-        ///     Gets a snapshot of the current mempool content.
+        ///     Takes a KeyStore implementation to support both local and remote KeyStores'.
         /// </summary>
-        /// <returns></returns>
-        IDictionary<Key, StTx> GetMemPoolContent();
-
+        IKeyStore KeyStore { get; }
+        
         /// <summary>
-        ///     Saves the transaction associated with a given key.
+        ///     Takes the crypto library implementation the nodes using.
         /// </summary>
-        /// <param name="key">Key under which the transaction is stored.</param>
-        /// <param name="transaction"></param>
-        bool SaveTx(Key key, StTx transaction);
+        ICryptoContext CryptoContext { get; }
 
-        /// <summary>
-        ///     Retrieves the transaction corresponding the a given key.
-        /// </summary>
-        /// <param name="key">Key under which the transaction is stored.</param>
-        /// <returns>The transaction matching the <see cref="key" /> if any.</returns>
-        StTx GetTx(Key key);
+        Task Sign(ReadOnlySpan<byte> data, string address, string password);
+        
+        void Verify();
+        void ExportKey();
+
     }
 }

@@ -17,7 +17,13 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace Catalyst.Node.Common.Modules.Consensus
+namespace Catalyst.Node.Common.Helpers.Cryptography
 {
-    public interface IConsensus { }
+    public class Signature
+    {
+        public byte[] Bytes{ get; private set; }
+
+        public Signature(byte[] bytes) { Bytes = bytes; }
+
+    }
 }

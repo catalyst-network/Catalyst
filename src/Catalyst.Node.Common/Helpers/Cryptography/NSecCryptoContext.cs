@@ -18,7 +18,9 @@
 */
 
 using System;
+using System.Text;
 using Catalyst.Node.Common.Interfaces;
+using Multiformats.Base;
 using NSec.Cryptography;
 
 namespace Catalyst.Node.Common.Helpers.Cryptography
@@ -30,11 +32,11 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
     {
         private static readonly SignatureAlgorithm Algorithm = SignatureAlgorithm.Ed25519;
         private static readonly KeyBlobFormat _publicKeyFormat = KeyBlobFormat.PkixPublicKey;
-        private static readonly KeyBlobFormat _privateKeyFormat = KeyBlobFormat.PkixPrivateKey;
+        private static readonly KeyBlobFormat _privateKeyFormat = KeyBlobFormat.RawPrivateKey;
 
         public IPrivateKey GeneratePrivateKey()
         {
-            //Newly generated private keys can be exported once.
+            // Newly generated private keys can be exported once.
             var keyParams = new KeyCreationParameters {ExportPolicy = KeyExportPolicies.AllowPlaintextArchiving};
             var key = Key.Create(Algorithm, keyParams);
             return new NSecPrivateKeyWrapper(key);
@@ -85,6 +87,12 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         {
             var realPublicKey = key.GetNSecFormatPublicKey();
             return new NSecPublicKeyWrapper(realPublicKey);
+        }
+        //just returning public key atm for address
+        public string AddressFromKey(IPublicKey key)
+        {
+            var rawBytes = key.GetNSecFormatPublicKey().Export(_publicKeyFormat);
+            return Multibase.Encode(MultibaseEncoding.Base58Btc, rawBytes);
         }
     }
 }

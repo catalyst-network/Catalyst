@@ -73,5 +73,7 @@ namespace Catalyst.Node.Common.Interfaces
         /// <param name="key"></param>
         /// <returns></returns>
         IPublicKey GetPublicKey(IPrivateKey key);
+
+        string AddressFromKey(IPublicKey key);
     }
 }
