@@ -116,7 +116,7 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CipherParams.cs" Link="Helpers\KeyStore\Model\CipherParams.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\RandomBytesGenerator.cs" Link="Helpers\KeyStore\Crypto\RandomBytesGenerator.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\IRandomBytesGenerator.cs" Link="Helpers\KeyStore\Crypto\IRandomBytesGenerator.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\Scrypt.cs" Link="Helpers\KeyStore\Crypto\Scrypt.cs" />
+    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\SCrypt.cs" Link="Helpers\KeyStore\Crypto\SCrypt.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\KeyStoreCrypto.cs" Link="Helpers\KeyStore\Crypto\KeyStoreCrypto.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\DecryptionException.cs" Link="Helpers\KeyStore\Crypto\DecryptionException.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\Pbkdf2ParamsDTO.cs" Link="Helpers\KeyStore\JsonDeserialisation\Pbkdf2ParamsDTO.cs" />
