@@ -21,28 +21,23 @@
 using System.IO;
 using System.Threading.Tasks;
 using Autofac;
-using Autofac.Configuration;
-using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Helpers.Config;
- using Catalyst.Node.Common.Interfaces.Modules.Mempool;
- using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Mempool;
-using Catalyst.Protocols.Transaction;
+ using Catalyst.Node.Core.UnitTest.TestUtils;
+ using Catalyst.Protocols.Transaction;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Serilog;
-using SharpRepository.Ioc.Autofac;
-using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 {
-    public class MempoolIntegrationTests : FileSystemBasedTest
+    public class MempoolIntegrationTests : ConfigFileBasedTest
     {
         public MempoolIntegrationTests(ITestOutputHelper output) : base(output) { }
-        private ContainerBuilder _containerBuilder;
 
         private async Task Mempool_can_save_and_retrieve(FileInfo mempoolModuleFile)
         {
@@ -53,9 +48,10 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
+
             ConfigureContainerBuilder(config);
 
-            var container = _containerBuilder.Build();
+            var container = ContainerBuilder.Build();
 
             using (var scope = container.BeginLifetimeScope())
             {
@@ -85,21 +81,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                 Updated = new StTx.Types.Timestamp {Nanos = 100, Seconds = 30}
             };
             return new StTxModel {Key = key, Transaction = transaction};
-        }
-
-        private void ConfigureContainerBuilder(IConfigurationRoot config)
-        {
-            var configurationModule = new ConfigurationModule(config);
-            _containerBuilder = new ContainerBuilder();
-            _containerBuilder.RegisterModule(configurationModule);
-
-            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config);
-            Log.Logger = loggerConfiguration.CreateLogger();
-            _containerBuilder.RegisterLogger();
-
-            var repoFactory =
-                RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
-            _containerBuilder.RegisterSharpRepository(repoFactory);
         }
 
         private async Task<string> CreateAlteredConfigForMempool(FileInfo mempoolConfigFile)

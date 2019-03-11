@@ -35,12 +35,12 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class P2PMessaging : IP2PMessaging<MultithreadEventLoopGroup>, IDisposable
+    public class P2PMessaging : IP2PMessaging, IDisposable
     {
         private readonly IPeerSettings _settings;
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
-        private X509Certificate2 _certificate;
+        private readonly X509Certificate2 _certificate;
 
         public P2PMessaging(IPeerSettings settings, 
             ICertificateStore certificateStore,

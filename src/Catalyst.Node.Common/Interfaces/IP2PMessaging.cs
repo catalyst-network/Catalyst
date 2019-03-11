@@ -17,11 +17,9 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using DotNetty.Transport.Channels;
-
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IP2PMessaging<TEventLoop> where TEventLoop : IEventLoopGroup
+    public interface IP2PMessaging
     {
         /// <summary>
         ///     Ping the peer identified by <see cref="targetNode" /> to check its status on the network.
