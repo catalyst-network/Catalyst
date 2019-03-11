@@ -41,12 +41,11 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
-        private readonly ILogger _logger;
         private readonly IKeyStoreWrapper _keyStoreService;
         private readonly NSecPrivateKeyWrapper _privateKey;
         private readonly byte[] _privateKeyBytes;
-        private string _fileName;
-        private string _password;
+        private readonly string _fileName;
+        private readonly string _password;
 
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
@@ -54,9 +53,9 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
             //parameter modifier: https://github.com/castleproject/Core/issues/430
             _context = new NSecCryptoContext();
 
-            _logger = Substitute.For<ILogger>();
+            var logger = Substitute.For<ILogger>();
             _keyStoreService = Substitute.For<IKeyStoreWrapper>();
-            _keystore = new LocalKeyStore(_context, _keyStoreService, _fileSystem, _logger);
+            _keystore = new LocalKeyStore(_context, _keyStoreService, _fileSystem, logger);
 
             _privateKey = new NSecPrivateKeyWrapper(new Key(SignatureAlgorithm.Ed25519, 
                 new KeyCreationParameters { ExportPolicy = KeyExportPolicies.AllowPlaintextExport}));
