@@ -77,10 +77,10 @@ namespace Catalyst.Node.Core
             do
             {
                 nextMessage = Console.ReadLine();
-                if (string.Equals(nextMessage, "exit", StringComparison.OrdinalIgnoreCase)) break;
                 await _p2P.Messaging.BroadcastMessageAsync(nextMessage);
             } while (!ct.IsCancellationRequested
-             && !string.Equals(nextMessage, "exit", StringComparison.OrdinalIgnoreCase));
+                && !string.Equals(nextMessage, "exit", StringComparison.OrdinalIgnoreCase));
+
             _logger.Information("Stopping the Catalyst Node");
         }
         
