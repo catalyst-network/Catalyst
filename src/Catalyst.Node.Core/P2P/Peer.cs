@@ -28,12 +28,12 @@ namespace Catalyst.Node.Core.P2P
     public class Peer : IDisposable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly PeerIdentifier _peerIdentifier;
 
         private int Reputation { get; set; }
         private DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
-        private PeerIdentifier PeerIdentifier => _peerIdentifier;
+        private PeerIdentifier PeerIdentifier { get; }
+
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         private TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
