@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Autofac;
 using Autofac.Configuration;
@@ -9,6 +10,7 @@ using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.Modules.Mempool;
 using Catalyst.Node.Core.UnitTest.TestUtils;
@@ -40,18 +42,21 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         public void Peers_Can_Chat()
         {
             ConfigureContainerBuilder(_config);
-           
-            var serviceCollection = new ServiceCollection();
 
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(_currentTestName,
-                //Add .Net Core serviceCollection to the Autofac container.
-                b => { b.Populate(serviceCollection, _currentTestName); }))
+            using (var scope = container.BeginLifetimeScope(_currentTestName))
             {
-                var peer1 = container.Resolve<IP2PMessaging>();
-                var peer2 = container.Resolve<IP2PMessaging>();
+                var logger = container.Resolve<ILogger>();
+                var certificateStore = container.Resolve<ICertificateStore>();
 
-                //peer1.Ping()
+                var peerSettings = Enumerable.Range(0, 3).Select(
+                    i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
+
+                var peers = peerSettings
+                   .Select(s => new P2PMessaging(s, certificateStore, logger))
+                   .ToList();
+
+                peers[0].Ping(peers[1].Identifier);
             }
         }
     }

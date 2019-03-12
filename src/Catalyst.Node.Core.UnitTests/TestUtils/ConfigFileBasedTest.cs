@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Autofac;
+﻿using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Interfaces;
@@ -29,8 +28,6 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
             var repoFactory =
                 RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
             ContainerBuilder.RegisterSharpRepository(repoFactory);
-
-            ContainerBuilder.RegisterInstance(config).As<IConfigurationRoot>();
 
             var passwordReader = new TestPasswordReader();
             ContainerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();

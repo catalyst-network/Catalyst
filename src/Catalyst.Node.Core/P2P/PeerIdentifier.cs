@@ -60,6 +60,9 @@ namespace Catalyst.Node.Core.P2P
             Id = id;
         }
 
+        public PeerIdentifier(IPeerSettings settings) 
+            : this(settings.PublicKey.HexToByteArray(), settings.EndPoint) {}
+
         /// <summary>
         ///     method to build our peerId
         /// </summary>

@@ -42,6 +42,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
 
+        public IPeerIdentifier Identifier { get; }
+
         public P2PMessaging(IPeerSettings settings, 
             ICertificateStore certificateStore,
             ILogger logger)
@@ -51,8 +53,10 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
             _cancellationSource = new CancellationTokenSource();
 
-            RunP2PServerAsync();
-            RunP2PClientAsync();
+            Identifier = new PeerIdentifier(settings);
+
+            var longRunningTasks = new [] {RunP2PServerAsync(), RunP2PClientAsync()};
+            Task.WaitAll(longRunningTasks);
         }
 
         private async Task RunP2PServerAsync()
@@ -65,8 +69,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             try
             {
-
-
                 var bootstrap = new ServerBootstrap();
                 bootstrap
                    .Group(bossGroup, workerGroup)
@@ -75,7 +77,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                    .Handler(new LoggingHandler(LogLevel.INFO))
                    .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
                     {
-                        IChannelPipeline pipeline = channel.Pipeline;
+                        var pipeline = channel.Pipeline;
                         if (_certificate != null)
                         {
                             pipeline.AddLast(TlsHandler.Server(_certificate));
@@ -161,7 +163,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             }
         }
 
-        public async Task Stop()
+        public void Stop()
         {
             _cancellationSource.Cancel();
         }

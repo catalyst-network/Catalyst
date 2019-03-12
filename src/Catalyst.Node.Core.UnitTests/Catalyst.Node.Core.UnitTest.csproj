@@ -27,12 +27,6 @@
     <Folder Include="Modules\Dfs\" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Config\devnet.peer2.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Config\devnet.peer1.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Config\Modules\mempool.inmemory.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

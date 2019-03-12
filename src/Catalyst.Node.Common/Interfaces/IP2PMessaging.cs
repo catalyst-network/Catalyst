@@ -22,7 +22,12 @@ namespace Catalyst.Node.Common.Interfaces
     public interface IP2PMessaging
     {
         /// <summary>
-        ///     Ping the peer identified by <see cref="targetNode" /> to check its status on the network.
+        /// Identifier of the Peer behind the instance of the IP2PMessaging service
+        /// </summary>
+        IPeerIdentifier Identifier { get; }
+
+        /// <summary>
+        /// Ping the peer identified by <see cref="targetNode" /> to check its status on the network.
         /// </summary>
         /// <param name="targetNode">Identifier of the node supposed to reply to the ping request.</param>
         /// <returns>true if the target replied successfully</returns>
