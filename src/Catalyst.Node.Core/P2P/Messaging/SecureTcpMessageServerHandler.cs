@@ -1,32 +1,35 @@
 ﻿using System;
+using System.Reflection;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Groups;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
     internal class SecureTcpMessageServerHandler : SimpleChannelInboundHandler<string>
     {
-        static volatile IChannelGroup _group;
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private static volatile IChannelGroup _group;
+        private readonly object _groupLock = new object();
 
-        public override void ChannelActive(IChannelHandlerContext contex)
+        public override void ChannelActive(IChannelHandlerContext context)
         {
-            var g = _group;
-            if (g == null)
+            if (_group == null)
             {
-                lock (this)
+                lock (_groupLock)
                 {
                     if (_group == null)
                     {
-                        g = _group = new DefaultChannelGroup(contex.Executor);
+                        _group = new DefaultChannelGroup(context.Executor);
                     }
                 }
             }
 
-            contex.WriteAndFlushAsync(string.Format("Welcome to {0} secure chat server!\n", System.Net.Dns.GetHostName()));
-            g.Add(contex.Channel);
+            context.WriteAndFlushAsync(string.Format("Welcome to {0} secure chat server!\n", System.Net.Dns.GetHostName()));
+            _group.Add(context.Channel);
         }
 
-        class EveryOneBut : IChannelMatcher
+        private class EveryOneBut : IChannelMatcher
         {
             readonly IChannelId id;
 
@@ -38,17 +41,17 @@ namespace Catalyst.Node.Core.P2P.Messaging
             public bool Matches(IChannel channel) => channel.Id != this.id;
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext contex, string msg)
+        protected override void ChannelRead0(IChannelHandlerContext context, string msg)
         {
             //send message to all but this one
-            var broadcast = string.Format("[{0}] {1}\n", contex.Channel.RemoteAddress, msg);
+            var broadcast = string.Format("[{0}] {1}\n", context.Channel.RemoteAddress, msg);
             var response = string.Format("[you] {0}\n", msg);
-            _group.WriteAndFlushAsync(broadcast, new EveryOneBut(contex.Channel.Id));
-            contex.WriteAndFlushAsync(response);
+            _group.WriteAndFlushAsync(broadcast, new EveryOneBut(context.Channel.Id));
+            context.WriteAndFlushAsync(response);
 
             if (string.Equals("bye", msg, StringComparison.OrdinalIgnoreCase))
             {
-                contex.CloseAsync();
+                context.CloseAsync();
             }
         }
 
@@ -56,7 +59,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
         {
-            Console.WriteLine("{0}", e.StackTrace);
+            Logger.Error(e, "Error in P2P server");
             ctx.CloseAsync();
         }
 

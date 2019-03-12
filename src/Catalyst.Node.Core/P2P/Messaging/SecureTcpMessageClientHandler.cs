@@ -13,7 +13,7 @@ namespace Catalyst.Node.Core.P2P.Messaging {
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
-            Logger.Error(e.StackTrace);
+            Logger.Error(e, "Error in P2P client");
             context.CloseAsync();
         }
     }
