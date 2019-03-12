@@ -29,8 +29,7 @@ namespace Catalyst.Node.Core.P2P
     public class Peer : IDisposable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        public Peer(IPeerIdentifier peerIdentifier) { PeerIdentifier = peerIdentifier; }
-
+        
         private int Reputation { get; set; }
         private DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }

@@ -19,6 +19,8 @@
 
 using System;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
@@ -68,12 +70,16 @@ namespace Catalyst.Node.Core
             _contract = contract;
         }
 
-        public void Start()
+        public async Task RunAsync(CancellationToken ct)
         {
-            while (true)
+            _logger.Information("Starting the Catalyst Node");
+            while (!ct.IsCancellationRequested)
             {
-                Console.WriteLine("*");
+                var nextMessage = Console.ReadLine();
+                if(string.Equals(nextMessage, "exit", StringComparison.OrdinalIgnoreCase)) break;
+                await _p2P.Messaging.BroadcastMessageAsync(nextMessage);
             }
+            _logger.Information("Stopping the Catalyst Node");
         }
         
         /// <summary>

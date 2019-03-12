@@ -40,6 +40,11 @@ namespace Catalyst.Node.Common.Interfaces
         IPeerSettings Settings { get; }
 
         /// <summary>
+        ///     Peer messaging service.
+        /// </summary>
+        IP2PMessaging Messaging { get; }
+
+        /// <summary>
         ///     Request the node at <see cref="targetNode" /> for a list of peers.
         /// </summary>
         /// <param name="queryingNode">Identifier of the node making the request.</param>

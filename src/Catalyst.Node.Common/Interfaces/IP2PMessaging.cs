@@ -17,6 +17,8 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System.Threading.Tasks;
+
 namespace Catalyst.Node.Common.Interfaces
 {
     public interface IP2PMessaging
@@ -31,6 +33,8 @@ namespace Catalyst.Node.Common.Interfaces
         /// </summary>
         /// <param name="targetNode">Identifier of the node supposed to reply to the ping request.</param>
         /// <returns>true if the target replied successfully</returns>
-        bool Ping(IPeerIdentifier targetNode);
+        Task<bool> PingAsync(IPeerIdentifier targetNode);
+
+        Task BroadcastMessageAsync(string message);
     }
 }
