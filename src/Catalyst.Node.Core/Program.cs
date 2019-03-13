@@ -21,14 +21,15 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
-using Autofac;
+ using System.Threading;
+ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Interfaces;
-using Microsoft.Extensions.Configuration;
+ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
@@ -41,6 +42,7 @@ namespace Catalyst.Node.Core
         private static readonly ILogger Logger;
         private static readonly string LifetimeTag;
         private static readonly string ExecutionDirectory;
+        private static CancellationTokenSource _cancellationSource;
 
         static Program()
         {
@@ -52,6 +54,7 @@ namespace Catalyst.Node.Core
 
         public static int Main(string[] args)
         {
+            _cancellationSource = new CancellationTokenSource();
             try
             {
                 //Enable after checking safety implications, if plugins become important.
@@ -88,8 +91,7 @@ namespace Catalyst.Node.Core
                    .CreateLogger();
                 containerBuilder.RegisterLogger();
 
-                var repoFactory =
-                    RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
+                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
                 containerBuilder.RegisterInstance(config);
@@ -99,9 +101,9 @@ namespace Catalyst.Node.Core
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                    var serviceProvider = new AutofacServiceProvider(scope); //@TODO why initialised and null?
                     var node = container.Resolve<ICatalystNode>();
-                    node.Start();
+
+                    node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;
@@ -113,6 +115,11 @@ namespace Catalyst.Node.Core
             }
 
             return Environment.ExitCode;
+        }
+
+        static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            _cancellationSource.Cancel();
         }
 
         public static Assembly TryLoadAssemblyFromExecutionDirectory(AssemblyLoadContext context,

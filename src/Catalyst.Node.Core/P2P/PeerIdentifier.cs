@@ -60,6 +60,9 @@ namespace Catalyst.Node.Core.P2P
             Id = id;
         }
 
+        public PeerIdentifier(IPeerSettings settings) 
+            : this(settings.PublicKey.HexToByteArray(), settings.EndPoint) {}
+
         /// <summary>
         ///     method to build our peerId
         /// </summary>
@@ -128,10 +131,10 @@ namespace Catalyst.Node.Core.P2P
         {
             Guard.Argument(unPaddedVersion, nameof(unPaddedVersion)).NotNull().NotEmpty().NotWhiteSpace();
 
-            string version = null;
-            while (unPaddedVersion.Length < 2)
+            string version = unPaddedVersion;
+            while (version.Length < 2)
             {
-                version = unPaddedVersion.PadLeft(2, '0');
+                version = version.PadLeft(2, '0');
             }
             Guard.Argument(version).NotNull();
             return version;
