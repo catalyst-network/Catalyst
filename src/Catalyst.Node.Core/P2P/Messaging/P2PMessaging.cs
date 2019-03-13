@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     {
                         pipeline.AddLast(TlsHandler.Server(_certificate));
                     }
-
+                    pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
                     pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
                     pipeline.AddLast(encoder, decoder, serverHandler);
                 }));
@@ -125,7 +125,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                                 new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
                                 new ClientTlsSettings(_settings.EndPoint.ToString())));
                     }
-
+                    pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
                     pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
                     pipeline.AddLast(new StringEncoder(), new StringDecoder(), new SecureTcpMessageClientHandler());
                 }));
@@ -162,7 +162,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 finally
                 {
                     _clientEventLoopGroup.ShutdownGracefullyAsync().Wait(1000);
-                    Task.WaitAll(_serverParentGroup.ShutdownGracefullyAsync(), _serverWorkerGroup.ShutdownGracefullyAsync());
+                    Task.WaitAll(_serverParentGroup.ShutdownGracefullyAsync(), 
+                        _serverWorkerGroup.ShutdownGracefullyAsync());
                 }
             }
         }
