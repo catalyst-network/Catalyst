@@ -33,6 +33,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         private class EveryOneBut : IChannelMatcher
         {
+
             private readonly IChannelId _id;
 
             public EveryOneBut(IChannelId id)

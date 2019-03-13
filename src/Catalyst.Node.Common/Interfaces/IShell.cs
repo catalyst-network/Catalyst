@@ -24,12 +24,12 @@ namespace Catalyst.Node.Common.Interfaces
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        bool OnStart(string[] args);
-
+        bool RunConsole();
+        
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        bool OnStartNode(string[] args);
+        bool OnStart(string[] args);
 
         /// <summary>
         /// </summary>
