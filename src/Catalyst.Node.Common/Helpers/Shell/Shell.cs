@@ -20,48 +20,27 @@
 using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Catalyst.Node.Common.Interfaces;
 using Serilog;
 using Dawn;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
-    public sealed class Shell : ShellBase
+    public sealed class Shell : ShellBase, IAds
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// </summary>
         public Shell()
         {
-            Logger.Information("Koopa Shell Start");
-            RunConsole();
+            Console.WriteLine(@"Koopa Shell Start");
         }
 
         /// <summary>
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnServiceCommand(string[] args)
-        {
-            switch (args[1].ToLower(AppCulture))
-            {
-                case "rpc":
-                    return OnRpcCommand(args);
-                case "dfs":
-                    return OnDfsCommand(args);
-                case "wallet":
-                    return OnWalletCommand(args);
-                case "peer":
-                    return OnPeerCommand(args);
-                default:
-                    return CommandNotFound(args);
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static bool OnRpcCommand(string[] args)
+        public bool OnDfsCommand(string[] args)
         {
             switch (args[2].ToLower(AppCulture))
             {
@@ -82,7 +61,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnDfsCommand(string[] args)
+        public bool OnWalletCommand(string[] args)
         {
             switch (args[2].ToLower(AppCulture))
             {
@@ -103,7 +82,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnWalletCommand(string[] args)
+        public bool OnPeerCommand(string[] args)
         {
             switch (args[2].ToLower(AppCulture))
             {
@@ -124,17 +103,11 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnPeerCommand(string[] args)
+        public bool OnConsensusCommand(string[] args)
         {
             switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    throw new NotImplementedException();
-                case "stop":
-                    throw new NotImplementedException();
-                case "status":
-                    throw new NotImplementedException();
-                case "restart":
                     throw new NotImplementedException();
                 default:
                     return CommandNotFound(args);
@@ -154,11 +127,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 "\tregenerate cert\n" +
                 "\tmessage sign\n" +
                 "\tmessage verify\n" +
-                "RPC Commands:\n" +
-                "\tservice rpc start\n" +
-                "\tservice rpc stop\n" +
-                "\tservice rpc status\n" +
-                "\tservice rpc restart\n" +
                 "Dfs Commands:\n" +
                 "\tdfs file put\n" +
                 "\tdfs file get\n" +
@@ -171,8 +139,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 "\twallet addresses get\n" +
                 "\twallet addresses list\n" +
                 "\twallet addresses validate\n" +
-                "\twallet privkey import\n" +
-                "\twallet privkey export\n" +
+                "\twallet privatekey import\n" +
+                "\twallet privatekey export\n" +
                 "\twallet transaction create\n" +
                 "\twallet transaction sign\n" +
                 "\twallet transaction decode \n" +
@@ -181,7 +149,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 "\twallet send many\n" +
                 "\twallet send many from\n" +
                 "Peer Commands:\n" +
-                "\tpeer node crawl\n" +
                 "\tpeer node add\n" +
                 "\tpeer node remove\n" +
                 "\tpeer node blacklist\n" +
@@ -190,7 +157,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 "\tpeer node list\n" +
                 "\tpeer node info\n" +
                 "\tpeer node count\n" +
-                "\tpeer node connect\n" +
                 "Consensus Commands:\n" +
                 "\tvote fee transaction\n" +
                 "\tvote fee dfs\n" +
@@ -214,16 +180,14 @@ namespace Catalyst.Node.Common.Helpers.Shell
                     return OnHelpCommand();
                 case "message":
                     return OnMessageCommand(args);
-                case "service":
-                    return OnServiceCommand(args);
-                case "rpc":
-                    return OnRpcCommand(args);
                 case "dfs":
                     return OnDfsCommand(args);
                 case "wallet":
                     return OnWalletCommand(args);
                 case "peer":
                     return OnPeerCommand(args);
+                case "consensus":
+                    return OnConsensusCommand(args);                
                 default:
                     return base.OnCommand(args);
             }
@@ -232,7 +196,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static bool OnConnectNode(string[] args)
+        private bool OnConnectNode(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
@@ -245,49 +209,11 @@ namespace Catalyst.Node.Common.Helpers.Shell
         {
             switch (args[1].ToLower(AppCulture))
             {
-                case "node":
-                    return OnStartNode(args);
                 case "work":
                     return OnStartWork(args);
                 default:
                     return CommandNotFound(args);
             }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public override bool OnStartNode(string[] args)
-        {
-            switch (args[1].ToLower(AppCulture))
-            {
-                case "local":
-                    return OnStartNodeLocal(args);
-                case "remote":
-                    return OnStartNodeRemote(args);
-                default:
-                    return CommandNotFound(args);
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static bool OnStartNodeLocal(string[] args)
-        {
-            Guard.Argument(args).Contains(typeof(string));
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static bool OnStartNodeRemote(string[] args)
-        {
-            Guard.Argument(args).Contains(typeof(string));
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -377,29 +303,10 @@ namespace Catalyst.Node.Common.Helpers.Shell
         }
 
         /// <summary>
-        ///     Parses flags passed with commands.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <param name="regExPattern"></param>
-        private string ParseCmdArgs(string[] args, string regExPattern)
-        {
-            string returnArg = null;
-            foreach (var arg in args)
-            {
-                if (new Regex(@"[regExPattern]+").IsMatch(arg))
-                {
-                    returnArg = arg.Replace(regExPattern, "");
-                }
-            }
-
-            return returnArg;
-        }
-
-        /// <summary>
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnGetDelta(string[] args)
+        private bool OnGetDelta(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
@@ -418,7 +325,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnMessageCommand(string[] args)
+        private bool OnMessageCommand(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();

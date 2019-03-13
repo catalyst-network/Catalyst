@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using DotNetty.Common.Internal.Logging;
 using DotNetty.Transport.Channels;
 using Serilog;
 

@@ -95,6 +95,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     {
                         pipeline.AddLast(TlsHandler.Server(_certificate));
                     }
+
                     pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
                     pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
                     pipeline.AddLast(encoder, decoder, serverHandler);
