@@ -34,6 +34,14 @@
       ]
     },
     {
+      "type": "Catalyst.Node.Core.P2P.Messaging.P2PMessaging",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.IP2PMessaging, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
       "type": "Catalyst.Node.Common.Helpers.Keystore.LocalKeyStore, Catalyst.Node.Common",
       "services": [
         {
