@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Catalyst.Cli": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -20,27 +20,27 @@
 using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Catalyst.Node.Common.Interfaces;
 using Serilog;
 using Dawn;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
-    public sealed class Shell : ShellBase
+    public sealed class Shell : ShellBase, IAds
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
         /// </summary>
         public Shell()
         {
-            Logger.Information("Koopa Shell Start");
-            RunConsole();
+            Console.WriteLine("Koopa Shell Start");
         }
 
         /// <summary>
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnServiceCommand(string[] args)
+        private bool OnServiceCommand(string[] args)
         {
             switch (args[1].ToLower(AppCulture))
             {
@@ -61,7 +61,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnRpcCommand(string[] args)
+        public bool OnRpcCommand(string[] args)
         {
             switch (args[2].ToLower(AppCulture))
             {
@@ -82,7 +82,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnDfsCommand(string[] args)
+        public bool OnDfsCommand(string[] args)
         {
             switch (args[2].ToLower(AppCulture))
             {
@@ -103,7 +103,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnWalletCommand(string[] args)
+        public bool OnWalletCommand(string[] args)
         {
             switch (args[2].ToLower(AppCulture))
             {
@@ -124,7 +124,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnPeerCommand(string[] args)
+        public bool OnPeerCommand(string[] args)
         {
             switch (args[2].ToLower(AppCulture))
             {
@@ -135,6 +135,21 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 case "status":
                     throw new NotImplementedException();
                 case "restart":
+                    throw new NotImplementedException();
+                default:
+                    return CommandNotFound(args);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public bool OnConsensusCommand(string[] args)
+        {
+            switch (args[2].ToLower(AppCulture))
+            {
+                case "start":
                     throw new NotImplementedException();
                 default:
                     return CommandNotFound(args);
@@ -224,6 +239,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
                     return OnWalletCommand(args);
                 case "peer":
                     return OnPeerCommand(args);
+                case "consensus":
+                    return OnConsensusCommand(args);                
                 default:
                     return base.OnCommand(args);
             }
@@ -232,7 +249,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static bool OnConnectNode(string[] args)
+        private bool OnConnectNode(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
@@ -274,7 +291,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnStartNodeLocal(string[] args)
+        private bool OnStartNodeLocal(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
@@ -284,7 +301,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnStartNodeRemote(string[] args)
+        private bool OnStartNodeRemote(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
@@ -399,7 +416,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnGetDelta(string[] args)
+        private bool OnGetDelta(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
@@ -418,7 +435,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static bool OnMessageCommand(string[] args)
+        private bool OnMessageCommand(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();

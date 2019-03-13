@@ -80,8 +80,8 @@ namespace Catalyst.Cli
                 )
             );
 
-            container.Resolve<IAds>();
-
+            var shell = container.Resolve<IAds>();
+            shell.RunConsole();
             return 0;
         }
     }

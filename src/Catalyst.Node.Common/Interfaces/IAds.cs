@@ -19,13 +19,8 @@
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IAds
+    public interface IAds : IShell
     {
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        bool RunConsole();
-
         /// <summary>
         /// </summary>
         /// <param name="args"></param>
@@ -49,12 +44,6 @@ namespace Catalyst.Node.Common.Interfaces
         /// <param name="args"></param>
         /// <returns></returns>
         bool OnWalletCommand(string[] args);
-
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        bool OnServiceCommand(string[] args);
 
         /// <summary>
         /// </summary>

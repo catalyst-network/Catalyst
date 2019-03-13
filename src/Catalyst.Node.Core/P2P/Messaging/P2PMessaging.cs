@@ -118,15 +118,15 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 {
                     var pipeline = channel.Pipeline;
 
-                    if (_certificate != null)
-                    {
-                        pipeline.AddLast(
-                            new TlsHandler(stream => 
-                                new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-                                new ClientTlsSettings(_settings.EndPoint.ToString())));
-                    }
+                    // if (_certificate != null)
+                    // {
+                    //     pipeline.AddLast(
+                    //         new TlsHandler(stream => 
+                    //             new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
+                    //             new ClientTlsSettings(_settings.EndPoint.ToString())));
+                    // }
 
-                    pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
+                    // pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
                     pipeline.AddLast(new StringEncoder(), new StringDecoder(), new SecureTcpMessageClientHandler());
                 }));
 
