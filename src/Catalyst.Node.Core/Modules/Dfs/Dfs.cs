@@ -25,11 +25,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
 {
     public class Dfs : IDfs
     {
-
-        public Dfs(IIpfs ipfs)
-        {
-            
-        }
         /// <inheritdoc />
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {

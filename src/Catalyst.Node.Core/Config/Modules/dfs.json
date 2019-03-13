@@ -8,14 +8,6 @@
           "type": "Catalyst.Node.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Node.Common"
         }
       ]
-    },
-    {
-      "type": ",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.Modules.Dfs.IIpfs, Catalyst.Node.Common"
-        }
-
     }
   ]
 }
