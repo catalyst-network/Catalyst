@@ -9,12 +9,6 @@ namespace Catalyst.Node.Core.P2P.Messaging {
     { 
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         
-        public override void ChannelActive(IChannelHandlerContext context)
-        {
-            Console.WriteLine("123");
-            Logger.Information(context.Channel.ToString());
-        }
-        
         protected override void ChannelRead0(IChannelHandlerContext context, string msg) 
             => Logger.Information(msg);
 

@@ -9,44 +9,48 @@ namespace Catalyst.Node.Core.P2P.Messaging
     internal class SecureTcpMessageServerHandler : SimpleChannelInboundHandler<string>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private static volatile IChannelGroup _group;
+        private static volatile IChannelGroup _broadCastGroup;
         private readonly object _groupLock = new object();
+
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            if (_group == null)
+            base.ChannelActive(context);
+
+            if (_broadCastGroup == null)
             {
                 lock (_groupLock)
                 {
-                    if (_group == null)
+                    if (_broadCastGroup == null)
                     {
-                        _group = new DefaultChannelGroup(context.Executor);
+                        _broadCastGroup = new DefaultChannelGroup(context.Executor);
                     }
                 }
             }
-
             context.WriteAndFlushAsync(string.Format("Welcome to {0} secure chat server!\n", System.Net.Dns.GetHostName()));
-            _group.Add(context.Channel);
+            _broadCastGroup.Add(context.Channel);
         }
 
         private class EveryOneBut : IChannelMatcher
         {
-            readonly IChannelId id;
+
+            private readonly IChannelId _id;
 
             public EveryOneBut(IChannelId id)
             {
-                this.id = id;
+                _id = id;
             }
 
-            public bool Matches(IChannel channel) => channel.Id != this.id;
+            public bool Matches(IChannel channel) => !Equals(channel.Id, _id);
         }
 
         protected override void ChannelRead0(IChannelHandlerContext context, string msg)
         {
             //send message to all but this one
-            var broadcast = string.Format("[{0}] {1}\n", context.Channel.RemoteAddress, msg);
-            var response = string.Format("[you] {0}\n", msg);
-            _group.WriteAndFlushAsync(broadcast, new EveryOneBut(context.Channel.Id));
+            var broadcast = $"[{context.Channel.RemoteAddress}] {msg}\n";
+            var response = $"[you] {msg}\n";
+
+            _broadCastGroup.WriteAndFlushAsync(broadcast, new EveryOneBut(context.Channel.Id));
             context.WriteAndFlushAsync(response);
 
             if (string.Equals("bye", msg, StringComparison.OrdinalIgnoreCase))

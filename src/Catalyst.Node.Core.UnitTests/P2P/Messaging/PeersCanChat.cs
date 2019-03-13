@@ -27,7 +27,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
                .Build();
         }
 
-        [Fact(Skip = "not ready")]
+        [Fact(Skip = "not ready yet")]
         public async Task Peers_Can_Chat()
         {
             ConfigureContainerBuilder(_config);
