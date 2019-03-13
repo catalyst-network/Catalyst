@@ -21,11 +21,6 @@ namespace Catalyst.Node.Common.Interfaces
 {
     public interface IAds : IShell
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        bool OnRpcCommand(string[] args);
 
         /// <summary>
         /// </summary>

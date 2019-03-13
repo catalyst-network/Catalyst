@@ -34,11 +34,6 @@ namespace Catalyst.Node.Common.Interfaces
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        bool OnStartNode(string[] args);
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
         bool OnStartWork(string[] args);
 
         /// <summary>

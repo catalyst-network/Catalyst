@@ -24,20 +24,18 @@ using System.Text;
 using Catalyst.Node.Common.Interfaces;
 using Serilog;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
     public abstract class ShellBase : IShell
     {
-        private readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
         protected ShellBase()
         {
             AppCulture = new CultureInfo("es-GB", false);
         }
 
         private string Prompt => "Koopa";
-        private bool ShowPrompt { get; } = true;
         private string ServiceName => "Catalyst Distributed Shell";
         internal static CultureInfo AppCulture { get; set; }
 
@@ -45,11 +43,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <returns></returns>
         public abstract bool OnStart(string[] args);
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStartNode(string[] args);
 
         /// <summary>
         /// </summary>
@@ -78,7 +71,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         {
             var normalCmds =
                 "Normal Commands:\n" +
-                "\tstart node\n" +
                 "\tstart work\n" +
                 "\tstop node\n" +
                 "\tstop work\n" +
@@ -115,7 +107,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
                     Console.Clear();
                     return true;
                 case "exit":
-                    Console.WriteLine("exit trace");
                     return false;
                 default:
                     return CommandNotFound(args);
@@ -167,6 +158,25 @@ namespace Catalyst.Node.Common.Helpers.Shell
         protected abstract bool OnGetMempool();
 
         /// <summary>
+        ///     Parses flags passed with commands.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="regExPattern"></param>
+        private string ParseCmdArgs(string[] args, string regExPattern)
+        {
+            string returnArg = null;
+            foreach (var arg in args)
+            {
+                if (new Regex(@"[regExPattern]+").IsMatch(arg))
+                {
+                    returnArg = arg.Replace(regExPattern, "");
+                }
+            }
+
+            return returnArg;
+        }
+        
+        /// <summary>
         /// </summary>
         /// <param name="prompt"></param>
         /// <returns></returns>
@@ -176,9 +186,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
             var sb = new StringBuilder();
             ConsoleKeyInfo key;
-            Console.WriteLine(prompt);
-            Console.WriteLine(": ");
-
+            Console.WriteLine($@"${prompt}:");
             Console.ForegroundColor = ConsoleColor.Yellow;
 
             do
@@ -257,11 +265,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
             while (running)
             {
-                if (ShowPrompt)
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
-                    Console.WriteLine($"{Prompt}> ");
-                }
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.WriteLine($@"{Prompt}> ");
 
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 var line = Console.ReadLine()?.Trim();
@@ -282,7 +287,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 }
                 catch (SystemException ex)
                 {
-                    // Console.WriteLine(ex, "Exception raised in Shell");
+                    Console.WriteLine($@"Exception raised in Shell ${ex.Message}");
                 }
             }
 
@@ -296,7 +301,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         protected static bool CommandNotFound(string[] args)
         {
-            Console.WriteLine("error: command not found " + args);
+            Console.WriteLine($@"error: command not found ${args}");
             return true;
         }
     }
