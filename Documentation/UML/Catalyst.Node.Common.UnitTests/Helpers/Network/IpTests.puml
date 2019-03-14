@@ -1,0 +1,7 @@
+@startuml
+class IpTests {
+    + <<async>> GetPublicIp_should_not_wait_for_longest_response() : Task
+    + <<async>> GetPublicIp_should_tolerate_echo_failure() : Task
+    + <<async>> GetPublicIp_should_usually_return_a_valid_ip() : Task
+}
+@enduml

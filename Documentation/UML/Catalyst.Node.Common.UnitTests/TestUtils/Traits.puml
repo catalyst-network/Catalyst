@@ -1,0 +1,6 @@
+@startuml
+class Traits <<static>> {
+    + <<const>> TestType : string = "TestType"
+    + <<const>> IntegrationTest : string = "IntegrationTest"
+}
+@enduml

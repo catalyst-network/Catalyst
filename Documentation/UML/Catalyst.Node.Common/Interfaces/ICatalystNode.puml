@@ -1,0 +1,5 @@
+@startuml
+interface ICatalystNode {
+    RunAsync(cancellationSourceToken:CancellationToken) : Task
+}
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class SecureTcpMessageClientHandler {
+    # <<override>> ChannelRead0(context:IChannelHandlerContext, msg:string) : void
+    + <<override>> ExceptionCaught(context:IChannelHandlerContext, e:Exception) : void
+}
+class "SimpleChannelInboundHandler`1"<T> {
+}
+"SimpleChannelInboundHandler`1" "<string>" <|-- SecureTcpMessageClientHandler
+SecureTcpMessageClientHandler o-> "Logger" ILogger
+@enduml
