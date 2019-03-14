@@ -82,6 +82,14 @@
       ]
     },
     {
+      "type": "Ipfs.Engine.IpfsEngine, Ipfs.Engine",
+      "services": [
+        {
+          "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"
+        }
+      ]
+    },
+    {
       "type": "Catalyst.Node.Common.Helpers.Network.InjectableLookupClient, Catalyst.Node.Common",
       "services": [
         {

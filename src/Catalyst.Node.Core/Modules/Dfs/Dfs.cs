@@ -19,12 +19,19 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
     public class Dfs : IDfs
     {
+        private IIpfsConnector _ipfsConnector;
+
+        public Dfs(IIpfsConnector ipfsConnector)
+        {
+            _ipfsConnector = ipfsConnector;
+        }
         /// <inheritdoc />
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
