@@ -1,0 +1,8 @@
+@startuml
+interface IRedisStore {
+    Connect(endPoint:IPEndPoint) : void
+    GetInfo() : IDictionary<string, string>
+}
+IKeyValueStore <|-- IRedisStore
+IDisposable <|-- IRedisStore
+@enduml

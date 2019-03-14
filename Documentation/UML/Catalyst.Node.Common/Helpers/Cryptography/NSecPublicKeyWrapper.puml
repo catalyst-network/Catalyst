@@ -1,0 +1,8 @@
+@startuml
+class NSecPublicKeyWrapper <<sealed>> {
+    + NSecPublicKeyWrapper(key:PublicKey)
+    + GetNSecFormatPublicKey() : PublicKey
+}
+IPublicKey <|-- NSecPublicKeyWrapper
+NSecPublicKeyWrapper --> "_key" PublicKey
+@enduml

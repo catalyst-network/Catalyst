@@ -1,0 +1,7 @@
+@startuml
+interface IP2PMessaging {
+    PingAsync(targetNode:IPeerIdentifier) : Task<bool>
+    BroadcastMessageAsync(message:string) : Task
+}
+IP2PMessaging --> "Identifier" IPeerIdentifier
+@enduml

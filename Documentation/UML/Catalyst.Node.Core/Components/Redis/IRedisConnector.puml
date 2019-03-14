@@ -1,0 +1,7 @@
+@startuml
+interface IRedisConnector {
+}
+IDisposable <|-- IRedisConnector
+IRedisConnector --> "Connection" IConnectionMultiplexer
+IRedisConnector --> "Database" IDatabase
+@enduml

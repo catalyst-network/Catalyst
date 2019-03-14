@@ -1,0 +1,6 @@
+@startuml
+abstract class BaseModuleConfigTest {
+    # BaseModuleConfigTest(configFileUnderTest:string, extraRegistrations:Action<ContainerBuilder>)
+}
+BaseModuleConfigTest --> "Container" IContainer
+@enduml

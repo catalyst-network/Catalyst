@@ -1,0 +1,20 @@
+@startuml
+class RedisConnectorTests {
+    + RedisConnectorTests()
+    + Dispose() : void
+    - Writer(start:int, end:int) : void
+    - Reader(start:int, end:int) : void
+    + Connection_Should_Have_One_Endpoint() : void
+    + KeyAlreadyExistUpdate() : void
+    + KeyDoesNotExists() : void
+    + <<async>> KeysArePersistent() : Task
+    + MultipleClient() : void
+    + OneWriteRead() : void
+    + WriteByteArrayValue() : void
+    + WriteReadMany() : void
+}
+IDisposable <|-- RedisConnectorTests
+RedisConnectorTests o-> "EndPoint" IPEndPoint
+RedisConnectorTests --> "_connector" RedisConnector
+RedisConnectorTests --> "_database" IDatabase
+@enduml

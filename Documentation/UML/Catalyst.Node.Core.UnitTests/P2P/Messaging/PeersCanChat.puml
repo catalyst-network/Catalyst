@@ -1,0 +1,8 @@
+@startuml
+class PeersCanChat {
+    + PeersCanChat(output:ITestOutputHelper)
+    + <<async>> Peers_Can_Chat() : Task
+}
+ConfigFileBasedTest <|-- PeersCanChat
+PeersCanChat --> "_config" IConfigurationRoot
+@enduml
