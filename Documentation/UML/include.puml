@@ -109,6 +109,8 @@
 !include .\/Catalyst.Node.Common/Interfaces/Modules/Contract/IContract.puml
 !include .\/Catalyst.Node.Common/obj/Debug/netcoreapp2.1/Catalyst.Node.Common.AssemblyInfo.puml
 !include .\/Catalyst.Node.Common/obj/Debug/netcoreapp2.2/Catalyst.Node.Common.AssemblyInfo.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Inbound/InboundChannelInitializer.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Inbound/TcpServer.puml
 !include .\/Catalyst.Node.Core/obj/Debug/netcoreapp2.1/Catalyst.Node.Core.AssemblyInfo.puml
 !include .\/Catalyst.Node.Core/obj/Debug/netcoreapp2.2/Catalyst.Node.Core.AssemblyInfo.puml
 @enduml

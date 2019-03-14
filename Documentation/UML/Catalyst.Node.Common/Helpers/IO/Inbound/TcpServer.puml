@@ -1,0 +1,13 @@
+@startuml
+class TcpServer {
+    - <<readonly>> _port : int
+    + TcpServer(port:int, listenAddress:IPAddress, supervisorEventLoop:IEventLoopGroup, workerEventLoop:IEventLoopGroup, channelHandler:IChannelHandler)
+    + <<async>> StartServer(certificate:X509Certificate, channelInitializer:IChannelHandler) : Task<IChannel>
+}
+TcpServer --> "Channel" IChannel
+TcpServer --> "_listenAddress" IPAddress
+TcpServer --> "_supervisorEventLoop" IEventLoopGroup
+TcpServer --> "_workerEventLoop" IEventLoopGroup
+TcpServer --> "_channelHandler" IChannelHandler
+TcpServer --> "_certificate" X509Certificate
+@enduml

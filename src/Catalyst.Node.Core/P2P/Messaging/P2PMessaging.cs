@@ -87,7 +87,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     _settings.Port,
                     _settings.BindAddress,
                     _serverParentGroup,
-                    _serverWorkerGroup, serverHandler
+                    _serverWorkerGroup
             ).StartServer(
                 _certificate,
                 new InboundChannelInitializer<ISocketChannel>(channel => {},

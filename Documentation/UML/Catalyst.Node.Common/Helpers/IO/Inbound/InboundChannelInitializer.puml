@@ -1,0 +1,18 @@
+@startuml
+class "InboundChannelInitializer`1"<T> <<sealed>> {
+    + InboundChannelInitializer(initializationAction:Action<T>, encoder:IChannelHandler, decoder:IChannelHandler, channelHandler:IChannelHandler, certificate:X509Certificate)
+    + InboundChannelInitializer(initializationAction:Action<T>, encoder:IChannelHandler, decoder:IChannelHandler, channelHandler:IChannelHandler)
+    # <<override>> InitChannel(channel:T) : void
+    + <<override>> ToString() : string
+}
+class "ChannelInitializer`1"<T> {
+}
+class "Action`1"<T> {
+}
+"ChannelInitializer`1" "<T>" <|-- "InboundChannelInitializer`1"
+"InboundChannelInitializer`1" --> "_initializationAction<T>" "Action`1"
+"InboundChannelInitializer`1" --> "_certificate" X509Certificate
+"InboundChannelInitializer`1" --> "_encoder" IChannelHandler
+"InboundChannelInitializer`1" --> "_decoder" IChannelHandler
+"InboundChannelInitializer`1" --> "_channelHandler" IChannelHandler
+@enduml
