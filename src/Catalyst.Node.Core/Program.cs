@@ -95,6 +95,11 @@ namespace Catalyst.Node.Core
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
+
+                //To Be Removed: just for testing
+                var rpcServer = new RPC.CLIRPCServer();
+                rpcServer.RunServer().Wait();
+
                 using (var scope = container.BeginLifetimeScope(LifetimeTag,
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))

@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Title>Catalyst Node</Title>
@@ -6,37 +6,39 @@
     <PackageDescription>Catalyst Core Node</PackageDescription>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-  <Import Project="../Common.Projects.props" />
+  <Import Project="../Common.Projects.props"/>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.8.1" />
-    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
-    <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
-    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
-    <PackageReference Include="Catalyst.Protocol" Version="0.0.1.381-beta" />
-    <PackageReference Include="DnsClient" Version="1.2.0" />
-    <PackageReference Include="Ipfs.Api" Version="0.23.6" />
-    <PackageReference Include="Ipfs.Core" Version="0.40.0" />
-    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
-    <PackageReference Include="Networker.Formatter.ProtobufNet" Version="3.0.9-rc" />
-    <PackageReference Include="Serilog" Version="2.7.1" />
-    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
-    <PackageReference Include="Serilog.Enrichers.Thread" Version="3.0.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801" />
-    <PackageReference Include="Dawn.Guard" Version="1.7.0" />
-    <PackageReference Include="SharpRepository.Caching.Redis" Version="2.0.2.2" />
-    <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3-prerelease" />
-    <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.1-prerelease" />
-    <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.2-prerelease" />
-    <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
-    <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5" />
+    <PackageReference Include="Autofac" Version="4.8.1"/>
+    <PackageReference Include="Autofac.Configuration" Version="4.1.0"/>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1"/>
+    <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0"/>
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3"/>
+    <PackageReference Include="Catalyst.Protocol" Version="0.0.1.381-beta"/>
+    <PackageReference Include="DnsClient" Version="1.2.0"/>
+    <PackageReference Include="Ipfs.Api" Version="0.23.6"/>
+    <PackageReference Include="Ipfs.Core" Version="0.40.0"/>
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1"/>
+    <PackageReference Include="Networker.Formatter.ProtobufNet" Version="3.0.9-rc"/>
+    <PackageReference Include="Serilog" Version="2.7.1"/>
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3"/>
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="3.0.0"/>
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.1-dev-00801"/>
+    <PackageReference Include="Dawn.Guard" Version="1.7.0"/>
+    <PackageReference Include="SharpRepository.Caching.Redis" Version="2.0.2.2"/>
+    <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3-prerelease"/>
+    <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.1-prerelease"/>
+    <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.2-prerelease"/>
+    <PackageReference Include="StackExchange.Redis" Version="2.0.519"/>
+    <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="4.0.5"/>
+    <PackageReference Include="DotNetty.Codecs" Version="0.6.0"/>
+    <PackageReference Include="DotNetty.Handlers" Version="0.6.0"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
+    <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <None Update="Config\*.json">
