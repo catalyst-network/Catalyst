@@ -1,9 +1,10 @@
 using Ipfs.CoreApi;
+using PeerTalk;
 
 namespace Catalyst.Node.Common.Interfaces
-{
+{   
     public interface IIpfsConnector
     {
-        ICoreApi CoreApi { get; }
+        IService Service { get; }
     }
 }

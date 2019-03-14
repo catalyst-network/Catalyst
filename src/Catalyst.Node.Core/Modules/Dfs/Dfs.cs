@@ -17,6 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -35,7 +36,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         /// <inheritdoc />
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            await Task.CompletedTask.ConfigureAwait(false);
+            await _ipfsConnector.Service.StartAsync();
         }
 
         /// <inheritdoc />

@@ -1,12 +1,23 @@
 using Catalyst.Node.Common.Interfaces;
 using Ipfs.CoreApi;
+using Ipfs.Engine;
+using PeerTalk;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
+    public class InjectablePassphraseStringIpfsEngine : IpfsEngine
+    {
+        public InjectablePassphraseStringIpfsEngine(string passphrase)
+            : base(passphrase.ToCharArray()) { }
+    }
+    
     public class IpfsConnector : IIpfsConnector
     {
-        public ICoreApi CoreApi { get; }
+        public IService Service { get; }
 
-        public IpfsConnector(ICoreApi coreApi) { CoreApi = coreApi; }
+        public IpfsConnector(IService service)
+        {
+            Service = service;
+        }
     }
 }
