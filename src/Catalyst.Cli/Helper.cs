@@ -1,4 +1,4 @@
-namespace Catalyst.Node.Core.RPC
+namespace Catalyst.Cli
 {
     using Microsoft.Extensions.Configuration;
     using DotNetty.Common.Internal.Logging;
@@ -14,7 +14,7 @@ namespace Catalyst.Node.Core.RPC
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(ProcessDirectory)
-                .AddJsonFile("rpcsettings.json")
+                .AddJsonFile("clientrpcsettings.json")
                 .Build();
         }
 

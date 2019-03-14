@@ -1,6 +1,8 @@
-namespace Catalyst.Node.Core.RPC
+namespace Catalyst.Cli
 {
-    public static class ServerSettings
+using System.Net;
+
+    public class ClientSettings
     {
         public static bool IsSsl
         {
@@ -8,11 +10,15 @@ namespace Catalyst.Node.Core.RPC
             {
                 //string ssl = Helper.Configuration["ssl"];
                 //return !string.IsNullOrEmpty(ssl) && bool.Parse(ssl);
-                return true;
+                return false;
             }
         }
 
-        public static int Port => int.Parse("30303");
+        public static IPAddress Host => IPAddress.Parse("127.0.0.1");
+
+        public static int Port => int.Parse("8807");
+
+        public static int Size => int.Parse("256");
 
         public static bool UseLibuv
         {

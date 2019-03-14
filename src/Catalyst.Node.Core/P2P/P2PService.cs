@@ -27,8 +27,9 @@ namespace Catalyst.Node.Core.P2P
 {
     public class P2PService : IP2P
     {
-        public P2PService(IPeerSettings settings, IPeerDiscovery peerDiscovery)
+        public P2PService(IPeerSettings settings, IPeerDiscovery peerDiscovery, IP2PMessaging messaging)
         {
+            Messaging = messaging;
             Discovery = peerDiscovery;
             Settings = settings;
 
@@ -39,11 +40,7 @@ namespace Catalyst.Node.Core.P2P
         public IPeerDiscovery Discovery { get; }
         public IPeerIdentifier Identifier { get; }
         public IPeerSettings Settings { get; }
-
-        public bool Ping(IPeerIdentifier targetNode)
-        {
-            throw new NotImplementedException();
-        }
+        public IP2PMessaging Messaging { get; }
 
         public List<IPeerIdentifier> FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
         {

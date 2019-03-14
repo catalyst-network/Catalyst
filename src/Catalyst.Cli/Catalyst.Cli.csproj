@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Title>Catalyst CLI</Title>
@@ -7,14 +7,17 @@
     <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-  <Import Project="../Common.Projects.props" />
+  <Import Project="../Common.Projects.props"/>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.8.1" />
-    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="Autofac" Version="4.8.1"/>
+    <PackageReference Include="Autofac.Configuration" Version="4.1.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1"/>
+    <PackageReference Include="DotNetty.Codecs" Version="0.6.0"/>
+    <PackageReference Include="DotNetty.Handlers" Version="0.6.0"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.0"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
+    <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <None Update="config.shell.json">

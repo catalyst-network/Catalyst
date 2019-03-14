@@ -18,6 +18,14 @@
       ]
     },
     {
+      "type": "Catalyst.Node.Core.RPC.CLIRPCServer",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.ICLIRPCServer, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
       "type": "Catalyst.Node.Core.P2P.PeerSettings",
       "services": [
         {
@@ -30,6 +38,14 @@
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.IPeerDiscovery, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.P2P.Messaging.P2PMessaging",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.IP2PMessaging, Catalyst.Node.Common"
         }
       ]
     },

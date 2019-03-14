@@ -25,6 +25,8 @@ using Autofac.Configuration;
 using Catalyst.Node.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 
+using System.Diagnostics;
+
 namespace Catalyst.Cli
 {
     public static class Program
@@ -36,7 +38,7 @@ namespace Catalyst.Cli
         ///     Main cli loop
         /// </summary>
         /// <param name="args"></param>
-        public static int Main(string[] args)
+        public static int Main()
         {
             const int bufferSize = 1024 * 67 + 128;
 
@@ -80,8 +82,8 @@ namespace Catalyst.Cli
                 )
             );
 
-            container.Resolve<IAds>();
-
+            var shell = container.Resolve<IAds>();
+            shell.RunConsole();
             return 0;
         }
     }
