@@ -2,6 +2,7 @@
 using System.Reflection;
 using Catalyst.Protocols.Transaction;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Serilog;
@@ -14,19 +15,28 @@ namespace Catalyst.Node.Core.P2P.Messaging {
         protected override void ChannelRead0(IChannelHandlerContext context, Any message)
         {
             var log = JsonConvert.SerializeObject(message);
-            var innerLog = "unknown type";
-            if(message.TypeUrl == typeof(StTx).FullName)
+            Logger.Information(log + Environment.NewLine);
+            
+            if (message.TypeUrl == typeof(StTx).FullName)
             {
-                var tx = message.FromAny<StTx>();
-                innerLog = JsonConvert.SerializeObject(tx);
+                OutputTypedContentAsJson<StTx>(message);
             }
             else if (message.TypeUrl == typeof(Key).FullName)
             {
-                var key = message.FromAny<Key>();
-                innerLog = JsonConvert.SerializeObject(key);
+                OutputTypedContentAsJson<Key>(message);
             }
+            else
+            {
+                Logger.Warning("Unknown type {0} wrapped in an 'Any' message", message.TypeUrl);
+            }
+        }
+
+        private static void OutputTypedContentAsJson<T>(Any message) where T : IMessage
+        {
+            var tx = message.FromAny<T>();
+            var innerLog = JsonConvert.SerializeObject(tx);
             Logger.Information(innerLog + Environment.NewLine);
-        } 
+        }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
