@@ -53,7 +53,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
                .Handler(new LoggingHandler(LogLevel.INFO))
                .ChildHandler(channelInitializer);
 
-            return await bootstrap.BindAsync(_port);
+            return await bootstrap.BindAsync(_listenAddress, _port);
         }
     }
 }

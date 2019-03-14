@@ -83,19 +83,20 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _serverParentGroup = new MultithreadEventLoopGroup(1);
             _serverWorkerGroup = new MultithreadEventLoopGroup();
 
-            _serverChannel = await new TcpServer(_settings.Port, _settings.BindAddress, _serverParentGroup, _serverWorkerGroup, serverHandler)
-               .StartServer(_certificate, new ActionChannelInitializer<ISocketChannel>(channel =>
-                {
-                    var pipeline = channel.Pipeline;
-                    if (_certificate != null)
-                    {
-                        pipeline.AddLast(TlsHandler.Server(_certificate));
-                    }
-
-                    pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-                    pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-                    pipeline.AddLast(encoder, decoder, serverHandler);
-                }));
+            _serverChannel = await new TcpServer(
+                    _settings.Port,
+                    _settings.BindAddress,
+                    _serverParentGroup,
+                    _serverWorkerGroup, serverHandler
+            ).StartServer(
+                _certificate,
+                new InboundChannelInitializer<ISocketChannel>(channel => {},
+                    encoder,
+                    decoder,
+                    serverHandler,
+                    _certificate
+                )
+            );
         }
 
         private async Task RunP2PClientAsync()
