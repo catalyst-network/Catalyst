@@ -1,0 +1,22 @@
+@startuml
+class SecureTcpMessageServerHandler {
+    - <<readonly>> _groupLock : object
+    + <<override>> ChannelActive(context:IChannelHandlerContext) : void
+    # <<override>> ChannelRead0(context:IChannelHandlerContext, msg:string) : void
+    + <<override>> ChannelReadComplete(ctx:IChannelHandlerContext) : void
+    + <<override>> ExceptionCaught(ctx:IChannelHandlerContext, e:Exception) : void
+    + <<override>> IsSharable : bool <<get>>
+}
+class "SimpleChannelInboundHandler`1"<T> {
+}
+class EveryOneBut {
+    + EveryOneBut(id:IChannelId)
+    + Matches(channel:IChannel) : bool
+}
+"SimpleChannelInboundHandler`1" "<string>" <|-- SecureTcpMessageServerHandler
+SecureTcpMessageServerHandler o-> "Logger" ILogger
+SecureTcpMessageServerHandler --> "_broadCastGroup" IChannelGroup
+SecureTcpMessageServerHandler +-- EveryOneBut
+IChannelMatcher <|-- EveryOneBut
+EveryOneBut --> "_id" IChannelId
+@enduml
