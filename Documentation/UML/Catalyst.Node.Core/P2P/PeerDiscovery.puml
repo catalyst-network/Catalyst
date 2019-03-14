@@ -1,0 +1,14 @@
+@startuml
+class PeerDiscovery {
+    + PeerDiscovery(dns:IDns, repository:IRepository<Peer>)
+    <<internal>> <<async>> GetSeedNodes(seedServers:List<string>) : Task
+}
+class "IRepository`1"<T> {
+}
+class "List`1"<T> {
+}
+IPeerDiscovery <|-- PeerDiscovery
+PeerDiscovery --> "_dns" IDns
+PeerDiscovery --> "_peerRepository<Peer>" "IRepository`1"
+PeerDiscovery --> "SeedNodes<IPEndPoint>" "List`1"
+@enduml

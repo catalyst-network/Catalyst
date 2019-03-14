@@ -1,0 +1,7 @@
+@startuml
+interface IMempool {
+    GetMemPoolContent() : IDictionary<Key, StTx>
+    SaveTx(key:Key, transaction:StTx) : bool
+    GetTx(key:Key) : StTx
+}
+@enduml

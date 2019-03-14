@@ -1,0 +1,9 @@
+@startuml
+class ConfigTests {
+    {static} ConfigTests()
+    + Config_Should_Contain_a_valid_storage_module(network:Network) : void
+}
+class "List`1"<T> {
+}
+ConfigTests --> "Networks<object[]>" "List`1"
+@enduml

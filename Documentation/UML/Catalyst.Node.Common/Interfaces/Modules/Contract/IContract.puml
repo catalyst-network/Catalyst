@@ -1,0 +1,5 @@
+@startuml
+interface IContract {
+    Address : string <<get>> <<set>>
+}
+@enduml
