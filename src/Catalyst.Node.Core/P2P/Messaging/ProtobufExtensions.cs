@@ -9,7 +9,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
     {
         public static Any ToAny<T>(this T protobufObject) where T : IMessage
         {
-            var wrappedObject = new Any() { TypeUrl = typeof(T).FullName, Value = protobufObject.ToByteString() };
+            var wrappedObject = new Any { TypeUrl = typeof(T).FullName, Value = protobufObject.ToByteString() };
             return wrappedObject;
         }
 
