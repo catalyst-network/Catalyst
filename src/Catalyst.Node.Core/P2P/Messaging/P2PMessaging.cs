@@ -21,16 +21,16 @@ using System;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using DotNetty.Codecs;
+using DotNetty.Codecs.Protobuf;
 using DotNetty.Handlers.Logging;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Google.Protobuf.WellKnownTypes;
 using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using LogLevel = DotNetty.Handlers.Logging.LogLevel;
@@ -76,9 +76,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             _logger.Information("P2P server starting");
 
-            var encoder = new StringEncoder(Encoding.UTF8);
-            var decoder = new StringDecoder(Encoding.UTF8);
-            var serverHandler = new SecureTcpMessageServerHandler();
             _serverParentGroup = new MultithreadEventLoopGroup(1);
             _serverWorkerGroup = new MultithreadEventLoopGroup();
             
@@ -97,8 +94,11 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     }
 
                     pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-                    pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-                    pipeline.AddLast(encoder, decoder, serverHandler);
+                    pipeline.AddLast(new ProtobufVarint32FrameDecoder())
+                       .AddLast(new ProtobufDecoder(Any.Parser))
+                       .AddLast(new ProtobufVarint32LengthFieldPrepender())
+                       .AddLast(new ProtobufEncoder())
+                       .AddLast(new AnyTypeServerHandler());
                 }));
 
             _serverChannel = await bootstrap.BindAsync(_settings.Port);
@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             _logger.Information("P2P client starting");
             _clientEventLoopGroup = new MultithreadEventLoopGroup();
- 
+
             var bootstrap = new Bootstrap();
             bootstrap
                .Group(_clientEventLoopGroup)
@@ -126,9 +126,11 @@ namespace Catalyst.Node.Core.P2P.Messaging
                                 new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
                                 new ClientTlsSettings(_settings.EndPoint.ToString())));
                     }
-                    pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-                    pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-                    pipeline.AddLast(new StringEncoder(), new StringDecoder(), new SecureTcpMessageClientHandler());
+                    pipeline.AddLast(new ProtobufVarint32LengthFieldPrepender())
+                       .AddLast(new ProtobufEncoder())
+                       .AddLast(new ProtobufVarint32FrameDecoder())
+                       .AddLast(new ProtobufDecoder(Any.Parser))
+                       .AddLast(new AnyTypeClientHandler());
                 }));
 
             _clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(_settings.BindAddress, _settings.Port));
@@ -144,9 +146,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
             return await Task.FromResult(true);
         }
 
-        public async Task BroadcastMessageAsync(string message)
+        public async Task BroadcastMessageAsync(Any tx)
         {
-            await _clientChannel.WriteAndFlushAsync(message + Environment.NewLine);
+            await _clientChannel.WriteAndFlushAsync(tx);
         }
 
         protected virtual void Dispose(bool disposing)
