@@ -34,6 +34,7 @@ using DotNetty.Transport.Channels.Sockets;
 using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using LogLevel = DotNetty.Handlers.Logging.LogLevel;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
@@ -81,14 +82,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
             var serverHandler = new SecureTcpMessageServerHandler();
             _serverParentGroup = new MultithreadEventLoopGroup(1);
             _serverWorkerGroup = new MultithreadEventLoopGroup();
-            
-            var bootstrap = new ServerBootstrap();
-            bootstrap
-               .Group(_serverParentGroup, _serverWorkerGroup)
-               .Channel<TcpServerSocketChannel>()
-               .Option(ChannelOption.SoBacklog, 100)
-               .Handler(new LoggingHandler(LogLevel.INFO))
-               .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
+
+            _serverChannel = await new TcpServer(_settings.Port, _settings.BindAddress, _serverParentGroup, _serverWorkerGroup, serverHandler)
+               .StartServer(_certificate, new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
                     var pipeline = channel.Pipeline;
                     if (_certificate != null)
@@ -100,8 +96,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
                     pipeline.AddLast(encoder, decoder, serverHandler);
                 }));
-
-            _serverChannel = await bootstrap.BindAsync(_settings.Port);
         }
 
         private async Task RunP2PClientAsync()

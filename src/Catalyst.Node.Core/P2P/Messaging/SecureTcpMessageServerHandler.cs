@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Groups;
 using Serilog;
