@@ -15,7 +15,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         private readonly IPAddress _listenAddress;
         private readonly IEventLoopGroup _supervisorEventLoop;
         private readonly IEventLoopGroup _workerEventLoop;
-        private readonly X509Certificate _certificate;
 
         /// <summary>
         ///     
@@ -38,7 +37,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             _workerEventLoop = workerEventLoop;
         }
 
-        public async Task<IChannel> StartServer(X509Certificate certificate, IChannelHandler channelInitializer)
+        public async Task<IChannel> StartServer(IChannelHandler channelInitializer)
         {
             var bootstrap = new ServerBootstrap();
             bootstrap

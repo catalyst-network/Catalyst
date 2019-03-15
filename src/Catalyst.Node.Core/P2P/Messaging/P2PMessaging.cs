@@ -89,7 +89,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     _serverParentGroup,
                     _serverWorkerGroup
             ).StartServer(
-                _certificate,
                 new InboundChannelInitializer<ISocketChannel>(channel => {},
                     encoder,
                     decoder,
@@ -119,7 +118,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
                         pipeline.AddLast(
                             new TlsHandler(stream => 
                                 new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-                                new ClientTlsSettings(_settings.EndPoint.ToString())));
+                                new ClientTlsSettings(_settings.EndPoint.ToString()))
+                            );
                     }
                     pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
                     pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
