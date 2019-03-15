@@ -31,6 +31,8 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
 
             var passwordReader = new TestPasswordReader();
             ContainerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
+            
+            ContainerBuilder.RegisterInstance(config);
         }
     }
 }

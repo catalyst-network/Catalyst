@@ -10,7 +10,7 @@
       "Network": "devnet",
       "MutualAuthentication": false,
       "AcceptInvalidCerts": false,
-      "PfxFileName": "mycert.pfx",
+      "PfxFileName": "test_certificate_01.pem",
       "SslCertPassword": "test",
       "BindAddress": "127.0.0.1",
       "Port": 42069,

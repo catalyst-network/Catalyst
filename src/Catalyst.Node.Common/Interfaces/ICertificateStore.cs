@@ -24,5 +24,7 @@ namespace Catalyst.Node.Common.Interfaces
     public interface ICertificateStore
     {
         X509Certificate2 ReadOrCreateCertificateFile(string fileName);
+
+        X509Certificate2 ReadOrCreateCertificateFile(string fileName, string password);
     }
 }

@@ -98,20 +98,12 @@ namespace Catalyst.Node.Core
 
                 var container = containerBuilder.Build();
 
-                //To Be Removed: just for testing
-                //var rpcServer = new RPC.CLIRPCServer();
-                //RPC.CLIRPCServer.RunServerAsync().Wait();
-
                 using (var scope = container.BeginLifetimeScope(LifetimeTag,
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                    //var node = container.Resolve<ICatalystNode>();
-
-                    //node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
-
-                    var cliRPCServer = container.Resolve<ICLIRPCServer>();
-                    cliRPCServer.RunServerAsync().Wait();
+                   var node = container.Resolve<ICatalystNode>();
+                   node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;

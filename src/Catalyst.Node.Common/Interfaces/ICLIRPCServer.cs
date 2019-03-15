@@ -25,5 +25,6 @@ namespace Catalyst.Node.Common.Interfaces
     public interface ICLIRPCServer
     {
         Task RunServerAsync();
+        ICLIRPCServerSettings Settings { get; }
     }
 }
