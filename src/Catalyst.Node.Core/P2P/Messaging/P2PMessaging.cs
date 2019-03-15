@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright(c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
@@ -35,6 +35,7 @@ using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using LogLevel = DotNetty.Handlers.Logging.LogLevel;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Outbound;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
@@ -83,7 +84,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _serverParentGroup = new MultithreadEventLoopGroup(1);
             _serverWorkerGroup = new MultithreadEventLoopGroup();
 
-            _serverChannel = await new TcpServer(
+            _clientChannel = await new TcpServer(
                     _settings.Port,
                     _settings.BindAddress,
                     _serverParentGroup,
@@ -102,31 +103,23 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             _logger.Information("P2P client starting");
             _clientEventLoopGroup = new MultithreadEventLoopGroup();
- 
-            var bootstrap = new Bootstrap();
-            bootstrap
-               .Group(_clientEventLoopGroup)
-               .Channel<TcpSocketChannel>()
-               .Option(ChannelOption.TcpNodelay, true)
-               .Handler(new LoggingHandler(LogLevel.INFO))
-               .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
-                {
-                    var pipeline = channel.Pipeline;
-
-                    if (_certificate != null)
-                    {
-                        pipeline.AddLast(
-                            new TlsHandler(stream => 
-                                new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-                                new ClientTlsSettings(_settings.EndPoint.ToString()))
-                            );
-                    }
-                    pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-                    pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-                    pipeline.AddLast(new StringEncoder(), new StringDecoder(), new SecureTcpMessageClientHandler());
-                }));
-
-            _clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(_settings.BindAddress, _settings.Port));
+            var encoder = new StringEncoder(Encoding.UTF8);
+            var decoder = new StringDecoder(Encoding.UTF8);
+            var clientHandler = new SecureTcpMessageClientHandler();
+            
+            var bootstrap = await new TcpClient(
+                _settings.Port,
+                _settings.BindAddress,
+                _clientEventLoopGroup
+            ).StartClient(
+                new OutboundChannelInitializer<ISocketChannel>(channel => {},
+                    encoder,
+                    decoder,
+                    clientHandler,
+                    _settings.BindAddress,
+                    _certificate
+                )
+            );
         }
 
         public void Stop()

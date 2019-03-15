@@ -12,34 +12,44 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     {
         private readonly int _port;
         private readonly IPAddress _listenAddress;
-        private readonly IEventLoopGroup _supervisorEventLoop;
         private readonly IEventLoopGroup _workerEventLoop;
 
         public TcpClient
         (
             int port,
             IPAddress listenAddress,
-            IEventLoopGroup supervisorEventLoop,
             IEventLoopGroup workerEventLoop
         )
         {
             _port = port;
             _listenAddress = listenAddress;
-            _supervisorEventLoop = supervisorEventLoop;
             _workerEventLoop = workerEventLoop;
         }
         
         public async Task<IChannel> StartClient(IChannelHandler channelInitializer)
         {
-            var bootstrap = new ServerBootstrap();
+            var bootstrap = new Bootstrap();
             bootstrap
-               .Group(_supervisorEventLoop, _workerEventLoop)
-               .Channel<TcpServerSocketChannel>()
+               .Group(_workerEventLoop)
+               .Channel<TcpSocketChannel>()
                .Option(ChannelOption.SoBacklog, 100)
                .Handler(new LoggingHandler(LogLevel.INFO))
-               .ChildHandler(channelInitializer);
+               .Handler(channelInitializer);
 
-            return await bootstrap.BindAsync(_listenAddress, _port);
+            return await bootstrap.ConnectAsync(new IPEndPoint(_listenAddress, _port));
         }
+        
+        // public async Task<IChannel> StartClient(IChannelHandler channelInitializer)
+        // {
+        //     var bootstrap = new ServerBootstrap();
+        //     bootstrap
+        //        .Group(_workerEventLoop)
+        //        .Channel<TcpSocketChannel>()
+        //        .Option(ChannelOption.SoBacklog, 100)
+        //        .Handler(new LoggingHandler(LogLevel.INFO))
+        //        .ChildHandler(channelInitializer);
+        //
+        //     return await bootstrap.BindAsync(_listenAddress, _port);
+        // }
     }
 }

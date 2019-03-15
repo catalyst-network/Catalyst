@@ -79,7 +79,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                 pipeline.AddLast(
                     new TlsHandler(stream => 
                         new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-                        new ClientTlsSettings(_targetHost.ToString())));
+                        new ClientTlsSettings(_targetHost.ToString())
+                    )
+                );
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
