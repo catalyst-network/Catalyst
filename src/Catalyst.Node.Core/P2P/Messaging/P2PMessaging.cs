@@ -68,11 +68,11 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             Identifier = new PeerIdentifier(settings);
 
-            var longRunningTasks = new [] {RunP2PServerAsync(), RunP2PClientAsync()};
-            Task.WaitAll(longRunningTasks);
+            var startTasks = new [] {StartP2PServerAsync(), StartP2PClientAsync()};
+            Task.WaitAll(startTasks);
         }
 
-        private async Task RunP2PServerAsync()
+        private async Task StartP2PServerAsync()
         {
             _logger.Information("P2P server starting");
 
@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _serverChannel = await bootstrap.BindAsync(_settings.Port);
         }
 
-        private async Task RunP2PClientAsync()
+        private async Task StartP2PClientAsync()
         {
             _logger.Information("P2P client starting");
             _clientEventLoopGroup = new MultithreadEventLoopGroup();

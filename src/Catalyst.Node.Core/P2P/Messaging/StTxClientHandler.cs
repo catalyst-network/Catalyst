@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Protocols.Transaction;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -16,12 +17,12 @@ namespace Catalyst.Node.Core.P2P.Messaging {
         {
             var log = JsonConvert.SerializeObject(message);
             Logger.Information(log + Environment.NewLine);
-            
-            if (message.TypeUrl == typeof(StTx).FullName)
+
+            if (message.TypeUrl == StTx.Descriptor.ShortenedFullName())
             {
                 OutputTypedContentAsJson<StTx>(message);
             }
-            else if (message.TypeUrl == typeof(Key).FullName)
+            else if (message.TypeUrl == Key.Descriptor.ShortenedFullName())
             {
                 OutputTypedContentAsJson<Key>(message);
             }

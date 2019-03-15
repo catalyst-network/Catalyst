@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Protocols.Transaction;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Groups;
@@ -51,7 +52,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _broadCastGroup.WriteAndFlushAsync(message, new EveryOneBut(context.Channel.Id));
             context.WriteAndFlushAsync(message);
 
-            if (message.TypeUrl == typeof(StTx).FullName && message.FromAny<StTx>().Amount == 0)
+            if (message.TypeUrl == StTx.Descriptor.ShortenedFullName() && message.FromAny<StTx>().Amount == 0)
             {
                 context.CloseAsync();
             }
