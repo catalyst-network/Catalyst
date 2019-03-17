@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright(c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
@@ -47,9 +47,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly X509Certificate2 _certificate;
         private IChannel _clientChannel;
         private MultithreadEventLoopGroup _clientEventLoopGroup;
-        private IChannel _serverChannel;
-        private MultithreadEventLoopGroup _serverParentGroup;
-        private MultithreadEventLoopGroup _serverWorkerGroup;
+        private ISocketServer _socketServer;
 
         public IPeerIdentifier Identifier { get; }
 
@@ -59,9 +57,11 @@ namespace Catalyst.Node.Core.P2P.Messaging
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
         }
 
-        public P2PMessaging(IPeerSettings settings, 
+        public P2PMessaging(
+            IPeerSettings settings, 
             ICertificateStore certificateStore,
-            ILogger logger)
+            ILogger logger
+        )
         {
             _settings = settings;
             _logger = logger;
@@ -81,22 +81,23 @@ namespace Catalyst.Node.Core.P2P.Messaging
             var encoder = new StringEncoder(Encoding.UTF8);
             var decoder = new StringDecoder(Encoding.UTF8);
             var serverHandler = new SecureTcpMessageServerHandler();
-            _serverParentGroup = new MultithreadEventLoopGroup(1);
-            _serverWorkerGroup = new MultithreadEventLoopGroup();
 
-            _clientChannel = await new TcpServer(
-                    _settings.Port,
-                    _settings.BindAddress,
-                    _serverParentGroup,
-                    _serverWorkerGroup
-            ).StartServer(
-                new InboundChannelInitializer<ISocketChannel>(channel => {},
-                    encoder,
-                    decoder,
-                    serverHandler,
-                    _certificate
-                )
-            );
+            try
+            {
+                _socketServer = await new TcpServer(_logger)
+                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
+                        encoder,
+                        decoder,
+                        serverHandler,
+                        _certificate
+                   )
+                ).StartServer(_settings.BindAddress, _settings.Port);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                Dispose();
+            }
         }
 
         private async Task RunP2PClientAsync()
@@ -134,32 +135,14 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public async Task BroadcastMessageAsync(string message)
         {
-            await _clientChannel.WriteAndFlushAsync(message + Environment.NewLine);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _logger.Information("P2P Messaging service is closing");
-                _cancellationSource?.Dispose();
-                try
-                {
-                    _serverChannel.CloseAsync();
-                    _clientChannel.CloseAsync();
-                }
-                finally
-                {
-                    _clientEventLoopGroup.ShutdownGracefullyAsync().Wait(1000);
-                    Task.WaitAll(_serverParentGroup.ShutdownGracefullyAsync(), 
-                        _serverWorkerGroup.ShutdownGracefullyAsync());
-                }
-            }
+            await _socketServer.Channel.WriteAndFlushAsync(message + Environment.NewLine);
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            _socketServer.ShutdownServer();
+            _cancellationSource?.Dispose();
+            _certificate?.Dispose();
         }
     }
 }
