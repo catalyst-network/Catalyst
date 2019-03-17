@@ -19,13 +19,18 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Ipfs;
 
 namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
 {
     public interface IDfs
     {
         Task StartAsync(CancellationToken cancellationToken = default);
-        Task<string> AddFileAsync(string filename, CancellationToken cancellationToken = default);
-        Task<string> ReadAllTextAsync(string filename, CancellationToken cancellationToken = default);
+
+        /// <inheritdoc />
+        Task<IFileSystemNode> AddFileAsync(string filename, CancellationToken cancellationToken = default);
+
+        /// <inheritdoc />
+        Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default);
     }
 }

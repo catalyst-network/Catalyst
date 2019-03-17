@@ -3,7 +3,7 @@ using PeerTalk;
 
 namespace Catalyst.Node.Common.Interfaces
 {   
-    public interface IIpfsConnector
+    public interface IIpfsConnector: ICoreApi
     {
         IService Service { get; }
     }

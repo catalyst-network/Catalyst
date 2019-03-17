@@ -97,6 +97,9 @@
       "services": [
         {
           "type": "PeerTalk.IService, PeerTalk"
+        },
+        {
+          "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"
         }
       ],
       "parameters": {

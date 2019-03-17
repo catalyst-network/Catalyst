@@ -22,12 +22,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Dfs;
+using Ipfs;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
+
     public class Dfs : IDfs
     {
-        private IIpfsConnector _ipfsConnector;
+        private readonly IIpfsConnector _ipfsConnector;
 
         public Dfs(IIpfsConnector ipfsConnector)
         {
@@ -40,15 +42,15 @@ namespace Catalyst.Node.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<string> AddFileAsync(string filename, CancellationToken cancellationToken = default)
+        public async Task<IFileSystemNode> AddFileAsync(string filename, CancellationToken cancellationToken = default)
         {
-            return await Task.FromResult(null as string);
+            return await _ipfsConnector.FileSystem.AddFileAsync(filename, cancel: cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<string> ReadAllTextAsync(string filename, CancellationToken cancellationToken = default)
+        public async Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)
         {
-            return await Task.FromResult(null as string);
+            return await _ipfsConnector.FileSystem.ReadAllTextAsync(path, cancellationToken);
         }
     }
 }
