@@ -32,38 +32,32 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     public class TcpServer : IDisposable, ISocketServer
     {
+        private const int BackLogValue = 100;
+
         private readonly ILogger _logger;
-        private readonly IEventLoopGroup _workerEventLoop;
-        private readonly IEventLoopGroup _supervisorEventLoop;
-        
         public IChannel Channel { get; set; }
         private ServerBootstrap Server { get; set; }
-
+        private IEventLoopGroup WorkerEventLoop { get; set; }
+        private IEventLoopGroup SupervisorEventLoop { get; set; }
+        
         /// <summary>
         ///     
         /// </summary>
-        /// <param name="port"></param>
-        /// <param name="listenAddress"></param>
-        /// <param name="supervisorEventLoop"></param>
-        /// <param name="workerEventLoop"></param>
         /// <param name="logger"></param>
-        public TcpServer
-        (
-            ILogger logger
-        )
+        public TcpServer(ILogger logger)
         {
             _logger = logger;
         }
 
         public ISocketServer Bootstrap(IChannelHandler channelInitializer)
         {
-            var supervisorEventLoop = new MultithreadEventLoopGroup(1);
-            var workerEventLoop = new MultithreadEventLoopGroup();
+            SupervisorEventLoop = new MultithreadEventLoopGroup(1);
+            WorkerEventLoop = new MultithreadEventLoopGroup();
             
             Server = new ServerBootstrap()
-               .Group(supervisorEventLoop, workerEventLoop)
+               .Group(SupervisorEventLoop, WorkerEventLoop)
                .Channel<TcpServerSocketChannel>()
-               .Option(ChannelOption.SoBacklog, 100)
+               .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.INFO))
                .ChildHandler(channelInitializer);
             return this;
@@ -71,7 +65,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 
         public async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
         {
-            Channel = await Server.BindAsync(listenAddress, port);
+            Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
             return this;
         }
         
@@ -81,10 +75,10 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             {
                 await Channel.CloseAsync().ConfigureAwait(false);
             }
-            if (_supervisorEventLoop != null && _workerEventLoop != null)
+            if (SupervisorEventLoop != null && WorkerEventLoop != null)
             {
-                await _supervisorEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
-                await _workerEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
+                await SupervisorEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
+                await WorkerEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
             }
         }
 
