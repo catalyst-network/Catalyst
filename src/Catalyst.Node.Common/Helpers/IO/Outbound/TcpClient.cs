@@ -1,55 +1,69 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotNetty.Handlers.Logging;
+using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public class TcpClient
+    public sealed class TcpClient : IDisposable, ISocketClient
     {
-        private readonly int _port;
-        private readonly IPAddress _listenAddress;
-        private readonly IEventLoopGroup _workerEventLoop;
+        private readonly ILogger _logger;
+        public IChannel Channel { get; set; }
+        public Bootstrap Client { get; set; }
+        private IEventLoopGroup ClientEventLoopGroup { get; set; }
 
-        public TcpClient
-        (
-            int port,
-            IPAddress listenAddress,
-            IEventLoopGroup workerEventLoop
-        )
+        public TcpClient(ILogger logger)
         {
-            _port = port;
-            _listenAddress = listenAddress;
-            _workerEventLoop = workerEventLoop;
+            _logger = logger;
         }
-        
-        public async Task<IChannel> StartClient(IChannelHandler channelInitializer)
+
+        public ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {
-            var bootstrap = new Bootstrap();
-            bootstrap
-               .Group(_workerEventLoop)
+            ClientEventLoopGroup = new MultithreadEventLoopGroup();
+            Client = new Bootstrap()
+               .Group(ClientEventLoopGroup)
                .Channel<TcpSocketChannel>()
                .Option(ChannelOption.SoBacklog, 100)
                .Handler(new LoggingHandler(LogLevel.INFO))
                .Handler(channelInitializer);
-
-            return await bootstrap.ConnectAsync(new IPEndPoint(_listenAddress, _port));
+            return this;
         }
         
-        // public async Task<IChannel> StartClient(IChannelHandler channelInitializer)
-        // {
-        //     var bootstrap = new ServerBootstrap();
-        //     bootstrap
-        //        .Group(_workerEventLoop)
-        //        .Channel<TcpSocketChannel>()
-        //        .Option(ChannelOption.SoBacklog, 100)
-        //        .Handler(new LoggingHandler(LogLevel.INFO))
-        //        .ChildHandler(channelInitializer);
-        //
-        //     return await bootstrap.BindAsync(_listenAddress, _port);
-        // }
+        public async Task<ISocketClient> StartClient(IPAddress targetHost, int port)
+        {
+            Channel = await Client.ConnectAsync(new IPEndPoint(targetHost, port));
+            return this;
+        }
+
+        public async Task ShutdownClient()
+        {
+            if (Channel != null)
+            {
+                await Channel.CloseAsync().ConfigureAwait(false);
+            }
+            if (ClientEventLoopGroup != null )
+            {
+                await ClientEventLoopGroup.ShutdownGracefullyAsync().ConfigureAwait(false);
+            }
+        }
+        
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _logger.Information("Disposing TCP Client");
+                Task.WaitAll(ShutdownClient());
+            }
+        }
     }
 }

@@ -19,7 +19,6 @@
 
 using System;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Bootstrapping;
@@ -30,7 +29,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public class TcpServer : IDisposable, ISocketServer
+    public sealed class TcpServer : IDisposable, ISocketServer
     {
         private const int BackLogValue = 100;
 
@@ -85,7 +84,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
         
         private void Dispose(bool disposing)

@@ -45,7 +45,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private IChannel _clientChannel;
+        private ISocketClient _socketClient;
         private MultithreadEventLoopGroup _clientEventLoopGroup;
         private ISocketServer _socketServer;
 
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         private async Task RunP2PServerAsync()
         {
-            _logger.Information("P2P server starting");
+            _logger.Debug("P2P server starting");
 
             var encoder = new StringEncoder(Encoding.UTF8);
             var decoder = new StringDecoder(Encoding.UTF8);
@@ -102,24 +102,24 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         private async Task RunP2PClientAsync()
         {
-            _logger.Information("P2P client starting");
-            _clientEventLoopGroup = new MultithreadEventLoopGroup();
+            _logger.Debug("P2P client starting");
             var encoder = new StringEncoder(Encoding.UTF8);
             var decoder = new StringDecoder(Encoding.UTF8);
             var clientHandler = new SecureTcpMessageClientHandler();
             
-            var bootstrap = await new TcpClient(
-                _settings.Port,
-                _settings.BindAddress,
-                _clientEventLoopGroup
-            ).StartClient(
-                new OutboundChannelInitializer<ISocketChannel>(channel => {},
-                    encoder,
-                    decoder,
-                    clientHandler,
+            _socketClient= await new TcpClient(_logger)
+               .Bootstrap(
+                    new OutboundChannelInitializer<ISocketChannel>(channel => {},
+                        encoder,
+                        decoder,
+                        clientHandler,
+                        _settings.BindAddress, //just connecting to ours elf at moment, this needs to be IP of node you want to connect to.
+                        _certificate
+                    )
+               )
+               .StartClient(
                     _settings.BindAddress,
-                    _certificate
-                )
+                    _settings.Port
             );
         }
 
