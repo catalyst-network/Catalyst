@@ -1,13 +1,17 @@
 @startuml
-class TcpServer {
-    - <<readonly>> _port : int
-    + TcpServer(port:int, listenAddress:IPAddress, supervisorEventLoop:IEventLoopGroup, workerEventLoop:IEventLoopGroup, channelHandler:IChannelHandler)
-    + <<async>> StartServer(certificate:X509Certificate, channelInitializer:IChannelHandler) : Task<IChannel>
+class TcpServer <<sealed>> {
+    - <<const>> BackLogValue : int = 100
+    + TcpServer(logger:ILogger)
+    + <<override>> Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
+    + <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
+    + <<override>> <<async>> ShutdownServer() : Task
+    + Dispose() : void
+    - Dispose(disposing:bool) : void
 }
-TcpServer --> "Channel" IChannel
-TcpServer --> "_listenAddress" IPAddress
-TcpServer --> "_supervisorEventLoop" IEventLoopGroup
+AbstractServer <|-- TcpServer
+IDisposable <|-- TcpServer
+ISocketServer <|-- TcpServer
+TcpServer --> "_logger" ILogger
 TcpServer --> "_workerEventLoop" IEventLoopGroup
-TcpServer --> "_channelHandler" IChannelHandler
-TcpServer --> "_certificate" X509Certificate
+TcpServer --> "_supervisorEventLoop" IEventLoopGroup
 @enduml

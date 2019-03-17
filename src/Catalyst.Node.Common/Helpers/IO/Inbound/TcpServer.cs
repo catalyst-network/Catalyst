@@ -29,16 +29,14 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public sealed class TcpServer : IDisposable, ISocketServer
+    public sealed class TcpServer : AbstractServer, IDisposable, ISocketServer
     {
         private const int BackLogValue = 100;
 
         private readonly ILogger _logger;
-        public IChannel Channel { get; set; }
-        private ServerBootstrap Server { get; set; }
-        private IEventLoopGroup WorkerEventLoop { get; set; }
-        private IEventLoopGroup SupervisorEventLoop { get; set; }
-        
+        private readonly IEventLoopGroup _workerEventLoop;
+        private readonly IEventLoopGroup _supervisorEventLoop;
+               
         /// <summary>
         ///     
         /// </summary>
@@ -46,15 +44,15 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public TcpServer(ILogger logger)
         {
             _logger = logger;
+            _supervisorEventLoop = new MultithreadEventLoopGroup();
+            _workerEventLoop = new MultithreadEventLoopGroup();
         }
 
-        public ISocketServer Bootstrap(IChannelHandler channelInitializer)
+        public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
         {
-            SupervisorEventLoop = new MultithreadEventLoopGroup(1);
-            WorkerEventLoop = new MultithreadEventLoopGroup();
             
-            Server = new ServerBootstrap()
-               .Group(SupervisorEventLoop, WorkerEventLoop)
+            Server = (IServerBootstrp) new ServerBootstrpServer()
+               .Group(_supervisorEventLoop, _workerEventLoop)
                .Channel<TcpServerSocketChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.INFO))
@@ -68,16 +66,16 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             return this;
         }
         
-        public async Task ShutdownServer()
+        public override async Task ShutdownServer()
         {
             if (Channel != null)
             {
                 await Channel.CloseAsync().ConfigureAwait(false);
             }
-            if (SupervisorEventLoop != null && WorkerEventLoop != null)
+            if (_supervisorEventLoop != null && _workerEventLoop != null)
             {
-                await SupervisorEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
-                await WorkerEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
+                await _supervisorEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
+                await _workerEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
             }
         }
 

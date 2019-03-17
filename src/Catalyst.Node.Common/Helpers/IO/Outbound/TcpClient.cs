@@ -14,7 +14,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     {
         private readonly ILogger _logger;
         public IChannel Channel { get; set; }
-        public Bootstrap Client { get; set; }
+        public IBootstrap Client { get; set; }
         private IEventLoopGroup ClientEventLoopGroup { get; set; }
 
         public TcpClient(ILogger logger)
@@ -25,7 +25,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         public ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {
             ClientEventLoopGroup = new MultithreadEventLoopGroup();
-            Client = new Bootstrap()
+            Client = (IBootstrap) new ServerBootstrpClient()
                .Group(ClientEventLoopGroup)
                .Channel<TcpSocketChannel>()
                .Option(ChannelOption.SoBacklog, 100)
@@ -34,9 +34,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             return this;
         }
         
-        public async Task<ISocketClient> StartClient(IPAddress targetHost, int port)
+        public async Task<ISocketClient> ConnectClient(IPAddress targetHost, int port)
         {
-            Channel = await Client.ConnectAsync(new IPEndPoint(targetHost, port));
+            Channel = await Client.ConnectAsync(targetHost, port);
             return this;
         }
 

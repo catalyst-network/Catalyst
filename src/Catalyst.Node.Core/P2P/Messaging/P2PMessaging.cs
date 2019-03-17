@@ -117,7 +117,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                         _certificate
                     )
                )
-               .StartClient(
+               .ConnectClient(
                     _settings.BindAddress,
                     _settings.Port
             );

@@ -1,0 +1,8 @@
+@startuml
+interface ISocketServer {
+    Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
+    StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
+    ShutdownServer() : Task
+}
+ISocketServer --> "Channel" IChannel
+@enduml

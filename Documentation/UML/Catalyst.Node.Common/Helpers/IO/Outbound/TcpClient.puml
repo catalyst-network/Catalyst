@@ -1,0 +1,16 @@
+@startuml
+class TcpClient <<sealed>> {
+    + TcpClient(logger:ILogger)
+    + Bootstrap(channelInitializer:IChannelHandler) : ISocketClient
+    + <<async>> ConnectClient(targetHost:IPAddress, port:int) : Task<ISocketClient>
+    + <<async>> ShutdownClient() : Task
+    + Dispose() : void
+    - Dispose(disposing:bool) : void
+}
+IDisposable <|-- TcpClient
+ISocketClient <|-- TcpClient
+TcpClient --> "_logger" ILogger
+TcpClient --> "Channel" IChannel
+TcpClient --> "Client" IBootstrap
+TcpClient --> "ClientEventLoopGroup" IEventLoopGroup
+@enduml

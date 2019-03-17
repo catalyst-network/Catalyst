@@ -19,14 +19,15 @@
 
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces {
     public interface ISocketClient {
         IChannel Channel { get; set; }
-        Bootstrap Client { get; set; }
-        Task<ISocketClient> StartClient(IPAddress listenAddress, int port);
+        IBootstrap Client { get; set; }
+        Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port);
         Task ShutdownClient();
     }
 }

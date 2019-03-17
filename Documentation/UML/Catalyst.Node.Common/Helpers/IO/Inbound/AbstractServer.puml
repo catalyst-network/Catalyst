@@ -1,0 +1,10 @@
+@startuml
+abstract class AbstractServer {
+    + {abstract} Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
+    + <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
+    + {abstract} ShutdownServer() : Task
+}
+ISocketServer <|-- AbstractServer
+AbstractServer --> "Channel" IChannel
+AbstractServer --> "Server" IServerBootstrp
+@enduml
