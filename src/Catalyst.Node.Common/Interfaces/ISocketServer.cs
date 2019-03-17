@@ -20,7 +20,6 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces

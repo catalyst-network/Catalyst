@@ -17,24 +17,10 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System.Net;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
-using DotNetty.Transport.Channels;
-using Serilog;
-
-namespace Catalyst.Node.Common.Helpers.IO.Inbound
+namespace Catalyst.Node.Common.Helpers.IO
 {
-    public abstract class AbstractServer<T> : AbstractIo<T> where T : ISocketServer
+    public class AbstractChannelInitializer
     {
-        protected IServerBootstrap Server { private get; set; }
         
-        protected internal AbstractServer(ILogger logger) : base(logger) {}
-
-        public async Task<AbstractServer<T>> StartServer(IPAddress listenAddress, int port)
-        {
-            Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
-            return this;
-        }
     }
 }

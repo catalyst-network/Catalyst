@@ -52,10 +52,5 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
                .Handler(channelInitializer);
             return this;
         }
-        
-        public override string ToString()
-        {
-            return "UDP Server";
-        }
     }
 }

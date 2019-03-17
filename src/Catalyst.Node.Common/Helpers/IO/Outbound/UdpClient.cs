@@ -43,10 +43,5 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                .Handler(channelInitializer);
             return this;
         }
-        
-        public override string ToString()
-        {
-            return "UDP Client";
-        }
     }
 }

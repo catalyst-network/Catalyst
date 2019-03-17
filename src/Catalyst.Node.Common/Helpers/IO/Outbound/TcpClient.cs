@@ -21,6 +21,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using DotNetty.Common.Utilities;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -38,15 +39,10 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             Client = (IBootstrap) new Bootstrap()
                .Group(WorkerEventLoop)
                .Channel<TcpSocketChannel>()
-               .Option(ChannelOption.SoBacklog, 100)
+               .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.INFO))
                .Handler(channelInitializer);
             return this;
-        }
-        
-        public override string ToString()
-        {
-            return "TCP Client";
         }
     }
 }

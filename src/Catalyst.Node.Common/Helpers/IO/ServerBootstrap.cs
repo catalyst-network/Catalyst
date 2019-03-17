@@ -19,28 +19,13 @@
 
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public interface IServerBootstrp
-    {
-        Task<IChannel> BindAsync(IPAddress ipAddress, int port);
-    }
-    
-    public interface IBootstrap: IServerBootstrp
-    {
-        Task<IChannel> ConnectAsync(IPAddress ipAddress, int port);
-    }  
-
-    public class ServerBootstrap : DotNetty.Transport.Bootstrapping.ServerBootstrap, IServerBootstrp
+    public class ServerBootstrap : DotNetty.Transport.Bootstrapping.ServerBootstrap, IServerBootstrap
     {
         public new Task<IChannel> BindAsync(IPAddress ipAddress, int port) { return base.BindAsync(ipAddress, port); }
-    }
-
-    public class Bootstrap : DotNetty.Transport.Bootstrapping.Bootstrap, IBootstrap
-    {
-        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port) { return base.BindAsync(ipAddress, port); }
-        public new Task<IChannel> ConnectAsync(IPAddress ipAddress, int port) { return base.ConnectAsync(ipAddress, port); }
     }
 }

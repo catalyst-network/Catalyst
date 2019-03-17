@@ -19,11 +19,10 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.IO;
-using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Common.Interfaces {
+namespace Catalyst.Node.Common.Interfaces
+{
     public interface ISocketClient : IISocket
     {
         IChannel Channel { get; set; }

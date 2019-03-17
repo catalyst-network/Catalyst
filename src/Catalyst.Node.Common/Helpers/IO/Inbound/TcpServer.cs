@@ -44,7 +44,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 
         public TcpServer Bootstrap(IChannelHandler channelInitializer)
         {
-            Server = (IServerBootstrp) new ServerBootstrap()
+            Server = (IServerBootstrap) new ServerBootstrap()
                .Group(_supervisorEventLoop, WorkerEventLoop)
                .Channel<TcpServerSocketChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
@@ -61,11 +61,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             {
                 await _supervisorEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
             }
-        }
-        
-        public override string ToString()
-        {
-            return "TCP Server";
         }
     }
 }

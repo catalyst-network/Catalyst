@@ -20,6 +20,7 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
 using Serilog;
 
@@ -27,6 +28,8 @@ namespace Catalyst.Node.Common.Helpers.IO
 {
     public abstract class AbstractIo<T> where T : IISocket
     {
+        protected const int BackLogValue = 100;
+
         private readonly ILogger _logger;
         public IChannel Channel { get; set; }
         protected readonly IEventLoopGroup WorkerEventLoop;
@@ -61,6 +64,11 @@ namespace Catalyst.Node.Common.Helpers.IO
                 _logger.Information($"Disposing {ToString()}");
                 Task.WaitAll(Shutdown());
             }
+        }
+        
+        public override string ToString()
+        {
+            return StringUtil.SimpleClassName(typeof (T)) + "]";
         }
     }
 }
