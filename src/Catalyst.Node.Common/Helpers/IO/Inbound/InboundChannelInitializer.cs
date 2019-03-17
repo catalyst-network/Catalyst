@@ -27,13 +27,8 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public sealed class InboundChannelInitializer<T> : ChannelInitializer<T> where T : IChannel
+    public sealed class InboundChannelInitializer<T> : AbstractChannelInitializer<T> where T : IChannel
     {
-        private readonly Action<T> _initializationAction;
-        private readonly X509Certificate _certificate;
-        private readonly IChannelHandler _encoder;
-        private readonly IChannelHandler _decoder;
-        private readonly IChannelHandler _channelHandler;
         
         /// <summary>
         ///     Generic inbound channel initializer for tls sockets
@@ -43,14 +38,13 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// <param name="decoder"></param>
         /// <param name="channelHandler"></param>
         /// <param name="certificate"></param>
-        public InboundChannelInitializer(Action<T> initializationAction, IChannelHandler encoder, IChannelHandler decoder, IChannelHandler channelHandler, X509Certificate certificate)
-        {
-            _initializationAction = initializationAction;
-            _certificate = certificate;
-            _encoder = encoder;
-            _decoder = decoder;
-            _channelHandler = channelHandler;
-        }
+        public InboundChannelInitializer(
+            Action<T> initializationAction,
+            IChannelHandler encoder,
+            IChannelHandler decoder,
+            IChannelHandler channelHandler,
+            X509Certificate certificate
+        ) : base(initializationAction, encoder, decoder, channelHandler, certificate) { }
         
         /// <summary>
         ///     Generic inbound channel initializer for sockets
@@ -59,27 +53,26 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// <param name="encoder"></param>
         /// <param name="decoder"></param>
         /// <param name="channelHandler"></param>
-        public InboundChannelInitializer(Action<T> initializationAction, IChannelHandler encoder, IChannelHandler decoder, IChannelHandler channelHandler)
-        {
-            _initializationAction = initializationAction;
-            _encoder = encoder;
-            _decoder = decoder;
-            _channelHandler = channelHandler;
-        }
+        public InboundChannelInitializer(
+            Action<T> initializationAction,
+            IChannelHandler encoder,
+            IChannelHandler decoder,
+            IChannelHandler channelHandler
+        ) : base(initializationAction, encoder, decoder, channelHandler) { }
 
         protected override void InitChannel(T channel)
         {
-            _initializationAction(channel);
+            InitializationAction(channel);
             var pipeline = channel.Pipeline;
 
-            if (_certificate != null)
+            if (Certificate != null)
             {
-                pipeline.AddLast(TlsHandler.Server(_certificate));
+                pipeline.AddLast(TlsHandler.Server(Certificate));
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
             pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-            pipeline.AddLast(_encoder, _decoder, _channelHandler);
+            pipeline.AddLast(Encoder, Decoder, ChannelHandler);
         }
 
         public override string ToString()

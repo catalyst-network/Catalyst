@@ -29,14 +29,8 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public class OutboundChannelInitializer<T> : ChannelInitializer<T> where T : IChannel
+    public class OutboundChannelInitializer<T> : AbstractChannelInitializer<T> where T : IChannel
     {
-        private readonly Action<T> _initializationAction;
-        private readonly X509Certificate _certificate;
-        private readonly IChannelHandler _encoder;
-        private readonly IChannelHandler _decoder;
-        private readonly IChannelHandler _channelHandler;
-        private readonly IPAddress _targetHost;
 
         /// <summary>
         ///     Generic outbound channel initializer for tls sockets
@@ -54,16 +48,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             IChannelHandler channelHandler,
             IPAddress targetHost,
             X509Certificate certificate
-        )
-        {
-            _initializationAction = initializationAction;
-            _certificate = certificate;
-            _encoder = encoder;
-            _decoder = decoder;
-            _channelHandler = channelHandler;
-            _targetHost = targetHost;
-            _certificate = certificate;
-        }
+        ) : base(initializationAction, encoder, decoder, channelHandler, targetHost, certificate) { }
 
         /// <summary>
         ///     Generic outbound channel initializer for tls sockets
@@ -79,33 +64,26 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             IChannelHandler decoder,
             IChannelHandler channelHandler,
             IPAddress targetHost
-        )
-        {
-            _initializationAction = initializationAction;
-            _encoder = encoder;
-            _decoder = decoder;
-            _channelHandler = channelHandler;
-            _targetHost = targetHost;
-        }
+        ) : base(initializationAction, encoder, decoder, channelHandler, targetHost) { }
         
         protected override void InitChannel(T channel)
         {
-            _initializationAction(channel);
+            InitializationAction(channel);
             var pipeline = channel.Pipeline;
 
-            if (_certificate != null)
+            if (Certificate != null)
             {
                 pipeline.AddLast(
                     new TlsHandler(stream => 
                         new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-                        new ClientTlsSettings(_targetHost.ToString())
+                        new ClientTlsSettings(TargetHost.ToString())
                     )
                 );
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
             pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-            pipeline.AddLast(_encoder, _decoder, _channelHandler);
+            pipeline.AddLast(Encoder, Decoder, ChannelHandler);
         }
 
         public override string ToString()
