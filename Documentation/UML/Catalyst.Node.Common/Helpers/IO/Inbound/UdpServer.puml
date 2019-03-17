@@ -1,17 +1,10 @@
 @startuml
-class UdpServer {
+class "UdpServer`1"<T> <<sealed>> {
     + UdpServer(logger:ILogger)
-    + <<override>> Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
-    + <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
-    + <<override>> <<async>> ShutdownServer() : Task
-    + Dispose() : void
-    - Dispose(disposing:bool) : void
+    + Bootstrap(channelInitializer:IChannelHandler) : UdpServer<T>
+    + <<override>> ToString() : string
 }
-AbstractServer <|-- UdpServer
-ISocketServer <|-- UdpServer
-IDisposable <|-- UdpServer
-UdpServer --> "_logger" ILogger
-UdpServer --> "_workerEventLoop" IEventLoopGroup
-UdpServer --> "Channel" IChannel
-UdpServer --> "Server" IBootstrap
+class "AbstractServer`1"<T> {
+}
+"AbstractServer`1" "<ISocketServer>" <|-- "UdpServer`1"
 @enduml

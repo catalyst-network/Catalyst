@@ -24,10 +24,10 @@ using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces {
-    public interface ISocketClient {
+    public interface ISocketClient : IISocket
+    {
         IChannel Channel { get; set; }
         IBootstrap Client { get; set; }
         Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port);
-        Task ShutdownClient();
     }
 }

@@ -33,12 +33,12 @@ namespace Catalyst.Node.Common.Helpers.IO
         Task<IChannel> ConnectAsync(IPAddress ipAddress, int port);
     }  
 
-    public class ServerBootstrpServer : DotNetty.Transport.Bootstrapping.ServerBootstrap, IServerBootstrp
+    public class ServerBootstrap : DotNetty.Transport.Bootstrapping.ServerBootstrap, IServerBootstrp
     {
         public new Task<IChannel> BindAsync(IPAddress ipAddress, int port) { return base.BindAsync(ipAddress, port); }
     }
 
-    public class ServerBootstrpClient : DotNetty.Transport.Bootstrapping.Bootstrap, IBootstrap
+    public class Bootstrap : DotNetty.Transport.Bootstrapping.Bootstrap, IBootstrap
     {
         public new Task<IChannel> BindAsync(IPAddress ipAddress, int port) { return base.BindAsync(ipAddress, port); }
         public new Task<IChannel> ConnectAsync(IPAddress ipAddress, int port) { return base.ConnectAsync(ipAddress, port); }

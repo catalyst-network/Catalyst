@@ -45,9 +45,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private ISocketClient _socketClient;
-        private MultithreadEventLoopGroup _clientEventLoopGroup;
-        private ISocketServer _socketServer;
+        private AbstractClient<ISocketClient> _socketClient;
+        private AbstractServer<ISocketServer> _socketServer;
 
         public IPeerIdentifier Identifier { get; }
 
@@ -86,11 +85,11 @@ namespace Catalyst.Node.Core.P2P.Messaging
             {
                 _socketServer = await new TcpServer(_logger)
                    .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
-                        encoder,
-                        decoder,
-                        serverHandler,
-                        _certificate
-                   )
+                            encoder,
+                            decoder,
+                            serverHandler,
+                            _certificate
+                        )
                 ).StartServer(_settings.BindAddress, _settings.Port);
             }
             catch (Exception e)
@@ -107,7 +106,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             var decoder = new StringDecoder(Encoding.UTF8);
             var clientHandler = new SecureTcpMessageClientHandler();
             
-            _socketClient= await new TcpClient(_logger)
+            _socketClient = await new TcpClient(_logger)
                .Bootstrap(
                     new OutboundChannelInitializer<ISocketChannel>(channel => {},
                         encoder,
@@ -135,12 +134,12 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public async Task BroadcastMessageAsync(string message)
         {
-            await _socketServer.Channel.WriteAndFlushAsync(message + Environment.NewLine);
+            await _socketClient.Channel.WriteAndFlushAsync(message + Environment.NewLine);
         }
 
         public void Dispose()
         {
-            _socketServer.ShutdownServer();
+            _socketServer.Shutdown();
             _cancellationSource?.Dispose();
             _certificate?.Dispose();
         }

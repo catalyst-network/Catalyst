@@ -29,34 +29,23 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public class UdpServer : AbstractServer, ISocketServer, IDisposable
+    public sealed class UdpServer<T> : AbstractServer<ISocketServer> where T : ISocketServer
     {
-
-        private readonly ILogger _logger;
-        private readonly IEventLoopGroup _workerEventLoop;
-        
-        public new IChannel Channel { get; set; }
-        public new IBootstrap Server { get; set; }
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="logger"></param>
-        public UdpServer(ILogger logger)
-        {
-            _logger = logger;
-            _workerEventLoop = new MultithreadEventLoopGroup();
-        }
+        public UdpServer(ILogger logger) : base(logger) { }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="channelInitializer"></param>
         /// <returns></returns>
-        public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
+        public UdpServer<T> Bootstrap(IChannelHandler channelInitializer)
         {
-            Server = (IBootstrap) new ServerBootstrpClient()
-               .Group(_workerEventLoop)
+            Server = (IBootstrap) new Bootstrap()
+               .Group(WorkerEventLoop)
                .Channel<SocketDatagramChannel>()
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.INFO))
@@ -64,42 +53,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             return this;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="listenAddress"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
-        public async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
+        public override string ToString()
         {
-            Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
-            return this;
-        }
-        
-        public override async Task ShutdownServer()
-        {
-            if (Channel != null)
-            {
-                await Channel.CloseAsync().ConfigureAwait(false);
-            }
-            if (_workerEventLoop != null)
-            {
-                await _workerEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
-            }
-        }
-        
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-        
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _logger.Information("Disposing UDP Server");
-                Task.WaitAll(ShutdownServer());
-            }
+            return "UDP Server";
         }
     }
 }

@@ -1,17 +1,12 @@
 @startuml
 class TcpServer <<sealed>> {
-    - <<const>> BackLogValue : int = 100
     + TcpServer(logger:ILogger)
-    + <<override>> Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
-    + <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
-    + <<override>> <<async>> ShutdownServer() : Task
-    + Dispose() : void
-    - Dispose(disposing:bool) : void
+    + Bootstrap(channelInitializer:IChannelHandler) : TcpServer
+    + <<override>> <<async>> Shutdown() : Task
+    + <<override>> ToString() : string
 }
-AbstractServer <|-- TcpServer
-IDisposable <|-- TcpServer
-ISocketServer <|-- TcpServer
-TcpServer --> "_logger" ILogger
-TcpServer --> "_workerEventLoop" IEventLoopGroup
+class "AbstractServer`1"<T> {
+}
+"AbstractServer`1" "<ISocketServer>" <|-- TcpServer
 TcpServer --> "_supervisorEventLoop" IEventLoopGroup
 @enduml

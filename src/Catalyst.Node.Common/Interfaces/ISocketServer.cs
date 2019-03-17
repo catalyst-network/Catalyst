@@ -25,11 +25,11 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface ISocketServer
+    public interface ISocketServer : IISocket
     {
         IChannel Channel { get; set; }
         ISocketServer Bootstrap(IChannelHandler channelInitializer);
         Task<ISocketServer> StartServer(IPAddress listenAddress, int port);
-        Task ShutdownServer();
+        string ToString();
     }
 }

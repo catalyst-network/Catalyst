@@ -1,3 +1,22 @@
+/*
+* Copyright(c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
+*/
+
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,23 +29,14 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public sealed class TcpClient : IDisposable, ISocketClient
+    public sealed class TcpClient : AbstractClient<ISocketClient>
     {
-        private readonly ILogger _logger;
-        public IChannel Channel { get; set; }
-        public IBootstrap Client { get; set; }
-        private IEventLoopGroup ClientEventLoopGroup { get; set; }
+        public TcpClient(ILogger logger) : base(logger) { }
 
-        public TcpClient(ILogger logger)
+        public TcpClient Bootstrap(IChannelHandler channelInitializer)
         {
-            _logger = logger;
-        }
-
-        public ISocketClient Bootstrap(IChannelHandler channelInitializer)
-        {
-            ClientEventLoopGroup = new MultithreadEventLoopGroup();
-            Client = (IBootstrap) new ServerBootstrpClient()
-               .Group(ClientEventLoopGroup)
+            Client = (IBootstrap) new Bootstrap()
+               .Group(WorkerEventLoop)
                .Channel<TcpSocketChannel>()
                .Option(ChannelOption.SoBacklog, 100)
                .Handler(new LoggingHandler(LogLevel.INFO))
@@ -34,36 +44,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             return this;
         }
         
-        public async Task<ISocketClient> ConnectClient(IPAddress targetHost, int port)
+        public override string ToString()
         {
-            Channel = await Client.ConnectAsync(targetHost, port);
-            return this;
-        }
-
-        public async Task ShutdownClient()
-        {
-            if (Channel != null)
-            {
-                await Channel.CloseAsync().ConfigureAwait(false);
-            }
-            if (ClientEventLoopGroup != null )
-            {
-                await ClientEventLoopGroup.ShutdownGracefullyAsync().ConfigureAwait(false);
-            }
-        }
-        
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _logger.Information("Disposing TCP Client");
-                Task.WaitAll(ShutdownClient());
-            }
+            return "TCP Client";
         }
     }
 }

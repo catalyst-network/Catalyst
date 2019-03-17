@@ -1,0 +1,11 @@
+@startuml
+abstract class "AbstractIo`1"<T> {
+    # <<internal>> AbstractIo(logger:ILogger)
+    + <<virtual>> <<async>> Shutdown() : Task
+    + Dispose() : void
+    - Dispose(disposing:bool) : void
+}
+"AbstractIo`1" --> "_logger" ILogger
+"AbstractIo`1" --> "Channel" IChannel
+"AbstractIo`1" --> "WorkerEventLoop" IEventLoopGroup
+@enduml

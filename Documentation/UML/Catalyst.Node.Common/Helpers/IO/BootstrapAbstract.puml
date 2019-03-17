@@ -5,14 +5,14 @@ interface IServerBootstrp {
 interface IBootstrap {
     ConnectAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
 }
-class ServerBootstrpServer {
+class ServerBootstrap {
     + <<new>> BindAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
 }
-class ServerBootstrpClient {
+class Bootstrap {
     + <<new>> BindAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
     + <<new>> ConnectAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
 }
 IServerBootstrp <|-- IBootstrap
-IServerBootstrp <|-- ServerBootstrpServer
-IBootstrap <|-- ServerBootstrpClient
+IServerBootstrp <|-- ServerBootstrap
+IBootstrap <|-- Bootstrap
 @enduml

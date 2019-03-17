@@ -9,14 +9,17 @@ class P2PMessaging {
     + <<async>> BroadcastMessageAsync(message:string) : Task
     + Dispose() : void
 }
+class "AbstractClient`1"<T> {
+}
+class "AbstractServer`1"<T> {
+}
 IP2PMessaging <|-- P2PMessaging
 IDisposable <|-- P2PMessaging
 P2PMessaging --> "_settings" IPeerSettings
 P2PMessaging --> "_logger" ILogger
 P2PMessaging --> "_cancellationSource" CancellationTokenSource
 P2PMessaging --> "_certificate" X509Certificate2
-P2PMessaging --> "_socketClient" ISocketClient
-P2PMessaging --> "_clientEventLoopGroup" MultithreadEventLoopGroup
-P2PMessaging --> "_socketServer" ISocketServer
+P2PMessaging --> "_socketClient<ISocketClient>" "AbstractClient`1"
+P2PMessaging --> "_socketServer<ISocketServer>" "AbstractServer`1"
 P2PMessaging --> "Identifier" IPeerIdentifier
 @enduml

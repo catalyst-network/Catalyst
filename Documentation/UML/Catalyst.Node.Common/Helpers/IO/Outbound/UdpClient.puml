@@ -1,0 +1,10 @@
+@startuml
+class "UdpClient`1"<T> <<sealed>> {
+    + UdpClient(logger:ILogger)
+    + Bootstrap(channelInitializer:IChannelHandler) : UdpClient<T>
+    + <<override>> ToString() : string
+}
+class "AbstractClient`1"<T> {
+}
+"AbstractClient`1" "<T>" <|-- "UdpClient`1"
+@enduml

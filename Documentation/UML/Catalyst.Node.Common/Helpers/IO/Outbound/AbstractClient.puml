@@ -1,10 +1,10 @@
 @startuml
-abstract class AbstractClient {
-    + {abstract} Bootstrap(channelInitializer:IChannelHandler) : ISocketClient
-    + <<async>> ConnectClient(listenAddress:IPAddress, port:int) : Task<ISocketClient>
-    + {abstract} ShutdownClient() : Task
+abstract class "AbstractClient`1"<T> {
+    # <<internal>> AbstractClient(logger:ILogger)
+    + <<async>> ConnectClient(listenAddress:IPAddress, port:int) : Task<AbstractClient<T>>
 }
-ISocketClient <|-- AbstractClient
-AbstractClient --> "Channel" IChannel
-AbstractClient --> "Client" IBootstrap
+class "AbstractIo`1"<T> {
+}
+"AbstractIo`1" "<T>" <|-- "AbstractClient`1"
+"AbstractClient`1" --> "Client" IBootstrap
 @enduml
