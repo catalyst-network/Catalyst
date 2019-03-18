@@ -19,6 +19,7 @@
     <PackageReference Include="System.Memory" Version="4.5.2" />
     <PackageReference Include="System.Reactive.Linq" Version="4.1.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+    <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\submodules\nsec\src\Cryptography\AeadAlgorithm.cs" Link="Helpers\NSec\Cryptography\AeadAlgorithm.cs" />

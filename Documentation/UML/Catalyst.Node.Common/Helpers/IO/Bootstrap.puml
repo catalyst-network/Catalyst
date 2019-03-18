@@ -1,0 +1,6 @@
+@startuml
+class "Bootstrap`1"<BT> {
+    + <<new>> BindAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
+    + <<new>> ConnectAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
+}
+@enduml

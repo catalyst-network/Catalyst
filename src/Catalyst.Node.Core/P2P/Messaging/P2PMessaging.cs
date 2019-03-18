@@ -18,22 +18,17 @@
 */
 
 using System;
-using System.Net;
-using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Codecs;
-using DotNetty.Handlers.Logging;
-using DotNetty.Handlers.Tls;
-using DotNetty.Transport.Bootstrapping;
-using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
-using LogLevel = DotNetty.Handlers.Logging.LogLevel;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Outbound;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
@@ -43,23 +38,22 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private IChannel _clientChannel;
-        private MultithreadEventLoopGroup _clientEventLoopGroup;
-        private IChannel _serverChannel;
-        private MultithreadEventLoopGroup _serverParentGroup;
-        private MultithreadEventLoopGroup _serverWorkerGroup;
+        private ISocketClient _socketClient;
+        private ISocketServer _socketServer;
 
         public IPeerIdentifier Identifier { get; }
-
+        
         static P2PMessaging()
         {
             //Find a better way to do this at some point
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
         }
 
-        public P2PMessaging(IPeerSettings settings, 
+        public P2PMessaging(
+            IPeerSettings settings, 
             ICertificateStore certificateStore,
-            ILogger logger)
+            ILogger logger
+        )
         {
             _settings = settings;
             _logger = logger;
@@ -74,64 +68,51 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         private async Task RunP2PServerAsync()
         {
-            _logger.Information("P2P server starting");
+            _logger.Debug("P2P server starting");
 
             var encoder = new StringEncoder(Encoding.UTF8);
             var decoder = new StringDecoder(Encoding.UTF8);
             var serverHandler = new SecureTcpMessageServerHandler();
-            _serverParentGroup = new MultithreadEventLoopGroup(1);
-            _serverWorkerGroup = new MultithreadEventLoopGroup();
-            
-            var bootstrap = new ServerBootstrap();
-            bootstrap
-               .Group(_serverParentGroup, _serverWorkerGroup)
-               .Channel<TcpServerSocketChannel>()
-               .Option(ChannelOption.SoBacklog, 100)
-               .Handler(new LoggingHandler(LogLevel.INFO))
-               .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
-                {
-                    var pipeline = channel.Pipeline;
-                    if (_certificate != null)
-                    {
-                        pipeline.AddLast(TlsHandler.Server(_certificate));
-                    }
 
-                    pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-                    pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-                    pipeline.AddLast(encoder, decoder, serverHandler);
-                }));
-
-            _serverChannel = await bootstrap.BindAsync(_settings.Port);
+            try
+            {
+                _socketServer = await new TcpServer(_logger)
+                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
+                            encoder,
+                            decoder,
+                            serverHandler,
+                            certificate: _certificate
+                        )
+                ).StartServer(_settings.BindAddress, _settings.Port);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                Dispose();
+            }
         }
 
         private async Task RunP2PClientAsync()
         {
-            _logger.Information("P2P client starting");
-            _clientEventLoopGroup = new MultithreadEventLoopGroup();
- 
-            var bootstrap = new Bootstrap();
-            bootstrap
-               .Group(_clientEventLoopGroup)
-               .Channel<TcpSocketChannel>()
-               .Option(ChannelOption.TcpNodelay, true)
-               .Handler(new LoggingHandler(LogLevel.INFO))
-               .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
-                {
-                    var pipeline = channel.Pipeline;
-
-                    if (_certificate != null)
-                    {
-                        pipeline.AddLast(
-                            new TlsHandler(stream => 
-                                new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-                                new ClientTlsSettings(_settings.EndPoint.ToString())));
-                    }
-                    pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-                    pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-                    pipeline.AddLast(new StringEncoder(), new StringDecoder(), new SecureTcpMessageClientHandler());
-                }));
-
-            _clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(_settings.BindAddress, _settings.Port));
+            _logger.Debug("P2P client starting");
+            var encoder = new StringEncoder(Encoding.UTF8);
+            var decoder = new StringDecoder(Encoding.UTF8);
+            var clientHandler = new SecureTcpMessageClientHandler();
+            
+            _socketClient = await new UdpClient(_logger)
+               .Bootstrap(
+                    new OutboundChannelInitializer<ISocketChannel>(channel => {},
+                        encoder,
+                        decoder,
+                        clientHandler,
+                        _settings.BindAddress,
+                        _certificate
+                    )
+               )
+               .ConnectClient(
+                    _settings.BindAddress,
+                    _settings.Port
+               );
         }
 
         public void Stop()
@@ -146,32 +127,14 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public async Task BroadcastMessageAsync(string message)
         {
-            await _clientChannel.WriteAndFlushAsync(message + Environment.NewLine);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _logger.Information("P2P Messaging service is closing");
-                _cancellationSource?.Dispose();
-                try
-                {
-                    _serverChannel.CloseAsync();
-                    _clientChannel.CloseAsync();
-                }
-                finally
-                {
-                    _clientEventLoopGroup.ShutdownGracefullyAsync().Wait(1000);
-                    Task.WaitAll(_serverParentGroup.ShutdownGracefullyAsync(), 
-                        _serverWorkerGroup.ShutdownGracefullyAsync());
-                }
-            }
+            await _socketClient.Channel.WriteAndFlushAsync(message + Environment.NewLine);
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            _socketServer?.Shutdown();
+            _cancellationSource?.Dispose();
+            _certificate?.Dispose();
         }
     }
 }
