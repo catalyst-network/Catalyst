@@ -87,7 +87,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 //    .Bootstrap(new ActionChannelInitializer<IChannel>(channel => { })
                 //    ).StartServer(_settings.BindAddress, _settings.Port);
                 
-                _socketServer = await new TcpServer(_logger)
+                _socketServer = await new UdpServer(_logger)
                    .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
                             encoder,
                             decoder,
@@ -110,7 +110,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             var decoder = new StringDecoder(Encoding.UTF8);
             var clientHandler = new SecureTcpMessageClientHandler();
             
-            _socketClient = await new TcpClient(_logger)
+            _socketClient = await new UdpClient(_logger)
                .Bootstrap(
                     new OutboundChannelInitializer<ISocketChannel>(channel => {},
                         encoder,
