@@ -26,7 +26,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public abstract class AbstractIo<T> where T : IISocket
+    public abstract class AbstractIo<ST, BT> where ST : IISocket where BT : IServerBootstrap
     {
         protected const int BackLogValue = 100;
 
@@ -68,7 +68,7 @@ namespace Catalyst.Node.Common.Helpers.IO
         
         public override string ToString()
         {
-            return StringUtil.SimpleClassName(typeof (T)) + "]";
+            return StringUtil.SimpleClassName(typeof (ST));
         }
     }
 }

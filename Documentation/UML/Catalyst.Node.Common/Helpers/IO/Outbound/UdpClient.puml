@@ -1,10 +1,9 @@
 @startuml
-class "UdpClient`1"<T> <<sealed>> {
+class UdpClient <<sealed>> {
     + UdpClient(logger:ILogger)
-    + Bootstrap(channelInitializer:IChannelHandler) : UdpClient<T>
-    + <<override>> ToString() : string
+    + Bootstrap(channelInitializer:IChannelHandler) : UdpClient
 }
-class "AbstractClient`1"<T> {
+class "AbstractClient`2"<T1,T2> {
 }
-"AbstractClient`1" "<T>" <|-- "UdpClient`1"
+"AbstractClient`2" "<ISocketClient,IBootstrap>" <|-- UdpClient
 @enduml

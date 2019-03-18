@@ -24,6 +24,6 @@ using DotNetty.Transport.Channels;
 namespace Catalyst.Node.Common.Interfaces {
     public interface IBootstrap : IServerBootstrap
     {
-        Task<IChannel> ConnectAsync(IPAddress ipAddress, int port);
+            Task<IChannel> ConnectAsync(IPAddress ipAddress, int port);
     }
 }

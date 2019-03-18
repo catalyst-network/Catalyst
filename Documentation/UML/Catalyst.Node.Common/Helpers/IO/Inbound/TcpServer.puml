@@ -3,10 +3,9 @@ class TcpServer <<sealed>> {
     + TcpServer(logger:ILogger)
     + Bootstrap(channelInitializer:IChannelHandler) : TcpServer
     + <<override>> <<async>> Shutdown() : Task
-    + <<override>> ToString() : string
 }
-class "AbstractServer`1"<T> {
+class "AbstractServer`2"<T1,T2> {
 }
-"AbstractServer`1" "<ISocketServer>" <|-- TcpServer
+"AbstractServer`2" "<ISocketServer,IServerBootstrap>" <|-- TcpServer
 TcpServer --> "_supervisorEventLoop" IEventLoopGroup
 @enduml

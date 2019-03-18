@@ -1,10 +1,11 @@
 @startuml
-class "UdpServer`1"<T> <<sealed>> {
+class UdpServer <<sealed>> {
     + UdpServer(logger:ILogger)
-    + Bootstrap(channelInitializer:IChannelHandler) : UdpServer<T>
-    + <<override>> ToString() : string
+    + Bootstrap(channelInitializer:IChannelHandler) : UdpServer
+    + <<override>> <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<AbstractServer<ISocketServer, IBootstrap>>
 }
-class "AbstractServer`1"<T> {
+class "AbstractServer`2"<T1,T2> {
 }
-"AbstractServer`1" "<ISocketServer>" <|-- "UdpServer`1"
+"AbstractServer`2" "<ISocketServer,IBootstrap>" <|-- UdpServer
+UdpServer --> "Server" Bootstrap
 @enduml

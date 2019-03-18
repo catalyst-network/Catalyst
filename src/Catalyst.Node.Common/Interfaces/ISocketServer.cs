@@ -29,6 +29,7 @@ namespace Catalyst.Node.Common.Interfaces
         IChannel Channel { get; set; }
         ISocketServer Bootstrap(IChannelHandler channelInitializer);
         Task<ISocketServer> StartServer(IPAddress listenAddress, int port);
+        Task<IChannel> BindAsync(IPAddress listenAddress, int port);
         string ToString();
     }
 }

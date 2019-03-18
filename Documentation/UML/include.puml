@@ -18,9 +18,11 @@
 !include .\/Catalyst.Node.Common/Interfaces/IPeerIdentifier.puml
 !include .\/Catalyst.Node.Common/Interfaces/ICryptoContext.puml
 !include .\/Catalyst.Node.Common/Interfaces/IMessageSender.puml
+!include .\/Catalyst.Node.Common/Interfaces/IServerBootstrap.puml
 !include .\/Catalyst.Node.Common/Interfaces/IPrivateKey.puml
 !include .\/Catalyst.Node.Common/Interfaces/IPeerDiscovery.puml
 !include .\/Catalyst.Node.Common/Interfaces/IConnection.puml
+!include .\/Catalyst.Node.Common/Interfaces/IBootstrap.puml
 !include .\/Catalyst.Node.Common/Interfaces/IISocket.puml
 !include .\/Catalyst.Node.Common/Interfaces/IPasswordReader.puml
 !include .\/Catalyst.Node.Common/Interfaces/IShell.puml
@@ -66,7 +68,9 @@
 !include .\/Catalyst.Node.Common/Helpers/Network/Dns.puml
 !include .\/Catalyst.Node.Common/Helpers/Network/Ip.puml
 !include .\/Catalyst.Node.Common/Helpers/IO/AbstractIO.puml
-!include .\/Catalyst.Node.Common/Helpers/IO/BootstrapAbstract.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Bootstrap.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/ServerBootstrap.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/AbstractChannelInitializer.puml
 !include .\/Catalyst.Node.Common/Helpers/FileSystem/FileSystem.puml
 !include .\/Catalyst.Node.Common/Helpers/Events/Events.puml
 !include .\/Catalyst.Node.Common/Helpers/Enumerator/Enumeration.puml

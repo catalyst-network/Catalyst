@@ -30,7 +30,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public sealed class TcpClient : AbstractClient<ISocketClient>
+    public sealed class TcpClient : AbstractClient<ISocketClient, IBootstrap>
     {
         public TcpClient(ILogger logger) : base(logger) { }
 

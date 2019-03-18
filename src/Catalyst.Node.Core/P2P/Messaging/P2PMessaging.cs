@@ -45,8 +45,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private AbstractClient<ISocketClient> _socketClient;
-        private AbstractServer<ISocketServer> _socketServer;
+        private AbstractClient<ISocketClient, IBootstrap> _socketClient;
+        private AbstractServer<ISocketServer, IBootstrap> _socketServer;
 
         public IPeerIdentifier Identifier { get; }
 
@@ -83,14 +83,18 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             try
             {
-                _socketServer = await new TcpServer(_logger)
-                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
-                            encoder,
-                            decoder,
-                            serverHandler,
-                            _certificate
-                        )
-                ).StartServer(_settings.BindAddress, _settings.Port);
+                _socketServer = await new UdpServer(_logger)
+                   .Bootstrap(new ActionChannelInitializer<IChannel>(channel => { })
+                   ).StartServer(_settings.BindAddress, _settings.Port);
+                //
+                // _socketServer = await new TcpServer(_logger)
+                //    .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
+                //             encoder,
+                //             decoder,
+                //             serverHandler,
+                //             _certificate
+                //         )
+                // ).StartServer(_settings.BindAddress, _settings.Port);
             }
             catch (Exception e)
             {
@@ -106,20 +110,20 @@ namespace Catalyst.Node.Core.P2P.Messaging
             var decoder = new StringDecoder(Encoding.UTF8);
             var clientHandler = new SecureTcpMessageClientHandler();
             
-            _socketClient = await new TcpClient(_logger)
-               .Bootstrap(
-                    new OutboundChannelInitializer<ISocketChannel>(channel => {},
-                        encoder,
-                        decoder,
-                        clientHandler,
-                        _settings.BindAddress, //just connecting to ours elf at moment, this needs to be IP of node you want to connect to.
-                        _certificate
-                    )
-               )
-               .ConnectClient(
-                    _settings.BindAddress,
-                    _settings.Port
-            );
+            // _socketClient = await new TcpClient(_logger)
+            //    .Bootstrap(
+            //         new OutboundChannelInitializer<ISocketChannel>(channel => {},
+            //             encoder,
+            //             decoder,
+            //             clientHandler,
+            //             _settings.BindAddress, //just connecting to ours elf at moment, this needs to be IP of node you want to connect to.
+            //             _certificate
+            //         )
+            //    )
+            //    .ConnectClient(
+            //         _settings.BindAddress,
+            //         _settings.Port
+            //    );
         }
 
         public void Stop()
@@ -139,7 +143,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public void Dispose()
         {
-            _socketServer.Shutdown();
+            _socketServer?.Shutdown();
             _cancellationSource?.Dispose();
             _certificate?.Dispose();
         }

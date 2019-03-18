@@ -17,12 +17,14 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces {
-    public interface IServerBootstrap {
+    public interface IServerBootstrap: IComparable<IServerBootstrap>
+    {
         Task<IChannel> BindAsync(IPAddress ipAddress, int port);
     }
 }

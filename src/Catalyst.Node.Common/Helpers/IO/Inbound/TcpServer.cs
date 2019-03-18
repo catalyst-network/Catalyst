@@ -29,7 +29,8 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public sealed class TcpServer : AbstractServer<ISocketServer>
+    
+    public sealed class TcpServer : AbstractServer<ISocketServer, IServerBootstrap>
     {
         private readonly IEventLoopGroup _supervisorEventLoop;
                

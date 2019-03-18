@@ -29,11 +29,11 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public sealed class UdpClient<T> : AbstractClient<T> where T : ISocketClient
+    public sealed class UdpClient : AbstractClient<ISocketClient, IBootstrap>
     {
         public UdpClient(ILogger logger) : base(logger) { }
 
-        public UdpClient<T> Bootstrap(IChannelHandler channelInitializer)
+        public UdpClient Bootstrap(IChannelHandler channelInitializer)
         {
             Client = (IBootstrap) new Bootstrap()
                .Group(WorkerEventLoop)

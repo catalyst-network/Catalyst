@@ -1,11 +1,10 @@
 @startuml
-abstract class "AbstractServer`1"<T> {
-    # <<const>> BackLogValue : int = 100
+abstract class "AbstractServer`2"<ST,BT> {
+    # Server : BT <<get>> <<set>>
     # <<internal>> AbstractServer(logger:ILogger)
-    + <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<AbstractServer<T>>
+    + <<virtual>> <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<AbstractServer<ST, BT>>
 }
-class "AbstractIo`1"<T> {
+class "AbstractIo`2"<T1,T2> {
 }
-"AbstractIo`1" "<T>" <|-- "AbstractServer`1"
-"AbstractServer`1" --> "Server" IServerBootstrp
+"AbstractIo`2" "<ST,BT>" <|-- "AbstractServer`2"
 @enduml
