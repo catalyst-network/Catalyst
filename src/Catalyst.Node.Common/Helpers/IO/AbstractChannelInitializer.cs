@@ -18,8 +18,11 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using Dawn;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO
@@ -28,25 +31,19 @@ namespace Catalyst.Node.Common.Helpers.IO
     {
         protected readonly Action<T> InitializationAction;
         protected readonly X509Certificate Certificate;
-        protected readonly IChannelHandler Encoder;
-        protected readonly IChannelHandler Decoder;
-        protected readonly IChannelHandler ChannelHandler;
+        protected readonly IReadOnlyCollection<IChannelHandler> Handlers;
         protected readonly IPAddress TargetHost;
 
         protected AbstractChannelInitializer(
             Action<T> initializationAction,
-            IChannelHandler encoder,
-            IChannelHandler decoder,
-            IChannelHandler channelHandler,
+            IList<IChannelHandler> handlers,
             IPAddress targetHost = default,
             X509Certificate certificate = null
         )
         {
+            Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
             InitializationAction = initializationAction;
-            Encoder = encoder;
-            Decoder = decoder;
-            ChannelHandler = channelHandler;
-
+            Handlers = handlers.ToImmutableArray();
             TargetHost = targetHost;
             Certificate = certificate;
         }

@@ -21,6 +21,7 @@ using System;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
@@ -30,7 +31,11 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Protocols.Transaction;
 using Dawn;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core
@@ -45,7 +50,7 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
-        
+       
         private bool _disposed;
 
         public CatalystNode(
@@ -73,13 +78,34 @@ namespace Catalyst.Node.Core
         public async Task RunAsync(CancellationToken ct)
         {
             _logger.Information("Starting the Catalyst Node");
-            string nextMessage;
+            bool exit = false;
             do
             {
-                nextMessage = Console.ReadLine();
-                await _p2P.Messaging.BroadcastMessageAsync(nextMessage);
-            } while (!ct.IsCancellationRequested
-                && !string.Equals(nextMessage, "exit", StringComparison.OrdinalIgnoreCase));
+                _logger.Information("Creating a StTx message");
+                _logger.Information("Please type in a destination address");
+                var address = Console.ReadLine();
+
+                _logger.Information("Please type in a transaction amount");
+                if (!uint.TryParse(Console.ReadLine(), out var amount))
+                {
+                    amount = 1;
+                }
+                var tx = new StTx {Amount = amount, AddressDest = address};
+
+                await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
+                await Task.Delay(300, ct); //just to get the next message at the bottom
+
+                _logger.Information("Creating a Key message");
+                _logger.Information("Please type in a key hash");
+                var key = new Key {HashedSignature = Console.ReadLine() };
+
+                await _p2P.Messaging.BroadcastMessageAsync(key.ToAny());
+                await Task.Delay(300, ct); //just to get the exit message at the bottom
+
+                _logger.Information("Type 'exit' to exit, anything else to continue");
+                exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
+
+            } while (!ct.IsCancellationRequested && !exit);
 
             _logger.Information("Stopping the Catalyst Node");
         }

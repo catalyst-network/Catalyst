@@ -18,9 +18,12 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using DotNetty.Codecs;
 using DotNetty.Common.Utilities;
 using DotNetty.Handlers.Logging;
@@ -32,8 +35,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     public class OutboundChannelInitializer<T> : AbstractChannelInitializer<T> where T : IChannel
     {
         /// <inheritdoc />
-        public OutboundChannelInitializer(Action<T> initializationAction, IChannelHandler encoder, IChannelHandler decoder, IChannelHandler channelHandler, IPAddress targetHost = default, X509Certificate certificate = null)
-            : base(initializationAction, encoder, decoder, channelHandler, targetHost, certificate) { }
+        public OutboundChannelInitializer(Action<T> initializationAction,
+            IList<IChannelHandler> handlers,
+            IPAddress targetHost = default,
+            X509Certificate certificate = null)
+            : base(initializationAction, handlers, targetHost, certificate) { }
 
         protected override void InitChannel(T channel)
         {
@@ -51,8 +57,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-            pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-            pipeline.AddLast(Encoder, Decoder, ChannelHandler);
+            pipeline.AddLast(Handlers.ToArray());
         }
 
         public override string ToString()
