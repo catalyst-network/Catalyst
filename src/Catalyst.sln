@@ -24,6 +24,7 @@ ProjectSection(SolutionItems) = preProject
 	..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
 	..\.gitignore = ..\.gitignore
 	..\.dockerignore = ..\.dockerignore
+	..\Documentation = ..\Documentation
 	Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
 	Common.UnitTests.props = Common.UnitTests.props
 	Common.Projects.props = Common.Projects.props

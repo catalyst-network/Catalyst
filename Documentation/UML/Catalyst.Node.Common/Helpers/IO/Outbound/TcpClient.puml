@@ -1,0 +1,7 @@
+@startuml
+class TcpClient <<sealed>> {
+    + TcpClient(logger:ILogger)
+    + Bootstrap(channelInitializer:IChannelHandler) : TcpClient
+}
+AbstractClient <|-- TcpClient
+@enduml

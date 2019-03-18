@@ -1,0 +1,9 @@
+@startuml
+class UdpServer <<sealed>> {
+    + UdpServer(logger:ILogger)
+    + <<override>> Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
+    + <<override>> <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
+}
+AbstractServer <|-- UdpServer
+UdpServer --> "Server" Bootstrap
+@enduml

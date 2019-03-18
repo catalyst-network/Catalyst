@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Reflection;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Protocols.Transaction;
+using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Groups;
-using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    internal class AnyTypeServerHandler : SimpleChannelInboundHandler<Any>
+    internal class SecureTcpMessageServerHandler : SimpleChannelInboundHandler<string>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private static volatile IChannelGroup _broadCastGroup;
@@ -30,7 +28,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     }
                 }
             }
-            context.WriteAndFlushAsync($"Welcome to {System.Net.Dns.GetHostName()} secure chat server!\n");
+            context.WriteAndFlushAsync(string.Format("Welcome to {0} secure chat server!\n", System.Net.Dns.GetHostName()));
             _broadCastGroup.Add(context.Channel);
         }
 
@@ -47,12 +45,16 @@ namespace Catalyst.Node.Core.P2P.Messaging
             public bool Matches(IChannel channel) => !Equals(channel.Id, _id);
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext context, Any message)
+        protected override void ChannelRead0(IChannelHandlerContext context, string msg)
         {
-            _broadCastGroup.WriteAndFlushAsync(message, new EveryOneBut(context.Channel.Id));
-            context.WriteAndFlushAsync(message);
+            //send message to all but this one
+            var broadcast = $"[{context.Channel.RemoteAddress}] {msg}\n";
+            var response = $"[you] {msg}\n";
 
-            if (message.TypeUrl == StTx.Descriptor.ShortenedFullName() && message.FromAny<StTx>().Amount == 0)
+            _broadCastGroup.WriteAndFlushAsync(broadcast, new EveryOneBut(context.Channel.Id));
+            context.WriteAndFlushAsync(response);
+
+            if (string.Equals("bye", msg, StringComparison.OrdinalIgnoreCase))
             {
                 context.CloseAsync();
             }

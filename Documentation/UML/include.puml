@@ -16,16 +16,21 @@
 !include .\/Catalyst.Node.Common/Interfaces/IConnection.puml
 !include .\/Catalyst.Node.Common/Interfaces/IP2P.puml
 !include .\/Catalyst.Node.Common/Interfaces/IDns.puml
+!include .\/Catalyst.Node.Common/Interfaces/IBootstrap.puml
 !include .\/Catalyst.Node.Common/Interfaces/IAds.puml
 !include .\/Catalyst.Node.Common/Interfaces/IFileSystem.puml
 !include .\/Catalyst.Node.Common/Interfaces/ICatalystNode.puml
 !include .\/Catalyst.Node.Common/Interfaces/IPeerIdentifier.puml
 !include .\/Catalyst.Node.Common/Interfaces/ICertificateStore.puml
+!include .\/Catalyst.Node.Common/Interfaces/ISocketServer.puml
+!include .\/Catalyst.Node.Common/Interfaces/IServerBootstrap.puml
 !include .\/Catalyst.Node.Common/Interfaces/IPeerSettings.puml
 !include .\/Catalyst.Node.Common/Interfaces/ICryptoContext.puml
 !include .\/Catalyst.Node.Common/Interfaces/IPrivateKey.puml
+!include .\/Catalyst.Node.Common/Interfaces/ISocketClient.puml
 !include .\/Catalyst.Node.Common/Interfaces/IPublicKey.puml
 !include .\/Catalyst.Node.Common/Interfaces/IPeerDiscovery.puml
+!include .\/Catalyst.Node.Common/Interfaces/IISocket.puml
 !include .\/Catalyst.Node.Common/Interfaces/IKeyValueStore.puml
 !include .\/Catalyst.Node.Common/Interfaces/IShell.puml
 !include .\/Catalyst.Node.Common/Interfaces/IKeystore.puml
@@ -49,6 +54,10 @@
 !include .\/Catalyst.Node.Common.UnitTests/Helpers/Keystore/LocalKeyStoreTests.puml
 !include .\/Catalyst.Node.Common.UnitTests/Helpers/Cryptography/CertificateStoreTests.puml
 !include .\/Catalyst.Node.Common.UnitTests/Helpers/Cryptography/CryptographyTests.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Bootstrap.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/AbstractChannelInitializer.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/AbstractIO.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/ServerBootstrap.puml
 !include .\/Catalyst.Node.Common/Helpers/Events/Events.puml
 !include .\/Catalyst.Node.Common/Helpers/Shell/Shell.puml
 !include .\/Catalyst.Node.Common/Helpers/Shell/ShellBase.puml
@@ -109,6 +118,14 @@
 !include .\/Catalyst.Node.Common/Interfaces/Modules/Contract/IContract.puml
 !include .\/Catalyst.Node.Common/obj/Debug/netcoreapp2.1/Catalyst.Node.Common.AssemblyInfo.puml
 !include .\/Catalyst.Node.Common/obj/Debug/netcoreapp2.2/Catalyst.Node.Common.AssemblyInfo.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Inbound/AbstractServer.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Inbound/InboundChannelInitializer.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Inbound/TcpServer.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Inbound/UdpServer.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Outbound/UdpClient.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Outbound/TcpClient.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Outbound/OutboundChannelInitializer.puml
+!include .\/Catalyst.Node.Common/Helpers/IO/Outbound/AbstractClient.puml
 !include .\/Catalyst.Node.Core/obj/Debug/netcoreapp2.1/Catalyst.Node.Core.AssemblyInfo.puml
 !include .\/Catalyst.Node.Core/obj/Debug/netcoreapp2.2/Catalyst.Node.Core.AssemblyInfo.puml
 @enduml

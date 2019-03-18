@@ -1,0 +1,11 @@
+@startuml
+class "OutboundChannelInitializer`1"<T> {
+    + OutboundChannelInitializer(initializationAction:Action<T>, encoder:IChannelHandler, decoder:IChannelHandler, channelHandler:IChannelHandler, targetHost:IPAddress, certificate:X509Certificate)
+    + OutboundChannelInitializer(initializationAction:Action<T>, encoder:IChannelHandler, decoder:IChannelHandler, channelHandler:IChannelHandler, targetHost:IPAddress)
+    # <<override>> InitChannel(channel:T) : void
+    + <<override>> ToString() : string
+}
+class "AbstractChannelInitializer`1"<T> {
+}
+"AbstractChannelInitializer`1" "<T>" <|-- "OutboundChannelInitializer`1"
+@enduml
