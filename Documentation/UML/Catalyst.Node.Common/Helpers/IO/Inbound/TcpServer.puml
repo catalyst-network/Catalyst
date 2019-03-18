@@ -1,11 +1,9 @@
 @startuml
 class TcpServer <<sealed>> {
     + TcpServer(logger:ILogger)
-    + Bootstrap(channelInitializer:IChannelHandler) : TcpServer
+    + <<override>> Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
     + <<override>> <<async>> Shutdown() : Task
 }
-class "AbstractServer`2"<T1,T2> {
-}
-"AbstractServer`2" "<ISocketServer,IServerBootstrap>" <|-- TcpServer
+AbstractServer <|-- TcpServer
 TcpServer --> "_supervisorEventLoop" IEventLoopGroup
 @enduml

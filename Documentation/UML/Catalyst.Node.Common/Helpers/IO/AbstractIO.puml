@@ -1,13 +1,13 @@
 @startuml
-abstract class "AbstractIo`2"<ST,BT> {
+abstract class AbstractIo {
     # <<const>> BackLogValue : int = 100
     # <<internal>> AbstractIo(logger:ILogger)
     + <<virtual>> <<async>> Shutdown() : Task
     + Dispose() : void
     - Dispose(disposing:bool) : void
-    + <<override>> ToString() : string
 }
-"AbstractIo`2" --> "_logger" ILogger
-"AbstractIo`2" --> "Channel" IChannel
-"AbstractIo`2" --> "WorkerEventLoop" IEventLoopGroup
+IISocket <|-- AbstractIo
+AbstractIo --> "_logger" ILogger
+AbstractIo --> "WorkerEventLoop" IEventLoopGroup
+AbstractIo --> "Channel" IChannel
 @enduml

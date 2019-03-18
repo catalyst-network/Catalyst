@@ -1,10 +1,10 @@
 @startuml
-abstract class "AbstractServer`2"<ST,BT> {
-    # Server : BT <<get>> <<set>>
+abstract class AbstractServer {
     # <<internal>> AbstractServer(logger:ILogger)
-    + <<virtual>> <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<AbstractServer<ST, BT>>
+    + {abstract} Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
+    + <<virtual>> <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
 }
-class "AbstractIo`2"<T1,T2> {
-}
-"AbstractIo`2" "<ST,BT>" <|-- "AbstractServer`2"
+AbstractIo <|-- AbstractServer
+ISocketServer <|-- AbstractServer
+AbstractServer --> "Server" IServerBootstrap
 @enduml

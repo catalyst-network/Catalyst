@@ -1,9 +1,7 @@
 @startuml
 class UdpClient <<sealed>> {
     + UdpClient(logger:ILogger)
-    + Bootstrap(channelInitializer:IChannelHandler) : UdpClient
+    + Bootstrap(channelInitializer:IChannelHandler) : ISocketClient
 }
-class "AbstractClient`2"<T1,T2> {
-}
-"AbstractClient`2" "<ISocketClient,IBootstrap>" <|-- UdpClient
+AbstractClient <|-- UdpClient
 @enduml

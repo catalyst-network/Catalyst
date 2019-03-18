@@ -26,13 +26,14 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public abstract class AbstractIo<ST, BT> where ST : IISocket where BT : IServerBootstrap
+    public abstract class AbstractIo : IISocket
     {
         protected const int BackLogValue = 100;
 
         private readonly ILogger _logger;
-        public IChannel Channel { get; set; }
         protected readonly IEventLoopGroup WorkerEventLoop;
+
+        public IChannel Channel { get; set; }
 
         protected internal AbstractIo(ILogger logger)
         {
@@ -61,14 +62,9 @@ namespace Catalyst.Node.Common.Helpers.IO
         {
             if (disposing)
             {
-                _logger.Information($"Disposing {ToString()}");
+                _logger.Information($"Disposing {GetType().Name}");
                 Task.WaitAll(Shutdown());
             }
-        }
-        
-        public override string ToString()
-        {
-            return StringUtil.SimpleClassName(typeof (ST));
         }
     }
 }

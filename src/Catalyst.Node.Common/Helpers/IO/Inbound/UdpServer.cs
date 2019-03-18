@@ -29,7 +29,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public sealed class UdpServer : AbstractServer<ISocketServer, IBootstrap>
+    public sealed class UdpServer : AbstractServer
     {
         private new Bootstrap Server { get; set; }
         
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// </summary>
         /// <param name="channelInitializer"></param>
         /// <returns></returns>
-        public UdpServer Bootstrap(IChannelHandler channelInitializer)
+        public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
         {
             Server = new Bootstrap()
                .Group(WorkerEventLoop)
@@ -55,7 +55,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             return this;
         }
         
-        public override async Task<AbstractServer<ISocketServer, IBootstrap>> StartServer(IPAddress listenAddress, int port)
+        public override async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
         {
             Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
             return this;

@@ -2,7 +2,4 @@
 interface IISocket {
     Shutdown() : Task
 }
-class "IComparable`1"<T> {
-}
-"IComparable`1" "<IISocket>" <|-- IISocket
 @enduml

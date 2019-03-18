@@ -30,7 +30,7 @@ using Serilog;
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     
-    public sealed class TcpServer : AbstractServer<ISocketServer, IServerBootstrap>
+    public sealed class TcpServer : AbstractServer
     {
         private readonly IEventLoopGroup _supervisorEventLoop;
                
@@ -43,7 +43,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }
 
-        public TcpServer Bootstrap(IChannelHandler channelInitializer)
+        public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
         {
             Server = (IServerBootstrap) new ServerBootstrap()
                .Group(_supervisorEventLoop, WorkerEventLoop)

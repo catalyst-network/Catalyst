@@ -25,13 +25,13 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public abstract class AbstractClient<T, W> : AbstractIo<T, W> where T : ISocketClient where W : IBootstrap
+    public abstract class AbstractClient : AbstractIo, ISocketClient
     {
-        protected IBootstrap Client { private get; set; }
+        public IBootstrap Client { get; set; }
         
         protected internal AbstractClient(ILogger logger) : base(logger) {}
 
-        public async Task<AbstractClient<T, W>> ConnectClient(IPAddress listenAddress, int port)
+        public async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
         {
             Channel = await Client.ConnectAsync(listenAddress, port).ConfigureAwait(false);
             return this;

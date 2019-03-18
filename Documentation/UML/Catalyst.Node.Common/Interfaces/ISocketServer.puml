@@ -2,7 +2,6 @@
 interface ISocketServer {
     Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
     StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
-    BindAsync(listenAddress:IPAddress, port:int) : Task<IChannel>
     ToString() : string
 }
 IISocket <|-- ISocketServer

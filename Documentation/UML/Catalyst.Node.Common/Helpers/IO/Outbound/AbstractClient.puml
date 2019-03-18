@@ -1,10 +1,9 @@
 @startuml
-abstract class "AbstractClient`2"<T,W> {
+abstract class AbstractClient {
     # <<internal>> AbstractClient(logger:ILogger)
-    + <<async>> ConnectClient(listenAddress:IPAddress, port:int) : Task<AbstractClient<T, W>>
+    + <<async>> ConnectClient(listenAddress:IPAddress, port:int) : Task<ISocketClient>
 }
-class "AbstractIo`2"<T1,T2> {
-}
-"AbstractIo`2" "<T,W>" <|-- "AbstractClient`2"
-"AbstractClient`2" --> "Client" IBootstrap
+AbstractIo <|-- AbstractClient
+ISocketClient <|-- AbstractClient
+AbstractClient --> "Client" IBootstrap
 @enduml

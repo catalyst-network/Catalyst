@@ -25,13 +25,15 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public abstract class AbstractServer<ST, BT> : AbstractIo<ST, BT> where ST : IISocket where BT : IServerBootstrap
+    public abstract class AbstractServer : AbstractIo, ISocketServer
     {
-        protected BT Server { get; set; }
+        public IServerBootstrap Server { get; set; }
         
         protected internal AbstractServer(ILogger logger) : base(logger) {}
+        
+        public abstract ISocketServer Bootstrap(IChannelHandler channelInitializer);
 
-        public virtual async Task<AbstractServer<ST, BT>> StartServer(IPAddress listenAddress, int port)
+        public virtual async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
         {
             Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
             return this;
