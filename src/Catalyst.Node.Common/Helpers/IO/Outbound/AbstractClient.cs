@@ -31,10 +31,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         
         protected internal AbstractClient(ILogger logger) : base(logger) {}
 
-        public async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
-        {
-            Channel = await Client.ConnectAsync(listenAddress, port).ConfigureAwait(false);
-            return this;
-        }        
+        public abstract ISocketClient Bootstrap(IChannelHandler channelInitializer);
+
+        public abstract Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port);
     }
 }

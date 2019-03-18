@@ -33,6 +33,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
     public sealed class TcpServer : AbstractServer
     {
         private readonly IEventLoopGroup _supervisorEventLoop;
+        public new ServerBootstrap Server { get; set; }
                
         /// <summary>
         ///     
@@ -45,12 +46,18 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 
         public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
         {
-            Server = (IServerBootstrap) new ServerBootstrap()
+            Server = new ServerBootstrap()
                .Group(_supervisorEventLoop, WorkerEventLoop)
                .Channel<TcpServerSocketChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.INFO))
                .ChildHandler(channelInitializer);
+            return this;
+        }
+        
+        public override async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
+        {
+            Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
             return this;
         }
         

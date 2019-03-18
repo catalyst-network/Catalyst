@@ -32,10 +32,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     public sealed class UdpClient : AbstractClient
     {
         public UdpClient(ILogger logger) : base(logger) { }
+        public new Bootstrap Client { get; set; }
 
-        public ISocketClient Bootstrap(IChannelHandler channelInitializer)
+        public override  ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {
-            Client = (IBootstrap) new Bootstrap()
+            Client = new Bootstrap()
                .Group(WorkerEventLoop)
                .Channel<TcpSocketChannel>()
                .Option(ChannelOption.SoBacklog, 100)
@@ -43,5 +44,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                .Handler(channelInitializer);
             return this;
         }
+        
+        public override async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
+        {
+            Channel = await Client.ConnectAsync(listenAddress, port).ConfigureAwait(false);
+            return this;
+        } 
     }
 }

@@ -83,18 +83,18 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             try
             {
-                _socketServer = await new UdpServer(_logger)
-                   .Bootstrap(new ActionChannelInitializer<IChannel>(channel => { })
-                   ).StartServer(_settings.BindAddress, _settings.Port);
-                
                 // _socketServer = await new UdpServer(_logger)
-                //    .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
-                //             encoder,
-                //             decoder,
-                //             serverHandler,
-                //             _certificate
-                //         )
-                // ).StartServer(_settings.BindAddress, _settings.Port);
+                //    .Bootstrap(new ActionChannelInitializer<IChannel>(channel => { })
+                //    ).StartServer(_settings.BindAddress, _settings.Port);
+                
+                _socketServer = await new TcpServer(_logger)
+                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
+                            encoder,
+                            decoder,
+                            serverHandler,
+                            _certificate
+                        )
+                ).StartServer(_settings.BindAddress, _settings.Port);
             }
             catch (Exception e)
             {
@@ -116,7 +116,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                         encoder,
                         decoder,
                         clientHandler,
-                        _settings.BindAddress, //just connecting to ours elf at moment, this needs to be IP of node you want to connect to.
+                        _settings.BindAddress,
                         _certificate
                     )
                )

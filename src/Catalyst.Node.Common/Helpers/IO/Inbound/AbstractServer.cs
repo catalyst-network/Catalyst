@@ -33,10 +33,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         
         public abstract ISocketServer Bootstrap(IChannelHandler channelInitializer);
 
-        public virtual async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
-        {
-            Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
-            return this;
-        }
+        public abstract Task<ISocketServer> StartServer(IPAddress listenAddress, int port);
     }
 }
