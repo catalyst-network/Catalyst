@@ -1,0 +1,10 @@
+@startuml
+abstract class AbstractServer {
+    # <<internal>> AbstractServer(logger:ILogger)
+    + {abstract} Bootstrap(channelInitializer:IChannelHandler) : ISocketServer
+    + <<virtual>> <<async>> StartServer(listenAddress:IPAddress, port:int) : Task<ISocketServer>
+}
+AbstractIo <|-- AbstractServer
+ISocketServer <|-- AbstractServer
+AbstractServer --> "Server" IServerBootstrap
+@enduml

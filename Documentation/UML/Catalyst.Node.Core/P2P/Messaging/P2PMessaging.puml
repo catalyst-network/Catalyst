@@ -7,7 +7,6 @@ class P2PMessaging {
     + Stop() : void
     + <<async>> PingAsync(targetNode:IPeerIdentifier) : Task<bool>
     + <<async>> BroadcastMessageAsync(message:string) : Task
-    # <<virtual>> Dispose(disposing:bool) : void
     + Dispose() : void
 }
 IP2PMessaging <|-- P2PMessaging
@@ -16,10 +15,7 @@ P2PMessaging --> "_settings" IPeerSettings
 P2PMessaging --> "_logger" ILogger
 P2PMessaging --> "_cancellationSource" CancellationTokenSource
 P2PMessaging --> "_certificate" X509Certificate2
-P2PMessaging --> "_clientChannel" IChannel
-P2PMessaging --> "_clientEventLoopGroup" MultithreadEventLoopGroup
-P2PMessaging --> "_serverChannel" IChannel
-P2PMessaging --> "_serverParentGroup" MultithreadEventLoopGroup
-P2PMessaging --> "_serverWorkerGroup" MultithreadEventLoopGroup
+P2PMessaging --> "_socketClient" ISocketClient
+P2PMessaging --> "_socketServer" ISocketServer
 P2PMessaging --> "Identifier" IPeerIdentifier
 @enduml
