@@ -64,7 +64,10 @@ namespace Catalyst.Node.Core.RPC
             var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
 
-            _certificate = certificateStore.ReadOrCreateCertificateFile(settings.CertFileName, settings.SslCertPassword);
+            if(_settings.isSSL)
+            {
+                _certificate = certificateStore.ReadOrCreateCertificateFile(settings.CertFileName, settings.SslCertPassword);
+            }
 
             Task.WaitAll(RunServerAsync());
         }
@@ -114,8 +117,6 @@ namespace Catalyst.Node.Core.RPC
                     }));
 
                 _serverChannel = await bootstrap.BindAsync(_settings.Port);
-
-                //await bootstrapChannel.CloseAsync();
             }
             catch(Exception e)
             {

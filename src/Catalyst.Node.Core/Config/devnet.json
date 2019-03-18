@@ -32,7 +32,16 @@
       "BindAddress": "127.0.0.1",
       "Port": 30303,
       "CertFileName": "test_certificate_01.pem",
-      "SslCertPassword": "test"
+      "SslCertPassword": "test",
+      "SSL": "true"
+    },
+    "RpcClient": {
+      "ServerAddress": "127.0.0.1",
+      "Port": 30303,
+      "CertFileName": "test_certificate_01.pem",
+      "SslCertPassword": "test",
+      "Size": "256",
+      "SSL": "true"
     },
     "PersistenceConfiguration": {
       "repositories": {

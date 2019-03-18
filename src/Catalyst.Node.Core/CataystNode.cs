@@ -45,7 +45,7 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
-        private readonly ICLIRPCServer _rpcServer;
+        private readonly ICLIRPCServer _rpcServer;  //temp until we merge the P2P server with CLIRPCServer
         
         private bool _disposed;
 

@@ -9,5 +9,6 @@ namespace Catalyst.Node.Common.Interfaces
         IPAddress BindAddress { get; }
         string CertFileName { get; }
         string SslCertPassword { get; }
+        bool isSSL { get; }
     }
 }

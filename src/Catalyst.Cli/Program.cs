@@ -17,15 +17,21 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.Loader;
+ 
 using Autofac;
 using Autofac.Configuration;
+using AutofacSerilogIntegration;
+ 
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Helpers.FileSystem;
+using Catalyst.Node.Common.Helpers.Config;
+
 using Microsoft.Extensions.Configuration;
 
-using System.Diagnostics;
+using Serilog;
 
 namespace Catalyst.Cli
 {
@@ -41,14 +47,20 @@ namespace Catalyst.Cli
         public static int Main()
         {
             const int bufferSize = 1024 * 67 + 128;
+            
+            var catalystHomeDirectory = new FileSystem().GetCatalystHomeDir().FullName;
+            var network = Network.Dev;
 
-            var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
-
+            //Check Catalyst Home directory exists
             if (!Directory.Exists(catalystHomeDirectory))
             {
                 Directory.CreateDirectory(catalystHomeDirectory);
             }
+            
+            //Copy any config files from the local config to Catalyst Home
+            /*Copier to be udpated as it is not working correctly*/
+            //var configCopier = new ConfigCopier();
+            //configCopier.RunConfigStartUp(catalystHomeDirectory, network, AppDomain.CurrentDomain.BaseDirectory,  true);
 
             // check if user home data dir has a shell config
             var shellFilePath = Path.Combine(catalystHomeDirectory, ShellFileName);
@@ -59,21 +71,37 @@ namespace Catalyst.Cli
             }
 
             // resolve config from autofac
-            var builder = new ContainerBuilder();
-
             AssemblyLoadContext.Default.Resolving += (context, assembly) =>
                 context.LoadFromAssemblyPath(
                     Path.Combine(Directory.GetCurrentDirectory(),
                         $"{assembly.Name}.dll"));
 
-            var shellConfig = new ConfigurationBuilder().AddJsonFile(shellFilePath)
+            //Add all config files to the the configuration builder
+            var config = new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(shellFilePath))
+               .AddJsonFile(Path.Combine(catalystHomeDirectory, Constants.SerilogJsonConfigFile))
                .Build();
+            
+            
+            // register components from config file
+            var configurationModule = new ConfigurationModule(config);
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule(configurationModule);
 
-            var shellModule = new ConfigurationModule(shellConfig);
+            var loggerConfiguration =
+                new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
+            Log.Logger = loggerConfiguration.WriteTo
+               .File(Path.Combine(catalystHomeDirectory, "Catalyst.Node..log"), 
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
+               .CreateLogger();
+            containerBuilder.RegisterLogger();
 
-            builder.RegisterModule(shellModule);
+            //var shellModule = new ConfigurationModule(config);
 
-            var container = builder.Build();
+            containerBuilder.RegisterModule(configurationModule);
+
+            var container = containerBuilder.Build();
 
             Console.SetIn(
                 new StreamReader(
@@ -82,8 +110,13 @@ namespace Catalyst.Cli
                 )
             );
 
+            var client = container.Resolve<IRPCClient>();
+            client.RunClientAsync();
+            
             var shell = container.Resolve<IAds>();
             shell.RunConsole();
+
+            
             return 0;
         }
     }
