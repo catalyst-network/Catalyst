@@ -17,15 +17,14 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotNetty.Handlers.Logging;
 using Serilog;
+using ServerBootstrap = Catalyst.Node.Common.Helpers.IO.ServerBootstrap;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
@@ -33,8 +32,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
     public sealed class TcpServer : AbstractServer
     {
         private readonly IEventLoopGroup _supervisorEventLoop;
-        public new ServerBootstrap Server { get; set; }
-               
+
         /// <summary>
         ///     
         /// </summary>
@@ -46,7 +44,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 
         public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
         {
-            Server = new ServerBootstrap()
+            Server = new ServerBootstrap();
+            ((DotNetty.Transport.Bootstrapping.ServerBootstrap)Server)
                .Group(_supervisorEventLoop, WorkerEventLoop)
                .Channel<TcpServerSocketChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)

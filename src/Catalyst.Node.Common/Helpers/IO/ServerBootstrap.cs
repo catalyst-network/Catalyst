@@ -24,7 +24,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public class ServerBootstrap<BT> : DotNetty.Transport.Bootstrapping.ServerBootstrap where BT : IServerBootstrap
+    public class ServerBootstrap : DotNetty.Transport.Bootstrapping.ServerBootstrap, IServerBootstrap
     {
         public new Task<IChannel> BindAsync(IPAddress ipAddress, int port) { return base.BindAsync(ipAddress, port); }
     }

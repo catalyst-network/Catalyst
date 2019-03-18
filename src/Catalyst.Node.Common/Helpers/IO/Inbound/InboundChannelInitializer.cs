@@ -44,7 +44,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             IChannelHandler decoder,
             IChannelHandler channelHandler,
             X509Certificate certificate
-        ) : base(initializationAction, encoder, decoder, channelHandler, certificate) { }
+        ) : base(initializationAction, encoder, decoder, channelHandler, certificate: certificate) { }
         
         /// <summary>
         ///     Generic inbound channel initializer for sockets

@@ -20,13 +20,12 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public abstract class AbstractIo : IISocket
+    public abstract class AbstractIo : ISocket, IDisposable
     {
         protected const int BackLogValue = 100;
 
@@ -52,7 +51,7 @@ namespace Catalyst.Node.Common.Helpers.IO
                 await WorkerEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
             }
         }
-                
+
         public void Dispose()
         {
             Dispose(true);
@@ -60,11 +59,9 @@ namespace Catalyst.Node.Common.Helpers.IO
         
         private void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                _logger.Information($"Disposing {GetType().Name}");
-                Task.WaitAll(Shutdown());
-            }
+            if (!disposing) return;
+            _logger.Information($"Disposing {GetType().Name}");
+            Task.WaitAll(Shutdown());
         }
     }
 }

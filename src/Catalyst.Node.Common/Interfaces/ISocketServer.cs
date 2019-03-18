@@ -17,18 +17,16 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Net;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface ISocketServer : IISocket
+    public interface ISocketServer : ISocket
     {
         IChannel Channel { get; set; }
         ISocketServer Bootstrap(IChannelHandler channelInitializer);
         Task<ISocketServer> StartServer(IPAddress listenAddress, int port);
-        string ToString();
     }
 }

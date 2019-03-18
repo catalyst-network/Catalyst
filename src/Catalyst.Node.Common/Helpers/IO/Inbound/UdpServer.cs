@@ -17,22 +17,17 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
-using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     public sealed class UdpServer : AbstractServer
-    {
-        private new Bootstrap Server { get; set; }
-        
+    {       
         /// <summary>
         /// 
         /// </summary>
@@ -45,10 +40,12 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// <param name="channelInitializer"></param>
         /// <returns></returns>
         public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
-        {
-            Server = new Bootstrap()
+        { 
+            Server = new ServerBootstrap();
+            ((DotNetty.Transport.Bootstrapping.ServerBootstrap)Server)
                .Group(WorkerEventLoop)
-               .Channel<SocketDatagramChannel>()
+               //TODO : understand DotNetty inheritance schema
+               //.Channel<SocketDatagramChannel>()
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.INFO))
                .Handler(channelInitializer);            

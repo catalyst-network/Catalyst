@@ -17,12 +17,11 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Threading.Tasks;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IISocket
+    public interface ISocket
     {
         Task Shutdown();
     }

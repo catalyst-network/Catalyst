@@ -17,26 +17,25 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotNetty.Handlers.Logging;
 using Serilog;
+using Bootstrap = Catalyst.Node.Common.Helpers.IO.Bootstrap;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
     public sealed class UdpClient : AbstractClient
     {
         public UdpClient(ILogger logger) : base(logger) { }
-        public new Bootstrap Client { get; set; }
 
         public override  ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {
-            Client = new Bootstrap()
+            Client = new Bootstrap();
+                ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
                .Group(WorkerEventLoop)
                .Channel<TcpSocketChannel>()
                .Option(ChannelOption.SoBacklog, 100)

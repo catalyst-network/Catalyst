@@ -32,14 +32,12 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
     public sealed class TcpClient : AbstractClient
     {
-        
-        public new Bootstrap Client { get; set; }
-
         public TcpClient(ILogger logger) : base(logger) { }
 
         public override ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {
-            Client = new Bootstrap()
+            Client = new Bootstrap();
+            ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
                .Group(WorkerEventLoop)
                .Channel<TcpSocketChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)

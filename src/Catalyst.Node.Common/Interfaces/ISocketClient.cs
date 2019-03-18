@@ -23,7 +23,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface ISocketClient : IISocket
+    public interface ISocketClient : ISocket
     {
         IChannel Channel { get; set; }
         IBootstrap Client { get; set; }

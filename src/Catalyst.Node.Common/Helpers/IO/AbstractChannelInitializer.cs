@@ -32,55 +32,23 @@ namespace Catalyst.Node.Common.Helpers.IO
         protected readonly IChannelHandler Decoder;
         protected readonly IChannelHandler ChannelHandler;
         protected readonly IPAddress TargetHost;
-        
-        protected internal AbstractChannelInitializer(Action<T> initializationAction, IChannelHandler encoder, IChannelHandler decoder, IChannelHandler channelHandler, X509Certificate certificate)
-        {
-            InitializationAction = initializationAction;
-            Certificate = certificate;
-            Encoder = encoder;
-            Decoder = decoder;
-            ChannelHandler = channelHandler;
-        }
-        
-        protected internal AbstractChannelInitializer(Action<T> initializationAction, IChannelHandler encoder, IChannelHandler decoder, IChannelHandler channelHandler)
-        {
-            InitializationAction = initializationAction;
-            Encoder = encoder;
-            Decoder = decoder;
-            ChannelHandler = channelHandler;
-        }
-        
-        protected internal AbstractChannelInitializer(
-            Action<T> initializationAction,
-            IChannelHandler encoder,
-            IChannelHandler decoder,
-            IChannelHandler channelHandler,
-            IPAddress targetHost,
-            X509Certificate certificate
-        )
-        {
-            InitializationAction = initializationAction;
-            Certificate = certificate;
-            Encoder = encoder;
-            Decoder = decoder;
-            ChannelHandler = channelHandler;
-            TargetHost = targetHost;
-            Certificate = certificate;
-        }
 
-        protected internal AbstractChannelInitializer(
+        protected AbstractChannelInitializer(
             Action<T> initializationAction,
             IChannelHandler encoder,
             IChannelHandler decoder,
             IChannelHandler channelHandler,
-            IPAddress targetHost
+            IPAddress targetHost = default,
+            X509Certificate certificate = null
         )
         {
             InitializationAction = initializationAction;
             Encoder = encoder;
             Decoder = decoder;
             ChannelHandler = channelHandler;
+
             TargetHost = targetHost;
+            Certificate = certificate;
         }
     }
 }
