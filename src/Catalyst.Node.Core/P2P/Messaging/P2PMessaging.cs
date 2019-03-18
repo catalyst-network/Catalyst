@@ -18,22 +18,15 @@
 */
 
 using System;
-using System.Net;
-using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Codecs;
-using DotNetty.Handlers.Logging;
-using DotNetty.Handlers.Tls;
-using DotNetty.Transport.Bootstrapping;
-using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
-using LogLevel = DotNetty.Handlers.Logging.LogLevel;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
 
@@ -83,11 +76,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             try
             {
-                // _socketServer = await new UdpServer(_logger)
-                //    .Bootstrap(new ActionChannelInitializer<IChannel>(channel => { })
-                //    ).StartServer(_settings.BindAddress, _settings.Port);
-                
-                _socketServer = await new UdpServer(_logger)
+                _socketServer = await new TcpServer(_logger)
                    .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
                             encoder,
                             decoder,
