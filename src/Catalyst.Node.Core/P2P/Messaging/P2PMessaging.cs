@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -29,6 +30,9 @@ using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using DotNetty.Codecs.Protobuf;
+using DotNetty.Transport.Channels;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
@@ -70,19 +74,22 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             _logger.Debug("P2P server starting");
 
-            var encoder = new StringEncoder(Encoding.UTF8);
-            var decoder = new StringDecoder(Encoding.UTF8);
-            var serverHandler = new SecureTcpMessageServerHandler();
+            var handlers = new List<IChannelHandler>
+            {
+                new ProtobufVarint32FrameDecoder(),
+                new ProtobufDecoder(Any.Parser),
+                new ProtobufVarint32LengthFieldPrepender(),
+                new ProtobufEncoder(),
+                new AnyTypeServerHandler()
+            };
 
             try
             {
                 _socketServer = await new TcpServer(_logger)
-                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
-                            encoder,
-                            decoder,
-                            serverHandler,
-                            certificate: _certificate
-                        )
+                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(
+                        channel => { },
+                            handlers,
+                            certificate: _certificate)
                 ).StartServer(_settings.BindAddress, _settings.Port);
             }
             catch (Exception e)
@@ -95,16 +102,19 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private async Task RunP2PClientAsync()
         {
             _logger.Debug("P2P client starting");
-            var encoder = new StringEncoder(Encoding.UTF8);
-            var decoder = new StringDecoder(Encoding.UTF8);
-            var clientHandler = new SecureTcpMessageClientHandler();
+            var handlers = new List<IChannelHandler>
+            {
+                new ProtobufVarint32LengthFieldPrepender(),
+                new ProtobufEncoder(),
+                new ProtobufVarint32FrameDecoder(),
+                new ProtobufDecoder(Any.Parser),
+                new AnyTypeClientHandler()
+            };
             
             _socketClient = await new UdpClient(_logger)
                .Bootstrap(
                     new OutboundChannelInitializer<ISocketChannel>(channel => {},
-                        encoder,
-                        decoder,
-                        clientHandler,
+                        handlers,
                         _settings.BindAddress,
                         _certificate
                     )
@@ -125,9 +135,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
             return await Task.FromResult(true);
         }
 
-        public async Task BroadcastMessageAsync(string message)
+        public async Task BroadcastMessageAsync(Any msg)
         {
-            await _socketClient.Channel.WriteAndFlushAsync(message + Environment.NewLine);
+            await _socketClient.Channel.WriteAndFlushAsync(msg);
         }
 
         public void Dispose()
