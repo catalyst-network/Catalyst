@@ -12,15 +12,10 @@ namespace Catalyst.Node.Common.Helpers
     public static class ProtobufExtensions
     {
         private const string CatalystProtocol = "Catalyst.Protocol";
-        private static readonly Dictionary<string, string> protoToClrNameMapper;
-
-        static ProtobufExtensions()
-        {
-            protoToClrNameMapper = Assembly.Load(CatalystProtocol).ExportedTypes
-               .Where(t => typeof(IMessage).IsAssignableFrom(t))
-               .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
-               .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
-        }
+        private static readonly Dictionary<string, string> ProtoToClrNameMapper = Assembly.Load(CatalystProtocol).ExportedTypes
+           .Where(t => typeof(IMessage).IsAssignableFrom(t))
+           .Select(t => ((IMessage)Activator.CreateInstance(t)).Descriptor)
+           .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
 
         public static string ShortenedFullName(this MessageDescriptor descriptor)
         {
@@ -30,7 +25,11 @@ namespace Catalyst.Node.Common.Helpers
 
         public static Any ToAny<T>(this T protobufObject) where T : IMessage
         {
-            var wrappedObject = new Any { TypeUrl = protobufObject.Descriptor.ShortenedFullName(), Value = protobufObject.ToByteString() };
+            var wrappedObject = new Any
+            {
+                TypeUrl = protobufObject.Descriptor.ShortenedFullName(),
+                Value = protobufObject.ToByteString()
+            };
             return wrappedObject;
         }
 
@@ -43,7 +42,7 @@ namespace Catalyst.Node.Common.Helpers
 
         public static IMessage FromAny(this Any message)
         {
-            var type = Type.GetType(protoToClrNameMapper[message.TypeUrl]);
+            var type = Type.GetType(ProtoToClrNameMapper[message.TypeUrl]);
             var empty = (IMessage)Activator.CreateInstance(type);
             var innerMessage = empty.Descriptor.Parser.ParseFrom(message.Value);
             return innerMessage;
