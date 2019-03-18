@@ -34,7 +34,7 @@ namespace Catalyst.Node.Common.Helpers.IO
 
         public IChannel Channel { get; set; }
 
-        protected internal AbstractIo(ILogger logger)
+        protected AbstractIo(ILogger logger)
         {
             _logger = logger;
             WorkerEventLoop = new MultithreadEventLoopGroup();
@@ -57,11 +57,13 @@ namespace Catalyst.Node.Common.Helpers.IO
             Dispose(true);
         }
         
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) return;
-            _logger.Information($"Disposing {GetType().Name}");
-            Task.WaitAll(Shutdown());
+            if (disposing)
+            {
+                _logger.Information($"Disposing {GetType().Name}");
+                Task.WaitAll(Shutdown());
+            }
         }
     }
 }

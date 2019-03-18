@@ -42,7 +42,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private ISocketServer _socketServer;
 
         public IPeerIdentifier Identifier { get; }
-
+        
         static P2PMessaging()
         {
             //Find a better way to do this at some point
@@ -81,7 +81,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                             encoder,
                             decoder,
                             serverHandler,
-                            _certificate
+                            certificate: _certificate
                         )
                 ).StartServer(_settings.BindAddress, _settings.Port);
             }

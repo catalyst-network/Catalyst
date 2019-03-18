@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using DotNetty.Codecs;
 using DotNetty.Common.Utilities;
@@ -29,37 +30,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     public sealed class InboundChannelInitializer<T> : AbstractChannelInitializer<T> where T : IChannel
     {
-        
-        /// <summary>
-        ///     Generic inbound channel initializer for tls sockets
-        /// </summary>
-        /// <param name="initializationAction"></param>
-        /// <param name="encoder"></param>
-        /// <param name="decoder"></param>
-        /// <param name="channelHandler"></param>
-        /// <param name="certificate"></param>
-        public InboundChannelInitializer(
-            Action<T> initializationAction,
-            IChannelHandler encoder,
-            IChannelHandler decoder,
-            IChannelHandler channelHandler,
-            X509Certificate certificate
-        ) : base(initializationAction, encoder, decoder, channelHandler, certificate: certificate) { }
-        
-        /// <summary>
-        ///     Generic inbound channel initializer for sockets
-        /// </summary>
-        /// <param name="initializationAction"></param>
-        /// <param name="encoder"></param>
-        /// <param name="decoder"></param>
-        /// <param name="channelHandler"></param>
-        public InboundChannelInitializer(
-            Action<T> initializationAction,
-            IChannelHandler encoder,
-            IChannelHandler decoder,
-            IChannelHandler channelHandler
-        ) : base(initializationAction, encoder, decoder, channelHandler) { }
-
+        /// <inheritdoc />
+        public InboundChannelInitializer(Action<T> initializationAction, IChannelHandler encoder, IChannelHandler decoder, IChannelHandler channelHandler, IPAddress targetHost = default, X509Certificate certificate = null) 
+            : base(initializationAction, encoder, decoder, channelHandler, targetHost, certificate) { }
         protected override void InitChannel(T channel)
         {
             InitializationAction(channel);

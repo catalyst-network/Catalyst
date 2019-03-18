@@ -29,7 +29,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     {
         public IBootstrap Client { get; set; }
         
-        protected internal AbstractClient(ILogger logger) : base(logger) {}
+        protected AbstractClient(ILogger logger) : base(logger) {}
 
         public abstract ISocketClient Bootstrap(IChannelHandler channelInitializer);
 
