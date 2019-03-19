@@ -156,7 +156,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
             var overridingTransaction = _transaction.Clone();
             overridingTransaction.STEntries.Single().Amount = 100;
-            _memPool.SaveTx(overridingTransaction);
+            _memPool.SaveTransaction(overridingTransaction);
 
             var retrievedTransaction = _memPool.GetTransaction(transaction.Signature);
             retrievedTransaction.STEntries.Single().Amount.Should().Be(123); // assert tx with same key not updated
@@ -195,7 +195,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
         [Fact]
         public void SaveNullTx()
         {
-            new Action(() => _memPool.SaveTx(null))
+            new Action(() => _memPool.SaveTransaction(null))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null"); // transaction is null so do not insert
         }

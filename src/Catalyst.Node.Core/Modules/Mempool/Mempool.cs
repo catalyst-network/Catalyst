@@ -52,12 +52,6 @@ namespace Catalyst.Node.Core.Modules.Mempool
             return memPoolContent;
         }
 
-        public bool SaveTransaction(Transaction transaction)
-        {
-            Guard.Argument(transaction, nameof(transaction)).NotNull();
-            return SaveTransaction(transaction);
-        }
-
         /// <inheritdoc />
         public Transaction GetTransaction(TransactionSignature key)
         {
@@ -67,7 +61,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
         }
 
         /// <inheritdoc />
-        public bool SaveTx(Transaction keyedTransaction)
+        public bool SaveTransaction(Transaction keyedTransaction)
         {
             Guard.Argument(keyedTransaction, nameof(keyedTransaction)).NotNull();
             try
