@@ -201,8 +201,26 @@ namespace Catalyst.Cli
         /// <returns></returns>
         private bool OnConnectNode(string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
-            throw new NotImplementedException();
+            //Guard.Argument(args).Contains(typeof(string));
+            //throw new NotImplementedException();
+            
+            Console.WriteLine("Connecting node(s) ...");
+            
+            //Get the node entered by the user from the nodes list
+            RpcNode nodeConnected = _rpcNodes.nodesList.Find(node => node.NodeId.Equals((args[2])));
+
+            try
+            {
+                Console.WriteLine("Connecting to {0} @ {1}:{2}", nodeConnected.NodeId, nodeConnected.HostAddress.ToString(), nodeConnected.Port.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+            
+            return true;
         }
 
         /// <summary>

@@ -66,6 +66,7 @@ namespace Catalyst.Cli
                 var shellFilePath = Path.Combine(targetConfigFolder, Constants.ShellConfig);
                 var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
                 var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile);
+                var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
 
                 if (!File.Exists(shellFilePath))
                 {
@@ -81,6 +82,7 @@ namespace Catalyst.Cli
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellConfig))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile))
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
                    .Build();
             
                 var serviceCollection = new ServiceCollection();

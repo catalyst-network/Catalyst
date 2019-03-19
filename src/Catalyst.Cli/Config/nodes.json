@@ -1,0 +1,20 @@
+{
+  "CatalystCliRpcNodes": {
+    "nodes": [
+      {
+        "nodeId": "node1",
+        "host": "127.0.0.1",
+        "port": 42096,
+        "PfxFileName": "test.pfx",
+        "SslCertPassword": "test"
+       },
+      {
+        "nodeId": "node2",
+        "host": "127.0.0.2",
+        "port": 42096,
+        "PfxFileName": "test.pfx",
+        "SslCertPassword": "test"
+      }
+    ]
+  }
+}
