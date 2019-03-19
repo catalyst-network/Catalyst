@@ -59,8 +59,6 @@ namespace Catalyst.Cli
         {
             _logger = logger;
             _certificateStore = certificateStore;
-
-            Task.WaitAll(RunClientAsync());
         }
         
         public async Task RunClientAsync()
