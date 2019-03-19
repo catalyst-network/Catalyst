@@ -6,4 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+  </ItemGroup>
 </Project>
