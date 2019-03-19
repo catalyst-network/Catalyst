@@ -1,27 +1,21 @@
-using System;
 using System.IO;
 using System.Net.Sockets;
+using Autofac;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Core.UnitTest.TestUtils;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
-
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-using Catalyst.Node.Core.UnitTest.TestUtils;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Interfaces;
-
-using Autofac;
-
-using Serilog;
-
-namespace Catalyst.Node.Core.UnitTests.RPC
+namespace Catalyst.Node.Core.UnitTest.RPC
 {
     public class ServerUp : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
 
-        private ICLIRPCServer _rpcServer;
+        private IRpcServer _rpcServer;
 
         public ServerUp(ITestOutputHelper output) : base(output)
         {
@@ -44,7 +38,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
 
-                var cliRPCServer = container.Resolve<ICLIRPCServer>();
+                var cliRPCServer = container.Resolve<IRpcServer>();
                 _rpcServer = cliRPCServer;
             }
         }

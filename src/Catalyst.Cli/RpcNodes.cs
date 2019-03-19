@@ -15,16 +15,29 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
-using System.Threading;
-using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces;
+using Microsoft.Extensions.Configuration;
+using System.Net;
+using Dawn;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Cli
 {
-    public interface ICLIRPCServer
+
+    /// <summary>
+    /// This class provides the settings for the CLI.
+    /// </summary>
+    public class RpcNodes : IRpcNodes
     {
-        Task RunServerAsync();
-        ICLIRPCServerSettings Settings { get; }
+        /// <summary>
+        /// Intializes a new instance of the ClientSettings class and passes the application configuration
+        /// </summary>
+        /// <param name="rootSection"></param>
+        public RpcNodes(IConfigurationRoot rootSection)
+        {
+            IConfigurationRoot RootSection = rootSection;
+            
+        }
     }
 }

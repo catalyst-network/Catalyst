@@ -101,6 +101,8 @@ namespace Catalyst.Cli
             
                 containerBuilder.RegisterLogger();
 
+                containerBuilder.RegisterInstance(config);
+
                 var container = containerBuilder.Build();
                 
                 Console.SetIn(

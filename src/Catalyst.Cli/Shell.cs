@@ -18,13 +18,12 @@
 */
 
 using System;
-using System.Reflection;
-using System.Text.RegularExpressions;
+using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
-using Serilog;
 using Dawn;
+using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Common.Helpers.Shell
+namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds
     {
@@ -32,7 +31,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
         /// <summary>
         /// </summary>
-        public Shell(IRpcClient rpcClient)
+        public Shell(IRpcClient rpcClient, IConfigurationRoot configurationRoot)
         {
             rpcClient = _rpcClient;
             Console.WriteLine(@"Koopa Shell Start");

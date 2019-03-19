@@ -1,12 +1,13 @@
+using Microsoft.Extensions.Configuration;
+using DotNetty.Common.Internal.Logging;
+using Microsoft.Extensions.Logging;
+using System.Runtime;
+using System.IO;
+using System.Text.RegularExpressions;
+// using Microsoft.Extensions.Logging.Console;
+
 namespace Catalyst.Node.Core.RPC
 {
-    using Microsoft.Extensions.Configuration;
-    using DotNetty.Common.Internal.Logging;
-    using Microsoft.Extensions.Logging;
-    using System.Runtime;
-    using System.IO;
-    using System.Text.RegularExpressions;
-    using Microsoft.Extensions.Logging.Console;
 
     public static class Helper
     {
@@ -33,7 +34,7 @@ namespace Catalyst.Node.Core.RPC
 
         public static IConfigurationRoot Configuration { get; }
 
-        public static void SetConsoleLogger() => InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
+        // public static void SetConsoleLogger() => InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
 
         public static string GetApplicationRoot()
         {
