@@ -1,0 +1,5 @@
+@startuml
+class Signature {
+    + Signature(bytes:byte[])
+}
+@enduml

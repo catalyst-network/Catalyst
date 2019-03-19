@@ -15,6 +15,13 @@
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
     <PackageReference Include="Catalyst.Protocol" Version="0.0.1.381-beta" />
     <PackageReference Include="DnsClient" Version="1.2.0" />
+<<<<<<< HEAD
+=======
+    <PackageReference Include="DotNetty.Codecs" Version="0.6.0" />
+    <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
+    <PackageReference Include="DotNetty.Common" Version="0.6.0" />
+    <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
+>>>>>>> origin/develop
     <PackageReference Include="Ipfs.Api" Version="0.23.6" />
     <PackageReference Include="Ipfs.Core" Version="0.40.0" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />

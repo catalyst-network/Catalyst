@@ -1,0 +1,8 @@
+@startuml
+class Dfs {
+    + <<async>> StartAsync(cancellationToken:CancellationToken) : Task
+    + <<async>> AddFileAsync(filename:string, cancellationToken:CancellationToken) : Task<string>
+    + <<async>> ReadAllTextAsync(filename:string, cancellationToken:CancellationToken) : Task<string>
+}
+IDfs <|-- Dfs
+@enduml

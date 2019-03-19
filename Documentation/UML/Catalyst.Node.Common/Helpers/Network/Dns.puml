@@ -1,0 +1,14 @@
+@startuml
+class InjectableLookupClient {
+    + InjectableLookupClient(ipAddress:string, port:int)
+}
+class Dns <<sealed>> {
+    + Dns(client:ILookupClient)
+    + <<async>> GetTxtRecords(hostnames:IList<string>) : Task<IList<IDnsQueryResponse>>
+    + <<async>> GetTxtRecords(hostname:string) : Task<IDnsQueryResponse>
+    - <<async>> Query(hostname:string, type:QueryType) : Task<IDnsQueryResponse>
+}
+LookupClient <|-- InjectableLookupClient
+IDns <|-- Dns
+Dns --> "_client" ILookupClient
+@enduml

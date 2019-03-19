@@ -1,0 +1,12 @@
+@startuml
+class MempoolIntegrationTests {
+    + MempoolIntegrationTests(output:ITestOutputHelper)
+    - <<async>> Mempool_can_save_and_retrieve(mempoolModuleFile:FileInfo) : Task
+    - GetStTxModel(amount:uint, signature:string) : StTxModel
+    - <<async>> CreateAlteredConfigForMempool(mempoolConfigFile:FileInfo) : Task<string>
+    - <<async>> PointXmlConfigToLocalTestFolder(mempoolConfigFile:string) : Task<string>
+    + <<async>> Mempool_with_InMemoryRepo_can_save_and_retrieve() : Task
+    + <<async>> Mempool_with_XmlRepo_can_save_and_retrieve() : Task
+}
+ConfigFileBasedTest <|-- MempoolIntegrationTests
+@enduml
