@@ -1,0 +1,9 @@
+@startuml
+abstract class AbstractClient {
+    # <<internal>> AbstractClient(logger:ILogger)
+    + <<async>> ConnectClient(listenAddress:IPAddress, port:int) : Task<ISocketClient>
+}
+AbstractIo <|-- AbstractClient
+ISocketClient <|-- AbstractClient
+AbstractClient --> "Client" IBootstrap
+@enduml

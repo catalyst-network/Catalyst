@@ -1,0 +1,18 @@
+@startuml
+interface IServerBootstrp {
+    BindAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
+}
+interface IBootstrap {
+    ConnectAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
+}
+class ServerBootstrap {
+    + <<new>> BindAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
+}
+class Bootstrap {
+    + <<new>> BindAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
+    + <<new>> ConnectAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
+}
+IServerBootstrp <|-- IBootstrap
+IServerBootstrp <|-- ServerBootstrap
+IBootstrap <|-- Bootstrap
+@enduml

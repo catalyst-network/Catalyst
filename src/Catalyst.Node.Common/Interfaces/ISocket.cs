@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright(c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
@@ -18,24 +18,11 @@
 */
 
 using System.Threading.Tasks;
-using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IP2PMessaging
+    public interface ISocket
     {
-        /// <summary>
-        /// Identifier of the Peer behind the instance of the IP2PMessaging service
-        /// </summary>
-        IPeerIdentifier Identifier { get; }
-
-        /// <summary>
-        /// Ping the peer identified by <see cref="targetNode" /> to check its status on the network.
-        /// </summary>
-        /// <param name="targetNode">Identifier of the node supposed to reply to the ping request.</param>
-        /// <returns>true if the target replied successfully</returns>
-        Task<bool> PingAsync(IPeerIdentifier targetNode);
-
-        Task BroadcastMessageAsync(Any tx);
+        Task Shutdown();
     }
 }

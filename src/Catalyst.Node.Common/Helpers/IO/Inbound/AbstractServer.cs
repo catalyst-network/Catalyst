@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright(c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
@@ -17,25 +17,22 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System.Net;
 using System.Threading.Tasks;
-using Google.Protobuf.WellKnownTypes;
+using Catalyst.Node.Common.Interfaces;
+using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public interface IP2PMessaging
+    public abstract class AbstractServer : AbstractIo, ISocketServer
     {
-        /// <summary>
-        /// Identifier of the Peer behind the instance of the IP2PMessaging service
-        /// </summary>
-        IPeerIdentifier Identifier { get; }
+        public IServerBootstrap Server { get; set; }
+        
+        protected AbstractServer(ILogger logger) : base(logger) {}
+        
+        public abstract ISocketServer Bootstrap(IChannelHandler channelInitializer);
 
-        /// <summary>
-        /// Ping the peer identified by <see cref="targetNode" /> to check its status on the network.
-        /// </summary>
-        /// <param name="targetNode">Identifier of the node supposed to reply to the ping request.</param>
-        /// <returns>true if the target replied successfully</returns>
-        Task<bool> PingAsync(IPeerIdentifier targetNode);
-
-        Task BroadcastMessageAsync(Any tx);
+        public abstract Task<ISocketServer> StartServer(IPAddress listenAddress, int port);
     }
 }
