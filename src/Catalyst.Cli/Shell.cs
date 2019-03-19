@@ -27,12 +27,14 @@ namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds
     {
+        private readonly IRpcNodes _rpcNodes;
         private readonly IRpcClient _rpcClient;
 
         /// <summary>
         /// </summary>
-        public Shell(IRpcClient rpcClient, IConfigurationRoot configurationRoot)
+        public Shell(IRpcClient rpcClient, IRpcNodes rpcNodes)
         {
+            _rpcNodes = rpcNodes;
             rpcClient = _rpcClient;
             Console.WriteLine(@"Koopa Shell Start");
         }
