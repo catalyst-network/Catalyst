@@ -1,37 +1,12 @@
 {
-  "defaultAssembly": "Catalyst.Cli",
-  "components": [
-    {
-      "type": "Catalyst.Node.Common.Helpers.Shell.Shell, Catalyst.Node.Common",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.Interfaces.IAds, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Cli.RPCClient",
-      "services": [
-        {
-          "type": "Catalyst.Cli.IRPCClient, Catalyst.Cli"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Cli.ClientSettings",
-      "services": [
-        {
-          "type": "Catalyst.Cli.ICLIRPClientSettings, Catalyst.Cli"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
-        }
-      ]
-    }
-  ]
+  "CatalystCliConfiguration": {
+    "node": [
+      {
+        "host": "127.0.0.1",
+        "port": 42096,
+        "PfxFileName": "test.pfx",
+        "SslCertPassword": "test"
+      }
+    ]
+  }
 }

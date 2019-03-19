@@ -3,7 +3,7 @@ namespace Catalyst.Cli
     using System;
     using DotNetty.Transport.Channels;
 
-    public class RPClientHandler : SimpleChannelInboundHandler<string>
+    public class RpClientHandler : SimpleChannelInboundHandler<string>
     {
         protected override void ChannelRead0(IChannelHandlerContext contex, string msg)
         {

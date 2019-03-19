@@ -29,7 +29,7 @@ using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Interfaces;
- using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
