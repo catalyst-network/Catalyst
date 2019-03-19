@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 
 using DotNetty.Codecs;
+using DotNetty.Handlers.Logging;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
@@ -45,7 +46,8 @@ namespace Catalyst.Cli
         
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
-        
+        private MultithreadEventLoopGroup _clientEventLoopGroup;
+
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
         /// 1- Get the settings from the config file
@@ -63,8 +65,32 @@ namespace Catalyst.Cli
         
         public async Task RunClientAsync()
         {
-            //Create the event loop group
-            _logger.Information("I should extend Catalyst.Common.Helpers.IO.Outbound.TcpClient");
+            _logger.Information("Rpc client starting");
+            _clientEventLoopGroup = new MultithreadEventLoopGroup();
+ 
+            // var bootstrap = new Bootstrap();
+            // bootstrap
+            //    .Group(_clientEventLoopGroup)
+            //    .Channel<TcpSocketChannel>()
+            //    .Option(ChannelOption.TcpNodelay, true)
+            //    .Handler(new LoggingHandler(LogLevel.INFO))
+            //    .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
+            //     {
+            //         var pipeline = channel.Pipeline;
+            //
+            //         if (_certificate != null)
+            //         {
+            //             pipeline.AddLast(
+            //                 new TlsHandler(stream => 
+            //                         new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
+            //                     new ClientTlsSettings(_settings.EndPoint.ToString())));
+            //         }
+            //         pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
+            //         pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
+            //         pipeline.AddLast(new StringEncoder(), new StringDecoder(), new SecureTcpMessageClientHandler());
+            //     }));
+            //
+            // _clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(_settings.BindAddress, _settings.Port));
         }
         
         /*Implementing IDisposable */
