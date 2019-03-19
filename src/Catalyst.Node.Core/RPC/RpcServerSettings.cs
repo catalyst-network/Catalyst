@@ -27,14 +27,14 @@ namespace Catalyst.Node.Core.RPC
     /// <summary>
     /// This class provides the settings for the CLIRPCServer class.
     /// </summary>
-    public class CLIRPCServerSettings : ICLIRPCServerSettings
+    public class RpcServerSettings : IRpcServerSettings
     {
         /// <summary>
         /// Intializes a new instance of the CLIRPCServerSettings by reading the settings from the devnet.json
         /// application configuration and sets the settings properties.
         /// </summary>
         /// <param name="rootSection"></param>
-        public CLIRPCServerSettings(IConfigurationRoot rootSection)
+        public RpcServerSettings(IConfigurationRoot rootSection)
         {
             //Get the configuration
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();

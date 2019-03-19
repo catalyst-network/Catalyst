@@ -18,18 +18,18 @@
       ]
     },
     {
-      "type": "Catalyst.Node.Core.RPC.CLIRPCServer",
+      "type": "Catalyst.Node.Core.RPC.RpcServer",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Interfaces.ICLIRPCServer, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.IRpcServer, Catalyst.Node.Common"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Core.RPC.CLIRPCServerSettings",
+      "type": "Catalyst.Node.Core.RPC.RpcServerSettings",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Interfaces.ICLIRPCServerSettings, Catalyst.Node.Common"
+          "type": "Catalyst.Node.Common.Interfaces.IRpcServerSettings, Catalyst.Node.Common"
         }
       ]
     },

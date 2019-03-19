@@ -21,7 +21,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
     {
         private readonly IConfigurationRoot _config;
 
-        private ICLIRPCServer _rpcServer;
+        private IClirpcServer _rpcServer;
 
         public ServerUp(ITestOutputHelper output) : base(output)
         {
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
 
-                var cliRPCServer = container.Resolve<ICLIRPCServer>();
+                var cliRPCServer = container.Resolve<IClirpcServer>();
                 _rpcServer = cliRPCServer;
             }
         }

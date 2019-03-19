@@ -5,7 +5,7 @@ namespace Catalyst.Node.Core.RPC
     using System.Threading.Tasks;
     using DotNetty.Transport.Channels;
 
-    public class CLIRPCServerHandler : SimpleChannelInboundHandler<object>
+    public class RpcServerHandler : SimpleChannelInboundHandler<object>
     {
         public override void ChannelActive(IChannelHandlerContext contex)
         {

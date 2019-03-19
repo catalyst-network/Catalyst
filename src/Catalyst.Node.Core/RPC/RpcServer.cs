@@ -35,7 +35,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.RPC
 {
-    public class CLIRPCServer : ICLIRPCServer, IDisposable
+    public class RpcServer : IRpcServer, IDisposable
     {
         private static string CatalystSubfolder => ".Catalyst";
 
@@ -43,7 +43,7 @@ namespace Catalyst.Node.Core.RPC
 
         private readonly X509Certificate2 _certificate;
 
-        private readonly ICLIRPCServerSettings _settings;
+        private readonly IRpcServerSettings _settings;
 
         private IChannel _serverChannel;
 
@@ -51,12 +51,12 @@ namespace Catalyst.Node.Core.RPC
 
         private MultithreadEventLoopGroup _workerGroup;
 
-        public ICLIRPCServerSettings Settings
+        public IRpcServerSettings Settings
         {
             get { return _settings; }
         }
 
-        public CLIRPCServer(ICLIRPCServerSettings settings, ILogger logger, ICertificateStore certificateStore)
+        public RpcServer(IRpcServerSettings settings, ILogger logger, ICertificateStore certificateStore)
         {
             _logger = logger;
             _settings = settings;
@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.RPC
             var STRING_DECODER = new StringDecoder();
 
             //Create an instance of the Server Handler class
-            var SERVER_HANDLER = new CLIRPCServerHandler();
+            var SERVER_HANDLER = new RpcServerHandler();
 
             try
             {
