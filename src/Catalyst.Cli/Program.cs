@@ -118,7 +118,6 @@ namespace Catalyst.Cli
                 {
                     var shell = container.Resolve<ICatalystCli>();
                     shell.Ads.RunConsole();
-
                 }
                 
                 Environment.ExitCode = 0;
