@@ -7,8 +7,8 @@ namespace Catalyst.Node.Common.Interfaces
     {
         int Port { get; }
         IPAddress BindAddress { get; }
-        string CertFileName { get; }
-        string SslCertPassword { get; }
-        bool isSSL { get; }
+        bool MutualAuthentication { get; }
+        bool AcceptInvalidCerts { get; }
+        string PfxFileName { get; set; }
     }
 }

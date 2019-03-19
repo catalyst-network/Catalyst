@@ -18,10 +18,12 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
-
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
 using DotNetty.Handlers.Tls;
@@ -30,115 +32,74 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 
 using Catalyst.Node.Common.Interfaces;
-
+using Catalyst.Node.Core.P2P.Messaging;
+using DotNetty.Codecs.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core.RPC
 {
     public class RpcServer : IRpcServer, IDisposable
     {
-        private static string CatalystSubfolder => ".Catalyst";
-
         private readonly ILogger _logger;
-
+        private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-
         private readonly IRpcServerSettings _settings;
-
-        private IChannel _serverChannel;
-
-        private MultithreadEventLoopGroup _bossGroup;
-
-        private MultithreadEventLoopGroup _workerGroup;
-
-        public IRpcServerSettings Settings
-        {
-            get { return _settings; }
-        }
+        private ISocketServer _rpcSocketServer;
+        public IRpcServerSettings Settings { get; set; }
 
         public RpcServer(IRpcServerSettings settings, ILogger logger, ICertificateStore certificateStore)
         {
             _logger = logger;
             _settings = settings;
-
-            var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
-
-            if(_settings.isSSL)
-            {
-                _certificate = certificateStore.ReadOrCreateCertificateFile(settings.CertFileName, settings.SslCertPassword);
-            }
-
-            Task.WaitAll(RunServerAsync());
+            _cancellationSource = new CancellationTokenSource();
+            _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task RunServerAsync()
         {
-            _logger.Information("CLI Server Started ...");
+            _logger.Information("Rpc Server Starting!");
 
-            //Helper.SetConsoleLogger();
-
-            //Created a multithreaded event loop to handle I/O operation. 
-            //To implement a server-side application two EventLoopGroup are needed. 
-            //First EventLoopGroup,'boss', accepts an incoming connection.
-            _bossGroup = new MultithreadEventLoopGroup();
-            //second EventLoopGroup, 'worker', handles the traffic of the accepted connection once the boss accepts the connection and registers the accepted connection to the worker. 
-            _workerGroup = new MultithreadEventLoopGroup();
-
-
-            //Create a string encoder instance
-            var STRING_ENCODER = new StringEncoder();
-
-            //Create a string decoder instance
-            var STRING_DECODER = new StringDecoder();
-
-            //Create an instance of the Server Handler class
-            var SERVER_HANDLER = new RpcServerHandler();
+            var handlers = new List<IChannelHandler>
+            {
+                new ProtobufVarint32FrameDecoder(),
+                new ProtobufDecoder(Any.Parser),
+                new ProtobufVarint32LengthFieldPrepender(),
+                new ProtobufEncoder(),
+                new AnyTypeServerHandler()
+            };
 
             try
             {
-                //Create an instance of the ServerBootStrap which sets up a server
-                var bootstrap = new ServerBootstrap();
-                bootstrap
-                    .Group(_bossGroup, _workerGroup)
-                    .Channel<TcpServerSocketChannel>()
-                    .Option(ChannelOption.SoBacklog, 100)
-                    .Handler(new LoggingHandler(LogLevel.INFO))
-                    .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
-                    {
-                        IChannelPipeline pipeline = channel.Pipeline;
-                        if (_certificate != null)
-                        {
-                            pipeline.AddLast(TlsHandler.Server(_certificate));
-                        }
-
-                        pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-                        pipeline.AddLast(STRING_ENCODER, STRING_DECODER, SERVER_HANDLER);
-                    }));
-
-                _serverChannel = await bootstrap.BindAsync(_settings.Port);
+                _rpcSocketServer = await new TcpServer(_logger)
+                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(
+                        channel => { },
+                        handlers,
+                        certificate: _certificate)
+                    ).StartServer(_settings.BindAddress, _settings.Port);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                _logger.Information(e.InnerException.Message);
+                _logger.Error(e, e.Message);
+                Dispose();
             }
         }
 
-        /*Implementing IDisposable */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _logger.Information("CLI RPC service is closing");
-
-                try
-                {
-                   _serverChannel.CloseAsync(); 
-                }
-                finally
-                {
-                    Task.WaitAll(_bossGroup.ShutdownGracefullyAsync(), _workerGroup.ShutdownGracefullyAsync());
-                }
+                _rpcSocketServer?.Shutdown();
+                _cancellationSource?.Dispose();
+                _certificate?.Dispose(); 
             }
         }
 
@@ -146,6 +107,5 @@ namespace Catalyst.Node.Core.RPC
         {
             Dispose(true);
         }
-        /****************************/
     }
 }
