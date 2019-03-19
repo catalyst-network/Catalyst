@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Linq;
 using System.Security;
 using Catalyst.Node.Common.Interfaces;
 
@@ -28,37 +29,71 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         //@TODO we have some duplication here between shell base
         public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
         {
-            Console.WriteLine(passwordContext);
             var pwd = new SecureString();
+            ReadCharsFromConsole(passwordContext, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
+
+            pwd.MakeReadOnly();
+            return pwd;
+        }
+
+        public char[] ReadSecurePasswordAsChars(string passwordContext = "Please enter your password")
+        {
+            var maxLength = 255;
+            var buffer = new char[maxLength];
+            var length = ReadCharsFromConsole(passwordContext, 
+                (c, i) => buffer[i] = c, 
+                i => { buffer[i] = default; },
+                maxLength);
+            var password = buffer.Take(length).ToArray();
+
+            for (var i = 0; i < buffer.Length; i++) { buffer[i] = default; }
+
+            return password;
+        }
+
+        private static int ReadCharsFromConsole(string passwordContext,
+            Action<char, int> appendChar, 
+            Action<int> removeChar,
+            int maxLength = int.MaxValue)
+        {
+            Console.WriteLine(passwordContext);
             var waitForInput = true;
+            var inputLength = 0;
             while (waitForInput)
             {
                 var keyInfo = Console.ReadKey(true);
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.Enter:
-                        Console.WriteLine("");
+                        Console.WriteLine(string.Empty);
                         waitForInput = false;
                         break;
 
                     case ConsoleKey.Backspace:
-                        if (pwd.Length == 0)
+                        if (inputLength == 0)
                         {
                             continue;
                         }
-                        pwd.RemoveAt(pwd.Length - 1);
+
+                        removeChar(inputLength - 1);
+                        inputLength--;
                         Console.Write("\b \b");
                         break;
 
                     default:
-                        pwd.AppendChar(keyInfo.KeyChar);
+                        appendChar(keyInfo.KeyChar, inputLength);
+                        inputLength++;
                         Console.Write(@"*");
+                        if (inputLength == maxLength)
+                        {
+                            Console.WriteLine(@"Max password length reached ({0})", maxLength);
+                            waitForInput = false;
+                        }
                         break;
                 }
             }
 
-            pwd.MakeReadOnly();
-            return pwd;
+            return inputLength;
         }
     }
 }

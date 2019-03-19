@@ -5,6 +5,8 @@
   </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
+    <PackageReference Include="Ipfs.Api" Version="0.23.6" />
+    <PackageReference Include="Ipfs.Engine" Version="0.3.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
     <PackageReference Include="Dawn.Guard" Version="1.8.0" />
     <PackageReference Include="Catalyst.Protocol" Version="0.0.1.1912-beta" />
@@ -197,7 +199,6 @@
     <Folder Include="Helpers\RLP\" />
     <Folder Include="Interfaces\Modules\Consensus" />
     <Folder Include="Interfaces\Modules\Contract" />
-    <Folder Include="Interfaces\Modules\Dfs" />
     <Folder Include="Interfaces\Modules\KeySigner" />
     <Folder Include="Interfaces\Modules\Ledger" />
   </ItemGroup>
