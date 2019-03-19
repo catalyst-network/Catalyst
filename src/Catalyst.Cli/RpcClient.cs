@@ -21,6 +21,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Security;
+using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Shell;
@@ -100,11 +101,11 @@ namespace Catalyst.Cli
         {
             _logger.Information("Rpc client starting");
             _clientEventLoopGroup = new MultithreadEventLoopGroup();
-            
-            X509Certificate2 _certificate = _certificateStore.ReadOrCreateCertificateFile(node.PfxFileName);
 
             try
             {
+                X509Certificate2 _certificate = _certificateStore.ReadOrCreateCertificateFile(node.PfxFileName);
+
                 var bootstrap = new Bootstrap();
                 bootstrap
                    .Group(_clientEventLoopGroup)
@@ -114,20 +115,25 @@ namespace Catalyst.Cli
                    .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
                     {
                         var pipeline = channel.Pipeline;
-            
+
                         if (_certificate != null)
                         {
                             pipeline.AddLast(
-                                new TlsHandler(stream => 
-                                        new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
+                                new TlsHandler(stream =>
+                                        new SslStream(stream, true, (sender, certificate, chain, errors) => true),
                                     new ClientTlsSettings(node.HostAddress.ToString())));
                         }
+
                         pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
                         pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
                         pipeline.AddLast(new StringEncoder(), new StringDecoder(), new RpClientHandler());
                     }));
-            
+
                 IChannel clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(node.HostAddress, node.Port));
+            }
+            catch (ConnectException connectException)
+            {
+                Console.WriteLine("Catalyst Node @ {0}:{1} refused connection", node.HostAddress, node.Port);
             }
             catch (Exception e)
             {

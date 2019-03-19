@@ -21,6 +21,7 @@
 using System.IO;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
+ using Catalyst.Node.Common.Interfaces;
  using Catalyst.Node.Common.Interfaces.Modules.Consensus;
  using Catalyst.Node.Common.Interfaces.Modules.Contract;
  using Catalyst.Node.Common.Interfaces.Modules.Dfs;
@@ -48,12 +49,13 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         private static void PerformExtraRegistrations(ContainerBuilder builder)
         {
             builder.RegisterInstance(Substitute.For<ILogger>()).As<ILogger>();
+            builder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
         }
 
         [Theory]
         [InlineData(typeof(IConsensus), typeof(Consensus))]
         [InlineData(typeof(IContract), typeof(Contract))]
-        [InlineData(typeof(IDfs), typeof(Dfs))]
+        [InlineData(typeof(IDfs), typeof(IpfsDfs))]
         [InlineData(typeof(ILedger), typeof(Ledger))]
         [InlineData(typeof(IMempool), typeof(Core.Modules.Mempool.Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
