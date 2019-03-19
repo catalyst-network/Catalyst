@@ -28,11 +28,13 @@ namespace Catalyst.Node.Common.Helpers.Shell
 {
     public sealed class Shell : ShellBase, IAds
     {
+        private readonly IRpcClient _rpcClient;
 
         /// <summary>
         /// </summary>
-        public Shell()
+        public Shell(IRpcClient rpcClient)
         {
+            rpcClient = _rpcClient;
             Console.WriteLine(@"Koopa Shell Start");
         }
 
