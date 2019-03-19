@@ -82,31 +82,6 @@
       ]
     },
     {
-      "type": "Catalyst.Node.Core.Modules.Dfs.InjectablePassphraseStringIpfsEngine, Catalyst.Node.Core",
-      "services": [
-        {
-          "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"
-        }
-      ],
-      "parameters": {
-        "passphrase": "password"
-      }
-    },
-    {
-      "type": "Catalyst.Node.Core.Modules.Dfs.InjectablePassphraseStringIpfsEngine, Catalyst.Node.Core",
-      "services": [
-        {
-          "type": "PeerTalk.IService, PeerTalk"
-        },
-        {
-          "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"
-        }
-      ],
-      "parameters": {
-        "passphrase": "DhndFDsgibdfgSDGiusdgbhgvsdGdsibfsdSDGksdbgsd"
-      }
-    },
-    {
       "type": "Catalyst.Node.Common.Helpers.Network.InjectableLookupClient, Catalyst.Node.Common",
       "services": [
         {
