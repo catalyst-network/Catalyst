@@ -38,10 +38,12 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
 
         public char[] ReadSecurePasswordAsChars(string passwordContext = "Please enter your password")
         {
-            var buffer = new char[256];
+            var maxLength = 255;
+            var buffer = new char[maxLength];
             var length = ReadCharsFromConsole(passwordContext, 
                 (c, i) => buffer[i] = c, 
-                i => { buffer[i] = default; });
+                i => { buffer[i] = default; },
+                maxLength);
             var password = buffer.Take(length).ToArray();
 
             for (var i = 0; i < buffer.Length; i++) { buffer[i] = default; }
@@ -52,7 +54,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         private static int ReadCharsFromConsole(string passwordContext,
             Action<char, int> appendChar, 
             Action<int> removeChar,
-            int maxLength = 255)
+            int maxLength = int.MaxValue)
         {
             Console.WriteLine(passwordContext);
             var waitForInput = true;
@@ -82,6 +84,11 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                         appendChar(keyInfo.KeyChar, inputLength);
                         inputLength++;
                         Console.Write(@"*");
+                        if (inputLength == maxLength)
+                        {
+                            Console.WriteLine(@"Max password length reached ({0})", maxLength);
+                            waitForInput = false;
+                        }
                         break;
                 }
             }

@@ -1,4 +1,3 @@
-using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -76,7 +75,15 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public void Dispose()
         {
-            _ipfsDfs.Dispose();
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _ipfsDfs.Dispose();
+            }
         }
     }
 }
