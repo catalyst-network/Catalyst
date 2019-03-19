@@ -76,6 +76,8 @@ namespace Catalyst.Cli
                         shellComponentsFilePath);
                     File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.serilog.json"),
                         shellSeriLogFilePath);
+                    File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
+                        shellNodesFilePath);
                 }
                 
                 var config = new ConfigurationBuilder()

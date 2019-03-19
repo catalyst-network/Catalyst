@@ -41,6 +41,7 @@ namespace Catalyst.Cli
         public List<RpcNode> nodesList { get; }
         
         private readonly IConfigurationRoot _configurationRoot;
+        
         /// <summary>
         /// Intializes a new instance of the ClientSettings class and passes the application configuration
         /// </summary>

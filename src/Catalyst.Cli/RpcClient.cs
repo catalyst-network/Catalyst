@@ -23,7 +23,7 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-
+using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 
 using DotNetty.Codecs;
@@ -32,6 +32,8 @@ using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+
+using Microsoft.Extensions.Configuration;
 
 using Serilog;
 
@@ -46,6 +48,7 @@ namespace Catalyst.Cli
         
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
+        
         private MultithreadEventLoopGroup _clientEventLoopGroup;
 
         /// <summary>
@@ -91,6 +94,47 @@ namespace Catalyst.Cli
             //     }));
             //
             // _clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(_settings.BindAddress, _settings.Port));
+        }
+        
+        public async Task RunClientAsync(RpcNode node)
+        {
+            _logger.Information("Rpc client starting");
+            _clientEventLoopGroup = new MultithreadEventLoopGroup();
+            
+            X509Certificate2 _certificate = _certificateStore.ReadOrCreateCertificateFile(node.PfxFileName);
+
+            try
+            {
+                var bootstrap = new Bootstrap();
+                bootstrap
+                   .Group(_clientEventLoopGroup)
+                   .Channel<TcpSocketChannel>()
+                   .Option(ChannelOption.TcpNodelay, true)
+                   .Handler(new LoggingHandler(LogLevel.INFO))
+                   .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
+                    {
+                        var pipeline = channel.Pipeline;
+            
+                        if (_certificate != null)
+                        {
+                            pipeline.AddLast(
+                                new TlsHandler(stream => 
+                                        new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
+                                    new ClientTlsSettings(node.HostAddress.ToString())));
+                        }
+                        pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
+                        pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
+                        pipeline.AddLast(new StringEncoder(), new StringDecoder(), new RpClientHandler());
+                    }));
+            
+                IChannel clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(node.HostAddress, node.Port));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+                
         }
         
         /*Implementing IDisposable */
