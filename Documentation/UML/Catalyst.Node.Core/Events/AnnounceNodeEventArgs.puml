@@ -1,0 +1,7 @@
+@startuml
+class AnnounceNodeEventArgs {
+    + AnnounceNodeEventArgs(nodeIdentity:IPeerIdentifier)
+}
+EventArgs <|-- AnnounceNodeEventArgs
+AnnounceNodeEventArgs --> "NodeIdentity" IPeerIdentifier
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+class Mempool {
+    + Mempool(transactionStore:IRepository<StTxModel, Key>, logger:ILogger)
+    + GetMemPoolContent() : IDictionary<Key, StTx>
+    + SaveTx(key:Key, transaction:StTx) : bool
+    + GetTx(key:Key) : StTx
+    + SaveTx(keyedTransaction:StTxModel) : bool
+}
+class "IRepository`2"<T1,T2> {
+}
+IMempool <|-- Mempool
+Mempool --> "_logger" ILogger
+Mempool --> "_transactionStore<StTxModel,Key>" "IRepository`2"
+@enduml

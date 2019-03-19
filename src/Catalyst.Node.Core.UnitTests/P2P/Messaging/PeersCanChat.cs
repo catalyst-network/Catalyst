@@ -44,8 +44,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
                 var peers = peerSettings
                    .Select(s => new P2PMessaging(s, certificateStore, logger))
                    .ToList();
-
-                await peers[0].BroadcastMessageAsync(message: peers[1].Identifier.ToString());
+                await Task.Delay(1);
+                //await peers[0].BroadcastMessageAsync(message: peers[1].Identifier.ToString());
             }
         }
     }

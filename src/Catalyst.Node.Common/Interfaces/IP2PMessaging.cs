@@ -18,6 +18,7 @@
 */
 
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
@@ -35,6 +36,6 @@ namespace Catalyst.Node.Common.Interfaces
         /// <returns>true if the target replied successfully</returns>
         Task<bool> PingAsync(IPeerIdentifier targetNode);
 
-        Task BroadcastMessageAsync(string message);
+        Task BroadcastMessageAsync(Any tx);
     }
 }

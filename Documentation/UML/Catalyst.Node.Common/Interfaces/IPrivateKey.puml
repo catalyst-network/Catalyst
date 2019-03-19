@@ -1,0 +1,6 @@
+@startuml
+interface IPrivateKey {
+    GetNSecFormatPrivateKey() : Key
+}
+IPublicKey <|-- IPrivateKey
+@enduml

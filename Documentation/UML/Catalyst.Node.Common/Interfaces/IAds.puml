@@ -1,0 +1,9 @@
+@startuml
+interface IAds {
+    OnDfsCommand(args:string[]) : bool
+    OnPeerCommand(args:string[]) : bool
+    OnWalletCommand(args:string[]) : bool
+    OnConsensusCommand(args:string[]) : bool
+}
+IShell <|-- IAds
+@enduml

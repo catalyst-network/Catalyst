@@ -1,0 +1,7 @@
+@startuml
+interface IKeyValueStore {
+    Set(key:byte[], value:byte[], expiry:TimeSpan?) : bool
+    Get(key:byte[]) : byte[]
+    GetSnapshot() : IDictionary<byte[], byte[]>
+}
+@enduml

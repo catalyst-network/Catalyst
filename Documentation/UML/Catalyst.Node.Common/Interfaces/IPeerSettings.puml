@@ -1,0 +1,23 @@
+@startuml
+interface IPeerSettings {
+    PayoutAddress : string <<get>>
+    PublicKey : string <<get>>
+    Announce : bool <<get>>
+    MutualAuthentication : bool <<get>>
+    AcceptInvalidCerts : bool <<get>>
+    MaxConnections : ushort <<get>>
+    Port : int <<get>>
+    Magic : int <<get>>
+    PfxFileName : string <<get>>
+    AddressVersion : byte <<get>>
+    SslCertPassword : string <<get>>
+}
+class "List`1"<T> {
+}
+IPeerSettings --> "Network" Network
+IPeerSettings --> "AnnounceServer" IPEndPoint
+IPeerSettings --> "BindAddress" IPAddress
+IPeerSettings --> "EndPoint" IPEndPoint
+IPeerSettings --> "KnownNodes<string>" "List`1"
+IPeerSettings --> "SeedServers<string>" "List`1"
+@enduml

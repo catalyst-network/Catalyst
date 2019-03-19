@@ -1,0 +1,19 @@
+@startuml
+abstract class "AbstractChannelInitializer`1"<T> {
+    # <<internal>> AbstractChannelInitializer(initializationAction:Action<T>, encoder:IChannelHandler, decoder:IChannelHandler, channelHandler:IChannelHandler, certificate:X509Certificate)
+    # <<internal>> AbstractChannelInitializer(initializationAction:Action<T>, encoder:IChannelHandler, decoder:IChannelHandler, channelHandler:IChannelHandler)
+    # <<internal>> AbstractChannelInitializer(initializationAction:Action<T>, encoder:IChannelHandler, decoder:IChannelHandler, channelHandler:IChannelHandler, targetHost:IPAddress, certificate:X509Certificate)
+    # <<internal>> AbstractChannelInitializer(initializationAction:Action<T>, encoder:IChannelHandler, decoder:IChannelHandler, channelHandler:IChannelHandler, targetHost:IPAddress)
+}
+class "ChannelInitializer`1"<T> {
+}
+class "Action`1"<T> {
+}
+"ChannelInitializer`1" "<T>" <|-- "AbstractChannelInitializer`1"
+"AbstractChannelInitializer`1" --> "InitializationAction<T>" "Action`1"
+"AbstractChannelInitializer`1" --> "Certificate" X509Certificate
+"AbstractChannelInitializer`1" --> "Encoder" IChannelHandler
+"AbstractChannelInitializer`1" --> "Decoder" IChannelHandler
+"AbstractChannelInitializer`1" --> "ChannelHandler" IChannelHandler
+"AbstractChannelInitializer`1" --> "TargetHost" IPAddress
+@enduml
