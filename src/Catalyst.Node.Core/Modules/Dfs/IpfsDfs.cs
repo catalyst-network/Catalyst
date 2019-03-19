@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -73,7 +74,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         public Task StartAsync() { return _ipfsDfs.StartAsync(); }
         public Task StopAsync() { return _ipfsDfs.StopAsync(); }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             Dispose(true);
         }
