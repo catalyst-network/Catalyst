@@ -18,7 +18,7 @@
 */
 
 using System.Collections.Generic;
-using Catalyst.Protocols.Transaction;
+using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Node.Common.Interfaces.Modules.Mempool
 {
@@ -28,20 +28,20 @@ namespace Catalyst.Node.Common.Interfaces.Modules.Mempool
         ///     Gets a snapshot of the current mempool content.
         /// </summary>
         /// <returns></returns>
-        IDictionary<Key, StTx> GetMemPoolContent();
+        IEnumerable<Transaction> GetMemPoolContent();
 
         /// <summary>
         ///     Saves the transaction associated with a given key.
         /// </summary>
         /// <param name="key">Key under which the transaction is stored.</param>
         /// <param name="transaction"></param>
-        bool SaveTx(Key key, StTx transaction);
+        bool SaveTransaction(Transaction transaction);
 
         /// <summary>
         ///     Retrieves the transaction corresponding the a given key.
         /// </summary>
         /// <param name="key">Key under which the transaction is stored.</param>
         /// <returns>The transaction matching the <see cref="key" /> if any.</returns>
-        StTx GetTx(Key key);
+        Transaction GetTransaction(TransactionSignature key);
     }
 }

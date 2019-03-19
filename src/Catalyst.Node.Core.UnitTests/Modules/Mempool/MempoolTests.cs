@@ -19,11 +19,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Modules.Mempool;
-using Catalyst.Protocols.Transaction;
+using Catalyst.Node.Core.UnitTest.TestUtils;
+using Catalyst.Protocol.Transaction;
 using FluentAssertions;
+using NSec.Cryptography;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
@@ -36,39 +39,28 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
     {
         public MempoolTests()
         {
-            _keyValueStore = Substitute.For<IRepository<StTxModel, Key>>();
-            _logger = Substitute.For<ILogger>();
-            _memPool = new Core.Modules.Mempool.Mempool(_keyValueStore, _logger);
+            _transactionStore = Substitute.For<IRepository<Transaction, TransactionSignature>>();
+            var logger = Substitute.For<ILogger>();
+            _memPool = new Core.Modules.Mempool.Mempool(_transactionStore, logger);
 
-            _key = new Key {HashedSignature = "hashed_signature"};
-            _transaction = new StTx
-            {
-                Amount = 1,
-                Signature = "signature",
-                AddressDest = "address_dest",
-                AddressSource = "address_source",
-                Updated = new StTx.Types.Timestamp {Nanos = 100, Seconds = 30}
-            };
+            _transaction = TransactionHelper.GetTransaction();
         }
 
         private readonly Core.Modules.Mempool.Mempool _memPool;
 
-        private readonly IRepository<StTxModel, Key> _keyValueStore;
-        private readonly Key _key;
-        private readonly StTx _transaction;
-        private readonly ILogger _logger;
+        private readonly IRepository<Transaction, TransactionSignature> _transactionStore;
+        private readonly Transaction _transaction;
 
-        private static void AddKeyValueStoreEntryExpectation(Key key,
-            StTx tx,
-            IRepository<StTxModel, Key> keyValueStore)
+        private static void AddKeyValueStoreEntryExpectation(Transaction transaction,
+            IRepository<Transaction, TransactionSignature> store)
         {
-            var record = new StTxModel {Key = key.Clone(), Transaction = tx.Clone()};
-            keyValueStore.Get(Arg.Is<Key>(k => k.Equals(key)))
-               .Returns(record);
-            keyValueStore.TryGet(Arg.Is<Key>(k => k.Equals(key)), out Arg.Any<StTxModel>())
+            store.Get(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)))
+               .Returns(transaction);
+            store.TryGet(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)),
+                        out Arg.Any<Transaction>())     
                .Returns(ci =>
                 {
-                    ci[1] = record;
+                    ci[1] = transaction;
                     return true;
                 });
         }
@@ -76,69 +68,54 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
         private class ProducerConsumer
         {
             private static readonly object Locker = new object();
-            private readonly Key _key;
-            private readonly IRepository<StTxModel, Key> _keyValueStore;
+            private readonly IRepository<Transaction, TransactionSignature> _keyValueStore;
             private readonly IMempool _memPool;
             public int? FirstThreadId;
 
-            public ProducerConsumer(IMempool memPool, Key key, IRepository<StTxModel, Key> keyValueStore)
+            public ProducerConsumer(IMempool memPool, IRepository<Transaction, TransactionSignature> keyValueStore)
             {
                 _memPool = memPool;
-                _key = key;
                 _keyValueStore = keyValueStore;
             }
 
             public void Writer()
             {
-                StTx transaction;
+                Transaction transaction;
                 lock (Locker)
                 {
                     var id = Thread.CurrentThread.ManagedThreadId;
-                    transaction = new StTx {Amount = (uint) id};
+                    transaction = TransactionHelper.GetTransaction(standardAmount: (uint)id);
 
                     if (FirstThreadId == null)
                     {
                         FirstThreadId = id;
-                        AddKeyValueStoreEntryExpectation(_key, transaction, _keyValueStore);
+                        AddKeyValueStoreEntryExpectation(transaction, _keyValueStore);
                     }
 
                     Thread.Sleep(5); //milliseconds
                 }
 
-                // here there could be a context switch so second thread might call SaveTx failing the test
+                // here there could be a context switch so second thread might call SaveTransaction failing the test
                 // so a little sleep was needed in the locked section
-                _memPool.SaveTx(_key, transaction); // write same key but different tx amount, not under lock
+                _memPool.SaveTransaction(transaction); // write same key but different tx amount, not under lock
             }
         }
-
-        //        [TestMethod]//@TODO fix this
-        //        public void GetInfo()
-        //        {
-        //            Memp.SaveTx(_k,_t);
-        //            
-        //            var response = Memp.GetInfo();
-
-        //            Assert.IsNotNull(response);
-        //            Assert.IsTrue(response.Any());
-        //            Assert.AreEqual(response["tcp_port"], "6379");
-        //            Assert.IsTrue(int.Parse(response["used_memory"]) < 1000000);
-        //            Assert.AreEqual(response["db0"], "keys=1,expires=0,avg_ttl=0");            
-        //        }
 
         [Fact]
         public void Get_should_retrieve_a_saved_transaction()
         {
-            _memPool.SaveTx(_key, _transaction);
-            AddKeyValueStoreEntryExpectation(_key, _transaction, _keyValueStore);
+            _memPool.SaveTransaction(_transaction);
+            AddKeyValueStoreEntryExpectation(_transaction, _transactionStore);
 
-            var transactionFromMemPool = _memPool.GetTx(_key);
+            var transactionFromMemPool = _memPool.GetTransaction(_transaction.Signature);
 
-            transactionFromMemPool.Amount.Should().Be(_transaction.Amount);
+            transactionFromMemPool.STEntries.Single().Amount.Should().Be(_transaction.STEntries.Single().Amount);
+            transactionFromMemPool.CFEntries.Single().CommPedersenCommitmentitment.Should().BeEquivalentTo(_transaction.CFEntries.Single().CommPedersenCommitmentitment);
             transactionFromMemPool.Signature.Should().Be(_transaction.Signature);
-            transactionFromMemPool.AddressDest.Should().Be(_transaction.AddressDest);
-            transactionFromMemPool.AddressSource.Should().Be(_transaction.AddressSource);
-            transactionFromMemPool.Updated.Nanos.Should().Be(_transaction.Updated.Nanos);
-            transactionFromMemPool.Updated.Seconds.Should().Be(_transaction.Updated.Seconds);
+            transactionFromMemPool.Version.Should().Be(_transaction.Version);
+            transactionFromMemPool.LockTime.Should().Be(_transaction.LockTime);
+            transactionFromMemPool.TimeStamp.Should().Be(_transaction.TimeStamp);
+            transactionFromMemPool.TransactionFees.Should().Be(_transaction.TransactionFees);
         }
 
         [Fact]
@@ -147,43 +124,42 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             const int numTx = 10;
             for (var i = 0; i < numTx; i++)
             {
-                var key = new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"};
-                var transaction = new StTx {Amount = (uint) i};
-                _memPool.SaveTx(key, transaction);
-                AddKeyValueStoreEntryExpectation(key, transaction, _keyValueStore);
+                var transaction = TransactionHelper.GetTransaction(standardAmount: (uint) i, signature:$"key{i}");
+                _memPool.SaveTransaction(transaction);
+                AddKeyValueStoreEntryExpectation(transaction, _transactionStore);
             }
 
             for (var i = 0; i < numTx; i++)
             {
-                var key = new Key {HashedSignature = $"just_a_short_key_for_easy_search:{i}"};
-                var transaction = _memPool.GetTx(key);
-                transaction.Amount.Should().Be((uint) i);
+                var signature = TransactionHelper.GetTransactionSignature(signature: $"key{i}");
+                var transaction = _memPool.GetTransaction(signature);
+                transaction.STEntries.Single().Amount.Should().Be((uint) i);
             }
         }
 
         [Fact]
         public void GetNonExistentKey()
         {
-            _keyValueStore.Get(Arg.Any<Key>()).ThrowsForAnyArgs(new KeyNotFoundException());
-            new Action(() => _memPool.GetTx(new Key {HashedSignature = "just_a_short_key_for_easy_search:0"}))
+            _transactionStore.Get(Arg.Any<TransactionSignature>()).ThrowsForAnyArgs(new KeyNotFoundException());
+            new Action(() => _memPool.GetTransaction(TransactionHelper.GetTransactionSignature("signature that doesn't exist")))
                .Should().Throw<KeyNotFoundException>();
         }
 
         [Fact]
         public void KeyAlreadyExists()
         {
-            var key = new Key {HashedSignature = "just_a_short_key_for_easy_search:0"};
+            var transaction = TransactionHelper.GetTransaction(123, signature:"existingSignature");
 
-            _memPool.SaveTx(key, _transaction);
+            _memPool.SaveTransaction(transaction);
             var tx = _transaction;
-            AddKeyValueStoreEntryExpectation(key, tx, _keyValueStore);
+            AddKeyValueStoreEntryExpectation(tx, _transactionStore);
 
             var overridingTransaction = _transaction.Clone();
-            overridingTransaction.Amount = 100;
-            _memPool.SaveTx(key, overridingTransaction);
+            overridingTransaction.STEntries.Single().Amount = 100;
+            _memPool.SaveTx(overridingTransaction);
 
-            var transaction = _memPool.GetTx(key);
-            transaction.Amount.Should().Be(1); // assert tx with same key not updated
+            var retrievedTransaction = _memPool.GetTransaction(transaction.Signature);
+            retrievedTransaction.STEntries.Single().Amount.Should().Be(123); // assert tx with same key not updated
         }
 
         [Fact]
@@ -191,7 +167,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
         {
             const int threadNum = 8;
             var threadW = new Thread[threadNum];
-            var pc = new ProducerConsumer(_memPool, _key, _keyValueStore);
+            var pc = new ProducerConsumer(_memPool, _transactionStore);
 
             // Set up writer
             for (var i = 0; i < threadNum; i++) threadW[i] = new Thread(pc.Writer);
@@ -201,17 +177,17 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
             for (var i = 0; i < threadNum; i++) threadW[i].Join();
 
-            var transaction = _memPool.GetTx(_key);
+            var transaction = _memPool.GetTransaction(_transaction.Signature);
 
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
-            ((int) transaction.Amount).Should().Be(pc.FirstThreadId);
+            ((int) transaction.STEntries.Single().Amount).Should().Be(pc.FirstThreadId);
         }
 
         [Fact]
         public void SaveNullKey()
         {
-            new Action(() => _memPool.SaveTx(null, _transaction))
+            new Action(() => _memPool.SaveTransaction(_transaction))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null");
         }
@@ -219,9 +195,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
         [Fact]
         public void SaveNullTx()
         {
-            var newKey = new Key {HashedSignature = "just_a_short_key_for_easy_search:0"};
-
-            new Action(() => _memPool.SaveTx(newKey, null))
+            new Action(() => _memPool.SaveTx(null))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null"); // transaction is null so do not insert
         }

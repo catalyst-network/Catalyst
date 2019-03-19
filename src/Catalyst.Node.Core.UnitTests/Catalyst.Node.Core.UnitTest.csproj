@@ -6,10 +6,6 @@
   <ItemGroup>
     <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.7" />
     <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
-    <PackageReference Include="coverlet.msbuild" Version="2.6.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />

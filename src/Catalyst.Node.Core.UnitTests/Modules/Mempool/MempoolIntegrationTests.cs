@@ -19,16 +19,18 @@
 
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
+ using System.Text;
+ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Mempool;
- using Catalyst.Node.Core.UnitTest.TestUtils;
- using Catalyst.Protocols.Transaction;
+using Catalyst.Node.Core.UnitTest.TestUtils;
+using Catalyst.Protocol.Transaction;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
+ using Google.Protobuf;
+ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
@@ -58,30 +60,17 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                 var mempool = container.Resolve<IMempool>();
 
                 var guid = Guid.NewGuid().ToString();
-                var transactionToSave = GetStTxModel(signature: guid);
+                var transactionToSave = TransactionHelper.GetTransaction(signature: guid);
 
-                mempool.SaveTx(transactionToSave.Key, transactionToSave.Transaction);
+                mempool.SaveTransaction(transactionToSave);
 
-                var retrievedTransaction = mempool.GetTx(transactionToSave.Key);
+                var retrievedTransaction = mempool.GetTransaction(transactionToSave.Signature);
 
-                retrievedTransaction.Should().Be(transactionToSave.Transaction);
+                retrievedTransaction.Should().Be(transactionToSave);
                 retrievedTransaction.Signature.Should().Be(guid);
             }
         }
 
-        private StTxModel GetStTxModel(uint amount = 1, string signature = "signature")
-        {
-            var key = new Key {HashedSignature = "hashed_signature"};
-            var transaction = new StTx
-            {
-                Amount = amount,
-                Signature = signature,
-                AddressDest = "address_dest",
-                AddressSource = "address_source",
-                Updated = new StTx.Types.Timestamp {Nanos = 100, Seconds = 30}
-            };
-            return new StTxModel {Key = key, Transaction = transaction};
-        }
 
         private async Task<string> CreateAlteredConfigForMempool(FileInfo mempoolConfigFile)
         {
