@@ -77,6 +77,7 @@ namespace Catalyst.Node.Core
 
         public async Task RunAsync(CancellationToken ct)
         {
+            await _dfs.StartAsync(ct);
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
             do
