@@ -31,10 +31,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
-    <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="config.shell.json">
+    <None Update="Config\*.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

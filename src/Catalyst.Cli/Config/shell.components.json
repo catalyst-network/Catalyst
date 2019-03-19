@@ -1,0 +1,37 @@
+{
+  "defaultAssembly": "Catalyst.Cli",
+  "components": [
+    {
+      "type": "Catalyst.Cli.CatalystCli",
+      "services": [
+        {
+          "type": "Catalyst.Cli.ICatalystCli, Catalyst.Cli"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Helpers.Shell.Shell, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.IAds, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Cli.RPCClient",
+      "services": [
+        {
+          "type": "Catalyst.Cli.IRPCClient, Catalyst.Cli"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
+        }
+      ]
+    }
+  ]
+}
