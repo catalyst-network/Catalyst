@@ -10,12 +10,8 @@
       "Network": "devnet",
       "MutualAuthentication": false,
       "AcceptInvalidCerts": false,
-<<<<<<< HEAD
       "PfxFileName": "test_certificate_01.pem",
       "SslCertPassword": "test",
-=======
-      "PfxFileName": "mycert.pfx",
->>>>>>> d7ad1f3ffa8db5166f96db1684e29ed7c12159ff
       "BindAddress": "127.0.0.1",
       "Port": 42069,
       "PublicKey": "302a300506032b65700321001783421742816abf",
@@ -37,7 +33,7 @@
       "Port": 42042,
       "MutualAuthentication": false,
       "AcceptInvalidCerts": false,
-      "PfxFileName": "mycert.pfx"
+      "PfxFileName": "test_certificate_01.pem"
     },
     "PersistenceConfiguration": {
       "repositories": {

@@ -133,7 +133,9 @@ namespace Catalyst.Cli
             }
             catch (ConnectException connectException)
             {
-                Console.WriteLine("Catalyst Node @ {0}:{1} refused connection", node.HostAddress, node.Port);
+                //Console.WriteLine("Catalyst Node @ {0}:{1} refused connection", node.HostAddress, node.Port);
+                _logger.Error(connectException, 
+                    "Catalyst Node @ {0}:{1} refused connection", node.HostAddress, node.Port);
             }
             catch (Exception e)
             {
