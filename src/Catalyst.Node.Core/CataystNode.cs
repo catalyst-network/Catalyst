@@ -50,6 +50,7 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
+        private readonly IRpcServer _rpcServer;
        
         private bool _disposed;
 
@@ -61,6 +62,7 @@ namespace Catalyst.Node.Core
             ILedger ledger,
             IKeySigner keySigner,
             ILogger logger,
+            IRpcServer rpcServer,
             IMempool mempool = null,
             IContract contract = null
             )
@@ -71,12 +73,14 @@ namespace Catalyst.Node.Core
             _ledger = ledger;
             _keySigner = keySigner;
             _logger = logger;
+            _rpcServer = rpcServer;
             _mempool = mempool;
             _contract = contract;
         }
 
         public async Task RunAsync(CancellationToken ct)
         {
+            await _rpcServer.RunServerAsync();
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
             do

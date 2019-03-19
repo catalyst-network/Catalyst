@@ -49,7 +49,6 @@ namespace Catalyst.Node.Core.P2P
             PfxFileName = section.GetSection("PfxFileName").Value;
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             Announce = bool.Parse(section.GetSection("Announce").Value);
-            SslCertPassword = section.GetSection("SslCertPassword").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
             MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
