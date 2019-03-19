@@ -114,8 +114,8 @@ namespace Catalyst.Cli
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                    var shell = container.Resolve<IAds>();
-                    shell.RunConsole();
+                    var shell = container.Resolve<ICatalystCli>();
+                    shell.Ads.RunConsole();
                 }
                 
                 Environment.ExitCode = 0;

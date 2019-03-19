@@ -5,7 +5,7 @@ namespace Catalyst.Cli
 
     public class CatalystCli : ICatalystCli
     {
-        private readonly IAds _ads;
-        public CatalystCli(IAds ads) { _ads = ads; }
+        public IAds Ads { get; set; }
+        public CatalystCli(IAds ads) { Ads = ads; }
     }
 }

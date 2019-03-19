@@ -50,12 +50,7 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
-<<<<<<< HEAD
-        private readonly ICLIRPCServer _rpcServer;  //temp until we merge the P2P server with CLIRPCServer
-        
-=======
        
->>>>>>> origin/develop
         private bool _disposed;
 
         public CatalystNode(
@@ -66,7 +61,6 @@ namespace Catalyst.Node.Core
             ILedger ledger,
             IKeySigner keySigner,
             ILogger logger,
-            ICLIRPCServer rpcServer,
             IMempool mempool = null,
             IContract contract = null
             )
@@ -79,7 +73,6 @@ namespace Catalyst.Node.Core
             _logger = logger;
             _mempool = mempool;
             _contract = contract;
-            _rpcServer = rpcServer;
         }
 
         public async Task RunAsync(CancellationToken ct)
