@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Reflection;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Protocols.Transaction;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -8,7 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Messaging {
+namespace Catalyst.Node.Common.Helpers.IO.Outbound {
     public class AnyTypeClientHandler : SimpleChannelInboundHandler<Any>
     { 
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);

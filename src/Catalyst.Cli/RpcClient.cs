@@ -18,25 +18,17 @@
  */
 
 using System;
-using System.IO;
-using System.Net;
-using System.Net.Security;
-using System.Net.Sockets;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
-
-using DotNetty.Codecs;
-using DotNetty.Handlers.Logging;
-using DotNetty.Handlers.Tls;
-using DotNetty.Transport.Bootstrapping;
-using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-
-using Microsoft.Extensions.Configuration;
-
-using Serilog;
+using ILogger = Serilog.ILogger;
+using Catalyst.Node.Common.Helpers.IO.Outbound;
+using DotNetty.Codecs.Protobuf;
+using DotNetty.Transport.Channels;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Cli
 {
@@ -69,38 +61,33 @@ namespace Catalyst.Cli
         
         public async Task RunClientAsync(RpcNode node)
         {
-            _logger.Information("Rpc client starting");
-            _clientEventLoopGroup = new MultithreadEventLoopGroup();
+            X509Certificate2 _certificate = _certificateStore.ReadOrCreateCertificateFile(node.PfxFileName);
+
+            _logger.Debug("P2P client starting");
+            var handlers = new List<IChannelHandler>
+            {
+                new ProtobufVarint32LengthFieldPrepender(),
+                new ProtobufEncoder(),
+                new ProtobufVarint32FrameDecoder(),
+                new ProtobufDecoder(Any.Parser),
+                new AnyTypeClientHandler()
+            };
 
             try
             {
-                X509Certificate2 _certificate = _certificateStore.ReadOrCreateCertificateFile(node.PfxFileName);
-
-                var bootstrap = new Bootstrap();
-                bootstrap
-                   .Group(_clientEventLoopGroup)
-                   .Channel<TcpSocketChannel>()
-                   .Option(ChannelOption.TcpNodelay, true)
-                   .Handler(new LoggingHandler(LogLevel.INFO))
-                   .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
-                    {
-                        var pipeline = channel.Pipeline;
-
-                        if (_certificate != null)
-                        {
-                            pipeline.AddLast(
-                                new TlsHandler(stream =>
-                                        new SslStream(stream, true, (sender, certificate, chain, errors) => true),
-                                    new ClientTlsSettings(node.HostAddress.ToString())));
-                        }
-
-                        pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-                        pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-                        pipeline.AddLast(new StringEncoder(), new StringDecoder(), new RpClientHandler());
-                    }));
-
-                IChannel clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(node.HostAddress, node.Port));
-            }
+                node.socketClient = await new UdpClient(_logger)
+                   .Bootstrap(
+                        new OutboundChannelInitializer<ISocketChannel>(channel => {},
+                            handlers,
+                            node.HostAddress,
+                            _certificate
+                        )
+                    )
+                   .ConnectClient(
+                        node.HostAddress,
+                        node.Port
+                    );   
+            }           
             catch (ConnectException connectException)
             {
                 //Console.WriteLine("Catalyst Node @ {0}:{1} refused connection", node.HostAddress, node.Port);

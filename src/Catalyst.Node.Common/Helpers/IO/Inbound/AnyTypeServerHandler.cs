@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Reflection;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Protocols.Transaction;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Groups;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Messaging
+namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    internal class AnyTypeServerHandler : SimpleChannelInboundHandler<Any>
+    public class AnyTypeServerHandler : SimpleChannelInboundHandler<Any>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private static volatile IChannelGroup _broadCastGroup;
