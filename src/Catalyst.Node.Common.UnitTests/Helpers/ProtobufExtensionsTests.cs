@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Catalyst.Node.Common.Helpers;
+﻿using Catalyst.Node.Common.Helpers;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Xunit;

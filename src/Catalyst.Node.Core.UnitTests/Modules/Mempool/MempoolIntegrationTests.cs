@@ -19,18 +19,14 @@
 
 ﻿using System;
 using System.IO;
- using System.Text;
  using System.Threading.Tasks;
 using Autofac;
  using Catalyst.Node.Common.Helpers;
  using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.Modules.Mempool;
-using Catalyst.Node.Core.UnitTest.TestUtils;
-using Catalyst.Protocol.Transaction;
-using FluentAssertions;
- using Google.Protobuf;
+ using Catalyst.Node.Core.UnitTest.TestUtils;
+ using FluentAssertions;
  using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Xunit;

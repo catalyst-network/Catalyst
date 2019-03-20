@@ -31,12 +31,10 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core

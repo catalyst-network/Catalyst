@@ -19,11 +19,9 @@
 
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Dawn;
- using Google.Protobuf;
  using Serilog;
 using SharpRepository.Repository;
 
@@ -52,7 +50,6 @@ namespace Catalyst.Node.Core.Modules.Mempool
         public IEnumerable<Transaction> GetMemPoolContent()
         {
             var memPoolContent = _transactionStore.GetAll();
-               //.Select(b => Transaction.Parser.ParseFrom(b));
             return memPoolContent;
         }
 

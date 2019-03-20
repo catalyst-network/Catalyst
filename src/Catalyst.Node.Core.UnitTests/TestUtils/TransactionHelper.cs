@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
+﻿using Catalyst.Protocol.Transaction;
 using Catalyst.Node.Common.Helpers;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils
