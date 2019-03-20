@@ -19,11 +19,10 @@
 
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
-using Catalyst.Protocols.Transaction;
+using Catalyst.Protocol.Transaction;
 using Dawn;
-using Serilog;
+ using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.Modules.Mempool
@@ -34,52 +33,46 @@ namespace Catalyst.Node.Core.Modules.Mempool
     public class Mempool : IMempool
     {
         private readonly ILogger _logger;
-        private readonly IRepository<StTxModel, Key> _transactionStore;
+        private readonly IRepository<Transaction, TransactionSignature> _transactionStore;
 
         /// <inheritdoc />
-        public Mempool(IRepository<StTxModel, Key> transactionStore, ILogger logger)
+        public Mempool(IRepository<Transaction, TransactionSignature> transactionStore, ILogger logger)
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             _transactionStore = transactionStore;
+            _transactionStore.Conventions.GetPrimaryKeyName = _ => nameof(Transaction.Signature);
+            
             _logger = logger;
             _transactionStore.CachingEnabled = true;
         }
 
         /// <inheritdoc />
-        public IDictionary<Key, StTx> GetMemPoolContent()
+        public IEnumerable<Transaction> GetMemPoolContent()
         {
-            var memPoolContent = _transactionStore
-               .GetAll()
-               .ToDictionary(tx => tx.Key, tx => tx.Transaction);
+            var memPoolContent = _transactionStore.GetAll();
             return memPoolContent;
         }
 
-        public bool SaveTx(Key key, StTx transaction)
-        {
-            Guard.Argument(key, nameof(key)).NotNull();
-            Guard.Argument(transaction, nameof(transaction)).NotNull();
-            return SaveTx(new StTxModel {Key = key, Transaction = transaction});
-        }
-
         /// <inheritdoc />
-        public StTx GetTx(Key key)
+        public Transaction GetTransaction(TransactionSignature key)
         {
             Guard.Argument(key, nameof(key)).NotNull();
             var found = _transactionStore.Get(key);
-            return found.Transaction;
+            return found;
         }
 
         /// <inheritdoc />
-        public bool SaveTx(StTxModel keyedTransaction)
+        public bool SaveTransaction(Transaction transaction)
         {
-            Guard.Argument(keyedTransaction, nameof(keyedTransaction)).NotNull();
+            Guard.Argument(transaction, nameof(transaction)).NotNull();
+            Guard.Argument(transaction.Signature, nameof(transaction.Signature)).NotNull();
             try
             {
-                if (_transactionStore.TryGet(keyedTransaction.Key, out _))
+                if (_transactionStore.TryGet(transaction.Signature, out _))
                 {
                     return false;
                 }
-                _transactionStore.Add(keyedTransaction);
+                _transactionStore.Add(transaction);
                 return true;
             }
             catch (Exception e)

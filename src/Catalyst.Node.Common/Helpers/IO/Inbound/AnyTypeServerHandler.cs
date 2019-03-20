@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using Catalyst.Protocols.Transaction;
+using Catalyst.Node.Common.Helpers;
+using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Groups;
 using Google.Protobuf.WellKnownTypes;
@@ -51,7 +52,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             _broadCastGroup.WriteAndFlushAsync(message, new EveryOneBut(context.Channel.Id));
             context.WriteAndFlushAsync(message);
 
-            if (message.TypeUrl == StTx.Descriptor.ShortenedFullName() && message.FromAny<StTx>().Amount == 0)
+            if (message.TypeUrl == Transaction.Descriptor.ShortenedFullName() && message.FromAny<Transaction>().Version == 0)
             {
                 context.CloseAsync();
             }

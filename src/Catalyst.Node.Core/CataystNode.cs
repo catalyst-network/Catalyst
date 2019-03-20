@@ -31,11 +31,10 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
-using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Protocols.Transaction;
+using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core
@@ -86,25 +85,25 @@ namespace Catalyst.Node.Core
             bool exit = false;
             do
             {
-                _logger.Information("Creating a StTx message");
-                _logger.Information("Please type in a destination address");
-                var address = Console.ReadLine();
-                
-                _logger.Information("Please type in a transaction amount");
-                if (!uint.TryParse(Console.ReadLine(), out var amount))
+                _logger.Information("Creating a Transaction message");
+                _logger.Information("Please type in a pubkey for the transaction signature");
+                var pubkey = Console.ReadLine();
+
+                _logger.Information("Please type in a transaction version");
+                if (!uint.TryParse(Console.ReadLine(), out var version))
                 {
-                    amount = 1;
+                    version = 1;
                 }
-                var tx = new StTx {Amount = amount, AddressDest = address};
-                
+                var tx = new Transaction { Version = version, Signature = new TransactionSignature {Signature = ByteString.CopyFromUtf8(pubkey)}};
+
                 await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 await Task.Delay(300, ct); //just to get the next message at the bottom
-                
-                _logger.Information("Creating a Key message");
-                _logger.Information("Please type in a key hash");
-                var key = new Key {HashedSignature = Console.ReadLine() };
-                
-                await _p2P.Messaging.BroadcastMessageAsync(key.ToAny());
+
+                _logger.Information("Creating a Ping message");
+                _logger.Information("Please type in a ping message content");
+                var ping = new PeerProtocol.Types.PingRequest { Ping = Console.ReadLine() };
+
+                await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
                 
                 _logger.Information("Type 'exit' to exit, anything else to continue");

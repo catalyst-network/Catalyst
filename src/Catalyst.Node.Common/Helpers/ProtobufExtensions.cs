@@ -20,7 +20,7 @@ namespace Catalyst.Node.Common.Helpers
         public static string ShortenedFullName(this MessageDescriptor descriptor)
         {
             //we don't need to serialise the complete full name of our own types
-            return descriptor.FullName.Remove(0, CatalystProtocol.Length + 2);
+            return descriptor.FullName.Remove(0, CatalystProtocol.Length + 1);
         }
 
         public static Any ToAny<T>(this T protobufObject) where T : IMessage
@@ -46,6 +46,11 @@ namespace Catalyst.Node.Common.Helpers
             var empty = (IMessage)Activator.CreateInstance(type);
             var innerMessage = empty.Descriptor.Parser.ParseFrom(message.Value);
             return innerMessage;
+        }
+
+        public static ByteString ToUtf8ByteString(this string utf8String)
+        {
+            return ByteString.CopyFromUtf8(utf8String);
         }
     }
 }

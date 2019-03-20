@@ -41,10 +41,10 @@
         "inMemory": {
           "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository"
         },
-        "mongoDb": {
-          "factory": "SharpRepository.MongoDbRepository.MongoDbConfigRepositoryFactory, SharpRepository.MongoDbRepository",
-          "connectionString": "mongodb:://127.0.0.1"
-        },
+        //"mongoDb": {
+        //  "factory": "SharpRepository.MongoDbRepository.MongoDbConfigRepositoryFactory, SharpRepository.MongoDbRepository",
+        //  "connectionString": "mongodb:://127.0.0.1"
+        //},
         "inMemoryNoCaching": {
           "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository",
           "cachingStrategy": "none",
@@ -67,14 +67,14 @@
           "generational": "true",
           "writeThrough": "false"
         },
-        "redisProvider": {
-          "factory": "SharpRepository.Caching.Redis.RedisConfigCachingProviderFactory, SharpRepository.Caching.Redis",
-          "host": "127.0.0.1",
-          "port": "6379",
-          "ssl": false,
-          "password": "",
-          "defaultDatabase": "0"
-        },
+        //"redisProvider": {
+        //  "factory": "SharpRepository.Caching.Redis.RedisConfigCachingProviderFactory, SharpRepository.Caching.Redis",
+        //  "host": "127.0.0.1",
+        //  "port": "6379",
+        //  "ssl": false,
+        //  "password": "",
+        //  "defaultDatabase": "0"
+        //},
         "timeout": {
           "factory": "SharpRepository.Repository.Caching.TimeoutConfigCachingStrategyFactory, SharpRepository.Repository",
           "timeout": "200"

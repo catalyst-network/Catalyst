@@ -20,11 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using DotNetty.Codecs;
 using DotNetty.Transport.Channels.Sockets;
 using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
