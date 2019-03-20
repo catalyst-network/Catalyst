@@ -5,7 +5,7 @@
         "nodeId": "node1",
         "host": "127.0.0.1",
         "port": 42069,
-        "PfxFileName": "test_certificate_01.pem",
+        "PfxFileName": "mycert.pfx",
         "SslCertPassword": "test"
        },
       {

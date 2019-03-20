@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.RPC
                         channel => { },
                         handlers,
                         certificate: _certificate)
-                    ).StartServer(_settings.BindAddress, _settings.Port);
+                   ).StartServer(_settings.BindAddress, _settings.Port);
             }
             catch (Exception e)
             {
