@@ -24,7 +24,6 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotNetty.Handlers.Logging;
 using Serilog;
-using ServerBootstrap = Catalyst.Node.Common.Helpers.IO.ServerBootstrap;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {

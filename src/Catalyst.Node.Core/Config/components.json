@@ -2,14 +2,6 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "Catalyst.Node.Core.Components.Redis.RedisStore",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.Interfaces.IKeyValueStore, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
       "type": "Catalyst.Node.Core.CatalystNode",
       "services": [
         {

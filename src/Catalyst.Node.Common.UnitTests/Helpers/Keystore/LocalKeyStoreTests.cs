@@ -19,7 +19,6 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Interfaces;
@@ -31,7 +30,6 @@ using NSec.Cryptography;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -18,10 +18,7 @@
 */
 
 using System;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Interfaces;
-using Serilog;
 using Dawn;
 
 namespace Catalyst.Node.Common.Helpers.Shell
