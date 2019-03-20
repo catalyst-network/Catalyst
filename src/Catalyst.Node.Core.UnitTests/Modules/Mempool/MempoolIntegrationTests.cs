@@ -22,7 +22,8 @@ using System.IO;
  using System.Text;
  using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Node.Common.Helpers.Config;
+ using Catalyst.Node.Common.Helpers;
+ using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Mempool;
@@ -61,13 +62,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
                 var guid = Guid.NewGuid().ToString();
                 var transactionToSave = TransactionHelper.GetTransaction(signature: guid);
+                var signature = transactionToSave.Signature;
 
                 mempool.SaveTransaction(transactionToSave);
 
                 var retrievedTransaction = mempool.GetTransaction(transactionToSave.Signature);
 
                 retrievedTransaction.Should().Be(transactionToSave);
-                retrievedTransaction.Signature.Should().Be(guid);
+                retrievedTransaction.Signature.Signature.Should().BeEquivalentTo(guid.ToUtf8ByteString());
             }
         }
 

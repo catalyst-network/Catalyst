@@ -148,18 +148,16 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
         [Fact]
         public void KeyAlreadyExists()
         {
-            var transaction = TransactionHelper.GetTransaction(123, signature:"existingSignature");
-
-            _memPool.SaveTransaction(transaction);
-            var tx = _transaction;
-            AddKeyValueStoreEntryExpectation(tx, _transactionStore);
+            var expectedAmount = _transaction.STEntries.Single().Amount;
+            _memPool.SaveTransaction(_transaction);
+            AddKeyValueStoreEntryExpectation(_transaction, _transactionStore);
 
             var overridingTransaction = _transaction.Clone();
-            overridingTransaction.STEntries.Single().Amount = 100;
+            overridingTransaction.STEntries.Single().Amount = expectedAmount +100;
             _memPool.SaveTransaction(overridingTransaction);
 
-            var retrievedTransaction = _memPool.GetTransaction(transaction.Signature);
-            retrievedTransaction.STEntries.Single().Amount.Should().Be(123); // assert tx with same key not updated
+            var retrievedTransaction = _memPool.GetTransaction(_transaction.Signature);
+            retrievedTransaction.STEntries.Single().Amount.Should().Be(expectedAmount); 
         }
 
         [Fact]
@@ -187,6 +185,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
         [Fact]
         public void SaveNullKey()
         {
+            _transaction.Signature = null;
             new Action(() => _memPool.SaveTransaction(_transaction))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null");

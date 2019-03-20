@@ -23,7 +23,8 @@ using System.Linq;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Dawn;
-using Serilog;
+ using Google.Protobuf;
+ using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.Modules.Mempool
@@ -41,6 +42,8 @@ namespace Catalyst.Node.Core.Modules.Mempool
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             _transactionStore = transactionStore;
+            _transactionStore.Conventions.GetPrimaryKeyName = _ => nameof(Transaction.Signature);
+            
             _logger = logger;
             _transactionStore.CachingEnabled = true;
         }
@@ -49,6 +52,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
         public IEnumerable<Transaction> GetMemPoolContent()
         {
             var memPoolContent = _transactionStore.GetAll();
+               //.Select(b => Transaction.Parser.ParseFrom(b));
             return memPoolContent;
         }
 
@@ -61,16 +65,17 @@ namespace Catalyst.Node.Core.Modules.Mempool
         }
 
         /// <inheritdoc />
-        public bool SaveTransaction(Transaction keyedTransaction)
+        public bool SaveTransaction(Transaction transaction)
         {
-            Guard.Argument(keyedTransaction, nameof(keyedTransaction)).NotNull();
+            Guard.Argument(transaction, nameof(transaction)).NotNull();
+            Guard.Argument(transaction.Signature, nameof(transaction.Signature)).NotNull();
             try
             {
-                if (_transactionStore.TryGet(keyedTransaction.Signature, out _))
+                if (_transactionStore.TryGet(transaction.Signature, out _))
                 {
                     return false;
                 }
-                _transactionStore.Add(keyedTransaction);
+                _transactionStore.Add(transaction);
                 return true;
             }
             catch (Exception e)

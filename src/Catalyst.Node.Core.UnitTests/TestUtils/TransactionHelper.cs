@@ -32,7 +32,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils
                     CommPedersenCommitmentitment = confidentialCommitment.ToUtf8ByteString(),
                     PubKey = confidentialPubKey.ToUtf8ByteString()
                 }},
-                Signature = GetTransactionSignature(challenge, signature),
+                Signature = GetTransactionSignature(signature, challenge),
                 Version = version,
                 TimeStamp = timeStamp,
                 TransactionFees = transactionFees,
