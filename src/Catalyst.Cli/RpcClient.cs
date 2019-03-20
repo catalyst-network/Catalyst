@@ -67,36 +67,6 @@ namespace Catalyst.Cli
             _certificateStore = certificateStore;
         }
         
-        public async Task RunClientAsync()
-        {
-            _logger.Information("Rpc client starting");
-            _clientEventLoopGroup = new MultithreadEventLoopGroup();
- 
-            // var bootstrap = new Bootstrap();
-            // bootstrap
-            //    .Group(_clientEventLoopGroup)
-            //    .Channel<TcpSocketChannel>()
-            //    .Option(ChannelOption.TcpNodelay, true)
-            //    .Handler(new LoggingHandler(LogLevel.INFO))
-            //    .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
-            //     {
-            //         var pipeline = channel.Pipeline;
-            //
-            //         if (_certificate != null)
-            //         {
-            //             pipeline.AddLast(
-            //                 new TlsHandler(stream => 
-            //                         new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-            //                     new ClientTlsSettings(_settings.EndPoint.ToString())));
-            //         }
-            //         pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-            //         pipeline.AddLast(new DelimiterBasedFrameDecoder(8192, Delimiters.LineDelimiter()));
-            //         pipeline.AddLast(new StringEncoder(), new StringDecoder(), new SecureTcpMessageClientHandler());
-            //     }));
-            //
-            // _clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(_settings.BindAddress, _settings.Port));
-        }
-        
         public async Task RunClientAsync(RpcNode node)
         {
             _logger.Information("Rpc client starting");

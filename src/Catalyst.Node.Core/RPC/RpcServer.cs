@@ -54,6 +54,8 @@ namespace Catalyst.Node.Core.RPC
             _settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
+            var longRunningTasks = new [] {RunServerAsync()};
+            Task.WaitAll(longRunningTasks);
         }
 
         /// <summary>

@@ -55,6 +55,7 @@ namespace Catalyst.Cli
         /// <param name="args"></param>
         public static int Main()
         {
+            Log.Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             const int bufferSize = 1024 * 67 + 128;
             _cancellationSource = new CancellationTokenSource();
 
@@ -72,11 +73,23 @@ namespace Catalyst.Cli
                 {
                     File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.json"),
                         shellFilePath);
+                }
+
+                if (!File.Exists(shellComponentsFilePath))
+                {
                     File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.components.json"),
                         shellComponentsFilePath);
+                }
+
+                if (!File.Exists(shellSeriLogFilePath))
+                {
                     File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.serilog.json"),
                         shellSeriLogFilePath);
-                    File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
+                }
+                
+                if (!File.Exists(shellNodesFilePath))
+                {
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
                         shellNodesFilePath);
                 }
                 
@@ -130,7 +143,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                Log.Logger.Error(e, "Catalyst.Node failed to start.");
+                Log.Logger.Error(e, "Catalyst.Node failed to start." + e.Message);
                 Environment.ExitCode = 1;
             }
 
