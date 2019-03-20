@@ -18,7 +18,6 @@
 */
 
 using System;
-using System.Text;
 using Catalyst.Node.Common.Interfaces;
 using Multiformats.Base;
 using NSec.Cryptography;

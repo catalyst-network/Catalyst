@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using Catalyst.Node.Common.Helpers;
-using Catalyst.Protocols.Transaction;
+using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -18,13 +19,13 @@ namespace Catalyst.Node.Core.P2P.Messaging {
             var log = JsonConvert.SerializeObject(message);
             Logger.Information(log + Environment.NewLine);
 
-            if (message.TypeUrl == StTx.Descriptor.ShortenedFullName())
+            if (message.TypeUrl == Transaction.Descriptor.ShortenedFullName())
             {
-                OutputTypedContentAsJson<StTx>(message);
+                OutputTypedContentAsJson<Transaction>(message);
             }
-            else if (message.TypeUrl == Key.Descriptor.ShortenedFullName())
+            else if (message.TypeUrl == PeerProtocol.Types.PingRequest.Descriptor.ShortenedFullName())
             {
-                OutputTypedContentAsJson<Key>(message);
+                OutputTypedContentAsJson<PeerProtocol.Types.PingRequest>(message);
             }
             else
             {

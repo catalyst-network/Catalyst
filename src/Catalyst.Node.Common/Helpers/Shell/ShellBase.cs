@@ -22,7 +22,6 @@ using System.Reflection;
 using System.Security;
 using System.Text;
 using Catalyst.Node.Common.Interfaces;
-using Serilog;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
