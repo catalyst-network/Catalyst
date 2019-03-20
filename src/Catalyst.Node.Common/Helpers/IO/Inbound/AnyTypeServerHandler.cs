@@ -25,7 +25,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
                 {
                     if (_broadCastGroup == null)
                     {
-                        _broadCastGroup = new DefaultChannelGroup(context.Executor);
+                        _broadCastGroup = new DefaultChannelGroup(Guid.NewGuid().ToString(), context.Executor);
                     }
                 }
             }

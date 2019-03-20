@@ -42,8 +42,6 @@ namespace Catalyst.Cli
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
         
-        private MultithreadEventLoopGroup _clientEventLoopGroup;
-
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
         /// 1- Get the settings from the config file
@@ -63,7 +61,7 @@ namespace Catalyst.Cli
         {
             X509Certificate2 _certificate = _certificateStore.ReadOrCreateCertificateFile(node.PfxFileName);
 
-            _logger.Debug("P2P client starting");
+            _logger.Debug("Rpc client starting");
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32LengthFieldPrepender(),
@@ -72,33 +70,19 @@ namespace Catalyst.Cli
                 new ProtobufDecoder(Any.Parser),
                 new AnyTypeClientHandler()
             };
-
-            try
-            {
-                node.socketClient = await new UdpClient(_logger)
-                   .Bootstrap(
-                        new OutboundChannelInitializer<ISocketChannel>(channel => {},
-                            handlers,
-                            node.HostAddress,
-                            _certificate
-                        )
-                    )
-                   .ConnectClient(
+            
+            node.socketClient = await new TcpClient(_logger)
+               .Bootstrap(
+                    new OutboundChannelInitializer<ISocketChannel>(channel => {},
+                        handlers,
                         node.HostAddress,
-                        node.Port
-                    );   
-            }           
-            catch (ConnectException connectException)
-            {
-                //Console.WriteLine("Catalyst Node @ {0}:{1} refused connection", node.HostAddress, node.Port);
-                _logger.Error(connectException, 
-                    "Catalyst Node @ {0}:{1} refused connection", node.HostAddress, node.Port);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+                        _certificate
+                    )
+                )
+               .ConnectClient(
+                    node.HostAddress,
+                    node.Port
+                );
                 
         }
         

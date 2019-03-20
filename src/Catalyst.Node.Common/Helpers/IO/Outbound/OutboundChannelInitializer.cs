@@ -44,11 +44,10 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         protected override void InitChannel(T channel)
         {
             InitializationAction(channel);
-            var pipeline = channel.Pipeline;
 
             if (Certificate != null)
             {
-                pipeline.AddLast(
+                channel.Pipeline.AddLast(
                     new TlsHandler(stream => 
                         new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
                         new ClientTlsSettings(TargetHost.ToString())
@@ -56,8 +55,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                 );
             }
 
-            pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-            pipeline.AddLast(Handlers.ToArray());
+            channel.Pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
+            channel.Pipeline.AddLast(Handlers.ToArray());
         }
 
         public override string ToString()
