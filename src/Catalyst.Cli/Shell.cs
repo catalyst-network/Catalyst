@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
@@ -213,7 +214,7 @@ namespace Catalyst.Cli
             try
             {
                 Console.WriteLine("Connecting to {0} @ {1}:{2}", nodeConnected.NodeId, nodeConnected.HostAddress.ToString(), nodeConnected.Port.ToString());
-                _rpcClient.RunClientAsync(nodeConnected);
+                Task.WaitAll(_rpcClient.RunClientAsync(nodeConnected));
             }
             catch (Exception e)
             {
