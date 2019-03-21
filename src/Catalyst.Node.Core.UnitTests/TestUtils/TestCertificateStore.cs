@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2019 Catalyst Network
  *
  * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
@@ -17,27 +17,19 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Linq;
-using System.Security;
+using System.IO;
+using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Helpers.Config;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
-    class TestPasswordReader : IPasswordReader
+    public class TestCertificateStore : ICertificateStore
     {
-        private const string Password = "password";
-
-        public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
+        public X509Certificate2 ReadOrCreateCertificateFile(string fileName)
         {
-            var secureString = new SecureString();
-            Password.ToList().ForEach(c => secureString.AppendChar(c));
-            secureString.MakeReadOnly();
-            return secureString;
-        }
-
-        public char[] ReadSecurePasswordAsChars(string passwordContext = "Please enter your password")
-        {
-            return Password.ToCharArray();
+            return new X509Certificate2(Path.Combine(Constants.ConfigSubFolder, "mycert.pfx"));
         }
     }
 }

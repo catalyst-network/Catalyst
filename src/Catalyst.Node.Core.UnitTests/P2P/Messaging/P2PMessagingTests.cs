@@ -29,6 +29,7 @@ using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
@@ -56,10 +57,11 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {
             ConfigureContainerBuilder(_config);
-
+            
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(_currentTestName))
             {
