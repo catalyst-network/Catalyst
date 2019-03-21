@@ -47,6 +47,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         {
             Channel = await Client.ConnectAsync(listenAddress, port).ConfigureAwait(false);
             return this;
-        } 
+        }
+        
+        public override async Task SendMessage(object message) { await Channel.WriteAndFlushAsync(message); }
     }
 }

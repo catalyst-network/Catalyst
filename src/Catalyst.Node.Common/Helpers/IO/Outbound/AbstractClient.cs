@@ -34,5 +34,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         public abstract ISocketClient Bootstrap(IChannelHandler channelInitializer);
 
         public abstract Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port);
+
+        public abstract Task SendMessage(object message);
     }
 }

@@ -123,9 +123,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 case "info":
                     return OnGetInfo();
                 case "config":
-                    return OnGetConfig();
+                    return OnGetConfig(args);
                 case "version":
-                    return OnGetVersion();
+                    return OnGetVersion(args);
                 case "mempool":
                     return OnGetMempool();
                 default:
@@ -142,13 +142,13 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints the current loaded settings.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetConfig();
+        protected abstract bool OnGetConfig(string[] args);
 
         /// <summary>
         ///     Prints the current node version.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetVersion();
+        protected abstract bool OnGetVersion(string[] args);
 
         /// <summary>
         ///     Prints stats about the mempool implementation.

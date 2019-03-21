@@ -23,6 +23,7 @@ using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
 
 namespace Catalyst.Cli
 {
@@ -203,18 +204,15 @@ namespace Catalyst.Cli
         /// <returns></returns>
         private bool OnConnectNode(string[] args)
         {
-            //Guard.Argument(args).Contains(typeof(string));
-            //throw new NotImplementedException();
-            
-            Console.WriteLine("Connecting node(s) ...");
+            //check if the args array is not null, not empty and of minimum count 2
+            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
             
             //Get the node entered by the user from the nodes list
-            RpcNode nodeConnected = _rpcNodes.nodesList.Find(node => node.NodeId.Equals((args[2])));
+            RpcNode connectingNode = _rpcNodes.nodesList.Find(node => node.NodeId.Equals((args[2])));
 
             try
             {
-                Console.WriteLine("Connecting to {0} @ {1}:{2}", nodeConnected.NodeId, nodeConnected.HostAddress.ToString(), nodeConnected.Port.ToString());
-                Task.WaitAll(_rpcClient.RunClientAsync(nodeConnected));
+                Task.WaitAll(_rpcClient.RunClientAsync(connectingNode));
             }
             catch (Exception e)
             {
@@ -296,6 +294,8 @@ namespace Catalyst.Cli
                     return OnGetDelta(args);
                 case "mempool":
                     return OnGetMempool();
+                case "version":
+                    return OnGetVersion(args);
                 default:
                     return base.OnCommand(args);
             }
@@ -310,20 +310,55 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
+        /// Gets the version of a node
         /// </summary>
-        /// <returns></returns>
-        protected override bool OnGetVersion()
-        {
-            throw new NotImplementedException();
-        }
+        /// <returns>Returns true if successful and false otherwise.</returns>
+        protected override bool OnGetVersion(string[] args) { return GetNodeInfo(args); }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override bool OnGetConfig()
+        protected override bool OnGetConfig(string[] args) { return GetNodeInfo(args); }
+
+        /// <summary>
+        /// Requests node related information from the RPC Server.  The informaiton returned depends on the command in
+        /// the argument list which can be:
+        /// 1- version: gets node version
+        /// 2- config: gets node config
+        /// 3- info: gets node info
+        /// </summary>
+        /// <param name="args">Array of strings including the commands entered through command line interface</param>
+        /// <returns>Returns true if successful and false otherwise.</returns>
+        /// <exception cref="Exception"></exception>
+        private bool GetNodeInfo(string[] args)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //check if the args array is not null, not empty and of minimum count 2
+                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
+
+                //get the node 
+                RpcNode nodeConnected = _rpcClient.GetConnectedNode(args[2]);
+
+                //check if the node entered by the user was in the list of the connected nodes
+                if (nodeConnected != null)
+                {
+                    //send the message to the server by writing it to the channel
+                    _rpcClient.SendMessage(nodeConnected, args[1]);
+                }
+                else
+                {
+                    Console.WriteLine("Node not found.  Please connect to node first.");
+                }
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine(e);
+                throw e;
+            }
+
+            return true;
         }
 
         /// <summary>

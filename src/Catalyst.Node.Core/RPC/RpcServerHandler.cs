@@ -1,12 +1,15 @@
+using Catalyst.Node.Common.Helpers.Util;
+
+using System;
+using System.Net;
+using System.Threading.Tasks;
+using DotNetty.Transport.Channels;
+
 namespace Catalyst.Node.Core.RPC
 {
-    using System;
-    using System.Net;
-    using System.Threading.Tasks;
-    using DotNetty.Transport.Channels;
-
     public class RpcServerHandler : SimpleChannelInboundHandler<object>
     {
+
         public override void ChannelActive(IChannelHandlerContext contex)
         {
             contex.WriteAsync(string.Format("Welcome to {0} !\r\n", Dns.GetHostName()));
@@ -20,9 +23,21 @@ namespace Catalyst.Node.Core.RPC
             bool close = false;
             msg = message as string;
 
-            if (string.IsNullOrEmpty(msg))
+            if (!string.IsNullOrEmpty(msg))
             {
-                response = "Please type something.\r\n";
+                switch (msg)
+                {
+                    case "version":
+                        response = NodeUtil.GetVersion();
+                        break;
+                    case "config":
+                        GetConfig();
+                        response = "";
+                        break;
+                    default:
+                        response = "Invalid command.";
+                        break;
+                }
             }
             else if (string.Equals("bye", msg, StringComparison.OrdinalIgnoreCase))
             {
@@ -42,10 +57,7 @@ namespace Catalyst.Node.Core.RPC
             }
         }
 
-        public override void ChannelReadComplete(IChannelHandlerContext contex)
-        {
-            contex.Flush();
-        }
+        public override void ChannelReadComplete(IChannelHandlerContext contex) { contex.Flush(); }
 
         public override void ExceptionCaught(IChannelHandlerContext contex, Exception e)
         {
@@ -53,6 +65,10 @@ namespace Catalyst.Node.Core.RPC
             contex.CloseAsync();
         }
 
+        public event Action OnGetConfig = delegate { };
+
         public override bool IsSharable => true;
+
+        public void GetConfig() { OnGetConfig(); }
     }
 }

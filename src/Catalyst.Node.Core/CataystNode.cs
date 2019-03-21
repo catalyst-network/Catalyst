@@ -85,7 +85,7 @@ namespace Catalyst.Node.Core
             bool exit = false;
             do
             {
-                _logger.Information("Creating a Transaction message");
+                /*_logger.Information("Creating a Transaction message");
                 _logger.Information("Please type in a pubkey for the transaction signature");
                 var pubkey = Console.ReadLine();
 
@@ -107,7 +107,7 @@ namespace Catalyst.Node.Core
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
                 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
-                exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
+                exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);*/
 
             } while (!ct.IsCancellationRequested && !exit);
 

@@ -41,6 +41,8 @@ namespace Catalyst.Cli
         
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
+
+        private List<RpcNode> _connectedNodes;
         
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -55,13 +57,20 @@ namespace Catalyst.Cli
         {
             _logger = logger;
             _certificateStore = certificateStore;
+            
+            _connectedNodes = new List<RpcNode>();
         }
         
         public async Task RunClientAsync(RpcNode node)
         {
+            _logger.Information("Connecting to node ...");
+            
             X509Certificate2 _certificate = _certificateStore.ReadOrCreateCertificateFile(node.PfxFileName);
 
-            _logger.Debug("Rpc client starting");
+            _logger.Information("Rpc client starting");
+            
+            _logger.Information("Connecting to {0} @ {1}:{2}", node.NodeId, node.HostAddress.ToString(), node.Port.ToString());
+            
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32LengthFieldPrepender(),
@@ -83,8 +92,33 @@ namespace Catalyst.Cli
                     node.HostAddress,
                     node.Port
                 );
+            
+            _connectedNodes.Add(node);
                 
         }
+
+        public bool IsConnectedNode(string nodeId)
+        {
+            return _connectedNodes.Exists(node => node.NodeId == nodeId);
+        }
+        
+        public RpcNode GetConnectedNode(string nodeId)
+        {
+            if(IsConnectedNode(nodeId))
+                return _connectedNodes.Find(node => node.NodeId.Equals(nodeId));
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Sends the message to the RPC Server by writing it asynchronously 
+        /// </summary>
+        /// <param name="node">RpcNode object which is selected to connect to by the user</param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public async Task SendMessage(RpcNode node, object message) { await node.socketClient.SendMessage(message); }
         
         /*Implementing IDisposable */
         protected virtual void Dispose(bool disposing)
