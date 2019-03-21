@@ -38,7 +38,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly object _groupLock = new object();
         private readonly BehaviorSubject<Any> _messageSubject = new BehaviorSubject<Any>(NullObjects.Any);
 
-        public IObservable<Any> MessageStream => MessageStream.AsObservable();
+        public IObservable<Any> MessageStream => _messageSubject.AsObservable();
 
         public override void ChannelActive(IChannelHandlerContext context)
         {

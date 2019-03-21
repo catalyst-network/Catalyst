@@ -49,13 +49,11 @@ namespace Catalyst.Node.Common.Helpers
             Guard.Argument(protoType, nameof(protoType)).Require(t => typeof(IMessage).IsAssignableFrom(t));
 
             //get the static field Descriptor from T
-            var descriptor = (MessageDescriptor)protoType
+            var descriptor = (MessageDescriptor) protoType
                .GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)
                .GetValue(null);
             return ShortenedFullName(descriptor);
         }
-
-        public static Any NoMessage = Any.Pack(null, "NoMessage");
 
         public static Any ToAny<T>(this T protobufObject) where T : IMessage<T>
         {

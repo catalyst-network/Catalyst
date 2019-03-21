@@ -7,6 +7,6 @@ namespace Catalyst.Node.Common.Helpers.Util
 {
     public static class NullObjects
     {
-        public static Any Any = new Any();
+        public static readonly Any Any = new Any();
     }
 }

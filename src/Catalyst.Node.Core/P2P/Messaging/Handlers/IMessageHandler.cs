@@ -21,7 +21,7 @@ using System;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers {
-    public interface IMessageHandler : IDisposable
+    public interface IMessageHandler
     {
         void HandleMessage(Any message);
     }
