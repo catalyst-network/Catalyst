@@ -19,9 +19,11 @@
 
 using System.IO;
 using System.Reflection.Metadata;
+using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Cryptography;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
@@ -29,7 +31,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils
     {
         public X509Certificate2 ReadOrCreateCertificateFile(string fileName)
         {
-            return new X509Certificate2(Path.Combine(Constants.ConfigSubFolder, "mycert.pfx"));
+            return CertificateStore.BuildSelfSignedServerCertificate(new SecureString());
         }
     }
 }
