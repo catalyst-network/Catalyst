@@ -29,7 +29,7 @@ using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Interfaces;
- using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
@@ -97,13 +97,13 @@ namespace Catalyst.Node.Core
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
+
                 using (var scope = container.BeginLifetimeScope(LifetimeTag,
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                    var node = container.Resolve<ICatalystNode>();
-
-                    node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
+                   var node = container.Resolve<ICatalystNode>();
+                   node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;

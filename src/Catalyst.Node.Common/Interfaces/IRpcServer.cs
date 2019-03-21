@@ -17,14 +17,14 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface ICertificateStore
+    public interface IRpcServer
     {
-        X509Certificate2 ReadOrCreateCertificateFile(string fileName);
-
-        X509Certificate2 ReadOrCreateCertificateFile(string fileName, string password);
+        Task RunServerAsync();
+        IRpcServerSettings Settings { get; }
     }
 }

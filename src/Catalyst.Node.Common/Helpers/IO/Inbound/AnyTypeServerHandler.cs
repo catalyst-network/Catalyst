@@ -7,9 +7,9 @@ using DotNetty.Transport.Channels.Groups;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Messaging
+namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    internal class AnyTypeServerHandler : SimpleChannelInboundHandler<Any>
+    public class AnyTypeServerHandler : SimpleChannelInboundHandler<Any>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private static volatile IChannelGroup _broadCastGroup;
@@ -26,7 +26,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 {
                     if (_broadCastGroup == null)
                     {
-                        _broadCastGroup = new DefaultChannelGroup(context.Executor);
+                        _broadCastGroup = new DefaultChannelGroup(Guid.NewGuid().ToString(), context.Executor);
                     }
                 }
             }

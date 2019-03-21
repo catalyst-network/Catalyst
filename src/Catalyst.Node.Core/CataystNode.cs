@@ -49,6 +49,7 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
+        private readonly IRpcServer _rpcServer;
        
         private bool _disposed;
 
@@ -60,6 +61,7 @@ namespace Catalyst.Node.Core
             ILedger ledger,
             IKeySigner keySigner,
             ILogger logger,
+            IRpcServer rpcServer,
             IMempool mempool = null,
             IContract contract = null
             )
@@ -70,13 +72,15 @@ namespace Catalyst.Node.Core
             _ledger = ledger;
             _keySigner = keySigner;
             _logger = logger;
+            _rpcServer = rpcServer;
             _mempool = mempool;
             _contract = contract;
         }
 
         public async Task RunAsync(CancellationToken ct)
         {
-            await _dfs.StartAsync(ct);
+
+            // await _dfs.StartAsync(ct);
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
             do
@@ -101,7 +105,7 @@ namespace Catalyst.Node.Core
 
                 await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
-
+                
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
 

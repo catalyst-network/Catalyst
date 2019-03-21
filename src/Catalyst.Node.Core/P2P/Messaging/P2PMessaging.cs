@@ -109,7 +109,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 new AnyTypeClientHandler()
             };
             
-            _socketClient = await new UdpClient(_logger)
+            _socketClient = await new TcpClient(_logger)
                .Bootstrap(
                     new OutboundChannelInitializer<ISocketChannel>(channel => {},
                         handlers,
@@ -138,11 +138,19 @@ namespace Catalyst.Node.Core.P2P.Messaging
             await _socketClient.Channel.WriteAndFlushAsync(msg);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _socketServer?.Shutdown();
+                _cancellationSource?.Dispose();
+                _certificate?.Dispose();                
+            }
+        }
+        
         public void Dispose()
         {
-            _socketServer?.Shutdown();
-            _cancellationSource?.Dispose();
-            _certificate?.Dispose();
+            Dispose(true);
         }
     }
 }

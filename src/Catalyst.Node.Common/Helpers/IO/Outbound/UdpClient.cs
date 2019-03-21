@@ -36,7 +36,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             Client = new Bootstrap();
                 ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
                .Group(WorkerEventLoop)
-               .Channel<TcpSocketChannel>()
+               .Channel<TcpSocketChannel>() //WRONG
                .Option(ChannelOption.SoBacklog, 100)
                .Handler(new LoggingHandler(LogLevel.INFO))
                .Handler(channelInitializer);

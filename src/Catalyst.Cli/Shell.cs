@@ -18,18 +18,26 @@
 */
 
 using System;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
+using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Common.Helpers.Shell
+namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds
     {
+        private readonly IRpcNodes _rpcNodes;
+        private readonly IRpcClient _rpcClient;
 
         /// <summary>
         /// </summary>
-        public Shell()
+        public Shell(IRpcClient rpcClient, IRpcNodes rpcNodes)
         {
+            _rpcNodes = rpcNodes;
+            _rpcClient = rpcClient;
+            
             Console.WriteLine(@"Koopa Shell Start");
         }
 
@@ -195,8 +203,27 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private bool OnConnectNode(string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
-            throw new NotImplementedException();
+            //Guard.Argument(args).Contains(typeof(string));
+            //throw new NotImplementedException();
+            
+            Console.WriteLine("Connecting node(s) ...");
+            
+            //Get the node entered by the user from the nodes list
+            RpcNode nodeConnected = _rpcNodes.nodesList.Find(node => node.NodeId.Equals((args[2])));
+
+            try
+            {
+                Console.WriteLine("Connecting to {0} @ {1}:{2}", nodeConnected.NodeId, nodeConnected.HostAddress.ToString(), nodeConnected.Port.ToString());
+                Task.WaitAll(_rpcClient.RunClientAsync(nodeConnected));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+            
+            return true;
         }
 
         /// <summary>

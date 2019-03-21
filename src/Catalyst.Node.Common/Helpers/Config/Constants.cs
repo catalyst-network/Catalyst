@@ -33,6 +33,10 @@ namespace Catalyst.Node.Common.Helpers.Config
         public static string SerilogJsonConfigFile => "serilog.json";
         private static string JsonFilePattern => "{0}.json";
         public static string CatalystSubFolder => ".Catalyst";
+        public static string ShellConfig => "shell.json";
+        public static string ShellComponentsJsonConfigFile => "shell.components.json";
+        public static string ShellSerilogJsonConfigFile => "serilog.json";
+        public static string ShellNodesConfigFile => "nodes.json";
 
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()

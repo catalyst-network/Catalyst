@@ -31,12 +31,12 @@ namespace Catalyst.Node.Common.Helpers.Shell
     {
         protected ShellBase()
         {
-            AppCulture = new CultureInfo("es-GB", false);
+            AppCulture = new CultureInfo("en-GB", false);
         }
 
         private string Prompt => "Koopa";
         private string ServiceName => "Catalyst Distributed Shell";
-        internal static CultureInfo AppCulture { get; set; }
+        public static CultureInfo AppCulture { get; set; }
 
         /// <summary>
         /// </summary>

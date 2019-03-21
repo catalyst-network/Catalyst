@@ -38,7 +38,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// <param name="logger"></param>
         public TcpServer(ILogger logger) : base(logger)
         {
-            _supervisorEventLoop = new MultithreadEventLoopGroup();
+            _supervisorEventLoop = new MultithreadEventLoopGroup(1);
         }
 
         public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
@@ -46,7 +46,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             Server = new ServerBootstrap();
             ((DotNetty.Transport.Bootstrapping.ServerBootstrap)Server)
                .Group(_supervisorEventLoop, WorkerEventLoop)
-               .Channel<TcpServerSocketChannel>()
+               .ChannelFactory(() => new TcpServerSocketChannel())
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.INFO))
                .ChildHandler(channelInitializer);

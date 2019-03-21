@@ -17,7 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-﻿using System.Collections.Generic;
+ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Enumerator;
