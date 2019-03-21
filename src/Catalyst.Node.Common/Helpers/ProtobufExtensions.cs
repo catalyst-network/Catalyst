@@ -1,7 +1,28 @@
-﻿using System;
+﻿/*
+* Copyright(c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
+*/
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using Google.Protobuf.WellKnownTypes;
@@ -23,7 +44,18 @@ namespace Catalyst.Node.Common.Helpers
             return descriptor.FullName.Remove(0, CatalystProtocol.Length + 1);
         }
 
-        public static Any ToAny<T>(this T protobufObject) where T : IMessage
+        public static string ShortenedProtoFullName(this Type protoType)
+        {
+            Guard.Argument(protoType, nameof(protoType)).Require(t => typeof(IMessage).IsAssignableFrom(t));
+
+            //get the static field Descriptor from T
+            var descriptor = (MessageDescriptor) protoType
+               .GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)
+               .GetValue(null);
+            return ShortenedFullName(descriptor);
+        }
+
+        public static Any ToAny<T>(this T protobufObject) where T : IMessage<T>
         {
             var wrappedObject = new Any
             {

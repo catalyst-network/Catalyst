@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright(c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
@@ -17,13 +17,24 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using DotNetty.Transport.Channels.Sockets;
+using System;
+using Catalyst.Node.Common.Helpers;
+using Catalyst.Protocol.Rpc.Node;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO.Outbound
+namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class UdpClient : AbstractClient<SocketDatagramChannel>
+    public class PongResponseHandler : MessageHandlerBase<PongResponse>
     {
-        public UdpClient(ILogger logger) : base(logger) { }
+        public PongResponseHandler(IObservable<Any> messageStream, ILogger logger)
+        : base(messageStream, logger) { }
+
+        public override void HandleMessage(Any message)
+        {
+            Logger.Debug("received pong response");
+            var deserialised = message.FromAny<PongResponse>();
+            Logger.Debug("pong content is {0}", deserialised.Pong);
+        }
     }
 }
