@@ -17,28 +17,24 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System;
 using Catalyst.Node.Common.Helpers;
-using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
-using FluentAssertions;
-using Xunit;
+using Google.Protobuf.WellKnownTypes;
+using Serilog;
 
-namespace Catalyst.Node.Common.UnitTests.Helpers
+namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class ProtobufExtensionsTests
+    public class TransactionHandler : MessageHandlerBase<Transaction>
     {
-        [Fact]
-        public static void ShortenedFullName_should_remove_namespace_start()
-        {
-            Transaction.Descriptor.FullName.Should().Be("Catalyst.Protocol.Transaction.Transaction");
-            Transaction.Descriptor.ShortenedFullName().Should().Be("Transaction.Transaction");
-        }
+        public TransactionHandler(IObservable<Any> messageStream, ILogger logger)
+        : base(messageStream, logger) { }
 
-        [Fact]
-        public static void ShortenedProtoFullName_should_remove_namespace_start()
+        public override void HandleMessage(Any message)
         {
-            PeerProtocol.Types.PingRequest.Descriptor.FullName.Should().Be("Catalyst.Protocol.IPPN.PeerProtocol.PingRequest");
-            typeof(PeerProtocol.Types.PingRequest).ShortenedProtoFullName().Should().Be("IPPN.PeerProtocol.PingRequest");
+            Logger.Debug("received pong");
+            var deserialised = message.FromAny<Transaction>();
+            Logger.Debug("transaction pong is {0}", deserialised.Signature);
         }
     }
 }
