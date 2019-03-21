@@ -25,7 +25,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
     class TestPasswordReader : IPasswordReader
     {
-        private const string Password = "password";
+        private const string Password = "";
 
         public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
         {
