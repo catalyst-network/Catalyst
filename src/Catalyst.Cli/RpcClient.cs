@@ -38,7 +38,6 @@ namespace Catalyst.Cli
     /// </summary>
     public class RpcClient : IRpcClient, IDisposable
     {
-        
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
 

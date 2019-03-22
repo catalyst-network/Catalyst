@@ -36,6 +36,7 @@ using Catalyst.Node.Core.P2P.Messaging;
 using DotNetty.Codecs.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
+using Type = System.Type;
 
 namespace Catalyst.Node.Core.RPC
 {
@@ -89,6 +90,11 @@ namespace Catalyst.Node.Core.RPC
                 _logger.Error(e, e.Message);
                 Dispose();
             }
+        }
+
+        public IChannelHandler GetHandler(Type handlerType)
+        {
+            return _rpcSocketServer.Channel.Pipeline.Get(handlerType.Name);
         }
 
         /// <summary>

@@ -31,6 +31,7 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
+using Catalyst.Node.Core.RPC;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using Dawn;
@@ -108,6 +109,8 @@ namespace Catalyst.Node.Core
                 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);*/
+                var serverHandler = _rpcServer.GetHandler(typeof(RpcServerHandler)) as RpcServerHandler;
+                serverHandler.GetNodeConfig += GetNodeConfig;
 
             } while (!ct.IsCancellationRequested && !exit);
 
@@ -131,6 +134,11 @@ namespace Catalyst.Node.Core
             _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
+        }
+
+        private void GetNodeConfig(object sender, EventArgs e)
+        {
+            Console.WriteLine("GetNodeConfig event catch");
         }
 
         public void Dispose()

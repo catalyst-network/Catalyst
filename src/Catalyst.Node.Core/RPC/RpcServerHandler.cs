@@ -9,6 +9,16 @@ namespace Catalyst.Node.Core.RPC
 {
     public class RpcServerHandler : SimpleChannelInboundHandler<object>
     {
+        public event EventHandler GetNodeConfig;
+
+        protected virtual void onGetNodeConfig(EventArgs args)
+        {
+            EventHandler handler = GetNodeConfig;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
 
         public override void ChannelActive(IChannelHandlerContext contex)
         {
@@ -31,7 +41,8 @@ namespace Catalyst.Node.Core.RPC
                         response = NodeUtil.GetVersion();
                         break;
                     case "config":
-                        GetConfig();
+                        //Fire the GetNodeConfig event
+                        onGetNodeConfig(EventArgs.Empty);
                         response = "";
                         break;
                     default:

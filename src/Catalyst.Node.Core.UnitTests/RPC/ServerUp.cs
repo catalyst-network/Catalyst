@@ -52,5 +52,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             Assert.NotNull(client);
             
         }
+
+        public void CanHandleGetNodeConfigCommand()
+        {
+            
+        }
     }
 }
