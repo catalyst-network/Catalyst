@@ -96,7 +96,10 @@ namespace Catalyst.Cli
         /// <param name="node">RpcNode object which is selected to connect to by the user</param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task SendMessage(IRpcNode node, object message) { await node.SocketClient.SendMessage(message); }
+        public async Task SendMessage(IRpcNode node, Any message)
+        {
+            await node.SocketClient.SendMessage(message);
+        }
         
         /*Implementing IDisposable */
         protected virtual void Dispose(bool disposing)

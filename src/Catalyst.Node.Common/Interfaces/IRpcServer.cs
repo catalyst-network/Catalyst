@@ -17,14 +17,13 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Node.Common.Interfaces
 {
     public interface IRpcServer
     {
-        Task RunServerAsync();
+        Task StartServerAsync();
         IRpcServerSettings Settings { get; }
     }
 }

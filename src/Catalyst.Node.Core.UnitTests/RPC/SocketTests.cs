@@ -1,16 +1,20 @@
 using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Cli;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
+using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -30,6 +34,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .Build();
         }
 
@@ -69,21 +74,27 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             using (var scope = container.BeginLifetimeScope(_currentTestName))
             {
                 var logger = container.Resolve<ILogger>();
+                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
 
-                _rpcServer = container.Resolve<IRpcServer>();
-                var client = new RpcClient(logger, _certificateStore);
-                //var client = container.Resolve<IRpcClient>();
-                client.Should().NotBeNull();
                 _certificateStore = container.Resolve<ICertificateStore>();
+                _rpcServer = container.Resolve<IRpcServer>();
 
-                var peerSettings = new PeerSettings(_config) {Port = _rpcServer.Settings.Port + 1};
+                var client = new RpcClient(logger, _certificateStore);
+                client.Should().NotBeNull();
+
+                var peerSettings = new PeerSettings(_config) {Port = _rpcServer.Settings.Port + 1000};
                 var p2PMessenger = new P2PMessaging(peerSettings, _certificateStore, logger);
                 p2PMessenger.Should().NotBeNull();
 
-                //var connectedNodes = 
-                
+                var shell = new Shell(client, _config);
+                var hasConnected = shell.OnCommand("connect", "node", "node1");
+                hasConnected.Should().BeTrue();
 
-                //client.SendMessage(connectedNode)
+                var node1 = shell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+                
+                var info = shell.OnGetCommand("get", "config", "node1");
+
             }
         }
     }

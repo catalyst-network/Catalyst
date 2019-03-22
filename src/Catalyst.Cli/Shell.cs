@@ -22,11 +22,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
+using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli
 {
@@ -195,7 +196,7 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        protected override bool OnCommand(string[] args)
+        public override bool OnCommand(params string[] args)
         {
             switch (args[0].ToLower(AppCulture))
             {
@@ -323,7 +324,6 @@ namespace Catalyst.Cli
         /// <returns></returns>
         public override bool OnStopWork(string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
         }
 
@@ -331,9 +331,9 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnGetCommand(string[] args)
+        public bool OnGetCommand(params string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
+            Guard.Argument(args, nameof(args)).NotNull().MinCount(2);
             switch (args[1].ToLower(AppCulture))
             {
                 case "delta":
@@ -348,50 +348,26 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        protected override bool OnGetInfo()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Gets the version of a node
         /// </summary>
         /// <returns>Returns true if successful and false otherwise.</returns>
-        protected override bool OnGetVersion(string[] args) { return GetNodeInfo(args); }
+        protected override bool OnGetVersion(string[] args) { return true; }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        protected override bool OnGetConfig(string[] args) { return GetNodeInfo(args); }
-
-        /// <summary>
-        /// Requests node related information from the RPC Server.  The informaiton returned depends on the command in
-        /// the argument list which can be:
-        /// 1- version: gets node version
-        /// 2- config: gets node config
-        /// 3- info: gets node info
-        /// </summary>
-        /// <param name="args">Array of strings including the commands entered through command line interface</param>
-        /// <returns>Returns true if successful and false otherwise.</returns>
-        /// <exception cref="Exception"></exception>
-        private bool GetNodeInfo(string[] args)
+        protected override bool OnGetConfig(IList<string> args)
         {
             try
             {
-                //check if the args array is not null, not empty and of minimum count 2
-                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
+                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
                 //get the node 
-                var nodeConnected = GetConnectedNode(args[2]);
+                var nodeConnected = GetConnectedNode(args.First());
 
                 //check if the node entered by the user was in the list of the connected nodes
                 if (nodeConnected != null)
                 {
                     //send the message to the server by writing it to the channel
-                    _rpcClient.SendMessage(nodeConnected, args[1]);
+                    var request = new GetInfoRequest { Query = true };
+                    _rpcClient.SendMessage(nodeConnected, request.ToAny());
                 }
                 else
                 {

@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
 
             if (WriteLogsToFile) loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                 outputTemplate: LogOutputTemplate);
-
+            
             ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
         }
     }

@@ -55,5 +55,7 @@ namespace Catalyst.Node.Common.Interfaces
         bool IsConnectedNode(string nodeId);
 
         IRpcNode GetConnectedNode(string nodeId);
+
+        bool OnCommand(params string[] args);
     }
 }
