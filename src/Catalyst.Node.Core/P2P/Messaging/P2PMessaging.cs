@@ -28,8 +28,6 @@ using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
-using Common.Logging;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
@@ -142,6 +140,11 @@ namespace Catalyst.Node.Core.P2P.Messaging
         public async Task BroadcastMessageAsync(Any msg)
         {
             await _socketClient.Channel.WriteAndFlushAsync(msg);
+        }
+
+        public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, Any message)
+        {
+            
         }
 
         protected virtual void Dispose(bool disposing)

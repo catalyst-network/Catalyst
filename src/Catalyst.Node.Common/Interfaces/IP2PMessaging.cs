@@ -17,6 +17,7 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 
@@ -37,6 +38,7 @@ namespace Catalyst.Node.Common.Interfaces
         Task<bool> PingAsync(IPeerIdentifier targetNode);
 
         Task BroadcastMessageAsync(Any tx);
+        Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, Any message);
 
     }
 }

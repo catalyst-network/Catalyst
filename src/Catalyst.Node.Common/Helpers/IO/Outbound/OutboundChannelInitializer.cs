@@ -54,7 +54,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                 );
             }
 
-            pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
+            pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
             pipeline.AddLast(Handlers.ToArray());
         }
 
