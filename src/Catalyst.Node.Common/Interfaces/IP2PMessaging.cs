@@ -37,5 +37,6 @@ namespace Catalyst.Node.Common.Interfaces
         Task<bool> PingAsync(IPeerIdentifier targetNode);
 
         Task BroadcastMessageAsync(Any tx);
+
     }
 }

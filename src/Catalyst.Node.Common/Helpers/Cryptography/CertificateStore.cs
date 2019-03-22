@@ -200,7 +200,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             }
         }
 
-        private static X509Certificate2 BuildSelfSignedServerCertificate(SecureString password,
+        public static X509Certificate2 BuildSelfSignedServerCertificate(SecureString password,
             string commonName = LocalHost)
         {
             var sanBuilder = new SubjectAlternativeNameBuilder();

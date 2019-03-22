@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright(c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
@@ -17,13 +17,13 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using DotNetty.Transport.Channels.Sockets;
-using Serilog;
+using System;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Helpers.IO.Outbound
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public sealed class UdpClient : AbstractClient<SocketDatagramChannel>
+    public interface IMessageStreamer<out T> where T : IMessage
     {
-        public UdpClient(ILogger logger) : base(logger) { }
+        IObservable<T> MessageStream { get; }
     }
 }
