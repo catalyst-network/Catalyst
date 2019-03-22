@@ -18,6 +18,9 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
@@ -29,17 +32,35 @@ namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds
     {
-        private readonly IRpcNodes _rpcNodes;
+        private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
+        private List<IRpcNode> _nodes;
+
         private readonly IRpcClient _rpcClient;
 
         /// <summary>
         /// </summary>
-        public Shell(IRpcClient rpcClient, IRpcNodes rpcNodes)
+        public Shell(IRpcClient rpcClient, IConfigurationRoot config)
         {
-            _rpcNodes = rpcNodes;
+            _rpcNodeConfigs = BuildRpcNodeSettingList(config);
             _rpcClient = rpcClient;
-            
+            _nodes = new List<IRpcNode>();
+
             Console.WriteLine(@"Koopa Shell Start");
+        }
+        private List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
+        {
+            var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
+
+            var nodeList = section.GetChildren().Select(child => new RpcNodeConfig
+            {
+                NodeId = child.GetSection("nodeId").Value,
+                HostAddress = IPAddress.Parse(child.GetSection("host").Value),
+                Port = int.Parse(child.GetSection("port").Value),
+                PfxFileName = child.GetSection("PfxFileName").Value,
+                SslCertPassword = child.GetSection("SslCertPassword").Value
+            } as IRpcNodeConfig).ToList();
+
+            return nodeList;
         }
 
         /// <summary>
@@ -208,11 +229,13 @@ namespace Catalyst.Cli
             Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
             
             //Get the node entered by the user from the nodes list
-            RpcNode connectingNode = _rpcNodes.nodesList.Find(node => node.NodeId.Equals((args[2])));
+            var nodeConfig = _rpcNodeConfigs.Single(node => node.NodeId.Equals(args[2]));
 
             try
             {
-                Task.WaitAll(_rpcClient.RunClientAsync(connectingNode));
+                var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
+                var connectedNode = new RpcNode(nodeConfig, socket);
+                _nodes.Add(connectedNode);
             }
             catch (Exception e)
             {
@@ -220,9 +243,20 @@ namespace Catalyst.Cli
                 throw;
             }
             
-            
             return true;
         }
+
+        public override bool IsConnectedNode(string nodeId)
+        {
+            //todo : check the socket is actually opened
+            return _nodes.Exists(node => node.Config.NodeId == nodeId);
+        }
+
+        public override IRpcNode GetConnectedNode(string nodeId)
+        {
+            return _nodes.SingleOrDefault(node => node.Config.NodeId.Equals(nodeId));
+        }
+
 
         /// <summary>
         /// </summary>
@@ -269,7 +303,19 @@ namespace Catalyst.Cli
         public override bool OnStopNode(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
-            throw new NotImplementedException();
+
+            var node = _nodes.SingleOrDefault(n => n.Config.NodeId == args[0]);
+
+            if (node == null) { return false; }
+
+            node.SocketClient.Shutdown().GetAwaiter().GetResult();
+            _nodes.Remove(node);
+            return true;
+        }
+
+        public void SocketClientDisconnectedHandler()
+        {
+            //TODO : when a connection closes unexpectedly, remove the corresponding RpcNode from _nodes list.
         }
 
         /// <summary>
@@ -339,7 +385,7 @@ namespace Catalyst.Cli
                 Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
 
                 //get the node 
-                RpcNode nodeConnected = _rpcClient.GetConnectedNode(args[2]);
+                var nodeConnected = GetConnectedNode(args[2]);
 
                 //check if the node entered by the user was in the list of the connected nodes
                 if (nodeConnected != null)

@@ -62,6 +62,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public abstract bool OnStopWork(string[] args);
 
+        public abstract bool IsConnectedNode(string nodeId);
+        public abstract IRpcNode GetConnectedNode(string nodeId);
+
         /// <summary>
         ///     Prints a list of available cli commands.
         /// </summary>

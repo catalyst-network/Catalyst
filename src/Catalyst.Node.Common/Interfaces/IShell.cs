@@ -17,6 +17,8 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using Catalyst.Node.Common.Helpers.Shell;
+
 namespace Catalyst.Node.Common.Interfaces
 {
     public interface IShell
@@ -49,5 +51,9 @@ namespace Catalyst.Node.Common.Interfaces
         /// </summary>
         /// <returns></returns>
         bool OnStopWork(string[] args);
+
+        bool IsConnectedNode(string nodeId);
+
+        IRpcNode GetConnectedNode(string nodeId);
     }
 }
