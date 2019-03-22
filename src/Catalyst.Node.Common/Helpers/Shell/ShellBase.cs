@@ -18,11 +18,13 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Security;
 using System.Text;
 using Catalyst.Node.Common.Interfaces;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Catalyst.Node.Common.Helpers.Shell
@@ -62,6 +64,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public abstract bool OnStopWork(string[] args);
 
+        public abstract bool IsConnectedNode(string nodeId);
+        public abstract IRpcNode GetConnectedNode(string nodeId);
+
         /// <summary>
         ///     Prints a list of available cli commands.
         /// </summary>
@@ -94,7 +99,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        protected virtual bool OnCommand(string[] args)
+        public virtual bool OnCommand(params string[] args)
         {
             switch (args[0].ToLower(AppCulture))
             {
@@ -120,10 +125,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         {
             switch (args[1].ToLower(AppCulture))
             {
-                case "info":
-                    return OnGetInfo();
                 case "config":
-                    return OnGetConfig(args);
+                    return OnGetConfig(args.Skip(2).ToList());
                 case "version":
                     return OnGetVersion(args);
                 case "mempool":
@@ -134,15 +137,10 @@ namespace Catalyst.Node.Common.Helpers.Shell
         }
 
         /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool OnGetInfo();
-
-        /// <summary>
         ///     Prints the current loaded settings.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetConfig(string[] args);
+        protected abstract bool OnGetConfig(IList<string> args);
 
         /// <summary>
         ///     Prints the current node version.

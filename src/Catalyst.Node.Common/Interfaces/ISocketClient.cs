@@ -20,6 +20,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
@@ -28,6 +29,6 @@ namespace Catalyst.Node.Common.Interfaces
         IChannel Channel { get; set; }
         IBootstrap Client { get; set; }
         Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port);
-        Task SendMessage(object message);
+        Task SendMessage(Any message);
     }
 }

@@ -18,28 +18,50 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
+using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds
     {
-        private readonly IRpcNodes _rpcNodes;
+        private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
+        private List<IRpcNode> _nodes;
+
         private readonly IRpcClient _rpcClient;
 
         /// <summary>
         /// </summary>
-        public Shell(IRpcClient rpcClient, IRpcNodes rpcNodes)
+        public Shell(IRpcClient rpcClient, IConfigurationRoot config)
         {
-            _rpcNodes = rpcNodes;
+            _rpcNodeConfigs = BuildRpcNodeSettingList(config);
             _rpcClient = rpcClient;
-            
+            _nodes = new List<IRpcNode>();
+
             Console.WriteLine(@"Koopa Shell Start");
+        }
+        private List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
+        {
+            var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
+
+            var nodeList = section.GetChildren().Select(child => new RpcNodeConfig
+            {
+                NodeId = child.GetSection("nodeId").Value,
+                HostAddress = IPAddress.Parse(child.GetSection("host").Value),
+                Port = int.Parse(child.GetSection("port").Value),
+                PfxFileName = child.GetSection("PfxFileName").Value,
+                SslCertPassword = child.GetSection("SslCertPassword").Value
+            } as IRpcNodeConfig).ToList();
+
+            return nodeList;
         }
 
         /// <summary>
@@ -174,7 +196,7 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        protected override bool OnCommand(string[] args)
+        public override bool OnCommand(params string[] args)
         {
             switch (args[0].ToLower(AppCulture))
             {
@@ -208,11 +230,13 @@ namespace Catalyst.Cli
             Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
             
             //Get the node entered by the user from the nodes list
-            RpcNode connectingNode = _rpcNodes.nodesList.Find(node => node.NodeId.Equals((args[2])));
+            var nodeConfig = _rpcNodeConfigs.Single(node => node.NodeId.Equals(args[2]));
 
             try
             {
-                Task.WaitAll(_rpcClient.RunClientAsync(connectingNode));
+                var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
+                var connectedNode = new RpcNode(nodeConfig, socket);
+                _nodes.Add(connectedNode);
             }
             catch (Exception e)
             {
@@ -220,9 +244,20 @@ namespace Catalyst.Cli
                 throw;
             }
             
-            
             return true;
         }
+
+        public override bool IsConnectedNode(string nodeId)
+        {
+            //todo : check the socket is actually opened
+            return _nodes.Exists(node => node.Config.NodeId == nodeId);
+        }
+
+        public override IRpcNode GetConnectedNode(string nodeId)
+        {
+            return _nodes.SingleOrDefault(node => node.Config.NodeId.Equals(nodeId));
+        }
+
 
         /// <summary>
         /// </summary>
@@ -269,7 +304,19 @@ namespace Catalyst.Cli
         public override bool OnStopNode(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
-            throw new NotImplementedException();
+
+            var node = _nodes.SingleOrDefault(n => n.Config.NodeId == args[0]);
+
+            if (node == null) { return false; }
+
+            node.SocketClient.Shutdown().GetAwaiter().GetResult();
+            _nodes.Remove(node);
+            return true;
+        }
+
+        public void SocketClientDisconnectedHandler()
+        {
+            //TODO : when a connection closes unexpectedly, remove the corresponding RpcNode from _nodes list.
         }
 
         /// <summary>
@@ -277,7 +324,6 @@ namespace Catalyst.Cli
         /// <returns></returns>
         public override bool OnStopWork(string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
         }
 
@@ -285,9 +331,9 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnGetCommand(string[] args)
+        public bool OnGetCommand(params string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
+            Guard.Argument(args, nameof(args)).NotNull().MinCount(2);
             switch (args[1].ToLower(AppCulture))
             {
                 case "delta":
@@ -302,50 +348,26 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        protected override bool OnGetInfo()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Gets the version of a node
         /// </summary>
         /// <returns>Returns true if successful and false otherwise.</returns>
-        protected override bool OnGetVersion(string[] args) { return GetNodeInfo(args); }
+        protected override bool OnGetVersion(string[] args) { return true; }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        protected override bool OnGetConfig(string[] args) { return GetNodeInfo(args); }
-
-        /// <summary>
-        /// Requests node related information from the RPC Server.  The informaiton returned depends on the command in
-        /// the argument list which can be:
-        /// 1- version: gets node version
-        /// 2- config: gets node config
-        /// 3- info: gets node info
-        /// </summary>
-        /// <param name="args">Array of strings including the commands entered through command line interface</param>
-        /// <returns>Returns true if successful and false otherwise.</returns>
-        /// <exception cref="Exception"></exception>
-        private bool GetNodeInfo(string[] args)
+        protected override bool OnGetConfig(IList<string> args)
         {
             try
             {
-                //check if the args array is not null, not empty and of minimum count 2
-                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
+                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
                 //get the node 
-                RpcNode nodeConnected = _rpcClient.GetConnectedNode(args[2]);
+                var nodeConnected = GetConnectedNode(args.First());
 
                 //check if the node entered by the user was in the list of the connected nodes
                 if (nodeConnected != null)
                 {
                     //send the message to the server by writing it to the channel
-                    _rpcClient.SendMessage(nodeConnected, args[1]);
+                    var request = new GetInfoRequest { Query = true };
+                    _rpcClient.SendMessage(nodeConnected, request.ToAny());
                 }
                 else
                 {

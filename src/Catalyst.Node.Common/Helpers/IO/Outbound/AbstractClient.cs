@@ -23,6 +23,7 @@ using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
@@ -53,6 +54,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             return this;
         }
 
-        public Task SendMessage(object message) { return Channel.WriteAndFlushAsync(message); }
+        public Task SendMessage(Any message)
+        {
+            return Channel.WriteAndFlushAsync(message);
+        }
     }
 }

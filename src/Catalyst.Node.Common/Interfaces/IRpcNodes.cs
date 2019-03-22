@@ -4,8 +4,8 @@ using Catalyst.Node.Common.Helpers.Shell;
 
 namespace Catalyst.Node.Common.Interfaces 
 {
-    public interface IRpcNodes
+    public interface IRpcNodesSettings
     {
-        List<RpcNode> nodesList { get; }
+        List<IRpcNodeConfig> NodesList { get; }
     }
 }

@@ -17,7 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
+
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 
@@ -25,7 +25,7 @@ namespace Catalyst.Node.Common.Interfaces
 {
     public interface IRpcServer
     {
-        Task RunServerAsync();
+        Task StartServerAsync();
         IRpcServerSettings Settings { get; }
         
         SimpleChannelInboundHandler<object> RpcServerHandler { get; }

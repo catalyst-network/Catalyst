@@ -3,13 +3,16 @@ using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
-    public class RpcNode
+    public class RpcNode : IRpcNode
     {
-        public string NodeId { get; set; }
-        public IPAddress HostAddress { get; set; }
-        public int Port { get; set; }
-        public string PfxFileName { get; set; }
-        public string SslCertPassword { get; set; }
-        public ISocketClient socketClient { get; set; }
+        public IRpcNodeConfig Config { get; }
+    
+        public RpcNode(IRpcNodeConfig config, ISocketClient socketClient)
+        {
+            Config = config;
+            SocketClient = socketClient;
+        }
+
+        public ISocketClient SocketClient { get; }
     }
 }

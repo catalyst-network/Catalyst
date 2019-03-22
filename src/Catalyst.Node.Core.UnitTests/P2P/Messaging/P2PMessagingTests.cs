@@ -80,7 +80,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {
-
             ConfigureTestContainer();
             var indexes = Enumerable.Range(0, 3).ToList();
 

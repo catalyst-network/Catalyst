@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Shell;
@@ -41,9 +42,7 @@ namespace Catalyst.Cli
     {
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
-
-        private List<RpcNode> _connectedNodes;
-        
+      
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
         /// 1- Get the settings from the config file
@@ -57,19 +56,14 @@ namespace Catalyst.Cli
         {
             _logger = logger;
             _certificateStore = certificateStore;
-            
-            _connectedNodes = new List<RpcNode>();
         }
         
-        public async Task RunClientAsync(RpcNode node)
+        public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
         {
-            _logger.Information("Connecting to node ...");
-            
-            X509Certificate2 _certificate = _certificateStore.ReadOrCreateCertificateFile(node.PfxFileName);
+            var certificate = _certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName);
 
             _logger.Information("Rpc client starting");
-            
-            _logger.Information("Connecting to {0} @ {1}:{2}", node.NodeId, node.HostAddress.ToString(), node.Port.ToString());
+            _logger.Information("Connecting to {0} @ {1}:{2}", nodeConfig.NodeId, nodeConfig.HostAddress, nodeConfig.Port);
             
             var handlers = new List<IChannelHandler>
             {
@@ -80,36 +74,19 @@ namespace Catalyst.Cli
                 new AnyTypeClientHandler()
             };
             
-            node.socketClient = await new TcpClient(_logger)
+            var socketClient = await new TcpClient(_logger)
                .Bootstrap(
                     new OutboundChannelInitializer<ISocketChannel>(channel => {},
                         handlers,
-                        node.HostAddress,
-                        _certificate
+                        nodeConfig.HostAddress,
+                        certificate
                     )
                 )
                .ConnectClient(
-                    node.HostAddress,
-                    node.Port
+                    nodeConfig.HostAddress,
+                    nodeConfig.Port
                 );
-            
-            _connectedNodes.Add(node);
-                
-        }
-
-        public bool IsConnectedNode(string nodeId)
-        {
-            return _connectedNodes.Exists(node => node.NodeId == nodeId);
-        }
-        
-        public RpcNode GetConnectedNode(string nodeId)
-        {
-            if(IsConnectedNode(nodeId))
-                return _connectedNodes.Find(node => node.NodeId.Equals(nodeId));
-            else
-            {
-                return null;
-            }
+            return socketClient;
         }
 
         /// <summary>
@@ -118,7 +95,10 @@ namespace Catalyst.Cli
         /// <param name="node">RpcNode object which is selected to connect to by the user</param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task SendMessage(RpcNode node, object message) { await node.socketClient.SendMessage(message); }
+        public async Task SendMessage(IRpcNode node, Any message)
+        {
+            await node.SocketClient.SendMessage(message);
+        }
         
         /*Implementing IDisposable */
         protected virtual void Dispose(bool disposing)

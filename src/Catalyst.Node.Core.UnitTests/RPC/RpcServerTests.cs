@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 Assert.NotNull(client);
             }
 
-            _rpcServer.RunServerAsync();
+            _rpcServer.StartServerAsync();
         }
         
 

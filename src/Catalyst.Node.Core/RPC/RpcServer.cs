@@ -56,8 +56,11 @@ namespace Catalyst.Node.Core.RPC
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
+
             RpcServerHandler = new RpcServerHandler();
-            var longRunningTasks = new [] {RunServerAsync()};
+
+            var longRunningTasks = new [] {StartServerAsync()};
+
             Task.WaitAll(longRunningTasks);
         }
 
@@ -65,7 +68,7 @@ namespace Catalyst.Node.Core.RPC
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task RunServerAsync()
+        public async Task StartServerAsync()
         {
             _logger.Information("Rpc Server Starting!");
 
