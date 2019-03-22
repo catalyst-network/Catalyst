@@ -17,17 +17,23 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Threading.Tasks;
-using DotNetty.Transport.Channels;
+using System.IO;
+using System.Reflection.Metadata;
+using System.Security;
+using System.Security.Cryptography.X509Certificates;
+using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Cryptography;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
-    public interface IRpcServer
+    public class TestCertificateStore : ICertificateStore
     {
-        Task RunServerAsync();
-        IRpcServerSettings Settings { get; }
-        
-        SimpleChannelInboundHandler<object> RpcServerHandler { get; }
+        public X509Certificate2 ReadOrCreateCertificateFile(string fileName)
+        {
+            return CertificateStore.BuildSelfSignedServerCertificate(new SecureString());
+        }
+
+        public X509Certificate2 ReadOrCreateCertificateFile(string fileName, string password) { return CertificateStore.BuildSelfSignedServerCertificate(new SecureString()); }
     }
 }

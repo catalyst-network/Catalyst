@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net.Sockets;
 using Autofac;
@@ -8,16 +9,19 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using Catalyst.Node.Core.RPC;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public class ServerUp : ConfigFileBasedTest
+    public class RpcServerTests : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
 
         private IRpcServer _rpcServer;
+        
+        private readonly ITestOutputHelper _output;
 
-        public ServerUp(ITestOutputHelper output) : base(output)
+        public RpcServerTests(ITestOutputHelper output) : base(output)
         {
             //Build configuration
             _config = new ConfigurationBuilder()
@@ -25,37 +29,45 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
-            
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
 
-            //Create container
-            var container = ContainerBuilder.Build();
-            
-            //Resolve the CLIRPCServer 
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
-            {
-                var logger = container.Resolve<ILogger>();
-                var certificateStore = container.Resolve<ICertificateStore>();
-
-                var cliRPCServer = container.Resolve<IRpcServer>();
-                _rpcServer = cliRPCServer;
-            }
+            _output = output;
         }
 
         [Fact]
         public void ServerConnectedToCorrectPort()
         {
+            WriteLogsToFile = true;
+            WriteLogsToTestOutput = true;
+            //Create ContainerBuilder based on the configuration
+            ConfigureContainerBuilder(_config);
 
-            var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(), _rpcServer.Settings.Port);
-            
-            Assert.NotNull(client);
-            
+            //Create container
+            var container = ContainerBuilder.Build();
+ 
+            using (var scope = container.BeginLifetimeScope(_currentTestName))
+            {
+                var logger = container.Resolve<ILogger>();
+
+                _rpcServer = container.Resolve<IRpcServer>();
+                var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(), _rpcServer.Settings.Port);
+                Assert.NotNull(client);
+            }
+
+            _rpcServer.RunServerAsync();
         }
+        
 
+        [Fact]
         public void CanHandleGetNodeConfigCommand()
         {
+            ((RpcServerHandler)_rpcServer.RpcServerHandler).GetNodeConfig += GetNodeConfig;
             
+            //serverHandler.GetConfig();
+        }
+        
+        private void GetNodeConfig(object sender, EventArgs e)
+        {
+            Console.WriteLine("GetNodeConfig event catch");
         }
     }
 }

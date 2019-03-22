@@ -20,21 +20,39 @@
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public abstract class AbstractClient : AbstractIo, ISocketClient
+    public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient 
+        where TChannel : IChannel, new()
     {
         public IBootstrap Client { get; set; }
         
         protected AbstractClient(ILogger logger) : base(logger) {}
 
-        public abstract ISocketClient Bootstrap(IChannelHandler channelInitializer);
+        public virtual ISocketClient Bootstrap(IChannelHandler channelInitializer)
+        {
+            Client = new Bootstrap();
+            ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
+               .Group(WorkerEventLoop)
+               .Channel<TChannel>()
+               .Option(ChannelOption.SoBacklog, BackLogValue)
+               .Handler(new LoggingHandler(LogLevel.DEBUG))
+               .Handler(channelInitializer);
+            return this;
+        }
 
-        public abstract Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port);
+        public virtual async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
+        {
+            Channel = await Client.ConnectAsync(listenAddress, port)
+               .ConfigureAwait(false);
+            return this;
+        }
 
-        public abstract Task SendMessage(object message);
+        public Task SendMessage(object message) { return Channel.WriteAndFlushAsync(message); }
     }
 }

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,16 +46,17 @@ namespace Catalyst.Node.Core.RPC
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private readonly IRpcServerSettings _settings;
         private ISocketServer _rpcSocketServer;
-        public IRpcServerSettings Settings { get; set; }
+        public IRpcServerSettings Settings { get; }
+        public SimpleChannelInboundHandler<object> RpcServerHandler { get; }
 
         public RpcServer(IRpcServerSettings settings, ILogger logger, ICertificateStore certificateStore)
         {
             _logger = logger;
-            _settings = settings;
+            Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
+            RpcServerHandler = new RpcServerHandler();
             var longRunningTasks = new [] {RunServerAsync()};
             Task.WaitAll(longRunningTasks);
         }
@@ -73,7 +75,8 @@ namespace Catalyst.Node.Core.RPC
                 new ProtobufDecoder(Any.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new AnyTypeServerHandler()
+                new AnyTypeServerHandler(),
+                RpcServerHandler
             };
 
             try
@@ -83,18 +86,13 @@ namespace Catalyst.Node.Core.RPC
                         channel => { },
                         handlers,
                         certificate: _certificate)
-                   ).StartServer(_settings.BindAddress, _settings.Port);
+                   ).StartServer(Settings.BindAddress, Settings.Port);
             }
             catch (Exception e)
             {
                 _logger.Error(e, e.Message);
                 Dispose();
             }
-        }
-
-        public IChannelHandler GetHandler(Type handlerType)
-        {
-            return _rpcSocketServer.Channel.Pipeline.Get(handlerType.Name);
         }
 
         /// <summary>

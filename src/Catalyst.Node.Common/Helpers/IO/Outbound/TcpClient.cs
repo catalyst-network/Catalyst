@@ -17,38 +17,13 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System.Net;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
-using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using DotNetty.Handlers.Logging;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public sealed class TcpClient : AbstractClient
+    public sealed class TcpClient : AbstractClient<TcpSocketChannel>
     {
         public TcpClient(ILogger logger) : base(logger) { }
-
-        public override ISocketClient Bootstrap(IChannelHandler channelInitializer)
-        {
-            Client = new Bootstrap();
-            ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
-               .Group(WorkerEventLoop)
-               .Channel<TcpSocketChannel>()
-               .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.INFO))
-               .Handler(channelInitializer);
-            return this;
-        }
-        
-        public override async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
-        {
-            Channel = await Client.ConnectAsync(listenAddress, port).ConfigureAwait(false);
-            return this;
-        }
-        
-        public override async Task SendMessage(object message) { await Channel.WriteAndFlushAsync(message); }
     }
 }

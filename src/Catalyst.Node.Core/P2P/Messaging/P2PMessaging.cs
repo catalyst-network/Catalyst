@@ -28,23 +28,27 @@ using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Common.Logging;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class P2PMessaging : IP2PMessaging, IDisposable
+    public class P2PMessaging : IP2PMessaging, IDisposable, IMessageStreamer<Any>
     {
         private readonly IPeerSettings _settings;
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
+        private readonly AnyTypeClientHandler _anyTypeClientHandler;
         private ISocketClient _socketClient;
         private ISocketServer _socketServer;
 
         public IPeerIdentifier Identifier { get; }
-        
+        public IObservable<Any> MessageStream { get; }
+
         static P2PMessaging()
         {
             //Find a better way to do this at some point
@@ -63,6 +67,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _cancellationSource = new CancellationTokenSource();
 
             Identifier = new PeerIdentifier(settings);
+            _anyTypeClientHandler = new AnyTypeClientHandler();
+            MessageStream = _anyTypeClientHandler.MessageStream;
 
             var longRunningTasks = new [] {RunP2PServerAsync(), RunP2PClientAsync()};
             Task.WaitAll(longRunningTasks);
@@ -84,8 +90,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             try
             {
                 _socketServer = await new TcpServer(_logger)
-                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(
-                        channel => { },
+                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
                             handlers,
                             certificate: _certificate)
                 ).StartServer(_settings.BindAddress, _settings.Port);
@@ -100,13 +105,14 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private async Task RunP2PClientAsync()
         {
             _logger.Debug("P2P client starting");
+
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(Any.Parser),
-                new AnyTypeClientHandler()
+                _anyTypeClientHandler
             };
             
             _socketClient = await new TcpClient(_logger)
@@ -138,16 +144,20 @@ namespace Catalyst.Node.Core.P2P.Messaging
             await _socketClient.Channel.WriteAndFlushAsync(msg);
         }
 
+        public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, Any message)
+        {
+
+        }
+
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                _socketServer?.Shutdown();
-                _cancellationSource?.Dispose();
-                _certificate?.Dispose();                
-            }
+            if (!disposing) return;
+            _socketServer?.Shutdown();
+            _cancellationSource?.Dispose();
+            _certificate?.Dispose();
+            _anyTypeClientHandler?.Dispose();
         }
-        
+
         public void Dispose()
         {
             Dispose(true);

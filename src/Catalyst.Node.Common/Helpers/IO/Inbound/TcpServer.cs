@@ -30,6 +30,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
     
     public sealed class TcpServer : AbstractServer
     {
+        private readonly ILogger _logger;
         private readonly IEventLoopGroup _supervisorEventLoop;
 
         /// <summary>
@@ -38,7 +39,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// <param name="logger"></param>
         public TcpServer(ILogger logger) : base(logger)
         {
-            _supervisorEventLoop = new MultithreadEventLoopGroup(1);
+            _logger = logger;
+            _supervisorEventLoop = new MultithreadEventLoopGroup();
         }
 
         public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
@@ -48,7 +50,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
                .Group(_supervisorEventLoop, WorkerEventLoop)
                .ChannelFactory(() => new TcpServerSocketChannel())
                .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.INFO))
+               .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelInitializer);
             return this;
         }
@@ -56,6 +58,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public override async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
         {
             Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
+            _logger.Information(@"TcpServerChannel {0} is bound to {1} and {2}", Channel.Id, Channel.LocalAddress, Channel.Open ? "opened" : "closed");
             return this;
         }
         

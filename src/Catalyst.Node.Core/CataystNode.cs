@@ -109,8 +109,8 @@ namespace Catalyst.Node.Core
                 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);*/
-                var serverHandler = _rpcServer.GetHandler(typeof(RpcServerHandler)) as RpcServerHandler;
-                serverHandler.GetNodeConfig += GetNodeConfig;
+                
+                ((RpcServerHandler)_rpcServer.RpcServerHandler).GetNodeConfig += GetNodeConfig;
 
             } while (!ct.IsCancellationRequested && !exit);
 

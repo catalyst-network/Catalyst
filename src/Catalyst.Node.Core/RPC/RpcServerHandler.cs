@@ -4,13 +4,16 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.RPC
 {
     public class RpcServerHandler : SimpleChannelInboundHandler<object>
     {
+        //event to be fired when the RpcServerHandler recevives a GetNodeConfig command from the RpcClient
         public event EventHandler GetNodeConfig;
 
+        //Delegate associated with the event
         protected virtual void onGetNodeConfig(EventArgs args)
         {
             EventHandler handler = GetNodeConfig;
@@ -76,10 +79,6 @@ namespace Catalyst.Node.Core.RPC
             contex.CloseAsync();
         }
 
-        public event Action OnGetConfig = delegate { };
-
         public override bool IsSharable => true;
-
-        public void GetConfig() { OnGetConfig(); }
     }
 }
