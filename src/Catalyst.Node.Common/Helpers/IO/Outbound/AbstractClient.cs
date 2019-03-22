@@ -41,7 +41,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                .Group(WorkerEventLoop)
                .Channel<TChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.INFO))
+               .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer);
             return this;
         }

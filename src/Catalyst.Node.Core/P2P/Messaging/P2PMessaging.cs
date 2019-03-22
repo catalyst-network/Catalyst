@@ -144,6 +144,11 @@ namespace Catalyst.Node.Core.P2P.Messaging
             await _socketClient.Channel.WriteAndFlushAsync(msg);
         }
 
+        public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, Any message)
+        {
+
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;

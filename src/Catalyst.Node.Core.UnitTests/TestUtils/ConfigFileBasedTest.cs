@@ -17,6 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System.IO;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
@@ -24,6 +25,7 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Events;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
@@ -33,16 +35,20 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
 
         protected ContainerBuilder ContainerBuilder;
         protected ConfigFileBasedTest(ITestOutputHelper output) : base(output) { }
+        protected bool WriteLogsToTestOutput { get; set; } = false;
+        protected bool WriteLogsToFile { get; set; } = false;
+
+        protected string LogOutputTemplate { get; set; } =
+            "{Timestamp:HH:mm:ss} [{Level:u3}] ({ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}";
+
+        protected LogEventLevel LogEventLevel { get; set; } = LogEventLevel.Verbose;
 
         protected virtual void ConfigureContainerBuilder(IConfigurationRoot config)
         {
             var configurationModule = new ConfigurationModule(config);
             ContainerBuilder = new ContainerBuilder();
             ContainerBuilder.RegisterModule(configurationModule);
-
-            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config);
-            Log.Logger = loggerConfiguration.CreateLogger();
-            ContainerBuilder.RegisterLogger();
+            ContainerBuilder.RegisterInstance(config).As<IConfigurationRoot>();
 
             var repoFactory =
                 RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
@@ -53,6 +59,21 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
             
             var certificateStore = new TestCertificateStore();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
+
+            ConfigureLogging(config);
+        }
+
+        private void ConfigureLogging(IConfigurationRoot config)
+
+        {
+            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
+
+            if (WriteLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(_output, LogEventLevel, LogOutputTemplate);
+
+            if (WriteLogsToFile) loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
+                outputTemplate: LogOutputTemplate);
+
+            ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
         }
     }
 }

@@ -96,22 +96,5 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
                 //this happens all the time.
             }
         }
-
-        public static uint GetHashFromItems<T>(IEnumerable<T> items)
-        {
-            if (items == null)
-            {
-                return 0;
-            }
-            unchecked
-            {
-                var hash = 19;
-                foreach (var obj in items)
-                {
-                    hash = hash * 31 + obj.GetHashCode();
-                }
-                return (uint) hash;
-            }
-        }
     }
 }

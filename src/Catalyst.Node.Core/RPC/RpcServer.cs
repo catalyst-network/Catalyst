@@ -44,14 +44,13 @@ namespace Catalyst.Node.Core.RPC
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private readonly IRpcServerSettings _settings;
         private ISocketServer _rpcSocketServer;
-        public IRpcServerSettings Settings { get; set; }
+        public IRpcServerSettings Settings { get; }
 
         public RpcServer(IRpcServerSettings settings, ILogger logger, ICertificateStore certificateStore)
         {
             _logger = logger;
-            _settings = settings;
+            Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
             var longRunningTasks = new [] {RunServerAsync()};
@@ -82,7 +81,7 @@ namespace Catalyst.Node.Core.RPC
                         channel => { },
                         handlers,
                         certificate: _certificate)
-                   ).StartServer(_settings.BindAddress, _settings.Port);
+                   ).StartServer(Settings.BindAddress, Settings.Port);
             }
             catch (Exception e)
             {

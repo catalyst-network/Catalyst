@@ -42,6 +42,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         protected override void InitChannel(T channel)
         {
             InitializationAction(channel);
+            var pipeline = channel.Pipeline;
 
             if (Certificate != null)
             {
@@ -53,8 +54,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                 );
             }
 
-            channel.Pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-            channel.Pipeline.AddLast(Handlers.ToArray());
+            pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
+            pipeline.AddLast(Handlers.ToArray());
         }
 
         public override string ToString()

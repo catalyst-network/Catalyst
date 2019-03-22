@@ -37,6 +37,7 @@ using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -46,6 +47,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
     {
         private readonly IConfigurationRoot _config;
         private IEnumerable<IDisposable> _subscriptions;
+        private ILifetimeScope _scope;
+        private ILogger _logger;
+        private ICertificateStore _certificateStore;
 
         public P2PMessagingTests(ITestOutputHelper output) : base(output)
         {
@@ -56,45 +60,77 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
                .Build();
         }
 
+        private void ConfigureTestContainer()
+        {
+            WriteLogsToFile = true;
+            WriteLogsToTestOutput = true;
+
+            ConfigureContainerBuilder(_config);
+
+            var container = ContainerBuilder.Build();
+            _scope = container.BeginLifetimeScope(_currentTestName);
+
+            _logger = container.Resolve<ILogger>();
+            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+
+            _certificateStore = container.Resolve<ICertificateStore>();
+        }
+
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {
-            ConfigureContainerBuilder(_config);
+
+            ConfigureTestContainer();
+            var indexes = Enumerable.Range(0, 3).ToList();
+
+            var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
+            var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
+
+            var observers = indexes.Select(i => new AnyObserver(i, _logger)).ToList();
+            _subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
+
+            var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
+            await peers[0].BroadcastMessageAsync(broadcastMessage);
+
+            var tasks = peers
+               .Select(async p => await p.MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)))
+               .ToArray();
+            Task.WaitAll(tasks, TimeSpan.FromMilliseconds(100));
+        
+
+            var received = observers.Select(o => o.Received).ToList();
+            received.Count(r => r.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
+        
+        }
+
+        [Fact(Skip = "not ready yet")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
+        {
+            ConfigureTestContainer();
+
+            var indexes = Enumerable.Range(0, 3).ToList();
+
+            var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
+            var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
+
+            //var observers = indexes.Select(i => new AnyObserver(i, _logger)).ToList();
+            //_subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
+
+            //await peers[0].PingAsync(peers[2].Identifier);
+
+            //var tasks = Task.Run(() => peers[2].MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)));
+            //Task.WaitAll(new Task[]{tasks}, TimeSpan.FromMilliseconds(200))};
             
-            var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
-            {
-                var logger = container.Resolve<ILogger>();
-                var certificateStore = container.Resolve<ICertificateStore>();
-
-                var indexes = Enumerable.Range(0, 3).ToList();
-
-                var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
-                var peers = peerSettings.Select(s => new P2PMessaging(s, certificateStore, logger)).ToList();
-
-                var observers = indexes.Select(i => new AnyObserver(i, _output)).ToList();
-                _subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
-
-                var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
-                await peers[0].BroadcastMessageAsync(broadcastMessage);
-
-                using (var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(100)))
-                {
-                    var tasks = peers
-                       .Select(async p => await p.MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)))
-                       .ToArray();
-                    Task.WaitAll(tasks, cts.Token);
-                }
-
-                var received = observers.Select(o => o.Received).ToList();
-                received.Count(r => r.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
-            }
         }
 
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             if (!disposing) return;
+
+            _scope?.Dispose();
             if(_subscriptions == null) return;
             foreach (var subscription in _subscriptions)
             {
@@ -104,24 +140,24 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
 
         private class AnyObserver : IObserver<Any>
         {
-            private readonly ITestOutputHelper _output;
+            private readonly ILogger _logger;
 
-            public AnyObserver(int index, ITestOutputHelper output)
+            public AnyObserver(int index, ILogger logger)
             {
-                _output = output;
+                _logger = logger;
                 Index = index;
             }
 
             public Any Received { get; private set; }
             public int Index { get; }
 
-            public void OnCompleted() { _output.WriteLine($"observer {Index} done"); }
-            public void OnError(Exception error) { _output.WriteLine($"observer {Index} received error : {error.Message}"); }
+            public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
+            public void OnError(Exception error) { _logger.Debug($"observer {Index} received error : {error.Message}"); }
 
             public void OnNext(Any value)
             {
                 if(NullObjects.Any.Equals(value)) return;
-                _output.WriteLine($"observer {Index} received message of type {value?.TypeUrl ?? "(null)"}");
+                _logger.Debug($"observer {Index} received message of type {value?.TypeUrl ?? "(null)"}");
                 Received = value;
             }
         }
