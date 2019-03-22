@@ -19,25 +19,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using DotNetty.Codecs;
-using DotNetty.Handlers.Logging;
-using DotNetty.Handlers.Tls;
-using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Core.P2P.Messaging;
 using DotNetty.Codecs.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
-using Type = System.Type;
 
 namespace Catalyst.Node.Core.RPC
 {

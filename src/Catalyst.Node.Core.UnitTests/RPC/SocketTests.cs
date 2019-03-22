@@ -97,5 +97,42 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             }
         }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcClient_can_send_request_and_RpcServer_can_reply()
+        {
+            WriteLogsToFile = true;
+            WriteLogsToTestOutput = true;
+            //Create ContainerBuilder based on the configuration
+            ConfigureContainerBuilder(_config);
+
+            //Create container
+            var container = ContainerBuilder.Build();
+
+            using (var scope = container.BeginLifetimeScope(_currentTestName))
+            {
+                var logger = container.Resolve<ILogger>();
+                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
+
+                _certificateStore = container.Resolve<ICertificateStore>();
+                _rpcServer = container.Resolve<IRpcServer>();
+
+                var client = new RpcClient(logger, _certificateStore);
+                client.Should().NotBeNull();
+
+                var shell = new Shell(client, _config);
+                var hasConnected = shell.OnCommand("connect", "node", "node1");
+                hasConnected.Should().BeTrue();
+
+                var node1 = shell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+
+                var info = shell.OnGetCommand("get", "config", "node1");
+                //client.
+
+            }
+        }
+
     }
 }
