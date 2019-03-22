@@ -28,6 +28,7 @@ using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Codecs.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using PeerTalk.Protocols;
 using Serilog;
 
 namespace Catalyst.Node.Core.RPC
@@ -38,19 +39,25 @@ namespace Catalyst.Node.Core.RPC
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
         private ISocketServer _rpcSocketServer;
+        private AnyTypeServerHandlerBase _anyTypeServerHandlerBase;
+        private GetInfoRequestHandler _infoRequestHandler;
         public IRpcServerSettings Settings { get; }
-        public SimpleChannelInboundHandler<object> RpcServerHandler { get; }
+        public IObservable<ContextAny> MessageStream { get; }
 
-        public RpcServer(IRpcServerSettings settings, ILogger logger, ICertificateStore certificateStore)
+        public RpcServer(IRpcServerSettings settings,
+            ILogger logger, 
+            ICertificateStore certificateStore)
         {
             _logger = logger;
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            RpcServerHandler = new RpcServerHandler();
-
+            _anyTypeServerHandlerBase = new AnyTypeServerHandlerBase();
+            MessageStream = _anyTypeServerHandlerBase.MessageStream;
             var longRunningTasks = new [] {StartServerAsync()};
+
+            _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
 
             Task.WaitAll(longRunningTasks);
         }
@@ -69,8 +76,7 @@ namespace Catalyst.Node.Core.RPC
                 new ProtobufDecoder(Any.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new AnyTypeServerHandler(),
-                RpcServerHandler
+                _anyTypeServerHandlerBase
             };
 
             try
@@ -100,6 +106,7 @@ namespace Catalyst.Node.Core.RPC
                 _rpcSocketServer?.Shutdown();
                 _cancellationSource?.Dispose();
                 _certificate?.Dispose(); 
+                _infoRequestHandler?.Dispose();
             }
         }
 

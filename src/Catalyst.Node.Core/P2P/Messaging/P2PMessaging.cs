@@ -36,7 +36,7 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class P2PMessaging : IP2PMessaging, IDisposable, IMessageStreamer<Any>
+    public class P2PMessaging : IP2PMessaging, IDisposable, IMessageStreamer<ContextAny>
     {
         private readonly IPeerSettings _settings;
         private readonly ILogger _logger;
@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private ISocketServer _socketServer;
 
         public IPeerIdentifier Identifier { get; }
-        public IObservable<Any> MessageStream { get; }
+        public IObservable<ContextAny> MessageStream { get; }
 
         static P2PMessaging()
         {
@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 new ProtobufDecoder(Any.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new AnyTypeServerHandler()
+                new AnyTypeServerBroadcastingHandler()
             };
 
             try

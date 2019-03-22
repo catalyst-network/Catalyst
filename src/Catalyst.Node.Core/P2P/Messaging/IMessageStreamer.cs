@@ -21,7 +21,7 @@ using System;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.Messaging {
-    public interface IMessageStreamer<out T> where T : IMessage
+    public interface IMessageStreamer<out T> //where T : IMessage
     {
         IObservable<T> MessageStream { get; }
     }

@@ -17,9 +17,10 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-
+using System;
 using System.Threading.Tasks;
-using DotNetty.Transport.Channels;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
@@ -27,7 +28,6 @@ namespace Catalyst.Node.Common.Interfaces
     {
         Task StartServerAsync();
         IRpcServerSettings Settings { get; }
-        
-        SimpleChannelInboundHandler<object> RpcServerHandler { get; }
+        IObservable<ContextAny> MessageStream { get; }
     }
 }

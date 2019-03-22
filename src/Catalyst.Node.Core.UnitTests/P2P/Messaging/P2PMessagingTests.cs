@@ -34,7 +34,6 @@ using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using FluentAssertions;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -86,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
             var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
 
-            var observers = indexes.Select(i => new AnyObserver(i, _logger)).ToList();
+            var observers = indexes.Select(i => new ContextAnyObserver(i, _logger)).ToList();
             _subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
 
             var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
@@ -99,7 +98,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         
 
             var received = observers.Select(o => o.Received).ToList();
-            received.Count(r => r.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
+            received.Count(r => r.Message.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
         
         }
 
@@ -134,30 +133,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             foreach (var subscription in _subscriptions)
             {
                 subscription?.Dispose();
-            }
-        }
-
-        private class AnyObserver : IObserver<Any>
-        {
-            private readonly ILogger _logger;
-
-            public AnyObserver(int index, ILogger logger)
-            {
-                _logger = logger;
-                Index = index;
-            }
-
-            public Any Received { get; private set; }
-            public int Index { get; }
-
-            public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
-            public void OnError(Exception error) { _logger.Debug($"observer {Index} received error : {error.Message}"); }
-
-            public void OnNext(Any value)
-            {
-                if(NullObjects.Any.Equals(value)) return;
-                _logger.Debug($"observer {Index} received message of type {value?.TypeUrl ?? "(null)"}");
-                Received = value;
             }
         }
     }

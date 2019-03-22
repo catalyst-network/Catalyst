@@ -19,6 +19,7 @@
 
 using System;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
@@ -27,13 +28,13 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public class TransactionHandler : MessageHandlerBase<Transaction>
     {
-        public TransactionHandler(IObservable<Any> messageStream, ILogger logger)
+        public TransactionHandler(IObservable<ContextAny> messageStream, ILogger logger)
         : base(messageStream, logger) { }
 
-        public override void HandleMessage(Any message)
+        public override void HandleMessage(ContextAny message)
         {
             Logger.Debug("received pong");
-            var deserialised = message.FromAny<Transaction>();
+            var deserialised = message.Message.FromAny<Transaction>();
             Logger.Debug("transaction pong is {0}", deserialised.Signature);
         }
     }

@@ -32,15 +32,10 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public class AnyTypeServerHandler : SimpleChannelInboundHandler<Any>, IMessageStreamer<Any>, IDisposable
+    public class AnyTypeServerBroadcastingHandler : AnyTypeServerHandlerBase
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private static volatile IChannelGroup _broadCastGroup;
         private readonly object _groupLock = new object();
-        private readonly BehaviorSubject<Any> _messageSubject = new BehaviorSubject<Any>(NullObjects.Any);
-
-        public IObservable<Any> MessageStream => _messageSubject.AsObservable();
-
         public override void ChannelActive(IChannelHandlerContext context)
         {
             base.ChannelActive(context);
@@ -58,7 +53,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             context.WriteAndFlushAsync($"Welcome to {System.Net.Dns.GetHostName()} secure chat server!\n");
             _broadCastGroup.Add(context.Channel);
         }
-
         private class EveryOneBut : IChannelMatcher
         {
 
@@ -76,29 +70,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         {
             _broadCastGroup.WriteAndFlushAsync(message, new EveryOneBut(context.Channel.Id));
             context.WriteAndFlushAsync(message);
-        }
-
-        public override void ChannelReadComplete(IChannelHandlerContext ctx) => ctx.Flush();
-
-        public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
-        {
-            Logger.Error(e, "Error in P2P server");
-            ctx.CloseAsync().ContinueWith(_ => _messageSubject.OnCompleted());
-        }
-
-        public override bool IsSharable => true;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _messageSubject?.Dispose();
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

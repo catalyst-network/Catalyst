@@ -18,8 +18,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly IConfigurationRoot _config;
 
         private IRpcServer _rpcServer;
-        
-        private readonly ITestOutputHelper _output;
 
         public RpcServerTests(ITestOutputHelper output) : base(output)
         {
@@ -29,8 +27,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
-
-            _output = output;
         }
 
         [Fact]
@@ -54,15 +50,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
 
             _rpcServer.StartServerAsync();
-        }
-        
-
-        [Fact]
-        public void CanHandleGetNodeConfigCommand()
-        {
-            ((RpcServerHandler)_rpcServer.RpcServerHandler).GetNodeConfig += GetNodeConfig;
-            
-            //serverHandler.GetConfig();
         }
         
         private void GetNodeConfig(object sender, EventArgs e)

@@ -18,11 +18,12 @@
 */
 
 using System;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers {
     public interface IMessageHandler
     {
-        void HandleMessage(Any message);
+        void HandleMessage(ContextAny message);
     }
 }

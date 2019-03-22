@@ -20,26 +20,28 @@
 using System;
 using System.Reactive.Linq;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable where T : IMessage
+    public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable // where T : IMessage
     {
         private readonly IDisposable _messageSubscription;
         protected readonly ILogger Logger;
 
-        protected MessageHandlerBase(IObservable<Any> messageStream, ILogger logger)
+        protected MessageHandlerBase(IObservable<ContextAny> messageStream, ILogger logger)
         {
             Logger = logger;
             var filterMessageType = typeof(T).ShortenedProtoFullName();
-            _messageSubscription = messageStream.Where(m => m.TypeUrl == filterMessageType)
+            _messageSubscription = messageStream
+               //.Where(m => m !=null && m.Message.TypeUrl == filterMessageType)
                .Subscribe(HandleMessage);
         }
 
-        public abstract void HandleMessage(Any message);
+        public abstract void HandleMessage(ContextAny message);
 
         protected virtual void Dispose(bool disposing)
         {

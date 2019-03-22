@@ -21,6 +21,7 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.P2P;
 using DotNetty.Transport.Channels;
@@ -29,17 +30,17 @@ using Newtonsoft.Json;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging {
-    public class AnyTypeClientHandler : SimpleChannelInboundHandler<Any>, IMessageStreamer<Any>, IDisposable
+    public class AnyTypeClientHandler : SimpleChannelInboundHandler<Any>, IMessageStreamer<ContextAny>, IDisposable
     { 
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IObservable<Any> MessageStream => _messageSubject.AsObservable();
-        private readonly BehaviorSubject<Any> _messageSubject = new BehaviorSubject<Any>(NullObjects.Any);
+        public IObservable<ContextAny> MessageStream => _messageSubject.AsObservable();
+        private readonly BehaviorSubject<ContextAny> _messageSubject = new BehaviorSubject<ContextAny>(null);
         
         protected override void ChannelRead0(IChannelHandlerContext context, Any message)
         {
-            Logger.Debug(JsonConvert.SerializeObject(message) + Environment.NewLine);
-            _messageSubject.OnNext(message);
+            var contextAny = new ContextAny(message, context);
+            _messageSubject.OnNext(contextAny);
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)

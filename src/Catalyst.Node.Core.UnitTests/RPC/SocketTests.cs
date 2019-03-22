@@ -100,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcClient_can_send_request_and_RpcServer_can_reply()
+        public async Task RpcClient_can_send_request_and_RpcServer_can_reply()
         {
             WriteLogsToFile = true;
             WriteLogsToTestOutput = true;
@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 var client = new RpcClient(logger, _certificateStore);
                 client.Should().NotBeNull();
-
+                
                 var shell = new Shell(client, _config);
                 var hasConnected = shell.OnCommand("connect", "node", "node1");
                 hasConnected.Should().BeTrue();
@@ -128,9 +128,16 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var node1 = shell.GetConnectedNode("node1");
                 node1.Should().NotBeNull("we've just connected it");
 
-                var info = shell.OnGetCommand("get", "config", "node1");
-                //client.
+                var serverObserver = new ContextAnyObserver(0, logger);
+                _rpcServer.MessageStream.Subscribe(serverObserver);
 
+                var info = shell.OnGetCommand("get", "config", "node1");
+
+                await Task.Delay(1000);
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Message.TypeUrl.Should().Be(GetInfoRequest.Descriptor.ShortenedFullName());
+
+                await Task.Delay(2000);
             }
         }
 
