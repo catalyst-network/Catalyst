@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using DnsClient.Protocol;
+using Microsoft.Extensions.Configuration;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P
@@ -31,36 +32,54 @@ namespace Catalyst.Node.Core.P2P
     public class PeerDiscovery : IPeerDiscovery
     {
         private readonly IDns _dns;
-
         private readonly IRepository<Peer> _peerRepository;
+        private readonly List<IEnumerable<string>> _seedNodes;
+        
+        private List<IPEndPoint> Peers { get; set; }
 
         /// <summary>
         /// </summary>
         /// <param name="dns"></param>
         /// <param name="repository"></param>
-        public PeerDiscovery(IDns dns, IRepository<Peer> repository)
+        /// <param name="rootSection"></param>
+        public PeerDiscovery(IDns dns, IRepository<Peer> repository, IConfigurationRoot rootSection)
         {
             _dns = dns;
-            SeedNodes = new List<IPEndPoint>();
+            _seedNodes = new List<IEnumerable<string>>();
+            
+            _seedNodes.Add(rootSection.GetSection("CatalystNodeConfiguration")
+               .GetSection("Peer")
+               .GetSection("SeedServers")
+               .GetChildren()
+               .Select(p => p.Value)
+            );
+            
             _peerRepository = repository;
+            var longRunningTasks = new [] {PeerCrawler()};
+            Task.WaitAll(longRunningTasks);
         }
-
-        private List<IPEndPoint> SeedNodes { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        internal async Task GetSeedNodes(List<string> seedServers)
+        private async Task GetSeedNodes(List<IEnumerable<string>> seedServers)
         {
-            var dnsQueryAnswers = await _dns.GetTxtRecords(seedServers);
-            foreach (var dnsQueryAnswer in dnsQueryAnswers)
+            foreach (var seedNode in seedServers)
             {
+                var dnsQueryAnswer = await _dns.GetTxtRecords(seedNode.ToString());
+
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
                 {
-                    SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                    Peers.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
                 }
             }
+        }
+
+        private async Task PeerCrawler()
+        {
+            await GetSeedNodes(_seedNodes);
+
         }
     }
 }
