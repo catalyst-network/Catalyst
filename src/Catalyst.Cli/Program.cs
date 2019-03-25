@@ -64,16 +64,9 @@ namespace Catalyst.Cli
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
                 
                 // check if user home data dir has a shell config
-                var shellFilePath = Path.Combine(targetConfigFolder, Constants.ShellConfig);
                 var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
                 var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile);
                 var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
-
-                if (!File.Exists(shellFilePath))
-                {
-                    File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.json"),
-                        shellFilePath);
-                }
 
                 if (!File.Exists(shellComponentsFilePath))
                 {
@@ -94,7 +87,6 @@ namespace Catalyst.Cli
                 }
                 
                 var config = new ConfigurationBuilder()
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellConfig))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))

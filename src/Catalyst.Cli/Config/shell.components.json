@@ -10,14 +10,6 @@
       ]
     },
     {
-      "type": "Catalyst.Cli.RpcNodes",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.Interfaces.IRpcNodes, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
       "type": "Catalyst.Cli.Shell",
       "services": [
         {
