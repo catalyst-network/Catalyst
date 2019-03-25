@@ -92,7 +92,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
 
             var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
             var context = Substitute.For<IChannelHandlerContext>();
-            await peers[0].BroadcastMessageAsync(new ChanneledAny(context, broadcastMessage));
+            await peers[0].BroadcastMessageAsync(broadcastMessage);
 
             var tasks = peers
                .Select(async p => await p.MessageStream.FirstAsync(a => a != NullObjects.ChanneledAny))

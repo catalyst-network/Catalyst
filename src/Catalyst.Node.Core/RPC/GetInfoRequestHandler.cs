@@ -20,6 +20,7 @@
 using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Rpc.Node;
@@ -45,16 +46,25 @@ namespace Catalyst.Node.Core.RPC
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
-            if(message == null) return;
+            if(message == NullObjects.ChanneledAny) {return;}
             Logger.Debug("received message of type GetInfoRequest");
-            var deserialised = message.Payload.FromAny<GetInfoRequest>();
-            Logger.Debug("message content is {0}", deserialised);
-            var response = new GetInfoResponse()
+            try
             {
-                Query = String.Format("Node config:\nNode Name: {0}\nIP Address: {1}\nPort: {2} ", _config.NodeId,_config.BindAddress.ToString(), _config.Port.ToString())
-            };
+                var deserialised = message.Payload.FromAny<GetInfoRequest>();
+                Logger.Debug("message content is {0}", deserialised);
+                var response = new GetInfoResponse
+                {
+                    Query = String.Format("Node config:\nNode Name: {0}\nIP Address: {1}\nPort: {2} ", _config.NodeId,_config.BindAddress.ToString(), _config.Port.ToString())
+                };
 
-            message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, 
+                    "Failed to handle GetInfoRequest after receiving message {0}", message);
+                throw;
+            }
         }
     }
 }

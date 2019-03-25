@@ -101,11 +101,8 @@ namespace Catalyst.Cli
             switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    throw new NotImplementedException();
                 case "stop":
-                    throw new NotImplementedException();
                 case "status":
-                    throw new NotImplementedException();
                 case "restart":
                     throw new NotImplementedException();
                 default:
@@ -122,11 +119,8 @@ namespace Catalyst.Cli
             switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    throw new NotImplementedException();
                 case "stop":
-                    throw new NotImplementedException();
                 case "status":
-                    throw new NotImplementedException();
                 case "restart":
                     throw new NotImplementedException();
                 default:

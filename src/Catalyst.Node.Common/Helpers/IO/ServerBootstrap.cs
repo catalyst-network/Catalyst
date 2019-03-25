@@ -18,13 +18,11 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
-using PeerTalk;
 using Polly;
 using Polly.Retry;
 
@@ -32,7 +30,7 @@ namespace Catalyst.Node.Common.Helpers.IO
 {
     public class ServerBootstrap : DotNetty.Transport.Bootstrapping.ServerBootstrap, IServerBootstrap
     {
-        private AsyncRetryPolicy _exponentialBackOffRetryPolicy;
+        private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
 
         public ServerBootstrap()
         {
