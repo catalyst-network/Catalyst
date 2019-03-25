@@ -47,6 +47,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 
         public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
         {
+            Environment.SetEnvironmentVariable("io.netty.allocator.type", "unpooled");
+
             Server = new ServerBootstrap();
             ((DotNetty.Transport.Bootstrapping.ServerBootstrap)Server)
                .Group(_supervisorEventLoop, WorkerEventLoop)

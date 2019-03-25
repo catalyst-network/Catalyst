@@ -38,6 +38,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
 
         public virtual ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {
+            Environment.SetEnvironmentVariable("io.netty.allocator.type", "unpooled");
+
             Client = new Bootstrap();
             ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
                .Group(WorkerEventLoop)
