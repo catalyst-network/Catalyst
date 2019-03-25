@@ -17,6 +17,7 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -25,6 +26,7 @@ using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P
@@ -34,6 +36,7 @@ namespace Catalyst.Node.Core.P2P
         private readonly IDns _dns;
         private readonly IRepository<Peer> _peerRepository;
         private readonly List<IEnumerable<string>> _seedNodes;
+        private readonly ILogger _logger;
         
         private List<IPEndPoint> Peers { get; set; }
 
@@ -42,16 +45,19 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="dns"></param>
         /// <param name="repository"></param>
         /// <param name="rootSection"></param>
-        public PeerDiscovery(IDns dns, IRepository<Peer> repository, IConfigurationRoot rootSection)
+        public PeerDiscovery(IDns dns, IRepository<Peer> repository, IConfigurationRoot rootSection, ILogger logger)
         {
             _dns = dns;
+            _logger = logger;
             _seedNodes = new List<IEnumerable<string>>();
+            
+            Peers = new List<IPEndPoint>();
             
             _seedNodes.Add(rootSection.GetSection("CatalystNodeConfiguration")
                .GetSection("Peer")
                .GetSection("SeedServers")
                .GetChildren()
-               .Select(p => p.Value)
+               .Select(p => p.Value).ToList()
             );
             
             _peerRepository = repository;
@@ -66,7 +72,7 @@ namespace Catalyst.Node.Core.P2P
         {
             foreach (var seedNode in seedServers)
             {
-                var dnsQueryAnswer = await _dns.GetTxtRecords(seedNode.ToString());
+                var dnsQueryAnswer = await _dns.GetTxtRecords(seedNode.First());
 
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
@@ -78,8 +84,16 @@ namespace Catalyst.Node.Core.P2P
 
         private async Task PeerCrawler()
         {
-            await GetSeedNodes(_seedNodes);
-
+            try
+            {
+                await GetSeedNodes(_seedNodes);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                throw;
+            }
+            _logger.Information(_seedNodes.ToString());
         }
     }
 }

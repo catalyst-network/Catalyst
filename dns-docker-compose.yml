@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+
+  seedDns:
+    image: samuelcolvin/dnserver
+    ports:
+      - "5053:53/udp"
+    volumes:
+      - ./devnet_dnszone.txt:/zones/zones.txt
+

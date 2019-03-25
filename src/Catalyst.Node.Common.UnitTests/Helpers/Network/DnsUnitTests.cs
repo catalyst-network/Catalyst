@@ -39,7 +39,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
         public DnsUnitTests()
         {
             _lookupClient = Substitute.For<ILookupClient>();
-            _ipEndPoint = new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53);
+            _ipEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5053);
             _dns = new Dns(_lookupClient);
         }
 
@@ -141,10 +141,10 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
             var trueClient = new LookupClient(_ipEndPoint);
             var dns = new Dns(trueClient);
             var dnsQueryResponse =
-                await dns.GetTxtRecords("seed1.network.atlascity.io");
+                await dns.GetTxtRecords("seed1.catalystnetwork.io");
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
             var seedIp = answerSection.EscapedText.FirstOrDefault();
-            seedIp.Should().Be("92.207.178.198:42069");
+            seedIp.Should().Be("172.26.0.101:42069");
         }
     }
 }
