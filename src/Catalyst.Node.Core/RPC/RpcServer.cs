@@ -39,8 +39,8 @@ namespace Catalyst.Node.Core.RPC
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
         private ISocketServer _rpcSocketServer;
-        private AnyTypeServerHandlerBase _anyTypeServerHandlerBase;
-        private GetInfoRequestHandler _infoRequestHandler;
+        private readonly AnyTypeServerHandlerBase _anyTypeServerHandlerBase;
+        private readonly GetInfoRequestHandler _infoRequestHandler;
         public IRpcServerSettings Settings { get; }
         public IObservable<ContextAny> MessageStream { get; }
 

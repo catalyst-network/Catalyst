@@ -22,14 +22,12 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.P2P;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Messaging {
+namespace Catalyst.Node.Common.Helpers.IO.Outbound {
     public class AnyTypeClientHandler : SimpleChannelInboundHandler<Any>, IMessageStreamer<ContextAny>, IDisposable
     { 
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);

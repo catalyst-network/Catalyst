@@ -9,7 +9,8 @@ using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound {
-    public class AnyTypeServerHandlerBase : SimpleChannelInboundHandler<Any>, IMessageStreamer<ContextAny>, IDisposable
+    public class AnyTypeServerHandlerBase :
+        SimpleChannelInboundHandler<Any>, IMessageStreamer<ContextAny>, IDisposable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly BehaviorSubject<ContextAny> _messageSubject = new BehaviorSubject<ContextAny>(null);

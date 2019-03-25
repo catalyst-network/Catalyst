@@ -27,7 +27,6 @@ using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels.Sockets;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Core.P2P.Messaging;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;

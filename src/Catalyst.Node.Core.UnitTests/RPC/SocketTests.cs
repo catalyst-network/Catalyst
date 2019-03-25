@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Autofac;
@@ -104,6 +106,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         {
             WriteLogsToFile = true;
             WriteLogsToTestOutput = true;
+
+            AlterConfigurationToGetUniquePort();
+
             //Create ContainerBuilder based on the configuration
             ConfigureContainerBuilder(_config);
 
@@ -141,5 +146,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
+        private void AlterConfigurationToGetUniquePort()
+        {
+            var serverSection = _config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
+            var randomPort = int.Parse(serverSection.GetSection("Port").Value) +
+                new Random(_currentTestName.GetHashCode()).Next(0, 500);
+
+            serverSection.GetSection("Port").Value = randomPort.ToString();
+            var clientSection = _config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
+            clientSection.GetChildren().ToList().ForEach(c => { c.GetSection("port").Value = randomPort.ToString(); });
+        }
     }
 }

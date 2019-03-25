@@ -92,7 +92,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             await peers[0].BroadcastMessageAsync(broadcastMessage);
 
             var tasks = peers
-               .Select(async p => await p.MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)))
+               .Select(async p => await p.MessageStream.FirstAsync(a => a != null))
                .ToArray();
             Task.WaitAll(tasks, TimeSpan.FromMilliseconds(100));
         

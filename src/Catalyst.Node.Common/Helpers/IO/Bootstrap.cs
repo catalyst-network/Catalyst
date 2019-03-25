@@ -27,7 +27,6 @@ namespace Catalyst.Node.Common.Helpers.IO
 
     public class Bootstrap : DotNetty.Transport.Bootstrapping.Bootstrap, IBootstrap
     {
-        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port) { return base.BindAsync(ipAddress, port); }
-        public new Task<IChannel> ConnectAsync(IPAddress ipAddress, int port) { return base.ConnectAsync(ipAddress, port); }
+
     }
 }

@@ -24,6 +24,7 @@ using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf.WellKnownTypes;
+using Org.BouncyCastle.Crypto.Tls;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
