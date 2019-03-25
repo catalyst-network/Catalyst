@@ -14,5 +14,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         }
 
         public ISocketClient SocketClient { get; }
+        
     }
 }

@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels.Sockets;
@@ -31,6 +32,7 @@ using Catalyst.Node.Core.P2P.Messaging;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
+using Makaretu.Dns;
 
 namespace Catalyst.Cli
 {
@@ -42,7 +44,8 @@ namespace Catalyst.Cli
     {
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
-      
+        private AnyTypeClientHandler _clientHanlder;
+
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
         /// 1- Get the settings from the config file
@@ -56,6 +59,10 @@ namespace Catalyst.Cli
         {
             _logger = logger;
             _certificateStore = certificateStore;
+            _clientHanlder = new AnyTypeClientHandler();
+            MessageStream = _clientHanlder.MessageStream;
+            
+            //MessageStream 
         }
         
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
@@ -71,7 +78,7 @@ namespace Catalyst.Cli
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(Any.Parser),
-                new AnyTypeClientHandler()
+                new RpClientHandler()
             };
             
             var socketClient = await new TcpClient(_logger)
@@ -99,7 +106,9 @@ namespace Catalyst.Cli
         {
             await node.SocketClient.SendMessage(message);
         }
-        
+
+        public IObservable<ContextAny> MessageStream { get; }
+
         /*Implementing IDisposable */
         protected virtual void Dispose(bool disposing)
         {

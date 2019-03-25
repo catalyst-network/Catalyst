@@ -113,14 +113,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             using (var scope = container.BeginLifetimeScope(_currentTestName))
             {
                 var logger = container.Resolve<ILogger>();
-                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
+                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(
+                    new SerilogLoggerProvider(logger));
 
                 _certificateStore = container.Resolve<ICertificateStore>();
                 _rpcServer = container.Resolve<IRpcServer>();
 
                 var client = new RpcClient(logger, _certificateStore);
                 client.Should().NotBeNull();
-                
+
                 var shell = new Shell(client, _config);
                 var hasConnected = shell.OnCommand("connect", "node", "node1");
                 hasConnected.Should().BeTrue();
@@ -137,9 +138,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Message.TypeUrl.Should().Be(GetInfoRequest.Descriptor.ShortenedFullName());
 
+                var clientObserver = new ContextAnyObserver(1, logger);
                 await Task.Delay(2000);
+
+                client.MessageStream.Subscribe(clientObserver);
+                clientObserver.Received.Message.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
+
             }
         }
-
     }
 }

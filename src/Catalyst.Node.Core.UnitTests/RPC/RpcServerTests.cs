@@ -51,10 +51,5 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _rpcServer.StartServerAsync();
         }
-        
-        private void GetNodeConfig(object sender, EventArgs e)
-        {
-            Console.WriteLine("GetNodeConfig event catch");
-        }
     }
 }

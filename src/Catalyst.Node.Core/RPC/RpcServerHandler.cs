@@ -10,19 +10,6 @@ namespace Catalyst.Node.Core.RPC
 {
     public class RpcServerHandler : SimpleChannelInboundHandler<object>
     {
-        //event to be fired when the RpcServerHandler recevives a GetNodeConfig command from the RpcClient
-        public event EventHandler GetNodeConfig;
-
-        //Delegate associated with the event
-        protected virtual void onGetNodeConfig(EventArgs args)
-        {
-            EventHandler handler = GetNodeConfig;
-            if (handler != null)
-            {
-                handler(this, args);
-            }
-        }
-
         public override void ChannelActive(IChannelHandlerContext contex)
         {
             contex.WriteAsync(string.Format("Welcome to {0} !\r\n", Dns.GetHostName()));
@@ -44,8 +31,6 @@ namespace Catalyst.Node.Core.RPC
                         response = NodeUtil.GetVersion();
                         break;
                     case "config":
-                        //Fire the GetNodeConfig event
-                        onGetNodeConfig(EventArgs.Empty);
                         response = "";
                         break;
                     default:
