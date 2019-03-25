@@ -2,15 +2,15 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using Autofac;
-using Castle.Components.DictionaryAdapter;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Node.Core.RPC;
+using FluentAssertions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
@@ -30,7 +30,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .Build();
         }
 
-        [Fact(Skip = "just trying to fix the build")]
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void ServerConnectedToCorrectPort()
         {
             WriteLogsToFile = false;
@@ -45,12 +46,16 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             {
                 var logger = container.Resolve<ILogger>();
 
-                _rpcServer = container.Resolve<IRpcServer>();
-                var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(), _rpcServer.Settings.Port);
-                Assert.NotNull(client);
+                using (_rpcServer = container.Resolve<IRpcServer>())
+                {
+                    using (var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(),
+                        _rpcServer.Settings.Port))
+                    {
+                        client.Should().NotBeNull();
+                        client.Connected.Should().BeTrue();
+                    }
+                }
             }
-
-            _rpcServer.StartServerAsync();
         }
 
         protected override void Dispose(bool disposing)

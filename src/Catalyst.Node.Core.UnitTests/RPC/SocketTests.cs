@@ -101,11 +101,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 node1.Should().NotBeNull("we've just connected it");
                 
                 var info = shell.OnGetCommand("get", "config", "node1");
-
             }
         }
 
-        [Fact(Skip = "just trying to fix the build")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task RpcClient_can_send_request_and_RpcServer_can_reply()
         {
@@ -140,7 +139,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 var serverObserver = new AnyMessageObserver(0, logger);
                 var clientObserver = new AnyMessageObserver(1, logger);
-                using(_rpcServer.MessageStream.Subscribe(serverObserver))
+                using (_rpcServer.MessageStream.Subscribe(serverObserver))
                 using (_rpcClient.MessageStream.Subscribe(clientObserver))
                 {
                     var info = shell.OnGetCommand("get", "config", "node1");
