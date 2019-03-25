@@ -17,6 +17,7 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -50,6 +51,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
                .Group(_supervisorEventLoop, WorkerEventLoop)
                .ChannelFactory(() => new TcpServerSocketChannel())
                .Option(ChannelOption.SoBacklog, BackLogValue)
+               .Option(ChannelOption.ConnectTimeout, TimeSpan.MaxValue)
+               .Option(ChannelOption.SoTimeout, 0)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelInitializer);
             return this;

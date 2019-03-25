@@ -394,6 +394,11 @@ namespace Catalyst.Cli
                 //check if the node entered by the user was in the list of the connected nodes
                 if (nodeConnected != null)
                 {
+                    if (!nodeConnected.SocketClient.Channel.Active)
+                    {
+                        Console.WriteLine("Channel inactive ...");
+                    }
+                    
                     //send the message to the server by writing it to the channel
                     var request = new GetInfoRequest { Query = true };
                     _rpcClient.SendMessage(nodeConnected, request.ToAny());

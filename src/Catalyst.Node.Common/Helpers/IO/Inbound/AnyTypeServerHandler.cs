@@ -42,6 +42,13 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound {
             _messageSubject.OnNext(contextAny);
         }
 
+        public override void ChannelActive(IChannelHandlerContext contex)
+        {
+            contex.WriteAsync(string.Format("Welcome to RpcServer!\r\n"));
+            contex.WriteAndFlushAsync(string.Format("It is {0} now !\r\n", DateTime.Now));
+        }
+
+
         public override void ChannelReadComplete(IChannelHandlerContext ctx) => ctx.Flush();
 
         public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
