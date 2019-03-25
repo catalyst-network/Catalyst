@@ -47,8 +47,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void ServerConnectedToCorrectPort()
         {
-            WriteLogsToFile = true;
-            WriteLogsToTestOutput = true;
+            WriteLogsToFile = false;
+            WriteLogsToTestOutput = false;
             //Create ContainerBuilder based on the configuration
             ConfigureContainerBuilder(_config);
 
@@ -69,8 +69,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_and_P2PServer_should_work_together()
         {
-            WriteLogsToFile = true;
-            WriteLogsToTestOutput = true;
+            WriteLogsToFile = false;
+            WriteLogsToTestOutput = false;
             //Create ContainerBuilder based on the configuration
             ConfigureContainerBuilder(_config);
 
@@ -108,8 +108,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task RpcClient_can_send_request_and_RpcServer_can_reply()
         {
-            WriteLogsToFile = true;
-            WriteLogsToTestOutput = true;
+            WriteLogsToFile = false;
+            WriteLogsToTestOutput = false;
 
             AlterConfigurationToGetUniquePort();
 

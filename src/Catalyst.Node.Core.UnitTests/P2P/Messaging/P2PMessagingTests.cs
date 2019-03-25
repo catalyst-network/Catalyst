@@ -63,8 +63,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
 
         private void ConfigureTestContainer()
         {
-            WriteLogsToFile = true;
-            WriteLogsToTestOutput = true;
+            WriteLogsToFile = false;
+            WriteLogsToTestOutput = false;
 
             ConfigureContainerBuilder(_config);
 

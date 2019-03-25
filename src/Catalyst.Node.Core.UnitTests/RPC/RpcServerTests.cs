@@ -33,8 +33,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void ServerConnectedToCorrectPort()
         {
-            WriteLogsToFile = true;
-            WriteLogsToTestOutput = true;
+            WriteLogsToFile = false;
+            WriteLogsToTestOutput = false;
             //Create ContainerBuilder based on the configuration
             ConfigureContainerBuilder(_config);
 
