@@ -66,27 +66,6 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             return certificate;
         }
 
-        public X509Certificate2 ReadOrCreateCertificateFile(string pfxFilePath, string password)
-        {
-            var foundCertificate = TryGet(pfxFilePath, password, out var certificate);
-            
-            if (foundCertificate)
-            {
-                return certificate;
-            }
-
-            if (Environment.OSVersion.Platform == PlatformID.Unix) {
-                throw new PlatformNotSupportedException(
-                    "Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
-                    $"Please create a password protected certificate at {pfxFilePath}." +
-                    Environment.NewLine +
-                    "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
-            }
-            certificate = CreateAndSaveSelfSignedCertificate(pfxFilePath);
-
-            return certificate;
-        }
-
         private X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
         {
             var promptMessage = "Catalyst Node needs to create an SSL certificate." +
@@ -151,32 +130,6 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                         PasswordAttemptCounter(ex.Message, fullPath);
                     }   
                 }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception, "Failed to read certificate {0}", fullPath);
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool TryGet(string fileName, string password, out X509Certificate2 certificate)
-        {
-            var fullPath = Path.Combine(_storageFolder.ToString(), fileName);
-            var fileInfo = new FileInfo(fullPath);
-            certificate = null;
-
-            if (!fileInfo.Exists)
-            {
-                return false;
-            }
-
-            try
-            {
-                var fileInBytes = File.ReadAllBytes(fullPath);
-
-                certificate = new X509Certificate2(fileInBytes, password);
             }
             catch (Exception exception)
             {

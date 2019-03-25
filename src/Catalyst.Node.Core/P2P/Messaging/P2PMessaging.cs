@@ -34,7 +34,7 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class P2PMessaging : IP2PMessaging, IDisposable, IChanneledMessageStreamer<Any>
+    public class P2PMessaging : IP2PMessaging, IDisposable
     {
         private readonly IPeerSettings _settings;
         private readonly ILogger _logger;
@@ -46,7 +46,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private AnyTypeServerBroadcastingHandler _anyTypeServerBroadcastingHandler;
 
         public IPeerIdentifier Identifier { get; }
-        public IObservable<IChanneledMessage<Any>> MessageStream { get; }
+        public IObservable<IChanneledMessage<Any>> InboundMessageStream { get; }
+        public IObservable<IChanneledMessage<Any>> OutboundMessageStream { get; }
 
         static P2PMessaging()
         {
@@ -67,7 +68,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             Identifier = new PeerIdentifier(settings);
             _anyTypeClientHandler = new AnyTypeClientHandler();
-            MessageStream = _anyTypeClientHandler.MessageStream;
+            OutboundMessageStream = _anyTypeClientHandler.MessageStream;
+            _anyTypeServerBroadcastingHandler = new AnyTypeServerBroadcastingHandler();
+            InboundMessageStream = _anyTypeServerBroadcastingHandler.MessageStream;
 
             var longRunningTasks = new [] {RunP2PServerAsync(), RunP2PClientAsync()};
             Task.WaitAll(longRunningTasks);

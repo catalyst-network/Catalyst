@@ -24,6 +24,7 @@ using System.Reflection;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;

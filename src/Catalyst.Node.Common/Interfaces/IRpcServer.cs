@@ -19,6 +19,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
