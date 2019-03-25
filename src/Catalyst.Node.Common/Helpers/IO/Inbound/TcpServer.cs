@@ -68,7 +68,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public override async Task Shutdown()
         {
             await base.Shutdown().ConfigureAwait(false);
-            
+
             if (_supervisorEventLoop != null)
             {
                 await _supervisorEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);

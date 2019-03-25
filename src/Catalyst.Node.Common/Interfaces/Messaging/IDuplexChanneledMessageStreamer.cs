@@ -21,10 +21,11 @@ using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Messaging
 {
-    public interface IChanneledMessageStreamer<out T> where T : IMessage
+    public interface IDuplexChanneledMessageStreamer<out T> where T : IMessage
     {
-        IObservable<IChanneledMessage<T>> MessageStream { get; }
+        IObservable<IChanneledMessage<T>> InboundMessageStream { get; }
+        IObservable<IChanneledMessage<T>> OutboundMessageStream { get; }
     }
 }

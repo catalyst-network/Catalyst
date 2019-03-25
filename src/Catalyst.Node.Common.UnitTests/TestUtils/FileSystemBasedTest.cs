@@ -69,10 +69,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing)
-            {
-                return;
-            }
+            if (!disposing) { return; }
 
             var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
             if (_testDirectory.Parent != null) {

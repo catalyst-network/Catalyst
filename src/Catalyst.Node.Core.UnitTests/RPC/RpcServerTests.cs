@@ -4,16 +4,17 @@ using System.Net.Sockets;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Node.Core.RPC;
+using FluentAssertions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public class RpcServerTests : ConfigFileBasedTest
+    public class RpcServerTests : ConfigFileBasedTest, IDisposable
     {
         private readonly IConfigurationRoot _config;
 
@@ -29,11 +30,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .Build();
         }
 
+        //TODO : this is the simplest test that can cause the build to hang
+        //need to investigate and see if we can solve it
+        //[Fact(Skip = "causes build to hang")]
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void ServerConnectedToCorrectPort()
         {
-            WriteLogsToFile = true;
-            WriteLogsToTestOutput = true;
+            WriteLogsToFile = false;
+            WriteLogsToTestOutput = false;
             //Create ContainerBuilder based on the configuration
             ConfigureContainerBuilder(_config);
 
@@ -44,12 +49,22 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             {
                 var logger = container.Resolve<ILogger>();
 
-                _rpcServer = container.Resolve<IRpcServer>();
-                var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(), _rpcServer.Settings.Port);
-                Assert.NotNull(client);
+                using (_rpcServer = container.Resolve<IRpcServer>())
+                using (var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(),
+                    _rpcServer.Settings.Port))
+                {
+                    client.Should().NotBeNull();
+                    client.Connected.Should().BeTrue();
+                }
+                
             }
+        }
 
-            _rpcServer.StartServerAsync();
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if(!disposing) { return; }
+            _rpcServer?.Dispose();
         }
     }
 }

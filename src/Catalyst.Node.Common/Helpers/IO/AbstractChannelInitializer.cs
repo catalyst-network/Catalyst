@@ -27,7 +27,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public abstract class AbstractChannelInitializer<T> :  ChannelInitializer<T> where T : IChannel
+    public abstract class AbstractChannelInitializer<T> : ChannelInitializer<T> where T : IChannel
     {
         protected readonly Action<T> InitializationAction;
         protected readonly X509Certificate Certificate;
@@ -41,7 +41,6 @@ namespace Catalyst.Node.Common.Helpers.IO
             X509Certificate certificate = null
         )
         {
-            
             Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
             InitializationAction = initializationAction;
             Handlers = handlers.ToImmutableArray();

@@ -1,6 +1,4 @@
-
-
-/*
+﻿/*
 * Copyright(c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>
@@ -19,21 +17,14 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-
 using System;
-using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Shell;
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Messaging
 {
-    public interface IRpcClient : IChanneledMessageStreamer<Any>
-    {       
-         Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig);
-
-         Task SendMessage(IRpcNode node, Any message);
+    public interface IChanneledMessageStreamer<out T> where T : IMessage
+    {
+        IObservable<IChanneledMessage<T>> MessageStream { get; }
     }
 }
