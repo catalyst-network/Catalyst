@@ -30,6 +30,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .Build();
         }
 
+        //TODO : this is the simplest test that can cause the build to hang
+        //need to investigate and see if we can solve it
+        //[Fact(Skip = "causes build to hang")]
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void ServerConnectedToCorrectPort()
@@ -47,14 +50,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var logger = container.Resolve<ILogger>();
 
                 using (_rpcServer = container.Resolve<IRpcServer>())
+                using (var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(),
+                    _rpcServer.Settings.Port))
                 {
-                    using (var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(),
-                        _rpcServer.Settings.Port))
-                    {
-                        client.Should().NotBeNull();
-                        client.Connected.Should().BeTrue();
-                    }
+                    client.Should().NotBeNull();
+                    client.Connected.Should().BeTrue();
                 }
+                
             }
         }
 
