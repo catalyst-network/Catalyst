@@ -17,6 +17,7 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -50,8 +51,18 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
 
         public virtual async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
         {
-            Channel = await Client.ConnectAsync(listenAddress, port)
-               .ConfigureAwait(false);
+            try
+            {
+                Channel = await Client.BindAsync(listenAddress, port);
+                await Client.ConnectAsync(listenAddress, port)
+                   .ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw e;
+            }
+            
             return this;
         }
 

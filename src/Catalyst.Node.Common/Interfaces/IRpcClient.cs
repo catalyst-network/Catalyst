@@ -1,3 +1,5 @@
+
+
 /*
 * Copyright(c) 2019 Catalyst Network
 *
@@ -17,7 +19,11 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+
+using System;
+using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Google.Protobuf.WellKnownTypes;

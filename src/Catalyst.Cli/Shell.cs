@@ -27,17 +27,23 @@ using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+
+using ILogger = Serilog.ILogger;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using Serilog.Core;
 
 namespace Catalyst.Cli
 {
-    public sealed class Shell : ShellBase, IAds
+    public sealed class Shell : ShellBase, IAds, IObserver<IChanneledMessage<Any>>
     {
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly List<IRpcNode> _nodes;
 
         private readonly IRpcClient _rpcClient;
+        
+        public IChanneledMessage<Any> _response { get; set; }
         private readonly ILogger _logger;
 
         /// <summary>
@@ -48,6 +54,7 @@ namespace Catalyst.Cli
             _rpcClient = rpcClient;
             _logger = logger;
             _nodes = new List<IRpcNode>();
+            _rpcClient.MessageStream.Subscribe(this);
 
             Console.WriteLine(@"Koopa Shell Start");
         }
@@ -348,7 +355,35 @@ namespace Catalyst.Cli
         /// Gets the version of a node
         /// </summary>
         /// <returns>Returns true if successful and false otherwise.</returns>
-        protected override bool OnGetVersion(string[] args) { return true; }
+        protected override bool OnGetVersion(string[] args)
+        {
+            try
+            {
+                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+
+                //get the node 
+                var nodeConnected = GetConnectedNode(args.First());
+
+                //check if the node entered by the user was in the list of the connected nodes
+                if (nodeConnected != null)
+                {
+                    //send the message to the server by writing it to the channel
+                    var request = new GetInfoRequest { Query = true };
+                    _rpcClient.SendMessage(nodeConnected, request.ToAny());
+                }
+                else
+                {
+                    Console.WriteLine("Node not found.  Please connect to node first.");
+                }
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine(e);
+                throw e;
+            }
+
+            return true;
+        }
 
         protected override bool OnGetConfig(IList<string> args)
         {
@@ -362,6 +397,11 @@ namespace Catalyst.Cli
                 //check if the node entered by the user was in the list of the connected nodes
                 if (nodeConnected != null)
                 {
+                    if (!nodeConnected.SocketClient.Channel.Active)
+                    {
+                        Console.WriteLine("Channel inactive ...");
+                    }
+                    
                     //send the message to the server by writing it to the channel
                     var request = new GetInfoRequest { Query = true };
                     _rpcClient.SendMessage(nodeConnected, request.ToAny());
@@ -407,6 +447,19 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
+        }
+        
+        
+        /* Implementing IObserver */
+        public void OnCompleted() { }
+        public void OnError(Exception error) { Console.WriteLine($"RpcClient observer received error : {error.Message}"); }
+
+        public void OnNext(IChanneledMessage<Any> value)
+        {
+            if (value == null) return;
+
+            _response = value;
+            Console.WriteLine(_response.Payload.Value.ToString());
         }
     }
 }

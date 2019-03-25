@@ -21,6 +21,7 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
@@ -47,6 +48,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound {
         {
             Logger.Error(e, "Error in P2P client");
             context.CloseAsync().ContinueWith(_ => _messageSubject.OnCompleted());
+        }
+
+        public override Task CloseAsync(IChannelHandlerContext context)
+        {
+            return base.CloseAsync(context);
         }
 
         protected virtual void Dispose(bool disposing)

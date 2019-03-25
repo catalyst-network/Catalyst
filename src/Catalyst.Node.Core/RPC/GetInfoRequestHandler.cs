@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.RPC
                 Logger.Debug("message content is {0}", deserialised);
                 var response = new GetInfoResponse
                 {
-                    Query = "replying to you with a config"
+                    Query = String.Format("Node config:\nNode Name: {0}\nIP Address: {1}\nPort: {2} ", _config.NodeId,_config.BindAddress.ToString(), _config.Port.ToString())
                 };
 
                 message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
