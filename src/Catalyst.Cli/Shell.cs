@@ -21,29 +21,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Protocol.Rpc.Node;
+using Serilog;
+using Serilog.Core;
 
 namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds
     {
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
-        private List<IRpcNode> _nodes;
+        private readonly List<IRpcNode> _nodes;
 
         private readonly IRpcClient _rpcClient;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// </summary>
-        public Shell(IRpcClient rpcClient, IConfigurationRoot config)
+        public Shell(IRpcClient rpcClient, IConfigurationRoot config, ILogger logger)
         {
             _rpcNodeConfigs = BuildRpcNodeSettingList(config);
             _rpcClient = rpcClient;
+            _logger = logger;
             _nodes = new List<IRpcNode>();
 
             Console.WriteLine(@"Koopa Shell Start");
@@ -234,8 +237,8 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _logger.Error(e, "Failed to connect to node");
+                return false;
             }
             
             return true;

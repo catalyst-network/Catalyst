@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using Autofac;
+using Castle.Components.DictionaryAdapter;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Core.UnitTest.TestUtils;
@@ -13,7 +14,7 @@ using Catalyst.Node.Core.RPC;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public class RpcServerTests : ConfigFileBasedTest
+    public class RpcServerTests : ConfigFileBasedTest, IDisposable
     {
         private readonly IConfigurationRoot _config;
 
@@ -51,10 +52,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _rpcServer.StartServerAsync();
         }
-        
-        private void GetNodeConfig(object sender, EventArgs e)
+
+        protected override void Dispose(bool disposing)
         {
-            Console.WriteLine("GetNodeConfig event catch");
+            base.Dispose(disposing);
+            if(!disposing) { return; }
+            _rpcServer?.Dispose();
         }
     }
 }
