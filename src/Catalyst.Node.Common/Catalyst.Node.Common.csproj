@@ -202,6 +202,7 @@
     <Folder Include="Interfaces\Modules\Contract" />
     <Folder Include="Interfaces\Modules\KeySigner" />
     <Folder Include="Interfaces\Modules\Ledger" />
+    <Folder Include="Interfaces\P2P\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System">

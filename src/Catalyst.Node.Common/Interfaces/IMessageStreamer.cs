@@ -18,12 +18,13 @@
 */
 
 using System;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Interfaces.P2P
+namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IMessageStreamer<out T> // where T : IMessage
+    public interface IChanneledMessageStreamer<out T> where T : IMessage
     {
-        IObservable<T> MessageStream { get; }
+        IObservable<IChanneledMessage<T>> MessageStream { get; }
     }
 }

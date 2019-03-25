@@ -28,15 +28,13 @@ using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
-using Common.Logging;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class P2PMessaging : IP2PMessaging, IDisposable, IMessageStreamer<ContextAny>
+    public class P2PMessaging : IP2PMessaging, IDisposable, IChanneledMessageStreamer<Any>
     {
         private readonly IPeerSettings _settings;
         private readonly ILogger _logger;
@@ -47,7 +45,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private ISocketServer _socketServer;
 
         public IPeerIdentifier Identifier { get; }
-        public IObservable<ContextAny> MessageStream { get; }
+        public IObservable<IChanneledMessage<Any>> MessageStream { get; }
 
         static P2PMessaging()
         {
@@ -139,14 +137,14 @@ namespace Catalyst.Node.Core.P2P.Messaging
             return await Task.FromResult(true);
         }
 
-        public async Task BroadcastMessageAsync(Any msg)
+        public async Task BroadcastMessageAsync(IChanneledMessage<Any> msg)
         {
-            await _socketClient.Channel.WriteAndFlushAsync(msg);
+            await _socketClient.Channel.WriteAndFlushAsync(msg.Payload);
         }
 
-        public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, Any message)
+        public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message)
         {
-
+            await message.Context.WriteAndFlushAsync(message.Payload);
         }
 
         protected virtual void Dispose(bool disposing)

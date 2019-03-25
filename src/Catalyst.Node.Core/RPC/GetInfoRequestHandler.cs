@@ -35,7 +35,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly IRpcServerSettings _config;
 
         public GetInfoRequestHandler(
-            IObservable<ContextAny> messageStream,
+            IObservable<IChanneledMessage<Any>> messageStream,
             IRpcServerSettings config,
             ILogger logger)
             : base(messageStream, logger)
@@ -43,11 +43,11 @@ namespace Catalyst.Node.Core.RPC
             _config = config;
         }
 
-        public override void HandleMessage(ContextAny message)
+        public override void HandleMessage(IChanneledMessage<Any> message)
         {
             if(message == null) return;
             Logger.Debug("received message of type GetInfoRequest");
-            var deserialised = message.Message.FromAny<GetInfoRequest>();
+            var deserialised = message.Payload.FromAny<GetInfoRequest>();
             Logger.Debug("message content is {0}", deserialised);
             var response = new GetInfoResponse()
             {

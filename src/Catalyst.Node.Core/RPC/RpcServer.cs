@@ -28,7 +28,6 @@ using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Codecs.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using PeerTalk.Protocols;
 using Serilog;
 
 namespace Catalyst.Node.Core.RPC
@@ -39,10 +38,10 @@ namespace Catalyst.Node.Core.RPC
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
         private ISocketServer _rpcSocketServer;
-        private readonly AnyTypeServerHandlerBase _anyTypeServerHandlerBase;
+        private readonly AnyTypeServerHandler _anyTypeServerHandler;
         private readonly GetInfoRequestHandler _infoRequestHandler;
         public IRpcServerSettings Settings { get; }
-        public IObservable<ContextAny> MessageStream { get; }
+        public IObservable<IChanneledMessage<Any>> MessageStream { get; }
 
         public RpcServer(IRpcServerSettings settings,
             ILogger logger, 
@@ -53,8 +52,8 @@ namespace Catalyst.Node.Core.RPC
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            _anyTypeServerHandlerBase = new AnyTypeServerHandlerBase();
-            MessageStream = _anyTypeServerHandlerBase.MessageStream;
+            _anyTypeServerHandler = new AnyTypeServerHandler();
+            MessageStream = _anyTypeServerHandler.MessageStream;
             var longRunningTasks = new [] {StartServerAsync()};
 
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
@@ -76,7 +75,7 @@ namespace Catalyst.Node.Core.RPC
                 new ProtobufDecoder(Any.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                _anyTypeServerHandlerBase
+                _anyTypeServerHandler
             };
 
             try

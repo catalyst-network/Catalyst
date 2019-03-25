@@ -2,11 +2,13 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Cli;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
@@ -14,6 +16,7 @@ using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -125,7 +128,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 var client = new RpcClient(logger, _certificateStore);
                 client.Should().NotBeNull();
-                
+
                 var shell = new Shell(client, _config);
                 var hasConnected = shell.OnCommand("connect", "node", "node1");
                 hasConnected.Should().BeTrue();
@@ -133,16 +136,24 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var node1 = shell.GetConnectedNode("node1");
                 node1.Should().NotBeNull("we've just connected it");
 
-                var serverObserver = new ContextAnyObserver(0, logger);
+                var serverObserver = new AnyMessageObserver(0, logger);
                 _rpcServer.MessageStream.Subscribe(serverObserver);
+
+                var clientObserver = new AnyMessageObserver(1, logger);
+                client.MessageStream.Subscribe(clientObserver);
 
                 var info = shell.OnGetCommand("get", "config", "node1");
 
-                await Task.Delay(1000);
-                serverObserver.Received.Should().NotBeNull();
-                serverObserver.Received.Message.TypeUrl.Should().Be(GetInfoRequest.Descriptor.ShortenedFullName());
+                var tasks = new IChanneledMessageStreamer<Any>[] {client, _rpcServer}
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a!=null && a != NullObjects.ChanneledAny))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
 
-                await Task.Delay(2000);
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(GetInfoRequest.Descriptor.ShortenedFullName());
+                
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
             }
         }
 

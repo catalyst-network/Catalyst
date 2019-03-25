@@ -22,19 +22,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
 using Serilog;
 using Serilog.Extensions.Logging;
 using Xunit;
@@ -85,20 +87,20 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
             var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
 
-            var observers = indexes.Select(i => new ContextAnyObserver(i, _logger)).ToList();
+            var observers = indexes.Select(i => new AnyMessageObserver(i, _logger)).ToList();
             _subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
 
             var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
-            await peers[0].BroadcastMessageAsync(broadcastMessage);
+            var context = Substitute.For<IChannelHandlerContext>();
+            await peers[0].BroadcastMessageAsync(new ChanneledAny(context, broadcastMessage));
 
             var tasks = peers
-               .Select(async p => await p.MessageStream.FirstAsync(a => a != null))
+               .Select(async p => await p.MessageStream.FirstAsync(a => a != NullObjects.ChanneledAny))
                .ToArray();
             Task.WaitAll(tasks, TimeSpan.FromMilliseconds(100));
         
-
             var received = observers.Select(o => o.Received).ToList();
-            received.Count(r => r.Message.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
+            received.Count(r => r.Payload.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
         
         }
 

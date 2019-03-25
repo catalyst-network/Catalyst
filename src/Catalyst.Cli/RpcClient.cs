@@ -19,9 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels.Sockets;
@@ -41,36 +40,39 @@ namespace Catalyst.Cli
     {
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
-      
+        private readonly AnyTypeClientHandler _clientHandler;
+        public IObservable<IChanneledMessage<Any>> MessageStream { get; }
+
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
         /// 1- Get the settings from the config file
         /// 2- Create/Read the SSL Certificate
         /// 3- Start the client
         /// </summary>
-        /// <param name="settings">an object of ClientSettings which reads the settings from config file section RPCClient</param>
         /// <param name="logger">a logger instance</param>
         /// <param name="certificateStore">certification store object to create/read the SSL certificate</param>
         public RpcClient(ILogger logger, ICertificateStore certificateStore)
         {
             _logger = logger;
             _certificateStore = certificateStore;
+            _clientHandler = new AnyTypeClientHandler();
+            MessageStream = _clientHandler.MessageStream;
         }
-        
+
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
         {
             var certificate = _certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName);
 
             _logger.Information("Rpc client starting");
             _logger.Information("Connecting to {0} @ {1}:{2}", nodeConfig.NodeId, nodeConfig.HostAddress, nodeConfig.Port);
-            
+
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(Any.Parser),
-                new AnyTypeClientHandler()
+                _clientHandler
             };
             
             var socketClient = await new TcpClient(_logger)
@@ -98,8 +100,9 @@ namespace Catalyst.Cli
         {
             await node.SocketClient.SendMessage(message);
         }
-        
+
         /*Implementing IDisposable */
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
