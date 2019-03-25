@@ -43,6 +43,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly AnyTypeClientHandler _anyTypeClientHandler;
         private ISocketClient _socketClient;
         private ISocketServer _socketServer;
+        private AnyTypeServerBroadcastingHandler _anyTypeServerBroadcastingHandler;
 
         public IPeerIdentifier Identifier { get; }
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
@@ -76,13 +77,14 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             _logger.Debug("P2P server starting");
 
+            _anyTypeServerBroadcastingHandler = new AnyTypeServerBroadcastingHandler();
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(Any.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new AnyTypeServerBroadcastingHandler()
+                _anyTypeServerBroadcastingHandler
             };
 
             try
@@ -137,9 +139,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
             return await Task.FromResult(true);
         }
 
-        public async Task BroadcastMessageAsync(IChanneledMessage<Any> msg)
+        public async Task BroadcastMessageAsync(Any msg)
         {
-            await _socketClient.Channel.WriteAndFlushAsync(msg.Payload);
+            await _socketClient.Channel.WriteAndFlushAsync(msg);
         }
 
         public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message)

@@ -53,9 +53,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             return this;
         }
 
-        public Task SendMessage(Any message)
+        public async Task SendMessage(Any message)
         {
-            return Channel.WriteAndFlushAsync(message);
+            await Channel.WriteAndFlushAsync(message);
         }
     }
 }

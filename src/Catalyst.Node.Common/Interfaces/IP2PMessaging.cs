@@ -38,7 +38,7 @@ namespace Catalyst.Node.Common.Interfaces
         /// <returns>true if the target replied successfully</returns>
         Task<bool> PingAsync(IPeerIdentifier targetNode);
 
-        Task BroadcastMessageAsync(IChanneledMessage<Any> tx);
+        Task BroadcastMessageAsync(Any tx);
         Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message);
 
     }

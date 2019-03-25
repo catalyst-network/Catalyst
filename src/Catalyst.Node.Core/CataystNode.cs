@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core
             bool exit = false;
             do
             {
-                /*_logger.Information("Creating a Transaction message");
+                _logger.Information("Creating a Transaction message");
                 _logger.Information("Please type in a pubkey for the transaction signature");
                 var pubkey = Console.ReadLine();
 
@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core
                 {
                     version = 1;
                 }
-                var tx = new Transaction { Version = version, Signature = new TransactionSignature {Signature = ByteString.CopyFromUtf8(pubkey)}};
+                var tx = new Transaction { Version = version, Signature = new TransactionSignature { Signature = ByteString.CopyFromUtf8(pubkey) } };
 
                 await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 await Task.Delay(300, ct); //just to get the next message at the bottom
@@ -106,10 +106,10 @@ namespace Catalyst.Node.Core
 
                 await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
-                
+
                 _logger.Information("Type 'exit' to exit, anything else to continue");
-                exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);*/
-                
+                exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
+
             } while (!ct.IsCancellationRequested && !exit);
 
             _logger.Information("Stopping the Catalyst Node");
@@ -132,11 +132,6 @@ namespace Catalyst.Node.Core
             _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
-        }
-
-        private void GetNodeConfig(object sender, EventArgs e)
-        {
-            Console.WriteLine("GetNodeConfig event catch");
         }
 
         public void Dispose()
