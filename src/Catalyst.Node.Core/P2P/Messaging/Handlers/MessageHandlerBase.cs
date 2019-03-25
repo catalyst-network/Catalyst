@@ -27,21 +27,21 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable // where T : IMessage
+    public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable where T : IMessage
     {
         private readonly IDisposable _messageSubscription;
         protected readonly ILogger Logger;
 
-        protected MessageHandlerBase(IObservable<ContextAny> messageStream, ILogger logger)
+        protected MessageHandlerBase(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
         {
             Logger = logger;
             var filterMessageType = typeof(T).ShortenedProtoFullName();
             _messageSubscription = messageStream
-               //.Where(m => m !=null && m.Message.TypeUrl == filterMessageType)
+               .Where(m => m !=null && m.Payload.TypeUrl == filterMessageType)
                .Subscribe(HandleMessage);
         }
 
-        public abstract void HandleMessage(ContextAny message);
+        public abstract void HandleMessage(IChanneledMessage<Any> message);
 
         protected virtual void Dispose(bool disposing)
         {

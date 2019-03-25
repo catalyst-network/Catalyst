@@ -18,21 +18,13 @@
 */
 
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Reflection;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Groups;
 using Google.Protobuf.WellKnownTypes;
-using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public class AnyTypeServerBroadcastingHandler : AnyTypeServerHandlerBase
+    public class AnyTypeServerBroadcastingHandler : AnyTypeServerHandler
     {
         private static volatile IChannelGroup _broadCastGroup;
         private readonly object _groupLock = new object();

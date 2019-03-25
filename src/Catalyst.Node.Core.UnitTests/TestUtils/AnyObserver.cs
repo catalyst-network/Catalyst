@@ -5,26 +5,26 @@ using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils {
-    public class ContextAnyObserver : IObserver<ContextAny>
+    public class AnyMessageObserver : IObserver<IChanneledMessage<Any>>
     {
         private readonly ILogger _logger;
 
-        public ContextAnyObserver(int index, ILogger logger)
+        public AnyMessageObserver(int index, ILogger logger)
         {
             _logger = logger;
             Index = index;
         }
 
-        public ContextAny Received { get; private set; }
+        public IChanneledMessage<Any> Received { get; private set; }
         public int Index { get; }
 
         public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
         public void OnError(Exception error) { _logger.Debug($"observer {Index} received error : {error.Message}"); }
 
-        public void OnNext(ContextAny value)
+        public void OnNext(IChanneledMessage<Any> value)
         {
-            if (value == null) return;
-            _logger.Debug($"observer {Index} received message of type {value?.Message.TypeUrl ?? "(null)"}");
+            if (value == NullObjects.ChanneledAny) return;
+            _logger.Debug($"observer {Index} received message of type {value?.Payload.TypeUrl ?? "(null)"}");
             Received = value;
         }
     }

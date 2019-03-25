@@ -17,17 +17,14 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IRpcServer
+    public interface IRpcServer : IChanneledMessageStreamer<Any>
     {
         Task StartServerAsync();
         IRpcServerSettings Settings { get; }
-        IObservable<ContextAny> MessageStream { get; }
     }
 }

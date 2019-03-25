@@ -17,13 +17,12 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers {
     public interface IMessageHandler
     {
-        void HandleMessage(ContextAny message);
+        void HandleMessage(IChanneledMessage<Any> message);
     }
 }

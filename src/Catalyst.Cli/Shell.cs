@@ -31,17 +31,18 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 
 using ILogger = Serilog.ILogger;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Cli
 {
-    public sealed class Shell : ShellBase, IAds, IObserver<ContextAny>
+    public sealed class Shell : ShellBase, IAds, IObserver<IChanneledMessage<Any>>
     {
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
         private List<IRpcNode> _nodes;
 
         private readonly IRpcClient _rpcClient;
         
-        public ContextAny _response { get; set; }
+        public IChanneledMessage<Any> _response { get; set; }
 
         /// <summary>
         /// </summary>
@@ -451,12 +452,12 @@ namespace Catalyst.Cli
         public void OnCompleted() { }
         public void OnError(Exception error) { Console.WriteLine($"RpcClient observer received error : {error.Message}"); }
 
-        public void OnNext(ContextAny value)
+        public void OnNext(IChanneledMessage<Any> value)
         {
             if (value == null) return;
 
             _response = value;
-            Console.WriteLine(_response.Message.Value.ToString());
+            Console.WriteLine(_response.Payload.Value.ToString());
         }
     }
 }

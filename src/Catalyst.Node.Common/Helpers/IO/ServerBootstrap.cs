@@ -17,15 +17,35 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
+using PeerTalk;
+using Polly;
+using Polly.Retry;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
     public class ServerBootstrap : DotNetty.Transport.Bootstrapping.ServerBootstrap, IServerBootstrap
     {
-        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port) { return base.BindAsync(ipAddress, port); }
+        private AsyncRetryPolicy _exponentialBackOffRetryPolicy;
+
+        public ServerBootstrap()
+        {
+            _exponentialBackOffRetryPolicy = Policy.Handle<SocketException>()
+               .WaitAndRetryAsync(10, retryAttempt =>
+                    TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt))
+                );
+        }
+        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port)
+        {
+            return _exponentialBackOffRetryPolicy.ExecuteAsync(
+                () => base.BindAsync(ipAddress, port)
+            );
+        }
     }
 }

@@ -28,13 +28,13 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public class PingRequestHandler : MessageHandlerBase<PingRequest>
     {
-        public PingRequestHandler(IObservable<ContextAny> messageStream, ILogger logger)
+        public PingRequestHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
         : base(messageStream, logger) { }
 
-        public override void HandleMessage(ContextAny message)
+        public override void HandleMessage(IChanneledMessage<Any> message)
         {
             Logger.Debug("received ping");
-            var deserialised = message.Message.FromAny<PingRequest>();
+            var deserialised = message.Payload.FromAny<PingRequest>();
             Logger.Debug("ping content is {0}", deserialised.Ping);
         }
     }

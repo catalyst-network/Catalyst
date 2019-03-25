@@ -28,13 +28,13 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public class TransactionHandler : MessageHandlerBase<Transaction>
     {
-        public TransactionHandler(IObservable<ContextAny> messageStream, ILogger logger)
+        public TransactionHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
         : base(messageStream, logger) { }
 
-        public override void HandleMessage(ContextAny message)
+        public override void HandleMessage(IChanneledMessage<Any> message)
         {
             Logger.Debug("received pong");
-            var deserialised = message.Message.FromAny<Transaction>();
+            var deserialised = message.Payload.FromAny<Transaction>();
             Logger.Debug("transaction pong is {0}", deserialised.Signature);
         }
     }

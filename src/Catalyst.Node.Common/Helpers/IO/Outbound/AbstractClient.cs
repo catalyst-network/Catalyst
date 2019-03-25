@@ -22,7 +22,6 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
