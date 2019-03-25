@@ -20,6 +20,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using DotNetty.Buffers;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
@@ -40,7 +41,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
                .Group(WorkerEventLoop)
                .Channel<TChannel>()
-               .Option(ChannelOption.SoBacklog, BackLogValue)
+               // .Option(ChannelOption.SoBacklog, BackLogValue)
+               .Option(ChannelOption.Allocator, UnpooledByteBufferAllocator.Default)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer);
             return this;

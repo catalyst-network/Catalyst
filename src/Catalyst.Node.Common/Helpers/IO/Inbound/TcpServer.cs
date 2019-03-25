@@ -20,6 +20,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotNetty.Handlers.Logging;
@@ -49,7 +50,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             ((DotNetty.Transport.Bootstrapping.ServerBootstrap)Server)
                .Group(_supervisorEventLoop, WorkerEventLoop)
                .ChannelFactory(() => new TcpServerSocketChannel())
-               .Option(ChannelOption.SoBacklog, BackLogValue)
+               // .Option(ChannelOption.SoBacklog, BackLogValue)
+               .Option(ChannelOption.Allocator, UnpooledByteBufferAllocator.Default)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelInitializer);
             return this;
