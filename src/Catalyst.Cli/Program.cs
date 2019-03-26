@@ -103,7 +103,7 @@ namespace Catalyst.Cli
                 var loggerConfiguration =
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
                 Log.Logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"), 
+                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node.Cli.log"), 
                         rollingInterval: RollingInterval.Day,
                         outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                    .CreateLogger();
