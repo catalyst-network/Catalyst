@@ -43,6 +43,7 @@ namespace Catalyst.Cli
         private readonly ICertificateStore _certificateStore;
         private readonly AnyTypeClientHandler _clientHandler;
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
+        private readonly GetInfoResponseHandler _getInfoResponseHandler;
 
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -58,6 +59,8 @@ namespace Catalyst.Cli
             _certificateStore = certificateStore;
             _clientHandler = new AnyTypeClientHandler();
             MessageStream = _clientHandler.MessageStream;
+            
+            _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, _logger);
         }
 
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
