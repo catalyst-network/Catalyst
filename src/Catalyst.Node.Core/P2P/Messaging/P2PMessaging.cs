@@ -47,9 +47,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly X509Certificate2 _certificate;
         private readonly AnyTypeClientHandler _anyTypeClientHandler;
         private readonly AnyTypeServerBroadcastingHandler _anyTypeServerHandler;
-        private readonly Dictionary<string, IChannelHandlerContext> _challengePendingContexts;
+        //private readonly Dictionary<string, IChannelHandlerContext> _challengePendingContexts;
 
-        private ISocketClient _socketClient;
+        public ISocketClient SocketClient;
         private ISocketServer _socketServer;
 
         public IPeerIdentifier Identifier { get; }
@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
         }
 
-        public P2PMessaging(IPeerSettings settings, 
+        public P2PMessaging(IPeerSettings settings,
             ICertificateStore certificateStore,
             ILogger logger)
         {
@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _logger = logger;
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
             _cancellationSource = new CancellationTokenSource();
-            
+
             //_challengePendingContexts = new Dictionary<string, IChannelHandlerContext>();
 
             Identifier = new PeerIdentifier(settings);
@@ -79,9 +79,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _anyTypeServerHandler = new AnyTypeServerBroadcastingHandler();
             InboundMessageStream = _anyTypeServerHandler.MessageStream;
 
-            var pongResponseHandler = new PongResponseHandler(_anyTypeServerHandler.MessageStream, _logger);
-            
-            var longRunningTasks = new [] {RunP2PServerAsync(), RunP2PClientAsync()};
+            //var pongResponseHandler = new PongResponseHandler(_anyTypeServerHandler.MessageStream, _logger);
+
+            var longRunningTasks = new[] { RunP2PServerAsync(), RunP2PClientAsync() };
             Task.WaitAll(longRunningTasks);
         }
 
@@ -125,10 +125,10 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 new ProtobufDecoder(Any.Parser),
                 _anyTypeClientHandler
             };
-            
-            _socketClient = await new TcpClient(_logger)
+
+            SocketClient = await new TcpClient(_logger)
                .Bootstrap(
-                    new OutboundChannelInitializer<ISocketChannel>(channel => {},
+                    new OutboundChannelInitializer<ISocketChannel>(channel => { },
                         handlers,
                         _settings.BindAddress,
                         _certificate
@@ -147,23 +147,51 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public async Task<bool> PingAsync(IPeerIdentifier targetNode)
         {
-            if (!AnyTypeServerBroadcastingHandler.ContextByPeerId.TryGetValue(targetNode.ToString(), out IChannelHandlerContext context))
+            if (!_anyTypeServerHandler.ContextByPeerId.TryGetValue(targetNode, out IChannel channel))
             {
-                _logger.Warning("Unable to ping peer {0}, peer not found in P2P internal dictionary");
+                _logger.Warning("Unable to ping peer {0}, peer not found in P2P internal dictionary", targetNode);
                 return false;
             }
 
             var guid = Guid.NewGuid().ToString();
-            await context.Channel.WriteAndFlushAsync(
-                new PeerProtocol.Types.PingRequest {Ping = guid }.ToAny());
+            await channel.WriteAndFlushAsync(
+                new PeerProtocol.Types.PingRequest { Ping = guid }.ToAny());
             return true;
+        }
+
+        public IChannel AddOrUpdateKnownPeer(IPeerIdentifier peerIdentifier,
+            IChannel context)
+        {
+            return _anyTypeServerHandler.ContextByPeerId.AddOrUpdate(peerIdentifier, context, (id, oldContext) =>
+                {
+                    oldContext.CloseAsync().GetAwaiter().GetResult();
+                    return context;
+                });
+
         }
 
         public async Task BroadcastMessageAsync(Any msg)
         {
-            var snapshot = AnyTypeServerBroadcastingHandler.ContextByPeerId.ToArray();
-            var tasks = snapshot.Select(p => p.Value.Channel.WriteAndFlushAsync(msg));
+            var snapshot = _anyTypeServerHandler.ContextByPeerId.ToArray();
+            var tasks = snapshot.Select(async p => await p.Value.WriteAndFlushAsync(msg)).ToArray();
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
+
+        public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, Any message)
+        {
+            var tasks = peers.Select(p => SendMessageToPeer(p, message)).ToArray();
             await Task.WhenAll(tasks);
+        }
+
+        public async Task SendMessageToPeer(IPeerIdentifier target, Any message)
+        {
+            if (!_anyTypeServerHandler.ContextByPeerId.TryGetValue(target, out IChannel channel))
+            {
+                _logger.Warning("Unable to ping peer {0}, peer not found in P2P internal dictionary", target);
+                return;
+            }
+
+            await channel.WriteAndFlushAsync(message);
         }
 
         public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message)

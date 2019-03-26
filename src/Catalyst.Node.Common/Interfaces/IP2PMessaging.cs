@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
@@ -39,8 +40,11 @@ namespace Catalyst.Node.Common.Interfaces
         /// <returns>true if the target replied successfully</returns>
         Task<bool> PingAsync(IPeerIdentifier targetNode);
 
+        IChannel AddOrUpdateKnownPeer(IPeerIdentifier peerIdentifier, IChannel context);
         Task BroadcastMessageAsync(Any tx);
-        Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message);
+        Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, Any message);
+
+
 
     }
 }
