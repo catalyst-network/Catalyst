@@ -30,11 +30,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly IConfigurationRoot _config;
 
-        private readonly IRpcServer _rpcServer;
-        private readonly ICertificateStore _certificateStore;
-        private readonly ILifetimeScope _scope;
-        private readonly ILogger _logger;
+        private IRpcServer _rpcServer;
+        private ICertificateStore _certificateStore;
         private RpcClient _rpcClient;
+        private ILifetimeScope _scope;
+        private ILogger _logger;
 
         public SocketTests(ITestOutputHelper output) : base(output)
         {
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact]
+        [Fact(Skip = "trying to exclude P2P from the tests for now")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_and_P2PServer_should_work_together()
         {

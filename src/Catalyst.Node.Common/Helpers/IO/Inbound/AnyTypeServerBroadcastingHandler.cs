@@ -18,36 +18,50 @@
 */
 
 using System;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
-using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Groups;
 using Google.Protobuf.WellKnownTypes;
-using NSec.Cryptography;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     public class AnyTypeServerBroadcastingHandler : AnyTypeServerHandler
     {
-        public static readonly ConcurrentDictionary<string, IChannelHandlerContext> ContextByPeerId 
-            = new ConcurrentDictionary<string, IChannelHandlerContext>();
-
+        private static volatile IChannelGroup _broadCastGroup;
+        private readonly object _groupLock = new object();
         public override void ChannelActive(IChannelHandlerContext context)
         {
             base.ChannelActive(context);
-            //var endpoint = (IPEndPoint)context.Channel.RemoteAddress;
-            //var publicKey = new PublicKey(new Ed25519());
-            //var peerId = new PeerIdentifier(publicKey.Export(KeyBlobFormat.NSecPublicKey).Take(20).ToArray(), endpoint);
-            var key = Guid.NewGuid().ToString();
-            ContextByPeerId.TryAdd(key, context);
+
+            if (_broadCastGroup == null)
+            {
+                lock (_groupLock)
+                {
+                    if (_broadCastGroup == null)
+                    {
+                        _broadCastGroup = new DefaultChannelGroup(Guid.NewGuid().ToString(), context.Executor);
+                    }
+                }
+            }
+            context.WriteAndFlushAsync($"Welcome to {System.Net.Dns.GetHostName()} secure chat server!\n");
+            _broadCastGroup.Add(context.Channel);
+        }
+        private class EveryOneBut : IChannelMatcher
+        {
+
+            private readonly IChannelId _id;
+
+            public EveryOneBut(IChannelId id)
+            {
+                _id = id;
+            }
+
+            public bool Matches(IChannel channel) => !Equals(channel.Id, _id);
         }
 
         protected override void ChannelRead0(IChannelHandlerContext context, Any message)
         {
-            base.ChannelRead0(context, message);
+            _broadCastGroup.WriteAndFlushAsync(message, new EveryOneBut(context.Channel.Id));
+            context.WriteAndFlushAsync(message);
         }
     }
 }
