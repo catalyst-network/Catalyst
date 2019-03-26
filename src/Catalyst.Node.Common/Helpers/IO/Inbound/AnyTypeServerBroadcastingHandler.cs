@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright(c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node<https: //github.com/catalyst-network/Catalyst.Node>

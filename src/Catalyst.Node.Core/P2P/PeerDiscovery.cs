@@ -35,7 +35,7 @@ namespace Catalyst.Node.Core.P2P
     {
         private readonly IDns _dns;
         private readonly IRepository<Peer> _peerRepository;
-        private readonly List<IEnumerable<string>> _seedNodes;
+        private readonly List<string> _seedNodes;
         private readonly ILogger _logger;
         
         private List<IPEndPoint> Peers { get; set; }
@@ -49,16 +49,18 @@ namespace Catalyst.Node.Core.P2P
         {
             _dns = dns;
             _logger = logger;
-            _seedNodes = new List<IEnumerable<string>>();
+            _seedNodes = new List<string>();
             
             Peers = new List<IPEndPoint>();
-            
-            _seedNodes.Add(rootSection.GetSection("CatalystNodeConfiguration")
+
+            foreach (var seedNode in rootSection.GetSection("CatalystNodeConfiguration")
                .GetSection("Peer")
                .GetSection("SeedServers")
                .GetChildren()
-               .Select(p => p.Value).ToList()
-            );
+               .Select(p => p.Value).ToList())
+            {
+                _seedNodes.Add(seedNode);   
+            }
             
             _peerRepository = repository;
             var longRunningTasks = new [] {PeerCrawler()};
@@ -68,11 +70,11 @@ namespace Catalyst.Node.Core.P2P
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        private async Task GetSeedNodes(List<IEnumerable<string>> seedServers)
+        private async Task GetSeedNodes(List<string> seedServers)
         {
             foreach (var seedNode in seedServers)
             {
-                var dnsQueryAnswer = await _dns.GetTxtRecords(seedNode.First());
+                var dnsQueryAnswer = await _dns.GetTxtRecords(seedNode);
 
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
