@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _scope = container.BeginLifetimeScope(_currentTestName);
 
             _logger = container.Resolve<ILogger>();
-            //DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
 
             _certificateStore = container.Resolve<ICertificateStore>();
         }

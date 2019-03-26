@@ -81,7 +81,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             using (var scope = container.BeginLifetimeScope(_currentTestName))
             {
                 var logger = container.Resolve<ILogger>();
-                //DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
+                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
 
                 _certificateStore = container.Resolve<ICertificateStore>();
                 _rpcServer = container.Resolve<IRpcServer>();

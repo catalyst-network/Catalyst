@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         static P2PMessaging()
         {
             //Find a better way to do this at some point
-            //DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
+            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
         }
 
         public P2PMessaging(
