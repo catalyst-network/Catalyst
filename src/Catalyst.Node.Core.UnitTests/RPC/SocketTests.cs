@@ -33,6 +33,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private IRpcServer _rpcServer;
         private ICertificateStore _certificateStore;
         private RpcClient _rpcClient;
+        private ILifetimeScope _scope;
+        private ILogger _logger;
 
         public SocketTests(ITestOutputHelper output) : base(output)
         {
@@ -43,119 +45,90 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .Build();
-        }
-
-        [Fact(Skip = "just trying to fix the build")]
-        public void ServerConnectedToCorrectPort()
-        {
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
-
-            //Create container
-            var container = ContainerBuilder.Build();
- 
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
-            {
-                var logger = container.Resolve<ILogger>();
-
-                _rpcServer = container.Resolve<IRpcServer>();
-                var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(), _rpcServer.Settings.Port);
-                Assert.NotNull(client);
-            }
-        }
-
-        [Fact(Skip = "just trying to fix the build")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcServer_and_P2PServer_should_work_together()
-        {
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
-
-            //Create container
-            var container = ContainerBuilder.Build();
-
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
-            {
-                var logger = container.Resolve<ILogger>();
-                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
-
-                _certificateStore = container.Resolve<ICertificateStore>();
-                _rpcServer = container.Resolve<IRpcServer>();
-
-                _rpcClient = new RpcClient(logger, _certificateStore);
-                _rpcClient.Should().NotBeNull();
-
-                var peerSettings = new PeerSettings(_config) {Port = _rpcServer.Settings.Port + 1000};
-                var p2PMessenger = new P2PMessaging(peerSettings, _certificateStore, logger);
-                p2PMessenger.Should().NotBeNull();
-
-                var shell = new Shell(_rpcClient, _config, logger);
-                var hasConnected = shell.OnCommand("connect", "node", "node1");
-                hasConnected.Should().BeTrue();
-
-                var node1 = shell.GetConnectedNode("node1");
-                node1.Should().NotBeNull("we've just connected it");
-                
-                var info = shell.OnGetCommand("get", "config", "node1");
-            }
-        }
-
-        [Fact(Skip = "just trying to fix the build")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task RpcClient_can_send_request_and_RpcServer_can_reply()
-        {
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
 
             AlterConfigurationToGetUniquePort();
 
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
+            WriteLogsToFile = false;
+            WriteLogsToTestOutput = false;
 
-            //Create container
+            ConfigureContainerBuilder(_config);
             var container = ContainerBuilder.Build();
 
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
+            _scope = container.BeginLifetimeScope(_currentTestName);
+
+            _logger = container.Resolve<ILogger>();
+            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+
+            _certificateStore = container.Resolve<ICertificateStore>();
+            _rpcServer = container.Resolve<IRpcServer>();
+
+        }
+
+        [Fact]
+        public void ServerConnectedToCorrectPort()
+        {
+            using (var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(),
+                _rpcServer.Settings.Port))
             {
-                var logger = container.Resolve<ILogger>();
-                //DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
-
-                _certificateStore = container.Resolve<ICertificateStore>();
-                _rpcServer = container.Resolve<IRpcServer>();
-
-                _rpcClient = new RpcClient(logger, _certificateStore);
-                _rpcClient.Should().NotBeNull();
-
-                var shell = new Shell(_rpcClient, _config, logger);
-                var hasConnected = shell.OnCommand("connect", "node", "node1");
-                hasConnected.Should().BeTrue();
-
-                var node1 = shell.GetConnectedNode("node1");
-                node1.Should().NotBeNull("we've just connected it");
-
-                var serverObserver = new AnyMessageObserver(0, logger);
-                var clientObserver = new AnyMessageObserver(1, logger);
-                using (_rpcServer.MessageStream.Subscribe(serverObserver))
-                using (_rpcClient.MessageStream.Subscribe(clientObserver))
-                {
-                    var info = shell.OnGetCommand("get", "config", "node1");
-
-                    var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
-                       .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
-                       .ToArray();
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
-
-                    serverObserver.Received.Should().NotBeNull();
-                    serverObserver.Received.Payload.TypeUrl.Should().Be(GetInfoRequest.Descriptor.ShortenedFullName());
-
-                    clientObserver.Received.Should().NotBeNull();
-                    clientObserver.Received.Payload.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
-                }
+                client.Should().NotBeNull();
+                client.Connected.Should().BeTrue();
             }
+        }
+
+        [Fact(Skip = "trying to exclude P2P from the tests for now")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcServer_and_P2PServer_should_work_together()
+        {
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
+
+            var peerSettings = new PeerSettings(_config) {Port = _rpcServer.Settings.Port + 1000};
+            var p2PMessenger = new P2PMessaging(peerSettings, _certificateStore, _logger);
+            p2PMessenger.Should().NotBeNull();
+
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+            node1.SocketClient.Channel.Active.Should().BeTrue();
+            node1.SocketClient.Shutdown();
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcClient_can_send_request_and_RpcServer_can_reply()
+        {
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
+
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnyMessageObserver(0, _logger);
+            var clientObserver = new AnyMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                var info = shell.OnGetCommand("get", "config", "node1");
+
+                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(GetInfoRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
+            }
+        
         }
 
         private void AlterConfigurationToGetUniquePort()
@@ -173,6 +146,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         {
             base.Dispose(disposing);
             if (!disposing) {return;}
+            _scope?.Dispose();
             _rpcServer?.Dispose();
             _rpcClient?.Dispose();
         }
