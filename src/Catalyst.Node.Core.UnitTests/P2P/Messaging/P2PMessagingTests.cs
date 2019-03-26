@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _certificateStore = container.Resolve<ICertificateStore>();
         }
 
-        [Fact(Skip = "other attempt to isolate a reason why the build is hanging")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {

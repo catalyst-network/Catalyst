@@ -19,15 +19,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels.Sockets;
 using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Protocol.IPPN;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
@@ -41,7 +46,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
         private readonly AnyTypeClientHandler _anyTypeClientHandler;
-        private readonly AnyTypeServerHandler _anyTypeServerHandler;
+        private readonly AnyTypeServerBroadcastingHandler _anyTypeServerHandler;
+        private readonly Dictionary<string, IChannelHandlerContext> _challengePendingContexts;
+
         private ISocketClient _socketClient;
         private ISocketServer _socketServer;
 
@@ -55,23 +62,25 @@ namespace Catalyst.Node.Core.P2P.Messaging
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
         }
 
-        public P2PMessaging(
-            IPeerSettings settings, 
+        public P2PMessaging(IPeerSettings settings, 
             ICertificateStore certificateStore,
-            ILogger logger
-        )
+            ILogger logger)
         {
             _settings = settings;
             _logger = logger;
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
             _cancellationSource = new CancellationTokenSource();
+            
+            //_challengePendingContexts = new Dictionary<string, IChannelHandlerContext>();
 
             Identifier = new PeerIdentifier(settings);
             _anyTypeClientHandler = new AnyTypeClientHandler();
             OutboundMessageStream = _anyTypeClientHandler.MessageStream;
-            _anyTypeServerHandler = new AnyTypeServerHandler();
+            _anyTypeServerHandler = new AnyTypeServerBroadcastingHandler();
             InboundMessageStream = _anyTypeServerHandler.MessageStream;
 
+            var pongResponseHandler = new PongResponseHandler(_anyTypeServerHandler.MessageStream, _logger);
+            
             var longRunningTasks = new [] {RunP2PServerAsync(), RunP2PClientAsync()};
             Task.WaitAll(longRunningTasks);
         }
@@ -138,12 +147,23 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public async Task<bool> PingAsync(IPeerIdentifier targetNode)
         {
-            return await Task.FromResult(true);
+            if (!AnyTypeServerBroadcastingHandler.ContextByPeerId.TryGetValue(targetNode.ToString(), out IChannelHandlerContext context))
+            {
+                _logger.Warning("Unable to ping peer {0}, peer not found in P2P internal dictionary");
+                return false;
+            }
+
+            var guid = Guid.NewGuid().ToString();
+            await context.Channel.WriteAndFlushAsync(
+                new PeerProtocol.Types.PingRequest {Ping = guid }.ToAny());
+            return true;
         }
 
         public async Task BroadcastMessageAsync(Any msg)
         {
-            await _socketClient.Channel.WriteAndFlushAsync(msg);
+            var snapshot = AnyTypeServerBroadcastingHandler.ContextByPeerId.ToArray();
+            var tasks = snapshot.Select(p => p.Value.Channel.WriteAndFlushAsync(msg));
+            await Task.WhenAll(tasks);
         }
 
         public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message)
@@ -158,6 +178,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _cancellationSource?.Dispose();
             _certificate?.Dispose();
             _anyTypeClientHandler?.Dispose();
+            _anyTypeServerHandler?.Dispose();
         }
 
         public void Dispose()
