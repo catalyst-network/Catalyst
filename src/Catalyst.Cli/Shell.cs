@@ -373,8 +373,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                //Console.WriteLine(e);
-                throw e;
+                _logger.Error(e, "Failed to get configuration ");
             }
 
             return true;

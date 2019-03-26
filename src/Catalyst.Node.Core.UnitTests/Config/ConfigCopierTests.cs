@@ -31,9 +31,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
 {
     public class ConfigCopierTests : FileSystemBasedTest
     {
-        public ConfigCopierTests(ITestOutputHelper output) : base(output) { _configCopier = new ConfigCopier(); }
-
-        private readonly ConfigCopier _configCopier;
+        public ConfigCopierTests(ITestOutputHelper output) : base(output) { }
 
         private class ConfigFilesOverwriteTestData : TheoryData<string, Network>
         {
@@ -76,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
             currentDirectory.Exists.Should().BeTrue("otherwise the test is not relevant");
             existingFileInfo.Exists.Should().BeTrue("otherwise the test is not relevant");
 
-            _configCopier.RunConfigStartUp(currentDirectory.FullName, network);
+            ConfigCopier.RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network).ToList();
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
@@ -119,7 +117,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
                 new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
             var network = Network.Dev;
-            _configCopier.RunConfigStartUp(currentDirectory.FullName, network);
+            ConfigCopier.RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network);
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
