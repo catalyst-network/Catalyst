@@ -22,19 +22,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
 using Serilog;
 using Serilog.Extensions.Logging;
 using Xunit;
@@ -70,49 +72,17 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _scope = container.BeginLifetimeScope(_currentTestName);
 
             _logger = container.Resolve<ILogger>();
-            //DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
 
             _certificateStore = container.Resolve<ICertificateStore>();
         }
 
-        [Fact(Skip = "Not ready")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {
             ConfigureTestContainer();
             var indexes = Enumerable.Range(0, 3).ToList();
-
-            var peerSettings = indexes.Select(i => new PeerSettings(_config) {Port = 40100 + i}).ToList();
-            var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
-
-            peers[0].AddOrUpdateKnownPeer(peers[0].Identifier, peers[0].SocketClient.Channel);
-            peers[0].AddOrUpdateKnownPeer(peers[1].Identifier, peers[1].SocketClient.Channel);
-            peers[0].AddOrUpdateKnownPeer(peers[2].Identifier, peers[2].SocketClient.Channel);
-
-            var observers = indexes.Select(i => new AnyMessageObserver(i, _logger)).ToList();
-            _subscriptions = peers.Select((p, i) => p.InboundMessageStream.Subscribe(observers[i]));
-
-            var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
-
-            await peers[0].BroadcastMessageAsync(broadcastMessage);
-
-            var tasks = peers
-               .Select(async p => await p.InboundMessageStream.FirstAsync(a => a != NullObjects.ChanneledAny))
-               .ToArray();
-
-            Task.WaitAll(tasks, TimeSpan.FromMilliseconds(1000));
-
-            var received = observers.Where(o => o.Received != null).Select(o => o.Received.Payload).ToList();
-            received.Count(r => r?.TypeUrl == broadcastMessage.TypeUrl).Should().Be(2);
-        }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
-        {
-            ConfigureTestContainer();
-
-            var indexes = Enumerable.Range(0, 2).ToList();
 
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
             var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
@@ -120,11 +90,39 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             var observers = indexes.Select(i => new AnyMessageObserver(i, _logger)).ToList();
             _subscriptions = peers.Select((p, i) => p.OutboundMessageStream.Subscribe(observers[i])).ToList();
 
+            var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
+            var context = Substitute.For<IChannelHandlerContext>();
+            await peers[0].BroadcastMessageAsync(broadcastMessage);
+
+            var tasks = peers
+               .Select(async p => await p.OutboundMessageStream.FirstAsync(a => a != NullObjects.ChanneledAny))
+               .ToArray();
+            Task.WaitAll(tasks, TimeSpan.FromMilliseconds(100));
+        
+            var received = observers.Select(o => o.Received).ToList();
+            received.Count(r => r.Payload.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
+        
+        }
+
+        [Fact(Skip = "not ready yet")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
+        {
+            ConfigureTestContainer();
+
+            var indexes = Enumerable.Range(0, 3).ToList();
+
+            var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
+            var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
+
+            //var observers = indexes.Select(i => new AnyObserver(i, _logger)).ToList();
+            //_subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
+
             //await peers[0].PingAsync(peers[2].Identifier);
 
             //var tasks = Task.Run(() => peers[2].MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)));
             //Task.WaitAll(new Task[]{tasks}, TimeSpan.FromMilliseconds(200))};
-
+            
         }
 
         protected override void Dispose(bool disposing)

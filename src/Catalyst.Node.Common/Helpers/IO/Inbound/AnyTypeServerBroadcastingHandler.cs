@@ -32,8 +32,22 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     public class AnyTypeServerBroadcastingHandler : AnyTypeServerHandler
     {
-        public readonly ConcurrentDictionary<IPeerIdentifier, IChannel> ContextByPeerId 
-            = new ConcurrentDictionary<IPeerIdentifier, IChannel>();
+        public static readonly ConcurrentDictionary<string, IChannelHandlerContext> ContextByPeerId 
+            = new ConcurrentDictionary<string, IChannelHandlerContext>();
 
+        public override void ChannelActive(IChannelHandlerContext context)
+        {
+            base.ChannelActive(context);
+            //var endpoint = (IPEndPoint)context.Channel.RemoteAddress;
+            //var publicKey = new PublicKey(new Ed25519());
+            //var peerId = new PeerIdentifier(publicKey.Export(KeyBlobFormat.NSecPublicKey).Take(20).ToArray(), endpoint);
+            var key = Guid.NewGuid().ToString();
+            ContextByPeerId.TryAdd(key, context);
+        }
+
+        protected override void ChannelRead0(IChannelHandlerContext context, Any message)
+        {
+            base.ChannelRead0(context, message);
+        }
     }
 }
