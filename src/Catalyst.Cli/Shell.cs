@@ -378,7 +378,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                //Console.WriteLine(e);
+                _logger.Debug(e.Message);
                 throw e;
             }
 
@@ -399,21 +399,22 @@ namespace Catalyst.Cli
                 {
                     if (!nodeConnected.SocketClient.Channel.Active)
                     {
-                        Console.WriteLine("Channel inactive ...");
+                        _logger.Information("Channel inactive ...");
                     }
                     
                     //send the message to the server by writing it to the channel
                     var request = new GetInfoRequest { Query = true };
-                    _rpcClient.SendMessage(nodeConnected, request.ToAny());
+                    _rpcClient.SendMessage(nodeConnected, request.ToAny()).Wait();
                 }
                 else
                 {
-                    Console.WriteLine("Node not found.  Please connect to node first.");
+                    //User messages should be read from an external resource file
+                    Console.WriteLine("Node not found.  Please connect to a node first.");
                 }
             }
             catch (Exception e)
             {
-                //Console.WriteLine(e);
+                _logger.Debug(e.Message);
                 throw e;
             }
 
