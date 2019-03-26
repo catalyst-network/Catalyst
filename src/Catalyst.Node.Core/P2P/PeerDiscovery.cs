@@ -33,48 +33,61 @@ namespace Catalyst.Node.Core.P2P
 {
     public class PeerDiscovery : IPeerDiscovery
     {
-        private readonly IDns _dns;
-        private readonly IRepository<Peer> _peerRepository;
-        private readonly List<string> _seedNodes;
-        private readonly ILogger _logger;
-        
-        private List<IPEndPoint> Peers { get; set; }
+        public IDns Dns { get; }
+        public ILogger Logger { get; }
+        public List<string> SeedNodes { get; }
+        public List<IPEndPoint> Peers { get; }
+        public IRepository<IPeer> PeerRepository { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="dns"></param>
         /// <param name="repository"></param>
         /// <param name="rootSection"></param>
-        public PeerDiscovery(IDns dns, IRepository<Peer> repository, IConfigurationRoot rootSection, ILogger logger)
+        /// <param name="logger"></param>
+        public PeerDiscovery(IDns dns, IRepository<IPeer> repository, IConfigurationRoot rootSection, ILogger logger)
         {
-            _dns = dns;
-            _logger = logger;
-            _seedNodes = new List<string>();
-            
+            Dns = dns;
+            Logger = logger;
+            PeerRepository = repository;
+            SeedNodes = new List<string>();
             Peers = new List<IPEndPoint>();
 
-            foreach (var seedNode in rootSection.GetSection("CatalystNodeConfiguration")
-               .GetSection("Peer")
-               .GetSection("SeedServers")
-               .GetChildren()
-               .Select(p => p.Value).ToList())
-            {
-                _seedNodes.Add(seedNode);   
-            }
+            ParseDnsServersFromConfig(rootSection);
             
-            _peerRepository = repository;
             var longRunningTasks = new [] {PeerCrawler()};
             Task.WaitAll(longRunningTasks);
         }
 
+        public void ParseDnsServersFromConfig(IConfigurationRoot rootSection)
+        {
+            try
+            {
+                foreach (var seedNode in rootSection.GetSection("CatalystNodeConfiguration")
+                   .GetSection("Peer")
+                   .GetSection("SeedServers")
+                   .GetChildren()
+                   .Select(p => p.Value).ToList())
+                {
+                    SeedNodes.Add(seedNode);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message);
+                throw;
+            }
+            
+        }
+        
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        private async Task GetSeedNodes(List<string> seedServers)
+        public async Task GetSeedNodesFromDns(List<string> seedServers)
         {
             foreach (var seedNode in seedServers)
             {
-                var dnsQueryAnswer = await _dns.GetTxtRecords(seedNode);
+                var dnsQueryAnswer = await Dns.GetTxtRecords(seedNode);
 
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
@@ -88,14 +101,13 @@ namespace Catalyst.Node.Core.P2P
         {
             try
             {
-                await GetSeedNodes(_seedNodes);
+                await GetSeedNodesFromDns(SeedNodes);
             }
             catch (Exception e)
             {
-                _logger.Error(e.Message);
+                Logger.Error(e.Message);
                 throw;
             }
-            _logger.Information(_seedNodes.ToString());
         }
     }
 }

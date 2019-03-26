@@ -17,7 +17,23 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Serilog;
+using SharpRepository.Repository;
+
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IPeerDiscovery { }
+    public interface IPeerDiscovery
+    {
+        IDns Dns { get; }
+        ILogger Logger { get; }
+        List<string> SeedNodes { get; }
+        List<IPEndPoint> Peers { get; }
+        IRepository<IPeer> PeerRepository { get; }
+        Task GetSeedNodesFromDns(List<string> seedServers);
+        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+    }
 }

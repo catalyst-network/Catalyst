@@ -15,9 +15,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP.UnitTests\RLPTests.cs" />
+    <Compile Remove="Helpers\Util\**" />
+    <Compile Remove="Helpers\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\Util\" />
     <Folder Include="Modules\Dfs\" />
   </ItemGroup>
   <ItemGroup>
@@ -27,8 +28,14 @@
     <None Update="Config\Modules\mempool.xml.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Remove="Helpers\Util\**" />
+    <None Remove="Helpers\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Helpers\Util\**" />
+    <EmbeddedResource Remove="Helpers\**" />
   </ItemGroup>
 </Project>
