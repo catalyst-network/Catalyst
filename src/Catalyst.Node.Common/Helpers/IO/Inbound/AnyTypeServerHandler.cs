@@ -25,6 +25,7 @@ using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using DotNetty.Transport.Channels;
+using DotNetty.Handlers.Tls;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
@@ -48,7 +49,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound {
             contex.WriteAsync(string.Format("Welcome to RpcServer!\r\n"));
             contex.WriteAndFlushAsync(string.Format("It is {0} now !\r\n", DateTime.Now));
         }
-
 
         public override void ChannelReadComplete(IChannelHandlerContext ctx) => ctx.Flush();
 

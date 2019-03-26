@@ -19,6 +19,8 @@
 
 using System;
 using System.Net;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
@@ -36,15 +38,12 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         protected AbstractClient(ILogger logger) : base(logger) {}
 
         public virtual ISocketClient Bootstrap(IChannelHandler channelInitializer)
-        {
+        {   
             Client = new Bootstrap();
             ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
                .Group(WorkerEventLoop)
                .Channel<TChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Option(ChannelOption.ConnectTimeout, TimeSpan.MaxValue)
-               .Option(ChannelOption.SoKeepalive, true )
-               .Option(ChannelOption.SoTimeout, 0)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer);
             return this;
@@ -54,8 +53,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         {
             try
             {
-                Channel = await Client.BindAsync(listenAddress, port);
-                await Client.ConnectAsync(listenAddress, port)
+                //Channel = await Client.BindAsync(listenAddress, port);
+                Channel = await Client.ConnectAsync(listenAddress, port)
                    .ConfigureAwait(false);
             }
             catch (Exception e)

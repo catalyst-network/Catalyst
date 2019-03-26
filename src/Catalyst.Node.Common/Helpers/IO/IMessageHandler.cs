@@ -20,7 +20,7 @@
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf.WellKnownTypes;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers {
+namespace Catalyst.Node.Common.Helpers.IO {
     public interface IMessageHandler
     {
         void HandleMessage(IChanneledMessage<Any> message);

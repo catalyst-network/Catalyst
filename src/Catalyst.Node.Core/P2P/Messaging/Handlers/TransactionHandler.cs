@@ -23,6 +23,7 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
+using Catalyst.Node.Common.Helpers.IO;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {

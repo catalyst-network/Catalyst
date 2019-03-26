@@ -26,6 +26,9 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using DotNetty.Common.Concurrency;
+using DotNetty.Handlers.Timeout;
+using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
@@ -48,11 +51,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound {
         {
             Logger.Error(e, "Error in P2P client");
             context.CloseAsync().ContinueWith(_ => _messageSubject.OnCompleted());
-        }
-
-        public override Task CloseAsync(IChannelHandlerContext context)
-        {
-            return base.CloseAsync(context);
         }
 
         protected virtual void Dispose(bool disposing)

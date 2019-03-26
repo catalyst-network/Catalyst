@@ -51,8 +51,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
                .Group(_supervisorEventLoop, WorkerEventLoop)
                .ChannelFactory(() => new TcpServerSocketChannel())
                .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Option(ChannelOption.ConnectTimeout, TimeSpan.MaxValue)
-               .Option(ChannelOption.SoTimeout, 0)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelInitializer);
             return this;

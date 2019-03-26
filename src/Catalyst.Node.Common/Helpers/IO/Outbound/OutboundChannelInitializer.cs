@@ -27,11 +27,14 @@ using DotNetty.Common.Utilities;
 using DotNetty.Handlers.Logging;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
+using DotNetty.Handlers.Timeout;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
     public class OutboundChannelInitializer<T> : AbstractChannelInitializer<T> where T : IChannel
     {
+        private static readonly TimeSpan ReadTimeout = TimeSpan.FromSeconds(10);
+        
         /// <inheritdoc />
         public OutboundChannelInitializer(Action<T> initializationAction,
             IList<IChannelHandler> handlers,
@@ -54,6 +57,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                 );
             }
 
+            pipeline.AddLast(new IdleStateHandler(ReadTimeout, TimeSpan.Zero, TimeSpan.Zero));
             pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
             pipeline.AddLast(Handlers.ToArray());
         }
