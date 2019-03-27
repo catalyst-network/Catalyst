@@ -23,7 +23,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
-using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using DnsClient.Protocol;
