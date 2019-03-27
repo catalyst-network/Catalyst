@@ -97,7 +97,11 @@ namespace Catalyst.Node.Core.P2P
                 {
                     foreach (var seedNode in answerSection.EscapedText)
                     {
-                        Peers.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                        var pingResponse = true;
+                        if (pingResponse == true)// pointless but place holder until we have a ping system
+                        {
+                            Peers.Add(EndpointBuilder.BuildNewEndPoint(seedNode));                            
+                        }
                     }
                 }
 
