@@ -32,7 +32,7 @@ namespace Catalyst.Node.Common.Interfaces
         ILogger Logger { get; }
         List<string> SeedNodes { get; }
         List<IPEndPoint> Peers { get; }
-        IRepository<IPeer> PeerRepository { get; }
+        IRepository<Peer> PeerRepository { get; }
         Task GetSeedNodesFromDns(List<string> seedServers);
         void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
     }

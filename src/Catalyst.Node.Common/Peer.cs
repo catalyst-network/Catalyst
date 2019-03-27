@@ -24,7 +24,7 @@ using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.Node.Common
 {
     public class Peer : IDisposable, IPeer
     {

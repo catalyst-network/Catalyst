@@ -66,15 +66,15 @@
       ]
     },
     {
-      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Core.P2P.Peer, Catalyst.Node.Core]], SharpRepository.InMemoryRepository",
+      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
       "services": [
         {
-          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.Interfaces.IPeer, Catalyst.Node.Common]], SharpRepository.Repository"
+          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.Repository"
         }
       ]
     },
     {
-      "type": "Catalyst.Node.Core.P2P.Peer",
+      "type": "Catalyst.Node.Common.Peer, Catalyst.Node.Common",
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.IPeer, Catalyst.Node.Common"

@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using DnsClient.Protocol;
@@ -37,7 +38,7 @@ namespace Catalyst.Node.Core.P2P
         public ILogger Logger { get; }
         public List<string> SeedNodes { get; }
         public List<IPEndPoint> Peers { get; }
-        public IRepository<IPeer> PeerRepository { get; }
+        public IRepository<Peer> PeerRepository { get; }
 
         /// <summary>
         /// </summary>
@@ -45,7 +46,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="repository"></param>
         /// <param name="rootSection"></param>
         /// <param name="logger"></param>
-        public PeerDiscovery(IDns dns, IRepository<IPeer> repository, IConfigurationRoot rootSection, ILogger logger)
+        public PeerDiscovery(IDns dns, IRepository<Peer> repository, IConfigurationRoot rootSection, ILogger logger)
         {
             Dns = dns;
             Logger = logger;
