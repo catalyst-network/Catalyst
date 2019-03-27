@@ -17,12 +17,9 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.IO;
-using System.Reflection.Metadata;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Cryptography;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils
@@ -33,5 +30,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils
         {
             return CertificateStore.BuildSelfSignedServerCertificate(new SecureString());
         }
+
+        public X509Certificate2 ReadOrCreateCertificateFile(string fileName, string password) { return CertificateStore.BuildSelfSignedServerCertificate(new SecureString()); }
     }
 }

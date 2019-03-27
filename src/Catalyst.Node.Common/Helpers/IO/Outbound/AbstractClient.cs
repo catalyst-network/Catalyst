@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
@@ -41,7 +41,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                .Group(WorkerEventLoop)
                .Channel<TChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.INFO))
+               .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer);
             return this;
         }
@@ -51,6 +51,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             Channel = await Client.ConnectAsync(listenAddress, port)
                .ConfigureAwait(false);
             return this;
+        }
+
+        public async Task SendMessage(Any message)
+        {
+            await Channel.WriteAndFlushAsync(message);
         }
     }
 }
