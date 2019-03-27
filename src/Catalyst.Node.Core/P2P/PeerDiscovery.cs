@@ -40,6 +40,8 @@ namespace Catalyst.Node.Core.P2P
         public List<IPEndPoint> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
 
+        private IPeer lastPeer { get; }
+
         /// <summary>
         /// </summary>
         /// <param name="dns"></param>
@@ -88,11 +90,12 @@ namespace Catalyst.Node.Core.P2P
         {
             foreach (var seedNode in seedServers)
             {
-                var dnsQueryAnswer = await Dns.GetTxtRecords(seedNode);
+                var dnsQueryAnswer = await Dns.GetTxtRecords(seedNode).ConfigureAwait(false);
 
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
                 {
+                    // need to ping these seed nodes here.
                     Peers.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
                 }
             }
@@ -100,14 +103,17 @@ namespace Catalyst.Node.Core.P2P
 
         private async Task PeerCrawler()
         {
-            try
+            if (Peers.Count == 0)
             {
-                await GetSeedNodesFromDns(SeedNodes);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e.Message);
-                throw;
+                try
+                {
+                    await GetSeedNodesFromDns(SeedNodes);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e.Message);
+                    throw;
+                }                
             }
         }
     }

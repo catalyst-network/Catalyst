@@ -81,34 +81,34 @@ namespace Catalyst.Node.Core
         public async Task RunAsync(CancellationToken ct)
         {
 
-            // await _dfs.StartAsync(ct);
+            await _dfs.StartAsync(ct);
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
             do
             {
-                /*_logger.Information("Creating a Transaction message");
+                _logger.Information("Creating a Transaction message");
                 _logger.Information("Please type in a pubkey for the transaction signature");
                 var pubkey = Console.ReadLine();
-
+                
                 _logger.Information("Please type in a transaction version");
                 if (!uint.TryParse(Console.ReadLine(), out var version))
                 {
                     version = 1;
                 }
                 var tx = new Transaction { Version = version, Signature = new TransactionSignature { Signature = ByteString.CopyFromUtf8(pubkey) } };
-
+                
                 await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 await Task.Delay(300, ct); //just to get the next message at the bottom
-
+                
                 _logger.Information("Creating a Ping message");
                 _logger.Information("Please type in a ping message content");
                 var ping = new PeerProtocol.Types.PingRequest { Ping = Console.ReadLine() };
-
+                
                 await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
                 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
-                exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);*/
+                exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
                 
             } while (!ct.IsCancellationRequested && !exit);
 
@@ -132,11 +132,6 @@ namespace Catalyst.Node.Core
             _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
-        }
-
-        private void GetNodeConfig(object sender, EventArgs e)
-        {
-            Console.WriteLine("GetNodeConfig event catch");
         }
 
         public void Dispose()
