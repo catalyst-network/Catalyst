@@ -23,6 +23,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using DnsClient.Protocol;
@@ -40,7 +41,7 @@ namespace Catalyst.Node.Core.P2P
         public List<IPEndPoint> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
 
-        private IPeer lastPeer { get; }
+        private IPeer LastPeer { get; }
 
         /// <summary>
         /// </summary>
@@ -107,7 +108,7 @@ namespace Catalyst.Node.Core.P2P
             {
                 try
                 {
-                    await GetSeedNodesFromDns(SeedNodes);
+                    await GetSeedNodesFromDns(SeedNodes).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
