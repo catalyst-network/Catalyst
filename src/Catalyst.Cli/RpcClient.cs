@@ -44,6 +44,7 @@ namespace Catalyst.Cli
         private readonly AnyTypeClientHandler _clientHandler;
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
         private readonly GetInfoResponseHandler _getInfoResponseHandler;
+        private readonly GetVersionResponseHandler _getVersionResponseHandler;
 
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -61,37 +62,58 @@ namespace Catalyst.Cli
             MessageStream = _clientHandler.MessageStream;
             
             _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, _logger);
+            _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, _logger);
         }
 
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
         {
-            var certificate = _certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName);
-
-            _logger.Information("Rpc client starting");
-            _logger.Information("Connecting to {0} @ {1}:{2}", nodeConfig.NodeId, nodeConfig.HostAddress, nodeConfig.Port);
-
-            var handlers = new List<IChannelHandler>
+            try
             {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(Any.Parser),
-                _clientHandler
-            };
-            
-            var socketClient = await new TcpClient(_logger)
-               .Bootstrap(
-                    new OutboundChannelInitializer<ISocketChannel>(channel => {},
-                        handlers,
-                        nodeConfig.HostAddress,
-                        certificate
+                var certificate = _certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName);
+
+                var handlers = new List<IChannelHandler>
+                {
+                    new ProtobufVarint32LengthFieldPrepender(),
+                    new ProtobufEncoder(),
+                    new ProtobufVarint32FrameDecoder(),
+                    new ProtobufDecoder(Any.Parser),
+                    _clientHandler
+                };
+
+                var socketClient = await new TcpClient(_logger)
+                   .Bootstrap(
+                        new OutboundChannelInitializer<ISocketChannel>(channel => { },
+                            handlers,
+                            nodeConfig.HostAddress,
+                            certificate
+                        )
                     )
-                )
-               .ConnectClient(
-                    nodeConfig.HostAddress,
-                    nodeConfig.Port
-                );
-            return socketClient;
+                   .ConnectClient(
+                        nodeConfig.HostAddress,
+                        nodeConfig.Port
+                    );
+
+
+                _logger.Information("Rpc client starting");
+                _logger.Information("Connecting to {0} @ {1}:{2}", nodeConfig.NodeId, nodeConfig.HostAddress,
+                    nodeConfig.Port);
+
+                return socketClient;
+            }
+            catch (System.PlatformNotSupportedException exception)
+            {
+                _logger.Error(exception, "SSL Certificate password incorrect");
+
+                throw exception;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Connection with the server couldn't be established.");
+                
+                Console.WriteLine("Connection with the server couldn't be established.");
+            }
+            
+            return null;
         }
 
         /// <summary>

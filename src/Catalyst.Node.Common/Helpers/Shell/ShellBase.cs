@@ -128,7 +128,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 case "config":
                     return OnGetConfig(args.Skip(2).ToList());
                 case "version":
-                    return OnGetVersion(args);
+                    return OnGetVersion(args.Skip(2).ToList());
                 case "mempool":
                     return OnGetMempool();
                 default:
@@ -146,7 +146,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints the current node version.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetVersion(string[] args);
+        protected abstract bool OnGetVersion(IList<string> args);
 
         /// <summary>
         ///     Prints stats about the mempool implementation.
@@ -300,6 +300,11 @@ namespace Catalyst.Node.Common.Helpers.Shell
         {
             Console.WriteLine($@"error: command not found ${args}");
             return true;
+        }
+
+        protected void ReturnUserMessage(string message)
+        {
+            Console.WriteLine(message);
         }
     }
 }

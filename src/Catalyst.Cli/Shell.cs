@@ -219,7 +219,7 @@ namespace Catalyst.Cli
                 case "peer":
                     return OnPeerCommand(args);
                 case "consensus":
-                    return OnConsensusCommand(args);                
+                    return OnConsensusCommand(args);
                 default:
                     return base.OnCommand(args);
             }
@@ -232,20 +232,40 @@ namespace Catalyst.Cli
         {
             //check if the args array is not null, not empty and of minimum count 2
             Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
-            
-            //Get the node entered by the user from the nodes list
-            var nodeConfig = _rpcNodeConfigs.Single(node => node.NodeId.Equals(args[2]));
 
-            try
+            IRpcNode connectedNode = GetConnectedNode(args[2]);
+            
+            //check if the node is already connected to the server
+            if (connectedNode == null)
             {
-                var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
-                var connectedNode = new RpcNode(nodeConfig, socket);
-                _nodes.Add(connectedNode);
+                //Get the node entered by the user from the nodes list
+                var nodeConfig = _rpcNodeConfigs.Single(node => node.NodeId.Equals(args[2]));
+
+                try
+                {
+                    var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
+
+                    //if a socket could not be opened with the node
+                    //then do not add the node to the list of conencted nodes
+                    if (socket != null)
+                    {
+                        connectedNode = new RpcNode(nodeConfig, socket);
+                        _nodes.Add(connectedNode);
+                    }
+                    
+                }
+                catch (System.PlatformNotSupportedException)
+                {
+                    ReturnUserMessage(String.Format("SSL certificate {0} password is incorrect. Please provide the correct password", nodeConfig.PfxFileName));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Failed to connect to node");
+                }
             }
-            catch (Exception e)
+            else
             {
-                _logger.Error(e, "Failed to connect to node");
-                return false;
+                ReturnUserMessage(String.Format("A connection has already been established with {0}", connectedNode.Config.NodeId));
             }
             
             return true;
@@ -355,7 +375,7 @@ namespace Catalyst.Cli
         /// Gets the version of a node
         /// </summary>
         /// <returns>Returns true if successful and false otherwise.</returns>
-        protected override bool OnGetVersion(string[] args)
+        protected override bool OnGetVersion(IList<string> args)
         {
             try
             {
@@ -368,7 +388,7 @@ namespace Catalyst.Cli
                 if (nodeConnected != null)
                 {
                     //send the message to the server by writing it to the channel
-                    var request = new GetInfoRequest { Query = true };
+                    var request = new VersionRequest();
                     _rpcClient.SendMessage(nodeConnected, request.ToAny());
                 }
                 else
@@ -403,7 +423,7 @@ namespace Catalyst.Cli
                     }
                     
                     //send the message to the server by writing it to the channel
-                    var request = new GetInfoRequest { Query = true };
+                    var request = new GetInfoRequest();
                     _rpcClient.SendMessage(nodeConnected, request.ToAny()).Wait();
                 }
                 else
