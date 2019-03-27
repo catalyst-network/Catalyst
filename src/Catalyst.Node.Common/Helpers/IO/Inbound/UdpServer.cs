@@ -47,7 +47,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
                //TODO : understand DotNetty inheritance schema
                //.Channel<SocketDatagramChannel>()
                .Option(ChannelOption.SoBroadcast, true)
-               .Handler(new LoggingHandler(LogLevel.INFO))
+               .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer);            
             return this;
         }

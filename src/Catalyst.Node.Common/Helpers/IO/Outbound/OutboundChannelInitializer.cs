@@ -19,12 +19,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using DotNetty.Common.Utilities;
-using DotNetty.Handlers.Logging;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
 
@@ -37,26 +35,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             IList<IChannelHandler> handlers,
             IPAddress targetHost = default,
             X509Certificate certificate = null)
-            : base(initializationAction, handlers, targetHost, certificate) { }
-
-        protected override void InitChannel(T channel)
-        {
-            InitializationAction(channel);
-            var pipeline = channel.Pipeline;
-
-            if (Certificate != null)
-            {
-                pipeline.AddLast(
-                    new TlsHandler(stream => 
-                        new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-                        new ClientTlsSettings(TargetHost.ToString())
-                    )
-                );
-            }
-
-            pipeline.AddLast(new LoggingHandler(LogLevel.DEBUG));
-            pipeline.AddLast(Handlers.ToArray());
-        }
+            : base(initializationAction, 
+                handlers, 
+                (certificate == null || targetHost == null) ? null : new TlsHandler(stream =>
+                    new SslStream(stream, true, (sender, cert, chain, errors) => true),
+                    new ClientTlsSettings(targetHost.ToString()))) { }
 
         public override string ToString()
         {

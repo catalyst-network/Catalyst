@@ -20,9 +20,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
+using System.Linq;
 using Dawn;
+using DotNetty.Handlers.Logging;
+using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO
@@ -30,22 +31,33 @@ namespace Catalyst.Node.Common.Helpers.IO
     public abstract class AbstractChannelInitializer<T> : ChannelInitializer<T> where T : IChannel
     {
         protected readonly Action<T> InitializationAction;
-        protected readonly X509Certificate Certificate;
         protected readonly IReadOnlyCollection<IChannelHandler> Handlers;
-        protected readonly IPAddress TargetHost;
+        protected readonly TlsHandler TlsHandler;
 
         protected AbstractChannelInitializer(
             Action<T> initializationAction,
             IList<IChannelHandler> handlers,
-            IPAddress targetHost = default,
-            X509Certificate certificate = null
+            TlsHandler tlsHandler
         )
         {
             Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
             InitializationAction = initializationAction;
             Handlers = handlers.ToImmutableArray();
-            TargetHost = targetHost;
-            Certificate = certificate;
+            TlsHandler = tlsHandler;
         }
+        protected override void InitChannel(T channel)
+        {
+            InitializationAction(channel);
+            var pipeline = channel.Pipeline;
+
+            if (TlsHandler != null)
+            {
+                pipeline.AddLast(TlsHandler);
+            }
+
+            pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
+            pipeline.AddLast(Handlers.ToArray());
+        }
+
     }
 }

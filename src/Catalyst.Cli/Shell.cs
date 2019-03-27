@@ -18,19 +18,52 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
+using Microsoft.Extensions.Configuration;
+using Catalyst.Protocol.Rpc.Node;
+using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.Shell
+namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds
     {
+        private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
+        private readonly List<IRpcNode> _nodes;
+
+        private readonly IRpcClient _rpcClient;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// </summary>
-        public Shell()
+        public Shell(IRpcClient rpcClient, IConfigurationRoot config, ILogger logger)
         {
+            _rpcNodeConfigs = BuildRpcNodeSettingList(config);
+            _rpcClient = rpcClient;
+            _logger = logger;
+            _nodes = new List<IRpcNode>();
+
             Console.WriteLine(@"Koopa Shell Start");
+        }
+        private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
+        {
+            var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
+
+            var nodeList = section.GetChildren().Select(child => new RpcNodeConfig
+            {
+                NodeId = child.GetSection("nodeId").Value,
+                HostAddress = IPAddress.Parse(child.GetSection("host").Value),
+                Port = int.Parse(child.GetSection("port").Value),
+                PfxFileName = child.GetSection("PfxFileName").Value,
+                SslCertPassword = child.GetSection("SslCertPassword").Value
+            } as IRpcNodeConfig).ToList();
+
+            return nodeList;
         }
 
         /// <summary>
@@ -63,11 +96,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
             switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    throw new NotImplementedException();
                 case "stop":
-                    throw new NotImplementedException();
                 case "status":
-                    throw new NotImplementedException();
                 case "restart":
                     throw new NotImplementedException();
                 default:
@@ -84,11 +114,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
             switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    throw new NotImplementedException();
                 case "stop":
-                    throw new NotImplementedException();
                 case "status":
-                    throw new NotImplementedException();
                 case "restart":
                     throw new NotImplementedException();
                 default:
@@ -165,7 +192,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        protected override bool OnCommand(string[] args)
+        public override bool OnCommand(params string[] args)
         {
             switch (args[0].ToLower(AppCulture))
             {
@@ -195,9 +222,38 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         private bool OnConnectNode(string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
-            throw new NotImplementedException();
+            //check if the args array is not null, not empty and of minimum count 2
+            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
+            
+            //Get the node entered by the user from the nodes list
+            var nodeConfig = _rpcNodeConfigs.Single(node => node.NodeId.Equals(args[2]));
+
+            try
+            {
+                var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
+                var connectedNode = new RpcNode(nodeConfig, socket);
+                _nodes.Add(connectedNode);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Failed to connect to node");
+                return false;
+            }
+            
+            return true;
         }
+
+        public override bool IsConnectedNode(string nodeId)
+        {
+            //todo : check the socket is actually opened
+            return _nodes.Exists(node => node.Config.NodeId == nodeId);
+        }
+
+        public override IRpcNode GetConnectedNode(string nodeId)
+        {
+            return _nodes.SingleOrDefault(node => node.Config.NodeId.Equals(nodeId));
+        }
+
 
         /// <summary>
         /// </summary>
@@ -244,7 +300,19 @@ namespace Catalyst.Node.Common.Helpers.Shell
         public override bool OnStopNode(string[] args)
         {
             Guard.Argument(args).Contains(typeof(string));
-            throw new NotImplementedException();
+
+            var node = _nodes.SingleOrDefault(n => n.Config.NodeId == args[0]);
+
+            if (node == null) { return false; }
+
+            node.SocketClient.Shutdown().GetAwaiter().GetResult();
+            _nodes.Remove(node);
+            return true;
+        }
+
+        public void SocketClientDisconnectedHandler()
+        {
+            //TODO : when a connection closes unexpectedly, remove the corresponding RpcNode from _nodes list.
         }
 
         /// <summary>
@@ -252,7 +320,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public override bool OnStopWork(string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
         }
 
@@ -260,43 +327,55 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public bool OnGetCommand(string[] args)
+        public bool OnGetCommand(params string[] args)
         {
-            Guard.Argument(args).Contains(typeof(string));
+            Guard.Argument(args, nameof(args)).NotNull().MinCount(2);
             switch (args[1].ToLower(AppCulture))
             {
                 case "delta":
                     return OnGetDelta(args);
                 case "mempool":
                     return OnGetMempool();
+                case "version":
+                    return OnGetVersion(args);
                 default:
                     return base.OnCommand(args);
             }
         }
 
         /// <summary>
+        /// Gets the version of a node
         /// </summary>
-        /// <returns></returns>
-        protected override bool OnGetInfo()
-        {
-            throw new NotImplementedException();
-        }
+        /// <returns>Returns true if successful and false otherwise.</returns>
+        protected override bool OnGetVersion(string[] args) { return true; }
 
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        protected override bool OnGetVersion()
+        protected override bool OnGetConfig(IList<string> args)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        protected override bool OnGetConfig()
-        {
-            throw new NotImplementedException();
+                //get the node 
+                var nodeConnected = GetConnectedNode(args.First());
+
+                //check if the node entered by the user was in the list of the connected nodes
+                if (nodeConnected != null)
+                {
+                    //send the message to the server by writing it to the channel
+                    var request = new GetInfoRequest { Query = true };
+                    _rpcClient.SendMessage(nodeConnected, request.ToAny());
+                }
+                else
+                {
+                    Console.WriteLine(@"Node not found. Please connect to node first.");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Failed to get configuration ");
+            }
+
+            return true;
         }
 
         /// <summary>

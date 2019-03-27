@@ -17,72 +17,124 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-﻿using System;
+using System;
 using System.IO;
-using System.Runtime.Loader;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Configuration;
-using Catalyst.Node.Common.Interfaces;
+using Autofac.Extensions.DependencyInjection;
+using AutofacSerilogIntegration;
+ using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Helpers.FileSystem;
+using Catalyst.Node.Common.Helpers.Config;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace Catalyst.Cli
 {
     public static class Program
     {
-        private static string CatalystSubfolder => ".Catalyst";
-        private static string ShellFileName => "shell.json";
+        private static readonly ILogger Logger;
+        private static readonly string LifetimeTag;
+
+        static Program()
+        {
+            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            Logger = Log.Logger.ForContext(declaringType);
+            LifetimeTag = declaringType.AssemblyQualifiedName;
+        }
 
         /// <summary>
         ///     Main cli loop
         /// </summary>
         /// <param name="args"></param>
-        public static int Main(string[] args)
+        public static int Main()
         {
+            Log.Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             const int bufferSize = 1024 * 67 + 128;
 
-            var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var catalystHomeDirectory = Path.Combine(homeDirectory, CatalystSubfolder);
-
-            if (!Directory.Exists(catalystHomeDirectory))
+            try
             {
-                Directory.CreateDirectory(catalystHomeDirectory);
+                var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
+                
+                // check if user home data dir has a shell config
+                var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
+                var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile);
+                var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
+
+                if (!File.Exists(shellComponentsFilePath))
+                {
+                    File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.components.json"),
+                        shellComponentsFilePath);
+                }
+
+                if (!File.Exists(shellSeriLogFilePath))
+                {
+                    File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.serilog.json"),
+                        shellSeriLogFilePath);
+                }
+                
+                if (!File.Exists(shellNodesFilePath))
+                {
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
+                        shellNodesFilePath);
+                }
+                
+                var config = new ConfigurationBuilder()
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile))
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
+                   .Build();
+            
+                var serviceCollection = new ServiceCollection();
+                
+                // register components from config file
+                var configurationModule = new ConfigurationModule(config);
+                var containerBuilder = new ContainerBuilder();
+            
+                containerBuilder.RegisterModule(configurationModule);
+
+                var loggerConfiguration =
+                    new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
+                Log.Logger = loggerConfiguration.WriteTo
+                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"), 
+                        rollingInterval: RollingInterval.Day,
+                        outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
+                   .CreateLogger();
+            
+                containerBuilder.RegisterLogger();
+
+                containerBuilder.RegisterInstance(config);
+
+                var container = containerBuilder.Build();
+                
+                Console.SetIn(
+                    new StreamReader(
+                        Console.OpenStandardInput(bufferSize),
+                        Console.InputEncoding, false, bufferSize
+                    )
+                );
+                
+                using (var scope = container.BeginLifetimeScope(LifetimeTag,
+                    //Add .Net Core serviceCollection to the Autofac container.
+                    b => { b.Populate(serviceCollection, LifetimeTag); }))
+                {
+                    var shell = container.Resolve<ICatalystCli>();
+                    shell.Ads.RunConsole();
+                }
+                
+                Environment.ExitCode = 0;
+            
+                return 0;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Catalyst.Node failed to start." + e.Message);
+                Environment.ExitCode = 1;
             }
 
-            // check if user home data dir has a shell config
-            var shellFilePath = Path.Combine(catalystHomeDirectory, ShellFileName);
-            if (!File.Exists(shellFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.shell.json"),
-                    shellFilePath);
-            }
-
-            // resolve config from autofac
-            var builder = new ContainerBuilder();
-
-            AssemblyLoadContext.Default.Resolving += (context, assembly) =>
-                context.LoadFromAssemblyPath(
-                    Path.Combine(Directory.GetCurrentDirectory(),
-                        $"{assembly.Name}.dll"));
-
-            var shellConfig = new ConfigurationBuilder().AddJsonFile(shellFilePath)
-               .Build();
-
-            var shellModule = new ConfigurationModule(shellConfig);
-
-            builder.RegisterModule(shellModule);
-
-            var container = builder.Build();
-
-            Console.SetIn(
-                new StreamReader(
-                    Console.OpenStandardInput(bufferSize),
-                    Console.InputEncoding, false, bufferSize
-                )
-            );
-
-            var shell = container.Resolve<IAds>();
-            shell.RunConsole();
-            return 0;
+            return Environment.ExitCode;
         }
     }
 }

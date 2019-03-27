@@ -34,7 +34,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
     {
         private readonly ILogger _logger;
         private readonly IRepository<Transaction, TransactionSignature> _transactionStore;
-
+ 
         /// <inheritdoc />
         public Mempool(IRepository<Transaction, TransactionSignature> transactionStore, ILogger logger)
         {

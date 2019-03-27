@@ -7,6 +7,7 @@
     <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
     <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -26,7 +27,7 @@
     <None Update="Config\Modules\mempool.xml.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Config\mycert.pfx">
+    <None Update="xunit.runner.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

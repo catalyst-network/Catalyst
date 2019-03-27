@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-
+  <MaxCpuCount>1</MaxCpuCount>
   <!-- Configurations for data collectors -->
   <DataCollectionRunSettings>
     <DataCollectors>

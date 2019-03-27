@@ -17,12 +17,15 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IP2PMessaging
+    public interface IP2PMessaging : IDuplexChanneledMessageStreamer<Any>
     {
         /// <summary>
         /// Identifier of the Peer behind the instance of the IP2PMessaging service
@@ -37,6 +40,7 @@ namespace Catalyst.Node.Common.Interfaces
         Task<bool> PingAsync(IPeerIdentifier targetNode);
 
         Task BroadcastMessageAsync(Any tx);
+        Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message);
 
     }
 }

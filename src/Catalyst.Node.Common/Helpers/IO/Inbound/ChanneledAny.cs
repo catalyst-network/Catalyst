@@ -17,12 +17,19 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System;
-using Google.Protobuf;
+using DotNetty.Transport.Channels;
+using Google.Protobuf.WellKnownTypes;
 
-namespace Catalyst.Node.Core.P2P.Messaging {
-    public interface IMessageStreamer<out T> where T : IMessage
+namespace Catalyst.Node.Common.Helpers.IO.Inbound {
+    public class ChanneledAny : IChanneledMessage<Any>
     {
-        IObservable<T> MessageStream { get; }
+        public Any Payload { get; }
+        public IChannelHandlerContext Context { get; }
+
+        public ChanneledAny(IChannelHandlerContext context, Any message)
+        {
+            Payload = message;
+            Context = context;
+        }
     }
 }

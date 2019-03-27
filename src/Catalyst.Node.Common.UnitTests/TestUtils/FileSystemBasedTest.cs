@@ -18,8 +18,7 @@
 */
 
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
+ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -69,10 +68,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing)
-            {
-                return;
-            }
+            if (!disposing) { return; }
 
             var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
             if (_testDirectory.Parent != null) {
@@ -94,23 +90,6 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             {
                 //no big deal is this doesn't work once in a while, only worry if
                 //this happens all the time.
-            }
-        }
-
-        public static uint GetHashFromItems<T>(IEnumerable<T> items)
-        {
-            if (items == null)
-            {
-                return 0;
-            }
-            unchecked
-            {
-                var hash = 19;
-                foreach (var obj in items)
-                {
-                    hash = hash * 31 + obj.GetHashCode();
-                }
-                return (uint) hash;
             }
         }
     }
