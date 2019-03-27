@@ -28,7 +28,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable // where T : IMessage
+    public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable where T : IMessage
     {
         private readonly IDisposable _messageSubscription;
         protected readonly ILogger Logger;
