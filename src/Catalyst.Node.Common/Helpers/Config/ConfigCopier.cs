@@ -40,7 +40,6 @@ namespace Catalyst.Node.Common.Helpers.Config
         public static void RunConfigStartUp(string dataDir, Network network, string sourceFolder = null, bool overwrite = OverwriteFilesByDefault)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-            sourceFolder = sourceFolder ?? AppDomain.CurrentDomain.BaseDirectory;
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
@@ -79,7 +78,8 @@ namespace Catalyst.Node.Common.Helpers.Config
 
             foreach (var fileName in filesToCopy)
             {
-                CopyConfigFileToFolder(dataDir, fileName, sourceFolder, overwrite);
+                CopyConfigFileToFolder(dataDir, fileName, 
+                    sourceFolder ?? AppDomain.CurrentDomain.BaseDirectory, overwrite);
             }
         }
 

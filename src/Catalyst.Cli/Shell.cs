@@ -51,7 +51,7 @@ namespace Catalyst.Cli
 
             Console.WriteLine(@"Koopa Shell Start");
         }
-        private List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
+        private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
         {
             var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
 
@@ -368,7 +368,7 @@ namespace Catalyst.Cli
                 }
                 else
                 {
-                    Console.WriteLine("Node not found.  Please connect to node first.");
+                    Console.WriteLine(@"Node not found. Please connect to node first.");
                 }
             }
             catch (Exception e)

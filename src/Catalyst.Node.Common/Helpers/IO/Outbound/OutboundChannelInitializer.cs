@@ -37,26 +37,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             IList<IChannelHandler> handlers,
             IPAddress targetHost = default,
             X509Certificate certificate = null)
-            : base(initializationAction, handlers, targetHost, certificate) { }
-
-        protected override void InitChannel(T channel)
-        {
-            InitializationAction(channel);
-            var pipeline = channel.Pipeline;
-
-            if (Certificate != null)
-            {
-                channel.Pipeline.AddLast(
-                    new TlsHandler(stream => 
-                        new SslStream(stream, true, (sender, certificate, chain, errors) => true), 
-                        new ClientTlsSettings(TargetHost.ToString())
-                    )
-                );
-            }
-
-            pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
-            pipeline.AddLast(Handlers.ToArray());
-        }
+            : base(initializationAction, 
+                handlers, 
+                (certificate == null || targetHost == null) ? null : new TlsHandler(stream =>
+                    new SslStream(stream, true, (sender, cert, chain, errors) => true),
+                    new ClientTlsSettings(targetHost.ToString()))) { }
 
         public override string ToString()
         {
