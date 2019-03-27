@@ -56,8 +56,8 @@ namespace Catalyst.Node.Core.P2P
 
             ParseDnsServersFromConfig(rootSection);
             
-            var longRunningTasks = new [] {PeerCrawler()};
-            Task.WaitAll(longRunningTasks);
+            // var longRunningTasks = new [] {PeerCrawler()};
+            // Task.WaitAll(longRunningTasks);
         }
 
         public void ParseDnsServersFromConfig(IConfigurationRoot rootSection)

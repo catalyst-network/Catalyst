@@ -29,6 +29,8 @@ ProjectSection(SolutionItems) = preProject
 	Common.UnitTests.props = Common.UnitTests.props
 	Common.Projects.props = Common.Projects.props
 	..\COPYING = ..\COPYING
+	..\devnet_dnszone.txt = ..\devnet_dnszone.txt
+	..\dns-docker-compose.yml = ..\dns-docker-compose.yml
 EndProjectSection
 EndProject
 Global
