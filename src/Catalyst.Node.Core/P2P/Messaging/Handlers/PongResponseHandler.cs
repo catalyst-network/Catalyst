@@ -28,13 +28,13 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public class PongResponseHandler : MessageHandlerBase<PongResponse>
     {
-        public PongResponseHandler(IObservable<ContextAny> messageStream, ILogger logger)
+        public PongResponseHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
         : base(messageStream, logger) { }
 
-        public override void HandleMessage(ContextAny message)
+        public override void HandleMessage(IChanneledMessage<Any> message)
         {
             Logger.Debug("received pong response");
-            var deserialised = message.Message.FromAny<PongResponse>();
+            var deserialised = message.Payload.FromAny<PongResponse>();
             Logger.Debug("pong content is {0}", deserialised.Pong);
         }
     }

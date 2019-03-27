@@ -18,24 +18,13 @@
 */
 
 using System;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Node.Common.Interfaces.Messaging
 {
-    public class TransactionHandler : MessageHandlerBase<Transaction>
+    public interface IChanneledMessageStreamer<out T> where T : IMessage
     {
-        public TransactionHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
-        : base(messageStream, logger) { }
-
-        public override void HandleMessage(IChanneledMessage<Any> message)
-        {
-            Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAny<Transaction>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
-        }
+        IObservable<IChanneledMessage<T>> MessageStream { get; }
     }
 }

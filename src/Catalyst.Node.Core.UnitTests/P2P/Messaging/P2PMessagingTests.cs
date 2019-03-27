@@ -32,8 +32,10 @@ using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
 using Serilog;
 using Serilog.Extensions.Logging;
 using Xunit;
@@ -60,8 +62,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
 
         private void ConfigureTestContainer()
         {
-            WriteLogsToFile = true;
-            WriteLogsToTestOutput = true;
+            WriteLogsToFile = false;
+            WriteLogsToTestOutput = false;
 
             ConfigureContainerBuilder(_config);
 
@@ -74,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _certificateStore = container.Resolve<ICertificateStore>();
         }
 
-        [Fact]
+        [Fact(Skip = "other attempt to isolate a reason why the build is hanging")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {
@@ -84,20 +86,20 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
             var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
 
-            var observers = indexes.Select(i => new ContextAnyObserver(i, _logger)).ToList();
-            _subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
+            var observers = indexes.Select(i => new AnyMessageObserver(i, _logger)).ToList();
+            _subscriptions = peers.Select((p, i) => p.OutboundMessageStream.Subscribe(observers[i])).ToList();
 
             var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
+            var context = Substitute.For<IChannelHandlerContext>();
             await peers[0].BroadcastMessageAsync(broadcastMessage);
 
             var tasks = peers
-               .Select(async p => await p.MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)))
+               .Select(async p => await p.OutboundMessageStream.FirstAsync(a => a != NullObjects.ChanneledAny))
                .ToArray();
             Task.WaitAll(tasks, TimeSpan.FromMilliseconds(100));
         
-
             var received = observers.Select(o => o.Received).ToList();
-            received.Count(r => r.Message.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
+            received.Count(r => r.Payload.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
         
         }
 

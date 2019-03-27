@@ -19,15 +19,14 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IRpcServer
+    public interface IRpcServer : IChanneledMessageStreamer<Any>, IDisposable
     {
         Task StartServerAsync();
         IRpcServerSettings Settings { get; }
-        IObservable<ContextAny> MessageStream { get; }
     }
 }

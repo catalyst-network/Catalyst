@@ -17,25 +17,12 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
+using DotNetty.Transport.Channels;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
-{
-    public class TransactionHandler : MessageHandlerBase<Transaction>
-    {
-        public TransactionHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
-        : base(messageStream, logger) { }
-
-        public override void HandleMessage(IChanneledMessage<Any> message)
-        {
-            Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAny<Transaction>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
-        }
+namespace Catalyst.Node.Common.Helpers.IO.Inbound {
+    public interface IChanneledMessage<out T> where T : IMessage {
+        T Payload { get; }
+        IChannelHandlerContext Context { get; }
     }
 }

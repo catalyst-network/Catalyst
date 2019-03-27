@@ -20,12 +20,11 @@
 using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC
@@ -35,7 +34,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly IRpcServerSettings _config;
 
         public GetInfoRequestHandler(
-            IObservable<ContextAny> messageStream,
+            IObservable<IChanneledMessage<Any>> messageStream,
             IRpcServerSettings config,
             ILogger logger)
             : base(messageStream, logger)
@@ -43,18 +42,27 @@ namespace Catalyst.Node.Core.RPC
             _config = config;
         }
 
-        public override void HandleMessage(ContextAny message)
+        public override void HandleMessage(IChanneledMessage<Any> message)
         {
-            if(message == null) return;
+            if(message == NullObjects.ChanneledAny) {return;}
             Logger.Debug("received message of type GetInfoRequest");
-            var deserialised = message.Message.FromAny<GetInfoRequest>();
-            Logger.Debug("message content is {0}", deserialised);
-            var response = new GetInfoResponse()
+            try
             {
-                Query = "replying to you with a config"
-            };
+                var deserialised = message.Payload.FromAny<GetInfoRequest>();
+                Logger.Debug("message content is {0}", deserialised);
+                var response = new GetInfoResponse
+                {
+                    Query = "replying to you with a config"
+                };
 
-            message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, 
+                    "Failed to handle GetInfoRequest after receiving message {0}", message);
+                throw;
+            }
         }
     }
 }

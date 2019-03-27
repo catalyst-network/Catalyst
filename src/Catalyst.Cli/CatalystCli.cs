@@ -1,7 +1,6 @@
 using Catalyst.Node.Common.Interfaces;
 using System.Diagnostics;
 using Serilog;
-using Serilog.Core;
 
 namespace Catalyst.Cli
 {

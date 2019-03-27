@@ -21,7 +21,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading;
 using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
@@ -38,15 +37,12 @@ namespace Catalyst.Cli
     {
         private static readonly ILogger Logger;
         private static readonly string LifetimeTag;
-        private static readonly string ExecutionDirectory;
-        private static CancellationTokenSource _cancellationSource;
-        
+
         static Program()
         {
             var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
             Logger = Log.Logger.ForContext(declaringType);
             LifetimeTag = declaringType.AssemblyQualifiedName;
-            ExecutionDirectory = Path.GetDirectoryName(declaringType.Assembly.Location);
         }
 
         /// <summary>
@@ -135,7 +131,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                Log.Logger.Error(e, "Catalyst.Node failed to start." + e.Message);
+                Logger.Error(e, "Catalyst.Node failed to start." + e.Message);
                 Environment.ExitCode = 1;
             }
 

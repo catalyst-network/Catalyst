@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 
 namespace Catalyst.Node.Common.Interfaces

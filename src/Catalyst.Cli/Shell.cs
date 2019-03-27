@@ -21,34 +21,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Protocol.Rpc.Node;
+using Serilog;
 
 namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds
     {
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
-        private List<IRpcNode> _nodes;
+        private readonly List<IRpcNode> _nodes;
 
         private readonly IRpcClient _rpcClient;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// </summary>
-        public Shell(IRpcClient rpcClient, IConfigurationRoot config)
+        public Shell(IRpcClient rpcClient, IConfigurationRoot config, ILogger logger)
         {
             _rpcNodeConfigs = BuildRpcNodeSettingList(config);
             _rpcClient = rpcClient;
+            _logger = logger;
             _nodes = new List<IRpcNode>();
 
             Console.WriteLine(@"Koopa Shell Start");
         }
-        private List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
+        private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
         {
             var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
 
@@ -94,11 +96,8 @@ namespace Catalyst.Cli
             switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    throw new NotImplementedException();
                 case "stop":
-                    throw new NotImplementedException();
                 case "status":
-                    throw new NotImplementedException();
                 case "restart":
                     throw new NotImplementedException();
                 default:
@@ -115,11 +114,8 @@ namespace Catalyst.Cli
             switch (args[2].ToLower(AppCulture))
             {
                 case "start":
-                    throw new NotImplementedException();
                 case "stop":
-                    throw new NotImplementedException();
                 case "status":
-                    throw new NotImplementedException();
                 case "restart":
                     throw new NotImplementedException();
                 default:
@@ -240,8 +236,8 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _logger.Error(e, "Failed to connect to node");
+                return false;
             }
             
             return true;
@@ -371,13 +367,12 @@ namespace Catalyst.Cli
                 }
                 else
                 {
-                    Console.WriteLine("Node not found.  Please connect to node first.");
+                    Console.WriteLine(@"Node not found. Please connect to node first.");
                 }
             }
             catch (Exception e)
             {
-                //Console.WriteLine(e);
-                throw e;
+                _logger.Error(e, "Failed to get configuration ");
             }
 
             return true;

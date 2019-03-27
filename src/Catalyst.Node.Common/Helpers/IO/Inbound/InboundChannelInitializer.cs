@@ -19,11 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using DotNetty.Common.Utilities;
-using DotNetty.Handlers.Logging;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
 
@@ -34,26 +31,15 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// <inheritdoc />
         public InboundChannelInitializer(Action<T> initializationAction,
             IList<IChannelHandler> handlers,
-            IPAddress targetHost = default,
-            X509Certificate certificate = null) 
-            : base(initializationAction, handlers, targetHost, certificate) { }
-        protected override void InitChannel(T channel)
-        {
-            InitializationAction(channel);
-            var pipeline = channel.Pipeline;
-
-            if (Certificate != null)
-            {
-                pipeline.AddLast(TlsHandler.Server(Certificate));
-            }
-
-            pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
-            pipeline.AddLast(Handlers.ToArray());
-        }
+            X509Certificate certificate = null)
+            : base(initializationAction, 
+                handlers, 
+                certificate == null ? null : TlsHandler.Server(certificate))
+        {}
 
         public override string ToString()
         {
-            return "InboundChannelInitializer[" + StringUtil.SimpleClassName(typeof (T)) + "]";
+            return $"InboundChannelInitializer[" + StringUtil.SimpleClassName(typeof (T)) + "]";
         }
     }
 }

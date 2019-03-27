@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core
                 {
                     version = 1;
                 }
-                var tx = new Transaction { Version = version, Signature = new TransactionSignature {Signature = ByteString.CopyFromUtf8(pubkey)}};
+                var tx = new Transaction { Version = version, Signature = new TransactionSignature { Signature = ByteString.CopyFromUtf8(pubkey) } };
 
                 await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 await Task.Delay(300, ct); //just to get the next message at the bottom
