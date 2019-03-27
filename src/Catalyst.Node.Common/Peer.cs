@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2019 Catalyst Network
  *
@@ -24,24 +25,24 @@ using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.Node.Common
 {
-    public class Peer : IDisposable
+    public class Peer : IDisposable, IPeer
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
- 
-        private int Reputation { get; set; }
-        private DateTime LastSeen { get; set; }
+
+        public int Reputation { get; set; }
+        public DateTime LastSeen { get; set; }
         public IPEndPoint EndPoint { get; set; }
-        private IPeerIdentifier PeerIdentifier { get; }
+        public IPeerIdentifier PeerIdentifier { get; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
-        private TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
+        public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
         public void Dispose() { Dispose(true); }
 
         /// <summary>
         /// </summary>
-        internal void Touch() { LastSeen = DateTimeUtil.UtcNow; }
+        public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
         /// <summary>
         /// </summary>

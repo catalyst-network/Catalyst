@@ -18,22 +18,28 @@
 */
 
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using SharpRepository.Repository;
+using DnsClient;
+using DnsClient.Protocol;
+using NSubstitute;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
-    public interface IPeerDiscovery
+    public static class MockQueryResponse
     {
-        IDns Dns { get; }
-        ILogger Logger { get; }
-        List<string> SeedNodes { get; }
-        List<IPEndPoint> Peers { get; }
-        IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(List<string> seedServers);
-        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        public static void CreateFakeLookupResult(string domainName, string seed, string value, ILookupClient lookupClient)
+        {
+            var queryResponse = Substitute.For<IDnsQueryResponse>();
+            var answers = new List<DnsResourceRecord>
+            {
+                new TxtRecord(new ResourceRecordInfo(domainName, ResourceRecordType.TXT, QueryClass.CS, 10, 32),
+                    new[] {seed}, new[] {value}
+                )
+            };
+
+            queryResponse.Answers.Returns(answers);
+            lookupClient.QueryAsync(Arg.Is(domainName), Arg.Any<QueryType>())
+               .Returns(Task.FromResult(queryResponse));
+        }
     }
 }

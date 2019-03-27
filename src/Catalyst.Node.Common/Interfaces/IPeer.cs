@@ -17,23 +17,30 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Collections.Generic;
+using System;
 using System.Net;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using SharpRepository.Repository;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IPeerDiscovery
+    public interface IPeer
     {
-        IDns Dns { get; }
-        ILogger Logger { get; }
-        List<string> SeedNodes { get; }
-        List<IPEndPoint> Peers { get; }
-        IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(List<string> seedServers);
-        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        int Reputation { get; set; }
+        DateTime LastSeen { get; set; }
+        IPEndPoint EndPoint { get; set; }
+        IPeerIdentifier PeerIdentifier { get; }
+        bool IsAwolBot { get; }
+        TimeSpan InactiveFor { get; }
+
+        /// <summary>
+        /// </summary>
+        void Touch();
+
+        /// <summary>
+        /// </summary>
+        void IncreaseReputation();
+
+        /// <summary>
+        /// </summary>
+        void DecreaseReputation();
     }
 }

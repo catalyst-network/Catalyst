@@ -34,14 +34,6 @@
       ]
     },
     {
-      "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.Interfaces.IPeerDiscovery, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
       "type": "Catalyst.Node.Core.P2P.Messaging.P2PMessaging",
       "services": [
         {
@@ -70,6 +62,22 @@
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.ICryptoContext, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
+      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
+      "services": [
+        {
+          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.Repository"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Peer, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.IPeer, Catalyst.Node.Common"
         }
       ]
     },
@@ -106,14 +114,6 @@
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.IP2P, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Core.P2P.Peer, Catalyst.Node.Core]], SharpRepository.InMemoryRepository",
-      "services": [
-        {
-          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.P2P.Peer, Catalyst.Node.Core]], SharpRepository.Repository"
         }
       ]
     },
