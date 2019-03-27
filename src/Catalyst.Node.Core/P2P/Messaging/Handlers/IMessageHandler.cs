@@ -19,6 +19,7 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers {

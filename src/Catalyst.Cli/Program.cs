@@ -53,7 +53,6 @@ namespace Catalyst.Cli
         {
             Log.Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             const int bufferSize = 1024 * 67 + 128;
-            _cancellationSource = new CancellationTokenSource();
 
             try
             {

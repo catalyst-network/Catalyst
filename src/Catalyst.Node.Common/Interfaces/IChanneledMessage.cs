@@ -20,7 +20,7 @@
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Helpers.IO.Inbound {
+namespace Catalyst.Node.Common.Interfaces {
     public interface IChanneledMessage<out T> where T : IMessage {
         T Payload { get; }
         IChannelHandlerContext Context { get; }

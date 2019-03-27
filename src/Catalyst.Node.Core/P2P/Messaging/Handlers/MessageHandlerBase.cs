@@ -21,6 +21,7 @@ using System;
 using System.Reactive.Linq;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;

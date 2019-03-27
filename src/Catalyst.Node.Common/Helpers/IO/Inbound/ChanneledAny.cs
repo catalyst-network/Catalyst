@@ -17,6 +17,7 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
+using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 

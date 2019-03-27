@@ -18,7 +18,6 @@
 */
 
 using System;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Interfaces.Messaging
