@@ -88,15 +88,22 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="seedServers"></param>
         public async Task GetSeedNodesFromDns(List<string> seedServers)
         {
-            foreach (var seedNode in seedServers)
+            foreach (var seedServer in seedServers)
             {
-                var dnsQueryAnswer = await Dns.GetTxtRecords(seedNode).ConfigureAwait(false);
+                var dnsQueryAnswer = await Dns.GetTxtRecords(seedServer).ConfigureAwait(false);
 
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
                 {
-                    // need to ping these seed nodes here.
-                    Peers.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                    foreach (var seedNode in answerSection.EscapedText)
+                    {
+                        Peers.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                    }
+                }
+
+                if (Peers.Count == 0)
+                {
+                    throw new Exception("No peers to start discovery");
                 }
             }
         }

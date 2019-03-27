@@ -9,6 +9,7 @@ using Catalyst.Node.Core.P2P;
 using NSubstitute;
 using SharpRepository.Repository;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
@@ -38,7 +39,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _logger = Substitute.For<ILogger>();
             _lookupClient = Substitute.For<ILookupClient>();
             _dns = new Dns(_lookupClient);
-
+            
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -76,6 +77,16 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanParseDnsNodesFromConfig()
         {
+            var urlList = new List<string>();
+            var domain1 = "seed1.catalystnetwork.io";
+            var domain2 = "seed1.catalystnetwork.io";
+            
+            urlList.Add(domain1);
+            urlList.Add(domain2);
+            
+            MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.2:42069", domain1, _lookupClient);
+            MockQueryResponse.CreateFakeLookupResult(domain2,"192.0.2.2:42069", domain2, _lookupClient);
+            
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
             
             peerDiscovery.ParseDnsServersFromConfig(_config);
@@ -84,40 +95,25 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         
         [Fact]
         public async Task CanGetSeedNodesFromDns()
-        {           
+        {     
             var urlList = new List<string>();
-            var domain1 = "seed1.network.atlascity.io";
-            var domain2 = "seed2.network.atlascity.io";
+            var domain1 = "seed1.catalystnetwork.io";
+            var domain2 = "seed1.catalystnetwork.io";
+            
             urlList.Add(domain1);
             urlList.Add(domain2);
             
-            CreateFakeLookupResult(domain1, "192.0.2.2:42069", domain1);
-            CreateFakeLookupResult(domain2,"192.0.2.2:42069", domain2);
-            
+            MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.2:42069", domain1, _lookupClient);
+            MockQueryResponse.CreateFakeLookupResult(domain2,"192.0.2.2:42069", domain2, _lookupClient);
+
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
             
             await peerDiscovery.GetSeedNodesFromDns(urlList);
-
+                        
             peerDiscovery.Peers.Should().NotBeNullOrEmpty();
-            peerDiscovery.Peers.Should().HaveCount(2);
+            peerDiscovery.Peers.Should().HaveCount(3);
             peerDiscovery.Peers.Should().NotContainNulls();
             peerDiscovery.Peers.Should().ContainItemsAssignableTo<IPEndPoint>();
         }
-        
-        private void CreateFakeLookupResult(string domainName, string seed, string value)
-        {
-            var queryResponse = Substitute.For<IDnsQueryResponse>();
-            var answers = new List<DnsResourceRecord>
-            {
-                new TxtRecord(new ResourceRecordInfo(domainName, ResourceRecordType.TXT, QueryClass.CS, 10, 32),
-                    new[] {seed}, new[] {value}
-                )
-            };
-
-            queryResponse.Answers.Returns(answers);
-            _lookupClient.QueryAsync(Arg.Is(domainName), Arg.Any<QueryType>())
-               .Returns(Task.FromResult(queryResponse));
-        }
-        
     }
 }

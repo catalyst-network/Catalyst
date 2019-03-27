@@ -17,34 +17,29 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Node.Common.Helpers.Extensions;
-using FluentAssertions;
-using Xunit;
+using System.Threading.Tasks;
+using DnsClient;
+using DnsClient.Protocol;
+using NSubstitute;
 
-namespace Catalyst.Node.Common.UnitTests.Helpers.Extensions
+namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
-    public static class EnumerableExtensionTests
+    public static class MockQueryResponse
     {
-        [Fact]
-        public static void GetARandomElement()
+        public static void CreateFakeLookupResult(string domainName, string seed, string value, ILookupClient lookupClient)
         {
-            var randomList = new List<string>();
-            var checkElementList = new List<string>();
-
-            for (int i = 0; i < 50; i++)
+            var queryResponse = Substitute.For<IDnsQueryResponse>();
+            var answers = new List<DnsResourceRecord>
             {
-                randomList.Add(Guid.NewGuid().ToString());
-            }
-            
-            for (int i = 0; i < 5; i++)
-            {
-                checkElementList.Add(randomList.RandomElement());
-            }
+                new TxtRecord(new ResourceRecordInfo(domainName, ResourceRecordType.TXT, QueryClass.CS, 10, 32),
+                    new[] {seed}, new[] {value}
+                )
+            };
 
-            checkElementList.Distinct().Count().Should().BeGreaterThan(1);
+            queryResponse.Answers.Returns(answers);
+            lookupClient.QueryAsync(Arg.Is(domainName), Arg.Any<QueryType>())
+               .Returns(Task.FromResult(queryResponse));
         }
     }
 }
