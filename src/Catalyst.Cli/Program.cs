@@ -21,7 +21,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading;
 using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;

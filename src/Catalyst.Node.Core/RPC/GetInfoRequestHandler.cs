@@ -25,8 +25,6 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC

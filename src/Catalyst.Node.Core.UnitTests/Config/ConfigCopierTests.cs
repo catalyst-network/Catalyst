@@ -17,7 +17,6 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

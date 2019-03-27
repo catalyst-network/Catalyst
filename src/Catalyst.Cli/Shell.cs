@@ -28,7 +28,6 @@ using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
-using Serilog.Core;
 
 namespace Catalyst.Cli
 {

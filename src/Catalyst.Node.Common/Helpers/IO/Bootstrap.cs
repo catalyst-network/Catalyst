@@ -17,10 +17,7 @@
 * along with Catalyst.Node.If not, see<https: //www.gnu.org/licenses/>.
 */
 
-using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
