@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.Network;
 using DnsClient;
 using DnsClient.Protocol;
 using NSubstitute;
@@ -38,12 +39,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         public static void CreateFakeLookupResult(string domainName, string seed, string value, ILookupClient lookupClient)
         {
             var queryResponse = Substitute.For<IDnsQueryResponse>();
-            var answers = new List<DnsResourceRecord>
-            {
-                new TxtRecord(new ResourceRecordInfo(domainName, ResourceRecordType.TXT, QueryClass.CS, 10, 32),
-                    new[] {seed}, new[] {value}
-                )
-            };
+            var answers = DevDnsQueryResponse.BuildDnsResourceRecords(domainName, value);
 
             queryResponse.Answers.Returns(answers);
             lookupClient.QueryAsync(Arg.Is(domainName), Arg.Any<QueryType>())
