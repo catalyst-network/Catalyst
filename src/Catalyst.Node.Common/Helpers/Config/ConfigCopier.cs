@@ -37,10 +37,9 @@ namespace Catalyst.Node.Common.Helpers.Config
         /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        public void RunConfigStartUp(string dataDir, Network network, string sourceFolder = null, bool overwrite = OverwriteFilesByDefault)
+        public static void RunConfigStartUp(string dataDir, Network network, string sourceFolder = null, bool overwrite = OverwriteFilesByDefault)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-            sourceFolder = sourceFolder ?? AppDomain.CurrentDomain.BaseDirectory;
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
@@ -79,11 +78,12 @@ namespace Catalyst.Node.Common.Helpers.Config
 
             foreach (var fileName in filesToCopy)
             {
-                CopyConfigFileToFolder(dataDir, fileName, sourceFolder, overwrite);
+                CopyConfigFileToFolder(dataDir, fileName, 
+                    sourceFolder ?? AppDomain.CurrentDomain.BaseDirectory, overwrite);
             }
         }
 
-        private void CopyConfigFileToFolder(string targetFolder,
+        private static void CopyConfigFileToFolder(string targetFolder,
             string fileName,
             string sourceFolder,
             bool overwrite = OverwriteFilesByDefault)

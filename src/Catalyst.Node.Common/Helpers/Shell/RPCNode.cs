@@ -1,4 +1,3 @@
-using System.Net;
 using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Common.Helpers.Shell
@@ -14,6 +13,5 @@ namespace Catalyst.Node.Common.Helpers.Shell
         }
 
         public ISocketClient SocketClient { get; }
-        
     }
 }

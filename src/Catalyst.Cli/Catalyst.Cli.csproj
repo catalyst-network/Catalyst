@@ -33,7 +33,7 @@
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Config\*.json">
+    <None Update="config.shell.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

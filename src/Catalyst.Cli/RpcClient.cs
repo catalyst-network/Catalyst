@@ -29,7 +29,6 @@ using Catalyst.Node.Common.Helpers.IO.Outbound;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
-using Makaretu.Dns;
 using Serilog;
 
 namespace Catalyst.Cli
@@ -125,8 +124,6 @@ namespace Catalyst.Cli
 
                 throw e;
             }
-            
-            return null;
         }
 
         /// <summary>

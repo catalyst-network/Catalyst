@@ -287,7 +287,7 @@ namespace Catalyst.Cli
             }
             //Handle any other exception. This is a generic error message and should not be returned to users but added
             //as a safe fail
-            catch (Exception e)
+            catch (Exception)
             {   
                 ReturnUserMessage(String.Format("Connection with the server couldn't be established."));
             }

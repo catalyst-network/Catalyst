@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -77,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _certificateStore = container.Resolve<ICertificateStore>();
         }
 
-        [Fact]
+        [Fact(Skip = "other attempt to isolate a reason why the build is hanging")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {

@@ -41,9 +41,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
         private readonly AnyTypeClientHandler _anyTypeClientHandler;
+        private readonly AnyTypeServerHandler _anyTypeServerHandler;
         private ISocketClient _socketClient;
         private ISocketServer _socketServer;
-        private AnyTypeServerBroadcastingHandler _anyTypeServerBroadcastingHandler;
 
         public IPeerIdentifier Identifier { get; }
         public IObservable<IChanneledMessage<Any>> InboundMessageStream { get; }
@@ -69,8 +69,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
             Identifier = new PeerIdentifier(settings);
             _anyTypeClientHandler = new AnyTypeClientHandler();
             OutboundMessageStream = _anyTypeClientHandler.MessageStream;
-            _anyTypeServerBroadcastingHandler = new AnyTypeServerBroadcastingHandler();
-            InboundMessageStream = _anyTypeServerBroadcastingHandler.MessageStream;
+            _anyTypeServerHandler = new AnyTypeServerHandler();
+            InboundMessageStream = _anyTypeServerHandler.MessageStream;
 
             var longRunningTasks = new [] {RunP2PServerAsync(), RunP2PClientAsync()};
             Task.WaitAll(longRunningTasks);
@@ -80,14 +80,13 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             _logger.Debug("P2P server starting");
 
-            _anyTypeServerBroadcastingHandler = new AnyTypeServerBroadcastingHandler();
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(Any.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                _anyTypeServerBroadcastingHandler
+                _anyTypeServerHandler
             };
 
             try

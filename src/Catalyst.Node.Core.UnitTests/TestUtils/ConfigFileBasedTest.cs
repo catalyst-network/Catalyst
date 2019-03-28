@@ -43,7 +43,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
 
         protected LogEventLevel LogEventLevel { get; set; } = LogEventLevel.Verbose;
 
-        protected virtual void ConfigureContainerBuilder(IConfigurationRoot config)
+        protected void ConfigureContainerBuilder(IConfigurationRoot config)
         {
             var configurationModule = new ConfigurationModule(config);
             ContainerBuilder = new ContainerBuilder();

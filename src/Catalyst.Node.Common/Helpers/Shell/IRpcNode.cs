@@ -1,4 +1,3 @@
-using System.Net;
 using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Common.Helpers.Shell {
