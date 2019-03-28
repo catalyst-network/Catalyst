@@ -20,9 +20,10 @@
 using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
+using PingRequest = Catalyst.Protocol.IPPN.PeerProtocol.Types.PingRequest;
+
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
@@ -35,7 +36,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         {
             Logger.Debug("received ping");
             var deserialised = message.Payload.FromAny<PingRequest>();
-            Logger.Debug("ping content is {0}", deserialised.Ping);
+            Logger.Debug("ping content is {0}", deserialised.CorrelationId);
         }
     }
 }

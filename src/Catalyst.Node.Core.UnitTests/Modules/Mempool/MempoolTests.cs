@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             var transactionFromMemPool = _memPool.GetTransaction(_transaction.Signature);
 
             transactionFromMemPool.STEntries.Single().Amount.Should().Be(_transaction.STEntries.Single().Amount);
-            transactionFromMemPool.CFEntries.Single().CommPedersenCommitmentitment.Should().BeEquivalentTo(_transaction.CFEntries.Single().CommPedersenCommitmentitment);
+            transactionFromMemPool.CFEntries.Single().PedersenCommit.Should().BeEquivalentTo(_transaction.CFEntries.Single().PedersenCommit);
             transactionFromMemPool.Signature.Should().Be(_transaction.Signature);
             transactionFromMemPool.Version.Should().Be(_transaction.Version);
             transactionFromMemPool.LockTime.Should().Be(_transaction.LockTime);

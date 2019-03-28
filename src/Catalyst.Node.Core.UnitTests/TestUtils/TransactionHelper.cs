@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils
                 }},
                 CFEntries = { new CFTransactionEntry()
                 {
-                    CommPedersenCommitmentitment = confidentialCommitment.ToUtf8ByteString(),
+                    PedersenCommit = confidentialCommitment.ToUtf8ByteString(),
                     PubKey = confidentialPubKey.ToUtf8ByteString()
                 }},
                 Signature = GetTransactionSignature(signature, challenge),
@@ -62,8 +62,8 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils
         {
             return new TransactionSignature
             {
-                Challenge = challenge.ToUtf8ByteString(),
-                Signature = signature.ToUtf8ByteString()
+                SchnorrComponent = challenge.ToUtf8ByteString(),
+                SchnorrSignature = signature.ToUtf8ByteString()
             };
         }
     }

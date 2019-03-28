@@ -93,14 +93,14 @@ namespace Catalyst.Node.Core
                 {
                     version = 1;
                 }
-                var tx = new Transaction { Version = version, Signature = new TransactionSignature { Signature = ByteString.CopyFromUtf8(pubkey) } };
+                var tx = new Transaction { Version = version, Signature = new TransactionSignature { SchnorrSignature = ByteString.CopyFromUtf8(pubkey) } };
 
                 await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 await Task.Delay(300, ct); //just to get the next message at the bottom
 
                 _logger.Information("Creating a Ping message");
                 _logger.Information("Please type in a ping message content");
-                var ping = new PeerProtocol.Types.PingRequest { Ping = Console.ReadLine() };
+                var ping = new PeerProtocol.Types.PingRequest { CorrelationId = Console.ReadLine().ToUtf8ByteString() };
 
                 await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
