@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using DnsClient;
+using DnsClient.Protocol;
 
 namespace Catalyst.Node.Common.Helpers.Network
 {
@@ -80,5 +81,21 @@ namespace Catalyst.Node.Common.Helpers.Network
                 return null;
             }
         }
+    }
+    
+    public class DevDns : IDns {
+        public Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames) { throw new NotImplementedException(); }
+
+        public Task<IDnsQueryResponse> GetTxtRecords(string hostname)
+        {
+            return               new TxtRecord(new ResourceRecordInfo(domainName, ResourceRecordType.TXT, QueryClass.CS, 10, 32),
+                new[] {seed}, new[] {value}
+            )
+        }
+    }
+
+    public class DnsQueryResponse : IDnsQueryResponse
+    {
+        
     }
 }

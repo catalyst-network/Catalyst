@@ -31,6 +31,7 @@ ProjectSection(SolutionItems) = preProject
 	..\COPYING = ..\COPYING
 	..\devnet_dnszone.txt = ..\devnet_dnszone.txt
 	..\dns-docker-compose.yml = ..\dns-docker-compose.yml
+	..\addLicenseHeader.sh = ..\addLicenseHeader.sh
 EndProjectSection
 EndProject
 Global
