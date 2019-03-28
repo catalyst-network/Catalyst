@@ -9,6 +9,7 @@ using Catalyst.Node.Core.P2P;
 using NSubstitute;
 using SharpRepository.Repository;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using DnsClient;
@@ -49,9 +50,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void ResolvesIPeerDiscoveryCorrectly()
         {
-            WriteLogsToFile = true;
-            WriteLogsToTestOutput = true;
-
             ConfigureContainerBuilder(_config);
 
             var container = ContainerBuilder.Build();
@@ -59,10 +57,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 var peerDiscovery = container.Resolve<IPeerDiscovery>();
                 Assert.NotNull(peerDiscovery);
-                // peerDiscovery.Should().In
                 peerDiscovery.Should().BeOfType(typeof(PeerDiscovery));
                 Assert.NotNull(peerDiscovery.Dns);
-                // peerDiscovery.Dns.Should().BeOfType(typeof(Dns));
+                peerDiscovery.Dns.Should().BeOfType(typeof(DevDns));
                 Assert.NotNull(peerDiscovery.Logger);
                 peerDiscovery.Logger.Should().BeOfType(typeof(Logger));
                 Assert.NotNull(peerDiscovery.SeedNodes);

@@ -29,6 +29,13 @@
         "seed3.catalystnetwork.io",
         "seed4.catalystnetwork.io",
         "seed5.catalystnetwork.io"
+      ],
+      "QueryAnswerValues": [ // Only use for development
+        "192.0.2.1:42069",
+        "192.0.2.2:42069",
+        "192.0.2.3:42069",
+        "192.0.2.4:42069",
+        "192.0.2.2:42069"
       ]
     },
     "Rpc": {

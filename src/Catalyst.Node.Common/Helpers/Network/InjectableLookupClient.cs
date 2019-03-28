@@ -17,31 +17,17 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.Config;
 using DnsClient;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Common.Helpers.Network
 {
-    //Allow passing in the ipAddress as a string in DI config files.
-    public interface IInjectableLookupClient : ILookupClient
-    {
-    }
-
-    public class InjectableLookupClient : LookupClient, IInjectableLookupClient
+    public class InjectableLookupClient : LookupClient
     {
         public InjectableLookupClient(IConfigurationRoot configurationRoot) : base 
         (
-            configurationRoot.GetSection("CatalystNodeConfiguration")
-               .GetSection("Peer")
-               .GetSection("DnsServers")
-               .GetChildren()
-               .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray()
+            ConfigValueParser.GetIpEndpointArrValues(configurationRoot, "DnsServers")
         ) { }
     }
 }

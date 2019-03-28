@@ -82,20 +82,4 @@ namespace Catalyst.Node.Common.Helpers.Network
             }
         }
     }
-    
-    public class DevDns : IDns {
-        public Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames) { throw new NotImplementedException(); }
-
-        public Task<IDnsQueryResponse> GetTxtRecords(string hostname)
-        {
-            return               new TxtRecord(new ResourceRecordInfo(domainName, ResourceRecordType.TXT, QueryClass.CS, 10, 32),
-                new[] {seed}, new[] {value}
-            )
-        }
-    }
-
-    public class DnsQueryResponse : IDnsQueryResponse
-    {
-        
-    }
 }
