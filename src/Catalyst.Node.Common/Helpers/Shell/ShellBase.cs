@@ -66,6 +66,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
         public abstract bool IsConnectedNode(string nodeId);
         public abstract IRpcNode GetConnectedNode(string nodeId);
+        
+        public abstract IRpcNodeConfig GetNodeConfig(string nodeId);
 
         /// <summary>
         ///     Prints a list of available cli commands.

@@ -34,6 +34,8 @@ using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using Serilog.Core;
 
+using DotNetty.Transport.Channels;
+
 namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds, IObserver<IChanneledMessage<Any>>
@@ -232,42 +234,64 @@ namespace Catalyst.Cli
         {
             //check if the args array is not null, not empty and of minimum count 2
             Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
-
-            IRpcNode connectedNode = GetConnectedNode(args[2]);
             
-            //check if the node is already connected to the server
-            if (connectedNode == null)
+            //Get the node configuration from the list of node configurations
+            IRpcNodeConfig nodeConfig = GetNodeConfig(args[2]);
+
+            //Check if the node has configuration in the config file
+            if (nodeConfig == null)
             {
-                //Get the node entered by the user from the nodes list
-                var nodeConfig = _rpcNodeConfigs.Single(node => node.NodeId.Equals(args[2]));
-
-                try
-                {
-                    var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
-
-                    //if a socket could not be opened with the node
-                    //then do not add the node to the list of conencted nodes
-                    if (socket != null)
-                    {
-                        connectedNode = new RpcNode(nodeConfig, socket);
-                        _nodes.Add(connectedNode);
-                    }
-                    
-                }
-                catch (System.PlatformNotSupportedException)
-                {
-                    ReturnUserMessage(String.Format("SSL certificate {0} password is incorrect. Please provide the correct password", nodeConfig.PfxFileName));
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(e, "Failed to connect to node");
-                }
+                ReturnUserMessage(String.Format("The node \"{0}\" has not been configured.  Please add the node to the config file and try again.", args[2]));
+                return true;
             }
-            else
+
+            //Find the node in the list of connected nodes
+            IRpcNode connectedNode = GetConnectedNode(args[2]);
+
+            //if the node is in the list of connected nodes then a connection has already been established to it
+            if (connectedNode != null)
             {
                 ReturnUserMessage(String.Format("A connection has already been established with {0}", connectedNode.Config.NodeId));
+                return true;
             }
-            
+
+            try
+            {
+                //Connect to the node
+                var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
+
+                //if a socket could not be opened with the node
+                //then do not add the node to the list of conencted nodes
+                if (socket != null)
+                {
+                    connectedNode = new RpcNode(nodeConfig, socket);
+                    _nodes.Add(connectedNode);
+                }
+                
+            }
+            //Handle the exception of a wrong SSL certificate password
+            catch (System.PlatformNotSupportedException)
+            {
+                ReturnUserMessage(String.Format("SSL certificate {0} is invalid. Please provide a valid SSL certificate to be able to connect to the node.", nodeConfig.PfxFileName));
+            }
+            //Handle the exception of not being able to connect to the node
+            catch (ConnectException)
+            {
+                ReturnUserMessage(String.Format("A connection to {0} was refused.  Please check the node status and try again.", nodeConfig.NodeId));
+            }
+            //Handle the exception of the connection timing out
+            catch (ConnectTimeoutException)
+            {
+                ReturnUserMessage(String.Format("Connection to {0} @ {1}:{2} timed out.  Please check the node status and try again.", 
+                    nodeConfig.NodeId, nodeConfig.HostAddress, nodeConfig.Port));
+            }
+            //Handle any other exception. This is a generic error message and should not be returned to users but added
+            //as a safe fail
+            catch (Exception e)
+            {   
+                ReturnUserMessage(String.Format("Connection with the server couldn't be established."));
+            }
+        
             return true;
         }
 
@@ -280,6 +304,11 @@ namespace Catalyst.Cli
         public override IRpcNode GetConnectedNode(string nodeId)
         {
             return _nodes.SingleOrDefault(node => node.Config.NodeId.Equals(nodeId));
+        }
+        
+        public override IRpcNodeConfig GetNodeConfig(string nodeId)
+        {
+            return _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
         }
 
 

@@ -30,6 +30,7 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Makaretu.Dns;
+using Serilog;
 
 namespace Catalyst.Cli
 {
@@ -102,15 +103,27 @@ namespace Catalyst.Cli
             }
             catch (System.PlatformNotSupportedException exception)
             {
-                _logger.Error(exception, "SSL Certificate password incorrect");
+                _logger.Error(exception, "Invalid SSL certificate.");
 
                 throw exception;
+            }
+            catch (ConnectException connectException)
+            {
+                _logger.Error(connectException, "Connection with the server couldn't be established.");
+
+                throw connectException;
+            }
+            catch (ConnectTimeoutException timeoutException)
+            {
+                _logger.Error(timeoutException, "Connection timed out.");
+
+                throw timeoutException;
             }
             catch (Exception e)
             {
                 _logger.Error(e, "Connection with the server couldn't be established.");
-                
-                Console.WriteLine("Connection with the server couldn't be established.");
+
+                throw e;
             }
             
             return null;
