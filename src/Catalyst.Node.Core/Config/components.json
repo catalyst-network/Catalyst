@@ -90,7 +90,7 @@
       ]
     },
     {
-      "type": "Catalyst.Node.Common.Helpers.Network.Dns, Catalyst.Node.Common",
+      "type": "Catalyst.Node.Common.UnitTests.TestUtils.MockDns, Catalyst.Node.Common.UnitTests",
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.IDns, Catalyst.Node.Common"

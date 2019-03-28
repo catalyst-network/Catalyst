@@ -34,7 +34,6 @@ namespace Catalyst.Node.Common.Helpers.Network
 
         /// <summary>
         /// </summary>
-        /// <param name="dnsServer"></param>
         /// <param name="client"></param>
         public Dns(ILookupClient client)
         {
