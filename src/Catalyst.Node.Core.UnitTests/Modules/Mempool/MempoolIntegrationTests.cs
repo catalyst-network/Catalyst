@@ -65,7 +65,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                 var retrievedTransaction = mempool.GetTransaction(transactionToSave.Signature);
 
                 retrievedTransaction.Should().Be(transactionToSave);
-                retrievedTransaction.Signature.Signature.Should().BeEquivalentTo(guid.ToUtf8ByteString());
+                retrievedTransaction.Signature.SchnorrSignature.Should().BeEquivalentTo(guid.ToUtf8ByteString());
             }
         }
 

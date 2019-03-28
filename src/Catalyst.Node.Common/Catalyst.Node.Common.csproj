@@ -10,7 +10,7 @@
     <PackageReference Include="Polly" Version="7.1.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
     <PackageReference Include="Dawn.Guard" Version="1.8.0" />
-    <PackageReference Include="Catalyst.Protocol" Version="0.0.1.1912-beta" />
+    <PackageReference Include="Catalyst.Protocol" Version="0.0.1.2168-beta" />
     <PackageReference Include="DnsClient" Version="1.2.0" />
     <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
