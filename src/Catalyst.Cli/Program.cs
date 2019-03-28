@@ -18,9 +18,7 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
@@ -51,11 +49,11 @@ namespace Catalyst.Cli
         ///     Main cli loop
         /// </summary>
         /// <param name="args"></param>
-        public static int Main(IEnumerable<string> xyz)
+        public static int Main()
         {
             Log.Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             const int bufferSize = 1024 * 67 + 128;
-            var ten = xyz.ElementAt(10);
+
             try
             {
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
