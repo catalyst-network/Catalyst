@@ -36,7 +36,7 @@ namespace Catalyst.Node.Common.UnitTests
         private const string LicenseHeaderFileName = "LicenseHeader.txt";
 
         [Fact]
-        public async Task All_Cs_Files_Should_Have_License_Header()
+        public static async Task All_Cs_Files_Should_Have_License_Header()
         {
             var declaringTypeAssembly = MethodBase.GetCurrentMethod().DeclaringType.Assembly;
 
