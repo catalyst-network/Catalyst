@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.RPC
             {
                 var deserialised = message.Payload.FromAny<VersionRequest>();
                 Logger.Debug("message content is {0}", deserialised);
-                var response = new VersionResponse()
+                var response = new VersionResponse
                 {
                     Version = NodeUtil.GetVersion()
                 };

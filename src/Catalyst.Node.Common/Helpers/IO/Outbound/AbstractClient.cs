@@ -19,6 +19,7 @@
 
 using System;
 using System.Net;
+using System.Reflection;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -33,6 +34,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient 
         where TChannel : IChannel, new()
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        
         public IBootstrap Client { get; set; }
         
         protected AbstractClient(ILogger logger) : base(logger) {}
@@ -53,14 +56,13 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         {
             try
             {
-                //Channel = await Client.BindAsync(listenAddress, port);
                 Channel = await Client.ConnectAsync(listenAddress, port)
                    .ConfigureAwait(false);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw e;
+                Logger.Error(e, "Error in AbstractClient");
+                throw;
             }
             
             return this;

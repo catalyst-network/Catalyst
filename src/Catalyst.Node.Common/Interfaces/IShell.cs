@@ -52,7 +52,7 @@ namespace Catalyst.Node.Common.Interfaces
         /// <returns></returns>
         bool OnStopWork(string[] args);
 
-        bool IsConnectedNode(string nodeId);
+        bool IsConnectedNode(string nodeId, out IRpcNode connectedNode);
 
         IRpcNode GetConnectedNode(string nodeId);
 

@@ -43,6 +43,7 @@ namespace Catalyst.Cli
         private readonly ICertificateStore _certificateStore;
         private readonly AnyTypeClientHandler _clientHandler;
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
+        
         private readonly GetInfoResponseHandler _getInfoResponseHandler;
         private readonly GetVersionResponseHandler _getVersionResponseHandler;
 
@@ -104,25 +105,25 @@ namespace Catalyst.Cli
             {
                 _logger.Error(exception, "Invalid SSL certificate.");
 
-                throw exception;
+                throw;
             }
             catch (ConnectException connectException)
             {
                 _logger.Error(connectException, "Connection with the server couldn't be established.");
 
-                throw connectException;
+                throw;
             }
             catch (ConnectTimeoutException timeoutException)
             {
                 _logger.Error(timeoutException, "Connection timed out.");
 
-                throw timeoutException;
+                throw;
             }
             catch (Exception e)
             {
                 _logger.Error(e, "Connection with the server couldn't be established.");
 
-                throw e;
+                throw;
             }
         }
 
@@ -144,6 +145,8 @@ namespace Catalyst.Cli
             if (disposing)
             {
                 _logger.Information("disposing RpcClient");
+                _getInfoResponseHandler.Dispose();
+                _getVersionResponseHandler.Dispose();
             }
         }
 

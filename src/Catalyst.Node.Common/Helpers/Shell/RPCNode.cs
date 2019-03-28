@@ -12,6 +12,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
             SocketClient = socketClient;
         }
 
-        public ISocketClient SocketClient { get; }
+        public ISocketClient SocketClient { get; set; }
     }
 }

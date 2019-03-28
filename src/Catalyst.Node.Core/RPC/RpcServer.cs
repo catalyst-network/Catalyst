@@ -109,6 +109,7 @@ namespace Catalyst.Node.Core.RPC
                 _cancellationSource?.Dispose();
                 _certificate?.Dispose(); 
                 _infoRequestHandler?.Dispose();
+                _versionRequestHandler.Dispose();
             }
         }
 

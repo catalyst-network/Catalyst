@@ -45,7 +45,7 @@ namespace Catalyst.Cli
 
         private readonly IRpcClient _rpcClient;
         
-        public IChanneledMessage<Any> _response { get; set; }
+        public IChanneledMessage<Any> Response { get; set; }
         private readonly ILogger _logger;
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Catalyst.Cli
 
             Console.WriteLine(@"Koopa Shell Start");
         }
-        private List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
+        private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
         {
             var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
 
@@ -207,7 +207,7 @@ namespace Catalyst.Cli
             switch (args[0].ToLower(AppCulture))
             {
                 case "connect":
-                    return OnConnectNode(args);
+                    return OnConnectNode(args.Skip(2).ToList());
                 case "start":
                     return OnStart(args);
                 case "help":
@@ -230,31 +230,26 @@ namespace Catalyst.Cli
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private bool OnConnectNode(string[] args)
+        private bool OnConnectNode(IList<string> args)
         {
-            //check if the args array is not null, not empty and of minimum count 2
-            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(3);
+            IRpcNodeConfig nodeConfig;
+            IRpcNode connectedNode;
+            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+
+            string nodeId = args.First();
             
-            //Get the node configuration from the list of node configurations
-            IRpcNodeConfig nodeConfig = GetNodeConfig(args[2]);
-
-            //Check if the node has configuration in the config file
-            if (nodeConfig == null)
-            {
-                ReturnUserMessage(String.Format("The node \"{0}\" has not been configured.  Please add the node to the config file and try again.", args[2]));
+            //if the node is invalid then do not continue
+            if (!IsConfiguredNode(nodeId))
                 return true;
-            }
 
-            //Find the node in the list of connected nodes
-            IRpcNode connectedNode = GetConnectedNode(args[2]);
+            nodeConfig = GetNodeConfig(nodeId);
 
-            //if the node is in the list of connected nodes then a connection has already been established to it
-            if (connectedNode != null)
+            if (IsConnectedNode(nodeId, out connectedNode))
             {
                 ReturnUserMessage(String.Format("A connection has already been established with {0}", connectedNode.Config.NodeId));
                 return true;
             }
-
+            
             try
             {
                 //Connect to the node
@@ -289,28 +284,11 @@ namespace Catalyst.Cli
             //as a safe fail
             catch (Exception)
             {   
-                ReturnUserMessage(String.Format("Connection with the server couldn't be established."));
+                ReturnUserMessage("Connection with the server couldn't be established.");
             }
         
             return true;
         }
-
-        public override bool IsConnectedNode(string nodeId)
-        {
-            //todo : check the socket is actually opened
-            return _nodes.Exists(node => node.Config.NodeId == nodeId);
-        }
-
-        public override IRpcNode GetConnectedNode(string nodeId)
-        {
-            return _nodes.SingleOrDefault(node => node.Config.NodeId.Equals(nodeId));
-        }
-        
-        public override IRpcNodeConfig GetNodeConfig(string nodeId)
-        {
-            return _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
-        }
-
 
         /// <summary>
         /// </summary>
@@ -406,29 +384,26 @@ namespace Catalyst.Cli
         /// <returns>Returns true if successful and false otherwise.</returns>
         protected override bool OnGetVersion(IList<string> args)
         {
+            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+
+            IRpcNode nodeConnected;
+            string nodeId = args.First();
+
+            //Perform validations required before a command call
+            if (!ValidatePreCommand(nodeId, out nodeConnected))
+                return false;
+            
             try
             {
-                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
-
-                //get the node 
-                var nodeConnected = GetConnectedNode(args.First());
-
-                //check if the node entered by the user was in the list of the connected nodes
-                if (nodeConnected != null)
-                {
-                    //send the message to the server by writing it to the channel
-                    var request = new VersionRequest();
-                    _rpcClient.SendMessage(nodeConnected, request.ToAny());
-                }
-                else
-                {
-                    Console.WriteLine("Node not found.  Please connect to node first.");
-                }
+                //send the message to the server by writing it to the channel
+                var request = new VersionRequest();
+                _rpcClient.SendMessage(nodeConnected, request.ToAny());
+                
             }
             catch (Exception e)
             {
                 _logger.Debug(e.Message);
-                throw e;
+                throw;
             }
 
             return true;
@@ -436,35 +411,25 @@ namespace Catalyst.Cli
 
         protected override bool OnGetConfig(IList<string> args)
         {
+            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+
+            IRpcNode nodeConnected;
+            string nodeId = args.First();
+            
+            //Perform validations required before a command call
+            if (!ValidatePreCommand(nodeId, out nodeConnected))
+                return false;
+            
             try
             {
-                Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
-
-                //get the node 
-                var nodeConnected = GetConnectedNode(args.First());
-
-                //check if the node entered by the user was in the list of the connected nodes
-                if (nodeConnected != null)
-                {
-                    if (!nodeConnected.SocketClient.Channel.Active)
-                    {
-                        _logger.Information("Channel inactive ...");
-                    }
-                    
-                    //send the message to the server by writing it to the channel
-                    var request = new GetInfoRequest();
-                    _rpcClient.SendMessage(nodeConnected, request.ToAny()).Wait();
-                }
-                else
-                {
-                    //User messages should be read from an external resource file
-                    Console.WriteLine("Node not found.  Please connect to a node first.");
-                }
+                //send the message to the server by writing it to the channel
+                var request = new GetInfoRequest();
+                _rpcClient.SendMessage(nodeConnected, request.ToAny()).Wait();
             }
             catch (Exception e)
             {
                 _logger.Debug(e.Message);
-                throw e;
+                throw;
             }
 
             return true;
@@ -499,17 +464,99 @@ namespace Catalyst.Cli
             throw new NotImplementedException();
         }
         
+        /// <summary>
+        /// Checks if the node is configured in the nodes.json config file before performing other operations.
+        /// </summary>
+        /// <param name="nodeId">The name of the node as entered at the command line</param>
+        /// <returns>True if the node is existing in the configuration file and False otherwise</returns>
+        private bool IsConfiguredNode(string nodeId)
+        {
+            //Get the node configuration from the list of node configurations
+            IRpcNodeConfig nodeConfig = GetNodeConfig(nodeId);
+
+            //Check if the node has configuration in the config file
+            if (nodeConfig == null)
+                return false;
+            
+            return true;
+        }
+        
+        /// <summary>
+        /// Checks if the node exists in the list of connected nodes.
+        /// </summary>
+        /// <param name="nodeId">The name of the node as entered at the command line</param>
+        /// <returns>True if the node is existing in the connected nodes list and False otherwise</returns>
+        public override bool IsConnectedNode(string nodeId, out IRpcNode connectedNode)
+        {
+            //Find the node in the list of connected nodes
+            connectedNode = GetConnectedNode(nodeId);
+
+            //if the node is in the list of connected nodes then a connection has already been established to it
+            if (connectedNode != null)
+                return true;
+
+            return false;
+        }
+
+        public bool IsSocketChannelActive(IRpcNode node)
+        {
+            if (!node.SocketClient.Channel.Active)
+            {
+                _logger.Information("Channel inactive ...");
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool ValidatePreCommand(string nodeId, out IRpcNode nodeConnected)
+        {
+            nodeConnected = null;
+            
+            //if the node is invalid then do not continue
+            if (!IsConfiguredNode(nodeId))
+            {
+                ReturnUserMessage(String.Format("The node \"{0}\" has not been configured.  Please add the node to the config file and try again.", nodeId));
+                return false;
+            }
+            
+            //Check if the node is already connected otherwise do not continue
+            //if the node is already connected the method will return the instance
+            if (!IsConnectedNode(nodeId, out nodeConnected))
+            {
+                ReturnUserMessage("Node not found.  Please connect to node first.");
+                return false;
+            }
+            
+            //Check if the channel is still active
+            if (!IsSocketChannelActive(nodeConnected))
+            {
+                ReturnUserMessage("Channel was closed by the server.  Please check the server and try again.");
+                return false;
+            }
+
+            return true;
+        }
+        
+        public override IRpcNode GetConnectedNode(string nodeId)
+        {
+            return _nodes.SingleOrDefault(node => node.Config.NodeId.Equals(nodeId));
+        }
+        
+        public override IRpcNodeConfig GetNodeConfig(string nodeId)
+        {
+            return _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
+        }
         
         /* Implementing IObserver */
         public void OnCompleted() { }
-        public void OnError(Exception error) { Console.WriteLine($"RpcClient observer received error : {error.Message}"); }
+        public void OnError(Exception error) { _logger.Error($"RpcClient observer received error : {error.Message}"); }
 
         public void OnNext(IChanneledMessage<Any> value)
         {
-            if (value == null) return;
+            if (value == null) {return;}
 
-            _response = value;
-            Console.WriteLine(_response.Payload.Value.ToString());
+            Response = value;
         }
     }
 }

@@ -64,7 +64,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public abstract bool OnStopWork(string[] args);
 
-        public abstract bool IsConnectedNode(string nodeId);
+        public abstract bool IsConnectedNode(string nodeId, out IRpcNode connectedNode);
+        
         public abstract IRpcNode GetConnectedNode(string nodeId);
         
         public abstract IRpcNodeConfig GetNodeConfig(string nodeId);
@@ -282,7 +283,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
                 try
                 {
-                    running = OnCommand(args);
+                    OnCommand(args);
                 }
                 catch (SystemException ex)
                 {
@@ -304,7 +305,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
             return true;
         }
 
-        protected void ReturnUserMessage(string message)
+        protected static void ReturnUserMessage(string message)
         {
             Console.WriteLine(message);
         }

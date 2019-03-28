@@ -10,14 +10,13 @@ using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Math.EC;
+using Serilog;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli
 {
     public class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>
     {
-        //private readonly IRpcNodesSettings _config;
-
         public GetVersionResponseHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger)
@@ -38,14 +37,14 @@ namespace Catalyst.Cli
                 Logger.Debug("Handling GetVersionResponse");
                 
                 var deserialised = message.Payload.FromAny<VersionResponse>();
-                Console.WriteLine("Node Version: {0}", deserialised.Version.ToString());
-                Console.WriteLine("Press Enter to continue ...\n");
+                Logger.Information("Node Version: {0}", deserialised.Version.ToString());
+                Logger.Information("Press Enter to continue ...\n");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
                     "Failed to handle GetInfoResponse after receiving message {0}", message);
-                throw ex;
+                throw;
             }
         }
     }

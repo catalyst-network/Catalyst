@@ -16,8 +16,6 @@ namespace Catalyst.Cli
 {
     public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>
     {
-        //private readonly IRpcNodesSettings _config;
-
         public GetInfoResponseHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger)
@@ -37,14 +35,14 @@ namespace Catalyst.Cli
             {
                 Logger.Debug("Handling GetInfoResponse");
                 var deserialised = message.Payload.FromAny<GetInfoResponse>();
-                Console.WriteLine("Requested node configuration\n============================\n{0}", deserialised.Query.ToString());
-                Console.WriteLine("Press Enter to continue ...\n");
+                Logger.Information("Requested node configuration\n============================\n{0}", deserialised.Query.ToString());
+                Logger.Information("Press Enter to continue ...\n");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
                     "Failed to handle GetInfoResponse after receiving message {0}", message);
-                throw ex;
+                throw;
             }
         }
     }

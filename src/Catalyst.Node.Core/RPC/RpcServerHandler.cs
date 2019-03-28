@@ -19,7 +19,8 @@ namespace Catalyst.Node.Core.RPC
         protected override void ChannelRead0(IChannelHandlerContext context, object message)
         {
             // Generate and write a response.
-            string response, msg;
+            string response;
+            string msg;
             bool close = false;
             msg = message as string;
 
