@@ -20,6 +20,9 @@
       "Magic": 4206942,
       "Announce": true,
       "AnnounceServer": "127.0.0.1:21420",
+      "DnsServers": [
+        "127.0.0.1:5053"
+      ],
       "SeedServers": [
         "seed1.catalystnetwork.io",
         "seed2.catalystnetwork.io",
