@@ -34,24 +34,27 @@ namespace Catalyst.Node.Common
         public int Reputation { get; set; }
         public DateTime LastSeen { get; set; }
         public IPeerIdentifier PeerIdentifier { get; set; }
-        public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
+        public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
         public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
         public void Dispose() { Dispose(true); }
-
+        
         /// <summary>
         /// </summary>
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
         /// <summary>
         /// </summary>
-        public void IncreaseReputation() { Reputation++; }
+        public void IncreaseReputation(int mer = 1)
+        {
+            Reputation += mer;
+        }
 
         /// <summary>
         /// </summary>
-        public void DecreaseReputation()
+        public void DecreaseReputation(int mer = 1)
         {
-            Reputation--;
+            Reputation += mer;
         }
 
         protected virtual void Dispose(bool disposing)

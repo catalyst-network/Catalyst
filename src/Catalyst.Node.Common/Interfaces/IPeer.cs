@@ -24,10 +24,10 @@ namespace Catalyst.Node.Common.Interfaces
 {
     public interface IPeer
     {
-        int Reputation { get; set; }
-        DateTime LastSeen { get; set; }
-        IPeerIdentifier PeerIdentifier { get; set; }
-        bool IsAwolBot { get; }
+        int Reputation { get; }
+        DateTime LastSeen { get; }
+        IPeerIdentifier PeerIdentifier { get; }
+        bool IsAwolPeer { get; }
         TimeSpan InactiveFor { get; }
 
         /// <summary>
@@ -36,10 +36,10 @@ namespace Catalyst.Node.Common.Interfaces
 
         /// <summary>
         /// </summary>
-        void IncreaseReputation();
+        void IncreaseReputation(int mer = 1);
 
         /// <summary>
         /// </summary>
-        void DecreaseReputation();
+        void DecreaseReputation(int mer = 1);
     }
 }
