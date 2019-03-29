@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using Catalyst.Node.Common.Helpers;
@@ -47,6 +48,13 @@ namespace Catalyst.Cli
         
         public IChanneledMessage<Any> Response { get; set; }
         private readonly ILogger _logger;
+
+        private const string NO_CONFIG_MESSAGE =
+            "Node not configured.  Add node to config file and try again.";
+
+        private const string NODE_CONNECTED_MESSAGE = "Connection already established with the node.";
+        private const string NODE_NOT_CONNECTED_MESSAGE = "Node is not connected.  Connect to node first.";
+        private const string CHANNEL_INACTIVE_MESSAGE = "Node is not connected.  Connect to node first.";
 
         /// <summary>
         /// </summary>
@@ -232,21 +240,23 @@ namespace Catalyst.Cli
         /// <returns></returns>
         private bool OnConnectNode(IList<string> args)
         {
-            IRpcNodeConfig nodeConfig;
-            IRpcNode connectedNode;
             Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
-            string nodeId = args.First();
+            var nodeId = args.First();
             
             //if the node is invalid then do not continue
             if (!IsConfiguredNode(nodeId))
-                return true;
-
-            nodeConfig = GetNodeConfig(nodeId);
-
-            if (IsConnectedNode(nodeId, out connectedNode))
             {
-                ReturnUserMessage(String.Format("A connection has already been established with {0}", connectedNode.Config.NodeId));
+                ReturnUserMessage(NO_CONFIG_MESSAGE);
+                return true;
+            }
+
+            var nodeConfig = GetNodeConfig(nodeId);
+
+            //Check if there is a connection has already been made to the node
+            if (IsConnectedNode(nodeId))
+            {
+                ReturnUserMessage(NODE_CONNECTED_MESSAGE);
                 return true;
             }
             
@@ -255,11 +265,11 @@ namespace Catalyst.Cli
                 //Connect to the node
                 var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
 
-                //if a socket could not be opened with the node
-                //then do not add the node to the list of conencted nodes
+                //if a socket could be opened with the node
+                //then create IRpcNode and add it the node to the list of connected nodes
                 if (socket != null)
                 {
-                    connectedNode = new RpcNode(nodeConfig, socket);
+                    IRpcNode connectedNode = new RpcNode(nodeConfig, socket);
                     _nodes.Add(connectedNode);
                 }
                 
@@ -267,18 +277,20 @@ namespace Catalyst.Cli
             //Handle the exception of a wrong SSL certificate password
             catch (System.PlatformNotSupportedException)
             {
-                ReturnUserMessage(String.Format("SSL certificate {0} is invalid. Please provide a valid SSL certificate to be able to connect to the node.", nodeConfig.PfxFileName));
+                ReturnUserMessage(
+                    $"SSL certificate {nodeConfig.PfxFileName} is invalid. Please provide a valid SSL certificate to be able to connect to the node.");
             }
             //Handle the exception of not being able to connect to the node
             catch (ConnectException)
             {
-                ReturnUserMessage(String.Format("A connection to {0} was refused.  Please check the node status and try again.", nodeConfig.NodeId));
+                ReturnUserMessage(
+                    $"A connection to {nodeConfig.NodeId} was refused.  Please check the node status and try again.");
             }
             //Handle the exception of the connection timing out
             catch (ConnectTimeoutException)
             {
-                ReturnUserMessage(String.Format("Connection to {0} @ {1}:{2} timed out.  Please check the node status and try again.", 
-                    nodeConfig.NodeId, nodeConfig.HostAddress, nodeConfig.Port));
+                ReturnUserMessage(
+                    $"Connection to {nodeConfig.NodeId} @ {nodeConfig.HostAddress}:{nodeConfig.Port} timed out.  Please check the node status and try again.");
             }
             //Handle any other exception. This is a generic error message and should not be returned to users but added
             //as a safe fail
@@ -386,18 +398,21 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
-            IRpcNode nodeConnected;
-            string nodeId = args.First();
+            var nodeId = args.First();
 
             //Perform validations required before a command call
-            if (!ValidatePreCommand(nodeId, out nodeConnected))
+            if (!ValidatePreCommand(nodeId))
+            {
                 return false;
+            }
             
             try
             {
+                var connectedNode = GetConnectedNode(nodeId);
+                
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
-                _rpcClient.SendMessage(nodeConnected, request.ToAny());
+                _rpcClient.SendMessage(connectedNode, request.ToAny());
                 
             }
             catch (Exception e)
@@ -413,18 +428,21 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
-            IRpcNode nodeConnected;
-            string nodeId = args.First();
+            var nodeId = args.First();
             
             //Perform validations required before a command call
-            if (!ValidatePreCommand(nodeId, out nodeConnected))
+            if (!ValidatePreCommand(nodeId))
+            {
                 return false;
+            }
             
             try
             {
+                var connectedNode = GetConnectedNode(nodeId);
+                
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
-                _rpcClient.SendMessage(nodeConnected, request.ToAny()).Wait();
+                _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();
             }
             catch (Exception e)
             {
@@ -471,14 +489,9 @@ namespace Catalyst.Cli
         /// <returns>True if the node is existing in the configuration file and False otherwise</returns>
         private bool IsConfiguredNode(string nodeId)
         {
-            //Get the node configuration from the list of node configurations
-            IRpcNodeConfig nodeConfig = GetNodeConfig(nodeId);
+            Debug.Assert(nodeId != null, nameof(nodeId) + " != null");
 
-            //Check if the node has configuration in the config file
-            if (nodeConfig == null)
-                return false;
-            
-            return true;
+            return GetNodeConfig(nodeId) != null ? true : false;
         }
         
         /// <summary>
@@ -486,52 +499,48 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="nodeId">The name of the node as entered at the command line</param>
         /// <returns>True if the node is existing in the connected nodes list and False otherwise</returns>
-        public override bool IsConnectedNode(string nodeId, out IRpcNode connectedNode)
+        public override bool IsConnectedNode(string nodeId)
         {
+            Debug.Assert(nodeId != null, nameof(nodeId) + " != null");
+            
             //Find the node in the list of connected nodes
-            connectedNode = GetConnectedNode(nodeId);
+            var connectedNode = GetConnectedNode(nodeId);
 
             //if the node is in the list of connected nodes then a connection has already been established to it
-            if (connectedNode != null)
-                return true;
+            return connectedNode != null ? true : false;
+        }
 
+        private bool IsSocketChannelActive(IRpcNode node)
+        {
+            if (node.SocketClient.Channel.Active) { return true; }
+            
+            _logger.Information("Channel inactive ...");
             return false;
         }
 
-        public bool IsSocketChannelActive(IRpcNode node)
+        private bool ValidatePreCommand(string nodeId)
         {
-            if (!node.SocketClient.Channel.Active)
-            {
-                _logger.Information("Channel inactive ...");
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool ValidatePreCommand(string nodeId, out IRpcNode nodeConnected)
-        {
-            nodeConnected = null;
-            
             //if the node is invalid then do not continue
             if (!IsConfiguredNode(nodeId))
             {
-                ReturnUserMessage(String.Format("The node \"{0}\" has not been configured.  Please add the node to the config file and try again.", nodeId));
+                ReturnUserMessage(NO_CONFIG_MESSAGE);
                 return false;
             }
             
             //Check if the node is already connected otherwise do not continue
             //if the node is already connected the method will return the instance
-            if (!IsConnectedNode(nodeId, out nodeConnected))
+            if (!IsConnectedNode(nodeId))
             {
-                ReturnUserMessage("Node not found.  Please connect to node first.");
+                ReturnUserMessage(NODE_NOT_CONNECTED_MESSAGE);
                 return false;
             }
+
+            var connectedNode = GetConnectedNode(nodeId);
             
             //Check if the channel is still active
-            if (!IsSocketChannelActive(nodeConnected))
+            if (!IsSocketChannelActive(connectedNode))
             {
-                ReturnUserMessage("Channel was closed by the server.  Please check the server and try again.");
+                ReturnUserMessage(CHANNEL_INACTIVE_MESSAGE);
                 return false;
             }
 
@@ -549,7 +558,11 @@ namespace Catalyst.Cli
         }
         
         /* Implementing IObserver */
-        public void OnCompleted() { }
+        public void OnCompleted()
+        {
+            //Do nothing because this method should include logic to do after the observer
+            //receives a message and handles it.
+        }
         public void OnError(Exception error) { _logger.Error($"RpcClient observer received error : {error.Message}"); }
 
         public void OnNext(IChanneledMessage<Any> value)
