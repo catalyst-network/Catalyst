@@ -26,34 +26,36 @@ using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.Node.Common
 {
-    public class Peer : IDisposable
+    public class Peer : IDisposable, IPeer
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
- 
-        private int Reputation { get; set; }
-        private DateTime LastSeen { get; set; }
-        public IPEndPoint EndPoint { get; set; }
-        private IPeerIdentifier PeerIdentifier { get; }
-        public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
-        private TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
+
+        public int Reputation { get; set; }
+        public DateTime LastSeen { get; set; }
+        public IPeerIdentifier PeerIdentifier { get; set; }
+        public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
+        public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
         public void Dispose() { Dispose(true); }
+        
+        /// <summary>
+        /// </summary>
+        public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
         /// <summary>
         /// </summary>
-        internal void Touch() { LastSeen = DateTimeUtil.UtcNow; }
-
-        /// <summary>
-        /// </summary>
-        public void IncreaseReputation() { Reputation++; }
-
-        /// <summary>
-        /// </summary>
-        public void DecreaseReputation()
+        public void IncreaseReputation(int mer = 1)
         {
-            Reputation--;
+            Reputation += mer;
+        }
+
+        /// <summary>
+        /// </summary>
+        public void DecreaseReputation(int mer = 1)
+        {
+            Reputation += mer;
         }
 
         protected virtual void Dispose(bool disposing)

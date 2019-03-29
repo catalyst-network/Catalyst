@@ -20,10 +20,27 @@
 #endregion
 
 using System;
-using Ipfs.CoreApi;
-using PeerTalk;
 
-namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
+namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IIpfsDfs : IDfs, ICoreApi, IService, IDisposable { }   
+    public interface IPeer
+    {
+        int Reputation { get; }
+        DateTime LastSeen { get; }
+        IPeerIdentifier PeerIdentifier { get; }
+        bool IsAwolPeer { get; }
+        TimeSpan InactiveFor { get; }
+
+        /// <summary>
+        /// </summary>
+        void Touch();
+
+        /// <summary>
+        /// </summary>
+        void IncreaseReputation(int mer = 1);
+
+        /// <summary>
+        /// </summary>
+        void DecreaseReputation(int mer = 1);
+    }
 }

@@ -34,14 +34,6 @@
       ]
     },
     {
-      "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.Interfaces.IPeerDiscovery, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
       "type": "Catalyst.Node.Core.P2P.Messaging.P2PMessaging",
       "services": [
         {
@@ -74,6 +66,22 @@
       ]
     },
     {
+      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
+      "services": [
+        {
+          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.Repository"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Common.Peer, Catalyst.Node.Common",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.IPeer, Catalyst.Node.Common"
+        }
+      ]
+    },
+    {
       "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
       "services": [
         {
@@ -82,7 +90,7 @@
       ]
     },
     {
-      "type": "Catalyst.Node.Common.Helpers.Network.Dns, Catalyst.Node.Common",
+      "type": "Catalyst.Node.Common.Helpers.Network.DevDns, Catalyst.Node.Common",
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.IDns, Catalyst.Node.Common"
@@ -95,25 +103,13 @@
         {
           "type": "DnsClient.ILookupClient, DnsClient"
         }
-      ],
-      "parameters": {
-        "ipAddress": "127.0.0.1",
-        "port": 5053
-      }
+      ]
     },
     {
       "type": "Catalyst.Node.Core.P2P.P2PService",
       "services": [
         {
           "type": "Catalyst.Node.Common.Interfaces.IP2P, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Core.P2P.Peer, Catalyst.Node.Core]], SharpRepository.InMemoryRepository",
-      "services": [
-        {
-          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.P2P.Peer, Catalyst.Node.Core]], SharpRepository.Repository"
         }
       ]
     },

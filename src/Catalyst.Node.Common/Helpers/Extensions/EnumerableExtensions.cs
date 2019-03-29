@@ -20,10 +20,19 @@
 #endregion
 
 using System;
-using Ipfs.CoreApi;
-using PeerTalk;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
+namespace Catalyst.Node.Common.Helpers.Extensions
 {
-    public interface IIpfsDfs : IDfs, ICoreApi, IService, IDisposable { }   
+    public static class EnumerableExtension
+    {
+        private static Random rng = new Random();
+
+        public static T RandomElement<T>(this IEnumerable<T> list)
+        {
+            var enumerable = list as T[] ?? list.ToArray();
+            return enumerable[rng.Next(enumerable.Length)];
+        }
+    }
 }

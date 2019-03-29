@@ -20,10 +20,33 @@
 #endregion
 
 using System;
-using Ipfs.CoreApi;
-using PeerTalk;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Node.Common.Helpers.Extensions;
+using FluentAssertions;
+using Xunit;
 
-namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
+namespace Catalyst.Node.Common.UnitTests.Helpers.Extensions
 {
-    public interface IIpfsDfs : IDfs, ICoreApi, IService, IDisposable { }   
+    public static class EnumerableExtensionTests
+    {
+        [Fact]
+        public static void GetARandomElement()
+        {
+            var randomList = new List<string>();
+            var checkElementList = new List<string>();
+
+            for (int i = 0; i < 50; i++)
+            {
+                randomList.Add(Guid.NewGuid().ToString());
+            }
+            
+            for (int i = 0; i < 5; i++)
+            {
+                checkElementList.Add(randomList.RandomElement());
+            }
+
+            checkElementList.Distinct().Count().Should().BeGreaterThan(1);
+        }
+    }
 }

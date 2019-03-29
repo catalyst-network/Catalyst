@@ -19,49 +19,104 @@
 */
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common;
+using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using DnsClient.Protocol;
+using Microsoft.Extensions.Configuration;
+using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P
 {
     public class PeerDiscovery : IPeerDiscovery
     {
-        private readonly IDns _dns;
-
-        private readonly IRepository<Peer> _peerRepository;
+        public IDns Dns { get; }
+        public ILogger Logger { get; }
+        public IList<string> SeedNodes { get; }
+        public IList<IPEndPoint> Peers { get; }
+        public IRepository<Peer> PeerRepository { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="dns"></param>
         /// <param name="repository"></param>
-        public PeerDiscovery(IDns dns, IRepository<Peer> repository)
+        /// <param name="rootSection"></param>
+        /// <param name="logger"></param>
+        public PeerDiscovery(IDns dns, IRepository<Peer> repository, IConfigurationRoot rootSection, ILogger logger)
         {
-            _dns = dns;
-            SeedNodes = new List<IPEndPoint>();
-            _peerRepository = repository;
+            Dns = dns;
+            Logger = logger;
+            PeerRepository = repository;
+            SeedNodes = new List<string>();
+            Peers = new List<IPEndPoint>();
+
+            ParseDnsServersFromConfig(rootSection);
+            
+            var longRunningTasks = new [] {PeerCrawler()};
+            Task.WaitAll(longRunningTasks);
         }
 
-        private List<IPEndPoint> SeedNodes { get; }
-
+        public void ParseDnsServersFromConfig(IConfigurationRoot rootSection)
+        {
+            try
+            {
+                foreach (var seedNode in ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList())
+                {
+                    SeedNodes.Add(seedNode);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message);
+                throw;
+            }
+            
+        }
+        
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        internal async Task GetSeedNodes(List<string> seedServers)
+        public async Task GetSeedNodesFromDns(IList<string> seedServers)
         {
-            var dnsQueryAnswers = await _dns.GetTxtRecords(seedServers);
-            foreach (var dnsQueryAnswer in dnsQueryAnswers)
+            foreach (var seedServer in seedServers)
             {
+                var dnsQueryAnswer = await Dns.GetTxtRecords(seedServer).ConfigureAwait(false);
+
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
                 if (answerSection != null)
                 {
-                    SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
+                    foreach (var seedNode in answerSection.EscapedText)
+                    {
+                        var pingResponse = true;
+                        if (pingResponse == true)// pointless but place holder until we have a ping system
+                        {
+                            Peers.Add(EndpointBuilder.BuildNewEndPoint(seedNode));                            
+                        }
+                    }
                 }
+            }
+        }
+
+        private async Task PeerCrawler()
+        {
+            if (Peers.Count == 0)
+            {
+                try
+                {
+                    await GetSeedNodesFromDns(SeedNodes).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e.Message);
+                    throw;
+                }                
             }
         }
     }

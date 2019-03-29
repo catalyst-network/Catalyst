@@ -19,11 +19,17 @@
 */
 #endregion
 
-using System;
-using Ipfs.CoreApi;
-using PeerTalk;
+using Catalyst.Node.Common.Helpers.Config;
+using DnsClient;
+using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
+namespace Catalyst.Node.Common.Helpers.Network
 {
-    public interface IIpfsDfs : IDfs, ICoreApi, IService, IDisposable { }   
+    public class InjectableLookupClient : LookupClient
+    {
+        public InjectableLookupClient(IConfigurationRoot configurationRoot) : base 
+        (
+            ConfigValueParser.GetIpEndpointArrValues(configurationRoot, "DnsServers")
+        ) { }
+    }
 }
