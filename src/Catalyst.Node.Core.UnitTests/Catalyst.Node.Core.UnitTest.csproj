@@ -17,10 +17,6 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP.UnitTests\RLPTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\Util\" />
-    <Folder Include="Modules\Dfs\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="Config\Modules\mempool.inmemory.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

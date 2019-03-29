@@ -7,9 +7,6 @@
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\Util\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
   </ItemGroup>
 </Project>

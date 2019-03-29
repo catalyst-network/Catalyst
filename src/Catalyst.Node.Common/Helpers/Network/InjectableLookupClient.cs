@@ -17,23 +17,17 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.Config;
+using DnsClient;
 using Microsoft.Extensions.Configuration;
-using Serilog;
-using SharpRepository.Repository;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Helpers.Network
 {
-    public interface IPeerDiscovery
+    public class InjectableLookupClient : LookupClient
     {
-        IDns Dns { get; }
-        ILogger Logger { get; }
-        IList<string> SeedNodes { get; }
-        IList<IPEndPoint> Peers { get; }
-        IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(IList<string> seedServers);
-        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        public InjectableLookupClient(IConfigurationRoot configurationRoot) : base 
+        (
+            ConfigValueParser.GetIpEndpointArrValues(configurationRoot, "DnsServers")
+        ) { }
     }
 }
