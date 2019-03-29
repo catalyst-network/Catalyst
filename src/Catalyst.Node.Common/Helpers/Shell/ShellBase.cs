@@ -304,10 +304,5 @@ namespace Catalyst.Node.Common.Helpers.Shell
             Console.WriteLine($@"error: command not found ${args}");
             return true;
         }
-
-        protected static void ReturnUserMessage(string message)
-        {
-            Console.WriteLine(message);
-        }
     }
 }

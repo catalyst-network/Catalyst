@@ -491,7 +491,7 @@ namespace Catalyst.Cli
         {
             Debug.Assert(nodeId != null, nameof(nodeId) + " != null");
 
-            return GetNodeConfig(nodeId) != null ? true : false;
+            return (GetNodeConfig(nodeId) != null);
         }
         
         /// <summary>
@@ -502,12 +502,9 @@ namespace Catalyst.Cli
         public override bool IsConnectedNode(string nodeId)
         {
             Debug.Assert(nodeId != null, nameof(nodeId) + " != null");
-            
-            //Find the node in the list of connected nodes
-            var connectedNode = GetConnectedNode(nodeId);
 
             //if the node is in the list of connected nodes then a connection has already been established to it
-            return connectedNode != null ? true : false;
+            return (GetConnectedNode(nodeId) != null);
         }
 
         private bool IsSocketChannelActive(IRpcNode node)
@@ -555,6 +552,11 @@ namespace Catalyst.Cli
         public override IRpcNodeConfig GetNodeConfig(string nodeId)
         {
             return _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
+        }
+        
+        private void ReturnUserMessage(string message)
+        {
+            _logger.Information(message);
         }
         
         /* Implementing IObserver */

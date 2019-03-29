@@ -60,7 +60,6 @@ namespace Catalyst.Node.Core.RPC
 
         public override void ExceptionCaught(IChannelHandlerContext contex, Exception e)
         {
-            Console.WriteLine(@"{0}", e.StackTrace);
             contex.CloseAsync();
         }
 
