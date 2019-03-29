@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Catalyst.Node.Common.Helpers.Extensions
 {
@@ -26,9 +27,10 @@ namespace Catalyst.Node.Common.Helpers.Extensions
     {
         private static Random rng = new Random();
 
-        public static T RandomElement<T>(this List<T> list)
+        public static T RandomElement<T>(this IEnumerable<T> list)
         {
-            return list[rng.Next(list.Count)];
+            var enumerable = list as T[] ?? list.ToArray();
+            return enumerable[rng.Next(enumerable.Length)];
         }
     }
 }

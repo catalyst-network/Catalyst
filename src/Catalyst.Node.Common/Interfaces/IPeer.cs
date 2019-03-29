@@ -26,8 +26,7 @@ namespace Catalyst.Node.Common.Interfaces
     {
         int Reputation { get; set; }
         DateTime LastSeen { get; set; }
-        IPEndPoint EndPoint { get; set; }
-        IPeerIdentifier PeerIdentifier { get; }
+        IPeerIdentifier PeerIdentifier { get; set; }
         bool IsAwolBot { get; }
         TimeSpan InactiveFor { get; }
 

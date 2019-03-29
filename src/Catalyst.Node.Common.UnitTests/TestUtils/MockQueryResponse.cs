@@ -36,7 +36,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         /// <param name="seed"></param>
         /// <param name="value"></param>
         /// <param name="lookupClient"></param>
-        public static void CreateFakeLookupResult(string domainName, string seed, string value, ILookupClient lookupClient)
+        public static void CreateFakeLookupResult(string domainName, string value, ILookupClient lookupClient)
         {
             var queryResponse = Substitute.For<IDnsQueryResponse>();
             var answers = DevDnsQueryResponse.BuildDnsResourceRecords(domainName, value);

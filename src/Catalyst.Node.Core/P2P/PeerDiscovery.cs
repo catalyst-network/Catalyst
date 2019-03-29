@@ -23,6 +23,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common;
+using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using DnsClient.Protocol;
@@ -36,8 +37,8 @@ namespace Catalyst.Node.Core.P2P
     {
         public IDns Dns { get; }
         public ILogger Logger { get; }
-        public List<string> SeedNodes { get; }
-        public List<IPEndPoint> Peers { get; }
+        public IList<string> SeedNodes { get; }
+        public IList<IPEndPoint> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
 
         /// <summary>
@@ -64,11 +65,7 @@ namespace Catalyst.Node.Core.P2P
         {
             try
             {
-                foreach (var seedNode in rootSection.GetSection("CatalystNodeConfiguration")
-                   .GetSection("Peer")
-                   .GetSection("SeedServers")
-                   .GetChildren()
-                   .Select(p => p.Value).ToList())
+                foreach (var seedNode in ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList())
                 {
                     SeedNodes.Add(seedNode);
                 }
@@ -84,7 +81,7 @@ namespace Catalyst.Node.Core.P2P
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        public async Task GetSeedNodesFromDns(List<string> seedServers)
+        public async Task GetSeedNodesFromDns(IList<string> seedServers)
         {
             foreach (var seedServer in seedServers)
             {
@@ -101,11 +98,6 @@ namespace Catalyst.Node.Core.P2P
                             Peers.Add(EndpointBuilder.BuildNewEndPoint(seedNode));                            
                         }
                     }
-                }
-
-                if (Peers.Count == 0)
-                {
-                    throw new Exception("No peers to start discovery");
                 }
             }
         }

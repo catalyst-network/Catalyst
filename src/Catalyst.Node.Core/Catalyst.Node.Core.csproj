@@ -36,7 +36,6 @@
     <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Catalyst.Node.Common.UnitTests\Catalyst.Node.Common.UnitTests.csproj" />
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
   </ItemGroup>
   <ItemGroup>

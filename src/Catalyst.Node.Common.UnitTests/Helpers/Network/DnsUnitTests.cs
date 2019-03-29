@@ -51,13 +51,13 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
         public async Task Dns_GetTxtRecords_from_list_should_return_IDnsQueryResponse_for_valid_list_of_strings_param()
         {
             var urlList = new List<string>();
-            var domain1 = "seed1.network.atlascity.io";
-            var domain2 = "seed2.network.atlascity.io";
+            var domain1 = "seed1.catalystnetwork.io";
+            var domain2 = "seed2.catalystnetwork.io";
             urlList.Add(domain1);
             urlList.Add(domain2);
 
-            MockQueryResponse.CreateFakeLookupResult(domain1, "seed1", "value1", _lookupClient);
-            MockQueryResponse.CreateFakeLookupResult(domain2, "seed2", "value2", _lookupClient);
+            MockQueryResponse.CreateFakeLookupResult(domain1, "value1", _lookupClient);
+            MockQueryResponse.CreateFakeLookupResult(domain2, "value2", _lookupClient);
 
             var responses = await _dns.GetTxtRecords(urlList);
 
@@ -71,14 +71,14 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
             Dns_GetTxtRecords_from_list_should_return_IDnsQueryResponse_for_valid_list_of_strings_param_even_when_one_lookup_is_null()
         {
             var urlList = new List<string>();
-            var domain1 = "seed1.network.atlascity.io";
-            var domain2 = "seed2.network.atlascity.io";
+            var domain1 = "seed1.catalystnetwork.io";
+            var domain2 = "seed2.catalystnetwork.io";
             urlList.Add(domain1);
             urlList.Add(domain2);
             var queryResponse1 = Substitute.For<IDnsQueryResponse>();
             var queryResponse2 = Substitute.For<IDnsQueryResponse>();
 
-            MockQueryResponse.CreateFakeLookupResult(domain1, "seed1", "value1", _lookupClient);
+            MockQueryResponse.CreateFakeLookupResult(domain1, "value1", _lookupClient);
 
             _lookupClient.QueryAsync(Arg.Is(domain2), Arg.Any<QueryType>())
                .Throws(new InvalidOperationException("failed"));
@@ -93,18 +93,17 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
         [Fact]
         public async Task Dns_GetTxtRecords_should_return_IDnsQueryResponse_from_lookup_client()
         {
-            var seed = "hoy";
             var value = "hey";
             var domainName = "domain.com";
 
-            MockQueryResponse.CreateFakeLookupResult(domainName, seed, value, _lookupClient);
+            MockQueryResponse.CreateFakeLookupResult(domainName, value, _lookupClient);
 
             var txtRecords = await _dns.GetTxtRecords(domainName);
 
             txtRecords.Should().BeAssignableTo<IDnsQueryResponse>();
             txtRecords.Answers.Count.Should().Be(1);
             txtRecords.Answers.First().DomainName.Value.Should().Be($"{domainName}.");
-            ((TxtRecord) txtRecords.Answers.First()).EscapedText.Should().BeEquivalentTo(seed);
+            ((TxtRecord) txtRecords.Answers.First()).EscapedText.Should().BeEquivalentTo(value);
             ((TxtRecord) txtRecords.Answers.First()).Text.Should().BeEquivalentTo(value);
         }
 

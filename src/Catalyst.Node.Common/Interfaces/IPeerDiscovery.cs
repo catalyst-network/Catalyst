@@ -30,10 +30,10 @@ namespace Catalyst.Node.Common.Interfaces
     {
         IDns Dns { get; }
         ILogger Logger { get; }
-        List<string> SeedNodes { get; }
-        List<IPEndPoint> Peers { get; }
+        IList<string> SeedNodes { get; }
+        IList<IPEndPoint> Peers { get; }
         IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(List<string> seedServers);
+        Task GetSeedNodesFromDns(IList<string> seedServers);
         void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
     }
 }

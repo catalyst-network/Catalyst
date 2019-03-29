@@ -33,8 +33,7 @@ namespace Catalyst.Node.Common
 
         public int Reputation { get; set; }
         public DateTime LastSeen { get; set; }
-        public IPEndPoint EndPoint { get; set; }
-        public IPeerIdentifier PeerIdentifier { get; }
+        public IPeerIdentifier PeerIdentifier { get; set; }
         public bool IsAwolBot => InactiveFor > TimeSpan.FromMinutes(30);
         public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
