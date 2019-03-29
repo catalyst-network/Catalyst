@@ -1,21 +1,23 @@
-﻿/*
- * Copyright (c) 2019 Catalyst Network
- *
- * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
- *
- * Catalyst.Node is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- * 
- * Catalyst.Node is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+#region LICENSE
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+* 
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+#endregion
 
 using System;
 using System.IO;
@@ -33,7 +35,7 @@ namespace Catalyst.Node.Common.UnitTests
     public class LicenseHeaderTests : FileSystemBasedTest
     {
         public LicenseHeaderTests(ITestOutputHelper output) : base(output) { }
-        private const string LicenseHeaderFileName = "LicenseHeader.txt";
+        private const string LicenseHeaderFileName = "COPYING";
 
         [Fact]
         public static async Task All_Cs_Files_Should_Have_License_Header()
@@ -47,16 +49,15 @@ namespace Catalyst.Node.Common.UnitTests
             sourcePath.Should().NotBeNull();
             var sourceDirectory = new DirectoryInfo(sourcePath);
 
-            var licenseText = await File.ReadAllTextAsync(Path.Combine(Environment.CurrentDirectory, LicenseHeaderFileName));
-            licenseText.Should().StartWith(@"/*");
-
+            var copyingText = await File.ReadAllTextAsync(Path.Combine(sourceDirectory.Parent?.FullName, LicenseHeaderFileName));
+            copyingText.Should().StartWith(@"#region LICENSE");
 
             var getWrongFiles = sourceDirectory.EnumerateFiles("*.cs", SearchOption.AllDirectories)
                .Select(async f =>
                 {
                     if (f.Name.EndsWith("AssemblyInfo.cs")) { return null;}
                     var allText = await File.ReadAllTextAsync(f.FullName);
-                    return allText.StartsWith(licenseText) ? null : f.FullName;
+                    return allText.StartsWith(copyingText) ? null : f.FullName;
                 }).ToArray();
 
             var files = (await Task.WhenAll(getWrongFiles)).Where(f => f != null).ToArray();
