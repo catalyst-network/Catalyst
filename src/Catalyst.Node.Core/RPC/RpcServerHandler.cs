@@ -12,17 +12,16 @@ namespace Catalyst.Node.Core.RPC
     {
         public override void ChannelActive(IChannelHandlerContext contex)
         {
-            contex.WriteAsync(string.Format("Welcome to {0} !\r\n", Dns.GetHostName()));
-            contex.WriteAndFlushAsync(string.Format("It is {0} now !\r\n", DateTime.Now));
+            contex.WriteAsync($"Welcome to {Dns.GetHostName()} !\r\n");
+            contex.WriteAndFlushAsync($"It is {DateTime.Now} now !\r\n");
         }
 
         protected override void ChannelRead0(IChannelHandlerContext context, object message)
         {
             // Generate and write a response.
             string response;
-            string msg;
-            bool close = false;
-            msg = message as string;
+            var close = false;
+            var msg = message as string;
 
             if (!string.IsNullOrEmpty(msg))
             {
@@ -61,7 +60,7 @@ namespace Catalyst.Node.Core.RPC
 
         public override void ExceptionCaught(IChannelHandlerContext contex, Exception e)
         {
-            Console.WriteLine("{0}", e.StackTrace);
+            Console.WriteLine(@"{0}", e.StackTrace);
             contex.CloseAsync();
         }
 

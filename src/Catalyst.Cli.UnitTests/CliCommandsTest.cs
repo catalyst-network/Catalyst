@@ -177,8 +177,8 @@ namespace Catalyst.Cli.UnitTests
             {
                 _shell = container.Resolve<ICatalystCli>();
 
-                IRpcNode nodeConencted;
-                if (!_shell.Ads.IsConnectedNode("node1", out nodeConencted))
+                
+                if (!_shell.Ads.IsConnectedNode("node1"))
                 {
                     var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
                     hasConnected.Should().BeTrue();
@@ -225,10 +225,8 @@ namespace Catalyst.Cli.UnitTests
             using (var scope = container.BeginLifetimeScope(_currentTestName))
             {
                 _shell = container.Resolve<ICatalystCli>();
-
-                IRpcNode nodeConencted;
                 
-                if (!_shell.Ads.IsConnectedNode("node1", out nodeConencted))
+                if (!_shell.Ads.IsConnectedNode("node1"))
                 {
                     var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
                     hasConnected.Should().BeTrue();

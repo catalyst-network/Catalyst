@@ -64,7 +64,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         public abstract bool OnStopWork(string[] args);
 
-        public abstract bool IsConnectedNode(string nodeId, out IRpcNode connectedNode);
+        public abstract bool IsConnectedNode(string nodeId);
         
         public abstract IRpcNode GetConnectedNode(string nodeId);
         
