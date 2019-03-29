@@ -48,11 +48,11 @@ namespace Catalyst.Node.Common.Helpers.Network
             return responses.Where(c => c != null).ToList();
         }
 
-        public async Task<IDnsQueryResponse> GetTxtRecords(string hostname = null)
+        public async Task<IDnsQueryResponse> GetTxtRecords(string hostname = "seed1.catalystnetwork.io")
         {
             var devDnsQueryResponse = new DevDnsQueryResponse
             {
-                Answers = DevDnsQueryResponse.BuildDnsResourceRecords("seed1.catalystnetwork.io", "192.0.0.2:42069")
+                Answers = DevDnsQueryResponse.BuildDnsResourceRecords(hostname, _dnsQueryAnswerValues.FirstOrDefault()?.ToString())
             };
             return await Task.FromResult<IDnsQueryResponse>(devDnsQueryResponse).ConfigureAwait(false);
         }   
