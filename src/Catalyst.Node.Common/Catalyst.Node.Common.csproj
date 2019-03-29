@@ -190,7 +190,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\Enumerator" />
-    <Folder Include="Helpers\Events" />
     <Folder Include="Helpers\FileSystem" />
     <Folder Include="Helpers\Hex\HexConverters\Extensions\" />
     <Folder Include="Helpers\Hex\HexTypes\" />
