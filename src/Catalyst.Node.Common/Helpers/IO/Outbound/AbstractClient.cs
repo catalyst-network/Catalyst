@@ -36,11 +36,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient 
         where TChannel : IChannel, new()
     {
-        protected static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        
+        private ILogger Logger { get; }
+    
         public IBootstrap Client { get; set; }
-        
-        protected AbstractClient(ILogger logger) : base(logger) {}
+
+        protected AbstractClient(ILogger logger) : base(logger) { Logger = logger; }
 
         public virtual ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {   
