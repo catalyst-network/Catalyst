@@ -20,20 +20,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using DnsClient;
+using DnsClient.Protocol;
 
 namespace Catalyst.Node.Common.Helpers.Network
 {
-    //Allow passing in the ipAddress as a string in DI config files.
-    public class InjectableLookupClient : LookupClient
-    {
-        public InjectableLookupClient(string ipAddress, int port)
-            : base(IPAddress.Parse(ipAddress), port) { }
-    }
 
     public sealed class Dns : IDns
     {
@@ -41,7 +35,6 @@ namespace Catalyst.Node.Common.Helpers.Network
 
         /// <summary>
         /// </summary>
-        /// <param name="dnsServer"></param>
         /// <param name="client"></param>
         public Dns(ILookupClient client)
         {

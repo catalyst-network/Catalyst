@@ -17,23 +17,20 @@
  * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using SharpRepository.Repository;
+using System.Linq;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Helpers.Extensions
 {
-    public interface IPeerDiscovery
+    public static class EnumerableExtension
     {
-        IDns Dns { get; }
-        ILogger Logger { get; }
-        IList<string> SeedNodes { get; }
-        IList<IPEndPoint> Peers { get; }
-        IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(IList<string> seedServers);
-        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        private static Random rng = new Random();
+
+        public static T RandomElement<T>(this IEnumerable<T> list)
+        {
+            var enumerable = list as T[] ?? list.ToArray();
+            return enumerable[rng.Next(enumerable.Length)];
+        }
     }
 }
