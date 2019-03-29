@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,13 +19,20 @@
 */
 #endregion
 
+using System;
 using Catalyst.Protocol.Common;
+using SharpRepository.Repository;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.P2P;
+using Catalyst.Protocol.IPPN;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
-    public interface IPeerIdentifier
+    public interface IPendingRequestCache : IDisposable
     {
-        byte[] Id { get; }
-        PeerId PeerId { get; }
+        IRepository<PendingRequest> ResponseStore { get; }
+        Task<bool> TryMatchResponseAsync(PingResponse response, IPeerIdentifier responderId);
+        IObservable<IPeerReputationChange> PeerRatingChanges { get; }
     }
 }

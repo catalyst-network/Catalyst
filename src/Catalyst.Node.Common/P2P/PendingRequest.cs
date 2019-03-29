@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,13 +19,16 @@
 */
 #endregion
 
-using Catalyst.Protocol.Common;
+using Google.Protobuf;
+using System;
+using Catalyst.Node.Common.Interfaces;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.P2P
 {
-    public interface IPeerIdentifier
+    public class PendingRequest
     {
-        byte[] Id { get; }
-        PeerId PeerId { get; }
+        public IPeerIdentifier TargetNodeId { get; set; }
+        public ByteString RequestContent { get; set; }
+        public DateTimeOffset SentDateTimeOffset { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,13 +19,13 @@
 */
 #endregion
 
-using Catalyst.Protocol.Common;
+using Catalyst.Node.Common.Interfaces.P2P;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Messaging
 {
-    public interface IPeerIdentifier
+    public interface IPeerReputationChange
     {
-        byte[] Id { get; }
-        PeerId PeerId { get; }
+        IPeerIdentifier PeerIdentifier { get; }
+        int ReputationChange { get; }
     }
 }

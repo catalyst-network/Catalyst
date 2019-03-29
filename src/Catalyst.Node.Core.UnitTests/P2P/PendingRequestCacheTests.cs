@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,13 +19,31 @@
 */
 #endregion
 
-using Catalyst.Protocol.Common;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.P2P;
+using Catalyst.Node.Core.P2P;
+using NSubstitute;
+using SharpRepository.Repository;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Core.UnitTest.P2P
 {
-    public interface IPeerIdentifier
+    public class PendingRequestCacheTests
     {
-        byte[] Id { get; }
-        PeerId PeerId { get; }
+        private readonly IRepository<PendingRequest> _responseStore;
+
+        public PendingRequestCacheTests()
+        {
+            _responseStore = Substitute.For<IRepository<PendingRequest>>();
+            //_peerIds = new Common.Peer();
+            
+        }
+
+        public async Task TryMatchResponseAsync_should_match_existing_records()
+        {
+
+        }
     }
 }
