@@ -1,0 +1,8 @@
+@startuml
+class ConfigFileBasedTest {
+    # ConfigFileBasedTest(output:ITestOutputHelper)
+    # <<virtual>> ConfigureContainerBuilder(config:IConfigurationRoot) : void
+}
+FileSystemBasedTest <|-- ConfigFileBasedTest
+ConfigFileBasedTest --> "ContainerBuilder" ContainerBuilder
+@enduml

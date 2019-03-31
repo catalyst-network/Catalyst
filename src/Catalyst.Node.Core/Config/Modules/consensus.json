@@ -1,0 +1,13 @@
+﻿{
+  "defaultAssembly": "Catalyst.Node.Core",
+  "components": [
+    {
+      "type": "Catalyst.Node.Core.Modules.Consensus.Consensus",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.Modules.Consensus.IConsensus, Catalyst.Node.Common"
+        }
+      ]
+    }
+  ]
+}

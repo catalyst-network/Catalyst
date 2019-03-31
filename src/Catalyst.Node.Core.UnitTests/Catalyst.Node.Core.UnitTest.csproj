@@ -1,23 +1,33 @@
 ﻿<Project>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.6.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    <PackageReference Include="NSubstitute" Version="4.0.0" />
-    <PackageReference Include="xunit.core" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
-    <PackageReference Include="xunit.assert" Version="2.4.1" />
+    <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
     <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Node.Common.UnitTests\Catalyst.Node.Common.UnitTests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP.UnitTests\RLPTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\Util\" />
+    <None Update="Config\Modules\mempool.inmemory.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Config\Modules\mempool.xml.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
   </ItemGroup>
 </Project>

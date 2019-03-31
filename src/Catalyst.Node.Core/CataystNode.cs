@@ -1,213 +1,154 @@
+#region LICENSE
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+* 
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+#endregion
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common;
-using Catalyst.Node.Common.Modules;
+using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Modules.Consensus;
+using Catalyst.Node.Common.Interfaces.Modules.Contract;
+using Catalyst.Node.Common.Interfaces.Modules.Dfs;
+using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Node.Common.Interfaces.Modules.Ledger;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
-using Catalyst.Node.Core.Helpers;
-using Catalyst.Node.Core.Helpers.Cryptography;
-using Catalyst.Node.Core.Helpers.Logger;
-using Catalyst.Node.Core.Helpers.Network;
-using Catalyst.Node.Core.Helpers.Platform;
-using Catalyst.Node.Core.Helpers.Util;
-using Catalyst.Node.Core.Helpers.Workers;
-using Catalyst.Node.Core.Modules.P2P;
-using Catalyst.Node.Core.Modules.P2P.Messages;
-using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.RPC;
+using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Transaction;
 using Dawn;
-using DnsClient.Protocol;
-using Serilog.Core;
-using Dns = Catalyst.Node.Core.Helpers.Network.Dns;
+using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Node.Core
 {
-    public class CatalystNode : IDisposable, IP2P
+    public class CatalystNode : IDisposable, ICatalystNode
     {
-        private static readonly object Mutex = new object();
+        private readonly IConsensus _consensus;
+        private readonly IContract _contract;
+        private readonly IDfs _dfs;
+        private readonly ILedger _ledger;
+        private readonly IKeySigner _keySigner;
+        private readonly ILogger _logger;
+        private readonly IMempool _mempool;
+        private readonly IP2P _p2P;
+        private readonly IRpcServer _rpcServer;
+       
+        private bool _disposed;
 
-        public readonly Kernel Kernel;
-
-        /// <summary>
-        ///     Instantiates basic CatalystSystem.
-        /// </summary>
-        private CatalystNode(Kernel kernel)
+        public CatalystNode(
+            IP2P p2P,
+            ICertificateStore certificateStore,
+            IConsensus consensus,
+            IDfs dfs,
+            ILedger ledger,
+            IKeySigner keySigner,
+            ILogger logger,
+            IRpcServer rpcServer,
+            IMempool mempool = null,
+            IContract contract = null
+            )
         {
-            Kernel = kernel;
-            SeedNodes = new List<IPEndPoint>();
-
-            var certificateStore = new CertificateStore(new Fs(), new ConsolePasswordReader(), Logger.None);
-            var foundCertificate = certificateStore
-               .TryGet(Kernel.NodeOptions.PeerSettings.PfxFileName, out X509Certificate2 certificate);
-
-            if (!foundCertificate) {
-                if(Environment.OSVersion.Platform == PlatformID.Unix)
-                    throw new UnsupportedPlatformException("Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
-                                                           $"Please create a password protected certificate at {Kernel.NodeOptions.PeerSettings.PfxFileName}." +
-                                                           Environment.NewLine +
-                                                           $"cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
-                certificateStore.CreateAndSaveSelfSignedCertificate(Kernel.NodeOptions.PeerSettings.PfxFileName);
-            }
-            
-            PeerManager = new PeerManager(certificate,
-                new PeerList(new ClientWorker()),
-                new MessageQueueManager(),
-                Kernel.NodeIdentity
-            );
-
-            Task.Run(async () =>
-                 await PeerManager.InboundConnectionListener(
-                     new IPEndPoint(Kernel.NodeOptions.PeerSettings.BindAddress,
-                         Kernel.NodeOptions.PeerSettings.Port
-                     )
-                 )
-            );
-
-            PeerManager.AnnounceNode += Announce;
+            _p2P = p2P;
+            _consensus = consensus;
+            _dfs = dfs;
+            _ledger = ledger;
+            _keySigner = keySigner;
+            _logger = logger;
+            _rpcServer = rpcServer;
+            _mempool = mempool;
+            _contract = contract;
         }
 
-        private static CatalystNode Instance { get; set; }
-        private List<IPEndPoint> SeedNodes { get; }
-        private PeerManager PeerManager { get; }
-        private bool Disposed { get; set; }
-
-        /// <summary>
-        /// </summary>
-        public void Dispose()
+        public async Task RunAsync(CancellationToken ct)
         {
-            Dispose(true);
-            Log.Message("disposing catalyst node");
-            GC.SuppressFinalize(this);
-        }
 
-        /// <summary>
-        ///     @TODO just to satisfy the DHT interface, need to implement
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        bool IP2P.Ping(IPeerIdentifier queryingNode)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        ///     @TODO just to satisfy the DHT interface, need to implement
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        bool IP2P.Store(string k, byte[] v)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="k"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        dynamic IP2P.FindValue(string k)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        ///     If a corresponding value is present on the queried node, the associated data is returned.
-        ///     Otherwise the return value is the return equivalent to FindNode()
-        /// </summary>
-        /// <param name="k"></param>
-        /// <param name="queryingNode"></param>
-        /// <param name="targetNode"></param>
-        /// <returns></returns>
-        List<IPeerIdentifier> IP2P.FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
-        {
-            // @TODO just to satisfy the DHT interface, need to implement
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        List<IPeerIdentifier> IP2P.GetPeers(IPeerIdentifier queryingNode)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="queryingNode"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        List<IPeerIdentifier> IP2P.PeerExchange(IPeerIdentifier queryingNode)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="seedServers"></param>
-        internal void GetSeedNodes(List<string> seedServers)
-        {
-            var dnsQueryAnswers = Dns.GetTxtRecords(seedServers);
-            foreach (var dnsQueryAnswer in dnsQueryAnswers)
+            await _dfs.StartAsync(ct);
+            _logger.Information("Starting the Catalyst Node");
+            bool exit = false;
+            do
             {
-                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                if (answerSection != null)
-                    SeedNodes.Add(EndpointBuilder.BuildNewEndPoint(answerSection.EscapedText.FirstOrDefault()));
-            }
-        }
+                _logger.Information("Creating a Transaction message");
+                _logger.Information("Please type in a pubkey for the transaction signature");
+                var pubkey = Console.ReadLine();
 
+                _logger.Information("Please type in a transaction version");
+                if (!uint.TryParse(Console.ReadLine(), out var version))
+                {
+                    version = 1;
+                }
+                var tx = new Transaction { Version = version, Signature = new TransactionSignature { SchnorrSignature = ByteString.CopyFromUtf8(pubkey) } };
+
+                await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
+                await Task.Delay(300, ct); //just to get the next message at the bottom
+
+                _logger.Information("Creating a Ping message");
+                _logger.Information("Please type in a ping message content");
+                var ping = new PeerProtocol.Types.PingRequest { CorrelationId = Console.ReadLine().ToUtf8ByteString() };
+
+                await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
+                await Task.Delay(300, ct); //just to get the exit message at the bottom
+
+                _logger.Information("Type 'exit' to exit, anything else to continue");
+                exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
+
+            } while (!ct.IsCancellationRequested && !exit);
+
+            _logger.Information("Stopping the Catalyst Node");
+        }
+        
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Announce(object sender, AnnounceNodeEventArgs e)
+        private void Announce(object sender, AnnounceNodeEventArgs e)
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(e, nameof(e)).NotNull();
-            var client = new TcpClient(Kernel.NodeOptions.PeerSettings.AnnounceServer.Address.ToString(),
-                Kernel.NodeOptions.PeerSettings.AnnounceServer.Port);
+            var client = new TcpClient(_p2P.Settings.AnnounceServer.Address.ToString(),
+                _p2P.Settings.AnnounceServer.Port);
             var nwStream = client.GetStream();
             var network = new byte[1];
             network[0] = 0x01;
-            Log.ByteArr(network);
-            var announcePackage = ByteUtil.Merge(network, Kernel.NodeIdentity.Id);
-            Log.ByteArr(announcePackage);
+            _logger.Debug(string.Join(" ", network));
+            var announcePackage = ByteUtil.Merge(network, _p2P.Identifier.Id);
+            _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
         }
 
-        /// <summary>
-        ///     Get a thread safe CatalystSystem singleton.
-        /// </summary>
-        /// <param name="kernel"></param>
-        /// <returns></returns>
-        public static CatalystNode GetInstance(Kernel kernel)
+        public void Dispose()
         {
-            Guard.Argument(kernel, nameof(kernel)).NotNull();
-            if (Instance == null)
-                lock (Mutex)
-                {
-                    if (Instance == null) Instance = new CatalystNode(kernel);
-                }
-
-            return Instance;
+            Dispose(true);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="disposing"></param>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (Disposed) return;
-
-            if (disposing) Kernel?.Dispose();
-
-            Disposed = true;
-            Log.Message("CatalystNode disposed");
+            if (disposing && !_disposed)
+            {
+                _logger.Verbose("Disposing of CatalystNode");
+                _disposed = true;
+                _logger.Verbose("CatalystNode disposed");
+            }
         }
     }
 }

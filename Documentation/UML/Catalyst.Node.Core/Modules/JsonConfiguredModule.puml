@@ -1,0 +1,8 @@
+@startuml
+class JsonConfiguredModule {
+    + JsonConfiguredModule(configFilePath:string)
+    # <<override>> Load(builder:ContainerBuilder) : void
+}
+Module <|-- JsonConfiguredModule
+JsonConfiguredModule --> "_configurationModule" ConfigurationModule
+@enduml

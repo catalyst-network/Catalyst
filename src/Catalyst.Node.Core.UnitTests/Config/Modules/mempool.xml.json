@@ -1,0 +1,24 @@
+{
+  "defaultAssembly": "Catalyst.Node.Core",
+  "components": [
+    {
+      "type": "SharpRepository.XmlRepository.XmlRepository`2[[Catalyst.Protocol.Transaction.Transaction, Catalyst.Protocol], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Protocol]], SharpRepository.XmlRepository",
+      "services": [
+        {
+          "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Protocol.Transaction.Transaction, Catalyst.Protocol], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Protocol]], SharpRepository.Repository"
+        }
+      ],
+      "parameters": {
+        "storagePath": "[@replace-this@]"
+      }
+    },
+    {
+      "type": "Catalyst.Node.Core.Modules.Mempool.Mempool",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Node.Common"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+@startuml
+class ModuleNamesTests <<static>> {
+    + {static} All_should_return_all_declared_names() : void
+}
+@enduml

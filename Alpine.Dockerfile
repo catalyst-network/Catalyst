@@ -1,11 +1,11 @@
-FROM microsoft/dotnet:2.1-sdk AS publish
+FROM microsoft/dotnet:2.2-sdk AS publish
 RUN apk update && apk add libc6-compat libnsl libnsl-dev
 WORKDIR /srv/
 COPY ./ ./
 WORKDIR /srv/src
 RUN dotnet restore
-WORKDIR Catalyst.Node
-RUN dotnet publish -c release -o out --self-contained --runtime linux-x64 --framework netcoreapp2.1
+WORKDIR ./Catalyst.Node
+RUN dotnet publish -c release -o out --self-contained --runtime linux-x64 --framework netcoreapp2.2
 
 # test application
 FROM publish AS testrunner
@@ -13,7 +13,7 @@ WORKDIR /srv/src
 ENTRYPOINT ["dotnet", "test", "--logger:trx"]
 
 # ADL runtime
-FROM microsoft/dotnet:2.1-runtime AS runtime
+FROM microsoft/dotnet:2.2-runtime AS runtime
 RUN apk update && apk add libc6-compat libnsl libnsl-dev
 WORKDIR /srv/src/Catalyst.Node
 COPY --from=publish /srv/src/Catalyst.Node/out ./

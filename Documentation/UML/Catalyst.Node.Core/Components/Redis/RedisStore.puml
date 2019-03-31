@@ -1,0 +1,16 @@
+@startuml
+class RedisStore {
+    + RedisStore(when:When)
+    + RedisStore(when:string)
+    + Connect(endPoint:IPEndPoint) : void
+    + Set(key:byte[], value:byte[], expiry:TimeSpan?) : bool
+    + Get(value:byte[]) : byte[]
+    + GetSnapshot() : IDictionary<byte[], byte[]>
+    + GetInfo() : IDictionary<string, string>
+    + Dispose() : void
+    # <<virtual>> Dispose(disposing:bool) : void
+}
+IRedisStore <|-- RedisStore
+RedisStore --> "_when" When
+RedisStore --> "_redisConnector" IRedisConnector
+@enduml

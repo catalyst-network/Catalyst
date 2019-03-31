@@ -1,0 +1,21 @@
+@startuml
+class PeerIdentifier {
+    - PeerIdentifier(id:byte[])
+    + PeerIdentifier(settings:IPeerSettings)
+    + PeerIdentifier(publicKey:byte[], endPoint:IPEndPoint)
+    - {static} BuildClientIdChunk() : byte[]
+    - {static} BuildClientVersionChunk() : byte[]
+    - {static} PadVersionString(unPaddedVersion:string) : string
+    - {static} BuildClientIpChunk() : byte[]
+    - {static} BuildClientPortChunk(endPoint:IPEndPoint) : byte[]
+    - {static} ValidatePeerId(peerId:byte[]) : bool
+    - {static} ValidatePeerIdLength(peerId:byte[]) : void
+    - {static} ValidateClientId(peerId:byte[]) : void
+    - {static} ValidateClientVersion(peerId:byte[]) : void
+    - {static} ValidateClientIp(peerId:byte[]) : void
+    - {static} ValidateClientPort(peerId:byte[]) : void
+    - {static} ValidateClientPubKey(peerId:byte[]) : void
+}
+IPeerIdentifier <|-- PeerIdentifier
+PeerIdentifier o-> "Logger" ILogger
+@enduml

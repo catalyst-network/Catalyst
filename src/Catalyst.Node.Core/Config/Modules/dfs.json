@@ -1,0 +1,13 @@
+﻿{
+  "defaultAssembly": "Catalyst.Node.Core",
+  "components": [
+    {
+      "type": "Catalyst.Node.Core.Modules.Dfs.IpfsDfs",
+      "services": [
+        {
+          "type": "Catalyst.Node.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Node.Common"
+        }
+      ]
+    }
+  ]
+}

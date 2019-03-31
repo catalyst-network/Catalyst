@@ -1,23 +1,10 @@
 {
   "CatalystNodeConfiguration": {
-    "Ledger": {
-      "Persistence": "Catalyst.Helpers.CouchDB"
-    },
     "Consensus": {
       "nDepth": 100
     },
     "Contract": {
       "StorageType": "Catalyst.Helpers.Ipfs"
-    },
-    "Dfs": {
-      "StorageType": "Catalyst.Helpers.Ipfs",
-      "ConnectRetries": 10,
-      "IpfsVersionApi": "api/v0/"
-    },
-    "Mempool": {
-      "Type" : "redis",
-      "Host" : "127.0.0.1",
-      "Port" : "6379"
     },
     "Peer": {
       "Network": "devnet",
@@ -27,22 +14,72 @@
       "SslCertPassword": "test",
       "BindAddress": "127.0.0.1",
       "Port": 42069,
+      "PublicKey": "302a300506032b65700321001783421742816abf",
       "MaxConnections": 10,
       "AddressVersion": 23,
       "Magic": 4206942,
       "Announce": true,
       "AnnounceServer": "127.0.0.1:21420",
       "SeedServers": [
-        "seed1.network.atlascity.io",
-        "seed2.network.atlascity.io",
-        "seed3.network.atlascity.io",
-        "seed4.network.atlascity.io",
-        "seed5.network.atlascity.io"
+        "seed1.network.devdns.local",
+        "seed2.network.devdns.local",
+        "seed3.network.devdns.local",
+        "seed4.network.devdns.local",
+        "seed5.network.devdns.local"
       ]
     },
     "Rpc": {
       "BindAddress": "127.0.0.1",
       "Port": 42042
+    },
+    "PersistenceConfiguration": {
+      "repositories": {
+        "default": "inMemoryNoCaching",
+        "inMemory": {
+          "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository"
+        },
+        //"mongoDb": {
+        //  "factory": "SharpRepository.MongoDbRepository.MongoDbConfigRepositoryFactory, SharpRepository.MongoDbRepository",
+        //  "connectionString": "mongodb:://127.0.0.1"
+        //},
+        "inMemoryNoCaching": {
+          "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository",
+          "cachingStrategy": "none",
+          "cachingProvider": "noCachingProvider"
+        }
+      },
+      "cachingProviders": {
+        "default": "inMemoryProvider",
+        "inMemoryProvider": {
+          "factory": "SharpRepository.Repository.Caching.InMemoryConfigCachingProviderFactory, SharpRepository.Repository"
+        },
+        "noCachingProvider": {
+          "factory": "SharpRepository.Repository.Caching.NoCachingConfigCachingProviderFactory, SharpRepository.Repository"
+        }
+      },
+      "cachingStrategies": {
+        "default": "standard",
+        "standard": {
+          "factory": "SharpRepository.Repository.Caching.StandardConfigCachingStrategyFactory, SharpRepository.Repository",
+          "generational": "true",
+          "writeThrough": "false"
+        },
+        //"redisProvider": {
+        //  "factory": "SharpRepository.Caching.Redis.RedisConfigCachingProviderFactory, SharpRepository.Caching.Redis",
+        //  "host": "127.0.0.1",
+        //  "port": "6379",
+        //  "ssl": false,
+        //  "password": "",
+        //  "defaultDatabase": "0"
+        //},
+        "timeout": {
+          "factory": "SharpRepository.Repository.Caching.TimeoutConfigCachingStrategyFactory, SharpRepository.Repository",
+          "timeout": "200"
+        },
+        "none": {
+          "factory": "SharpRepository.Repository.Caching.NoCachingConfigCachingStrategyFactory, SharpRepository.Repository"
+        }
+      }
     }
   }
 }

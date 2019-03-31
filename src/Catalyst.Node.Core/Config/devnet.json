@@ -1,48 +1,98 @@
 {
   "CatalystNodeConfiguration": {
-    "Ledger": {
-      "Persistence": "Catalyst.Helpers.CouchDB"
-    },
     "Consensus": {
       "nDepth": 100
     },
     "Contract": {
       "StorageType": "Catalyst.Helpers.Ipfs"
     },
-    "Dfs": {
-      "StorageType": "Catalyst.Helpers.Ipfs",
-      "ConnectRetries": 10,
-      "IpfsVersionApi": "api/v0/"
-    },
-    "Mempool": {
-      "Type" : "redis",
-      "Host" : "127.0.0.1",
-      "Port" : "6379"
-    },
     "Peer": {
       "Network": "devnet",
       "MutualAuthentication": false,
       "AcceptInvalidCerts": false,
-      "PfxFileName": "mycert.pfx",
+      "PfxFileName": "test_certificate_01.p12",
       "SslCertPassword": "test",
       "BindAddress": "127.0.0.1",
-      "Port": 42069,
+      "Port": 42070,
+      "PublicKey": "302a300506032b65700321001783421742816abf",
       "MaxConnections": 10,
       "AddressVersion": 23,
       "Magic": 4206942,
       "Announce": true,
       "AnnounceServer": "127.0.0.1:21420",
+      "DnsServers": [
+        "127.0.0.1:5053"
+      ],
       "SeedServers": [
-        "seed1.network.atlascity.io",
-        "seed2.network.atlascity.io",
-        "seed3.network.atlascity.io",
-        "seed4.network.atlascity.io",
-        "seed5.network.atlascity.io"
+        "seed1.catalystnetwork.io",
+        "seed2.catalystnetwork.io",
+        "seed3.catalystnetwork.io",
+        "seed4.catalystnetwork.io",
+        "seed5.catalystnetwork.io"
+      ],
+      "QueryAnswerValues": [ // Only use for development
+        "192.0.2.1:42069",
+        "192.0.2.2:42069",
+        "192.0.2.3:42069",
+        "192.0.2.4:42069",
+        "192.0.2.2:42069"
       ]
     },
     "Rpc": {
       "BindAddress": "127.0.0.1",
-      "Port": 42042
+      "Port": 42042,
+      "MutualAuthentication": false,
+      "AcceptInvalidCerts": false,
+      "PfxFileName": "test_certificate_01.p12"
+    },
+    "PersistenceConfiguration": {
+      "repositories": {
+        "default": "inMemoryNoCaching",
+        "inMemory": {
+          "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository"
+        },
+        //"mongoDb": {
+        //  "factory": "SharpRepository.MongoDbRepository.MongoDbConfigRepositoryFactory, SharpRepository.MongoDbRepository",
+        //  "connectionString": "mongodb:://127.0.0.1"
+        //},
+        "inMemoryNoCaching": {
+          "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository",
+          "cachingStrategy": "none",
+          "cachingProvider": "noCachingProvider"
+        }
+      },
+      "cachingProviders": {
+        "default": "inMemoryProvider",
+        "inMemoryProvider": {
+          "factory": "SharpRepository.Repository.Caching.InMemoryConfigCachingProviderFactory, SharpRepository.Repository"
+        },
+        "noCachingProvider": {
+          "factory": "SharpRepository.Repository.Caching.NoCachingConfigCachingProviderFactory, SharpRepository.Repository"
+        }
+      },
+      "cachingStrategies": {
+        "default": "standard",
+        "standard": {
+          "factory": "SharpRepository.Repository.Caching.StandardConfigCachingStrategyFactory, SharpRepository.Repository",
+          "generational": "true",
+          "writeThrough": "false"
+        },
+        //"redisProvider": {
+        //  "factory": "SharpRepository.Caching.Redis.RedisConfigCachingProviderFactory, SharpRepository.Caching.Redis",
+        //  "host": "127.0.0.1",
+        //  "port": "6379",
+        //  "ssl": false,
+        //  "password": "",
+        //  "defaultDatabase": "0"
+        //},
+        "timeout": {
+          "factory": "SharpRepository.Repository.Caching.TimeoutConfigCachingStrategyFactory, SharpRepository.Repository",
+          "timeout": "200"
+        },
+        "none": {
+          "factory": "SharpRepository.Repository.Caching.NoCachingConfigCachingStrategyFactory, SharpRepository.Repository"
+        }
+      }
     }
   }
 }

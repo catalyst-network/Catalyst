@@ -1,0 +1,21 @@
+@startuml
+class P2PMessaging {
+    {static} P2PMessaging()
+    + P2PMessaging(settings:IPeerSettings, certificateStore:ICertificateStore, logger:ILogger)
+    - <<async>> RunP2PServerAsync() : Task
+    - <<async>> RunP2PClientAsync() : Task
+    + Stop() : void
+    + <<async>> PingAsync(targetNode:IPeerIdentifier) : Task<bool>
+    + <<async>> BroadcastMessageAsync(message:string) : Task
+    + Dispose() : void
+}
+IP2PMessaging <|-- P2PMessaging
+IDisposable <|-- P2PMessaging
+P2PMessaging --> "_settings" IPeerSettings
+P2PMessaging --> "_logger" ILogger
+P2PMessaging --> "_cancellationSource" CancellationTokenSource
+P2PMessaging --> "_certificate" X509Certificate2
+P2PMessaging --> "_socketClient" ISocketClient
+P2PMessaging --> "_socketServer" ISocketServer
+P2PMessaging --> "Identifier" IPeerIdentifier
+@enduml

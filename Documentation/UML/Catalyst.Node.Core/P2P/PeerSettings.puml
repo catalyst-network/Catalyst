@@ -1,0 +1,25 @@
+@startuml
+class PeerSettings {
+    + PeerSettings(rootSection:IConfigurationRoot)
+    + PayoutAddress : string <<get>> <<set>>
+    + PublicKey : string <<get>> <<set>>
+    + Announce : bool <<get>> <<set>>
+    + MutualAuthentication : bool <<get>> <<set>>
+    + AcceptInvalidCerts : bool <<get>> <<set>>
+    + MaxConnections : ushort <<get>> <<set>>
+    + Port : int <<get>> <<set>>
+    + Magic : int <<get>> <<set>>
+    + PfxFileName : string <<get>> <<set>>
+    + AddressVersion : byte <<get>> <<set>>
+    + SslCertPassword : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+IPeerSettings <|-- PeerSettings
+PeerSettings --> "Network" Network
+PeerSettings --> "AnnounceServer" IPEndPoint
+PeerSettings --> "EndPoint" IPEndPoint
+PeerSettings --> "BindAddress" IPAddress
+PeerSettings --> "KnownNodes<string>" "List`1"
+PeerSettings --> "SeedServers<string>" "List`1"
+@enduml
