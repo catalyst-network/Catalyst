@@ -39,8 +39,8 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
         [Fact]
         public static void ShortenedProtoFullName_should_remove_namespace_start()
         {
-            PeerProtocol.Types.PingRequest.Descriptor.FullName.Should().Be("Catalyst.Protocol.IPPN.PeerProtocol.PingRequest");
-            typeof(PeerProtocol.Types.PingRequest).ShortenedProtoFullName().Should().Be("IPPN.PeerProtocol.PingRequest");
+            PingRequest.Descriptor.FullName.Should().Be("Catalyst.Protocol.IPPN.PingRequest");
+            typeof(PingRequest).ShortenedProtoFullName().Should().Be("IPPN.PingRequest");
         }
     }
 }

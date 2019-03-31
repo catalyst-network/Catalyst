@@ -53,9 +53,9 @@ namespace Catalyst.Node.Common.UnitTests
             copyingText.Should().StartWith(@"#region LICENSE");
 
             var getWrongFiles = sourceDirectory.EnumerateFiles("*.cs", SearchOption.AllDirectories)
+               .Where(f => f.Directory?.Parent?.Parent?.Name != "obj")
                .Select(async f =>
                 {
-                    if (f.Name.EndsWith("AssemblyInfo.cs")) { return null;}
                     var allText = await File.ReadAllTextAsync(f.FullName);
                     return allText.StartsWith(copyingText) ? null : f.FullName;
                 }).ToArray();
