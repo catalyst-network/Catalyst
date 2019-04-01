@@ -39,9 +39,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             X509Certificate certificate = null)
             : base(initializationAction, 
                 handlers, 
-                (certificate == null || targetHost == null) ? null : new TlsHandler(stream =>
+                certificate == null || targetHost == null ? null : new TlsHandler(stream =>
                     new SslStream(stream, true, (sender, cert, chain, errors) => true),
-                    new ClientTlsSettings(targetHost.ToString()))) { }
+                    new ClientTlsSettings(targetHost.ToString())
+                )
+            ) { }
 
         public override string ToString()
         {

@@ -28,7 +28,7 @@ namespace Catalyst.Node.Common.Interfaces
     public interface ISocketServer : ISocket
     {
         IChannel Channel { get; set; }
-        ISocketServer Bootstrap(IChannelHandler channelInitializer);
-        Task<ISocketServer> StartServer(IPAddress listenAddress, int port);
+        // ISocketServer Bootstrap(IChannelHandler channelInitializer);
+        // Task<ISocketServer> StartServer(IPAddress listenAddress, int port);
     }
 }

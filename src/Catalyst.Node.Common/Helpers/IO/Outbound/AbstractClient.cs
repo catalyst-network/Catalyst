@@ -20,6 +20,7 @@
 #endregion
 
 using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;

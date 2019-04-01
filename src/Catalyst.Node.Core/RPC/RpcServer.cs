@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private ISocketServer _rpcSocketServer;
+        private ITcpServer _rpcSocketServer;
         private readonly AnyTypeServerHandler _anyTypeServerHandler;
         private readonly GetInfoRequestHandler _infoRequestHandler;
         public IRpcServerSettings Settings { get; }
@@ -93,6 +93,7 @@ namespace Catalyst.Node.Core.RPC
             {
                 _logger.Error(e, e.Message);
                 Dispose();
+                throw;
             }
         }
 

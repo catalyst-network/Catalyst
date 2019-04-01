@@ -35,6 +35,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         
         public abstract ISocketServer Bootstrap(IChannelHandler channelInitializer);
 
-        public abstract Task<ISocketServer> StartServer(IPAddress listenAddress, int port);
+        // public abstract Task<T> StartServer(IPAddress listenAddress, int port);
     }
 }

@@ -20,16 +20,35 @@
 #endregion
 
 using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public sealed class UdpServer : AbstractServer
+    public interface IUdpServer {
+        IBootstrap UdpListener { get; set; }
+        IChannel Channel { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channelInitializer"></param>
+        /// <returns></returns>
+        IUdpServer Bootstrap(IChannelHandler channelInitializer);
+
+        Task<IUdpServer> StartServer(IPAddress listenAddress, int port);
+        Task Shutdown();
+    }
+
+    public sealed class UdpServer : AbstractIo, IUdpServer
     {       
+        public IBootstrap UdpListener { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -41,22 +60,21 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// </summary>
         /// <param name="channelInitializer"></param>
         /// <returns></returns>
-        public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
-        { 
-            Server = new ServerBootstrap();
-            ((DotNetty.Transport.Bootstrapping.ServerBootstrap)Server)
+        public IUdpServer Bootstrap(IChannelHandler channelInitializer)
+        {
+            UdpListener = new Bootstrap();
+            ((DotNetty.Transport.Bootstrapping.Bootstrap)UdpListener)
                .Group(WorkerEventLoop)
-               //TODO : understand DotNetty inheritance schema
-               //.Channel<SocketDatagramChannel>()
+               .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer);            
             return this;
         }
         
-        public override async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
+        public async Task<IUdpServer> StartServer(IPAddress listenAddress, int port)
         {
-            Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
+            Channel = await UdpListener.BindAsync(listenAddress, port).ConfigureAwait(false);
             return this;
         }
     }

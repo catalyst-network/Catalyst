@@ -29,9 +29,17 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    
-    public sealed class TcpServer : AbstractServer
+    public interface ITcpServer {
+        ITcpServer Bootstrap(IChannelHandler channelInitializer);
+        Task<ITcpServer> StartServer(IPAddress listenAddress, int port);
+        Task Shutdown();
+        IServerBootstrap Server { get; set; }
+        IChannel Channel { get; set; }
+    }
+
+    public sealed class TcpServer : AbstractIo, ITcpServer
     {
+        public IServerBootstrap Server { get; set; }
         private readonly ILogger _logger;
         private readonly IEventLoopGroup _supervisorEventLoop;
 
@@ -45,7 +53,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }
 
-        public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
+        public ITcpServer Bootstrap(IChannelHandler channelInitializer)
         {
             Server = new ServerBootstrap();
             ((DotNetty.Transport.Bootstrapping.ServerBootstrap)Server)
@@ -57,7 +65,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             return this;
         }
         
-        public override async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
+        public async Task<ITcpServer> StartServer(IPAddress listenAddress, int port)
         {
             Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
             _logger.Information(@"TcpServerChannel {0} is bound to {1} and {2}", Channel.Id, Channel.LocalAddress, Channel.Open ? "opened" : "closed");

@@ -33,6 +33,7 @@ namespace Catalyst.Node.Common.Interfaces
         /// Identifier of the Peer behind the instance of the IP2PMessaging service
         /// </summary>
         IPeerIdentifier Identifier { get; }
+        ISocketClient _socketClient { get; set; }
 
         /// <summary>
         /// Ping the peer identified by <see cref="targetNode" /> to check its status on the network.
@@ -43,6 +44,6 @@ namespace Catalyst.Node.Common.Interfaces
 
         Task BroadcastMessageAsync(Any tx);
         Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message);
-
+        Task RunP2PClientAsync();
     }
 }

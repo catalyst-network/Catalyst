@@ -21,6 +21,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -32,7 +33,7 @@ namespace Catalyst.Node.Common.Helpers.IO
         protected const int BackLogValue = 100;
 
         private readonly ILogger _logger;
-        protected readonly IEventLoopGroup WorkerEventLoop;
+        public IEventLoopGroup WorkerEventLoop { get; set; }
 
         public IChannel Channel { get; set; }
 

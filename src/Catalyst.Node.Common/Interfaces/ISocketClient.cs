@@ -32,5 +32,6 @@ namespace Catalyst.Node.Common.Interfaces
         IBootstrap Client { get; set; }
         Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port);
         Task SendMessage(Any message);
+        void Dispose();
     }
 }

@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,8 +31,10 @@ using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging
@@ -44,8 +47,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly X509Certificate2 _certificate;
         private readonly AnyTypeClientHandler _anyTypeClientHandler;
         private readonly AnyTypeServerHandler _anyTypeServerHandler;
-        private ISocketClient _socketClient;
-        private ISocketServer _socketServer;
+        public ISocketClient _socketClient { get; set; }
+        private IUdpServer _udpServer;
 
         public IPeerIdentifier Identifier { get; }
         public IObservable<IChanneledMessage<Any>> InboundMessageStream { get; }
@@ -74,7 +77,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _anyTypeServerHandler = new AnyTypeServerHandler();
             InboundMessageStream = _anyTypeServerHandler.MessageStream;
 
-            var longRunningTasks = new [] {RunP2PServerAsync(), RunP2PClientAsync()};
+            var longRunningTasks = new [] {RunP2PServerAsync()};
             Task.WaitAll(longRunningTasks);
         }
 
@@ -93,20 +96,20 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             try
             {
-                _socketServer = await new TcpServer(_logger)
-                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(channel => { },
-                            handlers,
-                            certificate: _certificate)
+                _udpServer = await new UdpServer(_logger)
+                   .Bootstrap(new InboundChannelInitializer<IChannel>(channel => { },
+                            handlers)
                 ).StartServer(_settings.BindAddress, _settings.Port);
             }
             catch (Exception e)
             {
                 _logger.Error(e, e.Message);
                 Dispose();
+                throw;
             }
         }
 
-        private async Task RunP2PClientAsync()
+        public async Task RunP2PClientAsync()
         {
             _logger.Debug("P2P client starting");
 
@@ -119,15 +122,13 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 _anyTypeClientHandler
             };
             
-            _socketClient = await new TcpClient(_logger)
+            _socketClient = await new UdpClient(_logger)//this socket client is still here running dispose and will throw an error on subsequent runs
                .Bootstrap(
-                    new OutboundChannelInitializer<ISocketChannel>(channel => {},
+                    new OutboundChannelInitializer<IChannel>(channel => {},
                         handlers,
-                        _settings.BindAddress,
-                        _certificate
+                        _settings.BindAddress
                     )
-               )
-               .ConnectClient(
+               ).ConnectClient(
                     _settings.BindAddress,
                     _settings.Port
                );
@@ -145,7 +146,14 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public async Task BroadcastMessageAsync(Any msg)
         {
-            await _socketClient.Channel.WriteAndFlushAsync(msg);
+          
+                IByteBuffer buffer = Unpooled.WrappedBuffer(msg.ToByteArray());
+
+                await _socketClient.Channel.WriteAndFlushAsync(new DatagramPacket(buffer, new IPEndPoint(_settings.BindAddress, 42067)));
+                await Task.Delay(5000);
+                Console.WriteLine("Waiting for response time 5000 completed. Closing client channel.");
+
+            
         }
 
         public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message)
@@ -156,7 +164,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;
-            _socketServer?.Shutdown();
+            _udpServer?.Shutdown();
             _cancellationSource?.Dispose();
             _certificate?.Dispose();
             _anyTypeClientHandler?.Dispose();

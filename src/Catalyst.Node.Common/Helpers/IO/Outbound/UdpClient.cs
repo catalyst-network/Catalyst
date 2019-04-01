@@ -19,13 +19,41 @@
 */
 #endregion
 
+using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces;
+using DotNetty.Handlers.Logging;
+using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
+
+
     public sealed class UdpClient : AbstractClient<SocketDatagramChannel>
     {
         public UdpClient(ILogger logger) : base(logger) { }
+
+        public override ISocketClient Bootstrap(IChannelHandler channelInitializer)
+        {
+            Client = new Bootstrap();
+            ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
+               .Group(WorkerEventLoop)
+               .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
+               .Option(ChannelOption.SoBroadcast, true)
+               .Handler(new LoggingHandler(LogLevel.DEBUG))
+               .Handler(channelInitializer);
+            return this;
+        }
+        
+        public override async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
+        {
+            Channel = await Client.BindAsync(listenAddress, 42068)
+               .ConfigureAwait(false);
+            return this;
+        }
     }
 }

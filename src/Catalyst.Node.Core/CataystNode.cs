@@ -86,26 +86,26 @@ namespace Catalyst.Node.Core
             bool exit = false;
             do
             {
-                _logger.Information("Creating a Transaction message");
-                _logger.Information("Please type in a pubkey for the transaction signature");
-                var pubkey = Console.ReadLine();
-
-                _logger.Information("Please type in a transaction version");
-                if (!uint.TryParse(Console.ReadLine(), out var version))
-                {
-                    version = 1;
-                }
-                var tx = new Transaction { Version = version, Signature = new TransactionSignature { SchnorrSignature = ByteString.CopyFromUtf8(pubkey) } };
-
-                await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
-                await Task.Delay(300, ct); //just to get the next message at the bottom
+                // _logger.Information("Creating a Transaction message");
+                // _logger.Information("Please type in a pubkey for the transaction signature");
+                // var pubkey = Console.ReadLine();
+                //
+                // _logger.Information("Please type in a transaction version");
+                // if (!uint.TryParse(Console.ReadLine(), out var version))
+                // {
+                //     version = 1;
+                // }
+                // var tx = new Transaction { Version = version, Signature = new TransactionSignature { SchnorrSignature = ByteString.CopyFromUtf8(pubkey) } };
+                //
+                // await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
+                // await Task.Delay(300, ct); //just to get the next message at the bottom
 
                 _logger.Information("Creating a Ping message");
-                _logger.Information("Please type in a ping message content");
-                var ping = new PingRequest { CorrelationId = Console.ReadLine().ToUtf8ByteString() };
-
+                var ping = new PingRequest { CorrelationId = Guid.NewGuid().ToString().ToUtf8ByteString() };
+                await _p2P.Messaging.RunP2PClientAsync();
                 await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
+                _p2P.Messaging._socketClient.Dispose();
 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);

@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Common.Interfaces
 {
@@ -80,5 +81,6 @@ namespace Catalyst.Node.Common.Interfaces
         /// <param name="queryingNode"></param>
         /// <returns></returns>
         List<IPeerIdentifier> PeerExchange(IPeerIdentifier queryingNode);
+
     }
 }
