@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,7 +19,7 @@
 */
 #endregion
 
-﻿using System;
+ using System;
  using System.IO;
 using System.Linq;
 using System.Reflection;
