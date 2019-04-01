@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -24,48 +24,40 @@ using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Node.Core.RPC
+namespace Catalyst.Cli.Handlers
 {
-    public class GetVersionRequestHandler : MessageHandlerBase<VersionRequest>
+    public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>
     {
-        private readonly IRpcServerSettings _config;
-
-        public GetVersionRequestHandler(
+        public GetInfoResponseHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
-            IRpcServerSettings config,
             ILogger logger)
             : base(messageStream, logger)
         {
-            _config = config;
+            
         }
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
-            if(message == NullObjects.ChanneledAny) {return;}
-            Logger.Debug("received message of type VersionRequest");
+            if (message == NullObjects.ChanneledAny)
+            {
+                return;
+            }
+            
             try
             {
-                var deserialised = message.Payload.FromAny<VersionRequest>();
-                Logger.Debug("message content is {0}", deserialised);
-                var response = new VersionResponse
-                {
-                    Version = NodeUtil.GetVersion()
-                };
-
-                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                Logger.Debug("Handling GetInfoResponse");
+                var deserialised = message.Payload.FromAny<GetInfoResponse>();
+                Logger.Information("Requested node configuration\n============================\n{0}", deserialised.Query.ToString());
+                Logger.Information("Press Enter to continue ...\n");
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, 
-                    "Failed to handle GetVersionRequest after receiving message {0}", message);
+                Logger.Error(ex,
+                    "Failed to handle GetInfoResponse after receiving message {0}", message);
                 throw;
             }
         }

@@ -33,6 +33,9 @@ using Catalyst.Node.Common.Helpers.Config;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
+using CommandLine;
+using McMaster.Extensions.CommandLineUtils;
+
 namespace Catalyst.Cli
 {
     public static class Program

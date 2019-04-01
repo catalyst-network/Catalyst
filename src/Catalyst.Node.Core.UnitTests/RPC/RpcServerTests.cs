@@ -38,8 +38,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     public class RpcServerTests : ConfigFileBasedTest, IDisposable
     {
         private readonly IConfigurationRoot _config;
-
         private IRpcServer _rpcServer;
+        
 
         public RpcServerTests(ITestOutputHelper output) : base(output)
         {

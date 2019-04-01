@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
@@ -48,6 +49,7 @@ namespace Catalyst.Cli
         
         private readonly GetInfoResponseHandler _getInfoResponseHandler;
         private readonly GetVersionResponseHandler _getVersionResponseHandler;
+        private readonly GetMempoolResponseHandler _getMempoolResponseHandler;
 
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -66,6 +68,7 @@ namespace Catalyst.Cli
             
             _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, _logger);
             _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, _logger);
+            _getMempoolResponseHandler = new GetMempoolResponseHandler(MessageStream, _logger);
         }
 
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)

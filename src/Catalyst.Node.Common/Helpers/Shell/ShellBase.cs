@@ -28,6 +28,7 @@ using Catalyst.Node.Common.Interfaces;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
@@ -135,7 +136,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 case "version":
                     return OnGetVersion(args.Skip(2).ToList());
                 case "mempool":
-                    return OnGetMempool();
+                    return OnGetMempool(args.Skip(2).ToList());
                 default:
                     return CommandNotFound(args);
             }
@@ -157,7 +158,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints stats about the mempool implementation.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetMempool();
+        protected abstract bool OnGetMempool(IList<string> args);
 
         /// <summary>
         ///     Parses flags passed with commands.
@@ -257,7 +258,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <returns></returns>
         public bool RunConsole()
-        {
+        {   
             var running = true;
 
             Console.OutputEncoding = Encoding.Unicode;

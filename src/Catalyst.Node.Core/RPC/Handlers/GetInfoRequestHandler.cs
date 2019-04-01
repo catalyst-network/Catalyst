@@ -23,44 +23,46 @@ using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Cli
+namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>
+    public class GetInfoRequestHandler : MessageHandlerBase<GetInfoRequest>
     {
-        public GetInfoResponseHandler(
+        private readonly IRpcServerSettings _config;
+
+        public GetInfoRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
+            IRpcServerSettings config,
             ILogger logger)
             : base(messageStream, logger)
         {
-            
+            _config = config;
         }
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
-            if (message == NullObjects.ChanneledAny)
-            {
-                return;
-            }
-            
+            if(message == NullObjects.ChanneledAny) {return;}
+            Logger.Debug("received message of type GetInfoRequest");
             try
             {
-                Logger.Debug("Handling GetInfoResponse");
-                var deserialised = message.Payload.FromAny<GetInfoResponse>();
-                Logger.Information("Requested node configuration\n============================\n{0}", deserialised.Query.ToString());
-                Logger.Information("Press Enter to continue ...\n");
+                var deserialised = message.Payload.FromAny<GetInfoRequest>();
+                Logger.Debug("message content is {0}", deserialised);
+                var response = new GetInfoResponse
+                {
+                    Query = String.Format("Node config:\nNode Name: {0}\nIP Address: {1}\nPort: {2} ", _config.NodeId,_config.BindAddress.ToString(), _config.Port.ToString())
+                };
+
+                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
-                Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", message);
+                Logger.Error(ex, 
+                    "Failed to handle GetInfoRequest after receiving message {0}", message);
                 throw;
             }
         }

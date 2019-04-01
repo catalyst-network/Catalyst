@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
@@ -31,13 +32,13 @@ using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-
+using CommandLine;
 using ILogger = Serilog.ILogger;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using Serilog.Core;
-
 using DotNetty.Transport.Channels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Catalyst.Cli
 {
@@ -236,7 +237,7 @@ namespace Catalyst.Cli
                     return base.OnCommand(args);
             }
         }
-
+        
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -339,7 +340,8 @@ namespace Catalyst.Cli
                 case "work":
                     return OnStopWork(args);
                 default:
-                    return base.OnCommand(args);
+                    //return base.OnCommand(args);
+                    return true;
             }
         }
 
@@ -384,11 +386,12 @@ namespace Catalyst.Cli
                 case "delta":
                     return OnGetDelta(args);
                 case "mempool":
-                    return OnGetMempool();
+                    return OnGetMempool(args.Skip(2).ToList());
                 case "version":
                     return OnGetVersion(args);
                 default:
-                    return base.OnCommand(args);
+                    //return base.OnCommand(args);
+                    return true;
             }
         }
 
@@ -469,9 +472,27 @@ namespace Catalyst.Cli
         ///     Get stats about the underlying mempool implementation
         /// </summary>
         /// <returns>Boolean</returns>
-        protected override bool OnGetMempool()
+        protected override bool OnGetMempool(IList<string> args)
         {
-            throw new NotImplementedException();
+            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+
+            var nodeId = args.First();
+            
+            try
+            {
+                var connectedNode = GetConnectedNode(nodeId);
+                
+                //send the message to the server by writing it to the channel
+                var request = new GetMempoolRequest();
+                _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();
+            }
+            catch (Exception e)
+            {
+                _logger.Debug(e.Message);
+                throw;
+            }
+
+            return true;
         }
 
         /// <summary>
