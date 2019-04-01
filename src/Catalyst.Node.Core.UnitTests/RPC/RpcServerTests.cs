@@ -52,8 +52,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         //TODO : this is the simplest test that can cause the build to hang
         //need to investigate and see if we can solve it
-        // [Fact(Skip = "causes build to hang")]
-        [Fact]
+        [Fact(Skip = "causes build to hang")]
+        // [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void ServerConnectedToCorrectPort()
         {

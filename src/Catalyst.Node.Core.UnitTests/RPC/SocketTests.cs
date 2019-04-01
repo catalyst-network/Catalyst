@@ -59,15 +59,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         public SocketTests(ITestOutputHelper output) : base(output)
         {
-            //Build configuration
-            _config = new ConfigurationBuilder()
+            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build();
-
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(_config, _currentTestName);
+               .Build(), _currentTestName);
 
             WriteLogsToFile = false;
             WriteLogsToTestOutput = false;
