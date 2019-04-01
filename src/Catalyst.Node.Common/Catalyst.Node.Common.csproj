@@ -167,11 +167,11 @@
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\LetterCasing.cs" Link="Helpers\Multiformats.Base\LetterCasing.cs" />
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Multibase.cs" Link="Helpers\Multiformats.Base\Multibase.cs" />
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\MultibaseEncoding.cs" Link="Helpers\Multiformats.Base\MultibaseEncoding.cs" />
-    <Compile Include="obj\Debug\netcoreapp2.2\Common.cs" />
-    <Compile Include="obj\Debug\netcoreapp2.2\Delta.cs" />
-    <Compile Include="obj\Debug\netcoreapp2.2\IPPN.cs" />
-    <Compile Include="obj\Debug\netcoreapp2.2\Rpc.cs" />
-    <Compile Include="obj\Debug\netcoreapp2.2\Transaction.cs" />
+    <Compile Include="obj\**\*\Common.cs" />
+    <Compile Include="obj\**\*\Delta.cs" />
+    <Compile Include="obj\**\*\IPPN.cs" />
+    <Compile Include="obj\**\*\Rpc.cs" />
+    <Compile Include="obj\**\*\Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx">
