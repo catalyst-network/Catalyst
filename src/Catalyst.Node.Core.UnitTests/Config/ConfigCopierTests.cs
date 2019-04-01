@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
             currentDirectory.Exists.Should().BeTrue("otherwise the test is not relevant");
             existingFileInfo.Exists.Should().BeTrue("otherwise the test is not relevant");
 
-            ConfigCopier.RunConfigStartUp(currentDirectory.FullName, network);
+            new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network).ToList();
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
@@ -119,7 +119,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
                 new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
             var network = Network.Dev;
-            ConfigCopier.RunConfigStartUp(currentDirectory.FullName, network);
+            new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network);
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
