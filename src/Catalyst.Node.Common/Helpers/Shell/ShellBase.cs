@@ -67,7 +67,10 @@ namespace Catalyst.Node.Common.Helpers.Shell
         public abstract bool OnStopWork(string[] args);
 
         public abstract bool IsConnectedNode(string nodeId);
+        
         public abstract IRpcNode GetConnectedNode(string nodeId);
+        
+        public abstract IRpcNodeConfig GetNodeConfig(string nodeId);
 
         /// <summary>
         ///     Prints a list of available cli commands.
@@ -130,7 +133,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 case "config":
                     return OnGetConfig(args.Skip(2).ToList());
                 case "version":
-                    return OnGetVersion(args);
+                    return OnGetVersion(args.Skip(2).ToList());
                 case "mempool":
                     return OnGetMempool();
                 default:
@@ -148,7 +151,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints the current node version.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetVersion(string[] args);
+        protected abstract bool OnGetVersion(IList<string> args);
 
         /// <summary>
         ///     Prints stats about the mempool implementation.
@@ -282,7 +285,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
                 try
                 {
-                    running = OnCommand(args);
+                    OnCommand(args);
                 }
                 catch (SystemException ex)
                 {

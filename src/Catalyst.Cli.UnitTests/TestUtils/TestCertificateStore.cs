@@ -19,26 +19,23 @@
 */
 #endregion
 
-using System;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
-using Catalyst.Node.Common.Helpers.IO;
+using System.IO;
+using System.Reflection.Metadata;
+using System.Security;
+using System.Security.Cryptography.X509Certificates;
+using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Cryptography;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Cli.UnitTests.TestUtils
 {
-    public class TransactionHandler : MessageHandlerBase<Transaction>
+    public class TestCertificateStore : ICertificateStore
     {
-        public TransactionHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
-        : base(messageStream, logger) { }
-
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public X509Certificate2 ReadOrCreateCertificateFile(string fileName)
         {
-            Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAny<Transaction>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
+            return CertificateStore.BuildSelfSignedServerCertificate(new SecureString());
         }
+
+        public X509Certificate2 ReadOrCreateCertificateFile(string fileName, string password) { return CertificateStore.BuildSelfSignedServerCertificate(new SecureString()); }
     }
 }

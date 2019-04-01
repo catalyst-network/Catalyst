@@ -39,6 +39,7 @@ namespace Catalyst.Node.Core.RPC
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
+            NodeId = section.GetSection("NodeId").Value;
             Port = int.Parse(section.GetSection("Port").Value);
             AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
@@ -51,5 +52,6 @@ namespace Catalyst.Node.Core.RPC
         public string PfxFileName { get; set; }
         public bool MutualAuthentication { get; set; }
         public bool AcceptInvalidCerts { get; set; }
+        public string NodeId { get; set; }
     }
 }

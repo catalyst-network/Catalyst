@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,12 +19,22 @@
 */
 #endregion
 
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Google.Protobuf.WellKnownTypes;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Node.Common.Helpers.Config;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers {
-    public interface IMessageHandler
+namespace Catalyst.Cli
+{
+    public class CliConfigCopier : ConfigCopier
     {
-        void HandleMessage(IChanneledMessage<Any> message);
+        protected override IEnumerable<string> RequiredConfigFiles(Network network)
+        {
+            var baseConfigs = base.RequiredConfigFiles(network);
+            return baseConfigs.Concat(new[]
+            {
+                Constants.ShellNodesConfigFile,
+                Constants.ShellComponentsJsonConfigFile,
+            });
+        }
     }
 }

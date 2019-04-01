@@ -27,7 +27,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Node.Common.Helpers.IO
 {
     public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable where T : IMessage
     {
