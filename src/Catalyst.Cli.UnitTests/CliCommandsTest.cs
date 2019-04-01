@@ -22,26 +22,16 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
-
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
-using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Cli.UnitTests.TestUtils;
-
 using Xunit;
 using Xunit.Abstractions;
 using Moq;
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-using Serilog;
-
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 
 using FluentAssertions;
 
