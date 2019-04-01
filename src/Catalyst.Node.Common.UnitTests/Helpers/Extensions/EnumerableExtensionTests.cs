@@ -31,6 +31,26 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Extensions
     public static class EnumerableExtensionTests
     {
         [Fact]
+        public static void RandomElementReturnsCorrectTypeOfString()
+        {
+            var randomList = new List<string>();
+            randomList.Add(Guid.NewGuid().ToString());
+            string returnedElement = EnumerableExtension.RandomElement(randomList);
+            
+            returnedElement.Should().BeOfType<string>();
+        }
+        
+        [Fact]
+        public static void RandomElementReturnsCorrectTypeOfBool()
+        {
+            var randomList = new List<bool>();
+            randomList.Add(false);
+            bool returnedElement = EnumerableExtension.RandomElement(randomList);
+
+            returnedElement.Should().BeFalse();
+        }
+        
+        [Fact]
         public static void GetARandomElement()
         {
             var randomList = new List<string>();
