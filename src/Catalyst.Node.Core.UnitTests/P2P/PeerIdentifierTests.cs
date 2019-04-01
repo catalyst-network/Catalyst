@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 ClientId = "aM".ToUtf8ByteString(),
                 ClientVersion = "09".ToUtf8ByteString(),
                 Ip = IPAddress.Parse("127.0.0.1").To16Bytes().ToByteString(),
-                Port = BitConverter.GetBytes(12345).ToByteString()
+                Port = BitConverter.GetBytes((ushort)12345).ToByteString()
             };
         }
 
@@ -104,6 +104,81 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .Should().Throw<ArgumentException>().WithMessage( "*PublicKey*");
 
             invalidPeer.PublicKey = new byte[21].ToByteString();
+        }
+
+        private class IpTestData : TheoryData<byte[]>
+        {
+            public IpTestData()
+            {
+                Add(new byte[0]);
+                Add(new byte[4]);
+                Add(new byte[15]);
+                Add(new byte[17]);
+            }
+        }
+
+        [Theory]
+        [ClassData(typeof(IpTestData))]
+        //Todo: discuss if this is relevant: why do we enforce a given size for IPs (or anything) if proto handles it
+        //and the protocol is designed in proto.
+        public void Constructor_should_fail_on_wrong_ip(byte[] ipBytes)
+        {
+            var invalidPeer = new PeerId(_validPeer)
+            {
+                Ip = ipBytes.ToByteString()
+            };
+
+            new Action(() => new PeerIdentifier(invalidPeer))
+               .Should().Throw<ArgumentException>().WithMessage("*Ip*");
+        }
+
+        [Theory]
+        [InlineData("Mum")]
+        [InlineData("Daddy")]
+        [InlineData("20")]
+        [InlineData("I2")]
+        [InlineData("M+")]
+        public void Constructor_should_fail_on_wrong_ClientId(string clientId)
+        {
+            var invalidPeer = new PeerId(_validPeer)
+            {
+                ClientId = clientId.ToUtf8ByteString()
+            };
+
+            new Action(() => new PeerIdentifier(invalidPeer))
+               .Should().Throw<ArgumentException>().WithMessage("*ClientId*");
+        }
+        
+        [Theory]
+        [InlineData("1")]
+        [InlineData("123")]
+        [InlineData("1.6")]
+        [InlineData("1.6.5")]
+        [InlineData("0.0.1")]
+        public void Constructor_should_fail_on_wrong_ClientVersion(string version)
+        {
+            var invalidPeer = new PeerId(_validPeer)
+            {
+                ClientVersion = version.ToUtf8ByteString()
+            };
+
+            new Action(() => new PeerIdentifier(invalidPeer))
+               .Should().Throw<ArgumentException>().WithMessage("*clientVersion*");
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(1024)]
+        public void Constructor_should_fail_on_wrong_Port(ushort port)
+        {
+            var invalidPeer = new PeerId(_validPeer)
+            {
+                Port = BitConverter.GetBytes(port).ToByteString()
+            };
+
+            new Action(() => new PeerIdentifier(invalidPeer))
+               .Should().Throw<ArgumentException>().WithMessage("*Port*");
         }
     }
 }

@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.P2P
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv6();
-        public int Port => BitConverter.ToInt32(PeerId.Port.ToByteArray());
+        public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
 
         public PeerId PeerId { get; }
@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.P2P
         /// <exception cref="ArgumentException"></exception>
         private static bool ValidateClientId(byte[] clientId)
         {
-            return Regex.IsMatch(ByteUtil.ByteToString(clientId), @"^[a-zA-Z]+$");
+            return Regex.IsMatch(ByteUtil.ByteToString(clientId), @"^[a-zA-Z]{1,2}$");
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="portBytes"></param>
         private static bool ValidatePort(byte[] portBytes)
         {
-            return Common.Helpers.Network.Ip.ValidPortRange(BitConverter.ToInt32(portBytes));
+            return Common.Helpers.Network.Ip.ValidPortRange(BitConverter.ToUInt16(portBytes));
         }
 
         public override string ToString()
