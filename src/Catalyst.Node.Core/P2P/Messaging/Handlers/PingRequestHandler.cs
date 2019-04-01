@@ -24,8 +24,7 @@ using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
-using PingRequest = Catalyst.Protocol.IPPN.PeerProtocol.Types.PingRequest;
-using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
