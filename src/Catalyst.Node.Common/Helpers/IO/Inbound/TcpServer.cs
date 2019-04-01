@@ -19,6 +19,7 @@
 */
 #endregion
 
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;

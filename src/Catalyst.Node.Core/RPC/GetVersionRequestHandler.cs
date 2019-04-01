@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -34,11 +34,11 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC
 {
-    public class GetInfoRequestHandler : MessageHandlerBase<GetInfoRequest>
+    public class GetVersionRequestHandler : MessageHandlerBase<VersionRequest>
     {
         private readonly IRpcServerSettings _config;
 
-        public GetInfoRequestHandler(
+        public GetVersionRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             IRpcServerSettings config,
             ILogger logger)
@@ -50,14 +50,14 @@ namespace Catalyst.Node.Core.RPC
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
             if(message == NullObjects.ChanneledAny) {return;}
-            Logger.Debug("received message of type GetInfoRequest");
+            Logger.Debug("received message of type VersionRequest");
             try
             {
-                var deserialised = message.Payload.FromAny<GetInfoRequest>();
+                var deserialised = message.Payload.FromAny<VersionRequest>();
                 Logger.Debug("message content is {0}", deserialised);
-                var response = new GetInfoResponse
+                var response = new VersionResponse
                 {
-                    Query = String.Format("Node config:\nNode Name: {0}\nIP Address: {1}\nPort: {2} ", _config.NodeId,_config.BindAddress.ToString(), _config.Port.ToString())
+                    Version = NodeUtil.GetVersion()
                 };
 
                 message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
@@ -65,7 +65,7 @@ namespace Catalyst.Node.Core.RPC
             catch (Exception ex)
             {
                 Logger.Error(ex, 
-                    "Failed to handle GetInfoRequest after receiving message {0}", message);
+                    "Failed to handle GetVersionRequest after receiving message {0}", message);
                 throw;
             }
         }
