@@ -26,6 +26,7 @@ using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.IPPN;
+using Dawn;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.Messaging
@@ -39,9 +40,15 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public IRepository<PendingRequest> ResponseStore { get; }
 
-        public async Task<bool> TryMatchResponseAsync(PingResponse response, IPeerIdentifier responderId)
+        public PendingRequest TryMatchResponseAsync(PingResponse response, IPeerIdentifier responderId)
         {
-            throw new NotImplementedException();
+            Guard.Argument(response, nameof(response)).NotNull()
+               .Require(r => r.CorrelationId != null);
+            Guard.Argument(responderId, nameof(responderId)).NotNull();
+
+            return !ResponseStore.TryFind(r => r.TargetNodeId.Equals(responderId), 
+                p => p, 
+                out PendingRequest matched) ? matched : null;
         }
 
         public IObservable<IPeerReputationChange> PeerRatingChanges { get; }

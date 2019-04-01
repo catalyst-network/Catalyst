@@ -27,6 +27,7 @@ using System.Text;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
 using FluentAssertions;
@@ -40,37 +41,30 @@ namespace Catalyst.Node.Core.UnitTest.P2P
     public class PeerIdentifierTests
     {
         private readonly ITestOutputHelper _output;
-        private readonly PeerId _validPeer;
+        private readonly PeerId _validPeerId;
 
         public PeerIdentifierTests(ITestOutputHelper output)
         {
             _output = output;
-            _validPeer = new PeerId()
-            {
-                PublicKey = new byte[20].ToByteString(),
-                ClientId = "aM".ToUtf8ByteString(),
-                ClientVersion = "09".ToUtf8ByteString(),
-                Ip = IPAddress.Parse("127.0.0.1").To16Bytes().ToByteString(),
-                Port = BitConverter.GetBytes((ushort)12345).ToByteString()
-            };
+            _validPeerId = PeerIdentifierHelper.GetPeerId();
         }
 
         [Fact]
         public void Valid_Peer_should_have_fields_with_correct_sizes()
         {
-            _validPeer.ClientId.ToByteArray().Length.Should().Be(2);
-            _validPeer.ClientVersion.ToByteArray().Length.Should().Be(2);
-            _validPeer.Ip.ToByteArray().Length.Should().Be(16);
-            _validPeer.Port.ToByteArray().Length.Should().Be(2);
-            _validPeer.PublicKey.ToByteArray().Length.Should().Be(20);
+            _validPeerId.ClientId.ToByteArray().Length.Should().Be(2);
+            _validPeerId.ClientVersion.ToByteArray().Length.Should().Be(2);
+            _validPeerId.Ip.ToByteArray().Length.Should().Be(16);
+            _validPeerId.Port.ToByteArray().Length.Should().Be(2);
+            _validPeerId.PublicKey.ToByteArray().Length.Should().Be(20);
 
-            _output.WriteLine(string.Join(" ", _validPeer.ToByteArray()));
+            _output.WriteLine(string.Join(" ", _validPeerId.ToByteArray()));
             var fieldsInBytes = new[]
             {
-                _validPeer.ClientId.ToByteArray(),
-                _validPeer.ClientVersion.ToByteArray(),
-                _validPeer.Ip.ToByteArray(), _validPeer.Port.ToByteArray(),
-                _validPeer.PublicKey.ToByteArray()
+                _validPeerId.ClientId.ToByteArray(),
+                _validPeerId.ClientVersion.ToByteArray(),
+                _validPeerId.Ip.ToByteArray(), _validPeerId.Port.ToByteArray(),
+                _validPeerId.PublicKey.ToByteArray()
             };
             _output.WriteLine(string.Join(" ", fieldsInBytes.SelectMany(b => b)));
         }
@@ -78,10 +72,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void Constructor_should_accept_valid_byte_arrays()
         {
-            var newPeer = new PeerIdentifier(_validPeer);
+            var newPeer = new PeerIdentifier(_validPeerId);
             newPeer.PublicKey.Length.Should().Be(20);
-            newPeer.ClientId.Should().Be("aM");
-            newPeer.ClientVersion.Should().Be("09");
+            newPeer.ClientId.Should().Be("Tc");
+            newPeer.ClientVersion.Should().Be("01");
             newPeer.Ip.GetAddressBytes().Should()
                .Equal(IPAddress.Parse("127.0.0.1").To16Bytes());
             newPeer.Port.Should().Be(12345);
@@ -96,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [InlineData(21)]
         public void Constructor_should_fail_on_wrong_public_key(int pubKeySize)
         {
-            var invalidPeer = new PeerId(_validPeer)
+            var invalidPeer = new PeerId(_validPeerId)
             {
                 PublicKey = new byte[pubKeySize].ToByteString()
             };
@@ -123,7 +117,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         //and the protocol is designed in proto.
         public void Constructor_should_fail_on_wrong_ip(byte[] ipBytes)
         {
-            var invalidPeer = new PeerId(_validPeer)
+            var invalidPeer = new PeerId(_validPeerId)
             {
                 Ip = ipBytes.ToByteString()
             };
@@ -140,7 +134,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [InlineData("M+")]
         public void Constructor_should_fail_on_wrong_ClientId(string clientId)
         {
-            var invalidPeer = new PeerId(_validPeer)
+            var invalidPeer = new PeerId(_validPeerId)
             {
                 ClientId = clientId.ToUtf8ByteString()
             };
@@ -157,7 +151,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [InlineData("0.0.1")]
         public void Constructor_should_fail_on_wrong_ClientVersion(string version)
         {
-            var invalidPeer = new PeerId(_validPeer)
+            var invalidPeer = new PeerId(_validPeerId)
             {
                 ClientVersion = version.ToUtf8ByteString()
             };
@@ -172,7 +166,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [InlineData(1024)]
         public void Constructor_should_fail_on_wrong_Port(ushort port)
         {
-            var invalidPeer = new PeerId(_validPeer)
+            var invalidPeer = new PeerId(_validPeerId)
             {
                 Port = BitConverter.GetBytes(port).ToByteString()
             };

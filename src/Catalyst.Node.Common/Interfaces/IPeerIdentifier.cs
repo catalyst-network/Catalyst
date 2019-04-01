@@ -19,12 +19,13 @@
 */
 #endregion
 
+using System;
 using System.Net;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IPeerIdentifier
+    public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
     {
         PeerId PeerId { get; }
         string ClientId { get; }

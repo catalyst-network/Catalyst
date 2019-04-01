@@ -32,7 +32,7 @@ namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
     public interface IPendingRequestCache : IDisposable
     {
         IRepository<PendingRequest> ResponseStore { get; }
-        Task<bool> TryMatchResponseAsync(PingResponse response, IPeerIdentifier responderId);
+        PendingRequest TryMatchResponseAsync(PingResponse response, IPeerIdentifier responderId);
         IObservable<IPeerReputationChange> PeerRatingChanges { get; }
     }
 }

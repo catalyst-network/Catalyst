@@ -134,5 +134,24 @@ namespace Catalyst.Node.Core.P2P
         {
             return ClientId + ClientVersion + $"@{Ip}:{Port}" + $"|{PublicKey.ToHex()}";
         }
+
+        public bool Equals(IPeerIdentifier other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(PeerId, other.PeerId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is IPeerIdentifier other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return (PeerId != null ? PeerId.GetHashCode() : 0);
+        }
     }
 }
