@@ -27,13 +27,17 @@ using System.Text;
 using Catalyst.Node.Common.Interfaces;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
+    
     public abstract class ShellBase : IShell
     {
+        
         protected ShellBase()
         {
             AppCulture = new CultureInfo("en-GB", false);
@@ -132,7 +136,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
             switch (args[1].ToLower(AppCulture))
             {
                 case "config":
-                    return OnGetConfig(args.Skip(2).ToList());
+                    return OnGetConfig(args[2]);
                 case "version":
                     return OnGetVersion(args.Skip(2).ToList());
                 case "mempool":
@@ -146,7 +150,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints the current loaded settings.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetConfig(IList<string> args);
+        protected abstract bool OnGetConfig(Object args);
 
         /// <summary>
         ///     Prints the current node version.
@@ -158,7 +162,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints stats about the mempool implementation.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetMempool(IList<string> args);
+        protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
         ///     Parses flags passed with commands.
@@ -257,6 +261,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
+
+        
         public bool RunConsole()
         {   
             var running = true;
@@ -286,7 +292,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
                 try
                 {
-                    OnCommand(args);
+                    //OnCommand(args);
+                    ParseCommand(args);
                 }
                 catch (SystemException ex)
                 {
@@ -298,6 +305,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
             return running;
         }
 
+        public abstract void ParseCommand(string[] args);
+        
+        
         /// <summary>
         /// </summary>
         /// <param name="args"></param>

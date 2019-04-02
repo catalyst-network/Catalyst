@@ -22,10 +22,15 @@
 using Catalyst.Node.Common.Interfaces;
 using System.Diagnostics;
 using Serilog;
+using McMaster.Extensions.CommandLineUtils;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.Shell;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Catalyst.Cli
 {
 
+    
     public class CatalystCli : ICatalystCli
     {
         public IAds Ads { get; set; }
@@ -35,5 +40,6 @@ namespace Catalyst.Cli
             logger.Debug("PID " + Process.GetCurrentProcess().Id);
             Ads = ads;
         }
+        
     }
 }

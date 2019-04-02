@@ -19,14 +19,27 @@
 */
 #endregion
 
-using System.Reflection;
-using McMaster.Extensions.CommandLineUtils;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Security;
+using Catalyst.Node.Common.Interfaces;
 
-namespace Catalyst.Node.Common.Interfaces {
-    public interface ICatalystCli
+namespace Catalyst.Cli.UnitTests.TestUtils
+{
+    class TestPasswordReader : IPasswordReader
     {
-        IAds Ads { get; set; }
+        private const string Password = "";
 
+        public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
+        {
+            var secureString = new SecureString();
+            Password.ToList().ForEach(c => secureString.AppendChar(c));
+            secureString.MakeReadOnly();
+            return secureString;
+        }
+
+        public char[] ReadSecurePasswordAsChars(string passwordContext = "Please enter your password")
+        {
+            return Password.ToCharArray();
+        }
     }
 }

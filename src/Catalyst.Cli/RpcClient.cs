@@ -86,7 +86,7 @@ namespace Catalyst.Cli
                     _clientHandler
                 };
 
-                var socketClient = await new TcpClient(_logger)
+                var socketClient = await new TcpClient()
                    .Bootstrap(
                         new OutboundChannelInitializer<ISocketChannel>(channel => { },
                             handlers,

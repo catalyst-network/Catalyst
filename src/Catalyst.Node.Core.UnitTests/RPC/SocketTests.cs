@@ -42,6 +42,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
+using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 using NSubstitute;
@@ -105,6 +106,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _certificateStore = container.Resolve<ICertificateStore>();
             _rpcServer = container.Resolve<IRpcServer>();
+
             
         }
 

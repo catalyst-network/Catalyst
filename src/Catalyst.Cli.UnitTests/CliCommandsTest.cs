@@ -36,11 +36,7 @@ using Moq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using Serilog;
-
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
-
 using FluentAssertions;
 
 namespace Catalyst.Cli.UnitTests
@@ -62,7 +58,7 @@ namespace Catalyst.Cli.UnitTests
                 
             // check if user home data dir has a shell config
             var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
-            var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile);
+            var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile);
             var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
             
             if (!File.Exists(shellComponentsFilePath))
@@ -85,7 +81,7 @@ namespace Catalyst.Cli.UnitTests
             
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile))
+               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
                .Build();
             

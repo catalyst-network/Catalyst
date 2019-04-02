@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Text;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
@@ -35,15 +34,8 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using CommandLine;
 using ILogger = Serilog.ILogger;
 using Google.Protobuf.WellKnownTypes;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
-using Serilog.Core;
 using DotNetty.Transport.Channels;
-using Microsoft.Extensions.DependencyInjection;
-using Serilog.Core;
-
-using DotNetty.Transport.Channels;
+using Microsoft.Extensions.Options;
 
 namespace Catalyst.Cli
 {
@@ -75,6 +67,7 @@ namespace Catalyst.Cli
             _rpcClient.MessageStream.Subscribe(this);
 
             Console.WriteLine(@"Koopa Shell Start");
+            
         }
         private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
         {
@@ -91,6 +84,31 @@ namespace Catalyst.Cli
 
             return nodeList;
         }
+
+        public override void ParseCommand(string[] args)
+        {   
+            Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, bool>(
+                    (GetInfoOptions opts) => OnGetCommands(opts),
+                    (ConnectOptions opts) => OnConnectNode(opts),
+                    errs => false);
+        }
+
+        private bool OnGetCommands(GetInfoOptions opts)
+        {
+            if (opts.i)
+            {
+                return OnGetConfig(opts);
+            }
+
+            if (opts.m)
+            {
+                return OnGetMempool(opts);
+            }
+
+            return false;
+        }
+        private bool RunCommitAndReturnExitCode(ConnectOptions opts) { return false; }
 
         /// <summary>
         /// </summary>
@@ -246,11 +264,11 @@ namespace Catalyst.Cli
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private bool OnConnectNode(IList<string> args)
+        private bool OnConnectNode(Object opts)
         {
-            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+            //Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
-            var nodeId = args.First();
+            var nodeId = ((ConnectOptions)opts).NodeId;
             
             //if the node is invalid then do not continue
             if (!IsConfiguredNode(nodeId))
@@ -309,6 +327,7 @@ namespace Catalyst.Cli
         
             return true;
         }
+
 
         /// <summary>
         /// </summary>
@@ -434,11 +453,11 @@ namespace Catalyst.Cli
             return true;
         }
 
-        protected override bool OnGetConfig(IList<string> args)
+        protected override bool OnGetConfig(Object opts)
         {
-            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+            //Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
-            var nodeId = args.First();
+            var nodeId = ((GetInfoOptions)opts).NodeId;
             
             //Perform validations required before a command call
             if (!ValidatePreCommand(nodeId))
@@ -474,14 +493,14 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        ///     Get stats about the underlying mempool implementation
+        /// Get stats about the underlying mempool implementation
         /// </summary>
         /// <returns>Boolean</returns>
-        protected override bool OnGetMempool(IList<string> args)
+        protected override bool OnGetMempool(Object args)
         {
-            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+            //Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
-            var nodeId = args.First();
+            var nodeId = ((GetInfoOptions)args).NodeId;
             
             try
             {
