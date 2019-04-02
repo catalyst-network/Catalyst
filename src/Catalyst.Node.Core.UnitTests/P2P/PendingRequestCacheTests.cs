@@ -25,6 +25,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -40,11 +41,11 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 {
     public class PendingRequestCacheTests
     {
-        private readonly IRepository<PendingRequest> _responseStore;
-        private PeerIdentifier[] _peerIds;
+        private readonly IPeerIdentifier[] _peerIds;
         private readonly IList<PendingRequest> _pendingRequests;
-        private PendingRequestCache _cache;
+        private readonly PendingRequestCache _cache;
         private PeerId _senderPeerId;
+        private Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
 
         public PendingRequestCacheTests()
         {
@@ -54,7 +55,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 PeerIdentifierHelper.GetPeerId("abcd"),
                 PeerIdentifierHelper.GetPeerId("efgh"),
                 PeerIdentifierHelper.GetPeerId("ijkl"),
-            }.Select(p => new PeerIdentifier(p)).ToArray();
+            }.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToArray();
+
+            _reputationByPeerIdentifier = _peerIds.ToDictionary(p => p, p => 0);
 
             _pendingRequests = _peerIds.Select((p, i) => new PendingRequest()
             {
@@ -66,8 +69,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                    .Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
 
-            _responseStore = Substitute.For<IRepository<PendingRequest>>();
-            _responseStore.TryFind(Arg.Any<Expression<Func<PendingRequest, bool>>>(),
+            var responseStore = Substitute.For<IRepository<PendingRequest>>();
+            responseStore.TryFind(Arg.Any<Expression<Func<PendingRequest, bool>>>(),
                     Arg.Any<Expression<Func<PendingRequest, PendingRequest>>>(),
                     out Arg.Any<PendingRequest>())
                .Returns(ci =>
@@ -77,7 +80,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     return ci[2] != null;
                 });
 
-            _cache = new PendingRequestCache(_responseStore);
+            _cache = new PendingRequestCache(responseStore);
+            _cache.PeerRatingChanges.Subscribe(change =>
+            {
+                if (!_reputationByPeerIdentifier.ContainsKey(change.PeerIdentifier)) return;
+                _reputationByPeerIdentifier[change.PeerIdentifier] += change.ReputationChange;
+            });
         }
 
         [Fact]
@@ -92,6 +100,18 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             request.Should().NotBeNull();
             request.CorrelationId.Should()
                .Equal(_pendingRequests[1].Content.FromAnySigned<PingResponse>().CorrelationId);
+        }
+
+        [Fact]
+        public void TryMatchResponseAsync_when_matching_should_increase_reputation()
+        {
+            var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
+            TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id();
+            var reputationAfter = _reputationByPeerIdentifier[_peerIds[1]];
+            reputationAfter.Should().BeGreaterThan(reputationBefore);
+
+            _reputationByPeerIdentifier.Where(r => !r.Key.Equals(_peerIds[1]))
+               .Select(r => r.Value).Should().AllBeEquivalentTo(0);
         }
 
         [Fact]

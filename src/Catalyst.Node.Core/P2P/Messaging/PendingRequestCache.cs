@@ -20,9 +20,11 @@
 #endregion
 
 using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.IPPN;
@@ -32,11 +34,16 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class PendingRequestCache : IPendingRequestCache
+    public class PendingRequestCache : IPendingRequestCache, IDisposable
     {
+        public IObservable<IPeerReputationChange> PeerRatingChanges => _ratingChangeSubject.AsObservable();
+
+        private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
+
         public PendingRequestCache(IRepository<PendingRequest> requestStore)
         {
             RequestStore = requestStore;
+            _ratingChangeSubject = new ReplaySubject<IPeerReputationChange>(0);
         }
 
         public IRepository<PendingRequest> RequestStore { get; }
@@ -55,6 +62,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 p => p,
                 out PendingRequest matched);
 
+            if(found) _ratingChangeSubject.OnNext(new PeerReputationChange(responderId, 10));
+
             return found ? matched.Content.FromAnySigned<TRequest>() : null;
         }
 
@@ -72,13 +81,12 @@ namespace Catalyst.Node.Core.P2P.Messaging
             return isMatching;
         }
 
-        public IObservable<IPeerReputationChange> PeerRatingChanges { get; }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) {return;}
 
             RequestStore?.Dispose();
+            _ratingChangeSubject.Dispose();
         }
 
         public void Dispose()
