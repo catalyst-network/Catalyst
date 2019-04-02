@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -20,18 +20,22 @@
 #endregion
 
 using System;
-using System.Net;
 using Catalyst.Protocol.Common;
+using SharpRepository.Repository;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.P2P;
+using Catalyst.Protocol.IPPN;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
-    public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
+    public interface IPendingRequestCache : IDisposable
     {
-        PeerId PeerId { get; }
-        string ClientId { get; }
-        string ClientVersion { get; }
-        IPAddress Ip { get; }
-        int Port { get; }
-        byte[] PublicKey { get; }
+        IRepository<PendingRequest> RequestStore { get; }
+        IObservable<IPeerReputationChange> PeerRatingChanges { get; }
+        TRequest TryMatchResponse<TRequest, TResponse>(TResponse response, IPeerIdentifier responderId)
+            where TRequest : class, IMessage<TRequest>
+            where TResponse : class, IMessage<TResponse>;
     }
 }
