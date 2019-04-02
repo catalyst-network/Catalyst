@@ -36,9 +36,9 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
-            Logger.Debug("received pong response");
+            Logger.Debug("received ping response");
             var deserialised = message.Payload.FromAny<PingResponse>();
-            Logger.Debug("pong content is {0}", deserialised.CorrelationId);
+            Logger.Debug("ping response content is empty");
         }
     }
 }

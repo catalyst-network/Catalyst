@@ -27,6 +27,7 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.P2P;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Dawn;
 using Google.Protobuf;
@@ -48,35 +49,34 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         public IRepository<PendingRequest> RequestStore { get; }
 
-        public TRequest TryMatchResponse<TRequest, TResponse>(TResponse response, IPeerIdentifier responderId) 
+        public TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response) 
             where TRequest : class, IMessage<TRequest>
             where TResponse : class, IMessage<TResponse>
         {
             Guard.Argument(response, nameof(response)).NotNull()
-               .Require(r => r.Descriptor.Name.EndsWith("Response"),
-                    r => $"{nameof(response)} is of type {r.Descriptor.Name} which is not a known response type.");
-            Guard.Argument(responderId, nameof(responderId)).NotNull();
+               .Require(r => typeof(TResponse).ShortenedProtoFullName().Equals(response.TypeUrl))
+               .Require(r => typeof(TRequest).ShortenedProtoFullName().Equals(r.TypeUrl.GetRequestType()));
 
             var found = RequestStore.TryFind(
-                r => MatchResponseToRequest<TRequest, TResponse>(response, r, responderId),
+                r => MatchResponseToRequest<TRequest, TResponse>(r, response),
                 p => p,
                 out PendingRequest matched);
 
-            if(found) _ratingChangeSubject.OnNext(new PeerReputationChange(responderId, 10));
+            if (!found) { return null; }
 
-            return found ? matched.Content.FromAnySigned<TRequest>() : null;
+            _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId), 10));
+            
+            return matched.Content.FromAnySigned<TRequest>();
         }
 
-        private static bool MatchResponseToRequest<TRequest, TResponse>(TResponse response, PendingRequest request, IPeerIdentifier responderId)
+        private static bool MatchResponseToRequest<TRequest, TResponse>( 
+            PendingRequest request, AnySigned response)
             where TRequest : class, IMessage<TRequest> 
             where TResponse : class, IMessage<TResponse>
         {
-            var isMatching = request.SentTo.Equals(responderId)
-                 && request.Content.TypeUrl == response.Descriptor.ShortenedFullName()
-                        //todo: clean this magic ?
-                       .Replace("Response", "Request")
-                 //todo: build a mechanism to append correlation Id on all proto Responses 
-                 && request.Content.FromAnySigned<PingRequest>().CorrelationId == (response as PingResponse).CorrelationId;
+            var isMatching = request.SentTo.PeerId.Equals(response.PeerId)
+                 && request.Content.TypeUrl == response.TypeUrl.GetRequestType()
+                 && request.Content.CorrelationId == response.CorrelationId;
 
             return isMatching;
         }

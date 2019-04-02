@@ -34,7 +34,8 @@ namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
     {
         IRepository<PendingRequest> RequestStore { get; }
         IObservable<IPeerReputationChange> PeerRatingChanges { get; }
-        TRequest TryMatchResponse<TRequest, TResponse>(TResponse response, IPeerIdentifier responderId)
+
+        TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
             where TRequest : class, IMessage<TRequest>
             where TResponse : class, IMessage<TResponse>;
     }

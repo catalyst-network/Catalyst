@@ -42,5 +42,23 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
             PingRequest.Descriptor.FullName.Should().Be("Catalyst.Protocol.IPPN.PingRequest");
             typeof(PingRequest).ShortenedProtoFullName().Should().Be("IPPN.PingRequest");
         }
+
+        [Theory]
+        [InlineData("MyFunnyRequest", "MyFunnyResponse")]
+        [InlineData("Request", "Response")]
+        [InlineData("Some.Namespace.ClassRequest", "Some.Namespace.ClassResponse")]
+        public static void GetResponseType_should_swap_request_suffix_for_response_suffix(string requestType, string responseType)
+        {
+            requestType.GetResponseType().Should().Be(responseType);
+        }
+
+        [Theory]
+        [InlineData("MyFunnyResponse", "MyFunnyRequest")]
+        [InlineData("Response", "Request")]
+        [InlineData("Some.Namespace.ClassResponse", "Some.Namespace.ClassRequest")]
+        public static void GetRequestType_should_swap_request_suffix_for_response_suffix(string responseType, string requestType)
+        {
+            responseType.GetRequestType().Should().Be(requestType);
+        }
     }
 }

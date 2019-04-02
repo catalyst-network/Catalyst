@@ -58,15 +58,11 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             }.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToArray();
 
             _reputationByPeerIdentifier = _peerIds.ToDictionary(p => p, p => 0);
-
             _pendingRequests = _peerIds.Select((p, i) => new PendingRequest()
             {
+                Content = new PingRequest().ToAnySigned(_senderPeerId, Guid.NewGuid()),
                 SentTo = p,
-                Content = new PingRequest {
-                        CorrelationId = Guid.NewGuid().ToByteArray().ToByteString(),
-                    }.ToAnySigned(_senderPeerId),
-                SentAt = DateTimeOffset.MinValue
-                   .Add(TimeSpan.FromMilliseconds(100 * i))
+                SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
 
             var responseStore = Substitute.For<IRepository<PendingRequest>>();
@@ -91,15 +87,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
         {
-            var responseMatchingIndex1 = new PingResponse()
-            {
-                CorrelationId = _pendingRequests[1].Content.FromAnySigned<PingRequest>().CorrelationId
-            };
+            var responseMatchingIndex1 = new PingResponse().ToAnySigned(
+                _peerIds[1].PeerId,
+                _pendingRequests[1].Content.CorrelationId.ToGuid());
 
-            var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingIndex1, _peerIds[1]);
+            var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingIndex1);
             request.Should().NotBeNull();
-            request.CorrelationId.Should()
-               .Equal(_pendingRequests[1].Content.FromAnySigned<PingResponse>().CorrelationId);
         }
 
         [Fact]
@@ -117,19 +110,16 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
         {
-            var responseMatchingNothing = new PingResponse()
-            {
-                CorrelationId = Guid.NewGuid().ToByteArray().ToByteString()
-            };
-            var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingNothing, _peerIds[1]);
+            var responseMatchingNothing = new PingResponse().ToAnySigned(_peerIds[1].PeerId, Guid.NewGuid());
+            var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingNothing);
             request.Should().BeNull();
         }
 
         [Fact]
         public void TryMatchResponseAsync_should_not_match_on_wrong_response_type()
         {
-            var matchingRequest = _pendingRequests[1].Content.FromAnySigned<PingRequest>();
-            new Action(() => _cache.TryMatchResponse<PingRequest, PingRequest>(matchingRequest, _peerIds[1]))
+            var matchingRequest = _pendingRequests[1].Content;
+            new Action(() => _cache.TryMatchResponse<PingRequest, PingRequest>(matchingRequest))
                 .Should().Throw<ArgumentException>();
         }
 
