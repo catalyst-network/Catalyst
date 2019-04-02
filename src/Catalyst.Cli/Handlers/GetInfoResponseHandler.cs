@@ -30,8 +30,18 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
 {
+    /// <summary>
+    /// Handler responsible for handling the server's response for the GetInfo request.
+    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.  
+    /// </summary>
     public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>
     {
+        /// <summary>
+        /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
+        /// </summary>
+        /// <param name="messageStream">The message stream the handler is listening to through which the handler will
+        /// receive the response from the server.</param>
+        /// <param name="logger">Logger to log debug related information.</param>
         public GetInfoResponseHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger)
@@ -40,6 +50,10 @@ namespace Catalyst.Cli.Handlers
             
         }
 
+        /// <summary>
+        /// Handles the VersionResponse message sent from the <see cref="GetInfoResponseHandler" />. 
+        /// </summary>
+        /// <param name="message">An object of GetInfoResponse</param>
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
             if (message == NullObjects.ChanneledAny)
@@ -50,9 +64,12 @@ namespace Catalyst.Cli.Handlers
             try
             {
                 Logger.Debug("Handling GetInfoResponse");
+                
                 var deserialised = message.Payload.FromAny<GetInfoResponse>();
-                Logger.Information("Requested node configuration\n============================\n{0}", deserialised.Query.ToString());
-                Logger.Information("Press Enter to continue ...\n");
+                
+                Console.WriteLine(@"{0}", deserialised.Query.ToString());
+                
+                Console.WriteLine(@"Press Enter to continue ...");
             }
             catch (Exception ex)
             {

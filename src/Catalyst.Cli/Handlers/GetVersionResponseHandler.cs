@@ -30,8 +30,19 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
 {
+    /// <summary>
+    /// Handler responsible for handling the server's response for the GetVersion request.
+    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
+    /// The handler implements <see cref="MessageHandlerBase"/>.  
+    /// </summary>
     public class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="messageStream">Message stream the handler is listening to through which the handler will
+        /// receive the response from the server.</param>
+        /// <param name="logger">Logger to log debug related information.</param>
         public GetVersionResponseHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger)
@@ -40,6 +51,10 @@ namespace Catalyst.Cli.Handlers
             
         }
 
+        /// <summary>
+        /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />. 
+        /// </summary>
+        /// <param name="message">An object of GetVersionResponse</param>
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
             if (message == NullObjects.ChanneledAny)
@@ -52,8 +67,9 @@ namespace Catalyst.Cli.Handlers
                 Logger.Debug("Handling GetVersionResponse");
                 
                 var deserialised = message.Payload.FromAny<VersionResponse>();
-                Logger.Information("Node Version: {0}", deserialised.Version.ToString());
-                Logger.Information("Press Enter to continue ...\n");
+                
+                Console.WriteLine(@"Node Version: {0}", deserialised.Version.ToString());
+                Console.WriteLine(@"Press Enter to continue ...");
             }
             catch (Exception ex)
             {
