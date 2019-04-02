@@ -91,6 +91,12 @@ namespace Catalyst.Node.Common.Helpers
             PeerId senderId,
             Guid correlationId = default) where T : IMessage<T>
         {
+            var typeUrl = protobufObject.Descriptor.ShortenedFullName();
+            Guard.Argument(senderId, nameof(senderId)).NotNull();
+            Guard.Argument(correlationId, nameof(correlationId))
+               .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
+                    g => $"{typeUrl} is a response type and needs a correlationId");
+
             var value = protobufObject.ToByteString();
             var anySigned = new AnySigned
             {
@@ -98,7 +104,7 @@ namespace Catalyst.Node.Common.Helpers
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
                 //todo: sign the `correlationId` and `value` bytes with publicKey instead
                 Signature = senderId.PublicKey,
-                TypeUrl = protobufObject.Descriptor.ShortenedFullName(),
+                TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
             return anySigned;

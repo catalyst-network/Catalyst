@@ -19,7 +19,9 @@
 */
 #endregion
 
+using System;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
@@ -59,6 +61,38 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
         public static void GetRequestType_should_swap_request_suffix_for_response_suffix(string responseType, string requestType)
         {
             responseType.GetRequestType().Should().Be(requestType);
+        }
+
+        [Fact]
+        public static void ToAnySigned_should_happen_new_guid_to_request_if_not_specified()
+        {
+            //this ensures we won't get Guid.Empty and then a risk of mismatch;
+            var wrapped = new PingRequest().ToAnySigned(PeerIdentifierHelper.GetPeerId("you"));
+            wrapped.CorrelationId.Should().NotBeEquivalentTo(Guid.Empty.ToByteString());
+        }
+
+        [Fact]
+        public static void ToAnySigned_should_set_the_wrapper_fields()
+        {
+            var guid = Guid.NewGuid();
+            var peerId = PeerIdentifierHelper.GetPeerId("blablabla");
+            var expectedContent = "content";
+            var wrapped = new PeerInfoRequest(){Ping = expectedContent}.ToAnySigned(peerId, guid);
+
+            wrapped.CorrelationId.ToGuid().Should().Be(guid);
+            wrapped.PeerId.Should().Be(peerId);
+            wrapped.TypeUrl.Should().Be(PeerInfoRequest.Descriptor.ShortenedFullName());
+            wrapped.FromAnySigned<PeerInfoRequest>().Ping.Should().Be(expectedContent);
+        }
+
+        [Fact]
+        public static void ToAnySigned_should_fail_on_response_without_correlationId()
+        {
+            var peerId = PeerIdentifierHelper.GetPeerId("someone");
+            var expectedContent = "censored";
+            var response = new PeerInfoResponse() { Pong = expectedContent };
+            new Action(() => response.ToAnySigned(peerId))
+               .Should().Throw<ArgumentException>();
         }
     }
 }
