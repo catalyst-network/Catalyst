@@ -35,8 +35,7 @@ namespace Catalyst.Node.Core.P2P
             Discovery = peerDiscovery;
             Settings = settings;
 
-            var ipEndPoint = new IPEndPoint(Settings.BindAddress, Settings.Port);
-            Identifier = new PeerIdentifier(Settings.PublicKey.HexToByteArray(), ipEndPoint);
+            Identifier = new PeerIdentifier(Settings);
         }
 
         public IPeerDiscovery Discovery { get; }

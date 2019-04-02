@@ -27,9 +27,10 @@ using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Protocol.Common;
 using Dawn;
+using Ipfs;
 using Nethereum.Hex.HexConvertors.Extensions;
-using Nethereum.RLP;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
@@ -45,262 +46,112 @@ namespace Catalyst.Node.Core.P2P
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// </summary>
-        /// <param name="id"></param>
-        private PeerIdentifier(byte[] id)
-        {
-            Guard.Argument(id)
-               .NotNull()
-               .NotEmpty();
-            
-            if (!ValidatePeerId(id))
-            {
-                throw new ArgumentException("Peer identifier is invalid.");
-            }
+        public static readonly string AssemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
+        public static readonly byte[] AssemblyMajorVersion2Bytes = Encoding.UTF8.GetBytes(AssemblyMajorVersion2Digits);
 
-            Id = id;
+        public static readonly byte[] AtlasClientId = Encoding.UTF8.GetBytes("AC");
+
+        public string ClientId => PeerId.ClientId.ToStringUtf8();
+        public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
+        public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv6();
+        public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
+        public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
+
+        public PeerId PeerId { get; }
+
+        public PeerIdentifier(PeerId peerId)
+        {
+            Guard.Argument(peerId, nameof(peerId)).Require(ValidatePeerId);
+            PeerId = peerId;
         }
 
         public PeerIdentifier(IPeerSettings settings) 
             : this(settings.PublicKey.HexToByteArray(), settings.EndPoint) {}
 
-        /// <summary>
-        ///     method to build our peerId
-        /// </summary>
-        /// <param name="publicKey"></param>
-        /// <param name="endPoint"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
+        private PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
         {
-            Guard.Argument(endPoint, nameof(endPoint)).NotNull();
-            Logger.Information(publicKey.Length.ToString());
-            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty().MaxCount(20).MinCount(20);
-
-            // init blank nodeId
-            var peerId = ByteUtil.InitialiseEmptyByteArray(42);
-
-            // copy client id chunk
-            Buffer.BlockCopy(BuildClientIdChunk(), 0, peerId, 0, 2);
-
-            // copy client version chunk
-            Buffer.BlockCopy(BuildClientVersionChunk(), 0, peerId, 2, 2);
-
-            // copy client ip chunk
-            Buffer.BlockCopy(BuildClientIpChunk(), 0, peerId, 4, 16);
-
-            // copy client port chunk
-            Buffer.BlockCopy(BuildClientPortChunk(endPoint), 0, peerId, 20, 2);
-
-            // copy client public key chunk
-            Buffer.BlockCopy(publicKey, 0, peerId, 22, 20);
-
-            if (!ValidatePeerId(peerId))
+            PeerId = new PeerId()
             {
-                throw new ArgumentException("Peer identifier is invalid.");
-            }
-
-            Id = peerId;
+                PublicKey = publicKey.ToByteString(),
+                Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
+                Ip = endPoint.Address.To16Bytes().ToByteString(),
+                ClientId = AtlasClientId.ToByteString(),
+                ClientVersion = AssemblyMajorVersion2Bytes.ToByteString()
+            };
         }
 
-        public byte[] Id { get; }
-
-        /// <summary>
-        ///     Get hex of this client
-        /// </summary>
-        /// <returns></returns>
-        private static byte[] BuildClientIdChunk()
+        public static bool ValidatePeerId(PeerId peerId)
         {
-            return Encoding.UTF8.GetBytes("AC");
-        }
-
-        /// <summary>
-        ///     We only care about the major ass string! 🍑 🍑 🍑
-        /// </summary>
-        /// <returns></returns>
-        private static byte[] BuildClientVersionChunk()
-        {
-            return Encoding.UTF8.GetBytes(
-                PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString()));
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="unPaddedVersion"></param>
-        /// <returns></returns>
-        private static string PadVersionString(string unPaddedVersion)
-        {
-            Guard.Argument(unPaddedVersion, nameof(unPaddedVersion)).NotNull().NotEmpty().NotWhiteSpace();
-
-            string version = unPaddedVersion;
-            while (version.Length < 2)
-            {
-                version = version.PadLeft(2, '0');
-            }
-            Guard.Argument(version).NotNull();
-            return version;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        private static byte[] BuildClientIpChunk()
-        {
-            var ipChunk = ByteUtil.InitialiseEmptyByteArray(16);
-            var address = Ip.GetPublicIpAsync().GetAwaiter().GetResult();
-            var ipBytes = address.GetAddressBytes();
-
-            if (ipBytes.Length == 4)
-            {
-                Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
-            }
-            else
-            {
-                ipChunk = ipBytes;
-            }
-
-            Logger.Debug(string.Join(" ", ipChunk));
-
-            return ipChunk;
-        }
-
-        /// <summary>
-        ///     @TODO this gets the connection end point for our port rather than the advertised port
-        /// </summary>
-        /// <param name="endPoint"></param>
-        /// <returns></returns>
-        private static byte[] BuildClientPortChunk(IPEndPoint endPoint)
-        {
-            Guard.Argument(endPoint, nameof(endPoint)).NotNull();
-            var buildClientPortChunk = endPoint.Port.ToBytesForRLPEncoding();
-            Logger.Debug(string.Join(" ", buildClientPortChunk));
-            return buildClientPortChunk;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="peerId"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        private static bool ValidatePeerId(byte[] peerId)
-        {
-            Guard.Argument(peerId, nameof(peerId))
-               .NotNull()
-               .NotEmpty();
-
-            try
-            {
-                ValidatePeerIdLength(peerId);
-                ValidateClientId(peerId);
-                ValidateClientVersion(peerId);
-                ValidateClientIp(peerId);
-                ValidateClientPort(peerId);
-                ValidateClientPubKey(peerId);
-            }
-            catch (ArgumentException e)
-            {
-                Logger.Error(e, "Failed to validate Peer Id");
-                return false;
-            }
-
+            Guard.Argument(peerId, nameof(peerId)).NotNull()
+               .Require(p => p.PublicKey.Length == 20, _ => "PublicKey should be 20 bytes")
+               .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
+               .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
+               .Require(p => ValidateClientId(p.ClientId.ToByteArray()),
+                    _ => "ClientId should only be 2 alphabetical letters")
+               .Require(p => ValidateClientVersion(p.ClientVersion.ToByteArray()), 
+                    _ => $"ClientVersion doesn't match {AssemblyMajorVersion2Digits}");
             return true;
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="peerId"></param>
+        /// <param name="clientId"></param>
         /// <exception cref="ArgumentException"></exception>
-        private static void ValidatePeerIdLength(byte[] peerId)
+        private static bool ValidateClientId(byte[] clientId)
         {
-            Guard.Argument(peerId, nameof(peerId))
-               .NotNull()
-               .NotEmpty()
-               .MinCount(42)
-               .MaxCount(42);
+            return Regex.IsMatch(ByteUtil.ByteToString(clientId), @"^[a-zA-Z]{1,2}$");
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="peerId"></param>
+        /// <param name="clientVersion"></param>
         /// <exception cref="ArgumentException"></exception>
-        private static void ValidateClientId(byte[] peerId)
+        private static bool ValidateClientVersion(byte[] clientVersion)
         {
-            Guard.Argument(peerId, nameof(peerId))
-               .NotNull()
-               .NotEmpty();
-            
-            if (!Regex.IsMatch(ByteUtil.ByteToString(peerId.Slice(0, 2)), @"^[a-zA-Z]+$"))
-            {
-                throw new ArgumentException("ClientID not valid");
-            }
+            Guard.Argument(clientVersion, nameof(clientVersion))
+               .NotNull().NotEmpty().Count(2);
+            var intVersion = int.Parse(Encoding.UTF8.GetString(clientVersion));
+            return 0 <= intVersion && intVersion <= 99;
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="peerId"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private static void ValidateClientVersion(byte[] peerId)
+        /// <param name="clientIp"></param>
+        private static bool ValidateIp(byte[] clientIp)
         {
-            Guard.Argument(peerId, nameof(peerId))
-               .NotNull()
-               .NotEmpty();
-            
-            if (!peerId.Slice(2, 4).ToHex()
-               .IsTheSameHex(
-                    PadVersionString(Assembly.GetExecutingAssembly().GetName().Version.Major.ToString())
-                       .ToHexUTF8()))
-            {
-                throw new ArgumentException("clientVersion not valid");
-            }
+            return IPAddress.TryParse(new IPAddress(clientIp).ToString(), out _);
         }
 
-        /// <summary>
+        /// <summary> 
         /// </summary>
-        /// <param name="peerId"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private static void ValidateClientIp(byte[] peerId)
+        /// <param name="portBytes"></param>
+        private static bool ValidatePort(byte[] portBytes)
         {
-            Guard.Argument(peerId, nameof(peerId))
-               .NotNull()
-               .NotEmpty();
-            
-            if (Ip.ValidateIp(new IPAddress(peerId.Slice(4, 20)).ToString()).GetType() != typeof(IPAddress))
-            {
-                throw new ArgumentException("clientIp not valid");
-            }
+            return Common.Helpers.Network.Ip.ValidPortRange(BitConverter.ToUInt16(portBytes));
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="peerId"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private static void ValidateClientPort(byte[] peerId)
+        public override string ToString()
         {
-            Guard.Argument(peerId, nameof(peerId))
-               .NotNull()
-               .NotEmpty();
-            
-            if (!Ip.ValidPortRange(peerId.Slice(20, 22).ToIntFromRLPDecoded()))
-            {
-                throw new ArgumentException("clientPort not valid");
-            }
+            return ClientId + ClientVersion + $"@{Ip}:{Port}" + $"|{PublicKey.ToHex()}";
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="peerId"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private static void ValidateClientPubKey(byte[] peerId)
+        public bool Equals(IPeerIdentifier other)
         {
-            Guard.Argument(peerId, nameof(peerId))
-               .NotNull()
-               .NotEmpty();
-            
-            if (peerId.Slice(22, 42).Length != 20)
-            {
-                throw new ArgumentException("clientPubKey not valid");
-            }
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(PeerId, other.PeerId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is IPeerIdentifier other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return (PeerId != null ? PeerId.GetHashCode() : 0);
         }
     }
 }

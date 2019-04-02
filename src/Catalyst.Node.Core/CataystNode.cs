@@ -132,7 +132,7 @@ namespace Catalyst.Node.Core
             var network = new byte[1];
             network[0] = 0x01;
             _logger.Debug(string.Join(" ", network));
-            var announcePackage = ByteUtil.Merge(network, _p2P.Identifier.Id);
+            var announcePackage = ByteUtil.Merge(network, _p2P.Identifier.PeerId.ToByteArray());
             _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();
