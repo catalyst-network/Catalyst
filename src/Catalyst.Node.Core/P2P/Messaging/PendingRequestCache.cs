@@ -28,10 +28,12 @@ using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
 using Dawn;
 using Google.Protobuf;
+using Microsoft.Extensions.Caching.Memory;
 using SharpRepository.Repository;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository.Caching;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
@@ -41,9 +43,10 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
 
-        public PendingRequestCache(IRepository<PendingRequest> requestStore)
+        public PendingRequestCache(IRepository<PendingRequest> requestStore = null, int ttlInSeconds = 10)
         {
-            RequestStore = requestStore;
+            var cacheProvider = new InMemoryCachingProvider(new MemoryCache(new MemoryCacheOptions()));            
+            RequestStore = requestStore ?? new InMemoryRepository<PendingRequest>(new TimeoutCachingStrategy<PendingRequest>(ttlInSeconds, cacheProvider));
             _ratingChangeSubject = new ReplaySubject<IPeerReputationChange>(0);
         }
 

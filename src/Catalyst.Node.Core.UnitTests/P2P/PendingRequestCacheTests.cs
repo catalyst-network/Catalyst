@@ -23,6 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
@@ -134,6 +136,19 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var matchingRequest = _pendingRequests[1].Content;
             new Action(() => _cache.TryMatchResponse<PingRequest, PingRequest>(matchingRequest))
                 .Should().Throw<ArgumentException>();
+        }
+
+        [Fact(Skip = "the cache is not caching the content, but only the returned results")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task RequestStore_should_not_keep_records_for_longer_than_ttl()
+        {
+            var cache = new PendingRequestCache(ttlInSeconds: 1);
+            cache.RequestStore.Add(_pendingRequests[0]);
+            cache.RequestStore.CachingEnabled.Should().BeTrue();
+            cache.RequestStore.CacheUsed.Should().BeTrue();
+            await Task.Delay(1500);
+            Thread.Sleep(1500);
+            cache.RequestStore.GetAll().Should().BeEmpty();
         }
 
     }
