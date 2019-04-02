@@ -19,16 +19,16 @@
 */
 #endregion
 
-using Google.Protobuf;
 using System;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.P2P
 {
     public class PendingRequest
     {
-        public IPeerIdentifier TargetNodeId { get; set; }
-        public ByteString RequestContent { get; set; }
-        public DateTimeOffset SentDateTimeOffset { get; set; }
+        public AnySigned Content { get; set; }
+        public IPeerIdentifier SentTo { get; set; }
+        public DateTimeOffset SentAt { get; set; }
     }
 }

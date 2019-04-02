@@ -49,13 +49,15 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             return peerIdentifier;
         }
 
-        public static PeerId GetPeerId(string publicKey,
+        public static PeerId GetPeerId(string publicKeySeed,
             string clientId = "Tc",
             int clientVersion = 1,
             IPAddress ipAddress = null,
             int port = 12345)
         {
-            var publicKeyBytes = Encoding.UTF8.GetBytes(publicKey).Take(20).ToArray();
+            var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
+               .Concat(Enumerable.Repeat(default(byte), 20))
+               .Take(20).ToArray();
             return GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
         }
     }

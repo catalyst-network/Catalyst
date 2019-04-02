@@ -20,35 +20,56 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.IPPN;
 using Dawn;
+using Google.Protobuf;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
     public class PendingRequestCache : IPendingRequestCache
     {
-        public PendingRequestCache(IRepository<PendingRequest> responseStore)
+        public PendingRequestCache(IRepository<PendingRequest> requestStore)
         {
-            ResponseStore = responseStore;
+            RequestStore = requestStore;
         }
 
-        public IRepository<PendingRequest> ResponseStore { get; }
+        public IRepository<PendingRequest> RequestStore { get; }
 
-        public PendingRequest TryMatchResponseAsync(PingResponse response, IPeerIdentifier responderId)
+        public TRequest TryMatchResponse<TRequest, TResponse>(TResponse response, IPeerIdentifier responderId) 
+            where TRequest : class, IMessage<TRequest>
+            where TResponse : class, IMessage<TResponse>
         {
             Guard.Argument(response, nameof(response)).NotNull()
-               .Require(r => r.CorrelationId != null);
+               .Require(r => r.Descriptor.Name.EndsWith("Response"),
+                    r => $"{nameof(response)} is of type {r.Descriptor.Name} which is not a known response type.");
             Guard.Argument(responderId, nameof(responderId)).NotNull();
 
-            return !ResponseStore.TryFind(r => r.TargetNodeId.Equals(responderId), 
-                p => p, 
-                out PendingRequest matched) ? matched : null;
+            var found = RequestStore.TryFind(
+                r => MatchResponseToRequest<TRequest, TResponse>(response, r, responderId),
+                p => p,
+                out PendingRequest matched);
+
+            return found ? matched.Content.FromAnySigned<TRequest>() : null;
+        }
+
+        private static bool MatchResponseToRequest<TRequest, TResponse>(TResponse response, PendingRequest request, IPeerIdentifier responderId)
+            where TRequest : class, IMessage<TRequest> 
+            where TResponse : class, IMessage<TResponse>
+        {
+            var isMatching = request.SentTo.Equals(responderId)
+                 && request.Content.TypeUrl == response.Descriptor.ShortenedFullName()
+                        //todo: clean this magic ?
+                       .Replace("Response", "Request")
+                 //todo: build a mechanism to append correlation Id on all proto Responses 
+                 && request.Content.FromAnySigned<PingRequest>().CorrelationId == (response as PingResponse).CorrelationId;
+
+            return isMatching;
         }
 
         public IObservable<IPeerReputationChange> PeerRatingChanges { get; }
@@ -57,7 +78,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             if (!disposing) {return;}
 
-            ResponseStore?.Dispose();
+            RequestStore?.Dispose();
         }
 
         public void Dispose()

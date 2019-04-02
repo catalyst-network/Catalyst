@@ -23,11 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -47,46 +44,74 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private PeerIdentifier[] _peerIds;
         private readonly IList<PendingRequest> _pendingRequests;
         private PendingRequestCache _cache;
+        private PeerId _senderPeerId;
 
         public PendingRequestCacheTests()
         {
-            _responseStore = Substitute.For<IRepository<PendingRequest>>();
+            _senderPeerId = PeerIdentifierHelper.GetPeerId("sender");
             _peerIds = new []
             {
                 PeerIdentifierHelper.GetPeerId("abcd"),
-                PeerIdentifierHelper.GetPeerId("efgh")
+                PeerIdentifierHelper.GetPeerId("efgh"),
+                PeerIdentifierHelper.GetPeerId("ijkl"),
             }.Select(p => new PeerIdentifier(p)).ToArray();
 
             _pendingRequests = _peerIds.Select((p, i) => new PendingRequest()
             {
-                TargetNodeId = p,
-                RequestContent = Guid.NewGuid().ToByteArray().ToByteString(),
-                SentDateTimeOffset = DateTimeOffset.MinValue
+                SentTo = p,
+                Content = new PingRequest {
+                        CorrelationId = Guid.NewGuid().ToByteArray().ToByteString(),
+                    }.ToAnySigned(_senderPeerId),
+                SentAt = DateTimeOffset.MinValue
                    .Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
+
+            _responseStore = Substitute.For<IRepository<PendingRequest>>();
+            _responseStore.TryFind(Arg.Any<Expression<Func<PendingRequest, bool>>>(),
+                    Arg.Any<Expression<Func<PendingRequest, PendingRequest>>>(),
+                    out Arg.Any<PendingRequest>())
+               .Returns(ci =>
+                {
+                    var predicate = ((Expression<Func<PendingRequest, bool>>)ci[0]).Compile();
+                    ci[2] = _pendingRequests.SingleOrDefault(r => predicate.Invoke(r));
+                    return ci[2] != null;
+                });
 
             _cache = new PendingRequestCache(_responseStore);
         }
 
         [Fact]
-        public void TryMatchResponseAsync_should_match_existing_records()
+        public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
         {
-            var responseMatchingNumber2 = new PingResponse()
+            var responseMatchingIndex1 = new PingResponse()
             {
-                CorrelationId = _pendingRequests[1].RequestContent
+                CorrelationId = _pendingRequests[1].Content.FromAnySigned<PingRequest>().CorrelationId
             };
-            _cache.ResponseStore.TryFind(Arg.Any<Expression<Func<PendingRequest, bool>>>(),
-                Arg.Any<Expression<Func<PendingRequest, PendingRequest>>>(),
-                out PendingRequest x).Returns(ci =>
-            {
-                ci[2] = responseMatchingNumber2;
-                return true;
-            });
 
-            var request = _cache.TryMatchResponseAsync(responseMatchingNumber2, _peerIds[1]);
+            var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingIndex1, _peerIds[1]);
             request.Should().NotBeNull();
-
-            request.RequestContent.Should().Equal(_pendingRequests[1].RequestContent);
+            request.CorrelationId.Should()
+               .Equal(_pendingRequests[1].Content.FromAnySigned<PingResponse>().CorrelationId);
         }
+
+        [Fact]
+        public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
+        {
+            var responseMatchingNothing = new PingResponse()
+            {
+                CorrelationId = Guid.NewGuid().ToByteArray().ToByteString()
+            };
+            var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingNothing, _peerIds[1]);
+            request.Should().BeNull();
+        }
+
+        [Fact]
+        public void TryMatchResponseAsync_should_not_match_on_wrong_response_type()
+        {
+            var matchingRequest = _pendingRequests[1].Content.FromAnySigned<PingRequest>();
+            new Action(() => _cache.TryMatchResponse<PingRequest, PingRequest>(matchingRequest, _peerIds[1]))
+                .Should().Throw<ArgumentException>();
+        }
+
     }
 }

@@ -26,13 +26,16 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.IPPN;
+using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
     public interface IPendingRequestCache : IDisposable
     {
-        IRepository<PendingRequest> ResponseStore { get; }
-        PendingRequest TryMatchResponseAsync(PingResponse response, IPeerIdentifier responderId);
+        IRepository<PendingRequest> RequestStore { get; }
         IObservable<IPeerReputationChange> PeerRatingChanges { get; }
+        TRequest TryMatchResponse<TRequest, TResponse>(TResponse response, IPeerIdentifier responderId)
+            where TRequest : class, IMessage<TRequest>
+            where TResponse : class, IMessage<TResponse>;
     }
 }
