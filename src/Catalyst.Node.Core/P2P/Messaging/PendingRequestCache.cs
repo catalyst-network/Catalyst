@@ -62,11 +62,10 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 p => p,
                 out PendingRequest matched);
 
-            if (!found) { return null; }
+            var reputationChange = found ? 10 : -10;
+            _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId), reputationChange));
 
-            _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId), 10));
-            
-            return matched.Content.FromAnySigned<TRequest>();
+            return matched?.Content.FromAnySigned<TRequest>();
         }
 
         private static bool MatchResponseToRequest<TRequest, TResponse>( 
