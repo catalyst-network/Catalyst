@@ -63,32 +63,11 @@ namespace Catalyst.Cli
             {
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
                 
-                // check if user home data dir has a shell config
-                var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
-                var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile);
-                var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
-
-                if (!File.Exists(shellComponentsFilePath))
-                {
-                    File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.components.json"),
-                        shellComponentsFilePath);
-                }
-
-                if (!File.Exists(shellSeriLogFilePath))
-                {
-                    File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.serilog.json"),
-                        shellSeriLogFilePath);
-                }
-                
-                if (!File.Exists(shellNodesFilePath))
-                {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
-                        shellNodesFilePath);
-                }
+                new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
                 
                 var config = new ConfigurationBuilder()
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile))
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
                    .Build();
             

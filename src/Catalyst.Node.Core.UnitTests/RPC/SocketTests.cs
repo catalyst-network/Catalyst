@@ -69,15 +69,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         public SocketTests(ITestOutputHelper output) : base(output)
         {
-            //Build configuration
-            _config = new ConfigurationBuilder()
+            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build();
-
-            AlterConfigurationToGetUniquePort();
+               .Build(), _currentTestName);
 
             WriteLogsToFile = false;
             WriteLogsToTestOutput = false;
@@ -211,17 +208,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 clientObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
             }
         
-        }
-
-        private void AlterConfigurationToGetUniquePort()
-        {
-            var serverSection = _config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
-            var randomPort = int.Parse(serverSection.GetSection("Port").Value) +
-                new Random(_currentTestName.GetHashCode()).Next(0, 500);
-
-            serverSection.GetSection("Port").Value = randomPort.ToString();
-            var clientSection = _config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
-            clientSection.GetChildren().ToList().ForEach(c => { c.GetSection("port").Value = randomPort.ToString(); });
         }
 
         protected override void Dispose(bool disposing)

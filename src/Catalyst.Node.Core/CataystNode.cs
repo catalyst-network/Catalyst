@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core
         public async Task RunAsync(CancellationToken ct)
         {
 
-            //await _dfs.StartAsync(ct);
+            await _dfs.StartAsync(ct);
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
             do
@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core
 
                 _logger.Information("Creating a Ping message");
                 _logger.Information("Please type in a ping message content");
-                var ping = new PeerProtocol.Types.PingRequest { CorrelationId = Console.ReadLine().ToUtf8ByteString() };
+                var ping = new PingRequest { CorrelationId = Console.ReadLine().ToUtf8ByteString() };
 
                 await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
                 await Task.Delay(300, ct); //just to get the exit message at the bottom

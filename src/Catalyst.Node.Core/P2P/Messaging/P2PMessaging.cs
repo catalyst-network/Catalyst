@@ -119,7 +119,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 _anyTypeClientHandler
             };
             
-            _socketClient = await new TcpClient(_logger)
+            _socketClient = await new TcpClient()
                .Bootstrap(
                     new OutboundChannelInitializer<ISocketChannel>(channel => {},
                         handlers,

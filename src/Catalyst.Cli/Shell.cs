@@ -35,10 +35,15 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using CommandLine;
 using ILogger = Serilog.ILogger;
 using Google.Protobuf.WellKnownTypes;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using Serilog.Core;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog.Core;
+
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Cli
 {

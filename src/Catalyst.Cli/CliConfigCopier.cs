@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,26 +19,22 @@
 */
 #endregion
 
-using System;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
-using Catalyst.Protocol.IPPN;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Node.Common.Helpers.Config;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Cli
 {
-    public class PingRequestHandler : MessageHandlerBase<PingRequest>
+    public class CliConfigCopier : ConfigCopier
     {
-        public PingRequestHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
-        : base(messageStream, logger) { }
-
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        protected override IEnumerable<string> RequiredConfigFiles(Network network)
         {
-            Logger.Debug("received ping");
-            var deserialised = message.Payload.FromAny<PingRequest>();
-            Logger.Debug("ping content is {0}", deserialised.CorrelationId);
+            var baseConfigs = base.RequiredConfigFiles(network);
+            return baseConfigs.Concat(new[]
+            {
+                Constants.ShellNodesConfigFile,
+                Constants.ShellComponentsJsonConfigFile,
+            });
         }
     }
 }

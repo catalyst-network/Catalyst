@@ -23,48 +23,46 @@ using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Math.EC;
+using Serilog;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Node.Core.RPC.Handlers
+namespace Catalyst.Cli
 {
-    public class GetInfoRequestHandler : MessageHandlerBase<GetInfoRequest>
+    public class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>
     {
-        private readonly IRpcServerSettings _config;
-
-        public GetInfoRequestHandler(
+        public GetVersionResponseHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
-            IRpcServerSettings config,
             ILogger logger)
             : base(messageStream, logger)
         {
-            _config = config;
+            
         }
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
-            if(message == NullObjects.ChanneledAny) {return;}
-            Logger.Debug("received message of type GetInfoRequest");
+            if (message == NullObjects.ChanneledAny)
+            {
+                return;
+            }
+            
             try
             {
-                var deserialised = message.Payload.FromAny<GetInfoRequest>();
-                Logger.Debug("message content is {0}", deserialised);
-                var response = new GetInfoResponse
-                {
-                    Query = String.Format("Node config:\nNode Name: {0}\nIP Address: {1}\nPort: {2} ", _config.NodeId,_config.BindAddress.ToString(), _config.Port.ToString())
-                };
-
-                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                Logger.Debug("Handling GetVersionResponse");
+                
+                var deserialised = message.Payload.FromAny<VersionResponse>();
+                Logger.Information("Node Version: {0}", deserialised.Version.ToString());
+                Logger.Information("Press Enter to continue ...\n");
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, 
-                    "Failed to handle GetInfoRequest after receiving message {0}", message);
+                Logger.Error(ex,
+                    "Failed to handle GetInfoResponse after receiving message {0}", message);
                 throw;
             }
         }
