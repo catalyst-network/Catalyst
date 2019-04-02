@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -20,18 +20,15 @@
 #endregion
 
 using System;
-using System.Net;
-using Catalyst.Protocol.Common;
+using System.Collections.Generic;
+using System.Text;
+using Catalyst.Node.Common.P2P;
+using SharpRepository.Repository;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
+    interface IReputationManager
     {
-        PeerId PeerId { get; }
-        string ClientId { get; }
-        string ClientVersion { get; }
-        IPAddress Ip { get; }
-        int Port { get; }
-        byte[] PublicKey { get; }
+        IRepository<Peer> PeerRepository { get; }
     }
 }

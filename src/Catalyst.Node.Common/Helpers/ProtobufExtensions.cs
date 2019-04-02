@@ -23,6 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
+using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
@@ -79,6 +81,30 @@ namespace Catalyst.Node.Common.Helpers
             var empty = (IMessage)Activator.CreateInstance(type);
             var innerMessage = empty.Descriptor.Parser.ParseFrom(message.Value);
             return innerMessage;
+        }
+
+        public static AnySigned ToAnySigned<T>(this T protobufObject, PeerId senderId) where T : IMessage<T>
+        {
+            var value = protobufObject.ToByteString();
+            var anySigned = new AnySigned
+            {
+                PeerId = senderId,
+                //todo: sign the `value` field with publicKey instead
+                Signature = senderId.PublicKey,
+                TypeUrl = protobufObject.Descriptor.ShortenedFullName(),
+                Value = protobufObject.ToByteString()
+            };
+            return anySigned;
+        }
+
+        public static T FromAnySigned<T>(this AnySigned message) where T : IMessage<T>
+        {
+            //todo check the message signature with the PeerId.PublicKey and value fields
+            if(message.PeerId.PublicKey != message.Signature)
+                throw new CryptographicException("Signature of the message doesn't match with sender's public Key");
+            var empty = (T)Activator.CreateInstance(typeof(T));
+            var typed = (T)empty.Descriptor.Parser.ParseFrom(message.Value);
+            return typed;
         }
 
         public static ByteString ToUtf8ByteString(this string utf8String)

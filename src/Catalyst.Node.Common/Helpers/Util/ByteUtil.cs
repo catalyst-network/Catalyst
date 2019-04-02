@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Dawn;
+using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Helpers.Util
 {
@@ -32,6 +33,13 @@ namespace Catalyst.Node.Common.Helpers.Util
         private static readonly Random Rand = new Random();
         public static byte[] ZeroByteArray { get; } = {0};
         public static byte[] EmptyByteArray { get; } = new byte[0];
+
+        public static ByteString ToByteString(this IEnumerable<byte> bytes)
+        {
+            Guard.Argument(bytes, nameof(bytes)).NotNull();
+            var array = bytes as byte[] ?? bytes.ToArray();
+            return ByteString.CopyFrom(array);
+        }
 
         /// <summary>
         ///     returns a random 8 byte long ulong for use in message correlation
