@@ -106,10 +106,10 @@ namespace Catalyst.Node.Core
 
                 _logger.Information("Creating a Ping message");
                 var ping = new PingRequest { CorrelationId = Guid.NewGuid().ToString().ToUtf8ByteString() };
-                await _p2P.Messaging.ConnectToPeerAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069));
-                await _p2P.Messaging.BroadcastMessageAsync(DatagramFactory.Create(ping.ToAny());
+                var targetEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069);
+                var peerSocketClientId = await _p2P.Messaging.PeerConnectAsync(targetEndpoint);
+                await _p2P.Messaging.BroadcastMessageAsync(peerSocketClientId, DatagramFactory.Create(ping.ToAny(), targetEndpoint));
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
-                _p2P.Messaging._socketClient.Dispose();
 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);

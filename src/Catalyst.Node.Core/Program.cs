@@ -36,6 +36,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
+ using SharpRepository.Repository.Configuration;
 
 namespace Catalyst.Node.Core
 {
@@ -75,6 +76,7 @@ namespace Catalyst.Node.Core
 
                 //.Net Core service collection
                 var serviceCollection = new ServiceCollection();
+                SharpRepositoryConfiguration
                 //Add .Net Core services (if any) first
                 //serviceCollection.AddLogging().AddDistributedMemoryCache();
 

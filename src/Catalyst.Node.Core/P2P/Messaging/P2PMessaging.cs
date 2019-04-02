@@ -32,6 +32,7 @@ using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using Dawn;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -42,17 +43,15 @@ namespace Catalyst.Node.Core.P2P.Messaging
 {
     public class P2PMessaging : IP2PMessaging, IDisposable
     {
-        private readonly IPeerSettings _settings;
+        private IUdpServer _udpServer;
         private readonly ILogger _logger;
-        private readonly CancellationTokenSource _cancellationSource;
+        private readonly IPeerSettings _settings;
         private readonly X509Certificate2 _certificate;
         private readonly AnyTypeClientHandler _anyTypeClientHandler;
         private readonly AnyTypeServerHandler _anyTypeServerHandler;
-        public ISocketClient _socketClient { get; set; }
-        private IUdpServer _udpServer;
-        private IDictionary<IPEndPoint, ISocketClient> OpenedClients { get; set; }
-
+        private readonly CancellationTokenSource _cancellationSource;
         public IPeerIdentifier Identifier { get; }
+        public IDictionary<int, ISocketClient> OpenedClients { get; }
         public IObservable<IChanneledMessage<Any>> InboundMessageStream { get; }
         public IObservable<IChanneledMessage<Any>> OutboundMessageStream { get; }
 
@@ -78,12 +77,15 @@ namespace Catalyst.Node.Core.P2P.Messaging
             OutboundMessageStream = _anyTypeClientHandler.MessageStream;
             _anyTypeServerHandler = new AnyTypeServerHandler();
             InboundMessageStream = _anyTypeServerHandler.MessageStream;
-            OpenedClients = new ConcurrentDictionary<IPEndPoint, ISocketClient>();
-            var longRunningTasks = new [] {RunP2PServerAsync()};
+            OpenedClients = new ConcurrentDictionary<int, ISocketClient>();
+            var longRunningTasks = new []
+            {
+                NodeListenerAsync()
+            };
             Task.WaitAll(longRunningTasks);
         }
 
-        private async Task RunP2PServerAsync()
+        private async Task NodeListenerAsync()
         {
             _logger.Debug("P2P server starting");
 
@@ -111,7 +113,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             }
         }
 
-        public async Task ConnectToPeerAsync(IPEndPoint peerEndPoint)
+        public async Task<int> PeerConnectAsync(IPEndPoint peerEndPoint)
         {
             _logger.Debug("P2P client starting");
 
@@ -124,31 +126,34 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 _anyTypeClientHandler
             };
             
-            OpenedClients.TryAdd(peerEndPoint, await new UdpClient()
+            var peerSocket = await new UdpClient()
                .Bootstrap(new OutboundChannelInitializer<IChannel>(channel => { },
-                        handlers,
-                        _settings.BindAddress
+                    handlers,
+                    peerEndPoint.Address
                )).ConnectClient(
-                    _settings.BindAddress,
-                    _settings.Port
-               )
-            );
+                    peerEndPoint.Address,
+                    peerEndPoint.Port
+               );
+
+            var peerSocketHashCode = peerSocket.Channel.RemoteAddress.GetHashCode();
+
+            OpenedClients.TryAdd(peerSocketHashCode, peerSocket);
+            return peerSocketHashCode;
         }
 
-        public async Task<bool> PingAsync(IPeerIdentifier targetNode)
+        public async Task BroadcastMessageAsync(int peerSocketClientId, IByteBufferHolder datagramPacket)
         {
-            return await Task.FromResult(true);
-        }
-
-        public async Task BroadcastMessageAsync(ISocketClient socketClient, IByteBufferHolder datagramPacket)
-        {
+            OpenedClients.TryGetValue(peerSocketClientId, out ISocketClient socketClient);
+            Guard.Argument(socketClient).NotNull();
+            
             try
             {
-                await socketClient.Channel.WriteAndFlushAsync(datagramPacket);
+                await socketClient.Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
             }
             finally
             {
-                await socketClient.Channel.CloseAsync();
+                await socketClient.Channel.CloseAsync().ConfigureAwait(false);
+                OpenedClients.Remove(peerSocketClientId);
             }      
         }
 
