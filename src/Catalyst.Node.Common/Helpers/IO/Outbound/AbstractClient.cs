@@ -19,7 +19,11 @@
 */
 #endregion
 
+using System;
 using System.Net;
+using System.Reflection;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
@@ -32,12 +36,14 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient 
         where TChannel : IChannel, new()
     {
+        private ILogger Logger { get; }
+    
         public IBootstrap Client { get; set; }
-        
-        protected AbstractClient(ILogger logger) : base(logger) {}
+
+        protected AbstractClient(ILogger logger) : base(logger) { Logger = logger; }
 
         public virtual ISocketClient Bootstrap(IChannelHandler channelInitializer)
-        {
+        {   
             Client = new Bootstrap();
             ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
                .Group(WorkerEventLoop)
@@ -50,8 +56,17 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
 
         public virtual async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
         {
-            Channel = await Client.ConnectAsync(listenAddress, port)
-               .ConfigureAwait(false);
+            try
+            {
+                Channel = await Client.ConnectAsync(listenAddress, port)
+                   .ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Error in AbstractClient");
+                throw;
+            }
+            
             return this;
         }
 

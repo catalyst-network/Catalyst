@@ -42,6 +42,8 @@ namespace Catalyst.Node.Core.RPC
         private ISocketServer _rpcSocketServer;
         private readonly AnyTypeServerHandler _anyTypeServerHandler;
         private readonly GetInfoRequestHandler _infoRequestHandler;
+        private readonly GetVersionRequestHandler _versionRequestHandler;
+        
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
 
@@ -59,6 +61,7 @@ namespace Catalyst.Node.Core.RPC
             var longRunningTasks = new [] {StartServerAsync()};
 
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
+            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, Settings, logger);
 
             Task.WaitAll(longRunningTasks);
         }
@@ -108,6 +111,7 @@ namespace Catalyst.Node.Core.RPC
                 _cancellationSource?.Dispose();
                 _certificate?.Dispose(); 
                 _infoRequestHandler?.Dispose();
+                _versionRequestHandler.Dispose();
             }
         }
 

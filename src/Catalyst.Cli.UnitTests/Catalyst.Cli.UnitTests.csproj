@@ -5,8 +5,10 @@
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
+    <ProjectReference Include="..\Catalyst.Node.Common.UnitTests\Catalyst.Node.Common.UnitTests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Moq" Version="4.10.1" />
   </ItemGroup>
 </Project>

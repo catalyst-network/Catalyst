@@ -20,25 +20,23 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
-using Catalyst.Node.Common.Helpers.IO;
+using System.Linq;
+using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
-    public class TransactionHandler : MessageHandlerBase<Transaction>
+    public static class SocketPortHelper
     {
-        public TransactionHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
-        : base(messageStream, logger) { }
-
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public static IConfigurationRoot AlterConfigurationToGetUniquePort(IConfigurationRoot config, string currentTestName)
         {
-            Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAny<Transaction>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
+            var serverSection = config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
+            var randomPort = int.Parse(serverSection.GetSection("Port").Value) +
+                new Random(currentTestName.GetHashCode()).Next(0, 500);
+
+            serverSection.GetSection("Port").Value = randomPort.ToString();
+            var clientSection = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
+            clientSection.GetChildren().ToList().ForEach(c => { c.GetSection("port").Value = randomPort.ToString(); });
+            return config;
         }
     }
 }

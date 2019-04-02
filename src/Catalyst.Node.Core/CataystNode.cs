@@ -33,6 +33,7 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
+using Catalyst.Node.Core.RPC;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using Dawn;
@@ -81,6 +82,7 @@ namespace Catalyst.Node.Core
 
         public async Task RunAsync(CancellationToken ct)
         {
+
             await _dfs.StartAsync(ct);
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
