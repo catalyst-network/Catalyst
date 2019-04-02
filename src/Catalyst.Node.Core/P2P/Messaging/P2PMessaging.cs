@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -49,6 +50,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly AnyTypeServerHandler _anyTypeServerHandler;
         public ISocketClient _socketClient { get; set; }
         private IUdpServer _udpServer;
+        private IDictionary<IPEndPoint, ISocketClient> OpenedClients { get; set; }
 
         public IPeerIdentifier Identifier { get; }
         public IObservable<IChanneledMessage<Any>> InboundMessageStream { get; }
@@ -76,7 +78,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             OutboundMessageStream = _anyTypeClientHandler.MessageStream;
             _anyTypeServerHandler = new AnyTypeServerHandler();
             InboundMessageStream = _anyTypeServerHandler.MessageStream;
-
+            OpenedClients = new ConcurrentDictionary<IPEndPoint, ISocketClient>();
             var longRunningTasks = new [] {RunP2PServerAsync()};
             Task.WaitAll(longRunningTasks);
         }
@@ -109,7 +111,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             }
         }
 
-        public async Task RunP2PClientAsync()
+        public async Task ConnectToPeerAsync(IPEndPoint peerEndPoint)
         {
             _logger.Debug("P2P client starting");
 
@@ -122,21 +124,15 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 _anyTypeClientHandler
             };
             
-            _socketClient = await new UdpClient(_logger)//this socket client is still here running dispose and will throw an error on subsequent runs
-               .Bootstrap(
-                    new OutboundChannelInitializer<IChannel>(channel => {},
+            OpenedClients.TryAdd(peerEndPoint, await new UdpClient()
+               .Bootstrap(new OutboundChannelInitializer<IChannel>(channel => { },
                         handlers,
                         _settings.BindAddress
-                    )
-               ).ConnectClient(
+               )).ConnectClient(
                     _settings.BindAddress,
                     _settings.Port
-               );
-        }
-
-        public void Stop()
-        {
-            _cancellationSource.Cancel();
+               )
+            );
         }
 
         public async Task<bool> PingAsync(IPeerIdentifier targetNode)
@@ -144,23 +140,28 @@ namespace Catalyst.Node.Core.P2P.Messaging
             return await Task.FromResult(true);
         }
 
-        public async Task BroadcastMessageAsync(Any msg)
+        public async Task BroadcastMessageAsync(ISocketClient socketClient, IByteBufferHolder datagramPacket)
         {
-          
-                IByteBuffer buffer = Unpooled.WrappedBuffer(msg.ToByteArray());
-
-                await _socketClient.Channel.WriteAndFlushAsync(new DatagramPacket(buffer, new IPEndPoint(_settings.BindAddress, 42067)));
-                await Task.Delay(5000);
-                Console.WriteLine("Waiting for response time 5000 completed. Closing client channel.");
-
-            
+            try
+            {
+                await socketClient.Channel.WriteAndFlushAsync(datagramPacket);
+            }
+            finally
+            {
+                await socketClient.Channel.CloseAsync();
+            }      
         }
 
         public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message)
         {
             await message.Context.WriteAndFlushAsync(message.Payload);
         }
-
+        
+        public void Stop()
+        {
+            _cancellationSource.Cancel();
+        }
+        
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;

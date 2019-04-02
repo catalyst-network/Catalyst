@@ -20,9 +20,11 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using DotNetty.Buffers;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
@@ -42,8 +44,8 @@ namespace Catalyst.Node.Common.Interfaces
         /// <returns>true if the target replied successfully</returns>
         Task<bool> PingAsync(IPeerIdentifier targetNode);
 
-        Task BroadcastMessageAsync(Any tx);
+        Task BroadcastMessageAsync(ISocketClient socketClient, IByteBufferHolder datagramPacket);
         Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message);
-        Task RunP2PClientAsync();
+        Task ConnectToPeerAsync(IPEndPoint peerEndpoint);
     }
 }

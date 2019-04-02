@@ -21,23 +21,22 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
 
-
     public sealed class UdpClient : AbstractClient<SocketDatagramChannel>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        public UdpClient() : base(Logger) { }
         
-
         public override ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {
             Client = new Bootstrap();
@@ -56,6 +55,5 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                .ConfigureAwait(false);
             return this;
         }
-        public UdpClient(ILogger logger) : base(logger) { }
     }
 }

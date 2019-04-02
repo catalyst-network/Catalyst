@@ -28,6 +28,8 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -78,32 +80,32 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _certificateStore = container.Resolve<ICertificateStore>();
         }
 
-        [Fact(Skip = "other attempt to isolate a reason why the build is hanging")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Peers_Can_Emit_And_Receive_Broadcast()
-        {
-            ConfigureTestContainer();
-            var indexes = Enumerable.Range(0, 3).ToList();
-
-            var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
-            var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
-
-            var observers = indexes.Select(i => new AnyMessageObserver(i, _logger)).ToList();
-            _subscriptions = peers.Select((p, i) => p.OutboundMessageStream.Subscribe(observers[i])).ToList();
-
-            var broadcastMessage = TransactionHelper.GetTransaction().ToAny();
-            var context = Substitute.For<IChannelHandlerContext>();
-            await peers[0].BroadcastMessageAsync(broadcastMessage);
-
-            var tasks = peers
-               .Select(async p => await p.OutboundMessageStream.FirstAsync(a => a != NullObjects.ChanneledAny))
-               .ToArray();
-            Task.WaitAll(tasks, TimeSpan.FromMilliseconds(100));
-        
-            var received = observers.Select(o => o.Received).ToList();
-            received.Count(r => r.Payload.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
-        
-        }
+        // [Fact(Skip = "other attempt to isolate a reason why the build is hanging")]
+        // [Trait(Traits.TestType, Traits.IntegrationTest)]
+        // public async Task Peers_Can_Emit_And_Receive_Broadcast()
+        // {
+        //     ConfigureTestContainer();
+        //     var indexes = Enumerable.Range(0, 3).ToList();
+        //
+        //     var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
+        //     var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
+        //
+        //     var observers = indexes.Select(i => new AnyMessageObserver(i, _logger)).ToList();
+        //     _subscriptions = peers.Select((p, i) => p.OutboundMessageStream.Subscribe(observers[i])).ToList();
+        //
+        //     var broadcastMessage = DatagramFactory.Create(TransactionHelper.GetTransaction().ToAny(), EndpointBuilder.BuildNewEndPoint(peers.FirstOrDefault().));
+        //     var context = Substitute.For<IChannelHandlerContext>();
+        //     await peers[0].BroadcastMessageAsync(broadcastMessage);
+        //
+        //     var tasks = peers
+        //        .Select(async p => await p.OutboundMessageStream.FirstAsync(a => a != NullObjects.ChanneledAny))
+        //        .ToArray();
+        //     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(100));
+        //
+        //     var received = observers.Select(o => o.Received).ToList();
+        //     received.Count(r => r.Payload.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
+        //
+        // }
 
         [Fact(Skip = "not ready yet")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]

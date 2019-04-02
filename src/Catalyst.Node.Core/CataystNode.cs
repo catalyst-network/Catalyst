@@ -20,10 +20,12 @@
 #endregion
 
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
@@ -104,8 +106,8 @@ namespace Catalyst.Node.Core
 
                 _logger.Information("Creating a Ping message");
                 var ping = new PingRequest { CorrelationId = Guid.NewGuid().ToString().ToUtf8ByteString() };
-                await _p2P.Messaging.RunP2PClientAsync();
-                await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
+                await _p2P.Messaging.ConnectToPeerAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069));
+                await _p2P.Messaging.BroadcastMessageAsync(DatagramFactory.Create(ping.ToAny());
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
                 _p2P.Messaging._socketClient.Dispose();
 
