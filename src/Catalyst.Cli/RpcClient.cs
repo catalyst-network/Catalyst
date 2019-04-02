@@ -31,6 +31,7 @@ using Catalyst.Node.Common.Helpers.IO.Outbound;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
+using Serilog;
 
 namespace Catalyst.Cli
 {
@@ -44,6 +45,9 @@ namespace Catalyst.Cli
         private readonly ICertificateStore _certificateStore;
         private readonly AnyTypeClientHandler _clientHandler;
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
+        
+        private readonly GetInfoResponseHandler _getInfoResponseHandler;
+        private readonly GetVersionResponseHandler _getVersionResponseHandler;
 
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -59,37 +63,70 @@ namespace Catalyst.Cli
             _certificateStore = certificateStore;
             _clientHandler = new AnyTypeClientHandler();
             MessageStream = _clientHandler.MessageStream;
+            
+            _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, _logger);
+            _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, _logger);
         }
 
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
         {
-            var certificate = _certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName);
-
-            _logger.Information("Rpc client starting");
-            _logger.Information("Connecting to {0} @ {1}:{2}", nodeConfig.NodeId, nodeConfig.HostAddress, nodeConfig.Port);
-
-            var handlers = new List<IChannelHandler>
+            try
             {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(Any.Parser),
-                _clientHandler
-            };
-            
-            var socketClient = await new TcpClient(_logger)
-               .Bootstrap(
-                    new OutboundChannelInitializer<ISocketChannel>(channel => {},
-                        handlers,
-                        nodeConfig.HostAddress,
-                        certificate
+                var certificate = _certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName);
+
+                var handlers = new List<IChannelHandler>
+                {
+                    new ProtobufVarint32LengthFieldPrepender(),
+                    new ProtobufEncoder(),
+                    new ProtobufVarint32FrameDecoder(),
+                    new ProtobufDecoder(Any.Parser),
+                    _clientHandler
+                };
+
+                var socketClient = await new TcpClient()
+                   .Bootstrap(
+                        new OutboundChannelInitializer<ISocketChannel>(channel => { },
+                            handlers,
+                            nodeConfig.HostAddress,
+                            certificate
+                        )
                     )
-                )
-               .ConnectClient(
-                    nodeConfig.HostAddress,
-                    nodeConfig.Port
-                );
-            return socketClient;
+                   .ConnectClient(
+                        nodeConfig.HostAddress,
+                        nodeConfig.Port
+                    );
+
+
+                _logger.Information("Rpc client starting");
+                _logger.Information("Connecting to {0} @ {1}:{2}", nodeConfig.NodeId, nodeConfig.HostAddress,
+                    nodeConfig.Port);
+
+                return socketClient;
+            }
+            catch (System.PlatformNotSupportedException exception)
+            {
+                _logger.Error(exception, "Invalid SSL certificate.");
+
+                throw;
+            }
+            catch (ConnectException connectException)
+            {
+                _logger.Error(connectException, "Connection with the server couldn't be established.");
+
+                throw;
+            }
+            catch (ConnectTimeoutException timeoutException)
+            {
+                _logger.Error(timeoutException, "Connection timed out.");
+
+                throw;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Connection with the server couldn't be established.");
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -110,6 +147,8 @@ namespace Catalyst.Cli
             if (disposing)
             {
                 _logger.Information("disposing RpcClient");
+                _getInfoResponseHandler.Dispose();
+                _getVersionResponseHandler.Dispose();
             }
         }
 

@@ -35,7 +35,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
 
     public sealed class UdpClient : AbstractClient<SocketDatagramChannel>
     {
-        public UdpClient(ILogger logger) : base(logger) { }
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        
 
         public override ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {
@@ -55,5 +56,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                .ConfigureAwait(false);
             return this;
         }
+        public UdpClient(ILogger logger) : base(logger) { }
     }
 }
