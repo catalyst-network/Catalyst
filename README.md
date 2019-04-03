@@ -8,13 +8,13 @@
 
 ## What is the Catalyst Network ?
 
-Catalyst Netowkr is the distributed operating system that enterprise and developers can get straight on. No language barriers.  No architecture constraints. Scalable, fast and lean. The first DLT that is fit for purpose.
+Catalyst Netwokr is the distributed operating system that enterprise and developers can get straight on. No language barriers.  No architecture constraints. Scalable, fast and lean. The first DLT that is fit for purpose.
 
 The decentralised protocol is designed from engineering first principles and built by an experienced team of software developers and financial service experts. With an enterprise focus it allows industries to leverage decentralisation into their operations.
 
 ## What is Catalyst.Node ?
 
-Catalyst.Node is the .Net implementation of the Catalyst Network. The spcification of our protocol is outlined in our technical while paper a more indepth implementation orientated document can be found in the "[Protocol Blueprint]"(https://github.com/catalyst-network/protocol-blueprint/)
+Catalyst.Node is the .Net implementation of the Catalyst Network. The spcification of our protocol is outlined in our technical while paper a more indepth implementation orientated document can be found in the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/)
 
 Catalyst.Node is developed on dotnet core 2.2 therefore supports Linux, macOS and Windows operating systems.
 
@@ -47,4 +47,4 @@ Is coming (don't you hate it when they say that). For now you can read through t
 
 `dotnet build`
 
-If that was really too quick try reading the [Quick Start Guide](https://github.com/catalyst-network/Catalyst.Node/wiki/Quick-Start-Guide/_edit)
+If that was really too quick try reading the [Quick Start Guide](https://github.com/catalyst-network/Catalyst.Node/wiki/Quick-Start-Guide)
