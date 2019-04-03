@@ -45,6 +45,10 @@ namespace Catalyst.Node.Core.Modules.Dfs
             _ipfsDfs.Options.Repository.Folder = Path.Combine(
                 new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName,
                 "Ipfs");
+            _ipfsDfs.Options.Discovery.BootstrapPeers = new MultiAddress[]
+            {
+                "seed1.catalystnetwork.io"
+            };
         }
 
         Task IService.StartAsync() { return this.StartAsync(); }
