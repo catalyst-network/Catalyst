@@ -34,11 +34,17 @@ Is coming (don't you hate it when they say that). For now you can read through t
 ## Real Quick Start Guide
 
 `git clone git@github.com:catalyst-network/Catalyst.Node.git `
+
 `cd Catalyst.Node`
+
 `git submodule init`
+
 `git submodule update`
+
 `cd src`
+
 `dotnet restore`
+
 `dotnet build`
 
 If that was really too quick try reading the [Quick Start Guide](https://github.com/catalyst-network/Catalyst.Node/wiki/Quick-Start-Guide/_edit)
