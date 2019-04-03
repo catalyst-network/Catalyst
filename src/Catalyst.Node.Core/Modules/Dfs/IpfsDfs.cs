@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 "Ipfs");
             _ipfsDfs.Options.Discovery.BootstrapPeers = new MultiAddress[]
             {
-                "seed1.catalystnetwork.io"
+                "/dns/seed1.catalystnetwork.io/tcp/4001"
             };
         }
 
