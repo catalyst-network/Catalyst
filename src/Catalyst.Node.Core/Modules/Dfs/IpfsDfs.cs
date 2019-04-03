@@ -38,9 +38,9 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public IpfsDfs(IPasswordReader passwordReader)
         {
-            var password = passwordReader.ReadSecurePasswordAsChars("Please provide your IPFS password");
-            //TODO handle secure strings in IPFS
+            var password = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsDfs = new IpfsEngine(password);
+            _ipfsDfs.Options.KeyChain.DefaultKeyType = "ed25519";
         }
 
         Task IService.StartAsync() { return this.StartAsync(); }
