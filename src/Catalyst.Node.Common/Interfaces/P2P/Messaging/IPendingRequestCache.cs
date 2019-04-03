@@ -20,23 +20,37 @@
 #endregion
 
 using System;
-using Catalyst.Protocol.Common;
-using SharpRepository.Repository;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces.Messaging;
+
 using Catalyst.Node.Common.P2P;
-using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
     public interface IPendingRequestCache : IDisposable
     {
-        IRepository<PendingRequest> RequestStore { get; }
+        /// <summary>
+        /// TimeSpan after which requests automatically get deleted from the cache (inflicting
+        /// a reputation penalty for the peer who didn't reply).
+        /// </summary>
+        TimeSpan CacheTtl { get; }
+
+        /// <summary>
+        /// Stream of reputation changes events raised by requests being answered or expired.
+        /// </summary>
         IObservable<IPeerReputationChange> PeerRatingChanges { get; }
 
+        /// <summary>
+        /// Tries to match a given message to a request in from the cache.
+        /// </summary>
+        /// <typeparam name="TRequest">The (CLR) type of the request for which the response is appropriate.</typeparam>
+        /// <typeparam name="TResponse">The (CLR) type of the response we are receiving.</typeparam>
+        /// <param name="response"></param>
+        /// <returns></returns>
         TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
             where TRequest : class, IMessage<TRequest>
             where TResponse : class, IMessage<TResponse>;
+
+        void AddPendingRequest(PendingRequest pendingRequest);
     }
 }

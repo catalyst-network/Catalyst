@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public PeerIdentifierTests(ITestOutputHelper output)
         {
             _output = output;
-            _validPeerId = PeerIdentifierHelper.GetPeerId();
+            _validPeerId = PeerIdHelper.GetPeerId();
         }
 
         [Fact]

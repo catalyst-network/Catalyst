@@ -67,7 +67,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
         public static void ToAnySigned_should_happen_new_guid_to_request_if_not_specified()
         {
             //this ensures we won't get Guid.Empty and then a risk of mismatch;
-            var wrapped = new PingRequest().ToAnySigned(PeerIdentifierHelper.GetPeerId("you"));
+            var wrapped = new PingRequest().ToAnySigned(PeerIdHelper.GetPeerId("you"));
             wrapped.CorrelationId.Should().NotBeEquivalentTo(Guid.Empty.ToByteString());
         }
 
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
         public static void ToAnySigned_should_set_the_wrapper_fields()
         {
             var guid = Guid.NewGuid();
-            var peerId = PeerIdentifierHelper.GetPeerId("blablabla");
+            var peerId = PeerIdHelper.GetPeerId("blablabla");
             var expectedContent = "content";
             var wrapped = new PeerInfoRequest(){Ping = expectedContent}.ToAnySigned(peerId, guid);
 
@@ -88,7 +88,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
         [Fact]
         public static void ToAnySigned_should_fail_on_response_without_correlationId()
         {
-            var peerId = PeerIdentifierHelper.GetPeerId("someone");
+            var peerId = PeerIdHelper.GetPeerId("someone");
             var expectedContent = "censored";
             var response = new PeerInfoResponse() { Pong = expectedContent };
             new Action(() => response.ToAnySigned(peerId))
