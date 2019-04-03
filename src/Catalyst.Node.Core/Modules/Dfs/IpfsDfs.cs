@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -41,6 +42,9 @@ namespace Catalyst.Node.Core.Modules.Dfs
             var password = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsDfs = new IpfsEngine(password);
             _ipfsDfs.Options.KeyChain.DefaultKeyType = "ed25519";
+            _ipfsDfs.Options.Repository.Folder = Path.Combine(
+                new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName,
+                "Ipfs");
         }
 
         Task IService.StartAsync() { return this.StartAsync(); }
