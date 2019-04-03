@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -20,18 +20,15 @@
 #endregion
 
 using System;
-using System.Net;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.P2P
 {
-    public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
+    public class PendingRequest
     {
-        PeerId PeerId { get; }
-        string ClientId { get; }
-        string ClientVersion { get; }
-        IPAddress Ip { get; }
-        int Port { get; }
-        byte[] PublicKey { get; }
+        public AnySigned Content { get; set; }
+        public IPeerIdentifier SentTo { get; set; }
+        public DateTimeOffset SentAt { get; set; }
     }
 }

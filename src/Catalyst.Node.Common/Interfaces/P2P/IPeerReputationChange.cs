@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,19 +19,11 @@
 */
 #endregion
 
-using System;
-using System.Net;
-using Catalyst.Protocol.Common;
-
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
+    public interface IPeerReputationChange
     {
-        PeerId PeerId { get; }
-        string ClientId { get; }
-        string ClientVersion { get; }
-        IPAddress Ip { get; }
-        int Port { get; }
-        byte[] PublicKey { get; }
+        IPeerIdentifier PeerIdentifier { get; }
+        int ReputationChange { get; }
     }
 }

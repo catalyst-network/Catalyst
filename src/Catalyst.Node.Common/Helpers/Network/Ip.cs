@@ -27,12 +27,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.Util;
+using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Network
 {
     public static class Ip
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         public static readonly ReadOnlyCollection<string> DefaultIpEchoUrls;
 
         static Ip()
@@ -59,6 +65,25 @@ namespace Catalyst.Node.Common.Helpers.Network
                .FirstAsync(t => t != null);
 
             return echoedIp;
+        }
+
+        public static byte[] To16Bytes(this IPAddress address)
+        {
+            var ipChunk = ByteUtil.InitialiseEmptyByteArray(16);
+            var ipBytes = address.GetAddressBytes();
+
+            if (ipBytes.Length == 4)
+            {
+                Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
+            }
+            else
+            {
+                ipChunk = ipBytes;
+            }
+
+            Logger.Verbose(string.Join(" ", ipChunk));
+
+            return ipChunk;
         }
 
         private static async Task<IPAddress> TryGetExternalIpFromEchoUrl(string url)
