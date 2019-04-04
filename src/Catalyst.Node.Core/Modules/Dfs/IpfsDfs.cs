@@ -29,7 +29,6 @@ using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 using Ipfs;
 using Ipfs.CoreApi;
 using Ipfs.Engine;
-using Microsoft.Extensions.Configuration;
 using PeerTalk;
 
 namespace Catalyst.Node.Core.Modules.Dfs
