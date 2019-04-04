@@ -51,7 +51,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
         
         public override async Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port)
         {
-            Channel = await Client.BindAsync(listenAddress, 42068)
+            Channel = await Client.BindAsync(listenAddress, IPEndPoint.MinPort)
                .ConfigureAwait(false);
             return this;
         }

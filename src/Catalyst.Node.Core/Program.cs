@@ -76,7 +76,6 @@ namespace Catalyst.Node.Core
 
                 //.Net Core service collection
                 var serviceCollection = new ServiceCollection();
-                SharpRepositoryConfiguration
                 //Add .Net Core services (if any) first
                 //serviceCollection.AddLogging().AddDistributedMemoryCache();
 

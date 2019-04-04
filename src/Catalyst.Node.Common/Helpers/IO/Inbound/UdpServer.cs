@@ -75,7 +75,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public async Task<IUdpServer> StartServer(IPAddress listenAddress, int port)
         {
             Channel = await UdpListener.BindAsync(listenAddress, port).ConfigureAwait(false);
-            return this;
+       return this;
         }
     }
 }

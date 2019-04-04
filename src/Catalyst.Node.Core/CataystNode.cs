@@ -90,6 +90,8 @@ namespace Catalyst.Node.Core
             bool exit = false;
             do
             {
+                
+                
                 // _logger.Information("Creating a Transaction message");
                 // _logger.Information("Please type in a pubkey for the transaction signature");
                 // var pubkey = Console.ReadLine();

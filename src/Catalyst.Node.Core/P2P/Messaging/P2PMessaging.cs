@@ -135,10 +135,10 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     peerEndPoint.Port
                );
 
-            var peerSocketHashCode = peerSocket.Channel.RemoteAddress.GetHashCode();
+            // var peerSocketHashCode = peerSocket.Channel.RemoteAddress.GetHashCode();
 
-            OpenedClients.TryAdd(peerSocketHashCode, peerSocket);
-            return peerSocketHashCode;
+            OpenedClients.TryAdd(peerEndPoint.GetHashCode(), peerSocket);
+            return peerEndPoint.GetHashCode();
         }
 
         public async Task BroadcastMessageAsync(int peerSocketClientId, IByteBufferHolder datagramPacket)
