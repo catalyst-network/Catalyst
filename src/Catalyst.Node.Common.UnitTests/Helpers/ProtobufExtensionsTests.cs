@@ -77,7 +77,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
             var guid = Guid.NewGuid();
             var peerId = PeerIdHelper.GetPeerId("blablabla");
             var expectedContent = "content";
-            var wrapped = new PeerInfoRequest(){Ping = expectedContent}.ToAnySigned(peerId, guid);
+            var wrapped = new PeerInfoRequest {Ping = expectedContent}.ToAnySigned(peerId, guid);
 
             wrapped.CorrelationId.ToGuid().Should().Be(guid);
             wrapped.PeerId.Should().Be(peerId);

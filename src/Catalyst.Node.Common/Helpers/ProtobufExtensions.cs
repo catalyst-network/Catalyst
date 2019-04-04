@@ -37,10 +37,10 @@ namespace Catalyst.Node.Common.Helpers
     public static class ProtobufExtensions
     {
         private const string CatalystProtocol = "Catalyst.Protocol";
-        public const string RequestSuffix = "Request";
-        public const string ResponseSuffix = "Response";
+        public static readonly string RequestSuffix = "Request";
+        public static readonly string ResponseSuffix = "Response";
 
-        private static readonly Dictionary<string, string> ProtoToClrNameMapper = Assembly.Load(CatalystProtocol).ExportedTypes
+        private static readonly Dictionary<string, string> ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
            .Where(t => typeof(IMessage).IsAssignableFrom(t))
            .Select(t => ((IMessage)Activator.CreateInstance(t)).Descriptor)
            .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);

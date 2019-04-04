@@ -37,8 +37,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
 {
     public class PendingRequestCache : IPendingRequestCache, IDisposable
     {
-        public const int BaseReputationChange = 10;
-        private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(BaseReputationChange);
+        public static readonly int BaseReputationChange = 10;
+        private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
         private readonly IMemoryCache _pendingRequests;
         private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
         private readonly MemoryCacheEntryOptions _entryOptions;
@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             var found = _pendingRequests.TryGetValue(response.CorrelationId, out PendingRequest matched);
 
-            if (!found) return null;
+            if (!found) {return null;}
 
             _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId), BaseReputationChange * 2));
             _pendingRequests.Remove(response.CorrelationId);
