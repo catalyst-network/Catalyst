@@ -90,7 +90,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
             var expectedContent = "censored";
-            var response = new PeerInfoResponse() { Pong = expectedContent };
+            var response = new PeerInfoResponse { Pong = expectedContent };
             new Action(() => response.ToAnySigned(peerId))
                .Should().Throw<ArgumentException>();
         }
