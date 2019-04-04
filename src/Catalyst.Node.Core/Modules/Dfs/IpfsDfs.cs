@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             _ipfsDfs = new IpfsEngine(password);
             _ipfsDfs.Options.KeyChain.DefaultKeyType = "ed25519";
             _ipfsDfs.Options.Repository.Folder = Path.Combine(
-                new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName,
+                new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName, 
                 "Ipfs");
             _ipfsDfs.Options.Discovery.BootstrapPeers = peerSettings
                 .SeedServers
