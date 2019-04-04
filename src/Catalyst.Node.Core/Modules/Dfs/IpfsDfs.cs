@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -28,6 +29,7 @@ using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 using Ipfs;
 using Ipfs.CoreApi;
 using Ipfs.Engine;
+using Microsoft.Extensions.Configuration;
 using PeerTalk;
 
 namespace Catalyst.Node.Core.Modules.Dfs
@@ -37,7 +39,9 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         private readonly IpfsEngine _ipfsDfs;
 
-        public IpfsDfs(IPasswordReader passwordReader)
+        public IpfsDfs(
+            IPasswordReader passwordReader,
+            IPeerSettings peerSettings)
         {
             var password = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsDfs = new IpfsEngine(password);
@@ -45,10 +49,11 @@ namespace Catalyst.Node.Core.Modules.Dfs
             _ipfsDfs.Options.Repository.Folder = Path.Combine(
                 new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName,
                 "Ipfs");
-            _ipfsDfs.Options.Discovery.BootstrapPeers = new MultiAddress[]
-            {
-                "/dns/seed1.catalystnetwork.io/tcp/4001"
-            };
+            _ipfsDfs.Options.Discovery.BootstrapPeers = peerSettings
+                .SeedServers
+                .Select(s => $"/dns/{s}/tcp/4001")
+                .Select(ma => new MultiAddress(ma))
+                .ToArray();
         }
 
         Task IService.StartAsync() { return this.StartAsync(); }
