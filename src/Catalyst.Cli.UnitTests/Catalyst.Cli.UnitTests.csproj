@@ -10,5 +10,6 @@
   <ItemGroup>
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="Moq" Version="4.10.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
   </ItemGroup>
 </Project>

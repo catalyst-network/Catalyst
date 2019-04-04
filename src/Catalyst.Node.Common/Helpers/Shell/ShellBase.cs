@@ -72,6 +72,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         public abstract bool OnStopWork(string[] args);
 
         public abstract bool IsConnectedNode(string nodeId);
+
+        public abstract bool IsSocketChannelActive(IRpcNode node);
         
         public abstract IRpcNode GetConnectedNode(string nodeId);
         
@@ -156,7 +158,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints the current node version.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetVersion(IList<string> args);
+        protected abstract bool OnGetVersion(Object args);
 
         /// <summary>
         ///     Prints stats about the mempool implementation.
@@ -305,7 +307,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
             return running;
         }
 
-        public abstract void ParseCommand(string[] args);
+        public abstract bool ParseCommand(params string[] args);
         
         
         /// <summary>

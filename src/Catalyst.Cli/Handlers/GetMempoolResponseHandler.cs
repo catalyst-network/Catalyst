@@ -67,7 +67,15 @@ namespace Catalyst.Cli.Handlers
                 Logger.Debug("Handling GetMempoolResponse");
                 
                 var deserialised = message.Payload.FromAny<GetMempoolResponse>();
-                Console.WriteLine(@"{0}", deserialised.Info.ToString());
+
+                int index = 0;
+                
+                foreach (string encodedTx in deserialised.Info.Values)
+                {
+                    index++;
+                    
+                    Console.WriteLine(@"t{0}: {1},",index, encodedTx);
+                }
                 
                 Console.WriteLine(@"Press Enter to continue ...");
             }

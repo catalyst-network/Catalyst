@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     txLst.Add(TransactionHelper.GetTransaction(567,"standardPubKey", "sign2"));
 
                     List<byte[]> txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
-                    return txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+                    return txEncodedLst;
                 }
                 );
 
@@ -106,8 +106,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _certificateStore = container.Resolve<ICertificateStore>();
             _rpcServer = container.Resolve<IRpcServer>();
-
-            
         }
 
         [Fact]
@@ -133,7 +131,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             p2PMessenger.Should().NotBeNull();
 
             var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            var hasConnected = shell.OnCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
             var node1 = shell.GetConnectedNode("node1");
@@ -150,7 +148,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _rpcClient.Should().NotBeNull();
 
             var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
             var node1 = shell.GetConnectedNode("node1");
@@ -161,7 +159,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             using (_rpcServer.MessageStream.Subscribe(serverObserver))
             using (_rpcClient.MessageStream.Subscribe(clientObserver))
             {
-                var info = shell.OnGetCommand("get", "config", "node1");
+                var info = shell.ParseCommand("get", "-i", "node1");
 
                 var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
@@ -185,7 +183,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _rpcClient.Should().NotBeNull();
 
             var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
             var node1 = shell.GetConnectedNode("node1");
@@ -196,7 +194,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             using (_rpcServer.MessageStream.Subscribe(serverObserver))
             using (_rpcClient.MessageStream.Subscribe(clientObserver))
             {   
-                var info = shell.OnGetCommand("get", "mempool", "node1");
+                var info = shell.ParseCommand("get", "-m", "node1");
 
                 var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))

@@ -38,8 +38,11 @@ namespace Catalyst.Node.Core.RPC
         public RpcServerSettings(IConfigurationRoot rootSection)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
+
+            NodeConfig = rootSection;
+            
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
-            NodeId = section.GetSection("NodeId").Value;
+            
             Port = int.Parse(section.GetSection("Port").Value);
             AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
@@ -47,11 +50,11 @@ namespace Catalyst.Node.Core.RPC
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
         }
 
-        public int Port { get; set;}
-        public IPAddress BindAddress { get; set;}
-        public string PfxFileName { get; set; }
-        public bool MutualAuthentication { get; set; }
-        public bool AcceptInvalidCerts { get; set; }
-        public string NodeId { get; set; }
+        public IConfigurationRoot NodeConfig { get; }
+        public int Port { get; }
+        public IPAddress BindAddress { get; }
+        public string PfxFileName { get;  }
+        public bool MutualAuthentication { get; }
+        public bool AcceptInvalidCerts { get; }
     }
 }

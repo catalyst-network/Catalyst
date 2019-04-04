@@ -35,7 +35,6 @@ using CommandLine;
 using ILogger = Serilog.ILogger;
 using Google.Protobuf.WellKnownTypes;
 using DotNetty.Transport.Channels;
-using Microsoft.Extensions.Options;
 
 namespace Catalyst.Cli
 {
@@ -85,9 +84,9 @@ namespace Catalyst.Cli
             return nodeList;
         }
 
-        public override void ParseCommand(string[] args)
+        public override bool ParseCommand(params string[] args)
         {   
-            Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions>(args)
+            return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions>(args)
                .MapResult<GetInfoOptions, ConnectOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts),
@@ -96,14 +95,19 @@ namespace Catalyst.Cli
 
         private bool OnGetCommands(GetInfoOptions opts)
         {
-            if (opts.i)
+            if (opts.info)
             {
                 return OnGetConfig(opts);
             }
 
-            if (opts.m)
+            if (opts.mempool)
             {
                 return OnGetMempool(opts);
+            }
+
+            if (opts.version)
+            {
+                return OnGetVersion(opts);
             }
 
             return false;
@@ -423,11 +427,11 @@ namespace Catalyst.Cli
         /// Gets the version of a node
         /// </summary>
         /// <returns>Returns true if successful and false otherwise.</returns>
-        protected override bool OnGetVersion(IList<string> args)
+        protected override bool OnGetVersion(Object opts)
         {
-            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+            //Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
 
-            var nodeId = args.First();
+            var nodeId = ((GetInfoOptions)opts).NodeId;
 
             //Perform validations required before a command call
             if (!ValidatePreCommand(nodeId))
@@ -554,7 +558,7 @@ namespace Catalyst.Cli
             return (GetConnectedNode(nodeId) != null);
         }
 
-        private bool IsSocketChannelActive(IRpcNode node)
+        public override bool IsSocketChannelActive(IRpcNode node)
         {
             if (node.SocketClient.Channel.Active) { return true; }
             
@@ -603,7 +607,7 @@ namespace Catalyst.Cli
         
         private void ReturnUserMessage(string message)
         {
-            _logger.Information(message);
+            Console.WriteLine(message);
         }
         
         /* Implementing IObserver */

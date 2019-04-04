@@ -20,12 +20,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
+using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -66,8 +69,34 @@ namespace Catalyst.Cli.Handlers
                 Logger.Debug("Handling GetInfoResponse");
                 
                 var deserialised = message.Payload.FromAny<GetInfoResponse>();
+
+                var result = JsonConvert.DeserializeObject<List<KeyValuePair<string,string>>>(deserialised.Query);
+
+                Console.WriteLine(@"[");
                 
-                Console.WriteLine(@"{0}", deserialised.Query.ToString());
+                foreach (var setting in result)
+                {
+                    var key = setting.Key;
+                    var value = setting.Value ?? "";
+                    
+                    if (value.Equals("subsection"))
+                    {
+                        if (!result.First().Equals(setting))
+                        {
+                            Console.WriteLine(@"    },");
+                        }
+                        
+                        Console.WriteLine(@"    " + key + @": {");
+                    }
+                    else
+                    {
+
+                        Console.WriteLine(@"        {0}: {1},", key, value );
+                    }
+                }
+                
+                Console.WriteLine(@"]");
+                
                 
                 Console.WriteLine(@"Press Enter to continue ...");
             }
