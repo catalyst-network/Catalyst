@@ -27,7 +27,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
-    public interface IPendingRequestCache : IDisposable
+    public interface IMessageCorrelationCache : IDisposable
     {
         /// <summary>
         /// TimeSpan after which requests automatically get deleted from the cache (inflicting

@@ -39,15 +39,15 @@ using PendingRequest = Catalyst.Node.Common.P2P.PendingRequest;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
-    public class PendingRequestCacheTests
+    public class MessageCorrelationCacheTests
     {
         private readonly IPeerIdentifier[] _peerIds;
         private readonly IList<PendingRequest> _pendingRequests;
-        private readonly PendingRequestCache _cache;
+        private readonly MessageCorrelationCache _cache;
         private readonly PeerId _senderPeerId;
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
 
-        public PendingRequestCacheTests(ITestOutputHelper output)
+        public MessageCorrelationCacheTests(ITestOutputHelper output)
         {
             _senderPeerId = PeerIdHelper.GetPeerId("sender");
             _peerIds = new []
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     return ci[1] != null;
                 });
 
-            _cache = new PendingRequestCache(responseStore);
+            _cache = new MessageCorrelationCache(responseStore);
             _cache.PeerRatingChanges.Subscribe(change =>
             {
                 if (!_reputationByPeerIdentifier.ContainsKey(change.PeerIdentifier)) return;

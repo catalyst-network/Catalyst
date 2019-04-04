@@ -50,11 +50,11 @@ using PendingRequest = Catalyst.Node.Common.P2P.PendingRequest;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
-    public sealed class PendingRequestCacheIntegrationTests : ConfigFileBasedTest
+    public sealed class MessageCorrelationCacheIntegrationTests : ConfigFileBasedTest
     {
         private readonly ILifetimeScope _scope;
 
-        public PendingRequestCacheIntegrationTests(ITestOutputHelper output) : base(output)
+        public MessageCorrelationCacheIntegrationTests(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             var cache = _scope.Resolve<IMemoryCache>();
             var ttl = TimeSpan.FromMilliseconds(100);
-            var pendingRequestCache = new PendingRequestCache(cache, ttl);
+            var pendingRequestCache = new MessageCorrelationCache(cache, ttl);
 
             pendingRequestCache.PeerRatingChanges
                .Subscribe(c => reputations[c.PeerIdentifier] += c.ReputationChange);

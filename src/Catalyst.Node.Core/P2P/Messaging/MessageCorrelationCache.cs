@@ -35,9 +35,9 @@ using Microsoft.Extensions.Primitives;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class PendingRequestCache : IPendingRequestCache, IDisposable
+    public class MessageCorrelationCache : IMessageCorrelationCache, IDisposable
     {
-        public static readonly int BaseReputationChange = 10;
+        public static readonly int BaseReputationChange = 1;
         private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
         private readonly IMemoryCache _pendingRequests;
         private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         public IObservable<IPeerReputationChange> PeerRatingChanges => _ratingChangeSubject.AsObservable();
         public TimeSpan CacheTtl { get; }
 
-        public PendingRequestCache(IMemoryCache cache, TimeSpan cacheTtl = default)
+        public MessageCorrelationCache(IMemoryCache cache, TimeSpan cacheTtl = default)
         {
             CacheTtl = cacheTtl == default ? DefaultTtl : cacheTtl;
             _pendingRequests = cache;
