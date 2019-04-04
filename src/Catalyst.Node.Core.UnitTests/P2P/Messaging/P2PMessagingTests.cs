@@ -49,9 +49,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
     {
         private readonly IConfigurationRoot _config;
         private IEnumerable<IDisposable> _subscriptions;
-        private ILifetimeScope _scope;
-        private ILogger _logger;
-        private ICertificateStore _certificateStore;
+        private readonly ILifetimeScope _scope;
+        private readonly ILogger _logger;
+        private readonly ICertificateStore _certificateStore;
 
         public P2PMessagingTests(ITestOutputHelper output) : base(output)
         {
@@ -60,10 +60,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
-        }
 
-        private void ConfigureTestContainer()
-        {
             WriteLogsToFile = false;
             WriteLogsToTestOutput = false;
 
@@ -73,7 +70,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _scope = container.BeginLifetimeScope(_currentTestName);
 
             _logger = container.Resolve<ILogger>();
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+            if(WriteLogsToFile || WriteLogsToTestOutput)
+            { DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));}
 
             _certificateStore = container.Resolve<ICertificateStore>();
         }
@@ -82,7 +80,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {
-            ConfigureTestContainer();
             var indexes = Enumerable.Range(0, 3).ToList();
 
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
@@ -109,8 +106,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
         {
-            ConfigureTestContainer();
-
             var indexes = Enumerable.Range(0, 3).ToList();
 
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();

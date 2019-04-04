@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
@@ -36,7 +37,10 @@ namespace Catalyst.Node.Common.Helpers
     public static class ProtobufExtensions
     {
         private const string CatalystProtocol = "Catalyst.Protocol";
-        private static readonly Dictionary<string, string> ProtoToClrNameMapper = Assembly.Load(CatalystProtocol).ExportedTypes
+        public static readonly string RequestSuffix = "Request";
+        public static readonly string ResponseSuffix = "Response";
+
+        private static readonly Dictionary<string, string> ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
            .Where(t => typeof(IMessage).IsAssignableFrom(t))
            .Select(t => ((IMessage)Activator.CreateInstance(t)).Descriptor)
            .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
@@ -83,15 +87,24 @@ namespace Catalyst.Node.Common.Helpers
             return innerMessage;
         }
 
-        public static AnySigned ToAnySigned<T>(this T protobufObject, PeerId senderId) where T : IMessage<T>
+        public static AnySigned ToAnySigned<T>(this T protobufObject, 
+            PeerId senderId,
+            Guid correlationId = default) where T : IMessage<T>
         {
+            var typeUrl = protobufObject.Descriptor.ShortenedFullName();
+            Guard.Argument(senderId, nameof(senderId)).NotNull();
+            Guard.Argument(correlationId, nameof(correlationId))
+               .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
+                    g => $"{typeUrl} is a response type and needs a correlationId");
+
             var value = protobufObject.ToByteString();
             var anySigned = new AnySigned
             {
                 PeerId = senderId,
-                //todo: sign the `value` field with publicKey instead
+                CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
+                //todo: sign the `correlationId` and `value` bytes with publicKey instead
                 Signature = senderId.PublicKey,
-                TypeUrl = protobufObject.Descriptor.ShortenedFullName(),
+                TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
             return anySigned;
@@ -110,6 +123,35 @@ namespace Catalyst.Node.Common.Helpers
         public static ByteString ToUtf8ByteString(this string utf8String)
         {
             return ByteString.CopyFromUtf8(utf8String);
+        }
+
+        public static Guid ToGuid(this ByteString guidBytes)
+        {
+            return new Guid(guidBytes.ToByteArray());
+        }
+
+        public static ByteString ToByteString(this Guid guid)
+        {
+            return guid.ToByteArray().ToByteString();
+        }
+
+        public static string GetRequestType(this string responseTypeUrl)
+        {
+            return SwapSuffixes(responseTypeUrl, ResponseSuffix, RequestSuffix);
+        }
+
+        public static string GetResponseType(this string requestTypeUrl)
+        {
+            return SwapSuffixes(requestTypeUrl, RequestSuffix, ResponseSuffix);
+        }
+
+        private static string SwapSuffixes(string requestTypeUrl, string originalSuffix, string targetSuffix)
+        {
+            Guard.Argument(requestTypeUrl, nameof(requestTypeUrl)).NotNull()
+               .Require(t => t.EndsWith(originalSuffix), t => $"{t} should end with {originalSuffix}");
+            return requestTypeUrl
+               .Remove(requestTypeUrl.Length - originalSuffix.Length, originalSuffix.Length)
+              + targetSuffix;
         }
     }
 }
