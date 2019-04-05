@@ -35,8 +35,12 @@ namespace Catalyst.Node.Core.Modules.Dfs
 {
     public class IpfsDfs : IIpfsDfs
     {
-
         private readonly IpfsEngine _ipfsDfs;
+        private readonly AddFileOptions addFileOptions = new AddFileOptions
+        {
+            Hash = "blake2b-256",
+            RawLeaves = true
+        };
 
         public IpfsDfs(
             IPasswordReader passwordReader,
@@ -64,7 +68,10 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public Task<IFileSystemNode> AddFileAsync(string filename, CancellationToken cancellationToken = default)
         {
-            return _ipfsDfs.FileSystem.AddFileAsync(filename, cancel: cancellationToken);
+            return _ipfsDfs.FileSystem.AddFileAsync(
+                filename,
+                options: addFileOptions,
+                cancel: cancellationToken);
         }
 
         public Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)
