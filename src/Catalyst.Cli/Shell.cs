@@ -454,8 +454,6 @@ namespace Catalyst.Cli
 
         protected override bool OnGetConfig(Object opts)
         {
-            //Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
-
             var nodeId = ((GetInfoOptions)opts).NodeId;
 
             //Perform validations required before a command call
