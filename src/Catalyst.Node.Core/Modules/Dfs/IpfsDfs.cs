@@ -20,6 +20,8 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -33,14 +35,28 @@ namespace Catalyst.Node.Core.Modules.Dfs
 {
     public class IpfsDfs : IIpfsDfs
     {
-
         private readonly IpfsEngine _ipfsDfs;
-
-        public IpfsDfs(IPasswordReader passwordReader)
+        private readonly AddFileOptions addFileOptions = new AddFileOptions
         {
-            var password = passwordReader.ReadSecurePasswordAsChars("Please provide your IPFS password");
-            //TODO handle secure strings in IPFS
+            Hash = "blake2b-256",
+            RawLeaves = true
+        };
+
+        public IpfsDfs(
+            IPasswordReader passwordReader,
+            IPeerSettings peerSettings)
+        {
+            var password = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsDfs = new IpfsEngine(password);
+            _ipfsDfs.Options.KeyChain.DefaultKeyType = "ed25519";
+            _ipfsDfs.Options.Repository.Folder = Path.Combine(
+                new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName, 
+                "Ipfs");
+            _ipfsDfs.Options.Discovery.BootstrapPeers = peerSettings
+                .SeedServers
+                .Select(s => $"/dns/{s}/tcp/4001")
+                .Select(ma => new MultiAddress(ma))
+                .ToArray();
         }
 
         Task IService.StartAsync() { return this.StartAsync(); }
@@ -52,7 +68,10 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public Task<IFileSystemNode> AddFileAsync(string filename, CancellationToken cancellationToken = default)
         {
-            return _ipfsDfs.FileSystem.AddFileAsync(filename, cancel: cancellationToken);
+            return _ipfsDfs.FileSystem.AddFileAsync(
+                filename,
+                options: addFileOptions,
+                cancel: cancellationToken);
         }
 
         public Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)
