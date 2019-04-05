@@ -69,7 +69,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils {
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
 
-            if (WriteLogsToTestOutput) TestOutputLoggerConfigurationExtensions.TestOutput(loggerConfiguration.WriteTo, _output, LogEventLevel, LogOutputTemplate);
+            if (WriteLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(_output, LogEventLevel, LogOutputTemplate);
 
             if (WriteLogsToFile) loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                 outputTemplate: LogOutputTemplate);
