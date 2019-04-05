@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -37,15 +37,15 @@ namespace Catalyst.Cli
 {
     /// <summary>
     /// This class provides a command line interface (CLI) application to connect to Catalyst Node.
-    /// Through the CLI the node operator will be able to connect to any number of running nodes and run commands. 
+    /// Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
     public class RpcClient : IRpcClient, IDisposable
     {
-        private readonly ILogger _logger;      
+        private readonly ILogger _logger;
         private readonly ICertificateStore _certificateStore;
         private readonly AnyTypeClientHandler _clientHandler;
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
-        
+
         private readonly GetInfoResponseHandler _getInfoResponseHandler;
         private readonly GetVersionResponseHandler _getVersionResponseHandler;
         private readonly GetMempoolResponseHandler _getMempoolResponseHandler;
@@ -64,7 +64,7 @@ namespace Catalyst.Cli
             _certificateStore = certificateStore;
             _clientHandler = new AnyTypeClientHandler();
             MessageStream = _clientHandler.MessageStream;
-            
+
             _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, _logger);
             _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, _logger);
             _getMempoolResponseHandler = new GetMempoolResponseHandler(MessageStream, _logger);
@@ -132,7 +132,7 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        /// Sends the message to the RPC Server by writing it asynchronously 
+        /// Sends the message to the RPC Server by writing it asynchronously
         /// </summary>
         /// <param name="node">RpcNode object which is selected to connect to by the user</param>
         /// <param name="message"></param>
@@ -151,6 +151,7 @@ namespace Catalyst.Cli
                 _logger.Information("disposing RpcClient");
                 _getInfoResponseHandler.Dispose();
                 _getVersionResponseHandler.Dispose();
+                _getMempoolResponseHandler.Dispose();
             }
         }
 
