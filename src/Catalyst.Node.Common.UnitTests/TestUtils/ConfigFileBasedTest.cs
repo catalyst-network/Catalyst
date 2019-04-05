@@ -24,7 +24,6 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.UnitTests.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -32,7 +31,7 @@ using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils {
+namespace Catalyst.Node.Common.UnitTests.TestUtils {
     public class ConfigFileBasedTest : FileSystemBasedTest {
 
         protected ContainerBuilder ContainerBuilder;
@@ -70,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
 
-            if (WriteLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(_output, LogEventLevel, LogOutputTemplate);
+            if (WriteLogsToTestOutput) TestOutputLoggerConfigurationExtensions.TestOutput(loggerConfiguration.WriteTo, _output, LogEventLevel, LogOutputTemplate);
 
             if (WriteLogsToFile) loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                 outputTemplate: LogOutputTemplate);
