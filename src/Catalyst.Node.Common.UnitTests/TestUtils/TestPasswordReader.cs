@@ -19,20 +19,27 @@
 */
 #endregion
 
+using System.Linq;
 using System.Security;
-using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Helpers.Cryptography;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils
+namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
-    public class TestCertificateStore : ICertificateStore
+    public class TestPasswordReader : IPasswordReader
     {
-        public X509Certificate2 ReadOrCreateCertificateFile(string fileName)
+        private const string Password = "";
+
+        public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
         {
-            return CertificateStore.BuildSelfSignedServerCertificate(new SecureString());
+            var secureString = new SecureString();
+            Password.ToList().ForEach(c => secureString.AppendChar(c));
+            secureString.MakeReadOnly();
+            return secureString;
         }
 
-        public X509Certificate2 ReadOrCreateCertificateFile(string fileName, string password) { return CertificateStore.BuildSelfSignedServerCertificate(new SecureString()); }
+        public char[] ReadSecurePasswordAsChars(string passwordContext = "Please enter your password")
+        {
+            return Password.ToCharArray();
+        }
     }
 }

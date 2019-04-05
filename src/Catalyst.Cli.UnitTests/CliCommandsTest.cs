@@ -25,14 +25,12 @@ using System.Reflection;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Cli.UnitTests.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
 using Moq;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Autofac;
-
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using FluentAssertions;
 
 namespace Catalyst.Cli.UnitTests
