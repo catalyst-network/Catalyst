@@ -4,6 +4,8 @@
 // $NAME$    -- source name (string literal or 'nameof' expression)
 // $MESSAGE$ -- string literal in the form of "$NAME$ != null"
 Guard.Argument($EXPR$, $NAME$).NotNull()</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=E03E56AF_002D8B05_002D41D1_002DAA57_002DA4FE965B794E_002Fd_003AProtocol/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ReadSettingsFromFileLevel/@EntryValue">True</s:Boolean>
 	
 	
 	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/ALIGN_MULTILINE_BINARY_EXPRESSIONS_CHAIN/@EntryValue">False</s:Boolean>
@@ -114,4 +116,3 @@ namespace $NAMESPACE$&#xD;
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=92732F9610241D49818D3E4BE966CB00/Field/=MessageType/@KeyIndexDefined">True</s:Boolean>
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=92732F9610241D49818D3E4BE966CB00/Field/=MessageType/Order/@EntryValue">1</s:Int64></wpf:ResourceDictionary>
 	
-</wpf:ResourceDictionary>
