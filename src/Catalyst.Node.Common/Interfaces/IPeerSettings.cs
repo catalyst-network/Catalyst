@@ -40,8 +40,8 @@ namespace Catalyst.Node.Common.Interfaces
         IPEndPoint EndPoint { get; }
         int Magic { get; }
         string PfxFileName { get; }
-        List<string> KnownNodes { get; }
-        List<string> SeedServers { get; }
+        IList<string> KnownNodes { get; }
+        IList<string> SeedServers { get; }
         byte AddressVersion { get; }
         string SslCertPassword { get; }
     }
