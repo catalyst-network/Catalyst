@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -27,7 +29,7 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
- using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
 using Microsoft.Extensions.Configuration;

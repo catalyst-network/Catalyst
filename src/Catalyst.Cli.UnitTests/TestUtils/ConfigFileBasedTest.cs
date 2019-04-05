@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System.IO;
@@ -32,9 +34,10 @@ using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
 
-namespace Catalyst.Cli.UnitTests.TestUtils {
-    public class ConfigFileBasedTest : FileSystemBasedTest {
-
+namespace Catalyst.Cli.UnitTests.TestUtils
+{
+    public class ConfigFileBasedTest : FileSystemBasedTest
+    {
         protected ContainerBuilder ContainerBuilder;
         protected ConfigFileBasedTest(ITestOutputHelper output) : base(output) { }
         protected bool WriteLogsToTestOutput { get; set; } = false;
@@ -72,8 +75,11 @@ namespace Catalyst.Cli.UnitTests.TestUtils {
 
             if (WriteLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(_output, LogEventLevel, LogOutputTemplate);
 
-            if (WriteLogsToFile) loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.Cli.log"), LogEventLevel,
-                outputTemplate: LogOutputTemplate);
+            if (WriteLogsToFile)
+            {
+                loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.Cli.log"), LogEventLevel,
+                    outputTemplate: LogOutputTemplate);   
+            }
             
             ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
         }

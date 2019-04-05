@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,10 +18,11 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
- using System;
- using System.IO;
+using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -70,10 +72,14 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) { return; }
+            if (!disposing)
+            {
+                return;
+            }
 
             var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
-            if (_testDirectory.Parent != null) {
+            if (_testDirectory.Parent != null) 
+            {
                 var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
                    .Where(d => regex.IsMatch(d.Name)
                      && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -33,7 +35,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
 {
     public class IpfsDfs : IIpfsDfs
     {
-
         private readonly IpfsEngine _ipfsDfs;
 
         public IpfsDfs(IPasswordReader passwordReader)

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -63,11 +65,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
         }
 
-        public P2PMessaging(
-            IPeerSettings settings, 
+        public P2PMessaging(IPeerSettings settings, 
             ICertificateStore certificateStore,
-            ILogger logger
-        )
+            ILogger logger)
         {
             _settings = settings;
             _logger = logger;
@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _anyTypeServerHandler = new AnyTypeServerHandler();
             InboundMessageStream = _anyTypeServerHandler.MessageStream;
             OpenedClients = new ConcurrentDictionary<int, ISocketClient>();
-            var longRunningTasks = new []
+            var longRunningTasks = new[]
             {
                 NodeListenerAsync()
             };
@@ -102,8 +102,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
             {
                 _udpServer = await new UdpServer(_logger)
                    .Bootstrap(new InboundChannelInitializer<IChannel>(channel => { },
-                            handlers)
-                ).StartServer(_settings.BindAddress, _settings.Port);
+                        handlers)
+                    ).StartServer(_settings.BindAddress, _settings.Port);
             }
             catch (Exception e)
             {
@@ -130,10 +130,10 @@ namespace Catalyst.Node.Core.P2P.Messaging
                .Bootstrap(new OutboundChannelInitializer<IChannel>(channel => { },
                     handlers,
                     peerEndPoint.Address
-               )).ConnectClient(
+                )).ConnectClient(
                     peerEndPoint.Address,
                     peerEndPoint.Port
-               );
+                );
 
             // var peerSocketHashCode = peerSocket.Channel.RemoteAddress.GetHashCode();
 

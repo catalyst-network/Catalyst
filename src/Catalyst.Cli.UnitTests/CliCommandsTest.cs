@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -30,9 +32,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Moq;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Autofac;
-
 using FluentAssertions;
 
 namespace Catalyst.Cli.UnitTests
@@ -120,7 +120,6 @@ namespace Catalyst.Cli.UnitTests
             result.Should().BeFalse();
         }
         
-
         [Fact(Skip = "Not ready yet.")]
         public void CanGetVersion()
         {
@@ -132,7 +131,6 @@ namespace Catalyst.Cli.UnitTests
             
             var node1 = _shell.Ads.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
-            
             
             var result = _shell.Ads.OnCommand("get", "version", "node1");
             result.Should().BeTrue();
