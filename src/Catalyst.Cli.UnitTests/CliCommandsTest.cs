@@ -69,8 +69,8 @@ namespace Catalyst.Cli.UnitTests
         private ILogger _logger;
         private ILifetimeScope _scope;
         
-        private IRpcServer _rpcServer;
-        private IRpcClient _rpcClient;
+        /*private IRpcServer _rpcServer;
+        private IRpcClient _rpcClient;*/
         
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {

@@ -64,9 +64,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private ILifetimeScope _scope;
         private ILogger _logger;
         
-        private readonly IMempool _memPool;
+        /*private readonly IMempool _memPool;
         private readonly Transaction _transaction;
-        private readonly IRepository<Transaction, TransactionSignature> _transactionStore;
+        private readonly IRepository<Transaction, TransactionSignature> _transactionStore;*/
 
         public SocketTests(ITestOutputHelper output) : base(output)
         {
@@ -142,7 +142,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcClient_can_send_request_and_RpcServer_can_reply()
+        public void RpcServer_Can_Handle_GetInfoRequest()
         {
             _rpcClient = new RpcClient(_logger, _certificateStore);
             _rpcClient.Should().NotBeNull();
@@ -171,6 +171,41 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
+            }
+        
+        }
+        
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcServer_Can_Handle_GetVersionRequest()
+        {
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
+
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnyMessageObserver(0, _logger);
+            var clientObserver = new AnyMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                var info = shell.ParseCommand("get", "-v", "node1");
+
+                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(VersionRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
             }
         
         }
@@ -207,7 +242,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
             }
-        
         }
 
         protected override void Dispose(bool disposing)

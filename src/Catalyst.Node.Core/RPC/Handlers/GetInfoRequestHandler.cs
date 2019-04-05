@@ -77,6 +77,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
             }
         }
 
+        /// <summary>
+        /// Creates a list of key value pair objects (string,string) of all configuration items in the passed in configuration section
+        /// </summary>
+        /// <param name="configSection">IConfigurationSection object including configuration read from config files</param>
+        /// <returns>a list of (string,string) key value pairs</returns>
         private IList<KeyValuePair<string, string>> GetConfiguration(IConfigurationSection configSection)
         {
             IList<KeyValuePair<string, string>> settings = new List<KeyValuePair<string, string>>();
@@ -87,20 +92,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 
                 if (subSection.GetChildren().Any())
                 {
-                    KeyValuePair<string,string> section = new KeyValuePair<string, string>(subSection.Key, "subsection");
-                    settings.Add(section);
-
                     subList = GetConfiguration(subSection);
+                    
+                    var section = new KeyValuePair<string, string>(subSection.Key, "subsection_"+subList.Count);
+                    settings.Add(section);
                     settings = settings.Concat(subList).ToList();
                     continue;
                 }
-                /*else
-                {
-                    subList = configSection.GetChildren().
-                        Select(t => new KeyValuePair<string, string>(t.Key, Convert.ToString(t.Value))).ToList();
-                    
-                    KeyValuePair<string,string> section = new KeyValuePair<string, string>(subSection.Key, Convert.ToString(subSection.Value));
-                }*/
                 
                 KeyValuePair<string,string> item = new KeyValuePair<string, string>(subSection.Key, Convert.ToString(subSection.Value));
                 settings.Add(item);
