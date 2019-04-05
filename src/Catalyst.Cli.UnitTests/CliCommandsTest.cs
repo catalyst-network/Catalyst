@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -51,45 +51,66 @@ namespace Catalyst.Cli.UnitTests
     {
         private readonly ICatalystCli _shell;
         private readonly ILifetimeScope _scope;
-        
+
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {
             var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
 
-            new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
-            
+            // check if user home data dir has a shell config
+            var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
+            var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile);
+            var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
+
+            if (!File.Exists(shellComponentsFilePath))
+            {
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.components.json"),
+                    shellComponentsFilePath);
+            }
+
+            if (!File.Exists(shellSeriLogFilePath))
+            {
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.serilog.json"),
+                    shellSeriLogFilePath);
+            }
+
+            if (!File.Exists(shellNodesFilePath))
+            {
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
+                    shellNodesFilePath);
+            }
+
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
                .Build();
-            
+
             var channel = Substitute.For<IChannel>();
             channel.Active.Returns(true);
             var tcpClient = Substitute.For<ISocketClient>();
             tcpClient.Channel.Returns(channel);
-                    
+
 
             var client = Substitute.For<IRpcClient>();
             client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
                .Returns(Task.FromResult(tcpClient));
-            
+
             ConfigureContainerBuilder(config);
             ContainerBuilder.RegisterInstance(tcpClient).As<ISocketClient>();
             ContainerBuilder.RegisterInstance(client).As<IRpcClient>();
-            
-            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;            
+
+            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
             var serviceCollection = new ServiceCollection();
             var container = ContainerBuilder.Build();
-            
+
             _scope = container.BeginLifetimeScope(_currentTestName);
-            
+
             _shell = container.Resolve<ICatalystCli>();
-            
+
             var logger = container.Resolve<ILogger>();
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
         }
-        
+
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         [Fact]
@@ -98,18 +119,18 @@ namespace Catalyst.Cli.UnitTests
             using (_scope)
             {
                 var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
-                
+
                 hasConnected.Should().BeTrue();
             }
         }
-        
+
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         [Fact]
         public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
             using (_scope)
-            {               
+            {
                 var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
 
@@ -127,7 +148,7 @@ namespace Catalyst.Cli.UnitTests
             using (_scope)
             {
                 var certificateStore = new Mock<ICertificateStore>();
-                    
+
                 var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
                 hasConnected.Should().BeTrue();
             }
@@ -141,11 +162,11 @@ namespace Catalyst.Cli.UnitTests
 
             var node1 = _shell.Ads.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
-            
+
             var result = _shell.Ads.ParseCommand("get", "-i", "node1");
             result.Should().BeTrue();
         }
-        
+
 
         [Fact]
         public void Cli_Can_Request_Node_Version()
@@ -155,11 +176,11 @@ namespace Catalyst.Cli.UnitTests
 
             var node1 = _shell.Ads.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
-            
+
             var result = _shell.Ads.ParseCommand("get", "-v", "node1");
             result.Should().BeTrue();
         }
-        
+
         [Fact]
         public void Cli_Can_Request_Node_Mempool()
         {
@@ -168,7 +189,7 @@ namespace Catalyst.Cli.UnitTests
 
             var node1 = _shell.Ads.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
-            
+
             var result = _shell.Ads.ParseCommand("get", "-m", "node1");
             result.Should().BeTrue();
         }
