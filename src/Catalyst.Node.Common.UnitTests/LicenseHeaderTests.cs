@@ -60,11 +60,11 @@ namespace Catalyst.Node.Common.UnitTests
                     return allText.StartsWith(copyingText) ? null : f.FullName;
                 }).ToArray();
 
-            var files = (await Task.WhenAll(getWrongFiles)).Where(f => f != null).ToArray();
+            var wrongFiles = (await Task.WhenAll(getWrongFiles)).Where(f => f != null).ToArray();
 
-            files.Should().BeEmpty(
+            wrongFiles.Should().BeEmpty(
                 $"all files should have a header{Environment.NewLine}" +
-                $"{string.Join(Environment.NewLine, files)} " + Environment.NewLine);
+                $"{string.Join(Environment.NewLine, wrongFiles)} " + Environment.NewLine);
         }
     }
 }

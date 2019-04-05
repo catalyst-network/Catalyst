@@ -75,8 +75,8 @@ namespace Catalyst.Node.Common.P2P
         public int Magic { get; set; }
         public IPAddress BindAddress { get; set; }
         public string PfxFileName { get; set; }
-        public List<string> KnownNodes { get; set; }
-        public List<string> SeedServers { get; set; }
+        public IList<string> KnownNodes { get; set; }
+        public IList<string> SeedServers { get; set; }
         public byte AddressVersion { get; set; }
         public string SslCertPassword { get; set; }
     }
