@@ -24,19 +24,20 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IP2PMessaging : IDuplexChanneledMessageStreamer<Any>
+    public interface IP2PMessaging : IDuplexChanneledMessageStreamer<AnySigned>
     {
         /// <summary>
         /// Identifier of the Peer behind the instance of the IP2PMessaging service
         /// </summary>
         IPeerIdentifier Identifier { get; }
         Task BroadcastMessageAsync(int peerSocketClientId, IByteBufferHolder datagramPacket);
-        Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message);
+        Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<AnySigned> message);
         Task<int> PeerConnectAsync(IPEndPoint peerEndpoint);
     }
 }

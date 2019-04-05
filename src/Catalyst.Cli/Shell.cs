@@ -31,7 +31,8 @@ using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-
+using Catalyst.Node.Common.P2P;
+using Catalyst.Protocol.Common;
 using ILogger = Serilog.ILogger;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
@@ -41,14 +42,14 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Cli
 {
-    public sealed class Shell : ShellBase, IAds, IObserver<IChanneledMessage<Any>>
+    public sealed class Shell : ShellBase, IAds, IObserver<IChanneledMessage<AnySigned>>
     {
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly List<IRpcNode> _nodes;
-
         private readonly IRpcClient _rpcClient;
         
-        public IChanneledMessage<Any> Response { get; set; }
+        public IPeerIdentifier Identifier { get; }
+        public IChanneledMessage<AnySigned> Response { get; set; }
         private readonly ILogger _logger;
 
         private const string NO_CONFIG_MESSAGE =
@@ -67,7 +68,6 @@ namespace Catalyst.Cli
             _logger = logger;
             _nodes = new List<IRpcNode>();
             _rpcClient.MessageStream.Subscribe(this);
-
             Console.WriteLine(@"Koopa Shell Start");
         }
         private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
@@ -414,7 +414,7 @@ namespace Catalyst.Cli
                 
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
-                _rpcClient.SendMessage(connectedNode, request.ToAny());
+                _rpcClient.SendMessage(connectedNode, request.ToAnySigned());
                 
             }
             catch (Exception e)
@@ -444,7 +444,7 @@ namespace Catalyst.Cli
                 
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
-                _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();
+                _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
             }
             catch (Exception e)
             {
@@ -569,7 +569,7 @@ namespace Catalyst.Cli
         }
         public void OnError(Exception error) { _logger.Error($"RpcClient observer received error : {error.Message}"); }
 
-        public void OnNext(IChanneledMessage<Any> value)
+        public void OnNext(IChanneledMessage<AnySigned> value)
         {
             if (value == null) {return;}
 

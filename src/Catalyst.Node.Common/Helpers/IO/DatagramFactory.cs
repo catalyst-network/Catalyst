@@ -21,6 +21,7 @@
 
 using System;
 using System.Net;
+using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
@@ -37,7 +38,7 @@ namespace Catalyst.Node.Common.Helpers.IO
         /// <param name="message"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static IByteBufferHolder Create(Any message, IPEndPoint target)
+        public static IByteBufferHolder Create(AnySigned message, IPEndPoint target)
         {
             return new DatagramPacket(Unpooled.WrappedBuffer(message.ToByteArray()), target);
         }

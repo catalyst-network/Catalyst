@@ -29,7 +29,7 @@ using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.Node.Common.P2P
 {
     /// <summary>
     ///     Peer settings class.
@@ -46,18 +46,18 @@ namespace Catalyst.Node.Core.P2P
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
             PublicKey = section.GetSection("PublicKey").Value;
-            Port = int.Parse(section.GetSection("Port").Value);
-            Magic = int.Parse(section.GetSection("Magic").Value);
+            Port = int.Parse((string) section.GetSection("Port").Value);
+            Magic = int.Parse((string) section.GetSection("Magic").Value);
             PfxFileName = section.GetSection("PfxFileName").Value;
             PayoutAddress = section.GetSection("PayoutAddress").Value;
-            Announce = bool.Parse(section.GetSection("Announce").Value);
-            BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
-            AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
-            MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
-            AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
-            MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
-            KnownNodes = section.GetSection("KnownNodes").GetChildren().Select(p => p.Value).ToList();
-            SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
+            Announce = bool.Parse((string) section.GetSection("Announce").Value);
+            BindAddress = IPAddress.Parse((string) section.GetSection("BindAddress").Value);
+            AddressVersion = byte.Parse((string) section.GetSection("AddressVersion").Value);
+            MaxConnections = ushort.Parse((string) section.GetSection("MaxConnections").Value);
+            AcceptInvalidCerts = bool.Parse((string) section.GetSection("AcceptInvalidCerts").Value);
+            MutualAuthentication = bool.Parse((string) section.GetSection("MutualAuthentication").Value);
+            KnownNodes = Enumerable.ToList<string>(section.GetSection("KnownNodes").GetChildren().Select(p => p.Value));
+            SeedServers = Enumerable.ToList<string>(section.GetSection("SeedServers").GetChildren().Select(p => p.Value));
             AnnounceServer =
                 Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
         }

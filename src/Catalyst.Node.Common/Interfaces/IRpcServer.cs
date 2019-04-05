@@ -22,11 +22,12 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Protocol.Common;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IRpcServer : IChanneledMessageStreamer<Any>, IDisposable
+    public interface IRpcServer : IChanneledMessageStreamer<AnySigned>, IDisposable
     {
         Task StartServerAsync();
         IRpcServerSettings Settings { get; }

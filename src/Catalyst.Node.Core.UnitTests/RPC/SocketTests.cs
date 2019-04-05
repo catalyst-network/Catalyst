@@ -32,10 +32,12 @@ using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
@@ -135,8 +137,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             {
                 var info = shell.OnGetCommand("get", "config", "node1");
 
-                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
-                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
+                var tasks = new IChanneledMessageStreamer<AnySigned>[] { _rpcClient, _rpcServer }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                    .ToArray();
                 Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
 

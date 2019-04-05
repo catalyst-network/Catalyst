@@ -25,22 +25,22 @@ using System.Reactive.Subjects;
 using System.Reflection;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound {
-    public class AnyTypeServerHandler :
-        SimpleChannelInboundHandler<Any>, IChanneledMessageStreamer<Any>, IDisposable
+    public class AnyTypeServerHandler : SimpleChannelInboundHandler<AnySigned>, IChanneledMessageStreamer<AnySigned>, IDisposable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly BehaviorSubject<IChanneledMessage<Any>> _messageSubject = new BehaviorSubject<IChanneledMessage<Any>>(NullObjects.ChanneledAny);
-        public IObservable<IChanneledMessage<Any>> MessageStream => _messageSubject.AsObservable();
+        private readonly BehaviorSubject<IChanneledMessage<AnySigned>> _messageSubject = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream => _messageSubject.AsObservable();
         public override bool IsSharable => true;
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, Any msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
         {
-            var contextAny = new ChanneledAny(ctx, msg);
+            var contextAny = new ChanneledAnySigned(ctx, msg);
             _messageSubject.OnNext(contextAny);
         }
 

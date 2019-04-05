@@ -20,11 +20,12 @@
 #endregion
 
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Protocol.Common;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Helpers.IO {
     public interface IMessageHandler
     {
-        void HandleMessage(IChanneledMessage<Any> message);
+        void HandleMessage(IChanneledMessage<AnySigned> message);
     }
 }

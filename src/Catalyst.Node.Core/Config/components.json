@@ -66,10 +66,26 @@
       ]
     },
     {
-      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
+      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Common.P2P.Peer, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
       "services": [
         {
-          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.Repository"
+          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.P2P.Peer, Catalyst.Node.Common]], SharpRepository.Repository"
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory",
+      "services": [
+        {
+          "type": "Microsoft.Extensions.Options.IOptions`1[[Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory]], Microsoft.Extensions.Options"
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Extensions.Caching.Memory.MemoryCache, Microsoft.Extensions.Caching.Memory",
+      "services": [
+        {
+          "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
         }
       ]
     },

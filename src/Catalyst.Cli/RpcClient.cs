@@ -28,6 +28,7 @@ using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels.Sockets;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
@@ -44,7 +45,7 @@ namespace Catalyst.Cli
         private readonly ILogger _logger;      
         private readonly ICertificateStore _certificateStore;
         private readonly AnyTypeClientHandler _clientHandler;
-        public IObservable<IChanneledMessage<Any>> MessageStream { get; }
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
         
         private readonly GetInfoResponseHandler _getInfoResponseHandler;
         private readonly GetVersionResponseHandler _getVersionResponseHandler;
@@ -135,7 +136,7 @@ namespace Catalyst.Cli
         /// <param name="node">RpcNode object which is selected to connect to by the user</param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task SendMessage(IRpcNode node, Any message)
+        public async Task SendMessage(IRpcNode node, AnySigned message)
         {
             await node.SocketClient.SendMessage(message);
         }

@@ -22,11 +22,12 @@
 using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Protocol.Common;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils {
-    public class AnyMessageObserver : IObserver<IChanneledMessage<Any>>
+    public class AnyMessageObserver : IObserver<IChanneledMessage<AnySigned>>
     {
         private readonly ILogger _logger;
 
@@ -36,15 +37,15 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
             Index = index;
         }
 
-        public IChanneledMessage<Any> Received { get; private set; }
+        public IChanneledMessage<AnySigned> Received { get; private set; }
         public int Index { get; }
 
         public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
         public void OnError(Exception error) { _logger.Debug($"observer {Index} received error : {error.Message}"); }
 
-        public void OnNext(IChanneledMessage<Any> value)
+        public void OnNext(IChanneledMessage<AnySigned> value)
         {
-            if (value == NullObjects.ChanneledAny) return;
+            if (value == NullObjects.ChanneledAnySigned) return;
             _logger.Debug($"observer {Index} received message of type {value?.Payload.TypeUrl ?? "(null)"}");
             Received = value;
         }

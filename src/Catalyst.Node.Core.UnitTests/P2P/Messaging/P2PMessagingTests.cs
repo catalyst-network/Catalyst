@@ -32,6 +32,7 @@ using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -51,9 +52,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
     {
         private readonly IConfigurationRoot _config;
         private IEnumerable<IDisposable> _subscriptions;
-        private ILifetimeScope _scope;
-        private ILogger _logger;
-        private ICertificateStore _certificateStore;
+        private readonly ILifetimeScope _scope;
+        private readonly ILogger _logger;
+        private readonly ICertificateStore _certificateStore;
 
         public P2PMessagingTests(ITestOutputHelper output) : base(output)
         {
@@ -62,10 +63,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
-        }
 
-        private void ConfigureTestContainer()
-        {
             WriteLogsToFile = false;
             WriteLogsToTestOutput = false;
 
@@ -75,44 +73,23 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _scope = container.BeginLifetimeScope(_currentTestName);
 
             _logger = container.Resolve<ILogger>();
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+            if(WriteLogsToFile || WriteLogsToTestOutput)
+            { DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));}
 
             _certificateStore = container.Resolve<ICertificateStore>();
         }
 
-        // [Fact(Skip = "other attempt to isolate a reason why the build is hanging")]
-        // [Trait(Traits.TestType, Traits.IntegrationTest)]
-        // public async Task Peers_Can_Emit_And_Receive_Broadcast()
-        // {
-        //     ConfigureTestContainer();
-        //     var indexes = Enumerable.Range(0, 3).ToList();
-        //
-        //     var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
-        //     var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
-        //
-        //     var observers = indexes.Select(i => new AnyMessageObserver(i, _logger)).ToList();
-        //     _subscriptions = peers.Select((p, i) => p.OutboundMessageStream.Subscribe(observers[i])).ToList();
-        //
-        //     var broadcastMessage = DatagramFactory.Create(TransactionHelper.GetTransaction().ToAny(), EndpointBuilder.BuildNewEndPoint(peers.FirstOrDefault().));
-        //     var context = Substitute.For<IChannelHandlerContext>();
-        //     await peers[0].BroadcastMessageAsync(broadcastMessage);
-        //
-        //     var tasks = peers
-        //        .Select(async p => await p.OutboundMessageStream.FirstAsync(a => a != NullObjects.ChanneledAny))
-        //        .ToArray();
-        //     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(100));
-        //
-        //     var received = observers.Select(o => o.Received).ToList();
-        //     received.Count(r => r.Payload.TypeUrl == broadcastMessage.TypeUrl).Should().Be(3);
-        //
-        // }
+        [Fact(Skip = "other attempt to isolate a reason why the build is hanging")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task Peers_Can_Emit_And_Receive_Broadcast()
+        {
+            var indexes = Enumerable.Range(0, 3).ToList();
+        }
 
         [Fact(Skip = "not ready yet")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
         {
-            ConfigureTestContainer();
-
             var indexes = Enumerable.Range(0, 3).ToList();
 
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();

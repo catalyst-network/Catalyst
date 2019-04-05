@@ -26,6 +26,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Protocol.Common;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
@@ -70,7 +71,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             return this;
         }
 
-        public async Task SendMessage(Any message)
+        public async Task SendMessage(AnySigned message)
         {
             await Channel.WriteAndFlushAsync(message);
         }

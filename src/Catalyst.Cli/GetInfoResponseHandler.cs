@@ -25,6 +25,7 @@ using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
@@ -36,16 +37,16 @@ namespace Catalyst.Cli
     public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>
     {
         public GetInfoResponseHandler(
-            IObservable<IChanneledMessage<Any>> messageStream,
+            IObservable<IChanneledMessage<AnySigned>> messageStream,
             ILogger logger)
             : base(messageStream, logger)
         {
             
         }
 
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAny)
+            if (message == NullObjects.ChanneledAnySigned)
             {
                 return;
             }
@@ -53,7 +54,7 @@ namespace Catalyst.Cli
             try
             {
                 Logger.Debug("Handling GetInfoResponse");
-                var deserialised = message.Payload.FromAny<GetInfoResponse>();
+                var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
                 Logger.Information("Requested node configuration\n============================\n{0}", deserialised.Query.ToString());
                 Logger.Information("Press Enter to continue ...\n");
             }

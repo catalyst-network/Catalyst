@@ -19,7 +19,7 @@
 */
 #endregion
 
-﻿using System;
+ using System;
 using System.IO;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;

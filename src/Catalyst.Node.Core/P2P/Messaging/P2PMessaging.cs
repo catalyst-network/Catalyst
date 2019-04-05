@@ -32,6 +32,8 @@ using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using Catalyst.Node.Common.P2P;
+using Catalyst.Protocol.Common;
 using Dawn;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
@@ -52,8 +54,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly CancellationTokenSource _cancellationSource;
         public IPeerIdentifier Identifier { get; }
         public IDictionary<int, ISocketClient> OpenedClients { get; }
-        public IObservable<IChanneledMessage<Any>> InboundMessageStream { get; }
-        public IObservable<IChanneledMessage<Any>> OutboundMessageStream { get; }
+        public IObservable<IChanneledMessage<AnySigned>> InboundMessageStream { get; }
+        public IObservable<IChanneledMessage<AnySigned>> OutboundMessageStream { get; }
 
         static P2PMessaging()
         {
@@ -73,8 +75,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _cancellationSource = new CancellationTokenSource();
 
             Identifier = new PeerIdentifier(settings);
-            _anyTypeClientHandler = new AnyTypeClientHandler();
-            OutboundMessageStream = _anyTypeClientHandler.MessageStream;
             _anyTypeServerHandler = new AnyTypeServerHandler();
             InboundMessageStream = _anyTypeServerHandler.MessageStream;
             OpenedClients = new ConcurrentDictionary<int, ISocketClient>();
@@ -92,7 +92,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(Any.Parser),
+                new ProtobufDecoder(AnySigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 _anyTypeServerHandler
@@ -122,8 +122,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(Any.Parser),
-                _anyTypeClientHandler
+                new ProtobufDecoder(AnySigned.Parser),
+                new AnyTypeClientHandler()
             };
             
             var peerSocket = await new UdpClient()
@@ -157,7 +157,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             }      
         }
 
-        public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<Any> message)
+        public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<AnySigned> message)
         {
             await message.Context.WriteAndFlushAsync(message.Payload);
         }

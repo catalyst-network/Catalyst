@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,23 +19,21 @@
 */
 #endregion
 
-using System;
 using Catalyst.Protocol.Common;
-using SharpRepository.Repository;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Node.Common.P2P;
-using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
+using DotNetty.Transport.Channels;
+using Google.Protobuf.WellKnownTypes;
 
-namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
+namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public interface IPendingRequestCache : IDisposable
+    public class ChanneledAnySigned : IChanneledMessage<AnySigned>
     {
-        IRepository<PendingRequest> RequestStore { get; }
-        IObservable<IPeerReputationChange> PeerRatingChanges { get; }
-        TRequest TryMatchResponse<TRequest, TResponse>(TResponse response, IPeerIdentifier responderId)
-            where TRequest : class, IMessage<TRequest>
-            where TResponse : class, IMessage<TResponse>;
+        public AnySigned Payload { get; }
+        public IChannelHandlerContext Context { get; }
+
+        public ChanneledAnySigned(IChannelHandlerContext context, AnySigned message)
+        {
+            Payload = message;
+            Context = context;
+        }
     }
 }

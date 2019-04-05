@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.P2P;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
@@ -34,7 +35,7 @@ namespace Catalyst.Node.Common.Interfaces
         ILogger Logger { get; }
         IList<string> SeedNodes { get; }
         IList<IPEndPoint> Peers { get; }
-        IRepository<Peer> PeerRepository { get; }
+        IRepository<Catalyst.Node.Common.P2P.Peer> PeerRepository { get; }
         Task GetSeedNodesFromDns(IList<string> seedServers);
         void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
     }

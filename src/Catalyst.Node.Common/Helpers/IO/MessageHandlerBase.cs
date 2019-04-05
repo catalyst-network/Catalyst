@@ -23,6 +23,7 @@ using System;
 using System.Reactive.Linq;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
@@ -34,7 +35,7 @@ namespace Catalyst.Node.Common.Helpers.IO
         private readonly IDisposable _messageSubscription;
         protected readonly ILogger Logger;
 
-        protected MessageHandlerBase(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
+        protected MessageHandlerBase(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
         {
             Logger = logger;
             var filterMessageType = typeof(T).ShortenedProtoFullName();
@@ -43,7 +44,7 @@ namespace Catalyst.Node.Common.Helpers.IO
                .Subscribe(HandleMessage);
         }
 
-        public abstract void HandleMessage(IChanneledMessage<Any> message);
+        public abstract void HandleMessage(IChanneledMessage<AnySigned> message);
 
         protected virtual void Dispose(bool disposing)
         {

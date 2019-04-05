@@ -19,11 +19,12 @@
 */
 #endregion
 
-﻿using System;
+ using System;
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Node.Common.Interfaces;
-using Nethereum.Hex.HexConvertors.Extensions;
+ using Catalyst.Node.Common.P2P;
+ using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Node.Core.P2P
 {

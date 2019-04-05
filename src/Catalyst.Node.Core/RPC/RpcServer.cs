@@ -28,6 +28,7 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
@@ -45,7 +46,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly GetVersionRequestHandler _versionRequestHandler;
         
         public IRpcServerSettings Settings { get; }
-        public IObservable<IChanneledMessage<Any>> MessageStream { get; }
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         public RpcServer(IRpcServerSettings settings,
             ILogger logger, 
@@ -77,7 +78,7 @@ namespace Catalyst.Node.Core.RPC
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(Any.Parser),
+                new ProtobufDecoder(AnySigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 _anyTypeServerHandler

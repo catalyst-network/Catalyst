@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -21,12 +21,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
@@ -46,7 +48,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public PeerIdentifierTests(ITestOutputHelper output)
         {
             _output = output;
-            _validPeerId = PeerIdentifierHelper.GetPeerId();
+            _validPeerId = PeerIdHelper.GetPeerId();
         }
 
         [Fact]
@@ -82,8 +84,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             _output.WriteLine(newPeer.ToString());
         }
-
+        
         [Theory]
+        [SuppressMessage("ReSharper", "Duplicate")]
         [InlineData(0)]
         [InlineData(10)]
         [InlineData(19)]

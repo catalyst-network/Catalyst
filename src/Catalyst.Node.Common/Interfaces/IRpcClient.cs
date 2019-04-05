@@ -22,14 +22,15 @@
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Protocol.Common;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IRpcClient : IChanneledMessageStreamer<Any>
+    public interface IRpcClient : IChanneledMessageStreamer<AnySigned>
     {       
          Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig);
 
-         Task SendMessage(IRpcNode node, Any message);
+         Task SendMessage(IRpcNode node, AnySigned message);
     }
 }

@@ -36,6 +36,7 @@ using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.RPC;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using Dawn;
@@ -84,7 +85,6 @@ namespace Catalyst.Node.Core
 
         public async Task RunAsync(CancellationToken ct)
         {
-
             await _dfs.StartAsync(ct);
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
@@ -107,10 +107,12 @@ namespace Catalyst.Node.Core
                 // await Task.Delay(300, ct); //just to get the next message at the bottom
 
                 _logger.Information("Creating a Ping message");
-                var ping = new PingRequest { CorrelationId = Guid.NewGuid().ToString().ToUtf8ByteString() };
+                
+                var ping = new PingRequest().ToAnySigned(_p2P.Messaging.Identifier.PeerId, Guid.NewGuid());
+                
                 var targetEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069);
                 var peerSocketClientId = await _p2P.Messaging.PeerConnectAsync(targetEndpoint);
-                await _p2P.Messaging.BroadcastMessageAsync(peerSocketClientId, DatagramFactory.Create(ping.ToAny(), targetEndpoint));
+                await _p2P.Messaging.BroadcastMessageAsync(peerSocketClientId, DatagramFactory.Create(ping, targetEndpoint));
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
 
                 _logger.Information("Type 'exit' to exit, anything else to continue");

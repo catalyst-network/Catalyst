@@ -26,6 +26,7 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
@@ -39,7 +40,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly IRpcServerSettings _config;
 
         public GetVersionRequestHandler(
-            IObservable<IChanneledMessage<Any>> messageStream,
+            IObservable<IChanneledMessage<AnySigned>> messageStream,
             IRpcServerSettings config,
             ILogger logger)
             : base(messageStream, logger)
@@ -47,13 +48,13 @@ namespace Catalyst.Node.Core.RPC
             _config = config;
         }
 
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if(message == NullObjects.ChanneledAny) {return;}
+            if(message == NullObjects.ChanneledAnySigned) {return;}
             Logger.Debug("received message of type VersionRequest");
             try
             {
-                var deserialised = message.Payload.FromAny<VersionRequest>();
+                var deserialised = message.Payload.FromAnySigned<VersionRequest>();
                 Logger.Debug("message content is {0}", deserialised);
                 var response = new VersionResponse
                 {

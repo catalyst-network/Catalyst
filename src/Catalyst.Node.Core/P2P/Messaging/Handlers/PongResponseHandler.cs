@@ -23,6 +23,7 @@ using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Protocol.Common;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using Catalyst.Protocol.IPPN;
@@ -31,14 +32,14 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public class PongResponseHandler : MessageHandlerBase<PingResponse>
     {
-        public PongResponseHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
+        public PongResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
         : base(messageStream, logger) { }
 
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            Logger.Debug("received pong response");
-            var deserialised = message.Payload.FromAny<PingResponse>();
-            Logger.Debug("pong content is {0}", deserialised.CorrelationId);
+            Logger.Debug("received ping response");
+            var deserialised = message.Payload.FromAnySigned<PingResponse>();
+            Logger.Debug("ping response content is empty");
         }
     }
 }

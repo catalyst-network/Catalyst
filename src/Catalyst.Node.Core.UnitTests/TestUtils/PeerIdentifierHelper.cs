@@ -19,13 +19,29 @@
 */
 #endregion
 
+using System.Linq;
+using System.Net;
+using System.Text;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.P2P;
-using SharpRepository.Repository;
+using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P;
 
-namespace Catalyst.Node.Common.Interfaces.P2P
+namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
-    interface IReputationManager
+    public static class PeerIdentifierHelper
     {
-        IRepository<Peer> PeerRepository { get; }
+        public static IPeerIdentifier GetPeerIdentifier(string publicKeySeed,
+            string clientId = "Tc",
+            int clientVersion = 1,
+            IPAddress ipAddress = null,
+            int port = 12345)
+        {
+            var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
+               .Concat(Enumerable.Repeat(default(byte), 20))
+               .Take(20).ToArray();
+            var peerIdentifier = PeerIdHelper.GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
+            return new PeerIdentifier(peerIdentifier);
+        }
     }
 }

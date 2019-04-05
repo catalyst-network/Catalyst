@@ -25,6 +25,7 @@ using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
@@ -37,16 +38,15 @@ namespace Catalyst.Cli
     public class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>
     {
         public GetVersionResponseHandler(
-            IObservable<IChanneledMessage<Any>> messageStream,
+            IObservable<IChanneledMessage<AnySigned>> messageStream,
             ILogger logger)
             : base(messageStream, logger)
-        {
-            
+        {    
         }
 
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAny)
+            if (message == NullObjects.ChanneledAnySigned)
             {
                 return;
             }
@@ -55,7 +55,7 @@ namespace Catalyst.Cli
             {
                 Logger.Debug("Handling GetVersionResponse");
                 
-                var deserialised = message.Payload.FromAny<VersionResponse>();
+                var deserialised = message.Payload.FromAnySigned<VersionResponse>();
                 Logger.Information("Node Version: {0}", deserialised.Version.ToString());
                 Logger.Information("Press Enter to continue ...\n");
             }

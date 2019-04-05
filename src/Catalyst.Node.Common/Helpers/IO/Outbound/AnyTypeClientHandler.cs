@@ -26,21 +26,22 @@ using System.Reflection;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound {
-    public class AnyTypeClientHandler : SimpleChannelInboundHandler<Any>, IChanneledMessageStreamer<Any>, IDisposable
+    public class AnyTypeClientHandler : SimpleChannelInboundHandler<AnySigned>, IChanneledMessageStreamer<AnySigned>, IDisposable
     { 
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IObservable<IChanneledMessage<Any>> MessageStream => _messageSubject.AsObservable();
-        private readonly BehaviorSubject<IChanneledMessage<Any>> _messageSubject = new BehaviorSubject<IChanneledMessage<Any>>(NullObjects.ChanneledAny);
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream => _messageSubject.AsObservable();
+        private readonly BehaviorSubject<IChanneledMessage<AnySigned>> _messageSubject = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
         
-        protected override void ChannelRead0(IChannelHandlerContext context, Any message)
+        protected override void ChannelRead0(IChannelHandlerContext context, AnySigned message)
         {
-            var contextAny = new ChanneledAny(context, message);
+            var contextAny = new ChanneledAnySigned(context, message);
             _messageSubject.OnNext(contextAny);
         }
 
