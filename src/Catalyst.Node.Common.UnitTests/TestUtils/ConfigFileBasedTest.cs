@@ -33,6 +33,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils 
 {
+
     public class ConfigFileBasedTest : FileSystemBasedTest {
 
         protected ContainerBuilder ContainerBuilder;

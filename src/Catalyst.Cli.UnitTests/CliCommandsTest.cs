@@ -28,7 +28,6 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-
 using Xunit;
 using Xunit.Abstractions;
 using Moq;
@@ -37,13 +36,12 @@ using FluentAssertions;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 using Autofac;
 using Catalyst.Node.Common.Helpers.Shell;
 using DotNetty.Transport.Channels;
-
 using Serilog;
 using Serilog.Extensions.Logging;
+
 
 namespace Catalyst.Cli.UnitTests
 {
