@@ -20,20 +20,15 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
-using System.Transactions;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
-using SharpRepository.Repository.Caching.Hash;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers

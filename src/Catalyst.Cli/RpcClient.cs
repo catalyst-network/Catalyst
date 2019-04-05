@@ -32,7 +32,6 @@ using Catalyst.Node.Common.Helpers.IO.Outbound;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
-using Serilog;
 
 namespace Catalyst.Cli
 {

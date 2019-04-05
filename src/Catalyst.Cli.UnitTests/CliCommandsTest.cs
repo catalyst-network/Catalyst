@@ -20,37 +20,28 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Reactive.Linq;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Cli.UnitTests.TestUtils;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 
 using Xunit;
 using Xunit.Abstractions;
 using Moq;
+using NSubstitute;
+using FluentAssertions;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Autofac;
-using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Helpers.Shell;
 using DotNetty.Transport.Channels;
-using FluentAssertions;
 
-using Google.Protobuf.WellKnownTypes;
-using NSubstitute;
-using NSubstitute.Core;
 using Serilog;
 using Serilog.Extensions.Logging;
 
@@ -58,48 +49,16 @@ namespace Catalyst.Cli.UnitTests
 {
     public sealed class CliCommandsTests : ConfigFileBasedTest
     {
-        private readonly IConfigurationRoot _config;
-        
-        //private ICertificateStore _certificateStore;
-        
-        private readonly string LifetimeTag;
-        
-        //private RpcClient _rpcClient;
-        private ICatalystCli _shell;
-        private ILogger _logger;
-        private ILifetimeScope _scope;
-        
-        /*private IRpcServer _rpcServer;
-        private IRpcClient _rpcClient;*/
+        private readonly ICatalystCli _shell;
+        private readonly ILifetimeScope _scope;
         
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {
             var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
-                
-            // check if user home data dir has a shell config
-            var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
-            var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile);
-            var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
-            
-            if (!File.Exists(shellComponentsFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.components.json"),
-                    shellComponentsFilePath);
-            }
 
-            if (!File.Exists(shellSeriLogFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.serilog.json"),
-                    shellSeriLogFilePath);
-            }
-                
-            if (!File.Exists(shellNodesFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
-                    shellNodesFilePath);
-            }
+            new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
             
-            _config = new ConfigurationBuilder()
+            var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
@@ -115,15 +74,11 @@ namespace Catalyst.Cli.UnitTests
             client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
                .Returns(Task.FromResult(tcpClient));
             
-            
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
+            ConfigureContainerBuilder(config);
             ContainerBuilder.RegisterInstance(tcpClient).As<ISocketClient>();
             ContainerBuilder.RegisterInstance(client).As<IRpcClient>();
             
-            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            LifetimeTag = declaringType.AssemblyQualifiedName;
-            
+            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;            
             var serviceCollection = new ServiceCollection();
             var container = ContainerBuilder.Build();
             
@@ -131,8 +86,8 @@ namespace Catalyst.Cli.UnitTests
             
             _shell = container.Resolve<ICatalystCli>();
             
-            _logger = container.Resolve<ILogger>();
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+            var logger = container.Resolve<ILogger>();
+            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
         }
         
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands

@@ -20,17 +20,13 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Security;
 using System.Text;
 using Catalyst.Node.Common.Interfaces;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using McMaster.Extensions.CommandLineUtils;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {

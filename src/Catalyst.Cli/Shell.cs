@@ -95,17 +95,17 @@ namespace Catalyst.Cli
 
         private bool OnGetCommands(GetInfoOptions opts)
         {
-            if (opts.info)
+            if (opts.Info)
             {
                 return OnGetConfig(opts);
             }
 
-            if (opts.mempool)
+            if (opts.Mempool)
             {
                 return OnGetMempool(opts);
             }
 
-            if (opts.version)
+            if (opts.Version)
             {
                 return OnGetVersion(opts);
             }

@@ -27,14 +27,11 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
- using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-
-using CommandLine;
-using McMaster.Extensions.CommandLineUtils;
 
 namespace Catalyst.Cli
 {

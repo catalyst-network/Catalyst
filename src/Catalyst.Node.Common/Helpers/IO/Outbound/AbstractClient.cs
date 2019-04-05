@@ -35,9 +35,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
     public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient 
         where TChannel : IChannel, new()
-    {
-        protected static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        
+    {        
         public IBootstrap Client { get; set; }
         
         protected AbstractClient(ILogger logger) : base(logger) {}
@@ -63,7 +61,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Error in AbstractClient");
+                _logger.Error(e, "Error in AbstractClient");
                 throw;
             }
             

@@ -90,7 +90,6 @@ namespace Catalyst.Cli.Handlers
 
         private void WriteConfiguration(IReadOnlyList<KeyValuePair<string, string>> configList, int startIndex, int count)
         {
-            var subSectionIndex = 0;
             var childIndex = 0;
             var childrenCount = 0;
             
@@ -108,7 +107,6 @@ namespace Catalyst.Cli.Handlers
                     
                 if (value.Contains("subsection"))
                 {
-                    subSectionIndex = j;
                     childIndex = j + 1;
                     childrenCount = Convert.ToInt16(value.Substring(value.IndexOf('_')+1));
                         

@@ -8,5 +8,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Autofac" Version="4.9.2" />
+    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+    <PackageReference Include="AutofacSerilogIntegration" Version="2.0.1-dev-00031" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+    <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
   </ItemGroup>
 </Project>

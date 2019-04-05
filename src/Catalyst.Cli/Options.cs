@@ -30,13 +30,13 @@ namespace Catalyst.Cli
     class GetInfoOptions
     {
         [Option('i', "info")]
-        public bool info { get; set; }
+        public bool Info { get; set; }
         
         [Option('m', "mempool")]
-        public bool mempool { get; set; }
+        public bool Mempool { get; set; }
         
         [Option('v', "version")]
-        public bool version { get; set; }
+        public bool Version { get; set; }
 
         [Value(1, MetaName = "Node ID",
             HelpText = "Valid and connected node ID.",
@@ -48,7 +48,7 @@ namespace Catalyst.Cli
     class ConnectOptions
     {
         [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public bool node { get; set; }
+        public bool Node { get; set; }
 
         [Value(1, MetaName = "Node ID",
             HelpText = "Node name as listed in nodes.json config file.",
@@ -56,15 +56,10 @@ namespace Catalyst.Cli
         public string NodeId { get; set; }
         
         [Usage(ApplicationAlias = "")]
-        public static IEnumerable<Example> Examples
-        {
-            get
-            {
-                return new List<Example>() {
-                    new Example("Connects the CLI to a node", new ConnectOptions { NodeId = "Node ID" })
-                };
-            }
-        }
+        public static IEnumerable<Example> Examples =>
+            new List<Example>() {
+                new Example("Connects the CLI to a node", new ConnectOptions { NodeId = "Node ID" })
+            };
     }
         
     
