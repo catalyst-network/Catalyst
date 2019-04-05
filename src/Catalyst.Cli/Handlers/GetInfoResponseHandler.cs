@@ -126,18 +126,10 @@ namespace Catalyst.Cli.Handlers
             }
         }
 
-        private void KeyValueWrite(KeyValuePair<string,string> keyValuePair)
+        private void WriteConfiguration(IReadOnlyList<KeyValuePair<string, string>> configList, int startIndex, int count)
         {
-            var key = keyValuePair.Key;
-            var value = keyValuePair.Value ?? "";
-            
-            Console.WriteLine(@"        {0}: {1},", key, value );
-        }
-
-        private void WriteConfiguration(List<KeyValuePair<string, string>> configList, int startIndex, int count)
-        {
-            Console.WriteLine("\t");
-            for (int j = startIndex; j < startIndex + count; j++)
+            Console.WriteLine(@"	");
+            for (var j = startIndex; j < startIndex + count; j++)
             {
                 var setting = configList[j];
                 var key = setting.Key;

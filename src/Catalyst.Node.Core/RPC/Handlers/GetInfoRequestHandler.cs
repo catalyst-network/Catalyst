@@ -31,7 +31,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -58,7 +57,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var deserialised = message.Payload.FromAny<GetInfoRequest>();
                 Logger.Debug("message content is {0}", deserialised);
 
-                IList<KeyValuePair<string, string>> configuration = GetConfiguration(_config.NodeConfig.GetSection("CatalystNodeConfiguration"));
+                var configuration = GetConfiguration(_config.NodeConfig.GetSection("CatalystNodeConfiguration"));
                 
                 var serializedList = JsonConvert.SerializeObject(configuration, Formatting.Indented);
                 
@@ -82,17 +81,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         /// <param name="configSection">IConfigurationSection object including configuration read from config files</param>
         /// <returns>a list of (string,string) key value pairs</returns>
-        private IList<KeyValuePair<string, string>> GetConfiguration(IConfigurationSection configSection)
+        private IList<KeyValuePair<string, string>> GetConfiguration(IConfiguration configSection)
         {
             IList<KeyValuePair<string, string>> settings = new List<KeyValuePair<string, string>>();
             
             foreach (var subSection in configSection.GetChildren())
             {
-                IList<KeyValuePair<string, string>> subList;
-                
                 if (subSection.GetChildren().Any())
                 {
-                    subList = GetConfiguration(subSection);
+                    var subList = GetConfiguration(subSection);
                     
                     var section = new KeyValuePair<string, string>(subSection.Key, "subsection_"+subList.Count);
                     settings.Add(section);
@@ -100,7 +97,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     continue;
                 }
                 
-                KeyValuePair<string,string> item = new KeyValuePair<string, string>(subSection.Key, Convert.ToString(subSection.Value));
+                var item = new KeyValuePair<string, string>(subSection.Key, Convert.ToString(subSection.Value));
                 settings.Add(item);
             }
 
