@@ -424,8 +424,6 @@ namespace Catalyst.Cli
         /// <returns>Returns true if successful and false otherwise.</returns>
         protected override bool OnGetVersion(Object opts)
         {
-            //Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
-
             var nodeId = ((GetInfoOptions)opts).NodeId;
 
             //Perform validations required before a command call
