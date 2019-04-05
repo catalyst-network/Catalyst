@@ -38,7 +38,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         {
             Logger.Debug("received ping");
             var deserialised = message.Payload.FromAny<PingRequest>();
-            Logger.Debug("ping content is {0}", deserialised.CorrelationId);
+            Logger.Debug("ping content is empty");
         }
     }
 }

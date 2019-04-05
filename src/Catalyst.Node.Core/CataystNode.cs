@@ -102,13 +102,6 @@ namespace Catalyst.Node.Core
                 await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 await Task.Delay(300, ct); //just to get the next message at the bottom
 
-                _logger.Information("Creating a Ping message");
-                _logger.Information("Please type in a ping message content");
-                var ping = new PingRequest { CorrelationId = Console.ReadLine().ToUtf8ByteString() };
-
-                await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
-                await Task.Delay(300, ct); //just to get the exit message at the bottom
-
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
 

@@ -6,8 +6,45 @@
 
 <hr/>
 
-## Setup
+## What is the Catalyst Network ?
 
-To get started remember to pull the associated submodules into the project
+Catalyst Netwokr is the distributed operating system that enterprise and developers can get straight on. No language barriers.  No architecture constraints. Scalable, fast and lean. The first DLT that is fit for purpose.
 
-`$ git submodules init; git submodule update `
+The decentralised protocol is designed from engineering first principles and built by an experienced team of software developers and financial service experts. With an enterprise focus it allows industries to leverage decentralisation into their operations.
+
+## What is Catalyst.Node ?
+
+Catalyst.Node is the .Net implementation of the Catalyst Network. The spcification of our protocol is outlined in our technical while paper a more indepth implementation orientated document can be found in the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/)
+
+Catalyst.Node is developed on dotnet core 2.2 therefore supports Linux, macOS and Windows operating systems.
+
+## Documentation
+
+Is coming (don't you hate it when they say that). For now you can read through the project [wiki](https://github.com/catalyst-network/Catalyst.Node/wiki) or the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/)
+
+## Features
+
+- Protobuffs wire format ([see why](https://github.com/catalyst-network/protocol-protobuffs#why-protobuffs))
+- RPC core protocol methods
+- Distributed file storage (DFS) built upon IPFS
+- Confidential and Public transactions
+- Fast new and novel consensus Delegated Proof Of Real Work With Some Staking & Reputation Elements (Cheers for the unhelpfull answer here @TonyVazz)
+- Flexible modula design
+
+## Real Quick Start Guide
+
+`git clone git@github.com:catalyst-network/Catalyst.Node.git `
+
+`cd Catalyst.Node`
+
+`git submodule init`
+
+`git submodule update`
+
+`cd src`
+
+`dotnet restore`
+
+`dotnet build`
+
+If that was really too quick try reading the [Quick Start Guide](https://github.com/catalyst-network/Catalyst.Node/wiki/Quick-Start-Guide)

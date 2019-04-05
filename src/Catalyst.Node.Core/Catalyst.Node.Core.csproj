@@ -20,6 +20,7 @@
     <PackageReference Include="Ipfs.Api" Version="0.23.6" />
     <PackageReference Include="Ipfs.Core" Version="0.40.0" />
     <PackageReference Include="Ipfs.Engine" Version="0.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />

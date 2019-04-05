@@ -26,11 +26,12 @@ using System.Text;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
-    public static class PeerIdentifierHelper
+    public static class PeerIdHelper
     {
         public static PeerId GetPeerId(byte[] publicKey = null,
             string clientId = "Tc",
