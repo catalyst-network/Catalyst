@@ -18,6 +18,10 @@ Catalyst.Node is the .Net implementation of the Catalyst Network. The spcificati
 
 Catalyst.Node is developed on dotnet core 2.2 therefore supports Linux, macOS and Windows operating systems.
 
+## Questions & Discussions
+
+Join us on our [<img src="https://img.shields.io/badge/slack-@oresoftware/npp-yellow.svg?logo=slack">](https://catalystnet.slack.com/messages/CGNJ845QV) for any questions and discussions.
+
 ## Documentation
 
 Is coming (don't you hate it when they say that). For now you can read through the project [wiki](https://github.com/catalyst-network/Catalyst.Node/wiki) or the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/)
