@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -90,7 +92,10 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
             var expectedContent = "censored";
-            var response = new PeerInfoResponse { Pong = expectedContent };
+            var response = new PeerInfoResponse
+            {
+                Pong = expectedContent
+            };
             new Action(() => response.ToAnySigned(peerId))
                .Should().Throw<ArgumentException>();
         }

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -31,13 +33,8 @@ using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using ILogger = Serilog.ILogger;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
-using Serilog.Core;
-
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Cli
@@ -70,6 +67,7 @@ namespace Catalyst.Cli
             _rpcClient.MessageStream.Subscribe(this);
             Console.WriteLine(@"Koopa Shell Start");
         }
+        
         private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
         {
             var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
@@ -273,11 +271,10 @@ namespace Catalyst.Cli
                 {
                     IRpcNode connectedNode = new RpcNode(nodeConfig, socket);
                     _nodes.Add(connectedNode);
-                }
-                
+                }    
             }
             //Handle the exception of a wrong SSL certificate password
-            catch (System.PlatformNotSupportedException)
+            catch (PlatformNotSupportedException)
             {
                 ReturnUserMessage(
                     $"SSL certificate {nodeConfig.PfxFileName} is invalid. Please provide a valid SSL certificate to be able to connect to the node.");
@@ -352,7 +349,10 @@ namespace Catalyst.Cli
 
             var node = _nodes.SingleOrDefault(n => n.Config.NodeId == args[0]);
 
-            if (node == null) { return false; }
+            if (node == null)
+            {
+                return false;
+            }
 
             node.SocketClient.Shutdown().GetAwaiter().GetResult();
             _nodes.Remove(node);
@@ -415,7 +415,6 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
                 _rpcClient.SendMessage(connectedNode, request.ToAnySigned());
-                
             }
             catch (Exception e)
             {
@@ -511,7 +510,10 @@ namespace Catalyst.Cli
 
         private bool IsSocketChannelActive(IRpcNode node)
         {
-            if (node.SocketClient.Channel.Active) { return true; }
+            if (node.SocketClient.Channel.Active)
+            {
+                return true;
+            }
             
             _logger.Information("Channel inactive ...");
             return false;
@@ -567,11 +569,15 @@ namespace Catalyst.Cli
             //Do nothing because this method should include logic to do after the observer
             //receives a message and handles it.
         }
+        
         public void OnError(Exception error) { _logger.Error($"RpcClient observer received error : {error.Message}"); }
 
         public void OnNext(IChanneledMessage<AnySigned> value)
         {
-            if (value == null) {return;}
+            if (value == null)
+            {
+                return;
+            }
 
             Response = value;
         }

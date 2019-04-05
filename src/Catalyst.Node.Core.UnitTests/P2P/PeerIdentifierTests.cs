@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -98,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 PublicKey = new byte[pubKeySize].ToByteString()
             };
             new Action(() => new PeerIdentifier(invalidPeer))
-               .Should().Throw<ArgumentException>().WithMessage( "*PublicKey*");
+               .Should().Throw<ArgumentException>().WithMessage("*PublicKey*");
 
             invalidPeer.PublicKey = new byte[21].ToByteString();
         }

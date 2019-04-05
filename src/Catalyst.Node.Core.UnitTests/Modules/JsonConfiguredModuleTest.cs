@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,19 +18,20 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
- using System;
+using System;
 using System.IO;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
- using Catalyst.Node.Common.Interfaces;
- using Catalyst.Node.Common.Interfaces.Modules.Consensus;
- using Catalyst.Node.Common.Interfaces.Modules.Contract;
- using Catalyst.Node.Common.Interfaces.Modules.Dfs;
- using Catalyst.Node.Common.Interfaces.Modules.Ledger;
- using Catalyst.Node.Common.Interfaces.Modules.Mempool;
- using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Modules.Consensus;
+using Catalyst.Node.Common.Interfaces.Modules.Contract;
+using Catalyst.Node.Common.Interfaces.Modules.Dfs;
+using Catalyst.Node.Common.Interfaces.Modules.Ledger;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Contract;
 using Catalyst.Node.Core.Modules.Dfs;

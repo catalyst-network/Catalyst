@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -49,7 +51,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public class SocketTests : ConfigFileBasedTest, IDisposable
+    public sealed class SocketTests : ConfigFileBasedTest, IDisposable
     {
         private readonly IConfigurationRoot _config;
 
@@ -81,7 +83,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _certificateStore = container.Resolve<ICertificateStore>();
             _rpcServer = container.Resolve<IRpcServer>();
-
         }
 
         [Fact]
@@ -137,7 +138,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             {
                 var info = shell.OnGetCommand("get", "config", "node1");
 
-                var tasks = new IChanneledMessageStreamer<AnySigned>[] { _rpcClient, _rpcServer }
+                var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    {
+                        _rpcClient, _rpcServer
+                    }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                    .ToArray();
                 Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
@@ -147,14 +151,17 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
-            }
-        
+            } 
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (!disposing) {return;}
+            if (!disposing)
+            {
+                return;
+            }
+            
             _scope?.Dispose();
             _rpcServer?.Dispose();
             _rpcClient?.Dispose();
