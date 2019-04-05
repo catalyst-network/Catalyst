@@ -52,6 +52,10 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         {
             builder.RegisterInstance(Substitute.For<ILogger>()).As<ILogger>();
             builder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
+
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.SeedServers.Returns(new[] {"seed1.seedservers.bogus", "seed2.seedservers.bogus"});
+            builder.RegisterInstance(peerSettings).As<IPeerSettings>();
         }
 
         [Theory]

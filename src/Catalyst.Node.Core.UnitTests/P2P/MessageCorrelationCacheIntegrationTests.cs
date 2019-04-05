@@ -100,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var match = pendingRequestCache.TryMatchResponse<PingRequest, PingResponse>(responseFromDude1);
             match.Should().NotBeNull();
 
-            await Task.Delay(ttl);
+            await Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)));
 
             correlationIds.Select(c => cache.TryGetValue(c.ToByteString(), out _))
                .Should().AllBeEquivalentTo(false, "entries are removed by matching or expiring");

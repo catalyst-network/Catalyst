@@ -20,9 +20,9 @@
 #endregion
 
 ﻿using System;
-using Autofac;
+ using Autofac;
 using Autofac.Configuration;
-using Microsoft.Extensions.Configuration;
+ using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
@@ -38,6 +38,7 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils
 
             var configurationModule = new ConfigurationModule(configuration);
             var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterInstance(configuration).As<IConfigurationRoot>();
             containerBuilder.RegisterModule(configurationModule);
             extraRegistrations?.Invoke(containerBuilder);
             Container = containerBuilder.Build();
