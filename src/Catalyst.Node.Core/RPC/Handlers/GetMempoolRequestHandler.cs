@@ -40,18 +40,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
 {
     public class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>
     {
-        private readonly IRpcServerSettings _config;
         private readonly IMempool _mempool;
 
 
         public GetMempoolRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
-            IRpcServerSettings config,
             ILogger logger, 
             IMempool mempool)
             : base(messageStream, logger)
         {
-            _config = config;
             _mempool = mempool;
         }
 

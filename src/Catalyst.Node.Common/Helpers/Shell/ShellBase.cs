@@ -294,7 +294,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
                 try
                 {
-                    //OnCommand(args);
                     ParseCommand(args);
                 }
                 catch (SystemException ex)

@@ -46,8 +46,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly GetInfoRequestHandler _infoRequestHandler;
         private readonly GetVersionRequestHandler _versionRequestHandler;
         private readonly GetMempoolRequestHandler _mempoolRequestHandler;
-        private readonly IMempool _mempool;
-        
+
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
 
@@ -58,7 +57,6 @@ namespace Catalyst.Node.Core.RPC
         {
             _logger = logger;
             Settings = settings;
-            _mempool = mempool;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
@@ -67,8 +65,8 @@ namespace Catalyst.Node.Core.RPC
             var longRunningTasks = new [] {StartServerAsync()};
 
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
-            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, Settings, logger);
-            _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, Settings, logger, _mempool);
+            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, logger);
+            _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, logger, mempool);
 
             Task.WaitAll(longRunningTasks);
         }

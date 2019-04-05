@@ -33,15 +33,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
 {
     public class GetVersionRequestHandler : MessageHandlerBase<VersionRequest>
     {
-        private readonly IRpcServerSettings _config;
-
         public GetVersionRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
-            IRpcServerSettings config,
             ILogger logger)
             : base(messageStream, logger)
         {
-            _config = config;
         }
 
         public override void HandleMessage(IChanneledMessage<Any> message)

@@ -112,7 +112,6 @@ namespace Catalyst.Cli
 
             return false;
         }
-        private bool RunCommitAndReturnExitCode(ConnectOptions opts) { return false; }
 
         /// <summary>
         /// </summary>
@@ -418,7 +417,6 @@ namespace Catalyst.Cli
                 case "version":
                     return OnGetVersion(args);
                 default:
-                    //return base.OnCommand(args);
                     return true;
             }
         }
@@ -502,8 +500,6 @@ namespace Catalyst.Cli
         /// <returns>Boolean</returns>
         protected override bool OnGetMempool(Object args)
         {
-            //Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
-
             var nodeId = ((GetInfoOptions)args).NodeId;
             
             try

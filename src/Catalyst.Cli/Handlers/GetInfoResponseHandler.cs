@@ -76,46 +76,8 @@ namespace Catalyst.Cli.Handlers
 
                 WriteConfiguration(result, 0, result.Count);
                 
-                /*for (int j = 0; j < result.Count; j++)
-                {
-                    var setting = result[j];
-                    var key = setting.Key;
-                    var value = setting.Value ?? "";
-                    
-                    if (value.Contains("subsection"))
-                    {
-                        var childIndex = result.IndexOf(setting) + 1;
-                        
-                        var childrenCount = Convert.ToInt16(value.Substring(value.IndexOf('_')+1));
-                        
-                        if (!result.First().Equals(setting))
-                        {
-                            Console.WriteLine(@"    },");
-                        }
-                        
-                        Console.WriteLine(@"    " + key + @": {");
-
-                        for (var i = childIndex; i < childIndex + childrenCount; i++)
-                        {
-                            var child = result[i];
-                            var childKey = child.Key;
-                            var childValue = child.Value ?? "";
-                            
-                            Console.WriteLine(@"        {0}: {1},", childKey, childValue );
-                        }
-
-                        j = j + childrenCount;
-                    }
-                    else
-                    {
-
-                        Console.WriteLine(@"        {0}: {1},", key, value );
-                    }
-                }*/
-                
                 Console.WriteLine(@"]");
                 
-                //Console.WriteLine(deserialised.Query);
                 Console.WriteLine(@"Press Enter to continue ...");
             }
             catch (Exception ex)
@@ -128,17 +90,27 @@ namespace Catalyst.Cli.Handlers
 
         private void WriteConfiguration(IReadOnlyList<KeyValuePair<string, string>> configList, int startIndex, int count)
         {
+            var subSectionIndex = 0;
+            var childIndex = 0;
+            var childrenCount = 0;
+            
             Console.WriteLine(@"	");
             for (var j = startIndex; j < startIndex + count; j++)
             {
+                if (j < (childIndex + childrenCount))
+                {
+                    continue;
+                }
+                    
                 var setting = configList[j];
                 var key = setting.Key;
                 var value = setting.Value ?? "";
                     
                 if (value.Contains("subsection"))
                 {
-                    var childIndex = j + 1;
-                    var childrenCount = Convert.ToInt16(value.Substring(value.IndexOf('_')+1));
+                    subSectionIndex = j;
+                    childIndex = j + 1;
+                    childrenCount = Convert.ToInt16(value.Substring(value.IndexOf('_')+1));
                         
                     if (!configList.First().Equals(setting) && !configList[childIndex].Key.Contains("0"))
                     {
@@ -151,8 +123,6 @@ namespace Catalyst.Cli.Handlers
                     }
 
                     WriteConfiguration(configList, childIndex, childrenCount);
-
-                    j = j + childrenCount;
                 }
                 else
                 {
