@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-*
+* 
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -54,30 +54,9 @@ namespace Catalyst.Cli.UnitTests
 
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {
-            var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
+            var targetConfigFolder = _fileSystem.GetCatalystHomeDir().FullName;
 
-            // check if user home data dir has a shell config
-            var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
-            var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile);
-            var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
-
-            if (!File.Exists(shellComponentsFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.components.json"),
-                    shellComponentsFilePath);
-            }
-
-            if (!File.Exists(shellSeriLogFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.serilog.json"),
-                    shellSeriLogFilePath);
-            }
-
-            if (!File.Exists(shellNodesFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
-                    shellNodesFilePath);
-            }
+            new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
 
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))

@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -29,12 +29,13 @@ namespace Catalyst.Cli
     {
         protected override IEnumerable<string> RequiredConfigFiles(Network network)
         {
-            var baseConfigs = base.RequiredConfigFiles(network);
-            return baseConfigs.Concat(new[]
+            //var baseConfigs = base.RequiredConfigFiles(network);
+            return new[]
             {
                 Constants.ShellNodesConfigFile,
                 Constants.ShellComponentsJsonConfigFile,
-            });
+                Constants.SerilogJsonConfigFile
+            };
         }
     }
 }
