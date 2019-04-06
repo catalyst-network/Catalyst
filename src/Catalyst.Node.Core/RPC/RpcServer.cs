@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -29,13 +31,14 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Core.RPC.Handlers;
 using DotNetty.Codecs.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Core.RPC
 {
-    public class RpcServer : IRpcServer, IDisposable
+    public class RpcServer : IRpcServer
     {
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
@@ -44,13 +47,15 @@ namespace Catalyst.Node.Core.RPC
         private readonly AnyTypeServerHandler _anyTypeServerHandler;
         private readonly GetInfoRequestHandler _infoRequestHandler;
         private readonly GetVersionRequestHandler _versionRequestHandler;
-        
+        private readonly GetMempoolRequestHandler _mempoolRequestHandler;
+
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         public RpcServer(IRpcServerSettings settings,
-            ILogger logger, 
-            ICertificateStore certificateStore)
+            ILogger logger,
+            ICertificateStore certificateStore,
+            IMempool mempool)
         {
             _logger = logger;
             Settings = settings;
@@ -59,16 +64,17 @@ namespace Catalyst.Node.Core.RPC
 
             _anyTypeServerHandler = new AnyTypeServerHandler();
             MessageStream = _anyTypeServerHandler.MessageStream;
-            var longRunningTasks = new [] {StartServerAsync()};
+            var longRunningTasks = new[] {StartServerAsync()};
 
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
-            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, Settings, logger);
+            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, logger);
+            _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, logger, mempool);
 
             Task.WaitAll(longRunningTasks);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public async Task StartServerAsync()
@@ -91,7 +97,7 @@ namespace Catalyst.Node.Core.RPC
                         channel => { },
                         handlers,
                         certificate: _certificate)
-                   ).StartServer(Settings.BindAddress, Settings.Port);
+                    ).StartServer(Settings.BindAddress, Settings.Port);
             }
             catch (Exception e)
             {
@@ -102,7 +108,7 @@ namespace Catalyst.Node.Core.RPC
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
@@ -111,9 +117,10 @@ namespace Catalyst.Node.Core.RPC
             {
                 _rpcSocketServer?.Shutdown();
                 _cancellationSource?.Dispose();
-                _certificate?.Dispose(); 
+                _certificate?.Dispose();
                 _infoRequestHandler?.Dispose();
                 _versionRequestHandler.Dispose();
+                _mempoolRequestHandler.Dispose();
             }
         }
 

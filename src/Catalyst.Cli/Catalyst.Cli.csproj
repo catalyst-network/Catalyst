@@ -7,6 +7,14 @@
     <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
     <Content Include="..\Catalyst.Node.Core\Config\serilog.json" Link="Config\serilog.json">
@@ -18,7 +26,9 @@
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
     <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
+    <PackageReference Include="CommandLineParser" Version="2.4.3" />
     <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="DotNetty.Codecs" Version="0.6.0" />
     <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
@@ -38,8 +48,8 @@
     <ProjectReference Include="..\Catalyst.Node.Common\Catalyst.Node.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-      <None Update="Config\*.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+    <None Update="Config\*.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

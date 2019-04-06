@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -56,8 +56,10 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             _currentTestName = _currentTest.TestCase.TestMethod.Method.Name;
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
+
                 //get a unique folder for this run
-                _currentTestName + $"_{testStartTime:yyMMddHHmmssffff}"));
+                _currentTestName + $"_{testStartTime:yyMMddHHmmssffff}")
+            );
 
             _testDirectory.Exists.Should().BeFalse();
             _testDirectory.Create();
@@ -78,7 +80,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             }
 
             var regex = new Regex(_currentTestName + @"_(?<timestamp>[\d]{14})");
-            if (_testDirectory.Parent != null) 
+            if (_testDirectory.Parent != null)
             {
                 var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
                    .Where(d => regex.IsMatch(d.Name)

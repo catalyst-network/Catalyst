@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -34,17 +35,18 @@ using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Node.Common.UnitTests;
 using Catalyst.Node.Common.P2P;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Transaction;
 using FluentAssertions;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
+using NSubstitute;
 using Serilog;
 using Serilog.Extensions.Logging;
 using Xunit;
@@ -52,7 +54,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public sealed class SocketTests : ConfigFileBasedTest, IDisposable
+    public sealed class SocketTests : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
 
@@ -74,7 +76,23 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             WriteLogsToFile = false;
             WriteLogsToTestOutput = false;
 
+            var mempool = Substitute.For<IMempool>();
+            mempool.GetMemPoolContentEncoded().Returns(x =>
+                {
+                    List<Transaction> txLst = new List<Transaction>
+                    {
+                        TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
+                        TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
+                    };
+
+                    List<byte[]> txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+                    return txEncodedLst;
+                }
+            );
+
             ConfigureContainerBuilder(_config);
+            ContainerBuilder.RegisterInstance(mempool).As<IMempool>();
+
             var container = ContainerBuilder.Build();
 
             _scope = container.BeginLifetimeScope(_currentTestName);
@@ -109,7 +127,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             p2PMessenger.Should().NotBeNull();
 
             var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            var hasConnected = shell.OnCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
             var node1 = shell.GetConnectedNode("node1");
@@ -120,24 +138,24 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcClient_can_send_request_and_RpcServer_can_reply()
+        public void RpcServer_Can_Handle_GetInfoRequest()
         {
             _rpcClient = new RpcClient(_logger, _certificateStore);
             _rpcClient.Should().NotBeNull();
 
             var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
             var node1 = shell.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
 
-            var serverObserver = new AnyMessageObserver(0, _logger);
-            var clientObserver = new AnyMessageObserver(1, _logger);
+            var serverObserver = new AnySignedMessageObserver(0, _logger);
+            var clientObserver = new AnySignedMessageObserver(1, _logger);
             using (_rpcServer.MessageStream.Subscribe(serverObserver))
             using (_rpcClient.MessageStream.Subscribe(clientObserver))
             {
-                var info = shell.OnGetCommand("get", "config", "node1");
+                var info = shell.ParseCommand("get", "-i", "node1");
 
                 var tasks = new IChanneledMessageStreamer<AnySigned>[]
                     {
@@ -152,7 +170,81 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
-            } 
+            }
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcServer_Can_Handle_GetVersionRequest()
+        {
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
+
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnySignedMessageObserver(0, _logger);
+            var clientObserver = new AnySignedMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                var info = shell.ParseCommand("get", "-v", "node1");
+
+                var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    {
+                        _rpcClient, _rpcServer
+                    }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(VersionRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
+            }
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcServer_Can_Handle_GetMempoolRequest()
+        {
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
+
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnySignedMessageObserver(0, _logger);
+            var clientObserver = new AnySignedMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                var info = shell.ParseCommand("get", "-m", "node1");
+
+                var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    {
+                        _rpcClient, _rpcServer
+                    }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -162,7 +254,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             {
                 return;
             }
-            
+
             _scope?.Dispose();
             _rpcServer?.Dispose();
             _rpcClient?.Dispose();

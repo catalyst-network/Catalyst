@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -34,19 +36,17 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient 
+    public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient
         where TChannel : IChannel, new()
     {
-        private ILogger Logger { get; }
-    
         public IBootstrap Client { get; set; }
 
-        protected AbstractClient(ILogger logger) : base(logger) { Logger = logger; }
+        protected AbstractClient(ILogger logger) : base(logger) { }
 
         public virtual ISocketClient Bootstrap(IChannelHandler channelInitializer)
-        {   
+        {
             Client = new Bootstrap();
-            ((DotNetty.Transport.Bootstrapping.Bootstrap)Client)
+            ((DotNetty.Transport.Bootstrapping.Bootstrap) Client)
                .Group(WorkerEventLoop)
                .Channel<TChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
@@ -64,10 +64,10 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Error in AbstractClient");
+                _logger.Error(e, "Error in AbstractClient");
                 throw;
             }
-            
+
             return this;
         }
 

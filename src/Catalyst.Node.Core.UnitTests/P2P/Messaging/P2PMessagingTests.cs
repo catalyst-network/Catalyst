@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,40 +9,30 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Common.UnitTests;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Node.Core.UnitTest.TestUtils;
-using DotNetty.Transport.Channels;
-using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using NSubstitute;
 using Serilog;
 using Serilog.Extensions.Logging;
 using Xunit;
@@ -49,7 +40,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
 {
-    public class P2PMessagingTests : ConfigFileBasedTest
+    public sealed class P2PMessagingTests : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
         private IEnumerable<IDisposable> _subscriptions;
@@ -74,17 +65,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _scope = container.BeginLifetimeScope(_currentTestName);
 
             _logger = container.Resolve<ILogger>();
-            if(WriteLogsToFile || WriteLogsToTestOutput)
-            { DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));}
+            if (WriteLogsToFile || WriteLogsToTestOutput)
+            {
+                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+            }
 
             _certificateStore = container.Resolve<ICertificateStore>();
-        }
-
-        [Fact(Skip = "other attempt to isolate a reason why the build is hanging")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Peers_Can_Emit_And_Receive_Broadcast()
-        {
-            var indexes = Enumerable.Range(0, 3).ToList();
         }
 
         [Fact(Skip = "not ready yet")]
@@ -93,7 +79,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         {
             var indexes = Enumerable.Range(0, 3).ToList();
 
-            var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
+            var peerSettings = indexes.Select(i => new PeerSettings(_config)
+            {
+                Port = 40100 + i
+            }).ToList();
             var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
 
             //var observers = indexes.Select(i => new AnyObserver(i, _logger)).ToList();
@@ -103,7 +92,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
 
             //var tasks = Task.Run(() => peers[2].MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)));
             //Task.WaitAll(new Task[]{tasks}, TimeSpan.FromMilliseconds(200))};
-            
         }
 
         protected override void Dispose(bool disposing)
@@ -112,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             if (!disposing) return;
 
             _scope?.Dispose();
-            if(_subscriptions == null) return;
+            if (_subscriptions == null) return;
             foreach (var subscription in _subscriptions)
             {
                 subscription?.Dispose();

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using Catalyst.Node.Common.Interfaces;
@@ -38,8 +40,11 @@ namespace Catalyst.Node.Core.RPC
         public RpcServerSettings(IConfigurationRoot rootSection)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
+
+            NodeConfig = rootSection;
+
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
-            NodeId = section.GetSection("NodeId").Value;
+
             Port = int.Parse(section.GetSection("Port").Value);
             AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
@@ -47,11 +52,11 @@ namespace Catalyst.Node.Core.RPC
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
         }
 
-        public int Port { get; set;}
-        public IPAddress BindAddress { get; set;}
-        public string PfxFileName { get; set; }
-        public bool MutualAuthentication { get; set; }
-        public bool AcceptInvalidCerts { get; set; }
-        public string NodeId { get; set; }
+        public IConfigurationRoot NodeConfig { get; }
+        public int Port { get; }
+        public IPAddress BindAddress { get; }
+        public string PfxFileName { get; }
+        public bool MutualAuthentication { get; }
+        public bool AcceptInvalidCerts { get; }
     }
 }

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -30,7 +32,6 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Nethereum.Hex.HexConvertors.Extensions;
-using Serilog;
 
 namespace Catalyst.Node.Common.P2P
 {
@@ -41,10 +42,8 @@ namespace Catalyst.Node.Common.P2P
     ///     clientID [2] + clientVersion[2] + Ip[16] + Port[2] + pub[20]
     ///     The client ID for this implementation is "AC" or hexadecimal 4143
     /// </summary>
-    public class PeerIdentifier : IPeerIdentifier
+    public sealed class PeerIdentifier : IPeerIdentifier
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
         public static readonly string AssemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
         public static readonly byte[] AssemblyMajorVersion2Bytes = Encoding.UTF8.GetBytes(AssemblyMajorVersion2Digits);
         public static readonly byte[] AtlasClientId = Encoding.UTF8.GetBytes("AC");
@@ -63,8 +62,8 @@ namespace Catalyst.Node.Common.P2P
             PeerId = peerId;
         }
 
-        public PeerIdentifier(IPeerSettings settings) 
-            : this(settings.PublicKey.HexToByteArray(), settings.EndPoint) {}
+        public PeerIdentifier(IPeerSettings settings)
+            : this(settings.PublicKey.HexToByteArray(), settings.EndPoint) { }
 
         private PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
         {
@@ -86,7 +85,7 @@ namespace Catalyst.Node.Common.P2P
                .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
                .Require(p => ValidateClientId(p.ClientId.ToByteArray()),
                     _ => "ClientId should only be 2 alphabetical letters")
-               .Require(p => ValidateClientVersion(p.ClientVersion.ToByteArray()), 
+               .Require(p => ValidateClientVersion(p.ClientVersion.ToByteArray()),
                     _ => $"ClientVersion doesn't match {AssemblyMajorVersion2Digits}");
             return true;
         }
@@ -120,7 +119,7 @@ namespace Catalyst.Node.Common.P2P
             return IPAddress.TryParse(new IPAddress(clientIp).ToString(), out _);
         }
 
-        /// <summary> 
+        /// <summary>
         /// </summary>
         /// <param name="portBytes"></param>
         private static bool ValidatePort(byte[] portBytes)

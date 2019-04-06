@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System.Collections.Generic;
@@ -24,16 +26,13 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Node.Common;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Core.P2P;
 using NSubstitute;
 using SharpRepository.Repository;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using DnsClient;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -44,10 +43,11 @@ using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
 using Dns = Catalyst.Node.Common.Helpers.Network.Dns;
+using Peer = Catalyst.Node.Common.Peer;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
-    public class PeerDiscoveryUnitTest : ConfigFileBasedTest
+    public sealed class PeerDiscoveryUnitTest : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
         private readonly IDns _dns;
@@ -61,12 +61,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _logger = Substitute.For<ILogger>();
             _lookupClient = Substitute.For<ILookupClient>();
             _dns = new Dns(_lookupClient);
-            
+
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build();   
+               .Build();
         }
 
         [Fact]
@@ -99,37 +99,35 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var urlList = new List<string>();
             var domain1 = "seed1.catalystnetwork.io";
             var domain2 = "seed1.catalystnetwork.io";
-            
             urlList.Add(domain1);
             urlList.Add(domain2);
-            
-            MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.1:42069",  _lookupClient);
-            MockQueryResponse.CreateFakeLookupResult(domain2,"192.0.2.2:42069", _lookupClient);
-            
+
+            MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.1:42069", _lookupClient);
+            MockQueryResponse.CreateFakeLookupResult(domain2, "192.0.2.2:42069", _lookupClient);
+
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
-            
+
             peerDiscovery.ParseDnsServersFromConfig(_config);
             peerDiscovery.SeedNodes.Should().NotBeNullOrEmpty();
             peerDiscovery.SeedNodes.Should().Contain(urlList);
         }
-        
+
         [Fact]
         public async Task CanGetSeedNodesFromDns()
-        {     
+        {
             var urlList = new List<string>();
             var domain1 = "seed1.catalystnetwork.io";
             var domain2 = "seed1.catalystnetwork.io";
-            
             urlList.Add(domain1);
             urlList.Add(domain2);
-            
+
             MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.2:42069", _lookupClient);
-            MockQueryResponse.CreateFakeLookupResult(domain2,"192.0.2.2:42069", _lookupClient);
+            MockQueryResponse.CreateFakeLookupResult(domain2, "192.0.2.2:42069", _lookupClient);
 
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
-            
+
             await peerDiscovery.GetSeedNodesFromDns(urlList);
-                        
+
             peerDiscovery.Peers.Should().NotBeNullOrEmpty();
             peerDiscovery.Peers.Should().HaveCount(3);
             peerDiscovery.Peers.Should().NotContainNulls();

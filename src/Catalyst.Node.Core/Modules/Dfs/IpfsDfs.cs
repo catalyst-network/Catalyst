@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -38,30 +38,33 @@ namespace Catalyst.Node.Core.Modules.Dfs
     public class IpfsDfs : IIpfsDfs
     {
         private readonly IpfsEngine _ipfsDfs;
+
         private readonly AddFileOptions addFileOptions = new AddFileOptions
         {
             Hash = "blake2b-256",
             RawLeaves = true
         };
 
-        public IpfsDfs(
-            IPasswordReader passwordReader,
+        public IpfsDfs(IPasswordReader passwordReader,
             IPeerSettings peerSettings)
         {
             var password = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsDfs = new IpfsEngine(password);
             _ipfsDfs.Options.KeyChain.DefaultKeyType = "ed25519";
             _ipfsDfs.Options.Repository.Folder = Path.Combine(
-                new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName, 
+                new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName,
                 "Ipfs");
             _ipfsDfs.Options.Discovery.BootstrapPeers = peerSettings
-                .SeedServers
-                .Select(s => $"/dns/{s}/tcp/4001")
-                .Select(ma => new MultiAddress(ma))
-                .ToArray();
+               .SeedServers
+               .Select(s => $"/dns/{s}/tcp/4001")
+               .Select(ma => new MultiAddress(ma))
+               .ToArray();
         }
 
-        Task IService.StartAsync() { return this.StartAsync(); }
+        Task IService.StartAsync()
+        {
+            return StartAsync();
+        }
 
         Task IDfs.StartAsync(CancellationToken cancellationToken)
         {
@@ -72,8 +75,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
         {
             return _ipfsDfs.FileSystem.AddFileAsync(
                 filename,
-                options: addFileOptions,
-                cancel: cancellationToken);
+                addFileOptions,
+                cancellationToken);
         }
 
         public Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)

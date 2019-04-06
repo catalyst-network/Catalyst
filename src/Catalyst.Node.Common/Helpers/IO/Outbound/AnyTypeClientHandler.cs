@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -31,14 +33,15 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO.Outbound {
-    public class AnyTypeClientHandler : SimpleChannelInboundHandler<AnySigned>, IChanneledMessageStreamer<AnySigned>, IDisposable
-    { 
+namespace Catalyst.Node.Common.Helpers.IO.Outbound
+{
+    public sealed class AnyTypeClientHandler : SimpleChannelInboundHandler<AnySigned>, IChanneledMessageStreamer<AnySigned>, IDisposable
+    {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         public IObservable<IChanneledMessage<AnySigned>> MessageStream => _messageSubject.AsObservable();
         private readonly BehaviorSubject<IChanneledMessage<AnySigned>> _messageSubject = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
-        
+
         protected override void ChannelRead0(IChannelHandlerContext context, AnySigned message)
         {
             var contextAny = new ChanneledAnySigned(context, message);
@@ -51,7 +54,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound {
             context.CloseAsync().ContinueWith(_ => _messageSubject.OnCompleted());
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -36,17 +38,16 @@ namespace Catalyst.Node.Common.Helpers.IO
         protected readonly IReadOnlyCollection<IChannelHandler> Handlers;
         protected readonly TlsHandler TlsHandler;
 
-        protected AbstractChannelInitializer(
-            Action<T> initializationAction,
+        protected AbstractChannelInitializer(Action<T> initializationAction,
             IList<IChannelHandler> handlers,
-            TlsHandler tlsHandler
-        )
+            TlsHandler tlsHandler)
         {
             Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
             InitializationAction = initializationAction;
             Handlers = handlers.ToImmutableArray();
             TlsHandler = tlsHandler;
         }
+
         protected override void InitChannel(T channel)
         {
             InitializationAction(channel);
@@ -60,6 +61,5 @@ namespace Catalyst.Node.Common.Helpers.IO
             pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
             pipeline.AddLast(Handlers.ToArray());
         }
-
     }
 }

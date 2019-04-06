@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -29,7 +29,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using DotNetty.Transport.Channels.Sockets;
 using Serilog.Extensions.Logging;
 using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
@@ -40,8 +39,6 @@ using Dawn;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
@@ -65,7 +62,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
         }
 
-        public P2PMessaging(IPeerSettings settings, 
+        public P2PMessaging(IPeerSettings settings,
             ICertificateStore certificateStore,
             ILogger logger)
         {
@@ -125,7 +122,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 new ProtobufDecoder(AnySigned.Parser),
                 new AnyTypeClientHandler()
             };
-            
+
             var peerSocket = await new UdpClient()
                .Bootstrap(new OutboundChannelInitializer<IChannel>(channel => { },
                     handlers,
@@ -145,7 +142,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             OpenedClients.TryGetValue(peerSocketClientId, out ISocketClient socketClient);
             Guard.Argument(socketClient).NotNull();
-            
+
             try
             {
                 await socketClient.Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
@@ -154,19 +151,19 @@ namespace Catalyst.Node.Core.P2P.Messaging
             {
                 await socketClient.Channel.CloseAsync().ConfigureAwait(false);
                 OpenedClients.Remove(peerSocketClientId);
-            }      
+            }
         }
 
         public async Task SendMessageToPeers(IEnumerable<IPeerIdentifier> peers, IChanneledMessage<AnySigned> message)
         {
             await message.Context.WriteAndFlushAsync(message.Payload);
         }
-        
+
         public void Stop()
         {
             _cancellationSource.Cancel();
         }
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;

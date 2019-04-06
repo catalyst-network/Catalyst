@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -34,7 +36,6 @@ using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
-using Catalyst.Node.Core.Events;
 using Catalyst.Node.Core.RPC;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -56,11 +57,10 @@ namespace Catalyst.Node.Core
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
         private readonly IRpcServer _rpcServer;
-       
+
         private bool _disposed;
 
-        public CatalystNode(
-            IP2P p2P,
+        public CatalystNode(IP2P p2P,
             ICertificateStore certificateStore,
             IConsensus consensus,
             IDfs dfs,
@@ -69,8 +69,7 @@ namespace Catalyst.Node.Core
             ILogger logger,
             IRpcServer rpcServer,
             IMempool mempool = null,
-            IContract contract = null
-            )
+            IContract contract = null)
         {
             _p2P = p2P;
             _consensus = consensus;
@@ -90,8 +89,6 @@ namespace Catalyst.Node.Core
             bool exit = false;
             do
             {
-                
-                
                 // _logger.Information("Creating a Transaction message");
                 // _logger.Information("Please type in a pubkey for the transaction signature");
                 // var pubkey = Console.ReadLine();
@@ -107,9 +104,9 @@ namespace Catalyst.Node.Core
                 // await Task.Delay(300, ct); //just to get the next message at the bottom
 
                 _logger.Information("Creating a Ping message");
-                
+
                 var ping = new PingRequest().ToAnySigned(_p2P.Messaging.Identifier.PeerId, Guid.NewGuid());
-                
+
                 var targetEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069);
                 var peerSocketClientId = await _p2P.Messaging.PeerConnectAsync(targetEndpoint);
                 await _p2P.Messaging.BroadcastMessageAsync(peerSocketClientId, DatagramFactory.Create(ping, targetEndpoint));
@@ -117,29 +114,9 @@ namespace Catalyst.Node.Core
 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
-
             } while (!ct.IsCancellationRequested && !exit);
 
             _logger.Information("Stopping the Catalyst Node");
-        }
-        
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        private void Announce(object sender, AnnounceNodeEventArgs e)
-        {
-            Guard.Argument(sender, nameof(sender)).NotNull();
-            Guard.Argument(e, nameof(e)).NotNull();
-            var client = new TcpClient(_p2P.Settings.AnnounceServer.Address.ToString(),
-                _p2P.Settings.AnnounceServer.Port);
-            var nwStream = client.GetStream();
-            var network = new byte[1];
-            network[0] = 0x01;
-            _logger.Debug(string.Join(" ", network));
-            var announcePackage = ByteUtil.Merge(network, _p2P.Identifier.PeerId.ToByteArray());
-            _logger.Debug(string.Join(" ", announcePackage));
-            nwStream.Write(announcePackage, 0, announcePackage.Length);
-            client.Close();
         }
 
         public void Dispose()

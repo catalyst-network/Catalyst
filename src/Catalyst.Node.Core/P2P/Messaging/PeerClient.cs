@@ -10,7 +10,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 {
     public class PeerClient : IDisposable
     {
-        private readonly ILogger _logger;      
+        private readonly ILogger _logger;
         private readonly ICertificateStore _certificateStore;
         private readonly AnyTypeClientHandler _clientHandler;
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
@@ -24,7 +24,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _clientHandler = new AnyTypeClientHandler();
             MessageStream = _clientHandler.MessageStream;
         }
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

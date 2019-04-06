@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,42 +9,32 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using DotNetty.Common;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using SharpRepository.Repository;
-using SharpRepository.Repository.Caching;
 using Xunit;
 using Xunit.Abstractions;
 using PendingRequest = Catalyst.Node.Common.P2P.PendingRequest;
@@ -77,7 +68,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var correlationIds = Enumerable.Range(0, 3).Select(i => Guid.NewGuid()).ToList();
 
             var requests = correlationIds
-               .Zip(peerIds, (c, p) => new { CorrelationId = c, PeerIdentifier = p })
+               .Zip(peerIds, (c, p) => new
+                {
+                    CorrelationId = c, PeerIdentifier = p
+                })
                .Select(c => new PendingRequest()
                 {
                     Content = new PingRequest().ToAnySigned(senderPeerId, c.CorrelationId),
@@ -96,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             requests.ForEach(r => pendingRequestCache.AddPendingRequest(r));
 
-            var responseFromDude1 = new PingResponse{}.ToAnySigned(peerIds[1].PeerId, correlationIds[1]);
+            var responseFromDude1 = new PingResponse().ToAnySigned(peerIds[1].PeerId, correlationIds[1]);
             var match = pendingRequestCache.TryMatchResponse<PingRequest, PingResponse>(responseFromDude1);
             match.Should().NotBeNull();
 

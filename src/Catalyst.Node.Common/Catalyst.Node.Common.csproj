@@ -3,6 +3,14 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
     <PackageReference Include="Ipfs.Api" Version="0.23.6" />
@@ -14,6 +22,7 @@
     <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Serilog" Version="2.8.0" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.3" />
     <PackageReference Include="libsodium" Version="[1.0.17]" />
     <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
     <PackageReference Include="System.IO.Abstractions" Version="3.1.1" />

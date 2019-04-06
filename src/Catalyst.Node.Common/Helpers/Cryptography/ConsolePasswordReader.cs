@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -42,19 +44,22 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         {
             var maxLength = 255;
             var buffer = new char[maxLength];
-            var length = ReadCharsFromConsole(passwordContext, 
-                (c, i) => buffer[i] = c, 
+            var length = ReadCharsFromConsole(passwordContext,
+                (c, i) => buffer[i] = c,
                 i => { buffer[i] = default; },
                 maxLength);
             var password = buffer.Take(length).ToArray();
 
-            for (var i = 0; i < buffer.Length; i++) { buffer[i] = default; }
+            for (var i = 0; i < buffer.Length; i++)
+            {
+                buffer[i] = default;
+            }
 
             return password;
         }
 
         private static int ReadCharsFromConsole(string passwordContext,
-            Action<char, int> appendChar, 
+            Action<char, int> appendChar,
             Action<int> removeChar,
             int maxLength = int.MaxValue)
         {
@@ -91,6 +96,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                             Console.WriteLine(@"Max password length reached ({0})", maxLength);
                             waitForInput = false;
                         }
+
                         break;
                 }
             }

@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -24,33 +26,25 @@ using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Node.Core.RPC
+namespace Catalyst.Node.Core.RPC.Handlers
 {
     public class GetVersionRequestHandler : MessageHandlerBase<VersionRequest>
     {
-        private readonly IRpcServerSettings _config;
-
-        public GetVersionRequestHandler(
-            IObservable<IChanneledMessage<AnySigned>> messageStream,
-            IRpcServerSettings config,
+        public GetVersionRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
             ILogger logger)
-            : base(messageStream, logger)
-        {
-            _config = config;
-        }
+            : base(messageStream, logger) { }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if(message == NullObjects.ChanneledAnySigned) {return;}
+            if (message == NullObjects.ChanneledAnySigned)
+            {
+                return;
+            }
+
             Logger.Debug("received message of type VersionRequest");
             try
             {
@@ -65,7 +59,7 @@ namespace Catalyst.Node.Core.RPC
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, 
+                Logger.Error(ex,
                     "Failed to handle GetVersionRequest after receiving message {0}", message);
                 throw;
             }

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,23 +9,24 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
- using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
- using System.Threading;
- using Autofac;
+using System.Threading;
+using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
@@ -36,7 +38,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
- using SharpRepository.Repository.Configuration;
 
 namespace Catalyst.Node.Core
 {
@@ -76,6 +77,7 @@ namespace Catalyst.Node.Core
 
                 //.Net Core service collection
                 var serviceCollection = new ServiceCollection();
+
                 //Add .Net Core services (if any) first
                 //serviceCollection.AddLogging().AddDistributedMemoryCache();
 
@@ -87,7 +89,7 @@ namespace Catalyst.Node.Core
                 var loggerConfiguration =
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
                 Log.Logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"), 
+                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"),
                         rollingInterval: RollingInterval.Day,
                         outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                    .CreateLogger();
@@ -99,13 +101,13 @@ namespace Catalyst.Node.Core
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
-
                 using (var scope = container.BeginLifetimeScope(LifetimeTag,
+
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                   var node = container.Resolve<ICatalystNode>();
-                   node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
+                    var node = container.Resolve<ICatalystNode>();
+                    node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;

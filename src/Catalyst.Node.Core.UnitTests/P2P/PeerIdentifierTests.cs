@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -22,21 +22,17 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
-using System.Text;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
 using FluentAssertions;
 using Google.Protobuf;
-using Nethereum.RLP;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -86,7 +82,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             _output.WriteLine(newPeer.ToString());
         }
-        
+
         [Theory]
         [SuppressMessage("ReSharper", "Duplicate")]
         [InlineData(0)]
@@ -118,8 +114,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
         [Theory]
         [ClassData(typeof(IpTestData))]
+
         //Todo: discuss if this is relevant: why do we enforce a given size for IPs (or anything) if proto handles it
-        //and the protocol is designed in proto.
         public void Constructor_should_fail_on_wrong_ip(byte[] ipBytes)
         {
             var invalidPeer = new PeerId(_validPeerId)
@@ -147,7 +143,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             new Action(() => new PeerIdentifier(invalidPeer))
                .Should().Throw<ArgumentException>().WithMessage("*ClientId*");
         }
-        
+
         [Theory]
         [InlineData("1")]
         [InlineData("123")]
