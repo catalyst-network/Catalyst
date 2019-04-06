@@ -232,7 +232,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
             var securePwd = new SecureString();
             ConsoleKeyInfo key;
             Console.WriteLine(prompt);
-            Console.WriteLine(": ");
+            Console.WriteLine(@": ");
 
             Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -267,7 +267,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
             Console.OutputEncoding = Encoding.Unicode;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             var ver = Assembly.GetEntryAssembly().GetName().Version;
-            Console.WriteLine($"{ServiceName} Version: {ver}");
+            Console.WriteLine($@"{ServiceName} Version: {ver}");
 
             while (running)
             {

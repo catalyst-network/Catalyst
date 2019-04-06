@@ -23,7 +23,6 @@
 
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {

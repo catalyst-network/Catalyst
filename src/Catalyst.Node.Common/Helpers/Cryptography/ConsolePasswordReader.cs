@@ -84,7 +84,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
 
                         removeChar(inputLength - 1);
                         inputLength--;
-                        Console.Write("\b \b");
+                        Console.Write(@" ");
                         break;
 
                     default:

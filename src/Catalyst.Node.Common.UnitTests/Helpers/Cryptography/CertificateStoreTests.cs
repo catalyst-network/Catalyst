@@ -61,14 +61,14 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 
         private void Create_certificate_store()
         {
-            var dataFolder = _fileSystem.GetCatalystHomeDir().FullName;
+            var dataFolder = FileSystem.GetCatalystHomeDir().FullName;
             _directoryInfo = new DirectoryInfo(dataFolder);
-            _certificateStore = new CertificateStore(_fileSystem, _passwordReader);
+            _certificateStore = new CertificateStore(FileSystem, _passwordReader);
         }
 
         private void Ensure_no_certificate_file_exists()
         {
-            _directoryInfo = _fileSystem.GetCatalystHomeDir();
+            _directoryInfo = FileSystem.GetCatalystHomeDir();
             if (_directoryInfo.Exists)
             {
                 _directoryInfo.Delete(true);

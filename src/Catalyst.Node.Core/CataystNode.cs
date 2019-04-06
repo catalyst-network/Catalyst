@@ -23,12 +23,10 @@
 
 using System;
 using System.Net;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
 using Catalyst.Node.Common.Interfaces.Modules.Contract;
@@ -36,12 +34,7 @@ using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
-using Catalyst.Node.Core.RPC;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Transaction;
-using Dawn;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Core

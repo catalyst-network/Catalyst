@@ -34,7 +34,6 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         ///     Method mocks the response from a DNS server when querying for TXT records.
         /// </summary>
         /// <param name="domainName"></param>
-        /// <param name="seed"></param>
         /// <param name="value"></param>
         /// <param name="lookupClient"></param>
         public static void CreateFakeLookupResult(string domainName, string value, ILookupClient lookupClient)

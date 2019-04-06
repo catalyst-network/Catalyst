@@ -29,7 +29,6 @@ using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound

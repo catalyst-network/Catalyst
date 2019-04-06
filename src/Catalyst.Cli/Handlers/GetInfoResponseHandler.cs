@@ -30,7 +30,6 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 

@@ -23,7 +23,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -33,14 +32,14 @@ namespace Catalyst.Node.Common.Helpers.IO
     public abstract class AbstractIo : ISocket, IDisposable
     {
         protected const int BackLogValue = 100;
-        protected readonly ILogger _logger;
+        protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
 
         public IChannel Channel { get; set; }
 
         protected AbstractIo(ILogger logger)
         {
-            _logger = logger;
+            Logger = logger;
             WorkerEventLoop = new MultithreadEventLoopGroup();
         }
 
@@ -66,7 +65,7 @@ namespace Catalyst.Node.Common.Helpers.IO
         {
             if (disposing)
             {
-                _logger.Information($"Disposing {GetType().Name}");
+                Logger.Information($"Disposing {GetType().Name}");
                 Task.WaitAll(Shutdown());
             }
         }

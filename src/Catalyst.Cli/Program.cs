@@ -37,7 +37,7 @@ using Serilog;
 
 namespace Catalyst.Cli
 {
-    public static class Program
+    internal static class Program
     {
         private static readonly ILogger Logger;
         private static readonly string LifetimeTag;
@@ -52,12 +52,12 @@ namespace Catalyst.Cli
         /// <summary>
         ///     Main cli loop
         /// </summary>
-        /// <param name="args"></param>
         public static int Main()
         {
             Log.Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             const int bufferSize = 1024 * 67 + 128;
 
+            var serviceCollection = new ServiceCollection();
             try
             {
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
@@ -69,8 +69,6 @@ namespace Catalyst.Cli
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
                    .Build();
-
-                var serviceCollection = new ServiceCollection();
 
                 // register components from config file
                 var configurationModule = new ConfigurationModule(config);
@@ -100,10 +98,8 @@ namespace Catalyst.Cli
                     )
                 );
 
-                using (var scope = container.BeginLifetimeScope(LifetimeTag,
-
-                    // Add .Net Core serviceCollection to the Autofac container.
-                    b => { b.Populate(serviceCollection, LifetimeTag); }))
+                // Add .Net Core serviceCollection to the Autofac container.
+                using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
 

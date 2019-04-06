@@ -45,16 +45,15 @@ namespace Catalyst.Cli
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly List<IRpcNode> _nodes;
         private readonly IRpcClient _rpcClient;
-        public IPeerIdentifier Identifier { get; }
-        public IChanneledMessage<AnySigned> Response { get; set; }
+        private IChanneledMessage<AnySigned> Response { get; set; }
         private readonly ILogger _logger;
 
-        private const string NO_CONFIG_MESSAGE =
+        private const string NoConfigMessage =
             "Node not configured.  Add node to config file and try again.";
 
-        private const string NODE_CONNECTED_MESSAGE = "Connection already established with the node.";
-        private const string NODE_NOT_CONNECTED_MESSAGE = "Node is not connected.  Connect to node first.";
-        private const string CHANNEL_INACTIVE_MESSAGE = "Node is not connected.  Connect to node first.";
+        private const string NodeConnectedMessage = "Connection already established with the node.";
+        private const string NodeNotConnectedMessage = "Node is not connected.  Connect to node first.";
+        private const string ChannelInactiveMessage = "Node is not connected.  Connect to node first.";
 
         /// <summary>
         /// </summary>
@@ -87,7 +86,7 @@ namespace Catalyst.Cli
         public override bool ParseCommand(params string[] args)
         {
             return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, bool>(
+               .MapResult(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts),
                     errs => false);
@@ -274,7 +273,7 @@ namespace Catalyst.Cli
             //if the node is invalid then do not continue
             if (!IsConfiguredNode(nodeId))
             {
-                ReturnUserMessage(NO_CONFIG_MESSAGE);
+                ReturnUserMessage(NoConfigMessage);
                 return true;
             }
 
@@ -283,7 +282,7 @@ namespace Catalyst.Cli
             //Check if there is a connection has already been made to the node
             if (IsConnectedNode(nodeId))
             {
-                ReturnUserMessage(NODE_CONNECTED_MESSAGE);
+                ReturnUserMessage(NodeConnectedMessage);
                 return true;
             }
 
@@ -567,7 +566,7 @@ namespace Catalyst.Cli
             //if the node is invalid then do not continue
             if (!IsConfiguredNode(nodeId))
             {
-                ReturnUserMessage(NO_CONFIG_MESSAGE);
+                ReturnUserMessage(NoConfigMessage);
                 return false;
             }
 
@@ -575,7 +574,7 @@ namespace Catalyst.Cli
             //if the node is already connected the method will return the instance
             if (!IsConnectedNode(nodeId))
             {
-                ReturnUserMessage(NODE_NOT_CONNECTED_MESSAGE);
+                ReturnUserMessage(NodeNotConnectedMessage);
                 return false;
             }
 
@@ -584,7 +583,7 @@ namespace Catalyst.Cli
             //Check if the channel is still active
             if (!IsSocketChannelActive(connectedNode))
             {
-                ReturnUserMessage(CHANNEL_INACTIVE_MESSAGE);
+                ReturnUserMessage(ChannelInactiveMessage);
                 return false;
             }
 

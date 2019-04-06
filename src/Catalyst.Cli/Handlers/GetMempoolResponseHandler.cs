@@ -28,7 +28,6 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf.WellKnownTypes;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -38,7 +37,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public class GetMempoolResponseHandler : MessageHandlerBase<GetMempoolResponse>
+    internal sealed class GetMempoolResponseHandler : MessageHandlerBase<GetMempoolResponse>
     {
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.

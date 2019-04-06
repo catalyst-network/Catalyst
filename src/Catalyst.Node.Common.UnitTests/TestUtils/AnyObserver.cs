@@ -25,7 +25,6 @@ using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Common;
-using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils

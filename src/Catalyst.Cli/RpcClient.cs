@@ -106,7 +106,7 @@ namespace Catalyst.Cli
 
                 return socketClient;
             }
-            catch (System.PlatformNotSupportedException exception)
+            catch (PlatformNotSupportedException exception)
             {
                 _logger.Error(exception, "Invalid SSL certificate.");
 

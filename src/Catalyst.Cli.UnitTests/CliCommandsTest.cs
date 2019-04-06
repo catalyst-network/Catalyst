@@ -21,12 +21,10 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Xunit;
@@ -51,7 +49,7 @@ namespace Catalyst.Cli.UnitTests
 
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {
-            var targetConfigFolder = _fileSystem.GetCatalystHomeDir().FullName;
+            var targetConfigFolder = FileSystem.GetCatalystHomeDir().FullName;
 
             new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
 
@@ -78,7 +76,7 @@ namespace Catalyst.Cli.UnitTests
             var serviceCollection = new ServiceCollection();
             var container = ContainerBuilder.Build();
 
-            _scope = container.BeginLifetimeScope(_currentTestName);
+            _scope = container.BeginLifetimeScope(CurrentTestName);
 
             _shell = container.Resolve<ICatalystCli>();
 

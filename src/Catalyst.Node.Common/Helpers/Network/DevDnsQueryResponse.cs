@@ -27,18 +27,39 @@ using DnsClient.Protocol;
 
 namespace Catalyst.Node.Common.Helpers.Network
 {
-    public class DevDnsQueryResponse : IDnsQueryResponse
+    public sealed class DevDnsQueryResponse : IDnsQueryResponse
     {
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public IReadOnlyList<DnsQuestion> Questions { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public IReadOnlyList<DnsResourceRecord> Additionals { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public IEnumerable<DnsResourceRecord> AllRecords { get; }
+
+        // ReSharper disable once MemberCanBeInternal
         public IReadOnlyList<DnsResourceRecord> Answers { get; set; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public IReadOnlyList<DnsResourceRecord> Authorities { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public string AuditTrail { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public string ErrorMessage { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public bool HasError { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public DnsResponseHeader Header { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public int MessageSize { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public NameServer NameServer { get; }
 
         /// <summary>

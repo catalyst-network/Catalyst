@@ -101,7 +101,7 @@ namespace Catalyst.Node.Core
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
-                using (var scope = container.BeginLifetimeScope(LifetimeTag,
+                using (container.BeginLifetimeScope(LifetimeTag,
 
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))

@@ -72,11 +72,11 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
 
-            if (WriteLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(_output, LogEventLevel, LogOutputTemplate);
+            if (WriteLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
 
             if (WriteLogsToFile)
             {
-                loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
+                loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                     LogOutputTemplate);
             }
 

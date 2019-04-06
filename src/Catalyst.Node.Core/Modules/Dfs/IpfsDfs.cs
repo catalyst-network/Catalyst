@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
     {
         private readonly IpfsEngine _ipfsDfs;
 
-        private readonly AddFileOptions addFileOptions = new AddFileOptions
+        private readonly AddFileOptions _addFileOptions = new AddFileOptions
         {
             Hash = "blake2b-256",
             RawLeaves = true
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         {
             return _ipfsDfs.FileSystem.AddFileAsync(
                 filename,
-                addFileOptions,
+                _addFileOptions,
                 cancellationToken);
         }
 

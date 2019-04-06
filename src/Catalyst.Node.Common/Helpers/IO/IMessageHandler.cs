@@ -23,11 +23,10 @@
 
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Protocol.Common;
-using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public interface IMessageHandler
+    internal interface IMessageHandler
     {
         void HandleMessage(IChanneledMessage<AnySigned> message);
     }

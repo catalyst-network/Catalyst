@@ -23,15 +23,11 @@
 
 using System;
 using System.Net;
-using System.Reflection;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
-using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
@@ -64,7 +60,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Error in AbstractClient");
+                Logger.Error(e, "Error in AbstractClient");
                 throw;
             }
 

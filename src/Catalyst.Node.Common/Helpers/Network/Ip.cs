@@ -32,7 +32,6 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Util;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Network

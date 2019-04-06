@@ -28,7 +28,6 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf.WellKnownTypes;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -65,7 +64,7 @@ namespace Catalyst.Cli.Handlers
             {
                 Logger.Debug("Handling GetVersionResponse");
                 var deserialised = message.Payload.FromAnySigned<VersionResponse>();
-                Logger.Information("Node Version: {0}", deserialised.Version.ToString());
+                Logger.Information("Node Version: {0}", deserialised.Version);
                 Logger.Information("Press Enter to continue ...\n");
             }
             catch (Exception ex)

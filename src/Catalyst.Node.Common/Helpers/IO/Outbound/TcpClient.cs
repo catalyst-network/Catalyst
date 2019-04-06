@@ -29,8 +29,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
     public sealed class TcpClient : AbstractClient<TcpSocketChannel>
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
-        public TcpClient() : base(Logger) { }
+        public TcpClient() : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType)) { }
     }
 }

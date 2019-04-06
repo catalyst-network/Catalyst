@@ -22,7 +22,6 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Node.Common.Helpers.Config;
 
 namespace Catalyst.Cli

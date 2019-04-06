@@ -24,14 +24,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -62,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             ConfigureContainerBuilder(_config);
 
             var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(_currentTestName);
+            _scope = container.BeginLifetimeScope(CurrentTestName);
 
             _logger = container.Resolve<ILogger>();
             if (WriteLogsToFile || WriteLogsToTestOutput)
@@ -77,13 +74,13 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
         {
-            var indexes = Enumerable.Range(0, 3).ToList();
-
-            var peerSettings = indexes.Select(i => new PeerSettings(_config)
-            {
-                Port = 40100 + i
-            }).ToList();
-            var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
+            // var indexes = Enumerable.Range(0, 3).ToList();
+            //
+            // var peerSettings = indexes.Select(i => new PeerSettings(_config)
+            // {
+            //     Port = 40100 + i
+            // }).ToList();
+            // var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
 
             //var observers = indexes.Select(i => new AnyObserver(i, _logger)).ToList();
             //_subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();

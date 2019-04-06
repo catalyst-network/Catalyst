@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using DnsClient;
-using DnsClient.Protocol;
 
 namespace Catalyst.Node.Common.Helpers.Network
 {
