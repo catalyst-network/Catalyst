@@ -19,6 +19,8 @@
 */
 #endregion
 
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Shell;
 
 namespace Catalyst.Node.Common.Interfaces
@@ -56,8 +58,12 @@ namespace Catalyst.Node.Common.Interfaces
 
         bool IsConnectedNode(string nodeId);
 
+        bool IsSocketChannelActive(IRpcNode node);
+
         IRpcNode GetConnectedNode(string nodeId);
 
         bool OnCommand(params string[] args);
+
+        bool ParseCommand(params string[] args);
     }
 }

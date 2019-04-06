@@ -19,11 +19,14 @@
 */
 #endregion
 
-﻿using System;
+ using System;
 using System.Collections.Generic;
-using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+ using System.Linq;
+ using Catalyst.Node.Common.Helpers.Util;
+ using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Dawn;
+ using Nethereum.RLP;
  using Serilog;
 using SharpRepository.Repository;
 
@@ -53,6 +56,15 @@ namespace Catalyst.Node.Core.Modules.Mempool
         {
             var memPoolContent = _transactionStore.GetAll();
             return memPoolContent;
+        }
+
+        public List<byte[]> GetMemPoolContentEncoded()
+        {
+            var memPoolContent = GetMemPoolContent();
+            
+            var encodedTxs = memPoolContent.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+
+            return encodedTxs;
         }
 
         /// <inheritdoc />

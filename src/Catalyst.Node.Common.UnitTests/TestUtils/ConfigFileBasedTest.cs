@@ -31,7 +31,9 @@ using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Common.UnitTests.TestUtils {
+namespace Catalyst.Node.Common.UnitTests.TestUtils 
+{
+
     public class ConfigFileBasedTest : FileSystemBasedTest {
 
         protected ContainerBuilder ContainerBuilder;
