@@ -31,12 +31,9 @@ using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-
+using CommandLine;
 using ILogger = Serilog.ILogger;
 using Google.Protobuf.WellKnownTypes;
-using Serilog;
-using Serilog.Core;
-
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Cli
@@ -47,7 +44,7 @@ namespace Catalyst.Cli
         private readonly List<IRpcNode> _nodes;
 
         private readonly IRpcClient _rpcClient;
-        
+
         public IChanneledMessage<Any> Response { get; set; }
         private readonly ILogger _logger;
 
@@ -69,6 +66,7 @@ namespace Catalyst.Cli
             _rpcClient.MessageStream.Subscribe(this);
 
             Console.WriteLine(@"Koopa Shell Start");
+
         }
         private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
         {
@@ -84,6 +82,35 @@ namespace Catalyst.Cli
             } as IRpcNodeConfig).ToList();
 
             return nodeList;
+        }
+
+        public override bool ParseCommand(params string[] args)
+        {
+            return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, bool>(
+                    (GetInfoOptions opts) => OnGetCommands(opts),
+                    (ConnectOptions opts) => OnConnectNode(opts),
+                    errs => false);
+        }
+
+        private bool OnGetCommands(GetInfoOptions opts)
+        {
+            if (opts.Info)
+            {
+                return OnGetConfig(opts);
+            }
+
+            if (opts.Mempool)
+            {
+                return OnGetMempool(opts);
+            }
+
+            if (opts.Version)
+            {
+                return OnGetVersion(opts);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -240,12 +267,10 @@ namespace Catalyst.Cli
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private bool OnConnectNode(IList<string> args)
+        private bool OnConnectNode(Object opts)
         {
-            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+            var nodeId = ((ConnectOptions)opts).NodeId;
 
-            var nodeId = args.First();
-            
             //if the node is invalid then do not continue
             if (!IsConfiguredNode(nodeId))
             {
@@ -261,7 +286,7 @@ namespace Catalyst.Cli
                 ReturnUserMessage(NODE_CONNECTED_MESSAGE);
                 return true;
             }
-            
+
             try
             {
                 //Connect to the node
@@ -274,7 +299,7 @@ namespace Catalyst.Cli
                     IRpcNode connectedNode = new RpcNode(nodeConfig, socket);
                     _nodes.Add(connectedNode);
                 }
-                
+
             }
             //Handle the exception of a wrong SSL certificate password
             catch (System.PlatformNotSupportedException)
@@ -297,12 +322,13 @@ namespace Catalyst.Cli
             //Handle any other exception. This is a generic error message and should not be returned to users but added
             //as a safe fail
             catch (Exception)
-            {   
+            {
                 ReturnUserMessage("Connection with the server couldn't be established.");
             }
-        
+
             return true;
         }
+
 
         /// <summary>
         /// </summary>
@@ -339,7 +365,7 @@ namespace Catalyst.Cli
                 case "work":
                     return OnStopWork(args);
                 default:
-                    return base.OnCommand(args);
+                    return true;
             }
         }
 
@@ -384,11 +410,11 @@ namespace Catalyst.Cli
                 case "delta":
                     return OnGetDelta(args);
                 case "mempool":
-                    return OnGetMempool();
+                    return OnGetMempool(args.Skip(2).ToList());
                 case "version":
                     return OnGetVersion(args);
                 default:
-                    return base.OnCommand(args);
+                    return true;
             }
         }
 
@@ -396,26 +422,24 @@ namespace Catalyst.Cli
         /// Gets the version of a node
         /// </summary>
         /// <returns>Returns true if successful and false otherwise.</returns>
-        protected override bool OnGetVersion(IList<string> args)
+        protected override bool OnGetVersion(Object opts)
         {
-            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
-
-            var nodeId = args.First();
+            var nodeId = ((GetInfoOptions)opts).NodeId;
 
             //Perform validations required before a command call
             if (!ValidatePreCommand(nodeId))
             {
                 return false;
             }
-            
+
             try
             {
                 var connectedNode = GetConnectedNode(nodeId);
-                
+
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
                 _rpcClient.SendMessage(connectedNode, request.ToAny());
-                
+
             }
             catch (Exception e)
             {
@@ -426,22 +450,20 @@ namespace Catalyst.Cli
             return true;
         }
 
-        protected override bool OnGetConfig(IList<string> args)
+        protected override bool OnGetConfig(Object opts)
         {
-            Guard.Argument(args, nameof(args)).NotNull().NotEmpty().MinCount(1);
+            var nodeId = ((GetInfoOptions)opts).NodeId;
 
-            var nodeId = args.First();
-            
             //Perform validations required before a command call
             if (!ValidatePreCommand(nodeId))
             {
                 return false;
             }
-            
+
             try
             {
                 var connectedNode = GetConnectedNode(nodeId);
-                
+
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
                 _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();
@@ -466,12 +488,28 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        ///     Get stats about the underlying mempool implementation
+        /// Get stats about the underlying mempool implementation
         /// </summary>
         /// <returns>Boolean</returns>
-        protected override bool OnGetMempool()
+        protected override bool OnGetMempool(Object args)
         {
-            throw new NotImplementedException();
+            var nodeId = ((GetInfoOptions)args).NodeId;
+
+            try
+            {
+                var connectedNode = GetConnectedNode(nodeId);
+
+                //send the message to the server by writing it to the channel
+                var request = new GetMempoolRequest();
+                _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();
+            }
+            catch (Exception e)
+            {
+                _logger.Debug(e.Message);
+                throw;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -483,7 +521,7 @@ namespace Catalyst.Cli
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
         }
-        
+
         /// <summary>
         /// Checks if the node is configured in the nodes.json config file before performing other operations.
         /// </summary>
@@ -495,7 +533,7 @@ namespace Catalyst.Cli
 
             return (GetNodeConfig(nodeId) != null);
         }
-        
+
         /// <summary>
         /// Checks if the node exists in the list of connected nodes.
         /// </summary>
@@ -509,10 +547,10 @@ namespace Catalyst.Cli
             return (GetConnectedNode(nodeId) != null);
         }
 
-        private bool IsSocketChannelActive(IRpcNode node)
+        public override bool IsSocketChannelActive(IRpcNode node)
         {
             if (node.SocketClient.Channel.Active) { return true; }
-            
+
             _logger.Information("Channel inactive ...");
             return false;
         }
@@ -525,7 +563,7 @@ namespace Catalyst.Cli
                 ReturnUserMessage(NO_CONFIG_MESSAGE);
                 return false;
             }
-            
+
             //Check if the node is already connected otherwise do not continue
             //if the node is already connected the method will return the instance
             if (!IsConnectedNode(nodeId))
@@ -535,7 +573,7 @@ namespace Catalyst.Cli
             }
 
             var connectedNode = GetConnectedNode(nodeId);
-            
+
             //Check if the channel is still active
             if (!IsSocketChannelActive(connectedNode))
             {
@@ -545,22 +583,22 @@ namespace Catalyst.Cli
 
             return true;
         }
-        
+
         public override IRpcNode GetConnectedNode(string nodeId)
         {
             return _nodes.SingleOrDefault(node => node.Config.NodeId.Equals(nodeId));
         }
-        
+
         public override IRpcNodeConfig GetNodeConfig(string nodeId)
         {
             return _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
         }
-        
+
         private void ReturnUserMessage(string message)
         {
-            _logger.Information(message);
+            Console.WriteLine(message);
         }
-        
+
         /* Implementing IObserver */
         public void OnCompleted()
         {

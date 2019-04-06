@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -23,46 +23,41 @@ using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
-using Serilog;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Cli
+namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>
+    public class GetVersionRequestHandler : MessageHandlerBase<VersionRequest>
     {
-        public GetVersionResponseHandler(
+        public GetVersionRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger)
             : base(messageStream, logger)
         {
-            
         }
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
-            if (message == NullObjects.ChanneledAny)
-            {
-                return;
-            }
-            
+            if(message == NullObjects.ChanneledAny) {return;}
+            Logger.Debug("received message of type VersionRequest");
             try
             {
-                Logger.Debug("Handling GetVersionResponse");
-                
-                var deserialised = message.Payload.FromAny<VersionResponse>();
-                Logger.Information("Node Version: {0}", deserialised.Version.ToString());
-                Logger.Information("Press Enter to continue ...\n");
+                var deserialised = message.Payload.FromAny<VersionRequest>();
+                Logger.Debug("message content is {0}", deserialised);
+                var response = new VersionResponse
+                {
+                    Version = NodeUtil.GetVersion()
+                };
+
+                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
-                Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", message);
+                Logger.Error(ex, 
+                    "Failed to handle GetVersionRequest after receiving message {0}", message);
                 throw;
             }
         }

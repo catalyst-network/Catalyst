@@ -31,7 +31,7 @@ namespace Catalyst.Node.Common.Helpers.IO
     {
         protected const int BackLogValue = 100;
 
-        private readonly ILogger _logger;
+        protected readonly ILogger _logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
 
         public IChannel Channel { get; set; }

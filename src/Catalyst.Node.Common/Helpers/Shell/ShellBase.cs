@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Security;
 using System.Text;
@@ -31,8 +30,10 @@ using System.Text.RegularExpressions;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
+    
     public abstract class ShellBase : IShell
     {
+        
         protected ShellBase()
         {
             AppCulture = new CultureInfo("en-GB", false);
@@ -67,6 +68,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         public abstract bool OnStopWork(string[] args);
 
         public abstract bool IsConnectedNode(string nodeId);
+
+        public abstract bool IsSocketChannelActive(IRpcNode node);
         
         public abstract IRpcNode GetConnectedNode(string nodeId);
         
@@ -131,11 +134,11 @@ namespace Catalyst.Node.Common.Helpers.Shell
             switch (args[1].ToLower(AppCulture))
             {
                 case "config":
-                    return OnGetConfig(args.Skip(2).ToList());
+                    return OnGetConfig(args[2]);
                 case "version":
                     return OnGetVersion(args.Skip(2).ToList());
                 case "mempool":
-                    return OnGetMempool();
+                    return OnGetMempool(args.Skip(2).ToList());
                 default:
                     return CommandNotFound(args);
             }
@@ -145,19 +148,19 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints the current loaded settings.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetConfig(IList<string> args);
+        protected abstract bool OnGetConfig(Object args);
 
         /// <summary>
         ///     Prints the current node version.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetVersion(IList<string> args);
+        protected abstract bool OnGetVersion(Object args);
 
         /// <summary>
         ///     Prints stats about the mempool implementation.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetMempool();
+        protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
         ///     Parses flags passed with commands.
@@ -256,8 +259,10 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
+
+        
         public bool RunConsole()
-        {
+        {   
             var running = true;
 
             Console.OutputEncoding = Encoding.Unicode;
@@ -285,7 +290,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
                 try
                 {
-                    OnCommand(args);
+                    ParseCommand(args);
                 }
                 catch (SystemException ex)
                 {
@@ -297,6 +302,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
             return running;
         }
 
+        public abstract bool ParseCommand(params string[] args);
+        
+        
         /// <summary>
         /// </summary>
         /// <param name="args"></param>

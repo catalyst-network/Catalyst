@@ -23,19 +23,27 @@ using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Cli
+namespace Catalyst.Cli.Handlers
 {
-    public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>
+    /// <summary>
+    /// Handler responsible for handling the server's response for the GetVersion request.
+    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
+    /// The handler implements <see cref="MessageHandlerBase"/>.  
+    /// </summary>
+    public class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>
     {
-        public GetInfoResponseHandler(
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="messageStream">Message stream the handler is listening to through which the handler will
+        /// receive the response from the server.</param>
+        /// <param name="logger">Logger to log debug related information.</param>
+        public GetVersionResponseHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger)
             : base(messageStream, logger)
@@ -43,6 +51,10 @@ namespace Catalyst.Cli
             
         }
 
+        /// <summary>
+        /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />. 
+        /// </summary>
+        /// <param name="message">An object of GetVersionResponse</param>
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
             if (message == NullObjects.ChanneledAny)
@@ -52,10 +64,12 @@ namespace Catalyst.Cli
             
             try
             {
-                Logger.Debug("Handling GetInfoResponse");
-                var deserialised = message.Payload.FromAny<GetInfoResponse>();
-                Logger.Information("Requested node configuration\n============================\n{0}", deserialised.Query.ToString());
-                Logger.Information("Press Enter to continue ...\n");
+                Logger.Debug("Handling GetVersionResponse");
+                
+                var deserialised = message.Payload.FromAny<VersionResponse>();
+                
+                Console.WriteLine(@"Node Version: {0}", deserialised.Version.ToString());
+                Console.WriteLine(@"Press Enter to continue ...");
             }
             catch (Exception ex)
             {

@@ -27,7 +27,7 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
- using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +35,7 @@ using Serilog;
 
 namespace Catalyst.Cli
 {
+
     public static class Program
     {
         private static readonly ILogger Logger;
@@ -59,60 +60,66 @@ namespace Catalyst.Cli
             try
             {
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
-                
+
                 new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
-                
+
                 var config = new ConfigurationBuilder()
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
                    .Build();
-            
+
                 var serviceCollection = new ServiceCollection();
-                
+
                 // register components from config file
                 var configurationModule = new ConfigurationModule(config);
                 var containerBuilder = new ContainerBuilder();
-            
+
                 containerBuilder.RegisterModule(configurationModule);
 
                 var loggerConfiguration =
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
                 Log.Logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"), 
+                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"),
                         rollingInterval: RollingInterval.Day,
-                        outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
+                        outputTemplate:
+                        "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                    .CreateLogger();
-            
+
                 containerBuilder.RegisterLogger();
 
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
-                
+
                 Console.SetIn(
                     new StreamReader(
                         Console.OpenStandardInput(bufferSize),
                         Console.InputEncoding, false, bufferSize
                     )
                 );
-                
+
                 using (var scope = container.BeginLifetimeScope(LifetimeTag,
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
+                    
                     shell.Ads.RunConsole();
                 }
-                
+
                 Environment.ExitCode = 0;
-            
+
                 return 0;
             }
             catch (Exception e)
             {
                 Logger.Error(e, "Catalyst.Node failed to start." + e.Message);
                 Environment.ExitCode = 1;
+            }
+            finally
+            {
+                Console.ReadLine();
             }
 
             return Environment.ExitCode;
