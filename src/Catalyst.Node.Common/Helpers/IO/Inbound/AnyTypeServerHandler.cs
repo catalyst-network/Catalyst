@@ -33,7 +33,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public class AnyTypeServerHandler : SimpleChannelInboundHandler<AnySigned>, IChanneledMessageStreamer<AnySigned>, IDisposable
+    public sealed class AnyTypeServerHandler : SimpleChannelInboundHandler<AnySigned>, IChanneledMessageStreamer<AnySigned>, IDisposable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly BehaviorSubject<IChanneledMessage<AnySigned>> _messageSubject = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
@@ -54,7 +54,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
             ctx.CloseAsync().ContinueWith(_ => _messageSubject.OnCompleted());
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

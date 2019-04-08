@@ -27,7 +27,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.P2P
 {
-    public class PendingRequest
+    public sealed class PendingRequest
     {
         public AnySigned Content { get; set; }
         public IPeerIdentifier SentTo { get; set; }

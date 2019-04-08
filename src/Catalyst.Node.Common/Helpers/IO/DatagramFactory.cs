@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Linq;
 using System.Net;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;

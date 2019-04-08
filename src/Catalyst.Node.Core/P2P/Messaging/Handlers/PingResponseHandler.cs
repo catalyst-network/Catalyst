@@ -31,9 +31,9 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class PongResponseHandler : MessageHandlerBase<PingResponse>
+    public class PingResponseHandler : MessageHandlerBase<PingResponse>
     {
-        public PongResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
+        public PingResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
             : base(messageStream, logger) { }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)

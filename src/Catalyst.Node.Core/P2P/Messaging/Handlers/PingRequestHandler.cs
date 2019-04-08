@@ -25,22 +25,35 @@ using System;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Serilog;
 using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    internal class PingRequestHandler : MessageHandlerBase<PingRequest>
+    internal sealed class PingRequestHandler : MessageHandlerBase<PingRequest>
     {
-        public PingRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
-            : base(messageStream, logger) { }
+        private readonly IPeerIdentifier _peerIdentifier;
+
+        public PingRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
+            IPeerIdentifier peerIdentifier,
+            ILogger logger)
+            : base(messageStream, logger)
+        {
+            logger.Information("PingRequestHandler ctor");
+            _peerIdentifier = peerIdentifier;
+        }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            Logger.Debug("received ping");
+            Logger.Information("Ping Message Recieved");
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
-            Logger.Debug("ping content is empty");
+            Logger.Debug("message content is {0}", deserialised);
+
+            // var pingResponse = new PingResponse().ToAnySigned(_peerIdentifier.PeerId, new Guid(message.Payload.CorrelationId.ToByteArray()));
+            // message.Context.Channel.WriteAndFlushAsync(pingResponse).GetAwaiter().GetResult();
         }
     }
 }

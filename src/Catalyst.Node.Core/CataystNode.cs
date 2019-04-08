@@ -96,8 +96,6 @@ namespace Catalyst.Node.Core
                 // await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 // await Task.Delay(300, ct); //just to get the next message at the bottom
 
-                _logger.Information("Creating a Ping message");
-
                 var ping = new PingRequest().ToAnySigned(_p2P.Messaging.Identifier.PeerId, Guid.NewGuid());
 
                 var targetEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069);

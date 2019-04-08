@@ -34,9 +34,11 @@ using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.P2P;
+using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Dawn;
 using DotNetty.Buffers;
+using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 
@@ -48,19 +50,12 @@ namespace Catalyst.Node.Core.P2P.Messaging
         private readonly ILogger _logger;
         private readonly IPeerSettings _settings;
         private readonly X509Certificate2 _certificate;
-        private readonly AnyTypeClientHandler _anyTypeClientHandler;
-        private readonly AnyTypeServerHandler _anyTypeServerHandler;
+        private readonly AnyTypeClientHandler _anyTypeServerHandler;
         private readonly CancellationTokenSource _cancellationSource;
+        private readonly PingRequestHandler _pingRequestHandler;
         public IPeerIdentifier Identifier { get; }
         public IDictionary<int, ISocketClient> OpenedClients { get; }
-        public IObservable<IChanneledMessage<AnySigned>> InboundMessageStream { get; }
-        public IObservable<IChanneledMessage<AnySigned>> OutboundMessageStream { get; }
-
-        static P2PMessaging()
-        {
-            //Find a better way to do this at some point
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
-        }
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         public P2PMessaging(IPeerSettings settings,
             ICertificateStore certificateStore,
@@ -72,13 +67,17 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _cancellationSource = new CancellationTokenSource();
 
             Identifier = new PeerIdentifier(settings);
-            _anyTypeServerHandler = new AnyTypeServerHandler();
-            InboundMessageStream = _anyTypeServerHandler.MessageStream;
-            OpenedClients = new ConcurrentDictionary<int, ISocketClient>();
+            _anyTypeServerHandler = new AnyTypeClientHandler();
+            MessageStream = _anyTypeServerHandler.MessageStream;
             var longRunningTasks = new[]
             {
                 NodeListenerAsync()
             };
+
+            _pingRequestHandler = new PingRequestHandler(_anyTypeServerHandler.MessageStream, Identifier, _logger);
+
+            OpenedClients = new ConcurrentDictionary<int, ISocketClient>();
+
             Task.WaitAll(longRunningTasks);
         }
 
@@ -88,10 +87,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             var handlers = new List<IChannelHandler>
             {
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(AnySigned.Parser),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
                 _anyTypeServerHandler
             };
 
@@ -116,10 +111,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             var handlers = new List<IChannelHandler>
             {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(AnySigned.Parser),
                 new AnyTypeClientHandler()
             };
 
@@ -131,8 +122,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
                     peerEndPoint.Address,
                     peerEndPoint.Port
                 );
-
-            // var peerSocketHashCode = peerSocket.Channel.RemoteAddress.GetHashCode();
 
             OpenedClients.TryAdd(peerEndPoint.GetHashCode(), peerSocket);
             return peerEndPoint.GetHashCode();
@@ -170,7 +159,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _udpServer?.Shutdown();
             _cancellationSource?.Dispose();
             _certificate?.Dispose();
-            _anyTypeClientHandler?.Dispose();
+            _pingRequestHandler?.Dispose();
         }
 
         public void Dispose()

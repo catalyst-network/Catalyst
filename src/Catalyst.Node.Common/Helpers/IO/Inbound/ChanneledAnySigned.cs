@@ -26,7 +26,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public class ChanneledAnySigned : IChanneledMessage<AnySigned>
+    public sealed class ChanneledAnySigned : IChanneledMessage<AnySigned>
     {
         public AnySigned Payload { get; }
         public IChannelHandlerContext Context { get; }

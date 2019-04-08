@@ -31,12 +31,12 @@ using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Common.P2P
+namespace Catalyst.Node.Core.P2P
 {
     /// <summary>
     ///     Peer settings class.
     /// </summary>
-    public class PeerSettings : IPeerSettings
+    public sealed class PeerSettings : IPeerSettings
     {
         /// <summary>
         ///     Set attributes

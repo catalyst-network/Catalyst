@@ -22,29 +22,49 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using System.Text;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
+using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
+using Google.Protobuf;
 using Serilog;
+using DotNetty.Codecs.Protobuf;
+using Nethereum.Hex.HexConvertors.Extensions;
+using ProtoBuf;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public sealed class AnyTypeClientHandler : SimpleChannelInboundHandler<AnySigned>, IChanneledMessageStreamer<AnySigned>, IDisposable
+    public sealed class AnyTypeClientHandler : SimpleChannelInboundHandler<DatagramPacket>, IChanneledMessageStreamer<AnySigned>, IDisposable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         public IObservable<IChanneledMessage<AnySigned>> MessageStream => _messageSubject.AsObservable();
         private readonly BehaviorSubject<IChanneledMessage<AnySigned>> _messageSubject = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
 
-        protected override void ChannelRead0(IChannelHandlerContext context, AnySigned message)
+        protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
         {
-            var contextAny = new ChanneledAnySigned(context, message);
-            _messageSubject.OnNext(contextAny);
+            Console.WriteLine($@"Client Received => {packet}");
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ms.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                var message = AnySigned.Parser.ParseFrom(ms);
+
+                var contextAny = new ChanneledAnySigned(context, message);
+                _messageSubject.OnNext(contextAny);
+            }
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)

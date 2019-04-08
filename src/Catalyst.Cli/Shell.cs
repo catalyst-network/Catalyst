@@ -442,7 +442,8 @@ namespace Catalyst.Cli
 
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
-                _rpcClient.SendMessage(connectedNode, request.ToAnySigned());
+                
+                // _rpcClient.SendMessage(connectedNode, request.ToAnySigned());
             }
             catch (Exception e)
             {
@@ -469,7 +470,8 @@ namespace Catalyst.Cli
 
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
-                _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
+                
+                // _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
             }
             catch (Exception e)
             {
@@ -504,7 +506,8 @@ namespace Catalyst.Cli
 
                 //send the message to the server by writing it to the channel
                 var request = new GetMempoolRequest();
-                _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
+                
+                // _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
             }
             catch (Exception e)
             {

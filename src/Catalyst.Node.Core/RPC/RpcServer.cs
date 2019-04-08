@@ -64,7 +64,10 @@ namespace Catalyst.Node.Core.RPC
 
             _anyTypeServerHandler = new AnyTypeServerHandler();
             MessageStream = _anyTypeServerHandler.MessageStream;
-            var longRunningTasks = new[] {StartServerAsync()};
+            var longRunningTasks = new[]
+            {
+                StartServerAsync()
+            };
 
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
             _versionRequestHandler = new GetVersionRequestHandler(MessageStream, logger);
@@ -93,10 +96,12 @@ namespace Catalyst.Node.Core.RPC
             try
             {
                 _rpcSocketServer = await new TcpServer(_logger)
-                   .Bootstrap(new InboundChannelInitializer<ISocketChannel>(
-                        channel => { },
-                        handlers,
-                        certificate: _certificate)
+                   .Bootstrap(
+                        new InboundChannelInitializer<ISocketChannel>(
+                            channel => { },
+                            handlers,
+                            _certificate
+                        )
                     ).StartServer(Settings.BindAddress, Settings.Port);
             }
             catch (Exception e)

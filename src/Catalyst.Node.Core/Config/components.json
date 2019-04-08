@@ -1,195 +1,195 @@
 {
-  "defaultAssembly": "Catalyst.Node.Core",
-  "components": [
-    {
-      "type": "Catalyst.Node.Core.CatalystNode",
-      "services": [
+    "defaultAssembly": "Catalyst.Node.Core",
+    "components": [
         {
-          "type": "Catalyst.Node.Common.Interfaces.ICatalystNode, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Core.RPC.RpcServer",
-      "services": [
+            "type": "Catalyst.Node.Core.CatalystNode",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.ICatalystNode, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IRpcServer, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Core.RPC.RpcServerSettings",
-      "services": [
+            "type": "Catalyst.Node.Core.RPC.RpcServer",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IRpcServer, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IRpcServerSettings, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Core.P2P.PeerSettings",
-      "services": [
+            "type": "Catalyst.Node.Core.RPC.RpcServerSettings",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IRpcServerSettings, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IPeerSettings, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Core.P2P.Messaging.P2PMessaging",
-      "services": [
+            "type": "Catalyst.Node.Core.P2P.PeerSettings",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IPeerSettings, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IP2PMessaging, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Keystore.LocalKeyStore, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Core.P2P.Messaging.P2PMessaging",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IP2PMessaging, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IKeyStore, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.KeyStore.KeyStoreServiceWrapped, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.Keystore.LocalKeyStore, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IKeyStore, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Helpers.KeyStore.IKeyStoreWrapper, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Cryptography.NSecCryptoContext, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.KeyStore.KeyStoreServiceWrapped, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Helpers.KeyStore.IKeyStoreWrapper, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.ICryptoContext, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Common.P2P.Peer, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.Cryptography.NSecCryptoContext, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.ICryptoContext, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.P2P.Peer, Catalyst.Node.Common]], SharpRepository.Repository"
-        }
-      ]
-    },
-    {
-      "type": "Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory",
-      "services": [
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
+            "services": [
+                {
+                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.Peer, Catalyst.Node.Common]], SharpRepository.Repository"
+                }
+            ]
+        },
         {
-          "type": "Microsoft.Extensions.Options.IOptions`1[[Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory]], Microsoft.Extensions.Options"
-        }
-      ]
-    },
-    {
-      "type": "Microsoft.Extensions.Caching.Memory.MemoryCache, Microsoft.Extensions.Caching.Memory",
-      "services": [
+            "type": "Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory",
+            "services": [
+                {
+                    "type": "Microsoft.Extensions.Options.IOptions`1[[Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory]], Microsoft.Extensions.Options"
+                }
+            ]
+        },
         {
-          "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Peer, Catalyst.Node.Common",
-      "services": [
+            "type": "Microsoft.Extensions.Caching.Memory.MemoryCache, Microsoft.Extensions.Caching.Memory",
+            "services": [
+                {
+                    "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IPeer, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
-      "services": [
+            "type": "Catalyst.Node.Common.Peer, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IPeer, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IPeerDiscovery, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Network.DevDns, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IPeerDiscovery, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IDns, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Network.InjectableLookupClient, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.Network.DevDns, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IDns, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "DnsClient.ILookupClient, DnsClient"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Core.P2P.P2PService",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.Network.InjectableLookupClient, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "DnsClient.ILookupClient, DnsClient"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IP2P, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Core.P2P.P2PService",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IP2P, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IPasswordReader, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.FileSystem.FileSystem, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IPasswordReader, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IFileSystem, Catalyst.Node.Common"
+            "type": "Catalyst.Node.Common.Helpers.FileSystem.FileSystem, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IFileSystem, Catalyst.Node.Common"
+                }
+            ]
         }
-      ]
-    }
-  ],
-  "modules": [
-    {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
-      "parameters": {
-        "configFilePath": "Config/Modules/dfs.json"
-      }
-    },
-    {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
-      "parameters": {
-        "configFilePath": "Config/Modules/consensus.json"
-      }
-    },
-    {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
-      "parameters": {
-        "configFilePath": "Config/Modules/contract.json"
-      }
-    },
-    {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
-      "parameters": {
-        "configFilePath": "Config/Modules/ledger.json"
-      }
-    },
-    {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
-      "parameters": {
-        "configFilePath": "Config/Modules/keysigner.json"
-      }
-    },
-    {
-      "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
-      "parameters": {
-        "configFilePath": "Config/Modules/mempool.json"
-      }
-    }
-  ]
+    ],
+    "modules": [
+        {
+            "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/dfs.json"
+            }
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/consensus.json"
+            }
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/contract.json"
+            }
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/ledger.json"
+            }
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/keysigner.json"
+            }
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/mempool.json"
+            }
+        }
+    ]
 }

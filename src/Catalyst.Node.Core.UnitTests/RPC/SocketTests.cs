@@ -38,6 +38,7 @@ using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
@@ -122,7 +123,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _rpcClient = new RpcClient(_logger, _certificateStore);
             _rpcClient.Should().NotBeNull();
 
-            var peerSettings = new PeerSettings(_config) {Port = _rpcServer.Settings.Port + 1000};
+            var peerSettings = new PeerSettings(_config)
+            {
+                Port = _rpcServer.Settings.Port + 1000
+            };
+
             var p2PMessenger = new P2PMessaging(peerSettings, _certificateStore, _logger);
             p2PMessenger.Should().NotBeNull();
 

@@ -31,7 +31,7 @@ using DotNetty.Buffers;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IP2PMessaging : IDuplexChanneledMessageStreamer<AnySigned>
+    public interface IP2PMessaging : IChanneledMessageStreamer<AnySigned>
     {
         /// <summary>
         /// Identifier of the Peer behind the instance of the IP2PMessaging service

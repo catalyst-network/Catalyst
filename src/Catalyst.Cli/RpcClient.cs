@@ -83,7 +83,7 @@ namespace Catalyst.Cli
                     new ProtobufVarint32LengthFieldPrepender(),
                     new ProtobufEncoder(),
                     new ProtobufVarint32FrameDecoder(),
-                    new ProtobufDecoder(Any.Parser),
+                    new ProtobufDecoder(AnySigned.Parser),
                     _clientHandler
                 };
 
