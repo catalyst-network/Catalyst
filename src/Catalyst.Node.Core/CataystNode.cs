@@ -83,7 +83,6 @@ namespace Catalyst.Node.Core
         public async Task RunAsync(CancellationToken ct)
         {
 
-            await _dfs.StartAsync(ct);
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
             do
@@ -104,6 +103,8 @@ namespace Catalyst.Node.Core
 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
+
+                await _dfs.AddTextAsync("hello", ct);
 
             } while (!ct.IsCancellationRequested && !exit);
 
