@@ -8,18 +8,19 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Security;
 using System.Text;
@@ -27,13 +28,14 @@ using Catalyst.Node.Common.Interfaces;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
-    
+
     public abstract class ShellBase : IShell
     {
-        
+
         protected ShellBase()
         {
             AppCulture = new CultureInfo("en-GB", false);
@@ -70,9 +72,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
         public abstract bool IsConnectedNode(string nodeId);
 
         public abstract bool IsSocketChannelActive(IRpcNode node);
-        
+
         public abstract IRpcNode GetConnectedNode(string nodeId);
-        
+
         public abstract IRpcNodeConfig GetNodeConfig(string nodeId);
 
         /// <summary>
@@ -163,6 +165,12 @@ namespace Catalyst.Node.Common.Helpers.Shell
         protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        protected abstract bool OnSignMessage(Object args);
+
+        /// <summary>
         ///     Parses flags passed with commands.
         /// </summary>
         /// <param name="args"></param>
@@ -180,7 +188,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
             return returnArg;
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="prompt"></param>
@@ -260,9 +268,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <returns></returns>
 
-        
+
         public bool RunConsole()
-        {   
+        {
             var running = true;
 
             Console.OutputEncoding = Encoding.Unicode;
@@ -282,7 +290,10 @@ namespace Catalyst.Node.Common.Helpers.Shell
                     break;
                 }
                 Console.ForegroundColor = ConsoleColor.White;
-                var args = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+
+                //split the command line input by spaces and keeping hyphens and preserve any spaces between quotes
+                string[] args = Regex.Split(line, "(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
                 if (args.Length == 0)
                 {
                     continue;
@@ -303,8 +314,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         }
 
         public abstract bool ParseCommand(params string[] args);
-        
-        
+
+
         /// <summary>
         /// </summary>
         /// <param name="args"></param>

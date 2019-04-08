@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
@@ -35,6 +36,10 @@ using CommandLine;
 using ILogger = Serilog.ILogger;
 using Google.Protobuf.WellKnownTypes;
 using DotNetty.Transport.Channels;
+using McMaster.Extensions.CommandLineUtils;
+using Nethereum.RLP;
+using Org.BouncyCastle.Bcpg;
+using Catalyst.Node.Common.Helpers.Util;
 
 namespace Catalyst.Cli
 {
@@ -84,12 +89,20 @@ namespace Catalyst.Cli
             return nodeList;
         }
 
+        /// <summary>
+        /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
+        /// </summary>
+        /// <param name="args">string array including the parameters passed through the command line</param>
+        /// <returns>Returns true if a method to handle the options is found otherwise returns false</returns>
         public override bool ParseCommand(params string[] args)
         {
-            return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, bool>(
+            ArgumentEscaper.EscapeAndConcatenate(args);
+
+            return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions, SignOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts),
+                    (SignOptions opts) => OnSignCommands(opts),
                     errs => false);
         }
 
@@ -108,6 +121,16 @@ namespace Catalyst.Cli
             if (opts.Version)
             {
                 return OnGetVersion(opts);
+            }
+
+            return false;
+        }
+
+        private bool OnSignCommands(SignOptions opts)
+        {
+            if (opts.Message.Length > 0)
+            {
+                return OnSignMessage(opts);
             }
 
             return false;
@@ -267,6 +290,56 @@ namespace Catalyst.Cli
         /// <summary>
         /// </summary>
         /// <returns></returns>
+        public override bool OnStart(string[] args)
+        {
+            switch (args[1].ToLower(AppCulture))
+            {
+                case "work":
+                    return OnStartWork(args);
+                default:
+                    return CommandNotFound(args);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        public override bool OnStop(string[] args)
+        {
+            Guard.Argument(args).Contains(typeof(string));
+            switch (args[1].ToLower(AppCulture))
+            {
+                case "node":
+                    return OnStopNode(args);
+                case "work":
+                    return OnStopWork(args);
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public bool OnGetCommand(params string[] args)
+        {
+            Guard.Argument(args, nameof(args)).NotNull().MinCount(2);
+            switch (args[1].ToLower(AppCulture))
+            {
+                case "delta":
+                    return OnGetDelta(args);
+                case "mempool":
+                    return OnGetMempool(args.Skip(2).ToList());
+                case "version":
+                    return OnGetVersion(args);
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
         private bool OnConnectNode(Object opts)
         {
             var nodeId = ((ConnectOptions)opts).NodeId;
@@ -329,21 +402,6 @@ namespace Catalyst.Cli
             return true;
         }
 
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public override bool OnStart(string[] args)
-        {
-            switch (args[1].ToLower(AppCulture))
-            {
-                case "work":
-                    return OnStartWork(args);
-                default:
-                    return CommandNotFound(args);
-            }
-        }
-
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -351,22 +409,6 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// </summary>
-        public override bool OnStop(string[] args)
-        {
-            Guard.Argument(args).Contains(typeof(string));
-            switch (args[1].ToLower(AppCulture))
-            {
-                case "node":
-                    return OnStopNode(args);
-                case "work":
-                    return OnStopWork(args);
-                default:
-                    return true;
-            }
         }
 
         /// <summary>
@@ -398,25 +440,6 @@ namespace Catalyst.Cli
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public bool OnGetCommand(params string[] args)
-        {
-            Guard.Argument(args, nameof(args)).NotNull().MinCount(2);
-            switch (args[1].ToLower(AppCulture))
-            {
-                case "delta":
-                    return OnGetDelta(args);
-                case "mempool":
-                    return OnGetMempool(args.Skip(2).ToList());
-                case "version":
-                    return OnGetVersion(args);
-                default:
-                    return true;
-            }
-        }
 
         /// <summary>
         /// Gets the version of a node
@@ -495,6 +518,12 @@ namespace Catalyst.Cli
         {
             var nodeId = ((GetInfoOptions)args).NodeId;
 
+            //Perform validations required before a command call
+            if (!ValidatePreCommand(nodeId))
+            {
+                return false;
+            }
+
             try
             {
                 var connectedNode = GetConnectedNode(nodeId);
@@ -509,6 +538,45 @@ namespace Catalyst.Cli
                 throw;
             }
 
+            return true;
+        }
+
+        protected override bool OnSignMessage(Object args)
+        {
+            var signOptions = args as SignOptions;
+
+            if (signOptions == null)
+            {
+                return false;
+            }
+
+            var message = signOptions.Message;
+            var nodeId = signOptions.Node;
+
+            //Perform validations required before a command call
+            if (!ValidatePreCommand(nodeId))
+            {
+                return false;
+            }
+
+            try {
+
+                var connectedNode = GetConnectedNode(nodeId);
+
+                //send the message to the server by writing it to the channel
+                var request = new SignMessageRequest();
+                var bytesForRlpEncoding = message.Trim('\"').ToBytesForRLPEncoding();
+                var encodedMessage = Nethereum.RLP.RLP.EncodeElement(bytesForRlpEncoding);
+
+                request.Query = encodedMessage.ToByteString();
+
+                _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             return true;
         }
 
