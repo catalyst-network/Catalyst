@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.Modules.Dfs {
         private readonly Ipfs.Engine.IpfsEngine _ipfsEngine;
         private readonly SecureString _passphrase;
 
-        public IpfsEngine(IPasswordReader passwordReader, IPeerSettings peerSettings, ILogger logger)
+        public IpfsEngine(IPasswordReader passwordReader, IPeerSettings peerSettings, IFileSystem fileSystem, ILogger logger)
         {
             Guard.Argument(peerSettings, nameof(peerSettings)).NotNull()
                .Require(p => p.SeedServers != null && p.SeedServers.Count > 0,
@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.Modules.Dfs {
             _ipfsEngine = new Ipfs.Engine.IpfsEngine(_passphrase);
             _ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
             _ipfsEngine.Options.Repository.Folder = Path.Combine(
-                new Common.Helpers.FileSystem.FileSystem().GetCatalystHomeDir().FullName,
+                fileSystem.GetCatalystHomeDir().FullName,
                 Core.Config.Constants.IpfsSubFolder);
             _ipfsEngine.Options.Discovery.BootstrapPeers = peerSettings
                .SeedServers

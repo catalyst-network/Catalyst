@@ -49,14 +49,6 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 
         private readonly IPasswordReader _passwordReader;
 
-        private SecureString BuildSecureStringPassword()
-        {
-            var secureString = new SecureString();
-            "password".ToList().ForEach(c => secureString.AppendChar(c));
-            secureString.MakeReadOnly();
-            return secureString;
-        }
-
         private void Create_certificate_store()
         {
             var dataFolder = _fileSystem.GetCatalystHomeDir().FullName;
@@ -78,7 +70,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
         private void Create_a_certificate_file_with_password()
         {
             _fileWithPassName = "test-with-pass.pfx";
-            _passwordReader.ReadSecurePassword().Returns(BuildSecureStringPassword());
+            _passwordReader.ReadSecurePassword().Returns(TestPasswordReader.BuildSecureStringPassword("password"));
             _createdCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 
@@ -89,7 +81,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 
         private void Read_the_certificate_file_with_password()
         {
-            _passwordReader.ReadSecurePassword().Returns(BuildSecureStringPassword());
+            _passwordReader.ReadSecurePassword().Returns(TestPasswordReader.BuildSecureStringPassword("password"));
             _retrievedCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 
