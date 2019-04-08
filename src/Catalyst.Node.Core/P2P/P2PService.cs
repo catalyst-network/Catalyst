@@ -44,6 +44,8 @@ namespace Catalyst.Node.Core.P2P
         private readonly TransactionHandler _transactionHandler;
         private readonly ISocketClientRegistry<IPeerClient> _socketClientRegistry;
 
+        public IP2PMessaging Messaging { get; }
+        public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         public P2PService(IPeerSettings settings,
@@ -74,34 +76,6 @@ namespace Catalyst.Node.Core.P2P
             };
 
             Task.WaitAll(longRunningTasks);
-        }
-
-        public IPeerDiscovery Discovery { get; }
-        public IP2PMessaging Messaging { get; }
-
-        public List<IPeerIdentifier> FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IPeerIdentifier> GetPeers(IPeerIdentifier queryingNode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Store(string k, byte[] v)
-        {
-            throw new NotImplementedException();
-        }
-
-        public dynamic FindValue(string k)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IPeerIdentifier> PeerExchange(IPeerIdentifier queryingNode)
-        {
-            throw new NotImplementedException();
         }
     }
 }

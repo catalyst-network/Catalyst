@@ -21,25 +21,13 @@
 
 #endregion
 
-using System.Net;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
-using Google.Protobuf;
+using Catalyst.Node.Common.Helpers.Shell;
+using System.Security.Cryptography.X509Certificates;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Interfaces
 {
-    public static class DatagramFactory
+    public interface INodeRpcClientFactory
     {
-        /// <summary>
-        ///     Returns a fully initialised Datagram.
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public static IByteBufferHolder Create(AnySigned message, IPEndPoint target)
-        {
-            return new DatagramPacket(Unpooled.WrappedBuffer(message.ToByteArray()), target);
-        }
+        INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig);
     }
 }
