@@ -63,7 +63,7 @@ namespace Catalyst.Cli
         public Shell(IConfigurationRoot config, ILogger logger, ICertificateStore certificateStore)
         {
             _certificateStore = certificateStore;
-            _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>(IoClients.NodeRpcTcpClient);
+            _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = BuildRpcNodeSettingList(config);
             _logger = logger;
 

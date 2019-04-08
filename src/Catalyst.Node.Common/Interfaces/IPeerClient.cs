@@ -26,7 +26,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IPeerClient
+    public interface IPeerClient : ISocketClient
     {
         Task SendMessage(AnySigned message);
     }

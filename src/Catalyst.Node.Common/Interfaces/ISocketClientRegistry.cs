@@ -59,5 +59,7 @@ namespace Catalyst.Node.Common.Interfaces
         /// <param name="socketHashCode"></param>
         /// <returns></returns>
         bool RemoveClientFromRegistry(int socketHashCode);
+
+        string GetRegistryType();
     }
 }

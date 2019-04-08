@@ -32,12 +32,10 @@ namespace Catalyst.Node.Common.Helpers.IO
 {
     public sealed class SocketClientRegistry<TSocketChannel> : ISocketClientRegistry<TSocketChannel> where TSocketChannel : class, ISocketClient
     {
-        public readonly IoClients ClientType;
         public IDictionary<int, TSocketChannel> Registry { get; }
 
-        public SocketClientRegistry(IoClients ioClientType)
+        public SocketClientRegistry()
         {
-            ClientType = ioClientType;
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
         }
 
@@ -71,6 +69,11 @@ namespace Catalyst.Node.Common.Helpers.IO
         {
             Guard.Argument(socketHashCode).NotZero().NotNegative();
             return Registry.Remove(socketHashCode);
+        }
+
+        public string GetRegistryType()
+        {
+            return typeof(TSocketChannel).Name;
         }
     }
 }

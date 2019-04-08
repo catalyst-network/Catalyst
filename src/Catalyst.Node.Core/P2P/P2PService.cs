@@ -42,20 +42,17 @@ namespace Catalyst.Node.Core.P2P
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly PingRequestHandler _pingRequestHandler;
         private readonly TransactionHandler _transactionHandler;
-        private readonly ISocketClientRegistry _socketClientRegistry;
+        private readonly ISocketClientRegistry<IPeerClient> _socketClientRegistry;
 
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         public P2PService(IPeerSettings settings,
-            IP2PMessaging messaging,
-            IPeerDiscovery peerDiscovery,
-            ISocketClientRegistry socketClientRegistry)
+            IPeerDiscovery peerDiscovery)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _settings = settings;
-            Messaging = messaging;
             Discovery = peerDiscovery;
-            _socketClientRegistry = socketClientRegistry;
+            _socketClientRegistry = new SocketClientRegistry<IPeerClient>();
 
             _peerIdentifier = new PeerIdentifier(_settings);
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
