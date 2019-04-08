@@ -24,6 +24,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
