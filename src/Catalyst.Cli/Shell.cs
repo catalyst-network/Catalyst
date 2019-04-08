@@ -26,12 +26,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using CommandLine;
@@ -42,28 +44,29 @@ namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds, IObserver<IChanneledMessage<AnySigned>>
     {
+        private readonly ICertificateStore _certificateStore;
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
-        private readonly List<IRpcNode> _nodes;
-        private readonly IRpcClient _rpcClient;
+        private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
+
         private IChanneledMessage<AnySigned> Response { get; set; }
         private readonly ILogger _logger;
 
         private const string NoConfigMessage =
-            "Node not configured.  Add node to config file and try again.";
+            "Node not configured. Add node to config file and try again.";
 
         private const string NodeConnectedMessage = "Connection already established with the node.";
-        private const string NodeNotConnectedMessage = "Node is not connected.  Connect to node first.";
-        private const string ChannelInactiveMessage = "Node is not connected.  Connect to node first.";
+        private const string NodeNotConnectedMessage = "Node is not connected. Connect to node first.";
+        private const string ChannelInactiveMessage = "Node is not connected. Connect to node first.";
 
         /// <summary>
         /// </summary>
-        public Shell(IRpcClient rpcClient, IConfigurationRoot config, ILogger logger)
+        public Shell(IConfigurationRoot config, ILogger logger, ICertificateStore certificateStore)
         {
+            _certificateStore = certificateStore;
+            _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>(IoClients.NodeRpcTcpClient);
             _rpcNodeConfigs = BuildRpcNodeSettingList(config);
-            _rpcClient = rpcClient;
             _logger = logger;
-            _nodes = new List<IRpcNode>();
-            _rpcClient.MessageStream.Subscribe(this);
+
             Console.WriteLine(@"Koopa Shell Start");
         }
 
@@ -288,16 +291,12 @@ namespace Catalyst.Cli
 
             try
             {
-                //Connect to the node
-                var socket = _rpcClient.GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
-
-                //if a socket could be opened with the node
-                //then create IRpcNode and add it the node to the list of connected nodes
-                if (socket != null)
-                {
-                    IRpcNode connectedNode = new RpcNode(nodeConfig, socket);
-                    _nodes.Add(connectedNode);
-                }
+                //Connect to the node and store it in the socket client registry
+                var nodeRpcClient = new NodeRpcClient(_certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName), nodeConfig);
+                var clientHashCode =
+                    _socketClientRegistry.GenerateClientHashCode(
+                        EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+                _socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
             }
 
             //Handle the exception of a wrong SSL certificate password
@@ -442,7 +441,7 @@ namespace Catalyst.Cli
 
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
-                
+
                 // _rpcClient.SendMessage(connectedNode, request.ToAnySigned());
             }
             catch (Exception e)
@@ -470,7 +469,7 @@ namespace Catalyst.Cli
 
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
-                
+
                 // _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
             }
             catch (Exception e)
@@ -506,7 +505,7 @@ namespace Catalyst.Cli
 
                 //send the message to the server by writing it to the channel
                 var request = new GetMempoolRequest();
-                
+
                 // _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
             }
             catch (Exception e)

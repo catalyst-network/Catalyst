@@ -24,9 +24,9 @@
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.P2P;
 
-namespace Catalyst.Node.Core.P2P.Messaging
+namespace Catalyst.Node.Core.P2P
 {
-    public class PeerReputationChange : IPeerReputationChange
+    internal sealed class PeerReputationChange : IPeerReputationChange
     {
         public IPeerIdentifier PeerIdentifier { get; }
         public int ReputationChange { get; }

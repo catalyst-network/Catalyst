@@ -21,27 +21,29 @@
 
 #endregion
 
-using System.Net;
+using System;
 using System.Reflection;
-using DotNetty.Handlers.Logging;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public abstract class TcpClient<TChannel> : AbstractClient<TChannel> where TChannel : IChannel, new()
+    public sealed class AnySignedTypeClientHandler : AbstractObservableHandler<AnySigned>
     {
-        protected TcpClient(ILogger logger) : base(logger) { }
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected override async void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected override void ChannelRead0(IChannelHandlerContext context, AnySigned message)
         {
-            Channel = await new Bootstrap()
-               .Group(WorkerEventLoop)
-               .Channel<TChannel>()
-               .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer)
-               .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port);
+            var contextAny = new ChanneledAnySigned(context, message);
+            MessageSubject.OnNext(contextAny);
+        }
+
+        public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
+        {
+            Logger.Error(e, "Error in P2P client");
+            context.CloseAsync().ContinueWith(_ => MessageSubject.OnCompleted());
         }
     }
 }

@@ -21,17 +21,33 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.Shell;
+using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Helpers.IO
 {
-    public interface IRpcClient : IChanneledMessageStreamer<AnySigned>
+    public abstract class AbstractObservableHandler<T> : SimpleChannelInboundHandler<T>, IChanneledMessageStreamer<AnySigned>, IDisposable
     {
-        Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig);
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream => MessageSubject.AsObservable();
+        internal readonly BehaviorSubject<IChanneledMessage<AnySigned>> MessageSubject = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
 
-        Task SendMessage(IRpcNode node, AnySigned message);
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                MessageSubject?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
     }
 }

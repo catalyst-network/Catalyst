@@ -64,13 +64,13 @@ namespace Catalyst.Cli.UnitTests
             var tcpClient = Substitute.For<ISocketClient>();
             tcpClient.Channel.Returns(channel);
 
-            var client = Substitute.For<IRpcClient>();
+            var client = Substitute.For<INodeRpcClient>();
             client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
                .Returns(Task.FromResult(tcpClient));
 
             ConfigureContainerBuilder(config);
             ContainerBuilder.RegisterInstance(tcpClient).As<ISocketClient>();
-            ContainerBuilder.RegisterInstance(client).As<IRpcClient>();
+            ContainerBuilder.RegisterInstance(client).As<INodeRpcClient>();
 
             var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
             var serviceCollection = new ServiceCollection();

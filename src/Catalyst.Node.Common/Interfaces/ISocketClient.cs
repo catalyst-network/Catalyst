@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -31,9 +30,6 @@ namespace Catalyst.Node.Common.Interfaces
     public interface ISocketClient : ISocket
     {
         IChannel Channel { get; set; }
-        IBootstrap Client { get; set; }
-        Task<ISocketClient> ConnectClient(IPAddress listenAddress, int port);
         Task SendMessage(AnySigned message);
-        void Dispose();
     }
 }

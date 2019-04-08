@@ -48,7 +48,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         Task Shutdown();
     }
 
-    public sealed class UdpServer : AbstractIo, IUdpServer
+    public abstract class UdpServer : AbstractIo, IUdpServer
     {
         public IBootstrap UdpListener { get; set; }
 

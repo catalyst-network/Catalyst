@@ -47,10 +47,10 @@ namespace Catalyst.Node.Common.UnitTests.Helpers
             typeof(PingRequest).ShortenedProtoFullName().Should().Be("IPPN.PingRequest");
         }
 
-        [Theory,
-         InlineData("MyFunnyRequest", "MyFunnyResponse"),
-         InlineData("Request", "Response"),
-         InlineData("Some.Namespace.ClassRequest", "Some.Namespace.ClassResponse")]
+        [Theory]
+        [InlineData("MyFunnyRequest", "MyFunnyResponse")]
+        [InlineData("Request", "Response")]
+        [InlineData("Some.Namespace.ClassRequest", "Some.Namespace.ClassResponse")]
         public static void GetResponseType_should_swap_request_suffix_for_response_suffix(string requestType, string responseType)
         {
             requestType.GetResponseType().Should().Be(responseType);

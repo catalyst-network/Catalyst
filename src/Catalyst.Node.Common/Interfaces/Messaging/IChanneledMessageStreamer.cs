@@ -23,12 +23,22 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Interfaces.Messaging
 {
     public interface IChanneledMessageStreamer<out T> where T : IMessage
     {
+        /// <summary>
+        ///     Message stream
+        /// </summary>
         IObservable<IChanneledMessage<T>> MessageStream { get; }
+
+        // /// <summary>
+        // ///     Subscribes to the above stream
+        // /// </summary>
+        // /// <param name="observer"></param>
+        // void SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer);
     }
 }

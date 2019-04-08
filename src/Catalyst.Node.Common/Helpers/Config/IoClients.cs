@@ -21,27 +21,25 @@
 
 #endregion
 
-using System.Net;
-using System.Reflection;
-using DotNetty.Handlers.Logging;
-using DotNetty.Transport.Channels;
-using Serilog;
+using Catalyst.Node.Common.Helpers.Enumerator;
 
-namespace Catalyst.Node.Common.Helpers.IO.Outbound
+namespace Catalyst.Node.Common.Helpers.Config
 {
-    public abstract class TcpClient<TChannel> : AbstractClient<TChannel> where TChannel : IChannel, new()
+    public class IoClients : Enumeration
     {
-        protected TcpClient(ILogger logger) : base(logger) { }
+        public static readonly IoClients NodeRpcTcpClient = new NodeRpcTcp();
+        public static readonly IoClients NodePeerUdpClient = new NodePeerUdp();
 
-        protected override async void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        private IoClients(int id, string name) : base(id, name) { }
+
+        private sealed class NodeRpcTcp : IoClients
         {
-            Channel = await new Bootstrap()
-               .Group(WorkerEventLoop)
-               .Channel<TChannel>()
-               .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer)
-               .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port);
+            public NodeRpcTcp() : base(1, "NodeRpcTcp") { }
+        }
+
+        private sealed class NodePeerUdp : IoClients
+        {
+            public NodePeerUdp() : base(2, "NodePeerUdp") { }
         }
     }
 }

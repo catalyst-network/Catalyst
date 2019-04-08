@@ -33,17 +33,15 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public sealed class AnyTypeServerHandler : SimpleChannelInboundHandler<AnySigned>, IChanneledMessageStreamer<AnySigned>, IDisposable
+    public sealed class AnyTypeServerHandler : AbstractObservableHandler<AnySigned>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly BehaviorSubject<IChanneledMessage<AnySigned>> _messageSubject = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream => _messageSubject.AsObservable();
         public override bool IsSharable => true;
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
         {
             var contextAny = new ChanneledAnySigned(ctx, msg);
-            _messageSubject.OnNext(contextAny);
+            MessageSubject.OnNext(contextAny);
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext ctx) => ctx.Flush();
@@ -51,17 +49,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
         {
             Logger.Error(e, "Error in P2P server");
-            ctx.CloseAsync().ContinueWith(_ => _messageSubject.OnCompleted());
+            ctx.CloseAsync().ContinueWith(_ => MessageSubject.OnCompleted());
         }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _messageSubject?.Dispose();
-            }
-        }
-
-        public void Dispose() { Dispose(true); }
     }
 }

@@ -28,20 +28,9 @@ namespace Catalyst.Node.Common.Interfaces
     public interface IP2P
     {
         /// <summary>
-        ///     Optional: a discovery mechanism
+        ///     The discovery mechanism for the peer network.
         /// </summary>
         IPeerDiscovery Discovery { get; }
-
-        /// <summary>
-        ///     The peer's identifier on the network.
-        ///     <see href="https://github.com/catalyst-network/protocol-blueprint/blob/master/PeerProtocol.md#peer-identifiers" />
-        /// </summary>
-        IPeerIdentifier Identifier { get; }
-
-        /// <summary>
-        ///     All settings needed by the peer component to connect and act on the network.
-        /// </summary>
-        IPeerSettings Settings { get; }
 
         /// <summary>
         ///     Peer messaging service.

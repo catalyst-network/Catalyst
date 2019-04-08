@@ -21,27 +21,24 @@
 
 #endregion
 
-using System.Net;
-using System.Reflection;
-using DotNetty.Handlers.Logging;
+using System;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO.Outbound
+namespace Catalyst.Node.Common.Interfaces
 {
-    public abstract class TcpClient<TChannel> : AbstractClient<TChannel> where TChannel : IChannel, new()
+    public interface INodeRpcClient : ISocketClient
     {
-        protected TcpClient(ILogger logger) : base(logger) { }
+        Task SendMessage(AnySigned message);
+        IChannel Channel { get; set; }
 
-        protected override async void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
-        {
-            Channel = await new Bootstrap()
-               .Group(WorkerEventLoop)
-               .Channel<TChannel>()
-               .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer)
-               .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port);
-        }
+        /// <summary>
+        ///     This Shouldn't really be here.
+        /// </summary>
+        /// <param name="observer"></param>
+        void SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer);
     }
 }

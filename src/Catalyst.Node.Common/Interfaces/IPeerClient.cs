@@ -21,24 +21,13 @@
 
 #endregion
 
-using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
-using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO.Outbound
+namespace Catalyst.Node.Common.Interfaces
 {
-    public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient where TChannel : IChannel, new()
+    public interface IPeerClient
     {
-        protected AbstractClient(ILogger logger) : base(logger) { }
-
-        protected abstract void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
-
-        public async Task SendMessage(AnySigned message)
-        {
-            await Channel.WriteAndFlushAsync(message);
-        }
+        Task SendMessage(AnySigned message);
     }
 }

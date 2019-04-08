@@ -34,14 +34,6 @@
       ]
     },
     {
-      "type": "Catalyst.Cli.RpcClient",
-      "services": [
-        {
-          "type": "Catalyst.Node.Common.Interfaces.IRpcClient, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
       "type": "Catalyst.Node.Common.Helpers.FileSystem.FileSystem, Catalyst.Node.Common",
       "services": [
         {

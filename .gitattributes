@@ -1,7 +1,4 @@
-*.cs     diff=csharp
 * text eol=lf
 *.cs text eol=lf
 *.md text eol=lf
 COPYING text eol=lf
-.gitattributes text eol=lf
-.gitignore text eol=lf

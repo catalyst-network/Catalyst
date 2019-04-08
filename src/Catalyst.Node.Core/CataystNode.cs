@@ -96,11 +96,12 @@ namespace Catalyst.Node.Core
                 // await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 // await Task.Delay(300, ct); //just to get the next message at the bottom
 
-                var ping = new PingRequest().ToAnySigned(_p2P.Messaging.Identifier.PeerId, Guid.NewGuid());
+                // var ping = new PingRequest().ToAnySigned(_p2P.Messaging.Identifier.PeerId, Guid.NewGuid());
 
                 var targetEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069);
                 var peerSocketClientId = await _p2P.Messaging.PeerConnectAsync(targetEndpoint);
-                await _p2P.Messaging.BroadcastMessageAsync(peerSocketClientId, DatagramFactory.Create(ping, targetEndpoint));
+
+                // await _p2P.Messaging.BroadcastMessageAsync(peerSocketClientId, DatagramFactory.Create(ping, targetEndpoint));
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
 
                 _logger.Information("Type 'exit' to exit, anything else to continue");

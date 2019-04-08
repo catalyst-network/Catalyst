@@ -23,25 +23,63 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.P2P;
+using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public class P2PService : IP2P
+    internal sealed class P2PService : UdpServer, IP2P
     {
-        public P2PService(IPeerSettings settings, IPeerDiscovery peerDiscovery, IP2PMessaging messaging)
+        private readonly IPeerSettings _settings;
+        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PingRequestHandler _pingRequestHandler;
+        private readonly TransactionHandler _transactionHandler;
+        private readonly ISocketClientRegistry _socketClientRegistry;
+
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
+
+        public P2PService(IPeerSettings settings,
+            IP2PMessaging messaging,
+            IPeerDiscovery peerDiscovery,
+            ISocketClientRegistry socketClientRegistry)
+            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
+            _settings = settings;
             Messaging = messaging;
             Discovery = peerDiscovery;
-            Settings = settings;
+            _socketClientRegistry = socketClientRegistry;
 
-            Identifier = new PeerIdentifier(Settings);
+            _peerIdentifier = new PeerIdentifier(_settings);
+            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+
+            MessageStream = protoDatagramChannelHandler.MessageStream;
+            _pingRequestHandler = new PingRequestHandler(MessageStream, _peerIdentifier, Logger);
+            _transactionHandler = new TransactionHandler(MessageStream, Logger);
+
+            IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
+            {
+                protoDatagramChannelHandler
+            };
+
+            Task[] longRunningTasks =
+            {
+                Bootstrap(new InboundChannelInitializer<IChannel>(channel => { },
+                    channelHandlers
+                )).StartServer(_settings.BindAddress, _settings.Port)
+            };
+
+            Task.WaitAll(longRunningTasks);
         }
 
         public IPeerDiscovery Discovery { get; }
-        public IPeerIdentifier Identifier { get; }
-        public IPeerSettings Settings { get; }
         public IP2PMessaging Messaging { get; }
 
         public List<IPeerIdentifier> FindNode(IPeerIdentifier queryingNode, IPeerIdentifier targetNode)

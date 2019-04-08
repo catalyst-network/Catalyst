@@ -90,7 +90,7 @@ namespace Catalyst.Node.Common.Helpers.Network
         /// <param name="ip"></param>
         /// <param name="port"></param>
         /// <returns></returns>
-        private static IPEndPoint BuildNewEndPoint(IPAddress ip, int port)
+        public static IPEndPoint BuildNewEndPoint(IPAddress ip, int port)
         {
             Guard.Argument(ip, nameof(ip)).NotNull();
             Guard.Argument(port, nameof(port)).Min(1025).Max(65535);
