@@ -38,7 +38,6 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -58,6 +57,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly IConfigurationRoot _config;
 
+        private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private IRpcServer _rpcServer;
         private ICertificateStore _certificateStore;
         private NodeRpcClient _nodeRpcClient;
@@ -71,6 +71,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
                .Build(), CurrentTestName);
 
             WriteLogsToFile = false;
@@ -102,6 +103,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _certificateStore = container.Resolve<ICertificateStore>();
             _rpcServer = container.Resolve<IRpcServer>();
+            _nodeRpcClientFactory = container.Resolve<INodeRpcClientFactory>();
         }
 
         [Fact]
@@ -119,10 +121,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_Can_Handle_GetInfoRequest()
         {
-            _nodeRpcClient = new NodeRpcClient(_logger, _certificateStore);
-            _nodeRpcClient.Should().NotBeNull();
+            // _nodeRpcClient = new NodeRpcClient(_certificateStore.ReadOrCreateCertificateFile("mycert.pfx"), NodeRpcConfig.BuildRpcNodeSettingList(_config));
+            // _nodeRpcClient.Should().NotBeNull();
 
-            var shell = new Shell(_nodeRpcClient, _config, _logger);
+            var shell = new Shell(_nodeRpcClientFactory, _config, _logger, _certificateStore);
             var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
@@ -156,10 +158,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_Can_Handle_GetVersionRequest()
         {
-            _nodeRpcClient = new NodeRpcClient(_logger, _certificateStore);
-            _nodeRpcClient.Should().NotBeNull();
+            // _nodeRpcClient = new NodeRpcClient(_logger, _certificateStore);
+            // _nodeRpcClient.Should().NotBeNull();
 
-            var shell = new Shell(_nodeRpcClient, _config, _logger);
+            var shell = new Shell(_nodeRpcClientFactory, _config, _logger, _certificateStore);
             var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
@@ -193,10 +195,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_Can_Handle_GetMempoolRequest()
         {
-            _nodeRpcClient = new NodeRpcClient(_logger, _certificateStore);
-            _nodeRpcClient.Should().NotBeNull();
+            // _nodeRpcClient = new NodeRpcClient(_logger, _certificateStore);
+            // _nodeRpcClient.Should().NotBeNull();
 
-            var shell = new Shell(_nodeRpcClient, _config, _logger);
+            var shell = new Shell(_nodeRpcClientFactory, _config, _logger, _certificateStore);
             var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
