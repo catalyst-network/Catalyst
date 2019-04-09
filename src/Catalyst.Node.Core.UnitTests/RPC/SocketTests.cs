@@ -67,6 +67,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public SocketTests(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
@@ -92,6 +93,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             );
 
             ConfigureContainerBuilder(_config);
+
+            // register fact test certioficate store
             ContainerBuilder.RegisterInstance(mempool).As<IMempool>();
 
             var container = ContainerBuilder.Build();
@@ -101,7 +104,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _logger = container.Resolve<ILogger>();
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
 
+            //resolve here to oiverride
             _certificateStore = container.Resolve<ICertificateStore>();
+
             _rpcServer = container.Resolve<IRpcServer>();
             _nodeRpcClientFactory = container.Resolve<INodeRpcClientFactory>();
         }
