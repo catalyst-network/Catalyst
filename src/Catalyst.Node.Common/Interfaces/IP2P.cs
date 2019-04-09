@@ -21,8 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
-
 namespace Catalyst.Node.Common.Interfaces
 {
     public interface IP2P

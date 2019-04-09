@@ -29,7 +29,6 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;
 using Google.Protobuf;
@@ -46,12 +45,11 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private readonly IPeerIdentifier[] _peerIds;
         private readonly IList<PendingRequest> _pendingRequests;
         private readonly MessageCorrelationCache _cache;
-        private readonly PeerId _senderPeerId;
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
 
         public MessageCorrelationCacheTests(ITestOutputHelper output)
         {
-            _senderPeerId = PeerIdHelper.GetPeerId("sender");
+            var senderPeerId = PeerIdHelper.GetPeerId("sender");
             _peerIds = new[]
             {
                 PeerIdHelper.GetPeerId("abcd"),
@@ -62,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _reputationByPeerIdentifier = _peerIds.ToDictionary(p => p, p => 0);
             _pendingRequests = _peerIds.Select((p, i) => new PendingRequest()
             {
-                Content = new PingRequest().ToAnySigned(_senderPeerId, Guid.NewGuid()),
+                Content = new PingRequest().ToAnySigned(senderPeerId, Guid.NewGuid()),
                 SentTo = p,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();

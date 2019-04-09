@@ -24,7 +24,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
-using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
 using Dawn;
 

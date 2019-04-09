@@ -24,7 +24,6 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
@@ -36,7 +35,7 @@ namespace Catalyst.Node.Common.Interfaces
         IChannel Channel { get; set; }
 
         /// <summary>
-        ///     This Shouldn't really be here.
+        ///    todo This Shouldn't really be here.
         /// </summary>
         /// <param name="observer"></param>
         void SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer);

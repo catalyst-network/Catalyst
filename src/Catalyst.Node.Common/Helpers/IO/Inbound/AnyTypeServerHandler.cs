@@ -22,11 +22,7 @@
 #endregion
 
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Reflection;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;

@@ -22,7 +22,6 @@
 #endregion
 
 using System.Net;
-using System.Reflection;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using Serilog;

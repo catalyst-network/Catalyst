@@ -21,13 +21,7 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Protocol.Common;
-
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IPeerClient : ISocketClient
-    {
-        Task SendMessage(AnySigned message);
-    }
+    public interface IPeerClient : ISocketClient { }
 }
