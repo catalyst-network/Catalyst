@@ -36,16 +36,19 @@ using Dawn;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using CommandLine;
 using ILogger = Serilog.ILogger;
 using DotNetty.Transport.Channels;
+using Nethereum.RLP;
 
 namespace Catalyst.Cli
 {
     public sealed class Shell : ShellBase, IAds, IObserver<IChanneledMessage<AnySigned>>
     {
+        private readonly IPeerIdentifier _peerIdentifier;
         private readonly ICertificateStore _certificateStore;
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
@@ -70,8 +73,18 @@ namespace Catalyst.Cli
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = BuildRpcNodeSettingList(config);
             _logger = logger;
+            _peerIdentifier = BuildCliPeerId(config);
 
             Console.WriteLine(@"Koopa Shell Start");
+        }
+
+        private static IPeerIdentifier BuildCliPeerId(IConfiguration configuration)
+        {
+            return new PeerIdentifier(configuration.GetSection("CatalystCliRpcNodes")
+                   .GetSection("CatalystCliConfig")
+                   .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
+                IPAddress.Loopback, IPEndPoint.MinPort
+            );
         }
 
         private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
@@ -444,7 +457,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
 
-                connectedNode.SendMessage(connectedNode, request.ToAnySigned());
+                connectedNode.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {
@@ -469,7 +482,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
 
-                connectedNode.SendMessage(connectedNode, request.ToAnySigned()).Wait();
+                connectedNode.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {
@@ -505,7 +518,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new GetMempoolRequest();
 
-                connectedNode.SendMessage(connectedNode, request.ToAnySigned()).Wait();
+                connectedNode.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {

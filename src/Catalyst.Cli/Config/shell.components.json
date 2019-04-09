@@ -18,14 +18,6 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.Shell.RpcNode, Catalyst.Node.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Node.Common.Helpers.Shell.IRpcNode, Catalyst.Node.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Cli.Shell",
             "services": [
                 {

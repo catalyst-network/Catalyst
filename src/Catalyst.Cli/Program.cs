@@ -68,6 +68,7 @@ namespace Catalyst.Cli
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellConfigFile))
                    .Build();
 
                 // register components from config file

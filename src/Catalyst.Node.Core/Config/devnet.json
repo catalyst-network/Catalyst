@@ -8,8 +8,8 @@
     },
     "Peer": {
       "Network": "devnet",
-      "MutualAuthentication": false,
-      "AcceptInvalidCerts": false,
+      "MutualAuthentication": false, // not sure we need these
+      "AcceptInvalidCerts": false, // not sure we need these
       "PfxFileName": "mycert.pfx",
       "SslCertPassword": "test",
       "BindAddress": "127.0.0.1",

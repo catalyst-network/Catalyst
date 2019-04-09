@@ -32,6 +32,7 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Nethereum.Hex.HexConvertors.Extensions;
+using Nethereum.RLP;
 
 namespace Catalyst.Node.Common.P2P
 {
@@ -62,12 +63,15 @@ namespace Catalyst.Node.Common.P2P
             PeerId = peerId;
         }
 
+        public PeerIdentifier(byte[] publicKey, IPAddress endPoint, int port)
+            : this(publicKey, EndpointBuilder.BuildNewEndPoint(endPoint, port)) { }
+
         public PeerIdentifier(IPeerSettings settings)
-            : this(settings.PublicKey.HexToByteArray(), settings.EndPoint) { }
+            : this(settings.PublicKey.ToBytesForRLPEncoding(), settings.EndPoint) { }
 
         private PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
         {
-            PeerId = new PeerId()
+            PeerId = new PeerId
             {
                 PublicKey = publicKey.ToByteString(),
                 Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
@@ -77,7 +81,7 @@ namespace Catalyst.Node.Common.P2P
             };
         }
 
-        public static bool ValidatePeerId(PeerId peerId)
+        private static bool ValidatePeerId(PeerId peerId)
         {
             Guard.Argument(peerId, nameof(peerId)).NotNull()
                .Require(p => p.PublicKey.Length == 20, _ => "PublicKey should be 20 bytes")
