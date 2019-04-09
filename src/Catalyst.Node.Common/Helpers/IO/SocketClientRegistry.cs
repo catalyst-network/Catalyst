@@ -61,12 +61,12 @@ namespace Catalyst.Node.Common.Helpers.IO
         /// <inheritdoc />
         public TSocketChannel GetClientFromRegistry(int socketHashCode)
         {
-            if (!Registry.TryGetValue(socketHashCode, out TSocketChannel socketClient))
+            if (Registry.TryGetValue(socketHashCode, out TSocketChannel socketClient))
             {
-                throw new KeyNotFoundException();
+                return socketClient;
             }
 
-            return socketClient;
+            return null;
         }
 
         /// <inheritdoc />

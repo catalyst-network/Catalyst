@@ -293,7 +293,7 @@ namespace Catalyst.Cli
             if (!IsConfiguredNode(nodeId))
             {
                 ReturnUserMessage(NoConfigMessage);
-                return true;
+                return false;
             }
 
             var nodeConfig = GetNodeConfig(nodeId);
@@ -302,7 +302,7 @@ namespace Catalyst.Cli
             if (IsConnectedNode(nodeId))
             {
                 ReturnUserMessage(NodeConnectedMessage);
-                return true;
+                return false;
             }
 
             try
@@ -555,7 +555,7 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="nodeId">The name of the node as entered at the command line</param>
         /// <returns>True if the node is existing in the connected nodes list and False otherwise</returns>
-        public bool IsConnectedNode(string nodeId)
+        public bool IsConnectedNode(string nodeId) // todo call this not go directly to GetConnectedNode() ????????
         {
             Guard.Argument(nodeId).NotNull();
 
@@ -588,7 +588,7 @@ namespace Catalyst.Cli
             if (!IsConnectedNode(nodeId))
             {
                 ReturnUserMessage(NodeNotConnectedMessage);
-                return false;
+                return true;
             }
 
             var connectedNode = GetConnectedNode(nodeId);
