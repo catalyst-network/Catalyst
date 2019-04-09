@@ -36,7 +36,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 {
-    public class CertificateStoreTests : FileSystemBasedTest
+    public sealed class CertificateStoreTests : FileSystemBasedTest
     {
         public CertificateStoreTests(ITestOutputHelper output) : base(output)
         {

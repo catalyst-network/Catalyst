@@ -115,31 +115,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact(Skip = "trying to exclude P2P from the tests for now")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcServer_and_P2PServer_should_work_together()
-        {
-            _nodeRpcClient = new NodeRpcClient(_logger, _certificateStore);
-            _nodeRpcClient.Should().NotBeNull();
-
-            var peerSettings = new PeerSettings(_config)
-            {
-                Port = _rpcServer.Settings.Port + 1000
-            };
-
-            // var p2PMessenger = new P2PMessaging(peerSettings, _certificateStore, _logger);
-            // p2PMessenger.Should().NotBeNull();
-
-            var shell = new Shell(_nodeRpcClient, _config, _logger);
-            var hasConnected = shell.OnCommand("connect", "-n", "node1");
-            hasConnected.Should().BeTrue();
-
-            var node1 = shell.GetConnectedNode("node1");
-            node1.Should().NotBeNull("we've just connected it");
-            node1.SocketClient.Channel.Active.Should().BeTrue();
-            node1.SocketClient.Shutdown();
-        }
-
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_Can_Handle_GetInfoRequest()

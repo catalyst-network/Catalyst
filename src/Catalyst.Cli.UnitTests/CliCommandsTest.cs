@@ -62,15 +62,15 @@ namespace Catalyst.Cli.UnitTests
 
             var channel = Substitute.For<IChannel>();
             channel.Active.Returns(true);
-            var tcpClient = Substitute.For<ISocketClient>();
-            tcpClient.Channel.Returns(channel);
+            var nodeRpcClient = Substitute.For<INodeRpcClient>();
+            nodeRpcClient.Channel.Returns(channel);
 
-            var client = Substitute.For<INodeRpcClient>();
-            client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
-               .Returns(Task.FromResult(tcpClient));
+            var certificateStore = Substitute.For<ICertificateStore>();
+            var client = Substitute.For<INodeRpcClientFactory>();
+            client.GetClient(certificateStore.ReadOrCreateCertificateFile("mycert.pfx"), Arg.Any<IRpcNodeConfig>()).Returns(nodeRpcClient);
 
             ConfigureContainerBuilder(config);
-            ContainerBuilder.RegisterInstance(tcpClient).As<ISocketClient>();
+            ContainerBuilder.RegisterInstance(nodeRpcClient).As<ISocketClient>();
             ContainerBuilder.RegisterInstance(client).As<INodeRpcClient>();
 
             var declaringType = MethodBase.GetCurrentMethod().DeclaringType;

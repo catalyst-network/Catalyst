@@ -28,7 +28,7 @@ using Catalyst.Node.Common.Helpers.Cryptography;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
-    public class TestCertificateStore : ICertificateStore
+    public sealed class TestCertificateStore : ICertificateStore
     {
         public X509Certificate2 ReadOrCreateCertificateFile(string fileName)
         {
