@@ -25,7 +25,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Interfaces;
-using FluentAssertions;
+ using Dawn;
+ using FluentAssertions;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
@@ -48,10 +49,18 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected FileSystemBasedTest(ITestOutputHelper output)
         {
+            Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
-            CurrentTest = Output?.GetType()
+            CurrentTest = Output.GetType()
                .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
                .GetValue(Output) as ITest;
+
+            if (CurrentTest == null)
+            {
+                throw new NullReferenceException(
+                    $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
+            }
+
             CurrentTestName = CurrentTest.TestCase.TestMethod.Method.Name;
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
