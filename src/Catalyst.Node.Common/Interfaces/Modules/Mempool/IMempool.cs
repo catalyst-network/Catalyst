@@ -31,6 +31,12 @@ namespace Catalyst.Node.Common.Interfaces.Modules.Mempool
         /// </summary>
         /// <returns></returns>
         IEnumerable<Transaction> GetMemPoolContent();
+        
+        /// <summary>
+        ///     Gets a snapshot of the current mempool content.
+        /// </summary>
+        /// <returns></returns>
+        List<byte[]> GetMemPoolContentEncoded();
 
         /// <summary>
         ///     Saves the transaction associated with a given key.

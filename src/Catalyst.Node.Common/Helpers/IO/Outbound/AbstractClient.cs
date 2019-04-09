@@ -35,12 +35,10 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
     public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient 
         where TChannel : IChannel, new()
-    {
-        private ILogger Logger { get; }
-    
+    {        
         public IBootstrap Client { get; set; }
-
-        protected AbstractClient(ILogger logger) : base(logger) { Logger = logger; }
+        
+        protected AbstractClient(ILogger logger) : base(logger) {}
 
         public virtual ISocketClient Bootstrap(IChannelHandler channelInitializer)
         {   
@@ -63,7 +61,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Error in AbstractClient");
+                _logger.Error(e, "Error in AbstractClient");
                 throw;
             }
             

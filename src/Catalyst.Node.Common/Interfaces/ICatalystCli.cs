@@ -19,9 +19,14 @@
 */
 #endregion
 
+using System.Reflection;
+using McMaster.Extensions.CommandLineUtils;
+using System.Threading.Tasks;
+
 namespace Catalyst.Node.Common.Interfaces {
     public interface ICatalystCli
     {
         IAds Ads { get; set; }
+
     }
 }

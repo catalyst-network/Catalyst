@@ -24,7 +24,6 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.UnitTests.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -32,7 +31,9 @@ using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils {
+namespace Catalyst.Node.Common.UnitTests.TestUtils 
+{
+
     public class ConfigFileBasedTest : FileSystemBasedTest {
 
         protected ContainerBuilder ContainerBuilder;
