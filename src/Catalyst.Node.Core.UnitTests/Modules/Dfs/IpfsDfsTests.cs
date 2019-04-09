@@ -46,7 +46,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         private readonly ILogger _logger;
         private readonly Cid _expectedCid;
         private readonly IFileSystemNode _addedRecord;
-        private readonly byte[] _hashBits;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public IpfsDfsTests()
@@ -56,11 +55,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
             _logger = Substitute.For<ILogger>();
-            _hashBits = Guid.NewGuid().ToByteArray().Concat(new byte[16]).ToArray();
+            var hashBits = Guid.NewGuid().ToByteArray().Concat(new byte[16]).ToArray();
             _expectedCid = new Cid
             {
                 Encoding = "base64",
-                Hash = new MultiHash(IpfsDfs.HashAlgorithm, _hashBits)
+                Hash = new MultiHash(IpfsDfs.HashAlgorithm, hashBits)
             };
 
             _addedRecord = Substitute.For<IFileSystemNode>();
