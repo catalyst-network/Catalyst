@@ -65,7 +65,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                .Should().Throw<ArgumentException>();
         }
 
-        [Fact(Skip = "trying to unstick it")]
+        [Fact]
         public void Constructor_should_read_a_password()
         {
             _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, _fileSystem, _logger);

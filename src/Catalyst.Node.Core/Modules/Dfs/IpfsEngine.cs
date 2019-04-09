@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.Modules.Dfs {
                     p => $"{nameof(peerSettings)} needs to specify at least one seed server.");
 
             _logger = logger;
-            //_passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
+            _passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             //_ipfsEngine = new Ipfs.Engine.IpfsEngine(_passphrase);
             //_ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
             //_ipfsEngine.Options.Repository.Folder = Path.Combine(
