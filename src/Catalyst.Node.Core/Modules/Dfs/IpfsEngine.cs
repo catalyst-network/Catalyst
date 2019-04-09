@@ -53,19 +53,19 @@ namespace Catalyst.Node.Core.Modules.Dfs {
             _logger = logger;
             _passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsEngine = new Ipfs.Engine.IpfsEngine("abcd".ToCharArray());
-            //_ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
-            //_ipfsEngine.Options.Repository.Folder = Path.Combine(
-            //    fileSystem.GetCatalystHomeDir().FullName,
-            //    Core.Config.Constants.IpfsSubFolder);
-            //_ipfsEngine.Options.Discovery.BootstrapPeers = peerSettings
-            //   .SeedServers
-            //   .Select(s => $"/dns/{s}/tcp/4001")
-            //   .Select(ma => new MultiAddress(ma))
-            //   .ToArray();
+            _ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
+            _ipfsEngine.Options.Repository.Folder = Path.Combine(
+                fileSystem.GetCatalystHomeDir().FullName,
+                Core.Config.Constants.IpfsSubFolder);
+            _ipfsEngine.Options.Discovery.BootstrapPeers = peerSettings
+               .SeedServers
+               .Select(s => $"/dns/{s}/tcp/4001")
+               .Select(ma => new MultiAddress(ma))
+               .ToArray();
 
             //_ipfsEngine.StartAsync().GetAwaiter().GetResult();
-        
-            //_logger.Information("IPFS engine started.");
+
+            _logger.Information("IPFS engine started.");
         }
         public IBitswapApi Bitswap => _ipfsEngine.Bitswap;
 
