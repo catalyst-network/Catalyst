@@ -37,15 +37,15 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
 
         protected ContainerBuilder ContainerBuilder;
         protected ConfigFileBasedTest(ITestOutputHelper output) : base(output) { }
-        protected bool WriteLogsToTestOutput { get; set; } = false;
-        protected bool WriteLogsToFile { get; set; } = false;
 
         protected string LogOutputTemplate { get; set; } =
             "{Timestamp:HH:mm:ss} [{Level:u3}] ({ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}";
 
         protected LogEventLevel LogEventLevel { get; set; } = LogEventLevel.Verbose;
 
-        protected void ConfigureContainerBuilder(IConfigurationRoot config)
+        protected virtual void ConfigureContainerBuilder(IConfigurationRoot config,
+            bool writeLogsToTestOutput = false,
+            bool writeLogsToFile = false)
         {
             var configurationModule = new ConfigurationModule(config);
             ContainerBuilder = new ContainerBuilder();
@@ -62,17 +62,17 @@ namespace Catalyst.Node.Core.UnitTest.TestUtils {
             var certificateStore = new TestCertificateStore();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
 
-            ConfigureLogging(config);
+            ConfigureLogging(config, writeLogsToTestOutput, writeLogsToFile);
         }
 
-        private void ConfigureLogging(IConfigurationRoot config)
+        private void ConfigureLogging(IConfigurationRoot config, bool writeLogsToTestOutput, bool writeLogsToFile)
 
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
 
-            if (WriteLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(_output, LogEventLevel, LogOutputTemplate);
+            if (writeLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
 
-            if (WriteLogsToFile) loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
+            if (writeLogsToFile) loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                 outputTemplate: LogOutputTemplate);
             
             ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());

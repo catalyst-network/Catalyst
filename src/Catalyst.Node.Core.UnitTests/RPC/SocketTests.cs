@@ -64,15 +64,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build(), _currentTestName);
-
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
+               .Build(), CurrentTestName);
 
             ConfigureContainerBuilder(_config);
             var container = ContainerBuilder.Build();
 
-            _scope = container.BeginLifetimeScope(_currentTestName);
+            _scope = container.BeginLifetimeScope(CurrentTestName);
 
             _logger = container.Resolve<ILogger>();
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));

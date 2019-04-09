@@ -59,7 +59,7 @@ namespace Catalyst.Cli.UnitTests
 
             ConfigureContainerBuilder(config);
             var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(_currentTestName);
+            _scope = container.BeginLifetimeScope(CurrentTestName);
             _shell = container.Resolve<ICatalystCli>();
         }
         

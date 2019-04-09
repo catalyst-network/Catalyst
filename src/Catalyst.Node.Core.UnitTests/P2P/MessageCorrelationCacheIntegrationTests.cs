@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -20,30 +20,19 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using DotNetty.Common;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using SharpRepository.Repository;
-using SharpRepository.Repository.Caching;
 using Xunit;
 using Xunit.Abstractions;
 using PendingRequest = Catalyst.Node.Common.P2P.PendingRequest;
@@ -62,7 +51,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             ConfigureContainerBuilder(config);
             var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(_currentTestName);
+            _scope = container.BeginLifetimeScope(CurrentTestName);
         }
 
         [Fact]

@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
         private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, Network network)
         {
             network = network ?? Network.Dev;
-            var currentDirectory = _fileSystem.GetCatalystHomeDir();
+            var currentDirectory = FileSystem.GetCatalystHomeDir();
             currentDirectory.Create();
             currentDirectory.Refresh();
             var existingFileInfo = new FileInfo(Path.Combine(currentDirectory.FullName, fileName));
@@ -111,7 +111,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RunConfigStartUp_Should_Create_Folder_If_Needed()
         {
-            var currentDirectory = _fileSystem.GetCatalystHomeDir();
+            var currentDirectory = FileSystem.GetCatalystHomeDir();
             currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
 
             var modulesDirectory =
