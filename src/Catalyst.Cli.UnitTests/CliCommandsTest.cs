@@ -23,7 +23,6 @@
 
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -35,8 +34,6 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
-using Catalyst.Cli.Rpc;
-using Catalyst.Node.Common.Helpers.Shell;
 using DotNetty.Transport.Channels;
 using Serilog;
 using Serilog.Extensions.Logging;

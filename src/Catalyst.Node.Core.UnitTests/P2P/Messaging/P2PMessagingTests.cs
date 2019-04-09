@@ -70,26 +70,26 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
             _certificateStore = container.Resolve<ICertificateStore>();
         }
 
-        [Fact(Skip = "not ready yet")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
-        {
-            // var indexes = Enumerable.Range(0, 3).ToList();
-            //
-            // var peerSettings = indexes.Select(i => new PeerSettings(_config)
-            // {
-            //     Port = 40100 + i
-            // }).ToList();
-            // var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
+        // [Fact(Skip = "not ready yet")]
+        // [Trait(Traits.TestType, Traits.IntegrationTest)]
+        // public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
+        // {
+        // var indexes = Enumerable.Range(0, 3).ToList();
+        //
+        // var peerSettings = indexes.Select(i => new PeerSettings(_config)
+        // {
+        //     Port = 40100 + i
+        // }).ToList();
+        // var peers = peerSettings.Select(s => new P2PMessaging(s, _certificateStore, _logger)).ToList();
 
-            //var observers = indexes.Select(i => new AnyObserver(i, _logger)).ToList();
-            //_subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
+        //var observers = indexes.Select(i => new AnyObserver(i, _logger)).ToList();
+        //_subscriptions = peers.Select((p, i) => p.MessageStream.Subscribe(observers[i])).ToList();
 
-            //await peers[0].PingAsync(peers[2].Identifier);
+        //await peers[0].PingAsync(peers[2].Identifier);
 
-            //var tasks = Task.Run(() => peers[2].MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)));
-            //Task.WaitAll(new Task[]{tasks}, TimeSpan.FromMilliseconds(200))};
-        }
+        //var tasks = Task.Run(() => peers[2].MessageStream.FirstAsync(a => !a.Equals(NullObjects.Any)));
+        //Task.WaitAll(new Task[]{tasks}, TimeSpan.FromMilliseconds(200))};
+        // }
 
         protected override void Dispose(bool disposing)
         {

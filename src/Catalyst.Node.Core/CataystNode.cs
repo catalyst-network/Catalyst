@@ -25,8 +25,6 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
 using Catalyst.Node.Common.Interfaces.Modules.Contract;
@@ -34,7 +32,6 @@ using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
-using Catalyst.Protocol.IPPN;
 using Serilog;
 
 namespace Catalyst.Node.Core
