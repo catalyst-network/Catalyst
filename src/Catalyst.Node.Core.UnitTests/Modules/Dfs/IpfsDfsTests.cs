@@ -41,7 +41,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
     public sealed class IpfsDfsTests : IDisposable
     {
         private const int DelayInMs = 100;
-        private const double DelayTolerance = 0.5;
         private readonly IIpfsEngine _ipfsEngine;
         private readonly ILogger _logger;
         private readonly Cid _expectedCid;
@@ -133,11 +132,9 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
                 new Action(() => dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>();
-                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * DelayTolerance));
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+                   .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
             }
         }
 
@@ -153,11 +150,9 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
                 new Action(() => dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>();
-                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * DelayTolerance));
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+                   .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
             }
         }
 
@@ -173,11 +168,10 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
+
                 new Action(() => dfs.ReadTextAsync("path", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>();
-                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * DelayTolerance));
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+                   .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
             }
         }
 
@@ -193,11 +187,9 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
                 new Action(() => dfs.ReadAsync("path", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>();
-                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * DelayTolerance));
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+                   .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
             }
         }
 
