@@ -35,6 +35,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
+using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Helpers.Shell;
 using DotNetty.Transport.Channels;
 using Serilog;

@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Node.Common.Helpers.Shell;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Catalyst.Node.Common.Interfaces

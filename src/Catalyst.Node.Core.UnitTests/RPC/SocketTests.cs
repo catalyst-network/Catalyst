@@ -30,6 +30,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Cli;
+using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Util;

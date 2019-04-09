@@ -21,20 +21,11 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces;
-
-namespace Catalyst.Node.Common.Helpers.Shell
+namespace Catalyst.Node.Common.Interfaces
 {
-    public sealed class RpcNode : IRpcNode
+    public interface IRpcNode
     {
-        public IRpcNodeConfig Config { get; }
-
-        public RpcNode(IRpcNodeConfig config, ISocketClient socketClient)
-        {
-            Config = config;
-            SocketClient = socketClient;
-        }
-
-        public ISocketClient SocketClient { get; set; }
+        IRpcNodeConfig Config { get; }
+        ISocketClient SocketClient { get; }
     }
 }

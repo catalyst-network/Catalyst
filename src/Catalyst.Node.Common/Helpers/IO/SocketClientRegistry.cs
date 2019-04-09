@@ -39,6 +39,11 @@ namespace Catalyst.Node.Common.Helpers.IO
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
         }
 
+        /// <summary>
+        ///     todo Maybe we put this in the ISocketClient somewhere, as it will always know its endpoint?
+        /// </summary>
+        /// <param name="socketEndpoint"></param>
+        /// <returns></returns>
         public int GenerateClientHashCode(IPEndPoint socketEndpoint)
         {
             Guard.Argument(socketEndpoint).NotNull();

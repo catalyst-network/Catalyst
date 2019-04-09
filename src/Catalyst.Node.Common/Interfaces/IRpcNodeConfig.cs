@@ -21,17 +21,16 @@
 
 #endregion
 
-using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Helpers.Shell;
-using Catalyst.Node.Common.Interfaces;
+using System.Net;
 
-namespace Catalyst.Cli
+namespace Catalyst.Node.Common.Interfaces
 {
-    public class NodeRpcClientFactory : INodeRpcClientFactory
+    public interface IRpcNodeConfig
     {
-        public INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig)
-        {
-            return new NodeRpcClient(certificate, nodeConfig);
-        }
+        string NodeId { get; set; }
+        IPAddress HostAddress { get; set; }
+        int Port { get; set; }
+        string PfxFileName { get; set; }
+        string SslCertPassword { get; set; }
     }
 }

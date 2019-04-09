@@ -48,5 +48,11 @@ namespace Catalyst.Node.Common.Interfaces
         /// <param name="args"></param>
         /// <returns></returns>
         bool OnConsensusCommand(string[] args);
+
+        bool IsConnectedNode(string nodeId);
+
+        bool IsSocketChannelActive(INodeRpcClient node);
+
+        INodeRpcClient GetConnectedNode(string nodeId);
     }
 }

@@ -23,27 +23,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
-using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Shell;
-using Catalyst.Node.Common.Interfaces;
-using DotNetty.Transport.Channels.Sockets;
-using ILogger = Serilog.ILogger;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using Google.Protobuf.WellKnownTypes;
+using DotNetty.Transport.Channels.Sockets;
 using Serilog;
+using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Cli
+namespace Catalyst.Cli.Rpc
 {
     /// <summary>
     /// This class provides a command line interface (CLI) application to connect to Catalyst Node.

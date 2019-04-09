@@ -21,13 +21,16 @@
 
 #endregion
 
+using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
 
-namespace Catalyst.Node.Common.Helpers.Shell
+namespace Catalyst.Cli.Rpc
 {
-    public interface IRpcNode
+    public class NodeRpcClientFactory : INodeRpcClientFactory
     {
-        IRpcNodeConfig Config { get; }
-        ISocketClient SocketClient { get; }
+        public INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig)
+        {
+            return new NodeRpcClient(certificate, nodeConfig);
+        }
     }
 }

@@ -22,15 +22,17 @@
 #endregion
 
 using System.Net;
+using Catalyst.Node.Common.Helpers.Shell;
+using Catalyst.Node.Common.Interfaces;
 
-namespace Catalyst.Node.Common.Helpers.Shell
+namespace Catalyst.Cli.Rpc
 {
-    public interface IRpcNodeConfig
+    public sealed class RpcNodeConfig : IRpcNodeConfig
     {
-        string NodeId { get; set; }
-        IPAddress HostAddress { get; set; }
-        int Port { get; set; }
-        string PfxFileName { get; set; }
-        string SslCertPassword { get; set; }
+        public string NodeId { get; set; }
+        public IPAddress HostAddress { get; set; }
+        public int Port { get; set; }
+        public string PfxFileName { get; set; }
+        public string SslCertPassword { get; set; }
     }
 }

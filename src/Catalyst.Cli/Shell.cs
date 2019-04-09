@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using Catalyst.Cli.Rpc;
+using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.Shell;
@@ -46,6 +48,7 @@ namespace Catalyst.Cli
     {
         private readonly ICertificateStore _certificateStore;
         private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
+        private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
 
         private IChanneledMessage<AnySigned> Response { get; set; }
@@ -60,9 +63,10 @@ namespace Catalyst.Cli
 
         /// <summary>
         /// </summary>
-        public Shell(IConfigurationRoot config, ILogger logger, ICertificateStore certificateStore)
+        public Shell(INodeRpcClientFactory nodeRpcClientFactory, IConfigurationRoot config, ILogger logger, ICertificateStore certificateStore)
         {
             _certificateStore = certificateStore;
+            _nodeRpcClientFactory = nodeRpcClientFactory;
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = BuildRpcNodeSettingList(config);
             _logger = logger;
@@ -292,7 +296,7 @@ namespace Catalyst.Cli
             try
             {
                 //Connect to the node and store it in the socket client registry
-                var nodeRpcClient = new NodeRpcClient(_certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName), nodeConfig);
+                var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName), nodeConfig);
                 var clientHashCode =
                     _socketClientRegistry.GenerateClientHashCode(
                         EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
@@ -376,15 +380,16 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args).Contains(typeof(string));
 
-            var node = _nodes.SingleOrDefault(n => n.Config.NodeId == args[0]);
+            var nodeConfig = _rpcNodeConfigs.SingleOrDefault(n => n.NodeId == args[0]);
 
-            if (node == null)
-            {
-                return false;
-            }
+            Guard.Argument(nodeConfig).NotNull();
 
-            node.SocketClient.Shutdown().GetAwaiter().GetResult();
-            _nodes.Remove(node);
+            var registryId =
+                _socketClientRegistry.GenerateClientHashCode(
+                    EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+            var node = _socketClientRegistry.GetClientFromRegistry(registryId);
+
+            node.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
             return true;
         }
 
@@ -430,10 +435,7 @@ namespace Catalyst.Cli
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             //Perform validations required before a command call
-            if (!ValidatePreCommand(nodeId))
-            {
-                return false;
-            }
+            Guard.Argument(ValidatePreCommand(nodeId)).True();
 
             try
             {
@@ -442,7 +444,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
 
-                // _rpcClient.SendMessage(connectedNode, request.ToAnySigned());
+                connectedNode.SendMessage(connectedNode, request.ToAnySigned());
             }
             catch (Exception e)
             {
@@ -458,10 +460,7 @@ namespace Catalyst.Cli
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             //Perform validations required before a command call
-            if (!ValidatePreCommand(nodeId))
-            {
-                return false;
-            }
+            Guard.Argument(ValidatePreCommand(nodeId)).True();
 
             try
             {
@@ -470,7 +469,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
 
-                // _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
+                connectedNode.SendMessage(connectedNode, request.ToAnySigned()).Wait();
             }
             catch (Exception e)
             {
@@ -506,7 +505,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new GetMempoolRequest();
 
-                // _rpcClient.SendMessage(connectedNode, request.ToAnySigned()).Wait();
+                connectedNode.SendMessage(connectedNode, request.ToAnySigned()).Wait();
             }
             catch (Exception e)
             {
@@ -534,9 +533,9 @@ namespace Catalyst.Cli
         /// <returns>True if the node is existing in the configuration file and False otherwise</returns>
         private bool IsConfiguredNode(string nodeId)
         {
-            Debug.Assert(nodeId != null, nameof(nodeId) + " != null");
+            Guard.Argument(nodeId).NotNull();
 
-            return (GetNodeConfig(nodeId) != null);
+            return GetNodeConfig(nodeId) != null;
         }
 
         /// <summary>
@@ -544,17 +543,17 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="nodeId">The name of the node as entered at the command line</param>
         /// <returns>True if the node is existing in the connected nodes list and False otherwise</returns>
-        public override bool IsConnectedNode(string nodeId)
+        public bool IsConnectedNode(string nodeId)
         {
-            Debug.Assert(nodeId != null, nameof(nodeId) + " != null");
+            Guard.Argument(nodeId).NotNull();
 
             //if the node is in the list of connected nodes then a connection has already been established to it
             return (GetConnectedNode(nodeId) != null);
         }
 
-        public override bool IsSocketChannelActive(IRpcNode node)
+        public bool IsSocketChannelActive(INodeRpcClient node)
         {
-            if (node.SocketClient.Channel.Active)
+            if (node.Channel.Active)
             {
                 return true;
             }
@@ -592,12 +591,19 @@ namespace Catalyst.Cli
             return true;
         }
 
-        public override IRpcNode GetConnectedNode(string nodeId)
+        public INodeRpcClient GetConnectedNode(string nodeId)
         {
-            return _nodes.SingleOrDefault(node => node.Config.NodeId.Equals(nodeId));
+            var nodeConfig = _rpcNodeConfigs.SingleOrDefault(node => node.NodeId.Equals(nodeId));
+
+            Guard.Argument(nodeConfig).NotNull();
+
+            var registryId =
+                _socketClientRegistry.GenerateClientHashCode(
+                    EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+            return _socketClientRegistry.GetClientFromRegistry(registryId);
         }
 
-        public override IRpcNodeConfig GetNodeConfig(string nodeId)
+        public IRpcNodeConfig GetNodeConfig(string nodeId)
         {
             return _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
         }

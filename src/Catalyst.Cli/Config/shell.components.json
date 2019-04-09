@@ -1,53 +1,61 @@
 {
-  "defaultAssembly": "Catalyst.Cli",
-  "components": [
-    {
-      "type": "Catalyst.Cli.CatalystCli",
-      "services": [
+    "defaultAssembly": "Catalyst.Cli",
+    "components": [
         {
-          "type": "Catalyst.Node.Common.Interfaces.ICatalystCli, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Shell.RpcNode, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Cli.CatalystCli",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.ICatalystCli, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Helpers.Shell.IRpcNode, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Cli.Shell",
-      "services": [
+            "type": "Catalyst.Node.Cli.NodeRpcClientFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.INodeRpcClientFactory, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IAds, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.Shell.RpcNode, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Helpers.Shell.IRpcNode, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IPasswordReader, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.FileSystem.FileSystem, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Cli.Shell",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IAds, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.IFileSystem, Catalyst.Node.Common"
-        }
-      ]
-    },
-    {
-      "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
-      "services": [
+            "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IPasswordReader, Catalyst.Node.Common"
+                }
+            ]
+        },
         {
-          "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
+            "type": "Catalyst.Node.Common.Helpers.FileSystem.FileSystem, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IFileSystem, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
