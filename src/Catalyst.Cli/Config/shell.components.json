@@ -10,7 +10,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Cli.NodeRpcClientFactory",
+            "type": "Catalyst.Cli.Rpc.NodeRpcClientFactory",
             "services": [
                 {
                     "type": "Catalyst.Node.Common.Interfaces.INodeRpcClientFactory, Catalyst.Node.Common"

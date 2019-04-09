@@ -26,7 +26,7 @@ using Catalyst.Node.Common.Helpers.Config;
 
 namespace Catalyst.Cli
 {
-    public class CliConfigCopier : ConfigCopier
+    public sealed class CliConfigCopier : ConfigCopier
     {
         protected override IEnumerable<string> RequiredConfigFiles(Network network)
         {
@@ -35,7 +35,8 @@ namespace Catalyst.Cli
             {
                 Constants.ShellNodesConfigFile,
                 Constants.ShellComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile
+                Constants.SerilogJsonConfigFile,
+                Constants.ShellConfigFile
             };
         }
     }

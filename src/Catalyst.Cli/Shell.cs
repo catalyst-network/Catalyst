@@ -80,10 +80,9 @@ namespace Catalyst.Cli
 
         private static IPeerIdentifier BuildCliPeerId(IConfiguration configuration)
         {
-            return new PeerIdentifier(configuration.GetSection("CatalystCliRpcNodes")
-                   .GetSection("CatalystCliConfig")
+            return new PeerIdentifier(configuration.GetSection("CatalystCliConfig")
                    .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
-                IPAddress.Loopback, IPEndPoint.MinPort
+                IPAddress.Loopback, IPEndPoint.MaxPort
             );
         }
 

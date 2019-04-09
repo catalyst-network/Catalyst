@@ -58,6 +58,7 @@ namespace Catalyst.Cli
             const int bufferSize = 1024 * 67 + 128;
 
             var serviceCollection = new ServiceCollection();
+
             try
             {
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
@@ -116,10 +117,11 @@ namespace Catalyst.Cli
                 Logger.Error(e, "Catalyst.Node failed to start." + e.Message);
                 Environment.ExitCode = 1;
             }
-            finally
-            {
-                Console.ReadLine();
-            }
+
+            // finally
+            // {
+            //     Console.ReadLine();
+            // }
 
             return Environment.ExitCode;
         }
