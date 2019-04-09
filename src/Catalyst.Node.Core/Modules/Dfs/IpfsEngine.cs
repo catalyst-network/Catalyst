@@ -63,9 +63,9 @@ namespace Catalyst.Node.Core.Modules.Dfs {
                .Select(ma => new MultiAddress(ma))
                .ToArray();
 
-            _ipfsEngine.StartAsync().GetAwaiter().GetResult();
+            //_ipfsEngine.StartAsync().GetAwaiter().GetResult();
         
-            _logger.Information("IPFS engine started.");
+            //_logger.Information("IPFS engine started.");
         }
         public IBitswapApi Bitswap => _ipfsEngine.Bitswap;
 
