@@ -21,14 +21,32 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
-using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Cli.Rpc
 {
-    public sealed class RpcNodeConfig : IRpcNodeConfig
+    public sealed class NodeRpcConfig : IRpcNodeConfig
     {
+        public static IList<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
+        {
+            var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
+
+            var nodeList = section.GetChildren().Select(child => new NodeRpcConfig
+            {
+                NodeId = child.GetSection("nodeId").Value,
+                HostAddress = IPAddress.Parse(child.GetSection("host").Value),
+                Port = int.Parse(child.GetSection("port").Value),
+                PfxFileName = child.GetSection("PfxFileName").Value,
+                SslCertPassword = child.GetSection("SslCertPassword").Value
+            } as IRpcNodeConfig).ToList();
+
+            return nodeList;
+        }
+
         public string NodeId { get; set; }
         public IPAddress HostAddress { get; set; }
         public int Port { get; set; }

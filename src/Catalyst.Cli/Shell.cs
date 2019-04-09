@@ -23,12 +23,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
@@ -50,7 +48,7 @@ namespace Catalyst.Cli
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly ICertificateStore _certificateStore;
-        private readonly List<IRpcNodeConfig> _rpcNodeConfigs;
+        private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
 
@@ -71,7 +69,7 @@ namespace Catalyst.Cli
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
-            _rpcNodeConfigs = BuildRpcNodeSettingList(config);
+            _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _logger = logger;
             _peerIdentifier = BuildCliPeerId(config);
 
@@ -84,22 +82,6 @@ namespace Catalyst.Cli
                    .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
                 IPAddress.Loopback, IPEndPoint.MaxPort
             );
-        }
-
-        private static List<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
-        {
-            var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
-
-            var nodeList = section.GetChildren().Select(child => new RpcNodeConfig
-            {
-                NodeId = child.GetSection("nodeId").Value,
-                HostAddress = IPAddress.Parse(child.GetSection("host").Value),
-                Port = int.Parse(child.GetSection("port").Value),
-                PfxFileName = child.GetSection("PfxFileName").Value,
-                SslCertPassword = child.GetSection("SslCertPassword").Value
-            } as IRpcNodeConfig).ToList();
-
-            return nodeList;
         }
 
         public override bool ParseCommand(params string[] args)
