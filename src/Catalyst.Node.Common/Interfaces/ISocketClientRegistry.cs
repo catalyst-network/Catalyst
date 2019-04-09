@@ -38,7 +38,7 @@ namespace Catalyst.Node.Common.Interfaces
         int GenerateClientHashCode(IPEndPoint socketEndpoint);
 
         /// <summary>
-        ///     Adds a ISocketClient to the registry.
+        ///     Adds an active ISocketClient to the registry.
         /// </summary>
         /// <param name="socketHashCode"></param>
         /// <param name="socketClient"></param>

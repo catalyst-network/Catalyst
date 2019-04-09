@@ -33,15 +33,15 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     {
         protected TcpClient(ILogger logger) : base(logger) { }
 
-        protected override async void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
         {
-            Channel = await new Bootstrap()
+            Channel = new Bootstrap()
                .Group(WorkerEventLoop)
                .Channel<TChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
-               .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port);
+               .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port).GetAwaiter().GetResult();
         }
     }
 }

@@ -55,18 +55,14 @@ namespace Catalyst.Node.Common.Helpers.IO
         {
             Guard.Argument(socketClient).NotNull();
             Guard.Argument(socketHashCode).NotZero().NotNegative();
+            Guard.Argument(socketClient.Channel.Active);
             return Registry.TryAdd(socketHashCode, socketClient);
         }
 
         /// <inheritdoc />
         public TSocketChannel GetClientFromRegistry(int socketHashCode)
         {
-            if (Registry.TryGetValue(socketHashCode, out TSocketChannel socketClient))
-            {
-                return socketClient;
-            }
-
-            return null;
+            return Registry.TryGetValue(socketHashCode, out TSocketChannel socketClient) ? socketClient : null;
         }
 
         /// <inheritdoc />

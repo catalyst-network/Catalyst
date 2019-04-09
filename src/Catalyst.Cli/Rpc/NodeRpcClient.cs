@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
@@ -60,7 +61,7 @@ namespace Catalyst.Cli.Rpc
         /// </summary>
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
-        public NodeRpcClient(X509Certificate certificate,
+        internal NodeRpcClient(X509Certificate certificate,
             IRpcNodeConfig nodeConfig) : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var anySignedTypeClientHandler = new AnySignedTypeClientHandler();
