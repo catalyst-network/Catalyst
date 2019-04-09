@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -49,6 +49,7 @@ namespace Catalyst.Cli
         private readonly GetInfoResponseHandler _getInfoResponseHandler;
         private readonly GetVersionResponseHandler _getVersionResponseHandler;
         private readonly GetMempoolResponseHandler _getMempoolResponseHandler;
+        private readonly SignMessageResponseHandler _signMessageResponseHandler;
 
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -68,6 +69,7 @@ namespace Catalyst.Cli
             _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, _logger);
             _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, _logger);
             _getMempoolResponseHandler = new GetMempoolResponseHandler(MessageStream, _logger);
+            _signMessageResponseHandler = new SignMessageResponseHandler(MessageStream, _logger);
         }
 
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
@@ -142,6 +144,31 @@ namespace Catalyst.Cli
             await node.SocketClient.SendMessage(message);
         }
 
+        public IRpcNode ConnectToNode(string nodeId, IRpcNodeConfig nodeConfig)
+        {
+            IRpcNode connectedNode = null;
+
+            try
+            {
+                //Connect to the node
+                var socket = GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
+
+                //if a socket could be opened with the node
+                //then create IRpcNode and add it the node to the list of connected nodes
+                if (socket != null)
+                {
+                    connectedNode = new RpcNode(nodeConfig, socket);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return connectedNode;
+        }
+
         /*Implementing IDisposable */
 
         protected virtual void Dispose(bool disposing)
@@ -152,6 +179,7 @@ namespace Catalyst.Cli
                 _getInfoResponseHandler.Dispose();
                 _getVersionResponseHandler.Dispose();
                 _getMempoolResponseHandler.Dispose();
+                _signMessageResponseHandler.Dispose();
             }
         }
 

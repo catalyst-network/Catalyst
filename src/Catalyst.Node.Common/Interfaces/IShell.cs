@@ -65,5 +65,6 @@ namespace Catalyst.Node.Common.Interfaces
         bool OnCommand(params string[] args);
 
         bool ParseCommand(params string[] args);
+
     }
 }

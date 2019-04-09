@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -54,7 +54,7 @@ namespace Catalyst.Cli
         /// <param name="args"></param>
         public static int Main()
         {
-            Log.Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
+            Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             const int bufferSize = 1024 * 67 + 128;
 
             try
@@ -104,7 +104,7 @@ namespace Catalyst.Cli
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
-                    
+
                     shell.Ads.RunConsole();
                 }
 
@@ -114,12 +114,8 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Catalyst.Node failed to start." + e.Message);
+                Console.WriteLine(@"Catalyst.Node failed to start." + e.Message);
                 Environment.ExitCode = 1;
-            }
-            finally
-            {
-                Console.ReadLine();
             }
 
             return Environment.ExitCode;

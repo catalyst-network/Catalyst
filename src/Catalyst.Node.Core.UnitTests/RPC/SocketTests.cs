@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -237,6 +237,39 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
+            }
+        }
+
+        [Fact]
+        public void RpcServer_Can_Handle_SignMessageRequest()
+        {
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
+
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnyMessageObserver(0, _logger);
+            var clientObserver = new AnyMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                var info = shell.ParseCommand("sign", "-m", "Hello Catalyst", "-n", "node1");
+
+                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(SignMessageRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
             }
         }
 

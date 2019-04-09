@@ -62,18 +62,22 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.Query.ToByteArray())[0].RLPData;
 
                 //get the original message from the decoded message
-                string originalMessage = decodeResult.ToStringFromRLPDecoded();
+                var originalMessage = decodeResult.ToStringFromRLPDecoded();
 
-                //TODO: use the keysigner to sign the message
+                //use the keysigner to sign the message
+                var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
+                var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(originalMessage));
 
-                //TODO: return the signature and the public key
-
+                //get the public key
+                var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
 
                 Logger.Debug("message content is {0}", deserialised.Query);
 
                 var response = new SignMessageResponse()
                 {
-                    Query = originalMessage
+                    Signature = signature.ToByteString(),
+                    PublicKey = _keySigner.CryptoContext.ExportPublicKey(publicKey).ToByteString(),
+                    OriginalMessage = deserialised.Query
                 };
 
                 message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
