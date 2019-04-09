@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.Modules.Dfs {
                .Select(ma => new MultiAddress(ma))
                .ToArray();
 
-            //_ipfsEngine.StartAsync().GetAwaiter().GetResult();
+            _ipfsEngine.StartAsync().GetAwaiter().GetResult();
 
             _logger.Information("IPFS engine started.");
         }
@@ -107,6 +107,7 @@ namespace Catalyst.Node.Core.Modules.Dfs {
         {
             if (!disposing) {return;}
 
+            //TODO: find out why this leaves the build server hanging on the test step
             //_ipfsEngine?.Dispose();
             _passphrase?.Dispose();
         }
