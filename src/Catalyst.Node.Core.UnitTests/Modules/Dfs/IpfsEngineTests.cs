@@ -20,21 +20,12 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
-using Ipfs;
-using Ipfs.CoreApi;
 using Serilog;
 using NSubstitute;
 using Xunit;
