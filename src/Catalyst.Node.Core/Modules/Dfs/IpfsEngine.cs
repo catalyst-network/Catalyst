@@ -107,7 +107,7 @@ namespace Catalyst.Node.Core.Modules.Dfs {
         {
             if (!disposing) {return;}
 
-            _ipfsEngine?.Dispose();
+            //_ipfsEngine?.Dispose();
             _passphrase?.Dispose();
         }
 
