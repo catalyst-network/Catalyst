@@ -105,8 +105,6 @@ namespace Catalyst.Node.Core
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
 
-                await _dfs.AddTextAsync("hello", ct);
-
             } while (!ct.IsCancellationRequested && !exit);
 
             _logger.Information("Stopping the Catalyst Node");

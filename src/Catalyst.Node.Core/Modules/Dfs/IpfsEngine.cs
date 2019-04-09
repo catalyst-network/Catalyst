@@ -36,7 +36,7 @@ namespace Catalyst.Node.Core.Modules.Dfs {
     /// Simply a wrapper around the Ipfs.Engine.IpfsEngine to allow us coding
     /// and testing against an interface.
     /// </summary>
-    public class IpfsEngine : IIpfsEngine {
+    public class IpfsEngine : IIpfsEngine, IDisposable {
 
         public static readonly string KeyChainDefaultKeyType = "ed25519";
 

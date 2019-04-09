@@ -38,9 +38,10 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
-    public class IpfsDfsTests
+    public sealed class IpfsDfsTests : IDisposable
     {
         private const int DelayInMs = 100;
+        private const double DelayTolerance = 0.5;
         private readonly IIpfsEngine _ipfsEngine;
         private readonly ILogger _logger;
         private readonly Cid _expectedCid;
@@ -137,7 +138,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 stopWatch.Start();
                 new Action(() => dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token)
                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>();
-                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * 0.3));
+                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * DelayTolerance));
             }
         }
 
@@ -157,7 +158,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 stopWatch.Start();
                 new Action(() => dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token)
                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>();
-                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * 0.3));
+                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * DelayTolerance));
             }
         }
 
@@ -177,7 +178,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 stopWatch.Start();
                 new Action(() => dfs.ReadTextAsync("path", _cancellationTokenSource.Token)
                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>();
-                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * 0.3));
+                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * DelayTolerance));
             }
         }
 
@@ -197,8 +198,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 stopWatch.Start();
                 new Action(() => dfs.ReadAsync("path", _cancellationTokenSource.Token)
                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>();
-                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * 0.3));
+                stopWatch.ElapsedMilliseconds.Should().BeCloseTo(DelayInMs, (int)(DelayInMs * DelayTolerance));
             }
+        }
+
+        public void Dispose()
+        {
+            _ipfsEngine?.Dispose();
+            _cancellationTokenSource?.Dispose();
         }
     }
 }
