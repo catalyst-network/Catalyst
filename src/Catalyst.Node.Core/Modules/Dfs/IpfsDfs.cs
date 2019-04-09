@@ -26,10 +26,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Dfs;
+using Common.Logging.Serilog;
 using Ipfs;
 using Ipfs.CoreApi;
 using Ipfs.Engine;
 using PeerTalk;
+using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
@@ -42,10 +44,14 @@ namespace Catalyst.Node.Core.Modules.Dfs
             RawLeaves = true
         };
 
+        static IpfsDfs() { global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
+
         public IpfsDfs(
             IPasswordReader passwordReader,
-            IPeerSettings peerSettings)
+            IPeerSettings peerSettings, ILogger logger)
         {
+            global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(logger);
+
             var password = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsDfs = new IpfsEngine(password);
             _ipfsDfs.Options.KeyChain.DefaultKeyType = "ed25519";
