@@ -25,6 +25,7 @@ using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using Common.Logging.Serilog;
 using Dawn;
 using Ipfs;
 using Ipfs.CoreApi;
@@ -43,6 +44,8 @@ namespace Catalyst.Node.Core.Modules.Dfs {
         private readonly ILogger _logger;
         private readonly Ipfs.Engine.IpfsEngine _ipfsEngine;
         private readonly SecureString _passphrase;
+
+        static IpfsEngine() { global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
 
         public IpfsEngine(IPasswordReader passwordReader, IPeerSettings peerSettings, IFileSystem fileSystem, ILogger logger)
         {
