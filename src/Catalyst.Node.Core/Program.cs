@@ -19,12 +19,12 @@
 */
 #endregion
 
- using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
- using System.Threading;
- using Autofac;
+using System.Threading;
+using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
@@ -36,27 +36,32 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
- using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
+using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
 
 namespace Catalyst.Node.Core
 {
     public static class Program
     {
-        private static readonly ILogger Logger;
+        private static ILogger _logger;
         private static readonly string LifetimeTag;
         private static readonly string ExecutionDirectory;
+        private static readonly Type DeclaringType;
         private static CancellationTokenSource _cancellationSource;
 
         static Program()
         {
-            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            Logger = Log.Logger.ForContext(declaringType);
-            LifetimeTag = declaringType.AssemblyQualifiedName;
-            ExecutionDirectory = Path.GetDirectoryName(declaringType.Assembly.Location);
+            DeclaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            _logger = new LoggerConfiguration()
+               .WriteTo.Console().CreateLogger().ForContext(DeclaringType);
+            LifetimeTag = DeclaringType.AssemblyQualifiedName;
+            ExecutionDirectory = Path.GetDirectoryName(DeclaringType.Assembly.Location);
         }
 
         public static int Main(string[] args)
         {
+            _logger.Information("Catalyst.Node.Core started with process id {0}",
+                System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
+
             _cancellationSource = new CancellationTokenSource();
             try
             {
@@ -86,17 +91,17 @@ namespace Catalyst.Node.Core
 
                 var loggerConfiguration =
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
-                Log.Logger = loggerConfiguration.WriteTo
+                _logger = loggerConfiguration.WriteTo
                    .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"), 
                         rollingInterval: RollingInterval.Day,
                         outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
-                   .CreateLogger();
+                   .CreateLogger().ForContext(DeclaringType);
+
                 containerBuilder.RegisterLogger();
+                containerBuilder.RegisterInstance(config);
 
                 var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);
-
-                containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
 
@@ -112,7 +117,7 @@ namespace Catalyst.Node.Core
             }
             catch (Exception e)
             {
-                Log.Logger.Error(e, "Catalyst.Node failed to start.");
+                _logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
 
@@ -130,31 +135,14 @@ namespace Catalyst.Node.Core
             try
             {
                 var assemblyFilePath = Path.Combine(ExecutionDirectory, $"{assemblyName.Name}.dll");
-                Logger.Debug("Resolving assembly {0} from file {1}", assemblyName, assemblyFilePath);
+                _logger.Debug("Resolving assembly {0} from file {1}", assemblyName, assemblyFilePath);
                 var assembly = context.LoadFromAssemblyPath(assemblyFilePath);
                 return assembly;
             }
             catch (Exception e)
             {
-                Logger.Warning(e, "Failed to load assembly {0} from file {1}.", e);
+                _logger.Warning(e, "Failed to load assembly {0} from file {1}.", e);
                 return null;
-            }
-        }
-
-        public static void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            try
-            {
-                Log.Logger.Fatal("Unhandled exception, Terminating", e);
-            }
-            catch
-            {
-                using (var fs = new FileStream("error.log", FileMode.Create, FileAccess.Write, FileShare.None))
-                using (var writer = new StreamWriter(fs))
-                {
-                    writer.WriteLine(e.ExceptionObject.ToString());
-                    writer.WriteLine($"IsTerminating: {e.IsTerminating}");
-                }
             }
         }
     }

@@ -33,7 +33,6 @@ namespace Catalyst.Cli
 
         public CatalystCli(IAds ads, ILogger logger)
         {
-            logger.Debug("PID " + Process.GetCurrentProcess().Id);
             Ads = ads;
         }
         
