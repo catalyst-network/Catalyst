@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         [Fact]
         public void Constructor_should_read_seed_servers_addresses_from_peerSettings()
         {
-            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, _fileSystem, _logger);
+            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
             _ipfsEngine.Options.Discovery.BootstrapPeers.Count().Should().Be(2);
         }
 
@@ -61,23 +61,23 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new string[] {});
-            new Action(() => new IpfsEngine(_passwordReader, peerSettings, _fileSystem, _logger))
+            new Action(() => new IpfsEngine(_passwordReader, peerSettings, FileSystem, _logger))
                .Should().Throw<ArgumentException>();
         }
 
         [Fact]
         public void Constructor_should_read_a_password()
         {
-            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, _fileSystem, _logger);
+            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
             _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePassword();
         }
 
         [Fact]
         public void Constructor_should_use_ipfs_subfolder()
         {
-            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, _fileSystem, _logger);
+            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
             _ipfsEngine.Options.Repository.Folder.Should()
-               .Be(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, Core.Config.Constants.IpfsSubFolder));
+               .Be(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, Core.Config.Constants.IpfsSubFolder));
         }
 
         protected override void Dispose(bool disposing)
