@@ -30,10 +30,10 @@ using System.Text.RegularExpressions;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {
-    
+
     public abstract class ShellBase : IShell
     {
-        
+
         protected ShellBase()
         {
             AppCulture = new CultureInfo("en-GB", false);
@@ -70,9 +70,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
         public abstract bool IsConnectedNode(string nodeId);
 
         public abstract bool IsSocketChannelActive(IRpcNode node);
-        
+
         public abstract IRpcNode GetConnectedNode(string nodeId);
-        
+
         public abstract IRpcNodeConfig GetNodeConfig(string nodeId);
 
         /// <summary>
@@ -163,6 +163,12 @@ namespace Catalyst.Node.Common.Helpers.Shell
         protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        protected abstract bool OnSignMessage(Object args);
+
+        /// <summary>
         ///     Parses flags passed with commands.
         /// </summary>
         /// <param name="args"></param>
@@ -180,7 +186,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
             return returnArg;
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="prompt"></param>
@@ -260,9 +266,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <returns></returns>
 
-        
+
         public bool RunConsole()
-        {   
+        {
             var running = true;
 
             Console.OutputEncoding = Encoding.Unicode;
@@ -282,7 +288,10 @@ namespace Catalyst.Node.Common.Helpers.Shell
                     break;
                 }
                 Console.ForegroundColor = ConsoleColor.White;
-                var args = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+
+                //split the command line input by spaces and keeping hyphens and preserve any spaces between quotes
+                string[] args = Regex.Split(line, "(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
                 if (args.Length == 0)
                 {
                     continue;
@@ -303,8 +312,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         }
 
         public abstract bool ParseCommand(params string[] args);
-        
-        
+
+
         /// <summary>
         /// </summary>
         /// <param name="args"></param>

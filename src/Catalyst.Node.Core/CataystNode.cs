@@ -23,7 +23,6 @@ using System;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
@@ -34,8 +33,6 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Events;
-using Catalyst.Node.Core.RPC;
-using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
@@ -54,7 +51,7 @@ namespace Catalyst.Node.Core
         private readonly IMempool _mempool;
         private readonly IP2P _p2P;
         private readonly IRpcServer _rpcServer;
-       
+
         private bool _disposed;
 
         public CatalystNode(
@@ -109,7 +106,7 @@ namespace Catalyst.Node.Core
 
             _logger.Information("Stopping the Catalyst Node");
         }
-        
+
         /// <summary>
         /// </summary>
         /// <returns></returns>

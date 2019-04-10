@@ -71,6 +71,8 @@ namespace Catalyst.Cli.UnitTests
             var client = Substitute.For<IRpcClient>();
             client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
                .Returns(Task.FromResult(tcpClient));
+            client.ConnectToNode(Arg.Any<string>(), Arg.Any<IRpcNodeConfig>())
+               .Returns(ci => new RpcNode((IRpcNodeConfig) ci[1], tcpClient));
 
             ConfigureContainerBuilder(config);
             ContainerBuilder.RegisterInstance(tcpClient).As<ISocketClient>();
@@ -133,6 +135,8 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Config()
         {
+            _shell.Ads.AskForUserInput(false);
+
             var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
@@ -147,6 +151,8 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Version()
         {
+            _shell.Ads.AskForUserInput(false);
+
             var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
@@ -160,6 +166,16 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Mempool()
         {
+            var channel = Substitute.For<IChannel>();
+            channel.Active.Returns(true);
+            var tcpClient = Substitute.For<ISocketClient>();
+            tcpClient.Channel.Returns(channel);
+
+
+            var client = Substitute.For<IRpcClient>();
+            client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
+               .Returns(Task.FromResult(tcpClient));
+
             var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
@@ -167,6 +183,19 @@ namespace Catalyst.Cli.UnitTests
             node1.Should().NotBeNull("we've just connected it");
 
             var result = _shell.Ads.ParseCommand("get", "-m", "node1");
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Cli_Can_Request_Node_To_Sign_A_Message()
+        {
+            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = _shell.Ads.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var result = _shell.Ads.ParseCommand("sign", "-m", "test message", "-n", "node1");
             result.Should().BeTrue();
         }
 

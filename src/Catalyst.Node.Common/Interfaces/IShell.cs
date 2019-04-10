@@ -31,7 +31,7 @@ namespace Catalyst.Node.Common.Interfaces
         /// </summary>
         /// <returns></returns>
         bool RunConsole();
-        
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -65,5 +65,6 @@ namespace Catalyst.Node.Common.Interfaces
         bool OnCommand(params string[] args);
 
         bool ParseCommand(params string[] args);
+
     }
 }
