@@ -106,6 +106,13 @@ namespace Catalyst.Cli
         /// <returns>Returns true if a method to handle the options is found otherwise returns false</returns>
         public override bool ParseCommand(params string[] args)
         {
+            Guard.Argument(args, nameof(args)).NotNull().MinCount(1).NotEmpty();
+
+            if (args[0] == string.Empty)
+            {
+                return true;
+            }
+
             return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions, SignOptions>(args)
                .MapResult<GetInfoOptions, ConnectOptions, SignOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
@@ -483,19 +490,23 @@ namespace Catalyst.Cli
             return true;
         }
 
-        protected override bool OnGetConfig(Object opts)
+        /// <summary>
+        /// Handles the command <code>get -i [node-name]</code>.  The method makes sure first the CLI is connected to
+        /// the node specified in the command and then creates a <see cref="GetInfoRequest"/> object and sends it in a
+        /// message to the RPC server in the node.
+        /// </summary>
+        /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
+        /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
+        protected override bool OnGetConfig(object opts)
         {
             var nodeId = ((GetInfoOptions)opts).NodeId;
 
             //Perform validations required before a command call
             var isValid = ValidatePreCommand(nodeId);
 
-            if (_askForUserInput && isValid != ValidationError.NoError)
+            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
             {
-                if (!AskUserToConnectToNode(nodeId, isValid))
-                {
-                    return false;
-                }
+                return false;
             }
 
             //if the node is connected and there are no other errors then send the get info request to the server
@@ -527,24 +538,31 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        /// Get stats about the underlying mempool implementation
+        /// Handles the command <code>get -m [node-name]</code>.  The method makes sure first the CLI is connected to
+        /// the node specified in the command and then creates a <see cref="GetMempoolRequest"/> object and sends it in a
+        /// message to the RPC server in the node.
         /// </summary>
-        /// <returns>Boolean</returns>
-        protected override bool OnGetMempool(Object args)
+        /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
+        /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
+        protected override bool OnGetMempool(object args)
         {
-            var nodeId = ((GetInfoOptions)args).NodeId;
+            if (!(args is GetInfoOptions getInfoOptions))
+            {
+                return false;
+            }
+
+            //get the node id from the command options
+            var nodeId = getInfoOptions.NodeId;
 
             //Perform validations required before a command call
             var isValid = ValidatePreCommand(nodeId);
 
-            if (_askForUserInput && isValid != ValidationError.NoError)
+            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
             {
-                if (!AskUserToConnectToNode(nodeId, isValid))
-                {
-                    return false;
-                }
+                return false;
             }
 
+            //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
                 var connectedNode = GetConnectedNode(nodeId);
@@ -562,11 +580,16 @@ namespace Catalyst.Cli
             return true;
         }
 
-        protected override bool OnSignMessage(Object args)
+        /// <summary>
+        /// Handles the command <code>sign -m "[text message]" -n [node-name]</code>.  The method makes sure first the CLI is connected to
+        /// the node specified in the command and then creates a <see cref="SignMessageRequest"/> object , encodes the text message and sends it in a
+        /// message to the RPC server in the node.
+        /// </summary>
+        /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
+        /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
+        protected override bool OnSignMessage(object opts)
         {
-            var signOptions = args as SignOptions;
-
-            if (signOptions == null)
+            if (!(opts is SignOptions signOptions))
             {
                 return false;
             }
@@ -574,19 +597,16 @@ namespace Catalyst.Cli
             var message = signOptions.Message;
             var nodeId = signOptions.Node;
 
+            //Perform validations required before a command call
             var isValid = ValidatePreCommand(nodeId);
 
-            if (_askForUserInput && isValid != ValidationError.NoError)
+            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
             {
-                if (!AskUserToConnectToNode(nodeId, isValid))
-                {
-                    return false;
-                }
+                return false;
             }
 
-
+            //if the node is connected and there are no other errors then send the get info request to the server
             try {
-
                 var connectedNode = GetConnectedNode(nodeId);
 
                 //send the message to the server by writing it to the channel
@@ -612,7 +632,7 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="nodeId">The node id as entered by the user in the command</param>
         /// <param name="validationResult">The validation result returned by the <see cref="ValidatePreCommand"/> method.</param>
-        /// <returns></returns>
+        /// <returns>Returns True if the user asked to connect to the node and the connection is successful otherwise returns False.</returns>
         private bool AskUserToConnectToNode(string nodeId, ValidationError validationResult)
         {
             //Perform validations required before a command call
@@ -648,7 +668,7 @@ namespace Catalyst.Cli
         /// Checks if the node is configured in the nodes.json config file before performing other operations.
         /// </summary>
         /// <param name="nodeId">The name of the node as entered at the command line</param>
-        /// <returns>True if the node is existing in the configuration file and False otherwise</returns>
+        /// <returns>True if the node exists in the configuration file and False otherwise</returns>
         private bool IsConfiguredNode(string nodeId)
         {
             Debug.Assert(nodeId != null, nameof(nodeId) + " != null");
@@ -669,6 +689,11 @@ namespace Catalyst.Cli
             return (GetConnectedNode(nodeId) != null);
         }
 
+        /// <summary>
+        /// Checks if the socket channel opened with the RPC server in the node is still active.
+        /// </summary>
+        /// <param name="node">A <see cref="IRpcNode"/> object including node required information.</param>
+        /// <returns>Returns True if the channel is still active and False otherwise.  A "Channel inactive ..." message is returned to the console.</returns>
         public override bool IsSocketChannelActive(IRpcNode node)
         {
             if (node.SocketClient.Channel.Active) { return true; }
@@ -677,6 +702,21 @@ namespace Catalyst.Cli
             return false;
         }
 
+        /// <summary>
+        /// Runs a number of validations before running the command.  The validations include:
+        /// 1- Is the node configuration available in the nodes.json file
+        /// 2- Is there a connection established between the CLI and the node specified in the command
+        /// 3- Is the channel socket active
+        /// </summary>
+        /// <remarks>The order of the checks is important. If the node is not configured then it is useless to try and
+        /// connect and in turn to check for the socket's channel.</remarks>
+        /// <param name="nodeId">A string containing the node id.</param>
+        /// <returns>Returns one of the values of the <see cref="ValidationError"/> enum as follows:
+        /// - <see cref="ValidationError.NodeNotConfigured"/> if the node is not configured
+        /// - <see cref="ValidationError.NodeNotConnected"/> if the node is not connected to the CLI
+        /// - <see cref="ValidationError.ChannelInactive"/> if the socket channel has become inactive
+        /// - <see cref="ValidationError.NoError"/> if all checks are passed successfully
+        /// </returns>
         private ValidationError ValidatePreCommand(string nodeId)
         {
             //if the node is invalid then do not continue
