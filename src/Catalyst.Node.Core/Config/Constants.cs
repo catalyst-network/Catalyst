@@ -19,27 +19,10 @@
 */
 #endregion
 
-using System;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
-using Catalyst.Protocol.IPPN;
-
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Node.Core.Config
 {
-    public class PongResponseHandler : MessageHandlerBase<PingResponse>
+    public static class Constants
     {
-        public PongResponseHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
-        : base(messageStream, logger) { }
-
-        public override void HandleMessage(IChanneledMessage<Any> message)
-        {
-            Logger.Debug("received ping response");
-            var deserialised = message.Payload.FromAny<PingResponse>();
-            Logger.Debug("ping response content is empty");
-        }
+        public static string IpfsSubFolder => "Ipfs";
     }
-}
+} 
