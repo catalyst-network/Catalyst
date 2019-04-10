@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -25,6 +25,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.UnitTests.TestUtils;

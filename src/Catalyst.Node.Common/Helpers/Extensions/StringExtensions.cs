@@ -19,11 +19,20 @@
 */
 #endregion
 
-using System;
-using Ipfs.CoreApi;
-using PeerTalk;
+using System.IO;
 
-namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
+namespace Catalyst.Node.Common.Helpers.Extensions
 {
-    public interface IIpfsDfs : IDfs, ICoreApi, IService, IDisposable { }   
+    public static class StringExtensions
+    {
+        public static Stream ToMemoryStream(this string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+    }
 }
