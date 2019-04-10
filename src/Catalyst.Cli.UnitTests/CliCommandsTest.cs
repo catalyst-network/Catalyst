@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -35,6 +36,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
+using Catalyst.Cli.Rpc;
 using DotNetty.Transport.Channels;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -56,35 +58,20 @@ namespace Catalyst.Cli.UnitTests
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
+               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellConfigFile))
                .Build();
 
-            var channel = Substitute.For<IChannel>();
-            channel.Active.Returns(true);
+            var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var nodeRpcClient = Substitute.For<INodeRpcClient>();
-            nodeRpcClient.Channel.Returns(channel);
-
-            var certificateStore = Substitute.For<ICertificateStore>();
-            var client = Substitute.For<INodeRpcClientFactory>();
-            client.GetClient(certificateStore.ReadOrCreateCertificateFile("mycert.pfx"), Arg.Any<IRpcNodeConfig>()).Returns(nodeRpcClient);
-
-            var client = Substitute.For<IRpcClient>();
-            client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
-               .Returns(Task.FromResult(tcpClient));
-            client.ConnectToNode(Arg.Any<string>(), Arg.Any<IRpcNodeConfig>())
-               .Returns(ci => new RpcNode((IRpcNodeConfig) ci[1], tcpClient));
 
             ConfigureContainerBuilder(config);
 
-            // ContainerBuilder.RegisterInstance(nodeRpcClient).As<ISocketClient>();
+            ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
             ContainerBuilder.RegisterInstance(nodeRpcClient).As<INodeRpcClient>();
 
-            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            var serviceCollection = new ServiceCollection();
             var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(CurrentTestName);
 
             _scope = container.BeginLifetimeScope(CurrentTestName);
-
             _shell = container.Resolve<ICatalystCli>();
 
             var logger = container.Resolve<ILogger>();
@@ -167,14 +154,10 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Mempool()
         {
-            var channel = Substitute.For<IChannel>();
-            channel.Active.Returns(true);
-            var tcpClient = Substitute.For<ISocketClient>();
-            tcpClient.Channel.Returns(channel);
+            var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
 
-            var client = Substitute.For<IRpcClient>();
-            client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
-               .Returns(Task.FromResult(tcpClient));
+            var testCertStore = new TestCertificateStore();
+            INodeRpcClient nodeRpcClient = nodeRpcClientFactory.GetClient(testCertStore.ReadOrCreateCertificateFile("mycert.pfx", "test"), Arg.Any<IRpcNodeConfig>());
 
             var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();

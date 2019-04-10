@@ -47,8 +47,12 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         public void OnNext(IChanneledMessage<AnySigned> value)
         {
-            if (value == NullObjects.ChanneledAnySigned) return;
-            _logger.Debug($"observer {Index} received message of type {value?.Payload.TypeUrl ?? "(null)"}");
+            if (value == NullObjects.ChanneledAnySigned)
+            {
+                return;
+            }
+
+            _logger.Debug($"observer {Index} received message of type {value?.Payload?.TypeUrl ?? "(null)"}");
             Received = value;
         }
     }

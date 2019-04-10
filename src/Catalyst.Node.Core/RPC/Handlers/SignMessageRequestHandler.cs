@@ -58,10 +58,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
             Logger.Debug("received message of type SignMessageRequest");
             try
             {
-                var deserialised = message.Payload.ToAnySigned<SignMessageRequest>();
+                var deserialised = message.Payload.FromAnySigned<SignMessageRequest>();
 
                 //decode the received message
-                var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
+                var decodeResult = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
 
                 //get the original message from the decoded message
                 var originalMessage = decodeResult.ToStringFromRLPDecoded();

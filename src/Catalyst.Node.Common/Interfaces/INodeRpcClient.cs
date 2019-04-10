@@ -24,20 +24,23 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface INodeRpcClient : ISocketClient
+    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned>
     {
         Task SendMessage(AnySigned message);
         IChannel Channel { get; set; }
 
         /// <summary>
-        ///    todo This Shouldn't really be here.
+        ///
         /// </summary>
         /// <param name="observer"></param>
         void SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer);
+
+        IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
     }
 }
