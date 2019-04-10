@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-*
+* 
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -28,7 +28,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Cli;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
@@ -43,13 +42,11 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
-using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Serilog.Extensions.Logging;
-using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 
