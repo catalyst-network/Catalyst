@@ -23,6 +23,7 @@
 
 using System;
 using System.Reactive.Linq;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;

@@ -23,9 +23,16 @@
 
 using System;
 using Ipfs.CoreApi;
-using PeerTalk;
+using Ipfs.Engine;
 
-namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
+namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public interface IIpfsDfs : IDfs, ICoreApi, IService, IDisposable { }
+    /// <summary>
+    /// Simply presenting the functions we use from the Ipfs.Engine.IpfsEngine
+    /// to allow coding and testing against interfaces.
+    /// </summary>
+    public interface IIpfsEngine : ICoreApi, PeerTalk.IService, IDisposable
+    {
+        IpfsEngineOptions Options { get; }
+    }
 }

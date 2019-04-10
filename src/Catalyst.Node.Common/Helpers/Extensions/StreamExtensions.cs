@@ -21,27 +21,20 @@
 
 #endregion
 
-using System;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Protocol.Common;
-using Serilog;
-using Catalyst.Protocol.IPPN;
+using System.IO;
+using System.Text;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Node.Common.Helpers.Extensions
 {
-    public class PingResponseHandler : MessageHandlerBase<PingResponse>
+    public static class StreamExtensions
     {
-        public PingResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
-            : base(messageStream, logger) { }
-
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        public static string ReadAllAsUtf8String(this Stream stream, bool leaveOpen)
         {
-            Logger.Debug("received ping response");
-            var deserialised = message.Payload.FromAnySigned<PingResponse>();
-            Logger.Debug("ping response content is empty");
+            using (var reader = new StreamReader(stream, Encoding.UTF8,
+                true, 4096, leaveOpen))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }

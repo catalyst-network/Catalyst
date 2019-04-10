@@ -21,12 +21,10 @@
 
 #endregion
 
-using System.Security;
-
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Core.Config
 {
-    public interface IPasswordReader
+    public static class Constants
     {
-        SecureString ReadSecurePassword(string passwordContext = "Please enter your password");
+        public static string IpfsSubFolder => "Ipfs";
     }
 }

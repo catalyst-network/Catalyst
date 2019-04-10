@@ -38,6 +38,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
+using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
 
 namespace Catalyst.Node.Core
 {

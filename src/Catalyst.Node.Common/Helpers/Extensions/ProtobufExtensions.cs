@@ -34,7 +34,7 @@ using Google.Protobuf.Reflection;
 using Google.Protobuf.WellKnownTypes;
 using Type = System.Type;
 
-namespace Catalyst.Node.Common.Helpers
+namespace Catalyst.Node.Common.Helpers.Extensions
 {
     public static class ProtobufExtensions
     {

@@ -23,6 +23,7 @@
 
 using Catalyst.Protocol.Transaction;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Extensions;
 
 namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
