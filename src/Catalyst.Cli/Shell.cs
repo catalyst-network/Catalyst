@@ -67,7 +67,7 @@ namespace Catalyst.Cli
         private const string NODE_NOT_CONNECTED_MESSAGE = "Node is not connected.  Connect to node first.";
         private const string CHANNEL_INACTIVE_MESSAGE = "Node is not connected.  Connect to node first.";
 
-        public bool ASK_FOR_USER_INPUT = true;
+        private bool _askForUserInput = true;
 
         /// <summary>
         /// </summary>
@@ -97,7 +97,7 @@ namespace Catalyst.Cli
             return nodeList;
         }
 
-        public void AskForUserInput(bool userInput) { ASK_FOR_USER_INPUT = userInput; }
+        public void AskForUserInput(bool userInput) { _askForUserInput = userInput; }
 
         /// <summary>
         /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
@@ -457,7 +457,7 @@ namespace Catalyst.Cli
             //Perform validations required before a command call
             var isValid = ValidatePreCommand(nodeId);
 
-            if (ASK_FOR_USER_INPUT && isValid != ValidationError.NoError)
+            if (_askForUserInput && isValid != ValidationError.NoError)
             {
                 if (!AskUserToConnectToNode(nodeId, isValid))
                 {
@@ -490,7 +490,7 @@ namespace Catalyst.Cli
             //Perform validations required before a command call
             var isValid = ValidatePreCommand(nodeId);
 
-            if (ASK_FOR_USER_INPUT && isValid != ValidationError.NoError)
+            if (_askForUserInput && isValid != ValidationError.NoError)
             {
                 if (!AskUserToConnectToNode(nodeId, isValid))
                 {
@@ -537,7 +537,7 @@ namespace Catalyst.Cli
             //Perform validations required before a command call
             var isValid = ValidatePreCommand(nodeId);
 
-            if (ASK_FOR_USER_INPUT && isValid != ValidationError.NoError)
+            if (_askForUserInput && isValid != ValidationError.NoError)
             {
                 if (!AskUserToConnectToNode(nodeId, isValid))
                 {
@@ -576,7 +576,7 @@ namespace Catalyst.Cli
 
             var isValid = ValidatePreCommand(nodeId);
 
-            if (ASK_FOR_USER_INPUT && isValid != ValidationError.NoError)
+            if (_askForUserInput && isValid != ValidationError.NoError)
             {
                 if (!AskUserToConnectToNode(nodeId, isValid))
                 {
@@ -606,34 +606,29 @@ namespace Catalyst.Cli
             return true;
         }
 
+        /// <summary>
+        /// Sends a Yes/No prompt question to the user of whether to connect the node included in the command.
+        /// This message is only called if the pre command validation returned and error <code>ValidationError.NodeNotConnected</code>.
+        /// </summary>
+        /// <param name="nodeId">The node id as entered by the user in the command</param>
+        /// <param name="validationResult">The validation result returned by the <see cref="ValidatePreCommand"/> method.</param>
+        /// <returns></returns>
         private bool AskUserToConnectToNode(string nodeId, ValidationError validationResult)
         {
             //Perform validations required before a command call
-            switch (validationResult)
+            if(validationResult == ValidationError.NodeNotConnected)
             {
-                case ValidationError.NodeNotConnected: //if the error was due to the node being connected
-                {
-                    //ask the user if he/she wants to connect to the node specified
-                    if (Prompt.GetYesNo("The node is not connected.\nDo you want to connect to node?",
-                        true, ConsoleColor.Green, ConsoleColor.Black))
-                    {
-                        //_nodes.Add(_rpcClient.ConnectToNode(nodeId, GetNodeConfig(nodeId)));
-                        //if the connection to the node was not successful return false
-                        //otherwise continue
-                        if (!OnConnectNode(nodeId))
-                        {
-                            return false;
-                        }
-                    }
-                    else //if the user answered no then do nothing and return false
-                    {
-                        return false;
-                    }
+                //ask the user if he/she wants to connect to the node specified
+                //if the user answered no to the question then return false
+                if (!Prompt.GetYesNo("The node is not connected.\nDo you want to connect to node?",
+                    true, ConsoleColor.Green, ConsoleColor.Black)) { return false; }
 
-                    break;
+                //Call the OnConnectNode method to connect to the node
+                //if the connection to the node was not successful return false
+                if (!OnConnectNode(nodeId))
+                {
+                    return false;
                 }
-                case ValidationError.NoError: //if there was no error then continue
-                    break;
             }
 
             return true;

@@ -70,18 +70,6 @@ namespace Catalyst.Cli
         [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
         public string Node { get; set; }
 
-        /*[Value(1, MetaName = "Message",
-            HelpText = "Node name as listed in nodes.json config file.",
-            Required = true)]
-        public string MessageValue { get; set; }
-
-        [Value(3, MetaName = "Node ID",
-            HelpText = "Node name as listed in nodes.json config file.",
-            Required = true)]
-        public string NodeId { get; set; }*/
-
-
-
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
             new List<Example> {

@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 Logger.Debug("message content is {0}", deserialised.Query);
 
-                var response = new SignMessageResponse()
+                var response = new SignMessageResponse
                 {
                     Signature = signature.ToByteString(),
                     PublicKey = _keySigner.CryptoContext.ExportPublicKey(publicKey).ToByteString(),
