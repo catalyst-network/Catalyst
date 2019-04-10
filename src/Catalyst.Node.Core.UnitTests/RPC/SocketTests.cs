@@ -54,13 +54,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 {
     public class SocketTests : ConfigFileBasedTest, IDisposable
     {
+        private const int MaxWaitInMs = 1000;
         private readonly IConfigurationRoot _config;
 
-        private IRpcServer _rpcServer;
-        private ICertificateStore _certificateStore;
+        private readonly IRpcServer _rpcServer;
+        private readonly ICertificateStore _certificateStore;
         private RpcClient _rpcClient;
-        private ILifetimeScope _scope;
-        private ILogger _logger;
+        private readonly ILifetimeScope _scope;
+        private readonly ILogger _logger;
 
         public SocketTests(ITestOutputHelper output) : base(output)
         {
@@ -155,7 +156,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
                    .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Payload.TypeUrl.Should().Be(GetInfoRequest.Descriptor.ShortenedFullName());
@@ -190,7 +191,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
                    .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Payload.TypeUrl.Should().Be(VersionRequest.Descriptor.ShortenedFullName());
@@ -225,7 +226,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
                    .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolRequest.Descriptor.ShortenedFullName());
@@ -258,7 +259,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
                    .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Payload.TypeUrl.Should().Be(SignMessageRequest.Descriptor.ShortenedFullName());

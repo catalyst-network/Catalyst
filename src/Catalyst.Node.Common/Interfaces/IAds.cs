@@ -21,7 +21,7 @@
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IAds : IShell
+    public interface IAds : IShell 
     {
 
         /// <summary>

@@ -64,7 +64,7 @@ namespace Catalyst.Cli
     [Verb("sign", HelpText = "Signs a message or a transaction")]
     class SignOptions
     {
-        [Option('m', "message", HelpText = "Directs the CLI to sgin the message to be provided as the value")]
+        [Option('m', "message", HelpText = "Directs the CLI to sign the message to be provided as the value")]
         public string Message { get; set; }
 
         [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]

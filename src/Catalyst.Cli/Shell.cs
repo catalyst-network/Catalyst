@@ -627,7 +627,7 @@ namespace Catalyst.Cli
                 var bytesForRlpEncoding = message.Trim('\"').ToBytesForRLPEncoding();
                 var encodedMessage = Nethereum.RLP.RLP.EncodeElement(bytesForRlpEncoding);
 
-                request.Query = encodedMessage.ToByteString();
+                request.Message = encodedMessage.ToByteString();
 
                 _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();
             }
