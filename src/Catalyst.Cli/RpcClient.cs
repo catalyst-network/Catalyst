@@ -162,7 +162,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.Error(e, e.Message);
                 throw;
             }
 
@@ -170,7 +170,6 @@ namespace Catalyst.Cli
         }
 
         /*Implementing IDisposable */
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

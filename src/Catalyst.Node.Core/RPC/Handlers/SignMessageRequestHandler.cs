@@ -37,7 +37,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IKeySigner _keySigner;
 
-
         public SignMessageRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger,
