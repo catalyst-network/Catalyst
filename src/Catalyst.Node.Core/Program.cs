@@ -30,6 +30,7 @@ using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.FileSystem;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,16 +47,23 @@ namespace Catalyst.Node.Core
         private static readonly string LifetimeTag;
         private static readonly string ExecutionDirectory;
         private static readonly Type DeclaringType;
+        private static readonly string LogFileName = "Catalyst.Node..log";
+
         private static CancellationTokenSource _cancellationSource;
 
         static Program()
         {
             DeclaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            _logger = new LoggerConfiguration()
-               .WriteTo.Console().CreateLogger().ForContext(DeclaringType);
+            _logger = ConsoleProgram.GetTempLogger(LogFileName, DeclaringType);
+
+            AppDomain.CurrentDomain.UnhandledException +=
+                (sender, args) => ConsoleProgram.LogUnhandledException(_logger, sender, args);
+
             LifetimeTag = DeclaringType.AssemblyQualifiedName;
             ExecutionDirectory = Path.GetDirectoryName(DeclaringType.Assembly.Location);
         }
+
+
 
         public static int Main(string[] args)
         {
@@ -92,7 +100,7 @@ namespace Catalyst.Node.Core
                 var loggerConfiguration =
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
                 _logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"), 
+                   .File(Path.Combine(targetConfigFolder, LogFileName), 
                         rollingInterval: RollingInterval.Day,
                         outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                    .CreateLogger().ForContext(DeclaringType);
