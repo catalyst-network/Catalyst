@@ -73,6 +73,7 @@ namespace Catalyst.Cli.UnitTests
             var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
             var serviceCollection = new ServiceCollection();
             var container = ContainerBuilder.Build();
+            _scope = container.BeginLifetimeScope(CurrentTestName);
 
             _scope = container.BeginLifetimeScope(CurrentTestName);
 

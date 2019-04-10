@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Interfaces;
+using Dawn;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
@@ -34,6 +35,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
+    /// <inheritdoc />
     /// <summary>
     ///     A base test class that can be used to offer inheriting tests a folder on which
     ///     to create files, logs, etc.
@@ -49,17 +51,24 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected FileSystemBasedTest(ITestOutputHelper output)
         {
+            Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
-            CurrentTest = Output?.GetType()
+            CurrentTest = Output.GetType()
                .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
                .GetValue(Output) as ITest;
+
+            if (CurrentTest == null)
+            {
+                throw new ArgumentNullException(
+                    $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
+            }
+
             CurrentTestName = CurrentTest.TestCase.TestMethod.Method.Name;
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
 
                 //get a unique folder for this run
-                CurrentTestName + $"_{testStartTime:yyMMddHHmmssffff}")
-            );
+                CurrentTestName + $"_{testStartTime:yyMMddHHmmssffff}"));
 
             _testDirectory.Exists.Should().BeFalse();
             _testDirectory.Create();
@@ -74,20 +83,18 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing)
+            if (!disposing || _testDirectory.Parent == null)
             {
                 return;
             }
 
             var regex = new Regex(CurrentTestName + @"_(?<timestamp>[\d]{14})");
-            if (_testDirectory.Parent != null)
-            {
-                var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
-                   .Where(d => regex.IsMatch(d.Name)
-                     && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
-                   .ToList();
-                oldDirectories.ForEach(TryDeleteFolder);
-            }
+
+            var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
+               .Where(d => regex.IsMatch(d.Name)
+                 && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
+               .ToList();
+            oldDirectories.ForEach(TryDeleteFolder);
         }
 
         private static void TryDeleteFolder(DirectoryInfo d)

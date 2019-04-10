@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using Autofac;
+using Autofac.Configuration;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
@@ -36,19 +37,33 @@ using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Contract;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.Modules.Ledger;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Modules
 {
-    public class JsonConfiguredModuleTest : BaseModuleConfigTest
+    public sealed class JsonConfiguredModuleTest
     {
+        private readonly IContainer _container;
+
         public JsonConfiguredModuleTest()
-            : base(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
-                PerformExtraRegistrations) { }
+        {
+            var configuration = new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
+               .Build();
+
+            var configurationModule = new ConfigurationModule(configuration);
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterInstance(configuration).As<IConfigurationRoot>();
+            containerBuilder.RegisterModule(configurationModule);
+
+            PerformExtraRegistrations(containerBuilder);
+
+            _container = containerBuilder.Build();
+        }
 
         private static void PerformExtraRegistrations(ContainerBuilder builder)
         {
@@ -69,7 +84,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
-            var resolvedType = Container.Resolve(interfaceType);
+            var resolvedType = _container.Resolve(interfaceType);
             resolvedType.Should().NotBeNull();
             resolvedType.Should().BeOfType(resolutionType);
             if (typeof(IDisposable).IsAssignableFrom(resolutionType))

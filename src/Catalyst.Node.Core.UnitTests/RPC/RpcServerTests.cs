@@ -56,15 +56,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void ServerConnectedToCorrectPort()
         {
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
-
             //Create ContainerBuilder based on the configuration
             ConfigureContainerBuilder(_config);
 
             //Create container
             var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
+ 
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 using (_rpcServer = container.Resolve<IRpcServer>())
                 using (var client = new TcpClient(_rpcServer.Settings.BindAddress.ToString(),

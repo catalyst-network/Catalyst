@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-*
+* 
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -26,6 +26,7 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -33,21 +34,21 @@ using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Common.UnitTests.TestUtils
+namespace Catalyst.Cli.UnitTests.TestUtils
 {
     public class ConfigFileBasedTest : FileSystemBasedTest
     {
         protected ContainerBuilder ContainerBuilder;
         protected ConfigFileBasedTest(ITestOutputHelper output) : base(output) { }
+        protected bool WriteLogsToTestOutput { get; set; } = false;
+        protected bool WriteLogsToFile { get; set; } = false;
 
         protected string LogOutputTemplate { get; set; } =
             "{Timestamp:HH:mm:ss} [{Level:u3}] ({ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}";
 
         protected LogEventLevel LogEventLevel { get; set; } = LogEventLevel.Verbose;
 
-        protected virtual void ConfigureContainerBuilder(IConfigurationRoot config,
-            bool writeLogsToTestOutput = false,
-            bool writeLogsToFile = false)
+        protected virtual void ConfigureContainerBuilder(IConfigurationRoot config)
         {
             var configurationModule = new ConfigurationModule(config);
             ContainerBuilder = new ContainerBuilder();
@@ -60,29 +61,26 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
             var passwordReader = new TestPasswordReader();
             ContainerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
-
+            
             var certificateStore = new TestCertificateStore();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
 
-            ConfigureLogging(config, writeLogsToTestOutput, writeLogsToFile);
+            ConfigureLogging(config);
         }
 
-        private void ConfigureLogging(IConfigurationRoot config, bool writeLogsToTestOutput, bool writeLogsToFile)
+        private void ConfigureLogging(IConfigurationRoot config)
 
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
 
-            if (writeLogsToTestOutput)
-            {
-                loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
-            }
+            if (WriteLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
 
-            if (writeLogsToFile)
+            if (WriteLogsToFile)
             {
-                loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
-                    LogOutputTemplate);
+                loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.Cli.log"), LogEventLevel,
+                    outputTemplate: LogOutputTemplate);
             }
-
+            
             ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
         }
     }

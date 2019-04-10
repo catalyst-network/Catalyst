@@ -75,9 +75,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
                .Build(), CurrentTestName);
 
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
-
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
