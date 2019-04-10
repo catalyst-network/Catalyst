@@ -22,6 +22,7 @@
 using System;
 using System.Text;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;

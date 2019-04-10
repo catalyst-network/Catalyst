@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests;
@@ -62,16 +63,16 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
 
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
+            var writeLogsToFile = false;
+            var writeLogsToTestOutput = false;
 
-            ConfigureContainerBuilder(_config);
+            ConfigureContainerBuilder(_config, writeLogsToTestOutput, writeLogsToFile);
 
             var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(_currentTestName);
+            _scope = container.BeginLifetimeScope(CurrentTestName);
 
             _logger = container.Resolve<ILogger>();
-            if(WriteLogsToFile || WriteLogsToTestOutput)
+            if(writeLogsToFile || writeLogsToTestOutput)
             { DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));}
 
             _certificateStore = container.Resolve<ICertificateStore>();
