@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build(), _currentTestName);
+               .Build(), CurrentTestName);
         }
 
         //TODO : this is the simplest test that can cause the build to hang
@@ -57,15 +57,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void ServerConnectedToCorrectPort()
         {
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
             //Create ContainerBuilder based on the configuration
             ConfigureContainerBuilder(_config);
 
             //Create container
             var container = ContainerBuilder.Build();
  
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var logger = container.Resolve<ILogger>();
 

@@ -55,7 +55,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
 
             var logger = Substitute.For<ILogger>();
             _keyStoreService = Substitute.For<IKeyStoreWrapper>();
-            _keystore = new LocalKeyStore(_context, _keyStoreService, _fileSystem, logger);
+            _keystore = new LocalKeyStore(_context, _keyStoreService, FileSystem, logger);
 
             _privateKey = new NSecPrivateKeyWrapper(new Key(SignatureAlgorithm.Ed25519, 
                 new KeyCreationParameters { ExportPolicy = KeyExportPolicies.AllowPlaintextExport}));
@@ -87,7 +87,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
 
             testKeyBySigning.Should().BeEquivalentTo(expectedSignedMessage, "the stored and retrieve key should be the same");
 
-            var storedData = File.ReadAllText(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, _fileName));
+            var storedData = File.ReadAllText(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, _fileName));
             storedData.Should().Be(fakeJsonData);
         }
         
