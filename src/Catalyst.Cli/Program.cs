@@ -32,7 +32,6 @@ using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
 
 namespace Catalyst.Cli
 {
