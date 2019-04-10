@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
         private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, Network network)
         {
             network = network ?? Network.Dev;
-            var currentDirectory = _fileSystem.GetCatalystHomeDir();
+            var currentDirectory = FileSystem.GetCatalystHomeDir();
             currentDirectory.Create();
             currentDirectory.Refresh();
             var existingFileInfo = new FileInfo(Path.Combine(currentDirectory.FullName, fileName));
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
             currentDirectory.Exists.Should().BeTrue("otherwise the test is not relevant");
             existingFileInfo.Exists.Should().BeTrue("otherwise the test is not relevant");
 
-            ConfigCopier.RunConfigStartUp(currentDirectory.FullName, network);
+            new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network).ToList();
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
@@ -112,14 +112,14 @@ namespace Catalyst.Node.Core.UnitTest.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RunConfigStartUp_Should_Create_Folder_If_Needed()
         {
-            var currentDirectory = _fileSystem.GetCatalystHomeDir();
+            var currentDirectory = FileSystem.GetCatalystHomeDir();
             currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
 
             var modulesDirectory =
                 new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
             var network = Network.Dev;
-            ConfigCopier.RunConfigStartUp(currentDirectory.FullName, network);
+            new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network);
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);

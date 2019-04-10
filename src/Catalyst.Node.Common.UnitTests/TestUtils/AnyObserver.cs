@@ -25,7 +25,8 @@ using Catalyst.Node.Common.Helpers.Util;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils {
+namespace Catalyst.Node.Common.UnitTests.TestUtils 
+{
     public class AnyMessageObserver : IObserver<IChanneledMessage<Any>>
     {
         private readonly ILogger _logger;

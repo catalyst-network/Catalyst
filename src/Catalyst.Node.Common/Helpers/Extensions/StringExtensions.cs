@@ -19,28 +19,20 @@
 */
 #endregion
 
-﻿using System;
-using Autofac;
-using Autofac.Configuration;
-using Microsoft.Extensions.Configuration;
+using System.IO;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils
+namespace Catalyst.Node.Common.Helpers.Extensions
 {
-    public abstract class BaseModuleConfigTest
+    public static class StringExtensions
     {
-        protected IContainer Container;
-
-        protected BaseModuleConfigTest(string configFileUnderTest, Action<ContainerBuilder> extraRegistrations = null)
+        public static Stream ToMemoryStream(this string s)
         {
-            var configuration = new ConfigurationBuilder()
-               .AddJsonFile(configFileUnderTest)
-               .Build();
-
-            var configurationModule = new ConfigurationModule(configuration);
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule(configurationModule);
-            extraRegistrations?.Invoke(containerBuilder);
-            Container = containerBuilder.Build();
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
     }
 }

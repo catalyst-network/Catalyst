@@ -20,44 +20,45 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Rpc.Node;
+using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Math.EC;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Node.Core.RPC
+namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class GetInfoRequestHandler : MessageHandlerBase<GetInfoRequest>
+    public class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>
     {
-        private readonly IRpcServerSettings _config;
+        private readonly IMempool _mempool;
 
-        public GetInfoRequestHandler(
+
+        public GetMempoolRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
-            IRpcServerSettings config,
-            ILogger logger)
+            ILogger logger, 
+            IMempool mempool)
             : base(messageStream, logger)
         {
-            _config = config;
+            _mempool = mempool;
         }
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
             if(message == NullObjects.ChanneledAny) {return;}
-            Logger.Debug("received message of type GetInfoRequest");
+            Logger.Debug("received message of type GetMempoolRequest");
             try
             {
-                var deserialised = message.Payload.FromAny<GetInfoRequest>();
+                var deserialised = message.Payload.FromAny<GetMempoolRequest>();
                 Logger.Debug("message content is {0}", deserialised);
-                var response = new GetInfoResponse
+                var response = new GetMempoolResponse
                 {
-                    Query = String.Format("Node config:\nNode Name: {0}\nIP Address: {1}\nPort: {2} ", _config.NodeId,_config.BindAddress.ToString(), _config.Port.ToString())
+                    Info = { GetMempoolContent() }
                 };
 
                 message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
@@ -68,6 +69,27 @@ namespace Catalyst.Node.Core.RPC
                     "Failed to handle GetInfoRequest after receiving message {0}", message);
                 throw;
             }
+        }
+
+        private MapField<string, string> GetMempoolContent()
+        {
+           var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
+           var memPoolMap = new MapField<string, string>();
+
+           for (var i=0; i < memPoolContentEncoded.Count; i++)
+           {
+               var sb = new StringBuilder("{");
+               foreach (var b in memPoolContentEncoded[i])
+               {
+                   sb.Append(b);
+               }
+
+               sb.Append("}");
+               
+               memPoolMap.Add(i.ToString(), sb.ToString());
+           }
+
+           return memPoolMap;
         }
     }
 }

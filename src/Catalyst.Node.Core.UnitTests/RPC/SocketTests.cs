@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -29,19 +30,26 @@ using Autofac;
 using Catalyst.Cli;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
+using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
+using NSubstitute;
 using Serilog;
 using Serilog.Extensions.Logging;
+using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -59,30 +67,39 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         public SocketTests(ITestOutputHelper output) : base(output)
         {
-            //Build configuration
-            _config = new ConfigurationBuilder()
+            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build();
+               .Build(), CurrentTestName);
 
-            AlterConfigurationToGetUniquePort();
+            var mempool = Substitute.For<IMempool>();
+            mempool.GetMemPoolContentEncoded().Returns(x =>
+                {
+                    List<Catalyst.Protocol.Transaction.Transaction> txLst = new List<Transaction>();
 
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
+                    txLst.Add(TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"));
+
+                    txLst.Add(TransactionHelper.GetTransaction(567,"standardPubKey", "sign2"));
+
+                    List<byte[]> txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+                    return txEncodedLst;
+                }
+                );
 
             ConfigureContainerBuilder(_config);
+            ContainerBuilder.RegisterInstance(mempool).As<IMempool>();
+
             var container = ContainerBuilder.Build();
 
-            _scope = container.BeginLifetimeScope(_currentTestName);
+            _scope = container.BeginLifetimeScope(CurrentTestName);
 
             _logger = container.Resolve<ILogger>();
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
 
             _certificateStore = container.Resolve<ICertificateStore>();
             _rpcServer = container.Resolve<IRpcServer>();
-
         }
 
         [Fact]
@@ -108,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             p2PMessenger.Should().NotBeNull();
 
             var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            var hasConnected = shell.OnCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
             var node1 = shell.GetConnectedNode("node1");
@@ -119,13 +136,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcClient_can_send_request_and_RpcServer_can_reply()
+        public void RpcServer_Can_Handle_GetInfoRequest()
         {
             _rpcClient = new RpcClient(_logger, _certificateStore);
             _rpcClient.Should().NotBeNull();
 
             var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.OnCommand("connect", "node", "node1");
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
             var node1 = shell.GetConnectedNode("node1");
@@ -136,7 +153,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             using (_rpcServer.MessageStream.Subscribe(serverObserver))
             using (_rpcClient.MessageStream.Subscribe(clientObserver))
             {
-                var info = shell.OnGetCommand("get", "config", "node1");
+                var info = shell.ParseCommand("get", "-i", "node1");
 
                 var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
@@ -149,18 +166,76 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
             }
-        
+
         }
 
-        private void AlterConfigurationToGetUniquePort()
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcServer_Can_Handle_GetVersionRequest()
         {
-            var serverSection = _config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
-            var randomPort = int.Parse(serverSection.GetSection("Port").Value) +
-                new Random(_currentTestName.GetHashCode()).Next(0, 500);
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
 
-            serverSection.GetSection("Port").Value = randomPort.ToString();
-            var clientSection = _config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
-            clientSection.GetChildren().ToList().ForEach(c => { c.GetSection("port").Value = randomPort.ToString(); });
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnyMessageObserver(0, _logger);
+            var clientObserver = new AnyMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                var info = shell.ParseCommand("get", "-v", "node1");
+
+                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(VersionRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
+            }
+
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcServer_Can_Handle_GetMempoolRequest()
+        {
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
+
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnyMessageObserver(0, _logger);
+            var clientObserver = new AnyMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                var info = shell.ParseCommand("get", "-m", "node1");
+
+                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
+            }
         }
 
         protected override void Dispose(bool disposing)

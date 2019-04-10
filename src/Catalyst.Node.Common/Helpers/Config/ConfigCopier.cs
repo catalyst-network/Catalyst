@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -39,7 +40,7 @@ namespace Catalyst.Node.Common.Helpers.Config
         /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        public static void RunConfigStartUp(string dataDir, Network network, string sourceFolder = null, bool overwrite = OverwriteFilesByDefault)
+        public void RunConfigStartUp(string dataDir, Network network, string sourceFolder = null, bool overwrite = OverwriteFilesByDefault)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
@@ -62,12 +63,7 @@ namespace Catalyst.Node.Common.Helpers.Config
                     modulesFolderInfo.EnumerateFiles(jsonSearchPattern)
                        .Select(m => Path.Combine(Constants.ModulesSubFolder, m.Name)));
 
-            var requiredConfigFiles = new[]
-            {
-                Constants.NetworkConfigFile(network),
-                Constants.ComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile
-            }.Concat(Constants.AllModuleFiles);
+            var requiredConfigFiles = RequiredConfigFiles(network);
 
             //TODO: think about case sensitivity of the environment we are in, this is oversimplified
             var filenameComparer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
@@ -83,6 +79,17 @@ namespace Catalyst.Node.Common.Helpers.Config
                 CopyConfigFileToFolder(dataDir, fileName, 
                     sourceFolder ?? AppDomain.CurrentDomain.BaseDirectory, overwrite);
             }
+        }
+
+        protected virtual IEnumerable<string> RequiredConfigFiles(Network network)
+        {
+            var requiredConfigFiles = new[]
+            {
+                Constants.NetworkConfigFile(network),
+                Constants.ComponentsJsonConfigFile,
+                Constants.SerilogJsonConfigFile
+            }.Concat(Constants.AllModuleFiles);
+            return requiredConfigFiles;
         }
 
         private static void CopyConfigFileToFolder(string targetFolder,

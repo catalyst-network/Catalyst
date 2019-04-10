@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -67,9 +67,12 @@ namespace Catalyst.Node.Common.Helpers.Shell
         public abstract bool OnStopWork(string[] args);
 
         public abstract bool IsConnectedNode(string nodeId);
-        
+
+        public abstract bool IsSocketChannelActive(IRpcNode node);
+
+
         public abstract IRpcNode GetConnectedNode(string nodeId);
-        
+
         public abstract IRpcNodeConfig GetNodeConfig(string nodeId);
 
         /// <summary>
@@ -135,7 +138,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
                 case "version":
                     return OnGetVersion(args.Skip(2).ToList());
                 case "mempool":
-                    return OnGetMempool();
+                    return OnGetMempool(args.Skip(2).ToList());
                 default:
                     return CommandNotFound(args);
             }
@@ -145,19 +148,19 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Prints the current loaded settings.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetConfig(IList<string> args);
+        protected abstract bool OnGetConfig(Object args);
 
         /// <summary>
         ///     Prints the current node version.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetVersion(IList<string> args);
+        protected abstract bool OnGetVersion(Object args);
 
         /// <summary>
         ///     Prints stats about the mempool implementation.
         /// </summary>
         /// <returns></returns>
-        protected abstract bool OnGetMempool();
+        protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
         ///     Parses flags passed with commands.
@@ -177,7 +180,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
             return returnArg;
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="prompt"></param>
@@ -256,6 +259,8 @@ namespace Catalyst.Node.Common.Helpers.Shell
         ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
+
+
         public bool RunConsole()
         {
             var running = true;
@@ -285,7 +290,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
 
                 try
                 {
-                    OnCommand(args);
+                    ParseCommand(args);
                 }
                 catch (SystemException ex)
                 {
@@ -296,6 +301,9 @@ namespace Catalyst.Node.Common.Helpers.Shell
             Console.ResetColor();
             return running;
         }
+
+        public abstract bool ParseCommand(params string[] args);
+
 
         /// <summary>
         /// </summary>

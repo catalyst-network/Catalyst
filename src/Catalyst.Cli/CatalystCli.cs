@@ -26,6 +26,7 @@ using Serilog;
 namespace Catalyst.Cli
 {
 
+    
     public class CatalystCli : ICatalystCli
     {
         public IAds Ads { get; set; }
@@ -35,5 +36,6 @@ namespace Catalyst.Cli
             logger.Debug("PID " + Process.GetCurrentProcess().Id);
             Ads = ads;
         }
+        
     }
 }

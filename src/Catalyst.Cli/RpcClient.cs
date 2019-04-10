@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Interfaces;
@@ -31,23 +32,23 @@ using Catalyst.Node.Common.Helpers.IO.Outbound;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
-using Serilog;
 
 namespace Catalyst.Cli
 {
     /// <summary>
     /// This class provides a command line interface (CLI) application to connect to Catalyst Node.
-    /// Through the CLI the node operator will be able to connect to any number of running nodes and run commands. 
+    /// Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
     public class RpcClient : IRpcClient, IDisposable
     {
-        private readonly ILogger _logger;      
+        private readonly ILogger _logger;
         private readonly ICertificateStore _certificateStore;
         private readonly AnyTypeClientHandler _clientHandler;
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
-        
+
         private readonly GetInfoResponseHandler _getInfoResponseHandler;
         private readonly GetVersionResponseHandler _getVersionResponseHandler;
+        private readonly GetMempoolResponseHandler _getMempoolResponseHandler;
 
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -63,9 +64,10 @@ namespace Catalyst.Cli
             _certificateStore = certificateStore;
             _clientHandler = new AnyTypeClientHandler();
             MessageStream = _clientHandler.MessageStream;
-            
+
             _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, _logger);
             _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, _logger);
+            _getMempoolResponseHandler = new GetMempoolResponseHandler(MessageStream, _logger);
         }
 
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
@@ -130,7 +132,7 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        /// Sends the message to the RPC Server by writing it asynchronously 
+        /// Sends the message to the RPC Server by writing it asynchronously
         /// </summary>
         /// <param name="node">RpcNode object which is selected to connect to by the user</param>
         /// <param name="message"></param>
@@ -149,6 +151,7 @@ namespace Catalyst.Cli
                 _logger.Information("disposing RpcClient");
                 _getInfoResponseHandler.Dispose();
                 _getVersionResponseHandler.Dispose();
+                _getMempoolResponseHandler.Dispose();
             }
         }
 

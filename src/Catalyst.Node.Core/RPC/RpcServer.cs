@@ -28,6 +28,8 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Core.RPC.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
@@ -43,13 +45,15 @@ namespace Catalyst.Node.Core.RPC
         private readonly AnyTypeServerHandler _anyTypeServerHandler;
         private readonly GetInfoRequestHandler _infoRequestHandler;
         private readonly GetVersionRequestHandler _versionRequestHandler;
-        
+        private readonly GetMempoolRequestHandler _mempoolRequestHandler;
+
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
 
         public RpcServer(IRpcServerSettings settings,
             ILogger logger, 
-            ICertificateStore certificateStore)
+            ICertificateStore certificateStore,
+            IMempool mempool)
         {
             _logger = logger;
             Settings = settings;
@@ -61,7 +65,8 @@ namespace Catalyst.Node.Core.RPC
             var longRunningTasks = new [] {StartServerAsync()};
 
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
-            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, Settings, logger);
+            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, logger);
+            _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, logger, mempool);
 
             Task.WaitAll(longRunningTasks);
         }
@@ -112,6 +117,7 @@ namespace Catalyst.Node.Core.RPC
                 _certificate?.Dispose(); 
                 _infoRequestHandler?.Dispose();
                 _versionRequestHandler.Dispose();
+                _mempoolRequestHandler.Dispose();
             }
         }
 

@@ -33,7 +33,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
     
     public sealed class TcpServer : AbstractServer
     {
-        private readonly ILogger _logger;
         private readonly IEventLoopGroup _supervisorEventLoop;
 
         /// <summary>
@@ -42,7 +41,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// <param name="logger"></param>
         public TcpServer(ILogger logger) : base(logger)
         {
-            _logger = logger;
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }
 

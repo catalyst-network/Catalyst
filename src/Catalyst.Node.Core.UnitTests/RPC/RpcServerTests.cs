@@ -43,30 +43,27 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         public RpcServerTests(ITestOutputHelper output) : base(output)
         {
-            //Build configuration
-            _config = new ConfigurationBuilder()
+            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build();
+               .Build(), CurrentTestName);
         }
 
         //TODO : this is the simplest test that can cause the build to hang
         //need to investigate and see if we can solve it
-        //[Fact(Skip = "causes build to hang")]
-        [Fact]
+        [Fact(Skip = "causes build to hang")]
+        // [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void ServerConnectedToCorrectPort()
         {
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
             //Create ContainerBuilder based on the configuration
             ConfigureContainerBuilder(_config);
 
             //Create container
             var container = ContainerBuilder.Build();
  
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var logger = container.Resolve<ILogger>();
 
@@ -77,8 +74,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     client.Should().NotBeNull();
                     client.Connected.Should().BeTrue();
                 }
-                
             }
+
+            container.Dispose();
         }
 
         protected override void Dispose(bool disposing)

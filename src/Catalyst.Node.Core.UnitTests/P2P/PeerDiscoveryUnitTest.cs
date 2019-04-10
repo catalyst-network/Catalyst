@@ -74,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             ConfigureContainerBuilder(_config);
 
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerDiscovery = container.Resolve<IPeerDiscovery>();
                 Assert.NotNull(peerDiscovery);

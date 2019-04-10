@@ -20,6 +20,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -49,22 +51,31 @@ namespace Catalyst.Node.Common.UnitTests
             sourcePath.Should().NotBeNull();
             var sourceDirectory = new DirectoryInfo(sourcePath);
 
-            var copyingText = await File.ReadAllTextAsync(Path.Combine(sourceDirectory.Parent?.FullName, LicenseHeaderFileName));
+            var copyingText = (await File.ReadAllTextAsync(Path.Combine(sourceDirectory.Parent?.FullName, LicenseHeaderFileName)))
+               .TrimEndOfLines();
             copyingText.Should().StartWith(@"#region LICENSE");
 
             var getWrongFiles = sourceDirectory.EnumerateFiles("*.cs", SearchOption.AllDirectories)
+               .Where(f => f.Directory?.Parent?.Parent?.Name != "obj")
                .Select(async f =>
                 {
-                    if (f.Name.EndsWith("AssemblyInfo.cs")) { return null;}
-                    var allText = await File.ReadAllTextAsync(f.FullName);
+                    var allText = (await File.ReadAllTextAsync(f.FullName)).TrimEndOfLines();
                     return allText.StartsWith(copyingText) ? null : f.FullName;
                 }).ToArray();
 
-            var files = (await Task.WhenAll(getWrongFiles)).Where(f => f != null).ToArray();
+            var wrongFiles = (await Task.WhenAll(getWrongFiles)).Where(f => f != null).ToArray();
 
-            files.Should().BeEmpty(
+            wrongFiles.Should().BeEmpty(
                 $"all files should have a header{Environment.NewLine}" +
-                $"{string.Join(Environment.NewLine, files)} " + Environment.NewLine);
+                $"{string.Join(Environment.NewLine, wrongFiles)} " + Environment.NewLine);
+        }
+    }
+
+    internal static class StringExtensions
+    {
+        internal static string TrimEndOfLines(this string originalString)
+        {
+            return new string(originalString.Where(c => c != '\n' && c != '\r').ToArray());
         }
     }
 }

@@ -22,122 +22,97 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
-using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Cli.UnitTests.TestUtils;
-
 using Xunit;
 using Xunit.Abstractions;
 using Moq;
+using NSubstitute;
+using FluentAssertions;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-using Serilog;
-
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
+using Catalyst.Node.Common.Helpers.Shell;
+using DotNetty.Transport.Channels;
+using Serilog;
+using Serilog.Extensions.Logging;
 
-using FluentAssertions;
 
 namespace Catalyst.Cli.UnitTests
 {
-    public class CliCommandsTests : ConfigFileBasedTest
+    public sealed class CliCommandsTests : ConfigFileBasedTest
     {
-        private readonly IConfigurationRoot _config;
-        
-        //private ICertificateStore _certificateStore;
-        
-        private readonly string LifetimeTag;
-        
-        //private RpcClient _rpcClient;
-        private ICatalystCli _shell;
-        
+        private readonly ICatalystCli _shell;
+        private readonly ILifetimeScope _scope;
+
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {
-            var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
-                
-            // check if user home data dir has a shell config
-            var shellComponentsFilePath = Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile);
-            var shellSeriLogFilePath = Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile);
-            var shellNodesFilePath = Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile);
-            
-            if (!File.Exists(shellComponentsFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.components.json"),
-                    shellComponentsFilePath);
-            }
+            var targetConfigFolder = FileSystem.GetCatalystHomeDir().FullName;
 
-            if (!File.Exists(shellSeriLogFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/shell.serilog.json"),
-                    shellSeriLogFilePath);
-            }
-                
-            if (!File.Exists(shellNodesFilePath))
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/nodes.json"),
-                    shellNodesFilePath);
-            }
-            
-            _config = new ConfigurationBuilder()
+            new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
+
+            var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellSerilogJsonConfigFile))
+               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
                .Build();
-            
+
+            var channel = Substitute.For<IChannel>();
+            channel.Active.Returns(true);
+            var tcpClient = Substitute.For<ISocketClient>();
+            tcpClient.Channel.Returns(channel);
+
+
+            var client = Substitute.For<IRpcClient>();
+            client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
+               .Returns(Task.FromResult(tcpClient));
+
+            ConfigureContainerBuilder(config);
+            ContainerBuilder.RegisterInstance(tcpClient).As<ISocketClient>();
+            ContainerBuilder.RegisterInstance(client).As<IRpcClient>();
+
             var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            LifetimeTag = declaringType.AssemblyQualifiedName;
+            var serviceCollection = new ServiceCollection();
+            var container = ContainerBuilder.Build();
+            _scope = container.BeginLifetimeScope(CurrentTestName);
+
+            _shell = container.Resolve<ICatalystCli>();
+
+            var logger = container.Resolve<ILogger>();
+            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
         }
-        
+
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         [Fact]
-        public void CanConnectToNode()
+        public void Cli_Can_Connect_To_Node()
         {
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
-            
-            var serviceCollection = new ServiceCollection();
-
-            var container = ContainerBuilder.Build();
-
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
+            using (_scope)
             {
-                _shell = container.Resolve<ICatalystCli>();
-                
-                var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
+                var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+
                 hasConnected.Should().BeTrue();
             }
         }
-        
+
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         [Fact]
-        public void CanHandleMultipleConnectionAttempts()
+        public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
-            
-            var serviceCollection = new ServiceCollection();
-
-            var container = ContainerBuilder.Build();
-
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
-            {               
-                _shell = container.Resolve<ICatalystCli>();
-                
-                var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
+            using (_scope)
+            {
+                var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
 
                 for (int i = 0; i < 10; i++)
                 {
-                    var canConnect = _shell.Ads.OnCommand("connect", "node", "node1");
+                    var canConnect = _shell.Ads.ParseCommand("connect", "-n", "node1");
                     canConnect.Should().BeTrue();
                 }
             }
@@ -146,101 +121,59 @@ namespace Catalyst.Cli.UnitTests
         [Fact(Skip = "Not ready yet.")]
         public void CanHandleSslCertificateWrongPassword()
         {
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
-            
-            var serviceCollection = new ServiceCollection();
-
-            var container = ContainerBuilder.Build();
-
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
+            using (_scope)
             {
-                _shell = container.Resolve<ICatalystCli>();
-
                 var certificateStore = new Mock<ICertificateStore>();
-                //certificateStore.Setup(x => x.ReadOrCreateCertificateFile()).Returns(false);
-                    
+
                 var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
                 hasConnected.Should().BeTrue();
             }
         }
 
-        [Fact(Skip = "Not ready yet.")]
-        public void CanGetNodeConfig()
+        [Fact]
+        public void Cli_Can_Request_Node_Config()
         {
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
-            
-            var serviceCollection = new ServiceCollection();
+            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
 
-            var container = ContainerBuilder.Build();
+            var node1 = _shell.Ads.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
 
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
-            {
-                _shell = container.Resolve<ICatalystCli>();
-
-                
-                if (!_shell.Ads.IsConnectedNode("node1"))
-                {
-                    var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
-                    hasConnected.Should().BeTrue();
-                }
-
-                var node1 = _shell.Ads.GetConnectedNode("node1");
-                node1.Should().NotBeNull("we've just connected it");
-                
-                var result = _shell.Ads.OnCommand("get", "config", "node1");
-                result.Should().BeTrue();
-            }
+            var result = _shell.Ads.ParseCommand("get", "-i", "node1");
+            result.Should().BeTrue();
         }
-        
-        [Fact(Skip = "Not ready yet.")]
-        public void TryToGetNodeConfigWithoutConnectingToNode()
+
+
+        [Fact]
+        public void Cli_Can_Request_Node_Version()
         {
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
-            
-            var serviceCollection = new ServiceCollection();
+            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
 
-            var container = ContainerBuilder.Build();
+            var node1 = _shell.Ads.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
 
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
-            {
-                _shell = container.Resolve<ICatalystCli>();
-                
-                var result = _shell.Ads.OnCommand("get", "config", "node1");
-                result.Should().BeFalse();
-            }
+            var result = _shell.Ads.ParseCommand("get", "-v", "node1");
+            result.Should().BeTrue();
         }
-        
 
-        [Fact(Skip = "Not ready yet.")]
-        public void CanGetVersion()
+        [Fact]
+        public void Cli_Can_Request_Node_Mempool()
         {
-            //Create ContainerBuilder based on the configuration
-            ConfigureContainerBuilder(_config);
-            
-            var serviceCollection = new ServiceCollection();
+            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
 
-            var container = ContainerBuilder.Build();
+            var node1 = _shell.Ads.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
 
-            using (var scope = container.BeginLifetimeScope(_currentTestName))
-            {
-                _shell = container.Resolve<ICatalystCli>();
-                
-                if (!_shell.Ads.IsConnectedNode("node1"))
-                {
-                    var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
-                    hasConnected.Should().BeTrue();
-                }
-                
-                var node1 = _shell.Ads.GetConnectedNode("node1");
-                node1.Should().NotBeNull("we've just connected it");
-                
-                
-                var result = _shell.Ads.OnCommand("get", "version", "node1");
-                result.Should().BeTrue();
-            }
+            var result = _shell.Ads.ParseCommand("get", "-m", "node1");
+            result.Should().BeTrue();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            _scope.Dispose();
         }
     }
 }

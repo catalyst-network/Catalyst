@@ -24,6 +24,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
@@ -83,7 +84,6 @@ namespace Catalyst.Node.Core
         public async Task RunAsync(CancellationToken ct)
         {
 
-            await _dfs.StartAsync(ct);
             _logger.Information("Starting the Catalyst Node");
             bool exit = false;
             do
@@ -101,13 +101,6 @@ namespace Catalyst.Node.Core
 
                 await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
                 await Task.Delay(300, ct); //just to get the next message at the bottom
-
-                _logger.Information("Creating a Ping message");
-                _logger.Information("Please type in a ping message content");
-                var ping = new PeerProtocol.Types.PingRequest { CorrelationId = Console.ReadLine().ToUtf8ByteString() };
-
-                await _p2P.Messaging.BroadcastMessageAsync(ping.ToAny());
-                await Task.Delay(300, ct); //just to get the exit message at the bottom
 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
@@ -130,7 +123,7 @@ namespace Catalyst.Node.Core
             var network = new byte[1];
             network[0] = 0x01;
             _logger.Debug(string.Join(" ", network));
-            var announcePackage = ByteUtil.Merge(network, _p2P.Identifier.Id);
+            var announcePackage = ByteUtil.Merge(network, _p2P.Identifier.PeerId.ToByteArray());
             _logger.Debug(string.Join(" ", announcePackage));
             nwStream.Write(announcePackage, 0, announcePackage.Length);
             client.Close();

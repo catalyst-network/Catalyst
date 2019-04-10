@@ -20,82 +20,76 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Dfs;
-using Ipfs;
 using Ipfs.CoreApi;
-using Ipfs.Engine;
-using PeerTalk;
+using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public class IpfsDfs : IIpfsDfs
+    public class IpfsDfs : IDfs, IDisposable
     {
-
-        private readonly IpfsEngine _ipfsDfs;
-
-        public IpfsDfs(IPasswordReader passwordReader)
+        public static readonly string HashAlgorithm = "blake2b-256";
+        public static readonly AddFileOptions AddFileOptions = new AddFileOptions
         {
-            var password = passwordReader.ReadSecurePasswordAsChars("Please provide your IPFS password");
-            //TODO handle secure strings in IPFS
-            _ipfsDfs = new IpfsEngine(password);
+            Hash = HashAlgorithm,
+            RawLeaves = true
+        };
+
+        private readonly IIpfsEngine _ipfsEngine;
+
+        private readonly ILogger _logger;
+
+        public IpfsDfs(IIpfsEngine ipfsEngine, ILogger logger)
+        {
+            _ipfsEngine = ipfsEngine;
+            _logger = logger;
         }
 
-        Task IService.StartAsync() { return this.StartAsync(); }
-
-        Task IDfs.StartAsync(CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
-            return Task.Run(() => _ipfsDfs.StartAsync(), cancellationToken);
+            var addedContent = await _ipfsEngine.FileSystem.AddTextAsync(
+                utf8Content,
+                options: AddFileOptions,
+                cancel: cancellationToken);
+            var id = addedContent.Id.Encode();
+            _logger.Debug("Text added to IPFS with id {0}", id);
+            return id;
         }
 
-        public Task<IFileSystemNode> AddFileAsync(string filename, CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public async Task<string> ReadTextAsync(string path,
+            CancellationToken cancellationToken = default)
         {
-            return _ipfsDfs.FileSystem.AddFileAsync(filename, cancel: cancellationToken);
+            _logger.Debug("Reading content at path {0} from IPFS", path);
+            return await _ipfsEngine.FileSystem.ReadAllTextAsync(path, cancellationToken);
         }
 
-        public Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public async Task<string> AddAsync(Stream content, string name = "",
+            CancellationToken cancellationToken = default)
         {
-            return _ipfsDfs.FileSystem.ReadAllTextAsync(path, cancellationToken);
+            var addedContent = await _ipfsEngine.FileSystem
+               .AddAsync(content, name, AddFileOptions, cancellationToken);
+            var id = addedContent.Id.Encode();
+            _logger.Debug("Content {1}added to IPFS with id {0}",
+                id, name +  " ");
+            return id;
         }
 
-        public IBitswapApi Bitswap => _ipfsDfs.Bitswap;
+        /// <inheritdoc />
+        public async Task<Stream> ReadAsync(string path,
+            CancellationToken cancellationToken = default)
+        {
+            _logger.Debug("Reading content at path {0} from Ipfs", path);
+            return await _ipfsEngine.FileSystem.ReadFileAsync(path, cancellationToken);
+        }
 
-        public IBlockApi Block => _ipfsDfs.Block;
-
-        public IBootstrapApi Bootstrap => _ipfsDfs.Bootstrap;
-
-        public IConfigApi Config => _ipfsDfs.Config;
-
-        public IDagApi Dag => _ipfsDfs.Dag;
-
-        public IDhtApi Dht => _ipfsDfs.Dht;
-
-        public IDnsApi Dns => _ipfsDfs.Dns;
-
-        public IFileSystemApi FileSystem => _ipfsDfs.FileSystem;
-
-        public IGenericApi Generic => _ipfsDfs.Generic;
-
-        public IKeyApi Key => _ipfsDfs.Key;
-
-        public INameApi Name => _ipfsDfs.Name;
-
-        public IObjectApi Object => _ipfsDfs.Object;
-
-        public IPinApi Pin => _ipfsDfs.Pin;
-
-        public IPubSubApi PubSub => _ipfsDfs.PubSub;
-
-        public IStatsApi Stats => _ipfsDfs.Stats;
-
-        public ISwarmApi Swarm => _ipfsDfs.Swarm;
-
-        public Task StartAsync() { return _ipfsDfs.StartAsync(); }
-        public Task StopAsync() { return _ipfsDfs.StopAsync(); }
-
-        void IDisposable.Dispose()
+        /// <inheritdoc />
+        public void Dispose()
         {
             Dispose(true);
         }
@@ -104,7 +98,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         {
             if (disposing)
             {
-                _ipfsDfs.Dispose();
+                _ipfsEngine.Dispose();
             }
         }
     }

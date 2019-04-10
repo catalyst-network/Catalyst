@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,20 +19,12 @@
 */
 #endregion
 
-using System.Security;
-using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Helpers.Cryptography;
+using SharpRepository.Repository;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public class TestCertificateStore : ICertificateStore
+    interface IReputationManager
     {
-        public X509Certificate2 ReadOrCreateCertificateFile(string fileName)
-        {
-            return CertificateStore.BuildSelfSignedServerCertificate(new SecureString());
-        }
-
-        public X509Certificate2 ReadOrCreateCertificateFile(string fileName, string password) { return CertificateStore.BuildSelfSignedServerCertificate(new SecureString()); }
+        IRepository<Peer> PeerRepository { get; }
     }
 }

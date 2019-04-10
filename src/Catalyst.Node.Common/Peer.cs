@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using System.Net;
 using System.Reflection;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
@@ -63,7 +62,7 @@ namespace Catalyst.Node.Common
             if (disposing)
             {
                 Logger.Verbose("Connection to peer {0} Disposed.",
-                    PeerIdentifier?.Id?.ToString() ?? "unknown");
+                    PeerIdentifier?.ToString() ?? "unknown");
             }
         }
     }

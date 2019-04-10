@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -19,11 +19,19 @@
 */
 #endregion
 
-using System;
-using Ipfs.CoreApi;
-using PeerTalk;
+using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.P2P;
 
-namespace Catalyst.Node.Common.Interfaces.Modules.Dfs
-{
-    public interface IIpfsDfs : IDfs, ICoreApi, IService, IDisposable { }   
+namespace Catalyst.Node.Core.P2P.Messaging {
+    public class PeerReputationChange : IPeerReputationChange
+    {
+        public IPeerIdentifier PeerIdentifier { get; }
+        public int ReputationChange { get; }
+
+        public PeerReputationChange(IPeerIdentifier peerIdentifier, int reputationChange)
+        {
+            PeerIdentifier = peerIdentifier;
+            ReputationChange = reputationChange;
+        }
+    }
 }

@@ -28,8 +28,10 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.UnitTests;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -49,9 +51,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
     {
         private readonly IConfigurationRoot _config;
         private IEnumerable<IDisposable> _subscriptions;
-        private ILifetimeScope _scope;
-        private ILogger _logger;
-        private ICertificateStore _certificateStore;
+        private readonly ILifetimeScope _scope;
+        private readonly ILogger _logger;
+        private readonly ICertificateStore _certificateStore;
 
         public P2PMessagingTests(ITestOutputHelper output) : base(output)
         {
@@ -60,20 +62,18 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
-        }
 
-        private void ConfigureTestContainer()
-        {
-            WriteLogsToFile = false;
-            WriteLogsToTestOutput = false;
+            var writeLogsToFile = false;
+            var writeLogsToTestOutput = false;
 
-            ConfigureContainerBuilder(_config);
+            ConfigureContainerBuilder(_config, writeLogsToTestOutput, writeLogsToFile);
 
             var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(_currentTestName);
+            _scope = container.BeginLifetimeScope(CurrentTestName);
 
             _logger = container.Resolve<ILogger>();
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
+            if(writeLogsToFile || writeLogsToTestOutput)
+            { DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));}
 
             _certificateStore = container.Resolve<ICertificateStore>();
         }
@@ -82,7 +82,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peers_Can_Emit_And_Receive_Broadcast()
         {
-            ConfigureTestContainer();
             var indexes = Enumerable.Range(0, 3).ToList();
 
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();
@@ -109,8 +108,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Peer_Can_Ping_Other_Peer_And_Receive_Pong()
         {
-            ConfigureTestContainer();
-
             var indexes = Enumerable.Range(0, 3).ToList();
 
             var peerSettings = indexes.Select(i => new PeerSettings(_config) { Port = 40100 + i }).ToList();

@@ -7,10 +7,10 @@
   <ItemGroup>
     <PackageReference Include="Ipfs.Api" Version="0.23.6" />
     <PackageReference Include="Ipfs.Engine" Version="0.3.0" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.3" />
     <PackageReference Include="Polly" Version="7.1.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
     <PackageReference Include="Dawn.Guard" Version="1.8.0" />
-    <PackageReference Include="Catalyst.Protocol" Version="0.0.1.2168-beta" />
     <PackageReference Include="DnsClient" Version="1.2.0" />
     <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
@@ -23,6 +23,10 @@
     <PackageReference Include="System.Reactive.Linq" Version="4.1.3" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
     <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
+    <PackageReference Include="Grpc.Tools" Version="1.19.0" PrivateAssets="All">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\submodules\nsec\src\Cryptography\AeadAlgorithm.cs" Link="Helpers\NSec\Cryptography\AeadAlgorithm.cs" />
@@ -164,6 +168,11 @@
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\LetterCasing.cs" Link="Helpers\Multiformats.Base\LetterCasing.cs" />
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Multibase.cs" Link="Helpers\Multiformats.Base\Multibase.cs" />
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\MultibaseEncoding.cs" Link="Helpers\Multiformats.Base\MultibaseEncoding.cs" />
+    <Compile Include="$(SolutionDir)\Catalyst.Node.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
+    <Compile Include="$(SolutionDir)\Catalyst.Node.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
+    <Compile Include="$(SolutionDir)\Catalyst.Node.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />
+    <Compile Include="$(SolutionDir)\Catalyst.Node.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />
+    <Compile Include="$(SolutionDir)\Catalyst.Node.Common\obj\$(Configuration)\$(TargetFrameWork)\Transaction.cs" Link="Protocol\Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="Helpers\NSec\Cryptography\Error.resx">
@@ -201,6 +210,14 @@
     <Folder Include="Interfaces\Modules\Contract" />
     <Folder Include="Interfaces\Modules\KeySigner" />
     <Folder Include="Interfaces\Modules\Ledger" />
+    <Folder Include="Protocol\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protocol\Common.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Delta.proto" Link="Protocol\Delta.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\IPPN.proto" Link="Protocol\IPPN.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protocol\Rpc.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protocol\Transaction.proto" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System">
