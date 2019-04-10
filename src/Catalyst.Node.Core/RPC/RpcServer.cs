@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -28,6 +28,7 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.RPC.Handlers;
 using DotNetty.Codecs.Protobuf;
@@ -46,14 +47,16 @@ namespace Catalyst.Node.Core.RPC
         private readonly GetInfoRequestHandler _infoRequestHandler;
         private readonly GetVersionRequestHandler _versionRequestHandler;
         private readonly GetMempoolRequestHandler _mempoolRequestHandler;
+        private readonly SignMessageRequestHandler _signMessageRequestHandler;
 
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
 
         public RpcServer(IRpcServerSettings settings,
-            ILogger logger, 
+            ILogger logger,
             ICertificateStore certificateStore,
-            IMempool mempool)
+            IMempool mempool,
+            IKeySigner keySigner)
         {
             _logger = logger;
             Settings = settings;
@@ -65,14 +68,15 @@ namespace Catalyst.Node.Core.RPC
             var longRunningTasks = new [] {StartServerAsync()};
 
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
-            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, logger);
+            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, Settings, logger);
             _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, logger, mempool);
+            _signMessageRequestHandler = new SignMessageRequestHandler(MessageStream, logger, keySigner);
 
             Task.WaitAll(longRunningTasks);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public async Task StartServerAsync()
@@ -105,7 +109,7 @@ namespace Catalyst.Node.Core.RPC
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
@@ -114,10 +118,11 @@ namespace Catalyst.Node.Core.RPC
             {
                 _rpcSocketServer?.Shutdown();
                 _cancellationSource?.Dispose();
-                _certificate?.Dispose(); 
+                _certificate?.Dispose();
                 _infoRequestHandler?.Dispose();
                 _versionRequestHandler.Dispose();
                 _mempoolRequestHandler.Dispose();
+                _signMessageRequestHandler.Dispose();
             }
         }
 

@@ -27,9 +27,11 @@ using Google.Protobuf.WellKnownTypes;
 namespace Catalyst.Node.Common.Interfaces
 {
     public interface IRpcClient : IChanneledMessageStreamer<Any>
-    {       
+    {
          Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig);
 
          Task SendMessage(IRpcNode node, Any message);
+
+         IRpcNode ConnectToNode(string nodeId, IRpcNodeConfig nodeConfig);
     }
 }

@@ -49,6 +49,7 @@ namespace Catalyst.Cli
         private readonly GetInfoResponseHandler _getInfoResponseHandler;
         private readonly GetVersionResponseHandler _getVersionResponseHandler;
         private readonly GetMempoolResponseHandler _getMempoolResponseHandler;
+        private readonly SignMessageResponseHandler _signMessageResponseHandler;
 
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -68,6 +69,7 @@ namespace Catalyst.Cli
             _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, _logger);
             _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, _logger);
             _getMempoolResponseHandler = new GetMempoolResponseHandler(MessageStream, _logger);
+            _signMessageResponseHandler = new SignMessageResponseHandler(MessageStream, _logger);
         }
 
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
@@ -142,8 +144,32 @@ namespace Catalyst.Cli
             await node.SocketClient.SendMessage(message);
         }
 
-        /*Implementing IDisposable */
+        public IRpcNode ConnectToNode(string nodeId, IRpcNodeConfig nodeConfig)
+        {
+            IRpcNode connectedNode = null;
 
+            try
+            {
+                //Connect to the node
+                var socket = GetClientSocketAsync(nodeConfig).GetAwaiter().GetResult();
+
+                //if a socket could be opened with the node
+                //then create IRpcNode and add it the node to the list of connected nodes
+                if (socket != null)
+                {
+                    connectedNode = new RpcNode(nodeConfig, socket);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw;
+            }
+
+            return connectedNode;
+        }
+
+        /*Implementing IDisposable */
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -152,6 +178,7 @@ namespace Catalyst.Cli
                 _getInfoResponseHandler.Dispose();
                 _getVersionResponseHandler.Dispose();
                 _getMempoolResponseHandler.Dispose();
+                _signMessageResponseHandler.Dispose();
             }
         }
 
