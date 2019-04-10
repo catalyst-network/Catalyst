@@ -46,7 +46,7 @@ namespace Catalyst.Cli
     }
 
     [Verb("connect", HelpText = "Connects the CLI to a catalyst node")]
-    sealed class ConnectOptions
+    public sealed class ConnectOptions
     {
         [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
         public bool Node { get; set; }
@@ -63,6 +63,26 @@ namespace Catalyst.Cli
                 new Example("Connects the CLI to a node", new ConnectOptions
                 {
                     NodeId = "Node ID"
+                })
+            };
+    }
+
+    [Verb("sign", HelpText = "Signs a message or a transaction")]
+    public sealed class SignOptions
+    {
+        [Option('m', "message", HelpText = "Directs the CLI to sign the message to be provided as the value")]
+        public string Message { get; set; }
+
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
+
+        [Usage(ApplicationAlias = "")]
+        public static IEnumerable<Example> Examples =>
+            new List<Example>
+            {
+                new Example("Signs a message or a transaction provided.", new SignOptions
+                {
+                    Node = "Messsage"
                 })
             };
     }

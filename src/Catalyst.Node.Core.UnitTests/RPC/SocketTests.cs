@@ -55,6 +55,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 {
     public sealed class SocketTests : ConfigFileBasedTest
     {
+        private const int MaxWaitInMs = 1000;
         private readonly IConfigurationRoot _config;
 
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
@@ -146,7 +147,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                    .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Payload.TypeUrl.Should().Be(GetInfoRequest.Descriptor.ShortenedFullName());
@@ -183,7 +184,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                    .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Payload.TypeUrl.Should().Be(VersionRequest.Descriptor.ShortenedFullName());
@@ -220,13 +221,46 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                    .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(500));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolRequest.Descriptor.ShortenedFullName());
 
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
+            }
+        }
+
+        [Fact]
+        public void RpcServer_Can_Handle_SignMessageRequest()
+        {
+            var shell = new Shell(_nodeRpcClientFactory, _config, _logger, _certificateStore);
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnySignedMessageObserver(0, _logger);
+            var clientObserver = new AnySignedMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                var info = shell.ParseCommand("sign", "-m", "Hello Catalyst", "-n", "node1");
+
+                var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    {
+                        _rpcClient, _rpcServer
+                    }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(SignMessageRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
             }
         }
 

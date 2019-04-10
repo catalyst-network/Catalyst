@@ -43,6 +43,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
     public sealed class IpfsDfsTests : IDisposable
     {
         private const int DelayInMs = 100;
+        private const int DelayMultiplier = 3;
         private readonly IIpfsEngine _ipfsEngine;
         private readonly ILogger _logger;
         private readonly Cid _expectedCid;
@@ -128,7 +129,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.AddTextAsync(Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * 2, (CancellationToken) c[2]).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[2]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
 

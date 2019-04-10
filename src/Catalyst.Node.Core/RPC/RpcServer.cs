@@ -31,6 +31,7 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
+using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.RPC.Handlers;
 using DotNetty.Codecs.Protobuf;
@@ -48,6 +49,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly GetInfoRequestHandler _infoRequestHandler;
         private readonly GetVersionRequestHandler _versionRequestHandler;
         private readonly GetMempoolRequestHandler _mempoolRequestHandler;
+        private readonly SignMessageRequestHandler _signMessageRequestHandler;
 
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
@@ -55,7 +57,8 @@ namespace Catalyst.Node.Core.RPC
         public RpcServer(IRpcServerSettings settings,
             ILogger logger,
             ICertificateStore certificateStore,
-            IMempool mempool)
+            IMempool mempool,
+            IKeySigner keySigner)
         {
             _logger = logger;
             Settings = settings;
@@ -72,6 +75,7 @@ namespace Catalyst.Node.Core.RPC
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
             _versionRequestHandler = new GetVersionRequestHandler(MessageStream, logger);
             _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, logger, mempool);
+            _signMessageRequestHandler = new SignMessageRequestHandler(MessageStream, logger, keySigner);
 
             Task.WaitAll(longRunningTasks);
         }
@@ -126,6 +130,7 @@ namespace Catalyst.Node.Core.RPC
                 _infoRequestHandler?.Dispose();
                 _versionRequestHandler.Dispose();
                 _mempoolRequestHandler.Dispose();
+                _signMessageRequestHandler.Dispose();
             }
         }
 

@@ -54,7 +54,7 @@ namespace Catalyst.Cli
         /// </summary>
         public static int Main()
         {
-            Log.Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
+            Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             const int bufferSize = 1024 * 67 + 128;
 
             var serviceCollection = new ServiceCollection();
@@ -114,7 +114,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Catalyst.Node failed to start." + e.Message);
+                Console.WriteLine(@"Catalyst.Node failed to start." + e.Message);
                 Environment.ExitCode = 1;
             }
 
