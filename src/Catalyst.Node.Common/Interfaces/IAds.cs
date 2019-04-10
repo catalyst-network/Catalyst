@@ -21,7 +21,7 @@
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IAds : IShell
+    public interface IAds : IShell 
     {
 
         /// <summary>
@@ -47,5 +47,7 @@ namespace Catalyst.Node.Common.Interfaces
         /// <param name="args"></param>
         /// <returns></returns>
         bool OnConsensusCommand(string[] args);
+
+        void AskForUserInput(bool userInput);
     }
 }

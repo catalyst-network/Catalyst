@@ -25,39 +25,55 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
+using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>
+    public class SignMessageRequestHandler : MessageHandlerBase<SignMessageRequest>
     {
-        private readonly IMempool _mempool;
+        private readonly IKeySigner _keySigner;
 
-
-        public GetMempoolRequestHandler(
+        public SignMessageRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger,
-            IMempool mempool)
+            IKeySigner keySigner)
             : base(messageStream, logger)
         {
-            _mempool = mempool;
+            _keySigner = keySigner;
         }
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
             if(message == NullObjects.ChanneledAny) {return;}
-            Logger.Debug("received message of type GetMempoolRequest");
+            Logger.Debug("received message of type SignMessageRequest");
             try
             {
-                var deserialised = message.Payload.FromAny<GetMempoolRequest>();
-                Logger.Debug("message content is {0}", deserialised);
-                var response = new GetMempoolResponse
+                var deserialised = message.Payload.FromAny<SignMessageRequest>();
+
+                //decode the received message
+                var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
+
+                //get the original message from the decoded message
+                var originalMessage = decodeResult.ToStringFromRLPDecoded();
+
+                //use the keysigner to sign the message
+                var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
+                var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(originalMessage));
+
+                //get the public key
+                var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
+
+                Logger.Debug("message content is {0}", deserialised.Message);
+
+                var response = new SignMessageResponse
                 {
-                    Info = { GetMempoolContent() }
+                    Signature = signature.ToByteString(),
+                    PublicKey = _keySigner.CryptoContext.ExportPublicKey(publicKey).ToByteString(),
+                    OriginalMessage = deserialised.Message
                 };
 
                 message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
@@ -65,30 +81,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetMempoolRequest after receiving message {0}", message);
+                    "Failed to handle SignMessageRequest after receiving message {0}", message);
                 throw;
             }
-        }
-
-        private MapField<string, string> GetMempoolContent()
-        {
-           var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
-           var memPoolMap = new MapField<string, string>();
-
-           for (var i=0; i < memPoolContentEncoded.Count; i++)
-           {
-               var sb = new StringBuilder("{");
-               foreach (var b in memPoolContentEncoded[i])
-               {
-                   sb.Append(b);
-               }
-
-               sb.Append("}");
-
-               memPoolMap.Add(i.ToString(), sb.ToString());
-           }
-
-           return memPoolMap;
         }
     }
 }
