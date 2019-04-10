@@ -19,22 +19,27 @@
 */
 #endregion
 
-using Catalyst.Node.Common.Interfaces;
-using System.Diagnostics;
+using System;
+using System.IO;
 using Serilog;
 
-namespace Catalyst.Cli
+namespace Catalyst.Node.Common.Helpers.Util
 {
-
-    
-    public class CatalystCli : ICatalystCli
+    public static class ConsoleProgram
     {
-        public IAds Ads { get; set; }
-
-        public CatalystCli(IAds ads, ILogger logger)
+        public static ILogger GetTempLogger(string logFileName, Type declaringType)
         {
-            Ads = ads;
+            var tempLogFile = Path.Combine(Path.GetTempPath(), logFileName);
+            var logger = new LoggerConfiguration()
+               .WriteTo.Console()
+               .WriteTo.File(tempLogFile, rollingInterval:RollingInterval.Day)
+               .CreateLogger().ForContext(declaringType);
+            return logger;
         }
-        
+
+        public static void LogUnhandledException(ILogger logger, object sender, UnhandledExceptionEventArgs e)
+        {
+            logger.Fatal((Exception)e.ExceptionObject, "Unhandled exception, Terminating: {0}", e.IsTerminating);
+        }
     }
 }
