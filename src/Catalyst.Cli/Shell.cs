@@ -8,12 +8,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -460,17 +460,21 @@ namespace Catalyst.Cli
         /// <returns>Returns true if successful and false otherwise.</returns>
         protected override bool OnGetVersion(Object opts)
         {
-            var nodeId = ((GetInfoOptions)opts).NodeId;
+            if (!(opts is GetInfoOptions ))
+            {
+                return false;
+            }
+
+            var getInfoOptions = (GetInfoOptions) opts;
+
+            var nodeId = getInfoOptions.NodeId;
 
             //Perform validations required before a command call
             var isValid = ValidatePreCommand(nodeId);
 
-            if (_askForUserInput && isValid != ValidationError.NoError)
+            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
             {
-                if (!AskUserToConnectToNode(nodeId, isValid))
-                {
-                    return false;
-                }
+                return false;
             }
 
             try
@@ -500,7 +504,14 @@ namespace Catalyst.Cli
         /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
         protected override bool OnGetConfig(object opts)
         {
-            var nodeId = ((GetInfoOptions)opts).NodeId;
+            if (!(opts is GetInfoOptions ))
+            {
+                return false;
+            }
+
+            var getInfoOptions = (GetInfoOptions) opts;
+
+            var nodeId = getInfoOptions.NodeId;
 
             //Perform validations required before a command call
             var isValid = ValidatePreCommand(nodeId);
@@ -543,14 +554,16 @@ namespace Catalyst.Cli
         /// the node specified in the command and then creates a <see cref="GetMempoolRequest"/> object and sends it in a
         /// message to the RPC server in the node.
         /// </summary>
-        /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
+        /// <param name="args"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
         /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
         protected override bool OnGetMempool(object args)
         {
-            if (!(args is GetInfoOptions getInfoOptions))
+            if (!(args is GetInfoOptions ))
             {
                 return false;
             }
+
+            var getInfoOptions = (GetInfoOptions) args;
 
             //get the node id from the command options
             var nodeId = getInfoOptions.NodeId;
@@ -590,10 +603,12 @@ namespace Catalyst.Cli
         /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
         protected override bool OnSignMessage(object opts)
         {
-            if (!(opts is SignOptions signOptions))
+            if (!(opts is SignOptions))
             {
                 return false;
             }
+
+            var signOptions = (SignOptions) opts;
 
             var message = signOptions.Message;
             var nodeId = signOptions.Node;
