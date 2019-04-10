@@ -43,7 +43,7 @@
       "Port": 42042,
       "MutualAuthentication": false,
       "AcceptInvalidCerts": false,
-      "PfxFileName": "test_certificate_01.p12"
+      "PfxFileName": "mycert.pfx"
     },
     "PersistenceConfiguration": {
       "repositories": {
