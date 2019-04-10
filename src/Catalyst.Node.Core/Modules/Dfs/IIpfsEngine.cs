@@ -20,26 +20,16 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Google.Protobuf.WellKnownTypes;
-using Serilog;
-using Catalyst.Protocol.IPPN;
+using Ipfs.CoreApi;
+using Ipfs.Engine;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
-{
-    public class PongResponseHandler : MessageHandlerBase<PingResponse>
+namespace Catalyst.Node.Core.Modules.Dfs {
+    /// <summary>
+    /// Simply presenting the functions we use from the Ipfs.Engine.IpfsEngine
+    /// to allow coding and testing against interfaces.
+    /// </summary>
+    public interface IIpfsEngine : ICoreApi, PeerTalk.IService, IDisposable
     {
-        public PongResponseHandler(IObservable<IChanneledMessage<Any>> messageStream, ILogger logger)
-        : base(messageStream, logger) { }
-
-        public override void HandleMessage(IChanneledMessage<Any> message)
-        {
-            Logger.Debug("received ping response");
-            var deserialised = message.Payload.FromAny<PingResponse>();
-            Logger.Debug("ping response content is empty");
-        }
+        IpfsEngineOptions Options { get; }
     }
 }

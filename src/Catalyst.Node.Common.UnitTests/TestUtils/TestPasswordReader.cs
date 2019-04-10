@@ -22,24 +22,31 @@
 using System.Linq;
 using System.Security;
 using Catalyst.Node.Common.Interfaces;
+using NSubstitute;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
     public class TestPasswordReader : IPasswordReader
     {
-        private const string Password = "";
+        private readonly string _expectedPassword;
 
-        public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
+        public TestPasswordReader(string expectedPassword = "")
+        {
+            _expectedPassword = expectedPassword;
+        }
+
+        public static SecureString BuildSecureStringPassword(string expectedPassword)
         {
             var secureString = new SecureString();
-            Password.ToList().ForEach(c => secureString.AppendChar(c));
+            expectedPassword.ToList().ForEach(c => secureString.AppendChar(c));
             secureString.MakeReadOnly();
             return secureString;
         }
 
-        public char[] ReadSecurePasswordAsChars(string passwordContext = "Please enter your password")
+
+        public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
         {
-            return Password.ToCharArray();
+            return BuildSecureStringPassword(_expectedPassword);
         }
     }
 }

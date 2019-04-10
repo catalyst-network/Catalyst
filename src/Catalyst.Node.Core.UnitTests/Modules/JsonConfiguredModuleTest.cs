@@ -70,6 +70,10 @@ namespace Catalyst.Node.Core.UnitTest.Modules
             var resolvedType = Container.Resolve(interfaceType);
             resolvedType.Should().NotBeNull();
             resolvedType.Should().BeOfType(resolutionType);
+            if (typeof(IDisposable).IsAssignableFrom(resolutionType))
+            {
+                ((IDisposable)resolvedType).Dispose();
+            }
         }
     }
 }
