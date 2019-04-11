@@ -23,7 +23,7 @@
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IAds : IShell 
+    public interface IAds : IShell
     {
         /// <summary>
         /// </summary>
@@ -49,12 +49,12 @@ namespace Catalyst.Node.Common.Interfaces
         /// <returns></returns>
         bool OnConsensusCommand(string[] args);
 
-        bool IsConnectedNode(string nodeId);
-
         bool IsSocketChannelActive(INodeRpcClient node);
 
         INodeRpcClient GetConnectedNode(string nodeId);
 
         void AskForUserInput(bool userInput);
+
+        bool OnSignMessage(object opts);
     }
 }

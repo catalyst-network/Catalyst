@@ -53,7 +53,7 @@ namespace Catalyst.Node.Common.Helpers.IO
         public bool AddClientToRegistry(int socketHashCode, TSocketChannel socketClient)
         {
             Guard.Argument(socketClient).NotNull();
-            Guard.Argument(socketHashCode).NotZero().NotNegative();
+            Guard.Argument(socketHashCode).NotZero();
             Guard.Argument(socketClient.Channel.Active);
             return Registry.TryAdd(socketHashCode, socketClient);
         }
@@ -61,13 +61,14 @@ namespace Catalyst.Node.Common.Helpers.IO
         /// <inheritdoc />
         public TSocketChannel GetClientFromRegistry(int socketHashCode)
         {
+            Guard.Argument(socketHashCode).NotZero();
             return Registry.TryGetValue(socketHashCode, out TSocketChannel socketClient) ? socketClient : null;
         }
 
         /// <inheritdoc />
         public bool RemoveClientFromRegistry(int socketHashCode)
         {
-            Guard.Argument(socketHashCode).NotZero().NotNegative();
+            Guard.Argument(socketHashCode).NotZero();
             return Registry.Remove(socketHashCode);
         }
 

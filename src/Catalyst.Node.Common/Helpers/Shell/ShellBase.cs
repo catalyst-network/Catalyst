@@ -164,12 +164,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool OnSignMessage(Object args);
-
-        /// <summary>
         ///     Parses flags passed with commands.
         /// </summary>
         /// <param name="args"></param>

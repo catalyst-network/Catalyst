@@ -43,6 +43,9 @@ using DotNetty.Transport.Channels;
 using Nethereum.RLP;
 using McMaster.Extensions.CommandLineUtils;
 using Catalyst.Node.Common.Helpers.Util;
+using Google.Protobuf.WellKnownTypes;
+using Org.BouncyCastle.Crypto.Engines;
+using Serilog.Core;
 
 namespace Catalyst.Cli
 {
@@ -342,83 +345,29 @@ namespace Catalyst.Cli
         /// <returns>Returns true unless an unhandled exception occurs.</returns>
         private bool OnConnectNode(string nodeId)
         {
-            //Validate the user input before trying to connect to node
-            if (!ValidatePreConnectToNode(nodeId))
-            {
-                ReturnUserMessage(NoConfigMessage);
-                return false;
-            }
-
-            var nodeConfig = GetNodeConfig(nodeId);
+            var rpcNodeConfigs = GetNodeConfig(nodeId);
 
             //Check if there is a connection has already been made to the node
-            if (IsConnectedNode(nodeId))
+            if (rpcNodeConfigs == null)
             {
-                ReturnUserMessage(NodeConnectedMessage);
-                return true;
+                return false;
             }
 
             try
             {
                 //Connect to the node and store it in the socket client registry
-                var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(nodeConfig.PfxFileName), nodeConfig);
+                var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
                 var clientHashCode =
                     _socketClientRegistry.GenerateClientHashCode(
-                        EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+                        EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
                 _socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
-            }
-
-            //Handle the exception of a wrong SSL certificate password
-            catch (PlatformNotSupportedException)
-            {
-                ReturnUserMessage(
-                    $"SSL certificate {nodeConfig.PfxFileName} is invalid. Please provide a valid SSL certificate to be able to connect to the node.");
-            }
-
-            //Handle the exception of not being able to connect to the node
-            catch (ConnectException)
-            {
-                ReturnUserMessage(
-                    $"A connection to {nodeConfig.NodeId} was refused.  Please check the node status and try again.");
-            }
-
-            //Handle the exception of the connection timing out
-            catch (ConnectTimeoutException)
-            {
-                ReturnUserMessage(
-                    $"Connection to {nodeConfig.NodeId} @ {nodeConfig.HostAddress}:{nodeConfig.Port} timed out.  Please check the node status and try again.");
             }
 
             //Handle any other exception. This is a generic error message and should not be returned to users but added
             //as a safe fail
-            catch (Exception)
+            catch (Exception e)
             {
-                ReturnUserMessage("Connection with the server couldn't be established.");
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Validates that the node is properly configured and that it has not been already connected to the node RPC server.
-        /// It also outputs messages to the command line depending on the error that happened.
-        /// </summary>
-        /// <param name="nodeId">A string including the name of the node.</param>
-        /// <returns></returns>
-        private bool ValidatePreConnectToNode(string nodeId)
-        {
-            //if the node is invalid then do not continue
-            if (!IsConfiguredNode(nodeId))
-            {
-                ReturnUserMessage(NoConfigMessage);
-                return false;
-            }
-
-            //Check if there is a connection has already been made to the node
-            if (IsConnectedNode(nodeId))
-            {
-                ReturnUserMessage(NodeConnectedMessage);
-                return false;
+                _logger.Debug(e.Message, e);
             }
 
             return true;
@@ -481,20 +430,15 @@ namespace Catalyst.Cli
 
             var nodeId = getInfoOptions.NodeId;
 
-            //Perform validations required before a command call
-            // Guard.Argument(ValidatePreCommand(nodeId)).True();
-            var isValid = ValidatePreCommand(nodeId);
-            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
-            {
-                return false;
-            }
+            var node = GetConnectedNode(nodeId);
+            Guard.Argument(node).NotNull();
 
             try
             {
                 //send the message to the server by writing it to the channel
                 var request = new VersionRequest();
 
-                GetConnectedNode(nodeId).SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {
@@ -516,23 +460,16 @@ namespace Catalyst.Cli
         {
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
-            //Perform validations required before a command call
-            var isValid = ValidatePreCommand(nodeId);
-
-            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
-            {
-                return false;
-            }
+            var node = GetConnectedNode(nodeId);
+            Guard.Argument(node).NotNull();
 
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
-                var connectedNode = GetConnectedNode(nodeId);
-
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
 
-                connectedNode.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {
@@ -564,23 +501,16 @@ namespace Catalyst.Cli
         {
             var nodeId = ((GetInfoOptions) args).NodeId;
 
-            //Perform validations required before a command call
-            var isValid = ValidatePreCommand(nodeId);
-
-            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
-            {
-                return false;
-            }
+            var node = GetConnectedNode(nodeId);
+            Guard.Argument(node).NotNull();
 
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
-                var connectedNode = GetConnectedNode(nodeId);
-
                 //send the message to the server by writing it to the channel
                 var request = new GetMempoolRequest();
 
-                connectedNode.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {
@@ -598,7 +528,7 @@ namespace Catalyst.Cli
         /// </summary>
         /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
         /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
-        protected override bool OnSignMessage(object opts)
+        public bool OnSignMessage(object opts)
         {
             if (!(opts is SignOptions))
             {
@@ -611,18 +541,13 @@ namespace Catalyst.Cli
             var nodeId = signOptions.Node;
 
             //Perform validations required before a command call
-            var isValid = ValidatePreCommand(nodeId);
+            var node = GetConnectedNode(nodeId);
 
-            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
-            {
-                return false;
-            }
+            Guard.Argument(node).NotNull();
 
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
-                var connectedNode = GetConnectedNode(nodeId);
-
                 //send the message to the server by writing it to the channel
                 var request = new SignMessageRequest();
                 var bytesForRlpEncoding = message.Trim('\"').ToBytesForRLPEncoding();
@@ -630,43 +555,12 @@ namespace Catalyst.Cli
 
                 request.Message = encodedMessage.ToByteString();
 
-                GetConnectedNode(nodeId).SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid())).Wait();
+                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid())).Wait();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        ///     Sends a Yes/No prompt question to the user of whether to connect the node included in the command.
-        ///     This message is only called if the pre command validation returned and error <code>ValidationError.NodeNotConnected</code>.
-        /// </summary>
-        /// <param name="nodeId">The node id as entered by the user in the command</param>
-        /// <param name="validationResult">The validation result returned by the <see cref="ValidatePreCommand"/> method.</param>
-        /// <returns>Returns True if the user asked to connect to the node and the connection is successful otherwise returns False.</returns>
-        private bool AskUserToConnectToNode(string nodeId, ValidationError validationResult)
-        {
-            //Perform validations required before a command call
-            if (validationResult == ValidationError.NodeNotConnected)
-            {
-                //ask the user if he/she wants to connect to the node specified
-                //if the user answered no to the question then return false
-                if (!Prompt.GetYesNo("The node is not connected.\nDo you want to connect to node?",
-                    true, ConsoleColor.Green, ConsoleColor.Black))
-                {
-                    return false;
-                }
-
-                //Call the OnConnectNode method to connect to the node
-                //if the connection to the node was not successful return false
-                if (!OnConnectNode(nodeId))
-                {
-                    return false;
-                }
             }
 
             return true;
@@ -680,31 +574,6 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Checks if the node is configured in the nodes.json config file before performing other operations.
-        /// </summary>
-        /// <param name="nodeId">The name of the node as entered at the command line</param>
-        /// <returns>True if the node exists in the configuration file and False otherwise</returns>
-        private bool IsConfiguredNode(string nodeId)
-        {
-            Guard.Argument(nodeId).NotNull();
-
-            return GetNodeConfig(nodeId) != null;
-        }
-
-        /// <summary>
-        /// Checks if the node exists in the list of connected nodes.
-        /// </summary>
-        /// <param name="nodeId">The name of the node as entered at the command line</param>
-        /// <returns>True if the node is existing in the connected nodes list and False otherwise</returns>
-        public bool IsConnectedNode(string nodeId) // todo call this not go directly to GetConnectedNode() ????????
-        {
-            Guard.Argument(nodeId).NotNull();
-
-            //if the node is in the list of connected nodes then a connection has already been established to it
-            return (GetConnectedNode(nodeId) != null);
         }
 
         /// <summary>
@@ -723,50 +592,6 @@ namespace Catalyst.Cli
             return false;
         }
 
-        /// <summary>
-        /// Runs a number of validations before running the command.  The validations include:
-        /// 1- Is the node configuration available in the nodes.json file
-        /// 2- Is there a connection established between the CLI and the node specified in the command
-        /// 3- Is the channel socket active
-        /// </summary>
-        /// <remarks>The order of the checks is important. If the node is not configured then it is useless to try and
-        /// connect and in turn to check for the socket's channel.</remarks>
-        /// <param name="nodeId">A string containing the node id.</param>
-        /// <returns>Returns one of the values of the <see cref="ValidationError"/> enum as follows:
-        /// - <see cref="ValidationError.NodeNotConfigured"/> if the node is not configured
-        /// - <see cref="ValidationError.NodeNotConnected"/> if the node is not connected to the CLI
-        /// - <see cref="ValidationError.ChannelInactive"/> if the socket channel has become inactive
-        /// - <see cref="ValidationError.NoError"/> if all checks are passed successfully
-        /// </returns>
-        private ValidationError ValidatePreCommand(string nodeId)
-        {
-            //if the node is invalid then do not continue
-            if (!IsConfiguredNode(nodeId))
-            {
-                ReturnUserMessage(NoConfigMessage);
-                return ValidationError.NodeNotConfigured;
-            }
-
-            //Check if the node is already connected otherwise do not continue
-            //if the node is already connected the method will return the instance
-            if (!IsConnectedNode(nodeId))
-            {
-                ReturnUserMessage(NodeNotConnectedMessage);
-                return ValidationError.NodeNotConnected;
-            }
-
-            var connectedNode = GetConnectedNode(nodeId);
-
-            //Check if the channel is still active
-            if (!IsSocketChannelActive(connectedNode))
-            {
-                ReturnUserMessage(ChannelInactiveMessage);
-                return ValidationError.ChannelInactive;
-            }
-
-            return ValidationError.NoError;
-        }
-
         public INodeRpcClient GetConnectedNode(string nodeId)
         {
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(node => node.NodeId.Equals(nodeId));
@@ -781,7 +606,15 @@ namespace Catalyst.Cli
 
         public IRpcNodeConfig GetNodeConfig(string nodeId)
         {
-            return _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
+            var config = _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
+
+            if (config != null)
+            {
+                return config;
+            }
+
+            ReturnUserMessage(NoConfigMessage);
+            return null;
         }
 
         private void ReturnUserMessage(string message)
