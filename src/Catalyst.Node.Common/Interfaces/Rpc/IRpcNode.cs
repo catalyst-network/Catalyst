@@ -21,19 +21,11 @@
 
 #endregion
 
-using System.Net;
-using Microsoft.Extensions.Configuration;
-
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Rpc
 {
-    public interface IRpcServerSettings
+    public interface IRpcNode
     {
-        IConfigurationRoot NodeConfig { get; }
-
-        int Port { get; }
-        IPAddress BindAddress { get; }
-        bool MutualAuthentication { get; }
-        bool AcceptInvalidCerts { get; }
-        string PfxFileName { get; }
+        IRpcNodeConfig Config { get; }
+        ISocketClient SocketClient { get; }
     }
 }

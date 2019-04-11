@@ -34,7 +34,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     {
         protected AbstractClient(ILogger logger) : base(logger) { }
 
-        protected abstract void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
+        protected abstract Task Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
 
         public async Task SendMessage(AnySigned message)
         {

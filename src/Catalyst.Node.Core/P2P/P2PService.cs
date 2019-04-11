@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Common;
@@ -36,15 +37,12 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    internal sealed class P2PService : UdpServer, IP2P
+    internal sealed class P2PService : UdpServer, IP2PService
     {
-        private readonly IPeerSettings _settings;
-        private readonly IPeerIdentifier _peerIdentifier;
         private readonly PingRequestHandler _pingRequestHandler;
         private readonly TransactionHandler _transactionHandler;
         private readonly ISocketClientRegistry<IPeerClient> _socketClientRegistry;
 
-        public IP2PMessaging Messaging { get; }
         public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
@@ -52,15 +50,14 @@ namespace Catalyst.Node.Core.P2P
             IPeerDiscovery peerDiscovery)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            _settings = settings;
             Discovery = peerDiscovery;
             _socketClientRegistry = new SocketClientRegistry<IPeerClient>();
 
-            _peerIdentifier = new PeerIdentifier(_settings);
+            IPeerIdentifier peerIdentifier = new PeerIdentifier(settings);
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
 
             MessageStream = protoDatagramChannelHandler.MessageStream;
-            _pingRequestHandler = new PingRequestHandler(MessageStream, _peerIdentifier, Logger);
+            _pingRequestHandler = new PingRequestHandler(MessageStream, peerIdentifier, Logger);
             _transactionHandler = new TransactionHandler(MessageStream, Logger);
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
@@ -72,7 +69,7 @@ namespace Catalyst.Node.Core.P2P
             {
                 Bootstrap(new InboundChannelInitializer<IChannel>(channel => { },
                     channelHandlers
-                )).StartServer(_settings.BindAddress, _settings.Port)
+                )).StartServer(settings.BindAddress, settings.Port)
             };
 
             Task.WaitAll(longRunningTasks);

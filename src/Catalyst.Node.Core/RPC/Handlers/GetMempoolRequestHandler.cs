@@ -30,6 +30,7 @@ using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.Collections;
 using ILogger = Serilog.ILogger;

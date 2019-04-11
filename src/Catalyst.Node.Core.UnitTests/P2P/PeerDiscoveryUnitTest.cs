@@ -32,6 +32,7 @@ using NSubstitute;
 using SharpRepository.Repository;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using DnsClient;
 using FluentAssertions;

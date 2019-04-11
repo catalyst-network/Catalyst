@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Serilog;
 
 namespace Catalyst.Node.Common.P2P

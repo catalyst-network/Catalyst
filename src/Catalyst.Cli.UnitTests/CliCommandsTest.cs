@@ -37,6 +37,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Catalyst.Cli.Rpc;
+using Catalyst.Node.Common.Interfaces.Rpc;
 using DotNetty.Transport.Channels;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -85,7 +86,7 @@ namespace Catalyst.Cli.UnitTests
         {
             using (_scope)
             {
-                var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+                var hasConnected = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
 
                 hasConnected.Should().BeTrue();
             }
@@ -98,12 +99,12 @@ namespace Catalyst.Cli.UnitTests
         {
             using (_scope)
             {
-                var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+                var hasConnected = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
 
                 for (int i = 0; i < 10; i++)
                 {
-                    var canConnect = _shell.Ads.ParseCommand("connect", "-n", "node1");
+                    var canConnect = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                     canConnect.Should().BeTrue();
                 }
             }
@@ -116,7 +117,7 @@ namespace Catalyst.Cli.UnitTests
             {
                 var certificateStore = new Mock<ICertificateStore>();
 
-                var hasConnected = _shell.Ads.OnCommand("connect", "node", "node1");
+                var hasConnected = _shell.AdvancedShell.OnCommand("connect", "node", "node1");
                 hasConnected.Should().BeTrue();
             }
         }
@@ -124,30 +125,30 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Config()
         {
-            _shell.Ads.AskForUserInput(false);
+            _shell.AdvancedShell.AskForUserInput(false);
 
-            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            var hasConnected = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
-            var node1 = _shell.Ads.GetConnectedNode("node1");
+            var node1 = _shell.AdvancedShell.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
 
-            var result = _shell.Ads.ParseCommand("get", "-i", "node1");
+            var result = _shell.AdvancedShell.ParseCommand("get", "-i", "node1");
             result.Should().BeTrue();
         }
 
         [Fact]
         public void Cli_Can_Request_Node_Version()
         {
-            _shell.Ads.AskForUserInput(false);
+            _shell.AdvancedShell.AskForUserInput(false);
 
-            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            var hasConnected = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
-            var node1 = _shell.Ads.GetConnectedNode("node1");
+            var node1 = _shell.AdvancedShell.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
 
-            var result = _shell.Ads.ParseCommand("get", "-v", "node1");
+            var result = _shell.AdvancedShell.ParseCommand("get", "-v", "node1");
             result.Should().BeTrue();
         }
 
@@ -159,26 +160,26 @@ namespace Catalyst.Cli.UnitTests
             var testCertStore = new TestCertificateStore();
             INodeRpcClient nodeRpcClient = nodeRpcClientFactory.GetClient(testCertStore.ReadOrCreateCertificateFile("mycert.pfx", "test"), Arg.Any<IRpcNodeConfig>());
 
-            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            var hasConnected = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
-            var node1 = _shell.Ads.GetConnectedNode("node1");
+            var node1 = _shell.AdvancedShell.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
 
-            var result = _shell.Ads.ParseCommand("get", "-m", "node1");
+            var result = _shell.AdvancedShell.ParseCommand("get", "-m", "node1");
             result.Should().BeTrue();
         }
 
         [Fact]
         public void Cli_Can_Request_Node_To_Sign_A_Message()
         {
-            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            var hasConnected = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
-            var node1 = _shell.Ads.GetConnectedNode("node1");
+            var node1 = _shell.AdvancedShell.GetConnectedNode("node1");
             node1.Should().NotBeNull("we've just connected it");
 
-            var result = _shell.Ads.ParseCommand("sign", "-m", "test message", "-n", "node1");
+            var result = _shell.AdvancedShell.ParseCommand("sign", "-m", "test message", "-n", "node1");
             result.Should().BeTrue();
         }
 

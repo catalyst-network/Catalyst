@@ -21,16 +21,23 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Serilog;
+using SharpRepository.Repository;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IRpcNodeConfig
+    public interface IPeerDiscovery
     {
-        string NodeId { get; set; }
-        IPAddress HostAddress { get; set; }
-        int Port { get; set; }
-        string PfxFileName { get; set; }
-        string SslCertPassword { get; set; }
+        IDns Dns { get; }
+        ILogger Logger { get; }
+        IList<string> SeedNodes { get; }
+        IList<IPEndPoint> Peers { get; }
+        IRepository<Peer> PeerRepository { get; }
+        Task GetSeedNodesFromDns(IList<string> seedServers);
+        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
     }
 }

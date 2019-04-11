@@ -22,6 +22,7 @@
 #endregion
 
 using System.Net;
+using System.Threading.Tasks;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -32,7 +33,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     {
         protected TcpClient(ILogger logger) : base(logger) { }
 
-        protected override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected override Task Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
         {
             Channel = new Bootstrap()
                .Group(WorkerEventLoop)
@@ -41,6 +42,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
                .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port).GetAwaiter().GetResult();
+            return Task.CompletedTask;
         }
     }
 }

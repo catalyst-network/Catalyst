@@ -22,18 +22,15 @@
 #endregion
 
 using System;
-using System.Net;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Rpc
 {
-    public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
+    public interface IRpcServer : IChanneledMessageStreamer<AnySigned>, IDisposable
     {
-        PeerId PeerId { get; }
-        string ClientId { get; }
-        string ClientVersion { get; }
-        IPAddress Ip { get; }
-        int Port { get; }
-        byte[] PublicKey { get; }
+        Task StartServerAsync();
+        IRpcServerSettings Settings { get; }
     }
 }

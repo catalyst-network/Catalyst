@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.P2P;
 using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Serilog;

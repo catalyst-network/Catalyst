@@ -26,7 +26,7 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Rpc
 {
     public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned>
     {

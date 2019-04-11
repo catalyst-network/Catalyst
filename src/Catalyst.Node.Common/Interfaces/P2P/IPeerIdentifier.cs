@@ -21,23 +21,19 @@
 
 #endregion
 
-using System.Collections.Generic;
+using System;
 using System.Net;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using SharpRepository.Repository;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IPeerDiscovery
+    public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
     {
-        IDns Dns { get; }
-        ILogger Logger { get; }
-        IList<string> SeedNodes { get; }
-        IList<IPEndPoint> Peers { get; }
-        IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(IList<string> seedServers);
-        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        PeerId PeerId { get; }
+        string ClientId { get; }
+        string ClientVersion { get; }
+        IPAddress Ip { get; }
+        int Port { get; }
+        byte[] PublicKey { get; }
     }
 }

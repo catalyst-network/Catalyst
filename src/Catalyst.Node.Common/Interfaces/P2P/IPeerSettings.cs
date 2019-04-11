@@ -21,16 +21,30 @@
 
 #endregion
 
-using System;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Protocol.Common;
+using System.Collections.Generic;
+using System.Net;
+using Catalyst.Node.Common.Helpers.Config;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IRpcServer : IChanneledMessageStreamer<AnySigned>, IDisposable
+    public interface IPeerSettings
     {
-        Task StartServerAsync();
-        IRpcServerSettings Settings { get; }
+        Network Network { get; }
+        string PayoutAddress { get; }
+        string PublicKey { get; }
+        bool Announce { get; }
+        IPEndPoint AnnounceServer { get; }
+        bool MutualAuthentication { get; }
+        bool AcceptInvalidCerts { get; }
+        ushort MaxConnections { get; }
+        int Port { get; }
+        IPAddress BindAddress { get; }
+        IPEndPoint EndPoint { get; }
+        int Magic { get; }
+        string PfxFileName { get; }
+        IList<string> KnownNodes { get; }
+        IList<string> SeedServers { get; }
+        byte AddressVersion { get; }
+        string SslCertPassword { get; }
     }
 }

@@ -23,6 +23,7 @@
 
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Rpc;
 
 namespace Catalyst.Cli.Rpc
 {

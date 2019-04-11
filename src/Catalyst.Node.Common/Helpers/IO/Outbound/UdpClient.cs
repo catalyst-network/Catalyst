@@ -23,6 +23,7 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
@@ -35,7 +36,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Outbound
     {
         protected UdpClient(ILogger logger) : base(logger) { }
 
-        protected override async void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected override async Task Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
         {
             Channel = await new Bootstrap()
                .Group(WorkerEventLoop)

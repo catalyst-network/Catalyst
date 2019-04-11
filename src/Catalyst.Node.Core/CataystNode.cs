@@ -32,6 +32,8 @@ using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.Interfaces.Rpc;
 using Serilog;
 
 namespace Catalyst.Node.Core
@@ -45,12 +47,12 @@ namespace Catalyst.Node.Core
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
-        private readonly IP2P _p2P;
+        private readonly IP2PService _p2P;
         private readonly IRpcServer _rpcServer;
 
         private bool _disposed;
 
-        public CatalystNode(IP2P p2P,
+        public CatalystNode(IP2PService p2P,
             ICertificateStore certificateStore,
             IConsensus consensus,
             IDfs dfs,

@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Rpc
 {
     public interface IRpcNodesSettings
     {

@@ -13,7 +13,7 @@
             "type": "Catalyst.Cli.Rpc.NodeRpcClientFactory",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.INodeRpcClientFactory, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.Rpc.INodeRpcClientFactory, Catalyst.Node.Common"
                 }
             ]
         },
@@ -21,7 +21,7 @@
             "type": "Catalyst.Cli.Shell",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IAds, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.IAdvancedShell, Catalyst.Node.Common"
                 }
             ]
         },

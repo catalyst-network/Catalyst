@@ -21,11 +21,28 @@
 
 #endregion
 
-namespace Catalyst.Node.Common.Interfaces
+using System;
+
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IRpcNode
+    public interface IPeer
     {
-        IRpcNodeConfig Config { get; }
-        ISocketClient SocketClient { get; }
+        int Reputation { get; }
+        DateTime LastSeen { get; }
+        IPeerIdentifier PeerIdentifier { get; }
+        bool IsAwolPeer { get; }
+        TimeSpan InactiveFor { get; }
+
+        /// <summary>
+        /// </summary>
+        void Touch();
+
+        /// <summary>
+        /// </summary>
+        void IncreaseReputation(int mer = 1);
+
+        /// <summary>
+        /// </summary>
+        void DecreaseReputation(int mer = 1);
     }
 }

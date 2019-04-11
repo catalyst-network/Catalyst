@@ -29,11 +29,11 @@ namespace Catalyst.Cli
 {
     public class CatalystCli : ICatalystCli
     {
-        public IAds Ads { get; set; }
+        public IAdvancedShell AdvancedShell { get; set; }
 
-        public CatalystCli(IAds ads, ILogger logger)
+        public CatalystCli(IAdvancedShell advancedShell, ILogger logger)
         {
-            Ads = ads;
+            AdvancedShell = advancedShell;
         }
     }
 }

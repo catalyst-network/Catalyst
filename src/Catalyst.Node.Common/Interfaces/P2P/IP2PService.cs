@@ -21,19 +21,14 @@
 
 #endregion
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IP2P
+    public interface IP2PService
     {
         /// <summary>
         ///     The discovery mechanism for the peer network.
         /// </summary>
         IPeerDiscovery Discovery { get; }
-
-        /// <summary>
-        ///     Peer messaging service.
-        /// </summary>
-        IP2PMessaging Messaging { get; }
 
         // /// <summary>
         // ///     Request the node at <see cref="targetNode" /> for a list of peers.

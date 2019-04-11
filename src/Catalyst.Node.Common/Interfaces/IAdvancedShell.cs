@@ -21,9 +21,11 @@
 
 #endregion
 
+using Catalyst.Node.Common.Interfaces.Rpc;
+
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IAds : IShell
+    public interface IAdvancedShell : IShell
     {
         /// <summary>
         /// </summary>

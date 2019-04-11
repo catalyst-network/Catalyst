@@ -33,6 +33,8 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.RPC.Handlers;
 using DotNetty.Codecs.Protobuf;

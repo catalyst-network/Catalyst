@@ -43,13 +43,15 @@ using DotNetty.Transport.Channels;
 using Nethereum.RLP;
 using McMaster.Extensions.CommandLineUtils;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.Interfaces.Rpc;
 using Google.Protobuf.WellKnownTypes;
 using Org.BouncyCastle.Crypto.Engines;
 using Serilog.Core;
 
 namespace Catalyst.Cli
 {
-    public sealed class Shell : ShellBase, IAds, IObserver<IChanneledMessage<AnySigned>>
+    public sealed class Shell : ShellBase, IAdvancedShell, IObserver<IChanneledMessage<AnySigned>>
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly ICertificateStore _certificateStore;
