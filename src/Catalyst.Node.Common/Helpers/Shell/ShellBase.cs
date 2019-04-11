@@ -23,7 +23,6 @@
 
 using System;
 using System.Reflection;
-using System.Security;
 using System.Text;
 using Catalyst.Node.Common.Interfaces;
 using System.Globalization;
@@ -66,14 +65,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <returns></returns>
         public abstract bool OnStopWork(string[] args);
-
-        // public abstract bool IsConnectedNode(string nodeId);
-        //
-        // public abstract bool IsSocketChannelActive(IRpcNode node);
-        //
-        // public abstract IRpcNode GetConnectedNode(string nodeId);
-        //
-        // public abstract IRpcNodeConfig GetNodeConfig(string nodeId);
 
         /// <summary>
         ///     Prints a list of available cli commands.
@@ -163,97 +154,11 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// <returns></returns>
         protected abstract bool OnGetMempool(Object args);
 
-        /// <summary>
-        ///     Parses flags passed with commands.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <param name="regExPattern"></param>
-        private string ParseCmdArgs(string[] args, string regExPattern)
-        {
-            string returnArg = null;
-            foreach (var arg in args)
-            {
-                if (new Regex(@"[regExPattern]+").IsMatch(arg))
-                {
-                    returnArg = arg.Replace(regExPattern, "");
-                }
-            }
-
-            return returnArg;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="prompt"></param>
-        /// <returns></returns>
-        public static string ReadPassword(string prompt)
-        {
-            const string t =
-                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-            var sb = new StringBuilder();
-            ConsoleKeyInfo key;
-            Console.WriteLine($@"${prompt}:");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-
-            do
-            {
-                key = Console.ReadKey(true);
-                if (t.IndexOf(key.KeyChar) != -1)
-                {
-                    sb.Append(key.KeyChar);
-                    Console.WriteLine('*'.ToString());
-                }
-                else if (key.Key == ConsoleKey.Backspace && sb.Length > 0)
-                {
-                    sb.Length--;
-                    ShellLogKey(key);
-                }
-            } while (key.Key != ConsoleKey.Enter);
-
-            Console.ForegroundColor = ConsoleColor.White;
-            return sb.ToString();
-        }
-
         private static void ShellLogKey(ConsoleKeyInfo key)
         {
             Console.WriteLine(key.KeyChar.ToString());
             Console.WriteLine(' '.ToString());
             Console.WriteLine(key.KeyChar.ToString());
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="prompt"></param>
-        /// <returns></returns>
-        public static SecureString ReadSecureString(string prompt)
-        {
-            const string t =
-                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-            var securePwd = new SecureString();
-            ConsoleKeyInfo key;
-            Console.WriteLine(prompt);
-            Console.WriteLine(@": ");
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-
-            do
-            {
-                key = Console.ReadKey(true);
-                if (t.IndexOf(key.KeyChar) != -1)
-                {
-                    securePwd.AppendChar(key.KeyChar);
-                    Console.WriteLine('*'.ToString(AppCulture));
-                }
-                else if (key.Key == ConsoleKey.Backspace && securePwd.Length > 0)
-                {
-                    securePwd.RemoveAt(securePwd.Length - 1);
-                    ShellLogKey(key);
-                }
-            } while (key.Key != ConsoleKey.Enter);
-
-            Console.ForegroundColor = ConsoleColor.White;
-            securePwd.MakeReadOnly();
-            return securePwd;
         }
 
         /// <summary>

@@ -30,11 +30,11 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public abstract class AbstractClient<TChannel> : AbstractIo, ISocketClient where TChannel : IChannel, new()
+    public abstract class AbstractClient : AbstractIo, ISocketClient
     {
         protected AbstractClient(ILogger logger) : base(logger) { }
 
-        protected abstract Task Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
+        protected abstract void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
 
         public async Task SendMessage(AnySigned message)
         {

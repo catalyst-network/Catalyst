@@ -125,8 +125,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Config()
         {
-            _shell.AdvancedShell.AskForUserInput(false);
-
             var hasConnected = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 
@@ -140,8 +138,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Version()
         {
-            _shell.AdvancedShell.AskForUserInput(false);
-
             var hasConnected = _shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
 

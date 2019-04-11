@@ -80,9 +80,6 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
             urlList.Add(domain1);
             urlList.Add(domain2);
 
-            // var queryResponse1 = Substitute.For<IDnsQueryResponse>();
-            // var queryResponse2 = Substitute.For<IDnsQueryResponse>();
-
             MockQueryResponse.CreateFakeLookupResult(domain1, "value1", _lookupClient);
 
             _lookupClient.QueryAsync(Arg.Is(domain2), Arg.Any<QueryType>())

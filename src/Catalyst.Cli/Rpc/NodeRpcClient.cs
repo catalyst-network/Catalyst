@@ -60,8 +60,8 @@ namespace Catalyst.Cli.Rpc
         /// </summary>
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
-        public NodeRpcClient(X509Certificate certificate,
-            IRpcNodeConfig nodeConfig) : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+        public NodeRpcClient(X509Certificate certificate, IRpcNodeConfig nodeConfig) 
+            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var anySignedTypeClientHandler = new AnySignedTypeClientHandler();
             MessageStream = anySignedTypeClientHandler.MessageStream;

@@ -30,7 +30,6 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
 {
     public class ConsolePasswordReader : IPasswordReader
     {
-        //@TODO we have some duplication here between shell base
         public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
         {
             var pwd = new SecureString();

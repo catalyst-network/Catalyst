@@ -23,6 +23,8 @@
 
 using System;
 using System.IO;
+using System.Security;
+using System.Security.Cryptography;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Interfaces;
@@ -102,16 +104,11 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
             _keystore.StoreKey(_privateKey, _fileName, _password);
 
             _keyStoreService.DecryptKeyStoreFromFile(Arg.Any<string>(), Arg.Is<string>(s => s.EndsWith(_fileName)))
-               .Throws(new CustomNethereumException("wrong password"));
+               .Throws(new CryptographicException("wrong password"));
 
             string password2 = "incorrect password";
             Action action = () => _keystore.GetKey(_fileName, password2);
-            action.Should().Throw<CustomNethereumException>("we should not be able to retrieve a key with the wrong password");
-        }
-
-        private sealed class CustomNethereumException : Exception
-        {
-            public CustomNethereumException(string message) : base(message) { }
+            action.Should().Throw<CryptographicException>("we should not be able to retrieve a key with the wrong password");
         }
     }
 }

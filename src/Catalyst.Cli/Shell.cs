@@ -65,12 +65,6 @@ namespace Catalyst.Cli
         private const string NoConfigMessage =
             "Node not configured. Add node to config file and try again.";
 
-        private const string NodeConnectedMessage = "Connection already established with the node.";
-        private const string NodeNotConnectedMessage = "Node is not connected. Connect to node first.";
-        private const string ChannelInactiveMessage = "Node is not connected. Connect to node first.";
-
-        private bool _askForUserInput = true;
-
         /// <summary>
         /// </summary>
         public Shell(INodeRpcClientFactory nodeRpcClientFactory, IConfigurationRoot config, ILogger logger, ICertificateStore certificateStore)
@@ -95,8 +89,6 @@ namespace Catalyst.Cli
                    .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
                 IPAddress.Loopback, IPEndPoint.MaxPort);
         }
-
-        public void AskForUserInput(bool userInput) { _askForUserInput = userInput; }
 
         /// <summary>
         /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult

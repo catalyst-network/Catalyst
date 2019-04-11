@@ -32,19 +32,19 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public abstract class UdpClient : AbstractClient<SocketDatagramChannel>, IUdpClient
+    public class UdpClient : AbstractClient, IUdpClient
     {
         protected UdpClient(ILogger logger) : base(logger) { }
 
-        protected override async Task Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected sealed override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
         {
-            Channel = await new Bootstrap()
+            Channel = new Bootstrap()
                .Group(WorkerEventLoop)
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
-               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort);
+               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort).GetAwaiter().GetResult();
         }
     }
 }

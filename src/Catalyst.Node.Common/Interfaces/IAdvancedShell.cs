@@ -55,8 +55,6 @@ namespace Catalyst.Node.Common.Interfaces
 
         INodeRpcClient GetConnectedNode(string nodeId);
 
-        void AskForUserInput(bool userInput);
-
         bool OnSignMessage(object opts);
     }
 }

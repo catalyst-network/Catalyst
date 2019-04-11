@@ -49,12 +49,12 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            Logger.Information("Ping Message Recieved");
+            Logger.Information("Ping Message Received");
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
             Logger.Debug("message content is {0}", deserialised);
 
-            // var pingResponse = new PingResponse().ToAnySigned(_peerIdentifier.PeerId, new Guid(message.Payload.CorrelationId.ToByteArray()));
-            // message.Context.Channel.WriteAndFlushAsync(pingResponse).GetAwaiter().GetResult();
+            var pingResponse = new PingResponse().ToAnySigned(_peerIdentifier.PeerId, new Guid(message.Payload.CorrelationId.ToByteArray()));
+            message.Context.Channel.WriteAndFlushAsync(pingResponse).GetAwaiter().GetResult();
         }
     }
 }
