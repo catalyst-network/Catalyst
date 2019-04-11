@@ -32,6 +32,7 @@ using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Util;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
@@ -39,14 +40,20 @@ namespace Catalyst.Cli
 {
     internal static class Program
     {
-        private static readonly ILogger Logger;
+        private static ILogger _logger;
         private static readonly string LifetimeTag;
+        private static readonly Type DeclaringType;
+        private static readonly string LogFileName = "Catalyst.Cli..log";
 
         static Program()
         {
-            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            Logger = Log.Logger.ForContext(declaringType);
-            LifetimeTag = declaringType.AssemblyQualifiedName;
+            DeclaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            _logger = ConsoleProgram.GetTempLogger(LogFileName, DeclaringType);
+
+            AppDomain.CurrentDomain.UnhandledException +=
+                (sender, args) => ConsoleProgram.LogUnhandledException(_logger, sender, args);
+
+            LifetimeTag = DeclaringType.AssemblyQualifiedName;
         }
 
         /// <summary>
@@ -54,7 +61,9 @@ namespace Catalyst.Cli
         /// </summary>
         public static int Main()
         {
-            Logger.Debug(System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
+            _logger.Information("Catalyst.Cli started with process id {0}",
+                System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
+
             const int bufferSize = 1024 * 67 + 128;
 
             var serviceCollection = new ServiceCollection();
@@ -62,7 +71,6 @@ namespace Catalyst.Cli
             try
             {
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
-
                 new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
 
                 var config = new ConfigurationBuilder()
@@ -80,15 +88,14 @@ namespace Catalyst.Cli
 
                 var loggerConfiguration =
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
-                Log.Logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, "Catalyst.Node..log"),
+                _logger = loggerConfiguration.WriteTo
+                   .File(Path.Combine(targetConfigFolder, LogFileName),
                         rollingInterval: RollingInterval.Day,
                         outputTemplate:
                         "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
-                   .CreateLogger();
+                   .CreateLogger().ForContext(DeclaringType);
 
                 containerBuilder.RegisterLogger();
-
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
@@ -98,7 +105,7 @@ namespace Catalyst.Cli
                         Console.OpenStandardInput(bufferSize),
                         Console.InputEncoding, false, bufferSize
                     )
-                );
+                ); 
 
                 // Add .Net Core serviceCollection to the Autofac container.
                 using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
@@ -114,7 +121,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                Console.WriteLine(@"Catalyst.Node failed to start." + e.Message);
+                _logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
 
