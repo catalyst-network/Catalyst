@@ -25,26 +25,36 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Cli;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Helpers.Extensions;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Shell;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.Modules.KeySigner;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
+using NSec.Cryptography;
 using NSubstitute;
+using NSubstitute.Core.Arguments;
 using Serilog;
 using Serilog.Extensions.Logging;
 using Xunit;
@@ -63,6 +73,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
 
+        private readonly IKeySigner _keySigner;
+
         public SocketTests(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
@@ -72,6 +84,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .Build(), CurrentTestName);
 
+            //Substituting the Mempool
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
@@ -98,6 +111,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _certificateStore = container.Resolve<ICertificateStore>();
             _rpcServer = container.Resolve<IRpcServer>();
+            _keySigner = container.Resolve<IKeySigner>();
         }
 
         [Fact]
@@ -271,63 +285,35 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_Can_Handle_VerifyMessageRequest()
         {
-            _rpcClient = new RpcClient(_logger, _certificateStore);
-            _rpcClient.Should().NotBeNull();
+            var fakeContext = Substitute.For<IChannelHandlerContext>();
+            var fakeChannel = Substitute.For<IChannel>();
+            
+            fakeContext.Channel.Returns(fakeChannel);
+            
+            /*var keySigner = Substitute.For<IKeySigner>();
+            keySigner.CryptoContext.GeneratePrivateKey()
+               .Returns(new NSecPrivateKeyWrapper(Key.Create(SignatureAlgorithm.Ed25519)));*/
 
-            var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-            hasConnected.Should().BeTrue();
-
-            var node1 = shell.GetConnectedNode("node1");
-            node1.Should().NotBeNull("we've just connected it");
-
-            var serverObserver = new AnyMessageObserver(0, _logger);
-            var clientObserver = new AnyMessageObserver(1, _logger);
-            using (_rpcServer.MessageStream.Subscribe(serverObserver))
-            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            const string message = "Hello Catalyst";
+            var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
+            var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(message));
+            var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
+            
+            var request =new VerifyMessageRequest()
             {
-                string message = "Hello Catalyst";
-                
-                //sign a message
-                var info = shell.ParseCommand("sign", "-m", message, "-n", node1.Config.NodeId);
+                Message = message.ToUtf8ByteString(),
+                PublicKey = Nethereum.RLP.RLP.EncodeElement(
+                    publicKey.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey)).ToByteString(),
+                Signature = signature.ToByteString()
+            }.ToAny();                
+            var channeledAny = new ChanneledAny(fakeContext, request);
+            var signRequest = new [] {channeledAny}.ToObservable();
+            
+            var handler = new VerifyMessageRequestHandler(signRequest, _logger, _keySigner);
 
-                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
-                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
-                   .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
-
-                serverObserver.Received.Should().NotBeNull();
-                serverObserver.Received.Payload.TypeUrl.Should().Be(SignMessageRequest.Descriptor.ShortenedFullName());
-
-                clientObserver.Received.Should().NotBeNull();
-                clientObserver.Received.Payload.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
-                
-                var signMessageResponse = clientObserver.Received.Payload.FromAny<SignMessageResponse>();
-                
-                //decode the received message
-                var decodedOriginalMessage = Nethereum.RLP.RLP.Decode(signMessageResponse.OriginalMessage.ToByteArray())[0].RLPData;
-                var originalMessage = decodedOriginalMessage.ToStringFromRLPDecoded();
-
-                originalMessage.Should().NotBeEmpty().And.Be(message);
-                
-                var signature = signMessageResponse.Signature.ToBase64();
-                var publicKey = signMessageResponse.PublicKey.ToBase64();
-                
-                //verify the signature
-                info = shell.ParseCommand("verify", "-m", "Hello Catalyst", "-k", publicKey, "-s", signature.ToString(), "-n", node1.Config.NodeId);
-                
-                serverObserver.Received.Should().NotBeNull();
-                serverObserver.Received.Payload.TypeUrl.Should().Be(VerifyMessageRequest.Descriptor.ShortenedFullName());
-
-                clientObserver.Received.Should().NotBeNull();
-                clientObserver.Received.Payload.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
-
-                var result = clientObserver.Received.Payload.FromAny<VerifyMessageResponse>();
-                result.IsSignedByKey.Should().BeTrue();
-            }
+            fakeChannel.Received(1).WriteAndFlushAsync(request);
         }
 
         protected override void Dispose(bool disposing)

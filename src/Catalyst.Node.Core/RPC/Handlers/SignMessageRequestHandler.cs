@@ -66,17 +66,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 //get the public key
                 var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
-                
-                //encode public key
-                //var bytesForRlpEncoding = message.Trim('\"').ToBytesForRLPEncoding();
-                var encodedPublicKey = Nethereum.RLP.RLP.EncodeElement(_keySigner.CryptoContext.ExportPublicKey(publicKey));
 
                 Logger.Debug("message content is {0}", deserialised.Message);
 
                 var response = new SignMessageResponse
                 {
                     Signature = signature.ToByteString(),
-                    PublicKey = encodedPublicKey,
+                    PublicKey = _keySigner.CryptoContext.ExportPublicKey(publicKey).ToByteString(),
                     OriginalMessage = deserialised.Message
                 };
 
