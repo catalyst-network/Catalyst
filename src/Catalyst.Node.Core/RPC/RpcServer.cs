@@ -48,6 +48,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly GetVersionRequestHandler _versionRequestHandler;
         private readonly GetMempoolRequestHandler _mempoolRequestHandler;
         private readonly SignMessageRequestHandler _signMessageRequestHandler;
+        private readonly VerifyMessageRequestHandler _verifyMessageRequestHandler;
 
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<Any>> MessageStream { get; }
@@ -67,10 +68,12 @@ namespace Catalyst.Node.Core.RPC
             MessageStream = _anyTypeServerHandler.MessageStream;
             var longRunningTasks = new [] {StartServerAsync()};
 
+            //Initialise handlers and subscribe them to listen to the message stream
             _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
             _versionRequestHandler = new GetVersionRequestHandler(MessageStream, logger);
             _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, logger, mempool);
             _signMessageRequestHandler = new SignMessageRequestHandler(MessageStream, logger, keySigner);
+            _verifyMessageRequestHandler = new VerifyMessageRequestHandler(MessageStream, logger, keySigner);
 
             Task.WaitAll(longRunningTasks);
         }
@@ -123,6 +126,7 @@ namespace Catalyst.Node.Core.RPC
                 _versionRequestHandler.Dispose();
                 _mempoolRequestHandler.Dispose();
                 _signMessageRequestHandler.Dispose();
+                _verifyMessageRequestHandler.Dispose();
             }
         }
 

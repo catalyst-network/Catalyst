@@ -199,6 +199,19 @@ namespace Catalyst.Cli.UnitTests
             result.Should().BeTrue();
         }
 
+        [Fact]
+        public void Cli_Can_Verify_Message()
+        {
+            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = _shell.Ads.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var result = _shell.Ads.ParseCommand("verify", "-m", "test message", "-k", "public_key", "-s", "signature");
+            result.Should().BeTrue();
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

@@ -74,10 +74,12 @@ namespace Catalyst.Cli.Handlers
 
                 //get the original message from the decoded message
                 var originalMessage = decodeResult.ToStringFromRLPDecoded();
+                var decodedPublicKey = Nethereum.RLP.RLP.Decode(deserialised.PublicKey.ToByteArray())[0].RLPData;
+                Nethereum.
 
                 //return to the user the signature, public key and the original message that he sent to be signed
                 Console.WriteLine("Signature: {0}\nPublic Key: {1}\nOriginal Message: \"{2}\"", deserialised.Signature.ToBase64(),
-                    deserialised.PublicKey.ToBase64(), originalMessage);
+                    decodedPublicKey.ToStringFromRLPDecoded(), originalMessage);
 
                 Console.WriteLine(@"Press Enter to continue ...");
             }

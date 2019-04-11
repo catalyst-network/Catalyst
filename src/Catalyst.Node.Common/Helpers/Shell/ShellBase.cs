@@ -323,5 +323,7 @@ namespace Catalyst.Node.Common.Helpers.Shell
             Console.WriteLine($@"error: command not found ${args}");
             return true;
         }
+
+        public abstract bool OnVerifyMessage(object opts);
     }
 }

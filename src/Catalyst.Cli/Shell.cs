@@ -111,11 +111,12 @@ namespace Catalyst.Cli
                 return true;
             }
 
-            return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions, SignOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, bool>(
+            return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
+                    (VerifyOptions opts) => OnVerifyMessage(opts),
                     errs => false);
         }
 
@@ -592,9 +593,7 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        /// Handles the command <code>sign -m "[text message]" -n [node-name]</code>.  The method makes sure first the CLI is connected to
-        /// the node specified in the command and then creates a <see cref="SignMessageRequest"/> object , encodes the text message and sends it in a
-        /// message to the RPC server in the node.
+        /// Sign a message with the private key of an address.
         /// </summary>
         /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
         /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
@@ -636,6 +635,61 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
+            return true;
+        }
+
+        /// <summary>
+        /// Verifies a signed message.
+        /// </summary>
+        /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
+        /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
+        public override bool OnVerifyMessage(object opts)
+        {
+            if (!(opts is VerifyOptions))
+            {
+                return false;
+            }
+            
+            //get the message to verify, the address/public key who signed it, and the signature 
+            var verifyOptions = (VerifyOptions) opts;
+            var message = verifyOptions.Message;
+            var nodeId = verifyOptions.Node;
+            var address = verifyOptions.Address;
+            var signature = verifyOptions.Signature;
+            
+            //Perform validations required before a command call
+            var isValid = ValidatePreCommand(nodeId);
+            
+            if (isValid != ValidationError.NoError && _askForUserInput && !AskUserToConnectToNode(nodeId, isValid))
+            {
+                return false;
+            }
+            
+            //if the node is connected and there are no other errors then send the get info request to the server
+            try {
+                var connectedNode = GetConnectedNode(nodeId);
+
+                //create a VerifyMessage request
+                var request = new VerifyMessageRequest();
+                
+                //encode the message 
+                var bytesForRlpEncoding = message.Trim('\"').ToBytesForRLPEncoding();
+                var encodedMessage = Nethereum.RLP.RLP.EncodeElement(bytesForRlpEncoding);
+
+                //populate the request
+                request.Message = encodedMessage.ToByteString();
+                request.PublicKey = address.ToUtf8ByteString();
+                request.Signature = signature.ToUtf8ByteString();
+
+                //send the message to the server by writing it to the channel for handling
+                _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             return true;
         }
 

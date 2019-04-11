@@ -20,24 +20,27 @@
 #endregion
 
 using System;
+using System.Buffers.Text;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol.Rpc.Node;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class SignMessageRequestHandler : MessageHandlerBase<SignMessageRequest>
+    public class VerifyMessageRequestHandler : MessageHandlerBase<VerifyMessageRequest>
     {
         private readonly IKeySigner _keySigner;
 
-        public SignMessageRequestHandler(
+        public VerifyMessageRequestHandler(
             IObservable<IChanneledMessage<Any>> messageStream,
             ILogger logger,
             IKeySigner keySigner)
@@ -49,43 +52,38 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
             if(message == NullObjects.ChanneledAny) {return;}
-            Logger.Debug("received message of type SignMessageRequest");
+            Logger.Debug("received message of type VerifyMessageRequest");
             try
             {
-                var deserialised = message.Payload.FromAny<SignMessageRequest>();
+                var deserialised = message.Payload.FromAny<VerifyMessageRequest>();
 
                 //decode the received message
-                var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
+                var decodeMessage = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
 
                 //get the original message from the decoded message
-                var originalMessage = decodeResult.ToStringFromRLPDecoded();
+                var originalMessage = decodeMessage.ToStringFromRLPDecoded();
 
-                //use the keysigner to sign the message
-                var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
-                var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(originalMessage));
-
-                //get the public key
-                var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
+                //use the keysigner to build an IPublicKey
+                IPublicKey pubKey = _keySigner.CryptoContext.ImportPublicKey(deserialised.PublicKey.ToByteArray());
                 
-                //encode public key
-                //var bytesForRlpEncoding = message.Trim('\"').ToBytesForRLPEncoding();
-                var encodedPublicKey = Nethereum.RLP.RLP.EncodeElement(_keySigner.CryptoContext.ExportPublicKey(publicKey));
+                //verify that the message was signed by a key corresponding to the provided
+                var result = _keySigner.CryptoContext.Verify(pubKey, decodeMessage,
+                    deserialised.Signature.ToByteArray());
 
                 Logger.Debug("message content is {0}", deserialised.Message);
 
-                var response = new SignMessageResponse
+                var response = new VerifyMessageResponse()
                 {
-                    Signature = signature.ToByteString(),
-                    PublicKey = encodedPublicKey,
-                    OriginalMessage = deserialised.Message
+                    IsSignedByKey = result
                 };
-
+                
+                //return response to the CLI
                 message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle SignMessageRequest after receiving message {0}", message);
+                    "Failed to handle VerifyMessageRequest after receiving message {0}", message);
                 throw;
             }
         }

@@ -237,6 +237,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_Can_Handle_SignMessageRequest()
         {
             _rpcClient = new RpcClient(_logger, _certificateStore);
@@ -266,6 +267,66 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
+            }
+        }
+        
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void RpcServer_Can_Handle_VerifyMessageRequest()
+        {
+            _rpcClient = new RpcClient(_logger, _certificateStore);
+            _rpcClient.Should().NotBeNull();
+
+            var shell = new Shell(_rpcClient, _config, _logger);
+            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+            hasConnected.Should().BeTrue();
+
+            var node1 = shell.GetConnectedNode("node1");
+            node1.Should().NotBeNull("we've just connected it");
+
+            var serverObserver = new AnyMessageObserver(0, _logger);
+            var clientObserver = new AnyMessageObserver(1, _logger);
+            using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (_rpcClient.MessageStream.Subscribe(clientObserver))
+            {
+                string message = "Hello Catalyst";
+                
+                //sign a message
+                var info = shell.ParseCommand("sign", "-m", message, "-n", node1.Config.NodeId);
+
+                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
+                   .ToArray();
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
+
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(SignMessageRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
+                
+                var signMessageResponse = clientObserver.Received.Payload.FromAny<SignMessageResponse>();
+                
+                //decode the received message
+                var decodedOriginalMessage = Nethereum.RLP.RLP.Decode(signMessageResponse.OriginalMessage.ToByteArray())[0].RLPData;
+                var originalMessage = decodedOriginalMessage.ToStringFromRLPDecoded();
+
+                originalMessage.Should().NotBeEmpty().And.Be(message);
+                
+                var signature = signMessageResponse.Signature.ToBase64();
+                var publicKey = signMessageResponse.PublicKey.ToBase64();
+                
+                //verify the signature
+                info = shell.ParseCommand("verify", "-m", "Hello Catalyst", "-k", publicKey, "-s", signature.ToString(), "-n", node1.Config.NodeId);
+                
+                serverObserver.Received.Should().NotBeNull();
+                serverObserver.Received.Payload.TypeUrl.Should().Be(VerifyMessageRequest.Descriptor.ShortenedFullName());
+
+                clientObserver.Received.Should().NotBeNull();
+                clientObserver.Received.Payload.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
+
+                var result = clientObserver.Received.Payload.FromAny<VerifyMessageResponse>();
+                result.IsSignedByKey.Should().BeTrue();
             }
         }
 
