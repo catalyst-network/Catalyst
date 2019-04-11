@@ -33,6 +33,7 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.RPC.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
@@ -58,7 +59,8 @@ namespace Catalyst.Node.Core.RPC
             ILogger logger,
             ICertificateStore certificateStore,
             IMempool mempool,
-            IKeySigner keySigner)
+            IKeySigner keySigner,
+            IPeerSettings peerSettings)
         {
             _logger = logger;
             Settings = settings;
@@ -72,10 +74,14 @@ namespace Catalyst.Node.Core.RPC
                 StartServerAsync()
             };
 
-            _infoRequestHandler = new GetInfoRequestHandler(MessageStream, Settings, logger);
-            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, logger);
-            _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, logger, mempool);
-            _signMessageRequestHandler = new SignMessageRequestHandler(MessageStream, logger, keySigner);
+            //todo: these handlers need to be instantiated by Autofac to avoid bringing dependencies
+            //all over the RpcServer constructor, and get a proper context for the loggers
+            //https://github.com/catalyst-network/Catalyst.Node/issues/309
+            IPeerIdentifier peerIdentifier = new PeerIdentifier(peerSettings);
+            _infoRequestHandler = new GetInfoRequestHandler(MessageStream, peerIdentifier, Settings, logger);
+            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, peerIdentifier, logger);
+            _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, peerIdentifier, logger, mempool);
+            _signMessageRequestHandler = new SignMessageRequestHandler(MessageStream, peerIdentifier, logger, keySigner);
 
             Task.WaitAll(longRunningTasks);
         }

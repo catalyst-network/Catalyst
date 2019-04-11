@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -22,11 +22,11 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
@@ -35,9 +35,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
 {
     public class GetVersionRequestHandler : MessageHandlerBase<VersionRequest>
     {
+        private readonly PeerId _peerId;
+
         public GetVersionRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
+            IPeerIdentifier peerIdentifier,
             ILogger logger)
-            : base(messageStream, logger) { }
+            : base(messageStream, logger)
+        {
+            _peerId = peerIdentifier.PeerId;
+        }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
@@ -56,7 +62,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     Version = NodeUtil.GetVersion()
                 };
 
-                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

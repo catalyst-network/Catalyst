@@ -36,7 +36,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         public AnySignedMessageObserver(int index, ILogger logger)
         {
             _logger = logger;
-            Index = index;
+            Index = index; 
         }
 
         public IChanneledMessage<AnySigned> Received { get; private set; }

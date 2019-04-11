@@ -30,6 +30,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Cli;
+using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
@@ -58,11 +59,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly IConfigurationRoot _config;
 
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
-        private IRpcServer _rpcServer;
-        private ICertificateStore _certificateStore;
-        private ILifetimeScope _scope;
-        private ILogger _logger;
-
+        private readonly IRpcServer _rpcServer;
+        private readonly ICertificateStore _certificateStore;
+        private readonly ILifetimeScope _scope;
+        private readonly ILogger _logger;
+        
         public SocketTests(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
@@ -73,8 +74,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
                .Build(), CurrentTestName);
-
-            var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
 
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
@@ -90,11 +89,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 }
             );
 
-            ConfigureContainerBuilder(_config);
-
-            // register fact test certificate store
+            ConfigureContainerBuilder(_config, true, true);
             ContainerBuilder.RegisterInstance(mempool).As<IMempool>();
-            ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
 
             var container = ContainerBuilder.Build();
 
@@ -107,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _certificateStore = container.Resolve<ICertificateStore>();
 
             _rpcServer = container.Resolve<IRpcServer>();
-            _nodeRpcClientFactory = container.Resolve<INodeRpcClientFactory>();
+            _nodeRpcClientFactory = new NodeRpcClientFactory();
         }
 
         [Fact]
@@ -161,6 +157,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_Can_Handle_GetVersionRequest()
         {
+            // _rpcServer.StartServerAsync().GetAwaiter().GetResult();
             var shell = new Shell(_nodeRpcClientFactory, _config, _logger, _certificateStore);
             var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();
@@ -172,8 +169,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var clientObserver = new AnySignedMessageObserver(1, _logger);
 
             using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (node1.SubscribeStream(clientObserver))
             {
-                node1.SubscribeStream(clientObserver);
                 var info = shell.ParseCommand("get", "-v", "node1");
 
                 var tasks = new IChanneledMessageStreamer<AnySigned>[]
@@ -182,11 +179,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     }
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                    .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                 serverObserver.Received.Should().NotBeNull();
                 serverObserver.Received.Payload.TypeUrl.Should().Be(VersionRequest.Descriptor.ShortenedFullName());
-
                 clientObserver.Received.Should().NotBeNull();
                 clientObserver.Received.Payload.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
             }
@@ -207,8 +203,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var clientObserver = new AnySignedMessageObserver(1, _logger);
 
             using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (node1.SubscribeStream(clientObserver))
             {
-                node1.SubscribeStream(clientObserver);
                 var info = shell.ParseCommand("get", "-m", "node1");
 
                 var tasks = new IChanneledMessageStreamer<AnySigned>[]
@@ -241,8 +237,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var clientObserver = new AnySignedMessageObserver(1, _logger);
 
             using (_rpcServer.MessageStream.Subscribe(serverObserver))
+            using (node1.SubscribeStream(clientObserver))
             {
-                node1.SubscribeStream(clientObserver);
                 var info = shell.ParseCommand("sign", "-m", "Hello Catalyst", "-n", "node1");
 
                 var tasks = new IChanneledMessageStreamer<AnySigned>[]

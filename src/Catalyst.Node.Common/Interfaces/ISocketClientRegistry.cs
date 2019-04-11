@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -28,7 +29,7 @@ namespace Catalyst.Node.Common.Interfaces
 {
     public interface ISocketClientRegistry<TSocketChannel> where TSocketChannel : class, ISocketClient
     {
-        IDictionary<int, TSocketChannel> Registry { get; }
+        IDictionary<int, ISubscribedSocket<TSocketChannel>> Registry { get; }
 
         /// <summary>
         ///     Generates a hashcode from the socket endpoint so we can find it in dict.
@@ -41,9 +42,9 @@ namespace Catalyst.Node.Common.Interfaces
         ///     Adds an active ISocketClient to the registry.
         /// </summary>
         /// <param name="socketHashCode"></param>
-        /// <param name="socketClient"></param>
+        /// <param name="subscribedSocket"></param>
         /// <returns></returns>
-        bool AddClientToRegistry(int socketHashCode, TSocketChannel socketClient);
+        bool AddClientToRegistry(int socketHashCode, ISubscribedSocket<TSocketChannel> subscribedSocket);
 
         /// <summary>
         ///     Tries to get a socket client from registry.
@@ -51,7 +52,7 @@ namespace Catalyst.Node.Common.Interfaces
         /// <param name="socketHashCode"></param>
         /// <returns></returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        TSocketChannel GetClientFromRegistry(int socketHashCode);
+        ISubscribedSocket<TSocketChannel> GetClientFromRegistry(int socketHashCode);
 
         /// <summary>
         ///     Removes a ISocketClient from registry.

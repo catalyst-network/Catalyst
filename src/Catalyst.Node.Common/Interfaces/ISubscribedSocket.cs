@@ -22,19 +22,25 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned>
+    /// <summary>
+    /// Bunches up a network socket and the Rx subscription used to watch its incoming messages
+    /// </summary>
+    /// <typeparam name="TSocketChannel">The type of the socket use to transmit information</typeparam>
+    public interface ISubscribedSocket<out TSocketChannel>
+        where TSocketChannel : class, ISocketClient
     {
         /// <summary>
-        /// Subscribes to the message stream of the underlying ISocketClient
+        /// The socket channel used for out of process communications
         /// </summary>
-        /// <param name="observer">The observer of the streamed messages</param>
-        /// <returns>The subscription as an IDisposable</returns>
-        IDisposable SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer);
+        TSocketChannel SocketChannel { get; }
+
+        /// <summary>
+        /// The (Rx) subscription to the socket channel used to propagate
+        /// messages in-process.
+        /// </summary>
+        IDisposable Subscription { get; }
     }
 }

@@ -64,31 +64,6 @@ namespace Catalyst.Node.Common.Helpers.Extensions
             return ShortenedFullName(descriptor);
         }
 
-        public static Any ToAny<T>(this T protobufObject) where T : IMessage<T>
-        {
-            var wrappedObject = new Any
-            {
-                TypeUrl = protobufObject.Descriptor.ShortenedFullName(),
-                Value = protobufObject.ToByteString()
-            };
-            return wrappedObject;
-        }
-
-        public static T FromAny<T>(this Any message) where T : IMessage
-        {
-            var empty = (T) Activator.CreateInstance(typeof(T));
-            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
-            return typed;
-        }
-
-        public static IMessage FromAny(this Any message)
-        {
-            var type = Type.GetType(ProtoToClrNameMapper[message.TypeUrl]);
-            var empty = (IMessage) Activator.CreateInstance(type);
-            var innerMessage = empty.Descriptor.Parser.ParseFrom(message.Value);
-            return innerMessage;
-        }
-
         public static AnySigned ToAnySigned<T>(this T protobufObject,
             PeerId senderId,
             Guid correlationId = default) where T : IMessage<T>
@@ -99,7 +74,6 @@ namespace Catalyst.Node.Common.Helpers.Extensions
                .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
 
-            var value = protobufObject.ToByteString();
             var anySigned = new AnySigned
             {
                 PeerId = senderId,
@@ -111,6 +85,14 @@ namespace Catalyst.Node.Common.Helpers.Extensions
                 Value = protobufObject.ToByteString()
             };
             return anySigned;
+        }
+
+        public static IMessage FromAnySigned(this AnySigned message)
+        {
+            var type = Type.GetType(ProtoToClrNameMapper[message.TypeUrl]);
+            var empty = (IMessage) Activator.CreateInstance(type);
+            var innerMessage = empty.Descriptor.Parser.ParseFrom(message.Value);
+            return innerMessage;
         }
 
         public static T FromAnySigned<T>(this AnySigned message) where T : IMessage<T>

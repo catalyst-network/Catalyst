@@ -31,11 +31,11 @@ namespace Catalyst.Node.Common.Helpers.IO
 {
     public sealed class SocketClientRegistry<TSocketChannel> : ISocketClientRegistry<TSocketChannel> where TSocketChannel : class, ISocketClient
     {
-        public IDictionary<int, TSocketChannel> Registry { get; }
+        public IDictionary<int, ISubscribedSocket<TSocketChannel>> Registry { get; }
 
         public SocketClientRegistry()
         {
-            Registry = new ConcurrentDictionary<int, TSocketChannel>();
+            Registry = new ConcurrentDictionary<int, ISubscribedSocket<TSocketChannel>>();
         }
 
         /// <summary>
@@ -45,30 +45,34 @@ namespace Catalyst.Node.Common.Helpers.IO
         /// <returns></returns>
         public int GenerateClientHashCode(IPEndPoint socketEndpoint)
         {
-            Guard.Argument(socketEndpoint).NotNull();
+            Guard.Argument(socketEndpoint, nameof(socketEndpoint)).NotNull();
             return socketEndpoint.GetHashCode();
         }
 
         /// <inheritdoc />
-        public bool AddClientToRegistry(int socketHashCode, TSocketChannel socketClient)
+        public bool AddClientToRegistry(int socketHashCode, ISubscribedSocket<TSocketChannel> subscribedSocket)
         {
-            Guard.Argument(socketClient).NotNull();
-            Guard.Argument(socketHashCode).NotZero();
-            Guard.Argument(socketClient.Channel.Active);
-            return Registry.TryAdd(socketHashCode, socketClient);
+            Guard.Argument(subscribedSocket, nameof(subscribedSocket)).NotNull();
+            Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
+            Guard.Argument(subscribedSocket.SocketChannel.Channel.Active, nameof(subscribedSocket.SocketChannel));
+            Guard.Argument(subscribedSocket.Subscription, nameof(subscribedSocket.Subscription)).NotNull();
+            return Registry.TryAdd(socketHashCode, subscribedSocket);
         }
 
         /// <inheritdoc />
-        public TSocketChannel GetClientFromRegistry(int socketHashCode)
+        public ISubscribedSocket<TSocketChannel> GetClientFromRegistry(int socketHashCode)
         {
-            Guard.Argument(socketHashCode).NotZero();
-            return Registry.TryGetValue(socketHashCode, out TSocketChannel socketClient) ? socketClient : null;
+            Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
+            var socketChannelAndSubscription = Registry.TryGetValue(socketHashCode, out var socketClient)
+                ? socketClient
+                : null;
+            return socketChannelAndSubscription;
         }
 
         /// <inheritdoc />
         public bool RemoveClientFromRegistry(int socketHashCode)
         {
-            Guard.Argument(socketHashCode).NotZero();
+            Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
             return Registry.Remove(socketHashCode);
         }
 

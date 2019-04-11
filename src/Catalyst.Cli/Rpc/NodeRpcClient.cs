@@ -88,9 +88,9 @@ namespace Catalyst.Cli.Rpc
         }
 
         /// <inheritdoc />
-        public void SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer)
+        public IDisposable SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer)
         {
-            MessageStream.Subscribe(observer);
+            return MessageStream.Subscribe(observer);
         }
 
         /// <inheritdoc />

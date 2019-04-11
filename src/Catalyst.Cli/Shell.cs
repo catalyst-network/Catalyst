@@ -57,14 +57,6 @@ namespace Catalyst.Cli
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
 
-        enum ValidationError
-        {
-            NodeNotConfigured = 1,
-            NodeNotConnected = 2,
-            ChannelInactive = 3,
-            NoError = 0
-        }
-
         private IChanneledMessage<AnySigned> Response { get; set; }
         private readonly ILogger _logger;
 
@@ -93,10 +85,13 @@ namespace Catalyst.Cli
 
         private static IPeerIdentifier BuildCliPeerId(IConfiguration configuration)
         {
+            //TODO: Handle different scenarios to get the IPAddress and Port depending
+            //on you whether you are connecting to a local node, or a remote one.
+            //https://github.com/catalyst-network/Catalyst.Node/issues/307
+
             return new PeerIdentifier(configuration.GetSection("CatalystCliConfig")
                    .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
-                IPAddress.Loopback, IPEndPoint.MaxPort
-            );
+                IPAddress.Loopback, IPEndPoint.MaxPort);
         }
 
         public void AskForUserInput(bool userInput) { _askForUserInput = userInput; }
@@ -357,10 +352,12 @@ namespace Catalyst.Cli
             {
                 //Connect to the node and store it in the socket client registry
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
+                var subscription = nodeRpcClient.SubscribeStream(this);
                 var clientHashCode =
                     _socketClientRegistry.GenerateClientHashCode(
                         EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
-                _socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
+                var socketAndSubscription = new SubscribedSocket<INodeRpcClient>(subscription, nodeRpcClient);
+                _socketClientRegistry.AddClientToRegistry(clientHashCode, socketAndSubscription);
             }
 
             //Handle any other exception. This is a generic error message and should not be returned to users but added
@@ -398,7 +395,9 @@ namespace Catalyst.Cli
                     EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
             var node = _socketClientRegistry.GetClientFromRegistry(registryId);
 
-            node.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
+            node.Subscription.Dispose();
+            node.SocketChannel.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
+
             return true;
         }
 
@@ -468,7 +467,6 @@ namespace Catalyst.Cli
             {
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
-
                 node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
@@ -598,10 +596,9 @@ namespace Catalyst.Cli
 
             Guard.Argument(nodeConfig).NotNull();
 
-            var registryId =
-                _socketClientRegistry.GenerateClientHashCode(
-                    EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
-            return _socketClientRegistry.GetClientFromRegistry(registryId);
+            var registryId = _socketClientRegistry.GenerateClientHashCode(
+                EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+            return _socketClientRegistry.GetClientFromRegistry(registryId).SocketChannel;
         }
 
         public IRpcNodeConfig GetNodeConfig(string nodeId)

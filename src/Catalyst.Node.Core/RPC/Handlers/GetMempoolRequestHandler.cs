@@ -27,6 +27,7 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Rpc.Node;
@@ -38,13 +39,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
     public sealed class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>
     {
         private readonly IMempool _mempool;
+        private readonly PeerId _peerId;
 
         public GetMempoolRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
+            IPeerIdentifier peerIdentifier,
             ILogger logger,
             IMempool mempool)
             : base(messageStream, logger)
         {
             _mempool = mempool;
+            _peerId = peerIdentifier.PeerId;
         }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
@@ -67,7 +71,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     }
                 };
 
-                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

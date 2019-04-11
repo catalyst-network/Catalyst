@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
@@ -40,13 +39,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
 {
     internal sealed class GetInfoRequestHandler : MessageHandlerBase<GetInfoRequest>
     {
+        private readonly PeerId _peerId;
         private readonly IRpcServerSettings _config;
 
         public GetInfoRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
+            IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
             ILogger logger)
             : base(messageStream, logger)
         {
+            _peerId = peerIdentifier.PeerId;
             _config = config;
         }
 
@@ -72,7 +74,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     Query = serializedList
                 };
 
-                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

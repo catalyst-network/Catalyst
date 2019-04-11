@@ -27,10 +27,10 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf.WellKnownTypes;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
@@ -39,13 +39,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
     public sealed class SignMessageRequestHandler : MessageHandlerBase<SignMessageRequest>
     {
         private readonly IKeySigner _keySigner;
+        private readonly PeerId _peerId;
 
         public SignMessageRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
+            IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner)
             : base(messageStream, logger)
         {
             _keySigner = keySigner;
+            _peerId = peerIdentifier.PeerId;
         }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
@@ -82,7 +85,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     OriginalMessage = deserialised.Message
                 };
 
-                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
