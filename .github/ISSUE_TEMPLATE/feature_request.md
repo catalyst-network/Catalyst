@@ -2,8 +2,8 @@
 name: Feature request
 about: Suggest an idea for this project
 title: ''
-labels: enhancement
-assignees: nshCore, CAT-OPS
+labels: ''
+assignees: CAT-OPS, nshCore
 
 ---
 
