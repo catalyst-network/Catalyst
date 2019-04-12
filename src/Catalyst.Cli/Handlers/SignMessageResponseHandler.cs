@@ -78,8 +78,6 @@ namespace Catalyst.Cli.Handlers
 Public Key: {1}
 Original Message: ""{2}""", deserialised.Signature.ToBase64(),
                     deserialised.PublicKey.ToBase64(), originalMessage);
-
-                Console.WriteLine(@"Press Enter to continue ...");
             }
             catch (Exception ex)
             {

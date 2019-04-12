@@ -72,10 +72,8 @@ namespace Catalyst.Cli.Handlers
                 {
                     index++;
 
-                    Console.WriteLine(@"t{0}: {1},", index, encodedTx);
+                    // Console.WriteLine(@"t{0}: {1},", index, encodedTx); TODO why?
                 }
-
-                Console.WriteLine(@"Press Enter to continue ...");
             }
             catch (Exception ex)
             {

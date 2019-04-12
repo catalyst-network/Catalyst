@@ -75,8 +75,6 @@ namespace Catalyst.Cli.Handlers
                 WriteConfiguration(result, 0, result.Count);
 
                 Console.WriteLine(@"]");
-
-                Console.WriteLine(@"Press Enter to continue ...");
             }
             catch (Exception ex)
             {

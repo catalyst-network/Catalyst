@@ -65,7 +65,6 @@ namespace Catalyst.Cli.Handlers
                 Logger.Debug("Handling GetVersionResponse");
                 var deserialised = message.Payload.FromAnySigned<VersionResponse>();
                 Logger.Information("Node Version: {0}", deserialised.Version);
-                Logger.Information("Press Enter to continue ...\n");
             }
             catch (Exception ex)
             {
