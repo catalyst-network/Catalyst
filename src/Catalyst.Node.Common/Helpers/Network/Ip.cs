@@ -68,6 +68,11 @@ namespace Catalyst.Node.Common.Helpers.Network
             return echoedIp;
         }
 
+        /// <summary>
+        ///     Creates a standardised format byte array that can handle a IPv6 address or an IPv4 with leading bytes padded with 0x0
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
         public static byte[] To16Bytes(this IPAddress address)
         {
             var ipChunk = ByteUtil.InitialiseEmptyByteArray(16);

@@ -23,6 +23,7 @@
 
 using System;
 using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -51,10 +52,10 @@ namespace Catalyst.Node.Common.P2P
 
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
-        public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv6();
+        public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
-        public IPEndPoint IpEndPoint => new IPEndPoint(Ip, Port);
+        public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
         public PeerId PeerId { get; }
 
         public PeerIdentifier(PeerId peerId)
@@ -138,21 +139,37 @@ namespace Catalyst.Node.Common.P2P
 
         public bool Equals(IPeerIdentifier other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            
             return Equals(PeerId, other.PeerId);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            
             return obj is IPeerIdentifier other && Equals(other);
         }
 
         public override int GetHashCode()
         {
-            return (PeerId != null ? PeerId.GetHashCode() : 0);
+            return PeerId != null ? PeerId.GetHashCode() : 0;
         }
     }
 }

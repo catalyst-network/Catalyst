@@ -23,6 +23,7 @@
 
 using System;
 using System.Net;
+using System.Net.Sockets;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
@@ -55,7 +56,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 
             var pingResponse = new PingResponse().ToAnySigned(_peerIdentifier.PeerId, new Guid(message.Payload.CorrelationId.ToByteArray()));
             var senderIdentifier = new PeerIdentifier(message.Payload.PeerId);
-            var datagramEnvelope = DatagramFactory.Create(pingResponse, new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069));
+            var datagramEnvelope = DatagramFactory.Create(pingResponse, senderIdentifier.IpEndPoint);
 
             message.Context.Channel.WriteAndFlushAsync(datagramEnvelope).GetAwaiter().GetResult();
         }
