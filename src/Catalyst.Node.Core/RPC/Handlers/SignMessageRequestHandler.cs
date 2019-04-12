@@ -29,6 +29,7 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
 using Nethereum.RLP;
+using NSec.Cryptography;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -58,22 +59,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
 
                 //get the original message from the decoded message
-                var originalMessage = decodeResult.ToStringFromRLPDecoded();
+                var decodedMessage = decodeResult.ToStringFromRLPDecoded();
 
                 //use the keysigner to sign the message
                 var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
-                var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(originalMessage));
-
-                //get the public key
+                var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
                 var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
 
                 var response = new SignMessageResponse
                 {
-                    Signature = signature.ToByteString(),
-                    PublicKey = _keySigner.CryptoContext.ExportPublicKey(publicKey).ToByteString(),
-                    OriginalMessage = deserialised.Message
+                    OriginalMessage = deserialised.Message,
+                    PublicKey = publicKey.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey).ToByteString(),
+                    Signature = signature.ToByteString()
                 };
 
                 message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();

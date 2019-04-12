@@ -678,8 +678,8 @@ namespace Catalyst.Cli
 
                 //populate the request
                 request.Message = encodedMessage.ToByteString();
-                request.PublicKey = address.ToUtf8ByteString();
-                request.Signature = signature.ToUtf8ByteString();
+                request.PublicKey = address.ToBytesForRLPEncoding().ToByteString();
+                request.Signature = signature.ToBytesForRLPEncoding().ToByteString();
 
                 //send the message to the server by writing it to the channel for handling
                 _rpcClient.SendMessage(connectedNode, request.ToAny()).Wait();

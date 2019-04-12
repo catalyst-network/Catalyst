@@ -50,6 +50,7 @@ namespace Catalyst.Cli
         private readonly GetVersionResponseHandler _getVersionResponseHandler;
         private readonly GetMempoolResponseHandler _getMempoolResponseHandler;
         private readonly SignMessageResponseHandler _signMessageResponseHandler;
+        private readonly VerifyMessageResponseHandler _verifyMessageResponseHandler;
 
         /// <summary>
         /// Intialize a new instance of RPClient by doing the following:
@@ -70,6 +71,7 @@ namespace Catalyst.Cli
             _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, _logger);
             _getMempoolResponseHandler = new GetMempoolResponseHandler(MessageStream, _logger);
             _signMessageResponseHandler = new SignMessageResponseHandler(MessageStream, _logger);
+            _verifyMessageResponseHandler = new VerifyMessageResponseHandler(MessageStream, _logger);
         }
 
         public async Task<ISocketClient> GetClientSocketAsync(IRpcNodeConfig nodeConfig)
@@ -179,6 +181,7 @@ namespace Catalyst.Cli
                 _getVersionResponseHandler.Dispose();
                 _getMempoolResponseHandler.Dispose();
                 _signMessageResponseHandler.Dispose();
+                _verifyMessageResponseHandler.Dispose();
             }
         }
 

@@ -29,6 +29,12 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
     /// <summary>
     ///     Provides NSec crypto operations on wrapped keys.
     /// </summary>
+    /// *****************************************************
+    /// ******                WARNING                  ******
+    /// ******    DO NOT TRY TO SUBSTITUTE FOR THIS    ******
+    /// ******    CLASS OR ANY OF ITS METHODS AS IT    ******
+    /// ******    IS HAS A NSUBSITUTE ISSUE            ******
+    /// *****************************************************
     public sealed class NSecCryptoContext : ICryptoContext
     {
         private static readonly SignatureAlgorithm Algorithm = SignatureAlgorithm.Ed25519;

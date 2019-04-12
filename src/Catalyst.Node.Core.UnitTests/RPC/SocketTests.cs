@@ -283,38 +283,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 clientObserver.Received.Payload.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
             }
         }
-        
-        [Fact]
-        public void RpcServer_Can_Handle_VerifyMessageRequest()
-        {
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            
-            fakeContext.Channel.Returns(fakeChannel);
-            
-            /*var keySigner = Substitute.For<IKeySigner>();
-            keySigner.CryptoContext.GeneratePrivateKey()
-               .Returns(new NSecPrivateKeyWrapper(Key.Create(SignatureAlgorithm.Ed25519)));*/
-
-            const string message = "Hello Catalyst";
-            var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
-            var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(message));
-            var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
-            
-            var request =new VerifyMessageRequest()
-            {
-                Message = message.ToUtf8ByteString(),
-                PublicKey = Nethereum.RLP.RLP.EncodeElement(
-                    publicKey.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey)).ToByteString(),
-                Signature = signature.ToByteString()
-            }.ToAny();                
-            var channeledAny = new ChanneledAny(fakeContext, request);
-            var signRequest = new [] {channeledAny}.ToObservable();
-            
-            var handler = new VerifyMessageRequestHandler(signRequest, _logger, _keySigner);
-
-            fakeChannel.Received(1).WriteAndFlushAsync(request);
-        }
 
         protected override void Dispose(bool disposing)
         {

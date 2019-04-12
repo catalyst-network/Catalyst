@@ -51,23 +51,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public override void HandleMessage(IChanneledMessage<Any> message)
         {
-            if(message == NullObjects.ChanneledAny) {return;}
+            if(message == NullObjects.ChanneledAny || _keySigner == null) {return;}
             Logger.Debug("received message of type VerifyMessageRequest");
             try
             {
                 var deserialised = message.Payload.FromAny<VerifyMessageRequest>();
 
-                //decode the received message
-                var decodeMessage = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
-
                 //get the original message from the decoded message
-                var originalMessage = decodeMessage.ToStringFromRLPDecoded();
+                var originalMessage = deserialised.Message.ToByteArray().ToStringFromRLPDecoded();
 
                 //use the keysigner to build an IPublicKey
                 IPublicKey pubKey = _keySigner.CryptoContext.ImportPublicKey(deserialised.PublicKey.ToByteArray());
                 
                 //verify that the message was signed by a key corresponding to the provided
-                var result = _keySigner.CryptoContext.Verify(pubKey, decodeMessage,
+                var result = _keySigner.CryptoContext.Verify(pubKey, deserialised.Message.ToByteArray(),
                     deserialised.Signature.ToByteArray());
 
                 Logger.Debug("message content is {0}", deserialised.Message);
@@ -78,7 +75,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 };
                 
                 //return response to the CLI
-                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                message.Context.Channel.WriteAndFlushAsync(response.ToAny())
+                        .GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
