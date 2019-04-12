@@ -73,6 +73,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 var p2PService = container.Resolve<IP2PService>();
                 Assert.NotNull(p2PService);
                 p2PService.Should().BeOfType(typeof(P2PService));
+                p2PService.Dispose();
+                scope.Dispose();
             }
         }
 
@@ -106,6 +108,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
+                    p2PService.Dispose();
+                    scope.Dispose();
                 }
             }
         }
