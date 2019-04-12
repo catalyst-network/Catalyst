@@ -49,43 +49,43 @@ namespace Catalyst.Node.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
+        public async Task<string> AddTextAsync(string content, CancellationToken cancellationToken = default)
         {
-            var addedContent = await _ipfsEngine.FileSystem.AddTextAsync(
-                utf8Content,
+            var node = await _ipfsEngine.FileSystem.AddTextAsync(
+                content,
                 options: AddFileOptions,
                 cancel: cancellationToken);
-            var id = addedContent.Id.Encode();
+            var id = node.Id.Encode();
             _logger.Debug("Text added to IPFS with id {0}", id);
             return id;
         }
 
         /// <inheritdoc />
-        public async Task<string> ReadTextAsync(string path,
+        public async Task<string> ReadTextAsync(string id,
             CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Reading content at path {0} from IPFS", path);
-            return await _ipfsEngine.FileSystem.ReadAllTextAsync(path, cancellationToken);
+            _logger.Debug("Reading content at path {0} from IPFS", id);
+            return await _ipfsEngine.FileSystem.ReadAllTextAsync(id, cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task<string> AddAsync(Stream content, string name = "",
             CancellationToken cancellationToken = default)
         {
-            var addedContent = await _ipfsEngine.FileSystem
+            var node = await _ipfsEngine.FileSystem
                .AddAsync(content, name, AddFileOptions, cancellationToken);
-            var id = addedContent.Id.Encode();
+            var id = node.Id.Encode();
             _logger.Debug("Content {1}added to IPFS with id {0}",
                 id, name +  " ");
             return id;
         }
 
         /// <inheritdoc />
-        public async Task<Stream> ReadAsync(string path,
+        public async Task<Stream> ReadAsync(string id,
             CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Reading content at path {0} from Ipfs", path);
-            return await _ipfsEngine.FileSystem.ReadFileAsync(path, cancellationToken);
+            _logger.Debug("Reading content at path {0} from Ipfs", id);
+            return await _ipfsEngine.FileSystem.ReadFileAsync(id, cancellationToken);
         }
 
         /// <inheritdoc />
