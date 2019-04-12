@@ -65,8 +65,6 @@ namespace Catalyst.Node.Core
             ExecutionDirectory = Path.GetDirectoryName(DeclaringType.Assembly.Location);
         }
 
-
-
         public static int Main(string[] args)
         {
             _logger.Information("Catalyst.Node.Core started with process id {0}",

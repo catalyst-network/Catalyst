@@ -37,9 +37,10 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    internal sealed class P2PService : UdpServer, IP2PService
+    public sealed class P2PService : UdpServer, IP2PService
     {
         private readonly PingRequestHandler _pingRequestHandler;
+        private readonly PingResponseHandler _pingResponseHandler;
         private readonly TransactionHandler _transactionHandler;
         private readonly ISocketClientRegistry<IPeerClient> _socketClientRegistry;
 
@@ -58,6 +59,7 @@ namespace Catalyst.Node.Core.P2P
 
             MessageStream = protoDatagramChannelHandler.MessageStream;
             _pingRequestHandler = new PingRequestHandler(MessageStream, peerIdentifier, Logger);
+            _pingResponseHandler = new PingResponseHandler(MessageStream, Logger);
             _transactionHandler = new TransactionHandler(MessageStream, Logger);
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>

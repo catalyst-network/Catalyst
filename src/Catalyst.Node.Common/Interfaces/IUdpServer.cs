@@ -21,11 +21,25 @@
 
 #endregion
 
-using System;
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Protocol.Common;
+using System.Net;
+using System.Threading.Tasks;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Common.Interfaces.P2P
+namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IPeerClient : IChanneledMessageStreamer<AnySigned>, IDisposable, ISocketClient { }
+    public interface IUdpServer
+    {
+        IBootstrap UdpListener { get; set; }
+        IChannel Channel { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="channelInitializer"></param>
+        /// <returns></returns>
+        IUdpServer Bootstrap(IChannelHandler channelInitializer);
+
+        Task<IUdpServer> StartServer(IPAddress listenAddress, int port);
+        Task Shutdown();
+    }
 }

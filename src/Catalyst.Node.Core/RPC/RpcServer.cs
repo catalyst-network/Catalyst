@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
         private ITcpServer _rpcSocketServer;
-        private readonly AnyTypeServerHandler _anyTypeServerHandler;
+        private readonly AnyTypeSignedServerHandler _anyTypeSignedServerHandler;
         private readonly GetInfoRequestHandler _infoRequestHandler;
         private readonly GetVersionRequestHandler _versionRequestHandler;
         private readonly GetMempoolRequestHandler _mempoolRequestHandler;
@@ -69,8 +69,8 @@ namespace Catalyst.Node.Core.RPC
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            _anyTypeServerHandler = new AnyTypeServerHandler();
-            MessageStream = _anyTypeServerHandler.MessageStream;
+            _anyTypeSignedServerHandler = new AnyTypeSignedServerHandler();
+            MessageStream = _anyTypeSignedServerHandler.MessageStream;
             var longRunningTasks = new[]
             {
                 StartServerAsync()
@@ -102,7 +102,7 @@ namespace Catalyst.Node.Core.RPC
                 new ProtobufDecoder(AnySigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                _anyTypeServerHandler
+                _anyTypeSignedServerHandler
             };
 
             try

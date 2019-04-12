@@ -29,7 +29,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public sealed class AnyTypeServerHandler : AbstractObservableHandler<AnySigned>
+    public sealed class AnyTypeSignedServerHandler : AbstractObservableHandler<AnySigned>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         public override bool IsSharable => true;

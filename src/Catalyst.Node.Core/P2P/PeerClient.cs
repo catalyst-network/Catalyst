@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
@@ -32,6 +33,7 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using Serilog;
 
@@ -39,9 +41,9 @@ namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerClient : UdpClient, IPeerClient
     {
-        private readonly PingRequestHandler _pingRequestHandler;
+        private readonly PingResponseHandler _pingRequestHandler;
 
-        private IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         /// <summary>
         ///
@@ -55,7 +57,7 @@ namespace Catalyst.Node.Core.P2P
 
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
             MessageStream = protoDatagramChannelHandler.MessageStream;
-            _pingRequestHandler = new PingRequestHandler(protoDatagramChannelHandler.MessageStream, peerIdentifier, Logger);
+            _pingRequestHandler = new PingResponseHandler(protoDatagramChannelHandler.MessageStream, Logger);
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
@@ -66,6 +68,11 @@ namespace Catalyst.Node.Core.P2P
                 channelHandlers,
                 ipEndPoint.Address
             ), ipEndPoint);
+        }
+
+        public async Task SendMessage(IByteBufferHolder datagramPacket)
+        {
+            await Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
         }
 
         protected override void Dispose(bool disposing)

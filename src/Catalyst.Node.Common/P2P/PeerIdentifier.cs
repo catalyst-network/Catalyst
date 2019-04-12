@@ -55,7 +55,7 @@ namespace Catalyst.Node.Common.P2P
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv6();
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
-
+        public IPEndPoint IpEndPoint => new IPEndPoint(Ip, Port);
         public PeerId PeerId { get; }
 
         public PeerIdentifier(PeerId peerId)
@@ -64,12 +64,12 @@ namespace Catalyst.Node.Common.P2P
             PeerId = peerId;
         }
 
-        public PeerIdentifier(byte[] publicKey, IPAddress endPoint, int port)
-            : this(publicKey, EndpointBuilder.BuildNewEndPoint(endPoint, port)) { }
+        public PeerIdentifier(byte[] publicKey, IPAddress ipAddress, int port)
+            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
 
         public PeerIdentifier(IPeerSettings settings)
             : this(settings.PublicKey.ToBytesForRLPEncoding(), settings.EndPoint) { }
-
+        
         private PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
         {
             PeerId = new PeerId

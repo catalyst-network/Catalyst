@@ -32,22 +32,6 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public interface IUdpServer
-    {
-        IBootstrap UdpListener { get; set; }
-        IChannel Channel { get; set; }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="channelInitializer"></param>
-        /// <returns></returns>
-        IUdpServer Bootstrap(IChannelHandler channelInitializer);
-
-        Task<IUdpServer> StartServer(IPAddress listenAddress, int port);
-        Task Shutdown();
-    }
-
     public abstract class UdpServer : AbstractIo, IUdpServer
     {
         public IBootstrap UdpListener { get; set; }
@@ -56,7 +40,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         ///
         /// </summary>
         /// <param name="logger"></param>
-        public UdpServer(ILogger logger) : base(logger) { }
+        protected UdpServer(ILogger logger) : base(logger) { }
 
         /// <summary>
         ///

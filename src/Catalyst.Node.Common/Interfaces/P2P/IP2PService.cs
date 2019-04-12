@@ -21,15 +21,20 @@
 
 #endregion
 
+using System;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Protocol.Common;
+
 namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IP2PService
+    public interface IP2PService : IChanneledMessageStreamer<AnySigned>, IDisposable
     {
         /// <summary>
         ///     The discovery mechanism for the peer network.
         /// </summary>
         IPeerDiscovery Discovery { get; }
-
+                
         // /// <summary>
         // ///     Request the node at <see cref="targetNode" /> for a list of peers.
         // /// </summary>

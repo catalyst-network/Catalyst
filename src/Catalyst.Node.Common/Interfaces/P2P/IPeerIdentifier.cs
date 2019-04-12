@@ -33,6 +33,7 @@ namespace Catalyst.Node.Common.Interfaces.P2P
         string ClientId { get; }
         string ClientVersion { get; }
         IPAddress Ip { get; }
+        IPEndPoint IpEndPoint { get; }
         int Port { get; }
         byte[] PublicKey { get; }
     }

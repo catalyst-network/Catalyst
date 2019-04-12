@@ -22,12 +22,15 @@
 #endregion
 
 using System;
+using System.Net;
 using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using Serilog;
 using Catalyst.Protocol.IPPN;
@@ -54,7 +57,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             Logger.Debug("message content is {0}", deserialised);
 
             var pingResponse = new PingResponse().ToAnySigned(_peerIdentifier.PeerId, new Guid(message.Payload.CorrelationId.ToByteArray()));
-            message.Context.Channel.WriteAndFlushAsync(pingResponse).GetAwaiter().GetResult();
+            var senderIdentifier = new PeerIdentifier(message.Payload.PeerId);
+            var datagramEnvelope = DatagramFactory.Create(pingResponse, new IPEndPoint(IPAddress.Parse("127.0.0.1"), 42069));
+
+            message.Context.Channel.WriteAndFlushAsync(datagramEnvelope).GetAwaiter().GetResult();
         }
     }
 }

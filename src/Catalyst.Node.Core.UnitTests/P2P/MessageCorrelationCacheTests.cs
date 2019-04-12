@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             }.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToArray();
 
             _reputationByPeerIdentifier = _peerIds.ToDictionary(p => p, p => 0);
-            _pendingRequests = _peerIds.Select((p, i) => new PendingRequest()
+            _pendingRequests = _peerIds.Select((p, i) => new PendingRequest
             {
                 Content = new PingRequest().ToAnySigned(senderPeerId, Guid.NewGuid()),
                 SentTo = p,
