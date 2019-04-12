@@ -51,7 +51,6 @@ namespace Catalyst.Node.Common.Helpers.IO
 
         protected override void InitChannel(T channel)
         {
-            Console.WriteLine(channel.ToString());
             InitializationAction(channel);
             var pipeline = channel.Pipeline;
 
@@ -61,7 +60,6 @@ namespace Catalyst.Node.Common.Helpers.IO
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
-            Console.WriteLine(Handlers.ToArray().ToString());
             pipeline.AddLast(Handlers.ToArray());
         }
     }

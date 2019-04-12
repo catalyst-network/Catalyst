@@ -125,11 +125,6 @@ namespace Catalyst.Cli
                 Environment.ExitCode = 1;
             }
 
-            // finally
-            // {
-            //     Console.ReadLine();
-            // }
-
             return Environment.ExitCode;
         }
     }

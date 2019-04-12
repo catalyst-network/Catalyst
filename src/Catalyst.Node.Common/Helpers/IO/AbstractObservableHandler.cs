@@ -35,9 +35,11 @@ namespace Catalyst.Node.Common.Helpers.IO
     public abstract class AbstractObservableHandler<T> : SimpleChannelInboundHandler<T>, IChanneledMessageStreamer<AnySigned>, IDisposable
     {
         public IObservable<IChanneledMessage<AnySigned>> MessageStream => MessageSubject.AsObservable();
-        internal readonly BehaviorSubject<IChanneledMessage<AnySigned>> MessageSubject = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
 
-        private void Dispose(bool disposing)
+        protected readonly BehaviorSubject<IChanneledMessage<AnySigned>> MessageSubject 
+            = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
+
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {

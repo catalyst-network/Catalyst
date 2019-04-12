@@ -33,11 +33,5 @@ namespace Catalyst.Node.Common.Interfaces.Messaging
         ///     Message stream
         /// </summary>
         IObservable<IChanneledMessage<T>> MessageStream { get; }
-
-        // /// <summary>
-        // ///     Subscribes to the above stream
-        // /// </summary>
-        // /// <param name="observer"></param>
-        // void SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer);
     }
 }
