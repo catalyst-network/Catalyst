@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 

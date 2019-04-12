@@ -28,7 +28,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;

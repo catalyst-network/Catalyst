@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Net;
 using Catalyst.Node.Common.Interfaces.Rpc;

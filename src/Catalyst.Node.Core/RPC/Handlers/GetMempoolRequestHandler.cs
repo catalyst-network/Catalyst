@@ -27,7 +27,6 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.P2P;

@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Node.Common.Interfaces;
-using System.Diagnostics;
 using Serilog;
 
 namespace Catalyst.Cli

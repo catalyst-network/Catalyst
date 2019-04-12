@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -25,7 +25,6 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;

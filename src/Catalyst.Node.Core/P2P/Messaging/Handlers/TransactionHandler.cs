@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Protocol.Transaction;

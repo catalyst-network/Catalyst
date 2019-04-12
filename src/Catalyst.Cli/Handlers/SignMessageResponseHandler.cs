@@ -28,7 +28,6 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf.WellKnownTypes;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 

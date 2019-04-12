@@ -22,9 +22,6 @@
 #endregion
 
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -34,11 +31,8 @@ using Moq;
 using NSubstitute;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Autofac;
-using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Interfaces.Rpc;
-using DotNetty.Transport.Channels;
 using Serilog;
 using Serilog.Extensions.Logging;
 

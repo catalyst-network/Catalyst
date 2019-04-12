@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;

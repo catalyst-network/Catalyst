@@ -158,7 +158,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RpcServer_Can_Handle_GetVersionRequest()
         {
-            // _rpcServer.StartServerAsync().GetAwaiter().GetResult();
             var shell = new Shell(_nodeRpcClientFactory, _config, _logger, _certificateStore);
             var hasConnected = shell.ParseCommand("connect", "-n", "node1");
             hasConnected.Should().BeTrue();

@@ -39,15 +39,10 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using CommandLine;
 using ILogger = Serilog.ILogger;
-using DotNetty.Transport.Channels;
 using Nethereum.RLP;
-using McMaster.Extensions.CommandLineUtils;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
-using Google.Protobuf.WellKnownTypes;
-using Org.BouncyCastle.Crypto.Engines;
-using Serilog.Core;
 
 namespace Catalyst.Cli
 {

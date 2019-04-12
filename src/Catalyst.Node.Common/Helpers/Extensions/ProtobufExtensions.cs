@@ -31,7 +31,6 @@ using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
-using Google.Protobuf.WellKnownTypes;
 using Type = System.Type;
 
 namespace Catalyst.Node.Common.Helpers.Extensions

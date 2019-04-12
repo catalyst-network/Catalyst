@@ -24,7 +24,6 @@
 using System.Linq;
 using System.Security;
 using Catalyst.Node.Common.Interfaces;
-using NSubstitute;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
