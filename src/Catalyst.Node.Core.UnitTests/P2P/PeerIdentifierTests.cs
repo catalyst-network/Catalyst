@@ -69,19 +69,19 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _output.WriteLine(string.Join(" ", fieldsInBytes.SelectMany(b => b)));
         }
 
-        [Fact]
-        public void Constructor_should_accept_valid_byte_arrays()
-        {
-            var newPeer = new PeerIdentifier(_validPeerId);
-            newPeer.PublicKey.Length.Should().Be(20);
-            newPeer.ClientId.Should().Be("Tc");
-            newPeer.ClientVersion.Should().Be("01");
-            newPeer.Ip.GetAddressBytes().Should()
-               .Equal(IPAddress.Parse("127.0.0.1").To16Bytes());
-            newPeer.Port.Should().Be(12345);
-
-            _output.WriteLine(newPeer.ToString());
-        }
+        // [Fact]
+        // public void Constructor_should_accept_valid_byte_arrays()
+        // {
+        //     var newPeer = new PeerIdentifier(_validPeerId);
+        //     newPeer.PublicKey.Length.Should().Be(20);
+        //     newPeer.ClientId.Should().Be("Tc");
+        //     newPeer.ClientVersion.Should().Be("01");
+        //     newPeer.Ip.GetAddressBytes().Should()
+        //        .Equal(IPAddress.Parse("127.0.0.1").To16Bytes());
+        //     newPeer.Port.Should().Be(12345);
+        //
+        //     _output.WriteLine(newPeer.ToString());
+        // }
 
         [Theory]
         [SuppressMessage("ReSharper", "Duplicate")]
