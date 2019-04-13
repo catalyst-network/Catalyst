@@ -36,5 +36,7 @@ namespace Catalyst.Node.Common.Interfaces.Rpc
         /// <param name="observer">The observer of the streamed messages</param>
         /// <returns>The subscription as an IDisposable</returns>
         IDisposable SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer);
+
+        void Dispose();
     }
 }
