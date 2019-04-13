@@ -56,13 +56,13 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public sealed class SocketTests : ConfigFileBasedTest
+    public sealed class RpcIntegrationTests : ConfigFileBasedTest
     {
         private const int MaxWaitInMs = 1000;
         private readonly IConfigurationRoot _config;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         
-        public SocketTests(ITestOutputHelper output) : base(output)
+        public RpcIntegrationTests(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
