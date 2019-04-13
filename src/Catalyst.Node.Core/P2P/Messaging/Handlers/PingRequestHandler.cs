@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             var senderIdentifier = new PeerIdentifier(message.Payload.PeerId);
             var datagramEnvelope = DatagramFactory.Create(pingResponse, senderIdentifier.IpEndPoint);
 
-            message.Context.Channel.WriteAndFlushAsync(datagramEnvelope).GetAwaiter().GetResult();
+            message.Context.Channel.WriteAndFlushAsync(datagramEnvelope);
         }
     }
 }

@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 }
             );
 
-            ConfigureContainerBuilder(_config, true, true);
+            ConfigureContainerBuilder(_config);
             ContainerBuilder.RegisterInstance(mempool).As<IMempool>();
 
             var container = ContainerBuilder.Build();
@@ -135,7 +135,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             using (_rpcServer.MessageStream.Subscribe(serverObserver))
             using (node1.MessageStream.Subscribe(clientObserver))
             {
-                //node1.SubscribeStream(clientObserver);
                 var info = shell.ParseCommand("get", "-i", "node1");
 
                 var tasks = new IChanneledMessageStreamer<AnySigned>[]
