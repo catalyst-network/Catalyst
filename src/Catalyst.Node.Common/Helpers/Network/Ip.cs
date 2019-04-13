@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -30,7 +32,6 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Util;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Network
@@ -67,6 +68,11 @@ namespace Catalyst.Node.Common.Helpers.Network
             return echoedIp;
         }
 
+        /// <summary>
+        ///     Creates a standardised format byte array that can handle a IPv6 address or an IPv4 with leading bytes padded with 0x0
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
         public static byte[] To16Bytes(this IPAddress address)
         {
             var ipChunk = ByteUtil.InitialiseEmptyByteArray(16);
@@ -131,12 +137,13 @@ namespace Catalyst.Node.Common.Helpers.Network
         /// <param name="ip"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IPAddress ValidateIp(string ip)
+        internal static IPAddress ValidateIp(string ip)
         {
             if (string.IsNullOrEmpty(ip))
             {
                 throw new ArgumentNullException(nameof(ip));
             }
+
             return IPAddress.Parse(ip);
         }
     }

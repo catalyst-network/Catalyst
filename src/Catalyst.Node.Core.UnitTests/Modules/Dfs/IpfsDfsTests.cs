@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,23 +9,21 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Extensions;
@@ -134,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 new Action(() => dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+                       .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
                    .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
             }
         }
@@ -145,14 +144,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken)c[3]).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * 2, (CancellationToken) c[3]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
 
             using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 new Action(() => dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+                       .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
                    .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
             }
         }
@@ -163,15 +162,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.ReadAllTextAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken)c[1]).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * 2, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult("some content");
                 });
 
             using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
-
                 new Action(() => dfs.ReadTextAsync("path", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+                       .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
                    .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
             }
         }
@@ -182,14 +180,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken)c[1]).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * 2, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult(Stream.Null);
                 });
 
             using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 new Action(() => dfs.ReadAsync("path", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+                       .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
                    .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
             }
         }

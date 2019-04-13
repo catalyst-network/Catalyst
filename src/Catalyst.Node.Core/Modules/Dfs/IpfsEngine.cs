@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -25,6 +27,7 @@ using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Common.Logging.Serilog;
 using Dawn;
 using Ipfs;
@@ -32,13 +35,14 @@ using Ipfs.CoreApi;
 using Ipfs.Engine;
 using Serilog;
 
-namespace Catalyst.Node.Core.Modules.Dfs {
+namespace Catalyst.Node.Core.Modules.Dfs
+{
     /// <summary>
     /// Simply a wrapper around the Ipfs.Engine.IpfsEngine to allow us coding
     /// and testing against an interface.
     /// </summary>
-    public class IpfsEngine : IIpfsEngine, IDisposable {
-
+    public class IpfsEngine : IIpfsEngine, IDisposable
+    {
         public static readonly string KeyChainDefaultKeyType = "ed25519";
 
         private readonly ILogger _logger;
@@ -71,6 +75,7 @@ namespace Catalyst.Node.Core.Modules.Dfs {
 
             _logger.Information("IPFS engine started.");
         }
+
         public IBitswapApi Bitswap => _ipfsEngine.Bitswap;
 
         public IBlockApi Block => _ipfsEngine.Block;
@@ -109,7 +114,10 @@ namespace Catalyst.Node.Core.Modules.Dfs {
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) {return;}
+            if (!disposing)
+            {
+                return;
+            }
 
             //TODO: find out why this leaves the build server hanging on the test step
             //_ipfsEngine?.Dispose();

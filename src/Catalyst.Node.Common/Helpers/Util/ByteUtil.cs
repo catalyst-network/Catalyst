@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -36,9 +38,9 @@ namespace Catalyst.Node.Common.Helpers.Util
 
         public static ByteString ToByteString(this IEnumerable<byte> bytes)
         {
-            Guard.Argument(bytes, nameof(bytes)).NotNull();
-            var array = bytes as byte[] ?? bytes.ToArray();
-            return ByteString.CopyFrom(array);
+            var enumerable = bytes as byte[] ?? bytes.ToArray();
+            Guard.Argument(enumerable, nameof(bytes)).NotNull();
+            return ByteString.CopyFrom(enumerable);
         }
 
         /// <summary>
@@ -102,7 +104,7 @@ namespace Catalyst.Node.Common.Helpers.Util
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>
@@ -115,6 +117,7 @@ namespace Catalyst.Node.Common.Helpers.Util
             {
                 returnArray[i] = 0x00;
             }
+
             return returnArray;
         }
 
@@ -130,7 +133,7 @@ namespace Catalyst.Node.Common.Helpers.Util
             {
                 foreach (var b in a)
                 {
-                    yield return b;                       
+                    yield return b;
                 }
             }
         }
@@ -150,25 +153,6 @@ namespace Catalyst.Node.Common.Helpers.Util
         {
             Guard.Argument(array, nameof(array)).NotNull().NotEmpty();
             return Encoding.UTF8.GetString(array);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static byte[] Xor(this byte[] a, byte[] b)
-        {
-            Guard.Argument(a, nameof(a)).NotNull().NotEmpty();
-            Guard.Argument(b, nameof(b)).NotNull().NotEmpty();
-
-            var length = Math.Min(a.Length, b.Length);
-            var result = InitialiseEmptyByteArray(length);
-            for (var i = 0; i < length; i++)
-            {
-                result[i] = (byte) (a[i] ^ b[i]);
-            }
-            return result;
         }
     }
 }

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -32,6 +34,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
     public class IpfsDfs : IDfs, IDisposable
     {
         public static readonly string HashAlgorithm = "blake2b-256";
+
         public static readonly AddFileOptions AddFileOptions = new AddFileOptions
         {
             Hash = HashAlgorithm,
@@ -69,14 +72,15 @@ namespace Catalyst.Node.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<string> AddAsync(Stream content, string name = "",
+        public async Task<string> AddAsync(Stream content,
+            string name = "",
             CancellationToken cancellationToken = default)
         {
             var node = await _ipfsEngine.FileSystem
                .AddAsync(content, name, AddFileOptions, cancellationToken);
             var id = node.Id.Encode();
             _logger.Debug("Content {1}added to IPFS with id {0}",
-                id, name +  " ");
+                id, name + " ");
             return id;
         }
 

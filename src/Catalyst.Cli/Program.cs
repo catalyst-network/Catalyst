@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -36,8 +38,7 @@ using Serilog;
 
 namespace Catalyst.Cli
 {
-
-    public static class Program
+    internal static class Program
     {
         private static ILogger _logger;
         private static readonly string LifetimeTag;
@@ -58,13 +59,14 @@ namespace Catalyst.Cli
         /// <summary>
         ///     Main cli loop
         /// </summary>
-        /// <param name="args"></param>
         public static int Main()
         {
             _logger.Information("Catalyst.Cli started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
 
             const int bufferSize = 1024 * 67 + 128;
+
+            var serviceCollection = new ServiceCollection();
 
             try
             {
@@ -75,9 +77,8 @@ namespace Catalyst.Cli
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
+                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellConfigFile))
                    .Build();
-
-                var serviceCollection = new ServiceCollection();
 
                 // register components from config file
                 var configurationModule = new ConfigurationModule(config);
@@ -106,13 +107,12 @@ namespace Catalyst.Cli
                     )
                 ); 
 
-                using (var scope = container.BeginLifetimeScope(LifetimeTag,
-                    //Add .Net Core serviceCollection to the Autofac container.
-                    b => { b.Populate(serviceCollection, LifetimeTag); }))
+                // Add .Net Core serviceCollection to the Autofac container.
+                using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
 
-                    shell.Ads.RunConsole();
+                    shell.AdvancedShell.RunConsole();
                 }
 
                 Environment.ExitCode = 0;

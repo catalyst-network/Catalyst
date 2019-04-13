@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -77,8 +79,6 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Network
             var domain2 = "seed2.catalystnetwork.io";
             urlList.Add(domain1);
             urlList.Add(domain2);
-            var queryResponse1 = Substitute.For<IDnsQueryResponse>();
-            var queryResponse2 = Substitute.For<IDnsQueryResponse>();
 
             MockQueryResponse.CreateFakeLookupResult(domain1, "value1", _lookupClient);
 

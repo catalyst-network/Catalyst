@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -29,7 +31,6 @@ using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
-using Google.Protobuf.WellKnownTypes;
 using Type = System.Type;
 
 namespace Catalyst.Node.Common.Helpers.Extensions
@@ -42,7 +43,7 @@ namespace Catalyst.Node.Common.Helpers.Extensions
 
         private static readonly Dictionary<string, string> ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
            .Where(t => typeof(IMessage).IsAssignableFrom(t))
-           .Select(t => ((IMessage)Activator.CreateInstance(t)).Descriptor)
+           .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
            .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
 
         public static string ShortenedFullName(this MessageDescriptor descriptor)
@@ -62,32 +63,7 @@ namespace Catalyst.Node.Common.Helpers.Extensions
             return ShortenedFullName(descriptor);
         }
 
-        public static Any ToAny<T>(this T protobufObject) where T : IMessage<T>
-        {
-            var wrappedObject = new Any
-            {
-                TypeUrl = protobufObject.Descriptor.ShortenedFullName(),
-                Value = protobufObject.ToByteString()
-            };
-            return wrappedObject;
-        }
-
-        public static T FromAny<T>(this Any message) where T : IMessage
-        {
-            var empty = (T)Activator.CreateInstance(typeof(T));
-            var typed = (T)empty.Descriptor.Parser.ParseFrom(message.Value);
-            return typed;
-        }
-
-        public static IMessage FromAny(this Any message)
-        {
-            var type = Type.GetType(ProtoToClrNameMapper[message.TypeUrl]);
-            var empty = (IMessage)Activator.CreateInstance(type);
-            var innerMessage = empty.Descriptor.Parser.ParseFrom(message.Value);
-            return innerMessage;
-        }
-
-        public static AnySigned ToAnySigned<T>(this T protobufObject, 
+        public static AnySigned ToAnySigned<T>(this T protobufObject,
             PeerId senderId,
             Guid correlationId = default) where T : IMessage<T>
         {
@@ -97,11 +73,11 @@ namespace Catalyst.Node.Common.Helpers.Extensions
                .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
 
-            var value = protobufObject.ToByteString();
             var anySigned = new AnySigned
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
+
                 //todo: sign the `correlationId` and `value` bytes with publicKey instead
                 Signature = senderId.PublicKey,
                 TypeUrl = typeUrl,
@@ -110,13 +86,21 @@ namespace Catalyst.Node.Common.Helpers.Extensions
             return anySigned;
         }
 
+        public static IMessage FromAnySigned(this AnySigned message)
+        {
+            var type = Type.GetType(ProtoToClrNameMapper[message.TypeUrl]);
+            var empty = (IMessage) Activator.CreateInstance(type);
+            var innerMessage = empty.Descriptor.Parser.ParseFrom(message.Value);
+            return innerMessage;
+        }
+
         public static T FromAnySigned<T>(this AnySigned message) where T : IMessage<T>
         {
             //todo check the message signature with the PeerId.PublicKey and value fields
-            if(message.PeerId.PublicKey != message.Signature)
+            if (message.PeerId.PublicKey != message.Signature)
                 throw new CryptographicException("Signature of the message doesn't match with sender's public Key");
-            var empty = (T)Activator.CreateInstance(typeof(T));
-            var typed = (T)empty.Descriptor.Parser.ParseFrom(message.Value);
+            var empty = (T) Activator.CreateInstance(typeof(T));
+            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
             return typed;
         }
 
@@ -150,7 +134,7 @@ namespace Catalyst.Node.Common.Helpers.Extensions
             Guard.Argument(requestTypeUrl, nameof(requestTypeUrl)).NotNull()
                .Require(t => t.EndsWith(originalSuffix), t => $"{t} should end with {originalSuffix}");
             return requestTypeUrl
-               .Remove(requestTypeUrl.Length - originalSuffix.Length, originalSuffix.Length)
+                   .Remove(requestTypeUrl.Length - originalSuffix.Length, originalSuffix.Length)
               + targetSuffix;
         }
     }

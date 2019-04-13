@@ -1,4 +1,5 @@
-#region LICENSE
+﻿#region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,22 +9,22 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
@@ -36,7 +37,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class MessageCorrelationCache : IMessageCorrelationCache, IDisposable
+    public class MessageCorrelationCache : IMessageCorrelationCache
     {
         public static readonly int BaseReputationChange = 1;
         private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
@@ -71,7 +72,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.SentTo, -BaseReputationChange));
         }
 
-        public TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response) 
+        public TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
             where TRequest : class, IMessage<TRequest>
             where TResponse : class, IMessage<TResponse>
         {
@@ -81,7 +82,10 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
             var found = _pendingRequests.TryGetValue(response.CorrelationId, out PendingRequest matched);
 
-            if (!found) {return null;}
+            if (!found)
+            {
+                return null;
+            }
 
             _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId), BaseReputationChange * 2));
             _pendingRequests.Remove(response.CorrelationId);
@@ -91,7 +95,10 @@ namespace Catalyst.Node.Core.P2P.Messaging
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) {return;}
+            if (!disposing)
+            {
+                return;
+            }
 
             _pendingRequests?.Dispose();
             _ratingChangeSubject.Dispose();
