@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,20 +9,17 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
-#endregion
 
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.Shell;
+#endregion
 
 namespace Catalyst.Node.Common.Interfaces
 {
@@ -56,15 +54,8 @@ namespace Catalyst.Node.Common.Interfaces
         /// <returns></returns>
         bool OnStopWork(string[] args);
 
-        bool IsConnectedNode(string nodeId);
-
-        bool IsSocketChannelActive(IRpcNode node);
-
-        IRpcNode GetConnectedNode(string nodeId);
-
         bool OnCommand(params string[] args);
 
         bool ParseCommand(params string[] args);
-
     }
 }

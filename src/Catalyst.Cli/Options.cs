@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System.Collections.Generic;
@@ -44,7 +46,7 @@ namespace Catalyst.Cli
     }
 
     [Verb("connect", HelpText = "Connects the CLI to a catalyst node")]
-    class ConnectOptions
+    public sealed class ConnectOptions
     {
         [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
         public bool Node { get; set; }
@@ -56,13 +58,17 @@ namespace Catalyst.Cli
 
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
-            new List<Example> {
-                new Example("Connects the CLI to a node", new ConnectOptions { NodeId = "Node ID" })
+            new List<Example>
+            {
+                new Example("Connects the CLI to a node", new ConnectOptions
+                {
+                    NodeId = "Node ID"
+                })
             };
     }
 
     [Verb("sign", HelpText = "Signs a message or a transaction")]
-    class SignOptions
+    public sealed class SignOptions
     {
         [Option('m', "message", HelpText = "Directs the CLI to sign the message to be provided as the value")]
         public string Message { get; set; }
@@ -72,9 +78,12 @@ namespace Catalyst.Cli
 
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
-            new List<Example> {
-                new Example("Signs a message or a transaction provided.", new SignOptions { Node = "Messsage" })
+            new List<Example>
+            {
+                new Example("Signs a message or a transaction provided.", new SignOptions
+                {
+                    Node = "Messsage"
+                })
             };
     }
-
 }

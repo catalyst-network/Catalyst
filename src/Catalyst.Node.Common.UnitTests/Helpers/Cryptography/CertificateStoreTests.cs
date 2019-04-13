@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,21 +9,20 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
 using System.IO;
-using System.Linq;
-using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Interfaces;
@@ -34,7 +34,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 {
-    public class CertificateStoreTests : FileSystemBasedTest
+    public sealed class CertificateStoreTests : FileSystemBasedTest
     {
         public CertificateStoreTests(ITestOutputHelper output) : base(output)
         {
@@ -63,6 +63,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
             {
                 _directoryInfo.Delete(true);
             }
+
             _directoryInfo.Create();
             _directoryInfo.EnumerateFiles().Should().BeEmpty();
         }

@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -24,18 +26,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.P2P;
 using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
+using Peer = Catalyst.Node.Common.Peer;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public class PeerDiscovery : IPeerDiscovery
+    public sealed class PeerDiscovery : IPeerDiscovery
     {
         public IDns Dns { get; }
         public ILogger Logger { get; }
@@ -58,8 +61,8 @@ namespace Catalyst.Node.Core.P2P
             Peers = new List<IPEndPoint>();
 
             ParseDnsServersFromConfig(rootSection);
-            
-            var longRunningTasks = new [] {PeerCrawler()};
+
+            var longRunningTasks = new[] {PeerCrawler()};
             Task.WaitAll(longRunningTasks);
         }
 
@@ -77,9 +80,8 @@ namespace Catalyst.Node.Core.P2P
                 Logger.Error(e.Message);
                 throw;
             }
-            
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
@@ -95,9 +97,9 @@ namespace Catalyst.Node.Core.P2P
                     foreach (var seedNode in answerSection.EscapedText)
                     {
                         var pingResponse = true;
-                        if (pingResponse == true)// pointless but place holder until we have a ping system
+                        if (pingResponse == true) // pointless but place holder until we have a ping system
                         {
-                            Peers.Add(EndpointBuilder.BuildNewEndPoint(seedNode));                            
+                            Peers.Add(EndpointBuilder.BuildNewEndPoint(seedNode));
                         }
                     }
                 }
@@ -116,7 +118,7 @@ namespace Catalyst.Node.Core.P2P
                 {
                     Logger.Error(e.Message);
                     throw;
-                }                
+                }
             }
         }
     }

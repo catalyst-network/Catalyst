@@ -1,4 +1,5 @@
-#region LICENSE
+﻿#region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,26 +9,25 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Catalyst.Node.Common.Helpers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.UnitTests.TestUtils
@@ -46,7 +46,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
                 ClientId = clientId.ToUtf8ByteString(),
                 ClientVersion = clientVersion.ToString("D2").ToUtf8ByteString(),
                 Ip = (ipAddress ?? IPAddress.Parse("127.0.0.1")).To16Bytes().ToByteString(),
-                Port = BitConverter.GetBytes((ushort)port).ToByteString()
+                Port = BitConverter.GetBytes((ushort) port).ToByteString()
             };
             return peerIdentifier;
         }

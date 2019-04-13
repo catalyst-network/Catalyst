@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -56,6 +58,7 @@ namespace Catalyst.Node.Common.Helpers.Enumerator
             {
                 return false;
             }
+
             parsed = GetAll<T>().SingleOrDefault(e => e.Name.Equals(value, comparison));
             return parsed != null;
         }
@@ -67,10 +70,12 @@ namespace Catalyst.Node.Common.Helpers.Enumerator
             var allValues = GetAll<T>();
             var enumerable = allValues as T[] ?? allValues.ToArray();
             var result = enumerable.SingleOrDefault(e => e.Name.Equals(value, comparison));
-            if (result == null) {
+            if (result == null)
+            {
                 throw new FormatException($"Failed to parse {value} into a {typeof(T).Name}, " +
                     $"admitted values are {string.Join(", ", enumerable.Select(v => v.Name))}");
             }
+
             return result;
         }
 
@@ -103,7 +108,7 @@ namespace Catalyst.Node.Common.Helpers.Enumerator
             {
                 return false;
             }
-            
+
             return Equals((Enumeration) obj);
         }
 

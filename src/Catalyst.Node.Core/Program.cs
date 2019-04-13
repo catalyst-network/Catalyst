@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -63,8 +65,6 @@ namespace Catalyst.Node.Core
             ExecutionDirectory = Path.GetDirectoryName(DeclaringType.Assembly.Location);
         }
 
-
-
         public static int Main(string[] args)
         {
             _logger.Information("Catalyst.Node.Core started with process id {0}",
@@ -89,6 +89,7 @@ namespace Catalyst.Node.Core
 
                 //.Net Core service collection
                 var serviceCollection = new ServiceCollection();
+
                 //Add .Net Core services (if any) first
                 //serviceCollection.AddLogging().AddDistributedMemoryCache();
 
@@ -99,6 +100,7 @@ namespace Catalyst.Node.Core
 
                 var loggerConfiguration =
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
+
                 _logger = loggerConfiguration.WriteTo
                    .File(Path.Combine(targetConfigFolder, LogFileName), 
                         rollingInterval: RollingInterval.Day,
@@ -112,13 +114,13 @@ namespace Catalyst.Node.Core
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
                 var container = containerBuilder.Build();
+                using (container.BeginLifetimeScope(LifetimeTag,
 
-                using (var scope = container.BeginLifetimeScope(LifetimeTag,
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                   var node = container.Resolve<ICatalystNode>();
-                   node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
+                    var node = container.Resolve<ICatalystNode>();
+                    node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;

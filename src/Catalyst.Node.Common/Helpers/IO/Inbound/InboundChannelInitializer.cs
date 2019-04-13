@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -34,14 +36,13 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         public InboundChannelInitializer(Action<T> initializationAction,
             IList<IChannelHandler> handlers,
             X509Certificate certificate = null)
-            : base(initializationAction, 
-                handlers, 
-                certificate == null ? null : TlsHandler.Server(certificate))
-        {}
+            : base(initializationAction,
+                handlers,
+                certificate == null ? null : TlsHandler.Server(certificate)) { }
 
         public override string ToString()
         {
-            return $"InboundChannelInitializer[" + StringUtil.SimpleClassName(typeof (T)) + "]";
+            return $"InboundChannelInitializer[" + StringUtil.SimpleClassName(typeof(T)) + "]";
         }
     }
 }

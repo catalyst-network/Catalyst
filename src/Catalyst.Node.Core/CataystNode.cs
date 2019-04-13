@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,23 +9,21 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
 using Catalyst.Node.Common.Interfaces.Modules.Contract;
@@ -32,10 +31,8 @@ using Catalyst.Node.Common.Interfaces.Modules.Dfs;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Ledger;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
-using Catalyst.Node.Core.Events;
-using Catalyst.Protocol.Transaction;
-using Dawn;
-using Google.Protobuf;
+using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.Interfaces.Rpc;
 using Serilog;
 
 namespace Catalyst.Node.Core
@@ -49,13 +46,12 @@ namespace Catalyst.Node.Core
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
-        private readonly IP2P _p2P;
+        private readonly IP2PService _p2P;
         private readonly IRpcServer _rpcServer;
 
         private bool _disposed;
 
-        public CatalystNode(
-            IP2P p2P,
+        public CatalystNode(IP2PService p2P,
             ICertificateStore certificateStore,
             IConsensus consensus,
             IDfs dfs,
@@ -64,8 +60,7 @@ namespace Catalyst.Node.Core
             ILogger logger,
             IRpcServer rpcServer,
             IMempool mempool = null,
-            IContract contract = null
-            )
+            IContract contract = null)
         {
             _p2P = p2P;
             _consensus = consensus;
@@ -80,50 +75,17 @@ namespace Catalyst.Node.Core
 
         public async Task RunAsync(CancellationToken ct)
         {
-
             _logger.Information("Starting the Catalyst Node");
-            bool exit = false;
+            bool exit;
             do
             {
-                _logger.Information("Creating a Transaction message");
-                _logger.Information("Please type in a pubkey for the transaction signature");
-                var pubkey = Console.ReadLine();
-
-                _logger.Information("Please type in a transaction version");
-                if (!uint.TryParse(Console.ReadLine(), out var version))
-                {
-                    version = 1;
-                }
-                var tx = new Transaction { Version = version, Signature = new TransactionSignature { SchnorrSignature = ByteString.CopyFromUtf8(pubkey) } };
-
-                await _p2P.Messaging.BroadcastMessageAsync(tx.ToAny());
-                await Task.Delay(300, ct); //just to get the next message at the bottom
+                await Task.Delay(300, ct); //just to get the exit message at the bottom
 
                 _logger.Information("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
-
             } while (!ct.IsCancellationRequested && !exit);
 
             _logger.Information("Stopping the Catalyst Node");
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        private void Announce(object sender, AnnounceNodeEventArgs e)
-        {
-            Guard.Argument(sender, nameof(sender)).NotNull();
-            Guard.Argument(e, nameof(e)).NotNull();
-            var client = new TcpClient(_p2P.Settings.AnnounceServer.Address.ToString(),
-                _p2P.Settings.AnnounceServer.Port);
-            var nwStream = client.GetStream();
-            var network = new byte[1];
-            network[0] = 0x01;
-            _logger.Debug(string.Join(" ", network));
-            var announcePackage = ByteUtil.Merge(network, _p2P.Identifier.PeerId.ToByteArray());
-            _logger.Debug(string.Join(" ", announcePackage));
-            nwStream.Write(announcePackage, 0, announcePackage.Length);
-            client.Close();
         }
 
         public void Dispose()

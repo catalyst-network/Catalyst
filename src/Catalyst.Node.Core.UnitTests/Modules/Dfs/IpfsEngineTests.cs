@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,21 +9,23 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
 using System.IO;
 using System.Linq;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
@@ -33,7 +36,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
-    public class IpfsEngineTests : FileSystemBasedTest
+    public sealed class IpfsEngineTests : FileSystemBasedTest
     {
         private readonly IPeerSettings _peerSettings;
         private readonly IPasswordReader _passwordReader;
@@ -43,7 +46,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         public IpfsEngineTests(ITestOutputHelper output) : base(output)
         {
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.SeedServers.Returns(new[] { "seed1.server.va", "island.domain.tv" });
+            _peerSettings.SeedServers.Returns(new[] {"seed1.server.va", "island.domain.tv"});
             _passwordReader = Substitute.For<IPasswordReader>();
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
@@ -60,7 +63,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         public void Constructor_should_throw_when_no_peers_in_peerSettings()
         {
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.SeedServers.Returns(new string[] {});
+            peerSettings.SeedServers.Returns(new string[] { });
             new Action(() => new IpfsEngine(_passwordReader, peerSettings, FileSystem, _logger))
                .Should().Throw<ArgumentException>();
         }

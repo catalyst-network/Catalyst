@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,19 +9,21 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Interfaces;
@@ -37,7 +40,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
 {
-    public class LocalKeyStoreTests : FileSystemBasedTest
+    public sealed class LocalKeyStoreTests : FileSystemBasedTest
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
@@ -57,8 +60,11 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
             _keyStoreService = Substitute.For<IKeyStoreWrapper>();
             _keystore = new LocalKeyStore(_context, _keyStoreService, FileSystem, logger);
 
-            _privateKey = new NSecPrivateKeyWrapper(new Key(SignatureAlgorithm.Ed25519, 
-                new KeyCreationParameters { ExportPolicy = KeyExportPolicies.AllowPlaintextExport}));
+            _privateKey = new NSecPrivateKeyWrapper(new Key(SignatureAlgorithm.Ed25519,
+                new KeyCreationParameters
+                {
+                    ExportPolicy = KeyExportPolicies.AllowPlaintextExport
+                }));
             _privateKeyBytes = _context.ExportPrivateKey(_privateKey);
             _fileName = "myKey.json";
             _password = "password123";
@@ -90,25 +96,18 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
             var storedData = File.ReadAllText(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, _fileName));
             storedData.Should().Be(fakeJsonData);
         }
-        
+
         [Fact]
         public void TestWrongPasswordStoreAndRetrieveKey()
         {
-            
-
             _keystore.StoreKey(_privateKey, _fileName, _password);
 
             _keyStoreService.DecryptKeyStoreFromFile(Arg.Any<string>(), Arg.Is<string>(s => s.EndsWith(_fileName)))
-               .Throws(new CustomNethereumException("wrong password"));
+               .Throws(new CryptographicException("wrong password"));
 
             string password2 = "incorrect password";
             Action action = () => _keystore.GetKey(_fileName, password2);
-            action.Should().Throw<CustomNethereumException>("we should not be able to retrieve a key with the wrong password");
-        }
-
-        private class CustomNethereumException : Exception
-        {
-            public CustomNethereumException(string message) : base(message) {}
+            action.Should().Throw<CryptographicException>("we should not be able to retrieve a key with the wrong password");
         }
     }
 }
