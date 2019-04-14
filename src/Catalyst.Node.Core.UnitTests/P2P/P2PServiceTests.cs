@@ -51,7 +51,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
     public sealed class P2PServiceTests : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
-        private readonly IP2PService _p2PService;
 
         public P2PServiceTests(ITestOutputHelper output) : base(output)
         {

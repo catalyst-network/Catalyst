@@ -608,14 +608,16 @@ namespace Catalyst.Cli
             Console.WriteLine(message);
         }
 
-        /* Implementing IObserver */
         public void OnCompleted()
         {
             //Do nothing because this method should include logic to do after the observer
             //receives a message and handles it.
         }
 
-        public void OnError(Exception error) { _logger.Error($"RpcClient observer received error : {error.Message}"); }
+        public void OnError(Exception error)
+        {
+            _logger.Error($"RpcClient observer received error : {error.Message}");
+        }
 
         public void OnNext(IChanneledMessage<AnySigned> value)
         {

@@ -29,7 +29,6 @@ using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Cli;
 using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
@@ -50,7 +49,6 @@ using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
-using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -93,13 +91,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _nodeRpcClientFactory = new NodeRpcClientFactory();
         }
 
-        [Fact(Skip = "breaks")]
+        [Fact(Skip = "test hanger")]
         public void ServerConnectedToCorrectPort()
         {
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 using (var client = new TcpClient(rpcServer.Settings.BindAddress.ToString(),
                     rpcServer.Settings.Port))
                 {
@@ -112,13 +110,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact(Skip = "breaks")]
+        [Fact(Skip = "test hanger")]
         public void RpcServer_Can_Handle_GetInfoRequest()
         {   
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(
@@ -160,13 +158,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact(Skip = "breaks")]
+        [Fact(Skip = "test hanger")]
         public void RpcServer_Can_Handle_GetVersionRequest()
         {
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(
@@ -206,13 +204,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
         
-        [Fact(Skip = "breaks")]
+        [Fact(Skip = "test hanger")]
         public void RpcServer_Can_Handle_GetMempoolRequest()
         {
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(
@@ -247,13 +245,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
         
-        [Fact(Skip = "breaks")]
+        [Fact(Skip = "test hanger")]
         public void RpcServer_Can_Handle_SignMessageRequest()
         {
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(
@@ -297,12 +295,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 rpcServer.Dispose();
                 scope.Dispose();
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (!disposing) ;
         }
     }
 }

@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 PeerIdHelper.GetPeerId("abcd"),
                 PeerIdHelper.GetPeerId("efgh"),
-                PeerIdHelper.GetPeerId("ijkl"),
+                PeerIdHelper.GetPeerId("ijkl")
             }.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToArray();
 
             _reputationByPeerIdentifier = _peerIds.ToDictionary(p => p, p => 0);
