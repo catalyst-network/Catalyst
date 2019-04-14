@@ -29,7 +29,7 @@ namespace Catalyst.Node.Common.Interfaces
 {
     public interface IUdpServer
     {
-        IBootstrap UdpListener { get; set; }
+        // IBootstrap UdpListener { get; set; }
         IChannel Channel { get; set; }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace Catalyst.Node.Common.Interfaces
         /// </summary>
         /// <param name="channelInitializer"></param>
         /// <returns></returns>
-        IUdpServer Bootstrap(IChannelHandler channelInitializer);
+        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
 
-        Task<IUdpServer> StartServer(IPAddress listenAddress, int port);
+        // Task<IUdpServer> StartServer(IPAddress listenAddress, int port);
         Task Shutdown();
     }
 }

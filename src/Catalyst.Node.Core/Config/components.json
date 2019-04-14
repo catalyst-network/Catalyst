@@ -10,10 +10,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.RPC.RpcServer",
+            "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Rpc.IRpcServer, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.Rpc.INodeRpcServer, Catalyst.Node.Common"
                 }
             ]
         },

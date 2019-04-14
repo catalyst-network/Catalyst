@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,13 +43,11 @@ using Serilog;
 
 namespace Catalyst.Node.Core.RPC
 {
-    public class RpcServer : IRpcServer
+    public class NodeRpcServer : TcpServer, INodeRpcServer
     {
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private ITcpServer _rpcSocketServer;
-        private readonly AnyTypeSignedServerHandler _anyTypeSignedServerHandler;
         private readonly GetInfoRequestHandler _infoRequestHandler;
         private readonly GetVersionRequestHandler _versionRequestHandler;
         private readonly GetMempoolRequestHandler _mempoolRequestHandler;
@@ -57,24 +56,20 @@ namespace Catalyst.Node.Core.RPC
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
-        public RpcServer(IRpcServerSettings settings,
+        public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
             ICertificateStore certificateStore,
             IMempool mempool,
             IKeySigner keySigner,
-            IPeerSettings peerSettings)
+            IPeerSettings peerSettings) : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _logger = logger;
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            _anyTypeSignedServerHandler = new AnyTypeSignedServerHandler();
-            MessageStream = _anyTypeSignedServerHandler.MessageStream;
-            var longRunningTasks = new[]
-            {
-                StartServerAsync()
-            };
+            var anyTypeSignedServerHandler = new AnyTypeSignedServerHandler();
+            MessageStream = anyTypeSignedServerHandler.MessageStream;
 
             //todo: these handlers need to be instantiated by Autofac to avoid bringing dependencies
             //all over the RpcServer constructor, and get a proper context for the loggers
@@ -84,67 +79,36 @@ namespace Catalyst.Node.Core.RPC
             _versionRequestHandler = new GetVersionRequestHandler(MessageStream, peerIdentifier, logger);
             _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, peerIdentifier, logger, mempool);
             _signMessageRequestHandler = new SignMessageRequestHandler(MessageStream, peerIdentifier, logger, keySigner);
-
-            Task.WaitAll(longRunningTasks);
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
-        public async Task StartServerAsync()
-        {
-            _logger.Information("Rpc Server Starting!");
-
-            var handlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(AnySigned.Parser),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                _anyTypeSignedServerHandler
-            };
-
-            try
-            {
-                _rpcSocketServer = await new TcpServer(_logger)
-                   .Bootstrap(
-                        new InboundChannelInitializer<ISocketChannel>(
-                            channel => { },
-                            handlers,
-                            _certificate
-                        )
-                    ).StartServer(Settings.BindAddress, Settings.Port);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, e.Message);
-                Dispose();
-                throw;
-            }
+            
+            Bootstrap(
+                new InboundChannelInitializer<ISocketChannel>(channel => { },
+                    new List<IChannelHandler>
+                    {
+                        new ProtobufVarint32FrameDecoder(),
+                        new ProtobufDecoder(AnySigned.Parser),
+                        new ProtobufVarint32LengthFieldPrepender(),
+                        new ProtobufEncoder(),
+                        anyTypeSignedServerHandler
+                    },
+                    _certificate
+                ),
+                Settings.BindAddress, Settings.Port
+            );
         }
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="disposing"></param>
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                _rpcSocketServer?.Shutdown();
-                _cancellationSource?.Dispose();
-                _certificate?.Dispose();
-                _infoRequestHandler?.Dispose();
-                _versionRequestHandler.Dispose();
-                _mempoolRequestHandler.Dispose();
-                _signMessageRequestHandler.Dispose();
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
+            if (!disposing) return;
+            _cancellationSource?.Dispose();
+            _certificate?.Dispose();
+            _infoRequestHandler?.Dispose();
+            _versionRequestHandler.Dispose();
+            _mempoolRequestHandler.Dispose();
+            _signMessageRequestHandler.Dispose();
         }
     }
 }

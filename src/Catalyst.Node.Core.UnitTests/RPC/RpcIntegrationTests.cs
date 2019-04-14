@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 using (var client = new TcpClient(rpcServer.Settings.BindAddress.ToString(),
                     rpcServer.Settings.Port))
                 {
@@ -116,7 +116,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(
@@ -164,7 +164,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(
@@ -210,7 +210,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(
@@ -251,7 +251,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var container = ContainerBuilder.Build();
             using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var rpcServer = container.Resolve<IRpcServer>();
+                var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(
