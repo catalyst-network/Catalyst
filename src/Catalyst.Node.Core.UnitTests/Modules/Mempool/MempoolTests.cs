@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             }
         }
 
-        [Fact(Skip = "mempool exception")]
+        [Fact]
         public void Get_should_retrieve_a_saved_transaction()
         {
             _memPool.SaveTransaction(_transaction);
@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             transactionFromMemPool.TransactionFees.Should().Be(_transaction.TransactionFees);
         }
 
-        [Fact(Skip = "mempool exception")]
+        [Fact]
         public void Get_should_retrieve_saved_transaction_matching_their_keys()
         {
             const int numTx = 10;
@@ -139,7 +139,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             }
         }
 
-        [Fact(Skip = "mempool exception")]
+        [Fact]
         public void GetNonExistentKey()
         {
             _transactionStore.Get(Arg.Any<TransactionSignature>()).ThrowsForAnyArgs(new KeyNotFoundException());
@@ -147,7 +147,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                .Should().Throw<KeyNotFoundException>();
         }
 
-        [Fact(Skip = "mempool exception")]
+        [Fact]
         public void KeyAlreadyExists()
         {
             var expectedAmount = _transaction.STEntries.Single().Amount;
@@ -162,7 +162,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             retrievedTransaction.STEntries.Single().Amount.Should().Be(expectedAmount);
         }
 
-        [Fact(Skip = "mempool exception")]
+        [Fact]
         public void MultipleThreadsSameKey()
         {
             const int threadNum = 8;
@@ -184,7 +184,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             ((int) transaction.STEntries.Single().Amount).Should().Be(pc.FirstThreadId);
         }
 
-        [Fact(Skip = "mempool exception")]
+        [Fact]
         public void SaveNullKey()
         {
             _transaction.Signature = null;
@@ -193,7 +193,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                .And.Message.Should().Contain("cannot be null");
         }
 
-        [Fact(Skip = "mempool exception")]
+        [Fact]
         public void SaveNullTx()
         {
             new Action(() => _memPool.SaveTransaction(null))
