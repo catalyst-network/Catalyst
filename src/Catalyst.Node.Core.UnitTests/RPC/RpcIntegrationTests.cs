@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _nodeRpcClientFactory = new NodeRpcClientFactory();
         }
 
-        [Fact(Skip = "breaks")]
+        [Fact]
         public void ServerConnectedToCorrectPort()
         {
             var container = ContainerBuilder.Build();
@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact(Skip = "breaks")]
+        [Fact]
         public void RpcServer_Can_Handle_GetInfoRequest()
         {   
             var container = ContainerBuilder.Build();
@@ -160,7 +160,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact(Skip = "breaks")]
+        [Fact]
         public void RpcServer_Can_Handle_GetVersionRequest()
         {
             var container = ContainerBuilder.Build();
@@ -206,7 +206,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
         
-        [Fact(Skip = "breaks")]
+        [Fact]
         public void RpcServer_Can_Handle_GetMempoolRequest()
         {
             var container = ContainerBuilder.Build();
@@ -247,7 +247,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
         
-        [Fact(Skip = "breaks")]
+        [Fact]
         public void RpcServer_Can_Handle_SignMessageRequest()
         {
             var container = ContainerBuilder.Build();
@@ -301,8 +301,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
             if (!disposing) ;
+            base.Dispose(disposing);
         }
     }
 }

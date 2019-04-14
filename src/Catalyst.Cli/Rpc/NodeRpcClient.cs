@@ -102,7 +102,7 @@ namespace Catalyst.Cli.Rpc
                 _getMempoolResponseHandler.Dispose();
             }
 
-            base.Dispose();
+            base.Dispose(true);
         }
     }
 }
