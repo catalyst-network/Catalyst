@@ -34,8 +34,6 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     public abstract class UdpServer : AbstractIo, IUdpServer
     {
-        public IBootstrap UdpListener { get; set; }
-
         /// <summary>
         ///
         /// </summary>
@@ -47,22 +45,17 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         /// </summary>
         /// <param name="channelInitializer"></param>
         /// <returns></returns>
-        public IUdpServer Bootstrap(IChannelHandler channelInitializer)
+        public void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port)
         {
-            UdpListener = new Bootstrap();
-            ((DotNetty.Transport.Bootstrapping.Bootstrap) UdpListener)
+            Channel = new Bootstrap()
                .Group(WorkerEventLoop)
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer);
-            return this;
-        }
-
-        public async Task<IUdpServer> StartServer(IPAddress listenAddress, int port)
-        {
-            Channel = await UdpListener.BindAsync(listenAddress, port).ConfigureAwait(false);
-            return this;
+               .Handler(channelInitializer)
+               .BindAsync(listenAddress, port)
+               .GetAwaiter()
+               .GetResult();
         }
     }
 }

@@ -67,14 +67,9 @@ namespace Catalyst.Node.Core.P2P
                 protoDatagramChannelHandler
             };
 
-            Task[] longRunningTasks =
-            {
-                Bootstrap(new InboundChannelInitializer<IChannel>(channel => { },
-                    channelHandlers
-                )).StartServer(settings.BindAddress, settings.Port)
-            };
-
-            Task.WaitAll(longRunningTasks);
+            Bootstrap(new InboundChannelInitializer<IChannel>(channel => { },
+                channelHandlers
+            ), settings.BindAddress, settings.Port);
         }
     }
 }

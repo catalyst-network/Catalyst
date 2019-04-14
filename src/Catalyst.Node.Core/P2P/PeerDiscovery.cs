@@ -34,7 +34,7 @@ using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
-using Peer = Catalyst.Node.Common.Peer;
+using Peer = Catalyst.Node.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.P2P
 {
