@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IP2PService _p2P;
-        private readonly IRpcServer _rpcServer;
+        private readonly INodeRpcServer _nodeRpcServer;
 
         private bool _disposed;
 
@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core
             ILedger ledger,
             IKeySigner keySigner,
             ILogger logger,
-            IRpcServer rpcServer,
+            INodeRpcServer nodeRpcServer,
             IMempool mempool = null,
             IContract contract = null)
         {
@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core
             _ledger = ledger;
             _keySigner = keySigner;
             _logger = logger;
-            _rpcServer = rpcServer;
+            _nodeRpcServer = nodeRpcServer;
             _mempool = mempool;
             _contract = contract;
         }

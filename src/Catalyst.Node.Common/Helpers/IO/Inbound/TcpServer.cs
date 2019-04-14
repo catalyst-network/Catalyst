@@ -33,14 +33,12 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
     public interface ITcpServer
     {
-        ITcpServer Bootstrap(IChannelHandler channelInitializer);
-        Task<ITcpServer> StartServer(IPAddress listenAddress, int port);
+        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
         Task Shutdown();
-        IServerBootstrap Server { get; set; }
         IChannel Channel { get; set; }
     }
 
-    public sealed class TcpServer : AbstractIo, ITcpServer
+    public abstract class TcpServer : AbstractIo, ITcpServer
     {
         public IServerBootstrap Server { get; set; }
         private readonly IEventLoopGroup _supervisorEventLoop;
@@ -49,28 +47,22 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         ///
         /// </summary>
         /// <param name="logger"></param>
-        public TcpServer(ILogger logger) : base(logger)
+        protected TcpServer(ILogger logger) : base(logger)
         {
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }
 
-        public ITcpServer Bootstrap(IChannelHandler channelInitializer)
+        public void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port)
         {
-            Server = new ServerBootstrap();
-            ((DotNetty.Transport.Bootstrapping.ServerBootstrap) Server)
+            Channel = new ServerBootstrap()
                .Group(_supervisorEventLoop, childGroup: WorkerEventLoop)
                .ChannelFactory(() => new TcpServerSocketChannel())
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .ChildHandler(channelInitializer);
-            return this;
-        }
-
-        public async Task<ITcpServer> StartServer(IPAddress listenAddress, int port)
-        {
-            Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
-            Logger.Information(@"TcpServerChannel {0} is bound to {1} and {2}", Channel.Id, Channel.LocalAddress, Channel.Open ? "opened" : "closed");
-            return this;
+               .ChildHandler(channelInitializer)
+               .BindAsync(listenAddress, port)
+               .GetAwaiter()
+               .GetResult();
         }
 
         public override async Task Shutdown()

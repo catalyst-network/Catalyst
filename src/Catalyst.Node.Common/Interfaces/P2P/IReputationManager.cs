@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Node.Common.P2P;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Common.Interfaces.P2P

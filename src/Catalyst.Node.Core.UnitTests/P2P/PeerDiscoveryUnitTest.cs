@@ -44,7 +44,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
 using Dns = Catalyst.Node.Common.Helpers.Network.Dns;
-using Peer = Catalyst.Node.Common.Peer;
+using Peer = Catalyst.Node.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
@@ -128,7 +128,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
             await peerDiscovery.GetSeedNodesFromDns(urlList);
-
             peerDiscovery.Peers.Should().NotBeNullOrEmpty();
             peerDiscovery.Peers.Should().HaveCount(3);
             peerDiscovery.Peers.Should().NotContainNulls();
