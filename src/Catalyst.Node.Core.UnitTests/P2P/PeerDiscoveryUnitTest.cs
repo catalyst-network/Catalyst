@@ -44,7 +44,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
 using Dns = Catalyst.Node.Common.Helpers.Network.Dns;
-using Peer = Catalyst.Node.Common.Peer;
+using Peer = Catalyst.Node.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
