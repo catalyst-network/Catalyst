@@ -55,11 +55,13 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private readonly IRepository<Peer> _peerRepository;
         private readonly ILogger _logger;
         private readonly ILookupClient _lookupClient;
+        private readonly IPeerClient _peerClient;
 
         public PeerDiscoveryUnitTest(ITestOutputHelper output) : base(output)
         {
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
+            _peerClient = Substitute.For<IPeerClient>();
             _lookupClient = Substitute.For<ILookupClient>();
             _dns = new Dns(_lookupClient);
 
@@ -106,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.1:42069", _lookupClient);
             MockQueryResponse.CreateFakeLookupResult(domain2, "192.0.2.2:42069", _lookupClient);
 
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
+            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _peerClient, _logger);
 
             peerDiscovery.ParseDnsServersFromConfig(_config);
             peerDiscovery.SeedNodes.Should().NotBeNullOrEmpty();
@@ -125,7 +127,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.2:42069", _lookupClient);
             MockQueryResponse.CreateFakeLookupResult(domain2, "192.0.2.2:42069", _lookupClient);
 
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
+            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _peerClient, _logger);
 
             await peerDiscovery.GetSeedNodesFromDns(urlList);
             peerDiscovery.Peers.Should().NotBeNullOrEmpty();

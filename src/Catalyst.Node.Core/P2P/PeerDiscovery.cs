@@ -42,6 +42,7 @@ namespace Catalyst.Node.Core.P2P
     {
         public IDns Dns { get; }
         public ILogger Logger { get; }
+        public IPeerClient PeerClient { get; }
         public IList<string> SeedNodes { get; }
         public IList<IPEndPoint> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
@@ -51,14 +52,20 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="dns"></param>
         /// <param name="repository"></param>
         /// <param name="rootSection"></param>
+        /// <param name="peerClient"></param>
         /// <param name="logger"></param>
-        public PeerDiscovery(IDns dns, IRepository<Peer> repository, IConfigurationRoot rootSection, ILogger logger)
+        public PeerDiscovery(IDns dns,
+            IRepository<Peer> repository,
+            IConfigurationRoot rootSection,
+            IPeerClient peerClient,
+            ILogger logger)
         {
             Dns = dns;
             Logger = logger;
             PeerRepository = repository;
             SeedNodes = new List<string>();
             Peers = new List<IPEndPoint>();
+            PeerClient = peerClient;
 
             ParseDnsServersFromConfig(rootSection);
 

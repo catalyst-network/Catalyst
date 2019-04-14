@@ -21,25 +21,12 @@
 
 #endregion
 
-using Catalyst.Node.Common.Helpers.Enumerator;
-
-namespace Catalyst.Node.Common.Helpers.Config
+namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class IoClients : Enumeration
+    public enum MessageType
     {
-        public static readonly IoClients NodeRpcTcpClient = new NodeRpcTcp();
-        public static readonly IoClients NodePeerUdpClient = new NodePeerUdp();
-
-        private IoClients(int id, string name) : base(id, name) { }
-
-        private sealed class NodeRpcTcp : IoClients
-        {
-            public NodeRpcTcp() : base(1, "NodeRpcTcp") { }
-        }
-
-        private sealed class NodePeerUdp : IoClients
-        {
-            public NodePeerUdp() : base(2, "NodePeerUdp") { }
-        }
+        PingRequest,
+        PingResponse,
+        Transaction
     }
 }

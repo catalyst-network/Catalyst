@@ -37,6 +37,7 @@ using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -92,9 +93,16 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(pid, targetHost);
-                
-                    var pingRequest = new PingRequest();
-                    var datagramEnvelope = DatagramFactory.Create(pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()), targetHost);
+
+                    var datagramEnvelope = MessageFactory<PingRequest>.GetMessage(
+                        new MessageDto<PingRequest>(
+                            MessageType.PingRequest,
+                            new PingRequest(),
+                            targetHost,
+                            pid
+                        )
+                    );
+                    
                     peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]

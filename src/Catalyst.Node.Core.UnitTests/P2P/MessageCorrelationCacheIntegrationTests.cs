@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 {
                     CorrelationId = c, PeerIdentifier = p
                 })
-               .Select(c => new PendingRequest()
+               .Select(c => new PendingRequest
                 {
                     Content = new PingRequest().ToAnySigned(senderPeerId, c.CorrelationId),
                     SentTo = c.PeerIdentifier,
