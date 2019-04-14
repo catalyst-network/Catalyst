@@ -29,7 +29,6 @@ using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Cli;
 using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
@@ -50,7 +49,6 @@ using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
-using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
