@@ -79,7 +79,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         //     newPeer.Ip.GetAddressBytes().Should()
         //        .Equal(IPAddress.Parse("127.0.0.1").To16Bytes());
         //     newPeer.Port.Should().Be(12345);
-        //
         //     _output.WriteLine(newPeer.ToString());
         // }
 
