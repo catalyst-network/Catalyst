@@ -44,6 +44,7 @@ using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
 
 using Microsoft.Extensions.Configuration;
+using Multiformats.Base;
 using Nethereum.RLP;
 using NSec.Cryptography;
 using NSubstitute;
@@ -97,18 +98,24 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             
             fakeContext.Channel.Returns(fakeChannel);
 
+            //Matching the SignMessageRequestHandler
             //sign a message to get the signature and the public key
             const string message = "Hello Catalyst";
             var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
             var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(message));
-            var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
+            var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey).GetNSecFormatPublicKey()
+               .Export(KeyBlobFormat.PkixPublicKey);
+
+            
+            var encodedSignature = Multibase.Encode(MultibaseEncoding.Base64, signature);
+            var encodedPublicKey = Multibase.Encode(MultibaseEncoding.Base58Btc, publicKey);
             
             //create a verify message request and populate with the data returned from the signed message
             var request =new VerifyMessageRequest()
             {
                 Message = message.ToUtf8ByteString(),
-                PublicKey = publicKey.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey).ToByteString(),
-                Signature = signature.ToByteString()
+                PublicKey = encodedPublicKey.ToUtf8ByteString(),
+                Signature = encodedSignature.ToUtf8ByteString()
             }.ToAny();
             
             //create a channel using the mock context and request

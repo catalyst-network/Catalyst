@@ -26,6 +26,7 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.WellKnownTypes;
+using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
@@ -76,8 +77,10 @@ namespace Catalyst.Cli.Handlers
                 var originalMessage = decodeResult.ToStringFromRLPDecoded();
 
                 //return to the user the signature, public key and the original message that he sent to be signed
-                Console.WriteLine("Signature: {0}\nPublic Key: {1}\nOriginal Message: \"{2}\"", deserialised.Signature.ToBase64(),
-                    deserialised.PublicKey.ToBase64(), originalMessage);
+                Console.WriteLine("Signature: {0}\nPublic Key: {1}\nOriginal Message: \"{2}\"", 
+                    Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray()),
+                    Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray()),
+                    originalMessage);
 
                 Console.WriteLine(@"Press Enter to continue ...");
             }

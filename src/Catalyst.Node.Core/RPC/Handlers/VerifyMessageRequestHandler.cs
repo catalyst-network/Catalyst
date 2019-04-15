@@ -31,6 +31,7 @@ using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
@@ -58,14 +59,26 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var deserialised = message.Payload.FromAny<VerifyMessageRequest>();
 
                 //get the original message from the decoded message
-                var originalMessage = deserialised.Message.ToByteArray().ToStringFromRLPDecoded();
+                //var originalMessage = deserialised.Message.ToByteArray().ToStringFromRLPDecoded();
+                //var decodedPublicKey = Convert.FromBase64String(deserialised.PublicKey.ToByteArray());
+                //decode the received message
+                var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
+
+                //get the original message from the decoded message
+                var decodedMessage = decodeResult.ToStringFromRLPDecoded();
+                var publicKey = deserialised.PublicKey;
+                var signature = deserialised.Signature;
+                
+                string encodingUsed;
+                var decodedPublicKey = Multibase.Decode(publicKey.ToStringUtf8(), out encodingUsed);
+                var decodedSignature = Multibase.Decode(signature.ToStringUtf8(), out encodingUsed);
 
                 //use the keysigner to build an IPublicKey
-                IPublicKey pubKey = _keySigner.CryptoContext.ImportPublicKey(deserialised.PublicKey.ToByteArray());
+                IPublicKey pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
                 
                 //verify that the message was signed by a key corresponding to the provided
                 var result = _keySigner.CryptoContext.Verify(pubKey, deserialised.Message.ToByteArray(),
-                    deserialised.Signature.ToByteArray());
+                    decodedSignature);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
 

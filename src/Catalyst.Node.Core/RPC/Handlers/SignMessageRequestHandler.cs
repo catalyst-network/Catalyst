@@ -27,7 +27,9 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol.Rpc.Node;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Nethereum.KeyStore.Crypto;
 using Nethereum.RLP;
 using NSec.Cryptography;
 using ILogger = Serilog.ILogger;
@@ -65,13 +67,17 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
                 var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
                 var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
+                var exportedPublicKey = _keySigner.CryptoContext.ExportPublicKey(publicKey);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
+                
+                KeyStoreCrypto keyStoreCrypto = new KeyStoreCrypto();
 
                 var response = new SignMessageResponse
                 {
                     OriginalMessage = deserialised.Message,
                     PublicKey = publicKey.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey).ToByteString(),
+                    //PublicKey = ByteString.CopyFrom(keyStoreCrypto.CalculateSha256Hash(exportedPublicKey)),
                     Signature = signature.ToByteString()
                 };
 
