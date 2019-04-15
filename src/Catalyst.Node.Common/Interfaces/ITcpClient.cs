@@ -21,25 +21,13 @@
 
 #endregion
 
-using System;
-using Catalyst.Node.Common.Interfaces;
+using System.Threading.Tasks;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Interfaces
 {
-    /// <inheritdoc />
-    public class SubscribedSocket<TSocketChannel>
-        : ISubscribedSocket<TSocketChannel> where TSocketChannel : class, ISocketClient
+    public interface ITcpClient : ISocketClient
     {
-        public SubscribedSocket(IDisposable subscription, TSocketChannel socketChannel)
-        {
-            Subscription = subscription;
-            SocketChannel = socketChannel;
-        }
-
-        /// <inheritdoc />
-        public IDisposable Subscription { get; }
-
-        /// <inheritdoc />
-        public TSocketChannel SocketChannel { get; }
+        Task SendMessage(AnySigned message);
     }
 }
