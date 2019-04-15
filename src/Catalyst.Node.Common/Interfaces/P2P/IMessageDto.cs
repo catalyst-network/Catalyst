@@ -21,25 +21,17 @@
 
 #endregion
 
-using System;
-using Catalyst.Node.Common.Interfaces;
+using System.Net;
+using Catalyst.Node.Common.P2P;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    /// <inheritdoc />
-    public sealed class SubscribedSocket<TSocketChannel>
-        : ISubscribedSocket<TSocketChannel> where TSocketChannel : class, ISocketClient
+    public interface IMessageDto<out TMessage> where TMessage : class, IMessage
     {
-        public SubscribedSocket(IDisposable subscription, TSocketChannel socketChannel)
-        {
-            Subscription = subscription;
-            SocketChannel = socketChannel;
-        }
-
-        /// <inheritdoc />
-        public IDisposable Subscription { get; }
-
-        /// <inheritdoc />
-        public TSocketChannel SocketChannel { get; }
+        P2PMessageType Type { get; }
+        TMessage Message { get; }
+        IPeerIdentifier PeerIdentifier { get; }
+        IPEndPoint Recipient { get; }
     }
 }

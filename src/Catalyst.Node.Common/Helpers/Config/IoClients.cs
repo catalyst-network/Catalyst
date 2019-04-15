@@ -25,9 +25,6 @@ using Catalyst.Node.Common.Helpers.Enumerator;
 
 namespace Catalyst.Node.Common.Helpers.Config
 {
-    /// <summary>
-    ///     Not sure we need this
-    /// </summary>
     public class IoClients : Enumeration
     {
         public static readonly IoClients NodeRpcTcpClient = new NodeRpcTcp();

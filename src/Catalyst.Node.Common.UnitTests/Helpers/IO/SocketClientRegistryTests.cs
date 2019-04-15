@@ -76,40 +76,58 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.IO
                .And
                .BeEmpty()
                .And
-               .BeOfType(typeof(ConcurrentDictionary<int, ISubscribedSocket<ISocketClient>>));
+               .BeOfType(typeof(ConcurrentDictionary<int, ISocketClient>));
+        }
+
+        [Fact] public void Cannot_Add_Inactive_Client()
+        {
+            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
+            var socket = Substitute.For<ISocketClient>();
+            socket.Channel.Active.Returns(false);
+            var hashcode = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort).GetHashCode();
+
+            new Action(() => clientSocketRegistry.AddClientToRegistry(hashcode, socket)).Should()
+               .Throw<ArgumentException>();
+        }
+
+        private static ISocketClient GetSubstituteForActiveSocketClient()
+        {
+            var substitute = Substitute.For<ISocketClient>();
+            substitute.Channel.Active.Returns(true);
+            return substitute;
         }
 
         [Fact]
         public void Can_Add_Socket_To_Registry_And_Get_Same_Client_From_HashCode()
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var subscribedSocket = Substitute.For<ISubscribedSocket<ISocketClient>>();
+            var socket = GetSubstituteForActiveSocketClient();
             var hashcode = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort).GetHashCode();
             
-            clientSocketRegistry.AddClientToRegistry(hashcode, subscribedSocket);
+            clientSocketRegistry.AddClientToRegistry(hashcode, socket);
 
             clientSocketRegistry.Registry
                .Should().ContainKey(hashcode);
 
             clientSocketRegistry.Registry
-               .Should().ContainValue(subscribedSocket);
+               .Should().ContainValue(socket);
             
             clientSocketRegistry.GetClientFromRegistry(hashcode)
                .Should().NotBeNull()
                .And
-               .BeAssignableTo<ISubscribedSocket<ISocketClient>>();
+               .BeAssignableTo<ISocketClient>();
         }
 
         [Fact]
         public void Can_Add_Multiple_Sockets_To_Registry()
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var listOfSockets = new ConcurrentDictionary<int, ISubscribedSocket<ISocketClient>>();
+            var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
             var randomPorts = new List<int> {2000, 3000, 4000, 5000, 6000};
             
             randomPorts.ForEach(port => listOfSockets.TryAdd(
                 new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
-                Substitute.For<ISubscribedSocket<ISocketClient>>()
+                GetSubstituteForActiveSocketClient()
             ));
             
             listOfSockets.ToList()
@@ -128,12 +146,12 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.IO
         public void Can_Add_Multiple_Sockets_To_Registry_And_Get_One()
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var listOfSockets = new ConcurrentDictionary<int, ISubscribedSocket<ISocketClient>>();
+            var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
             var randomPorts = new List<int> {2000, 3000, 4000, 5000, 6000};
             
             randomPorts.ForEach(port => listOfSockets.TryAdd(
                 new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
-                Substitute.For<ISubscribedSocket<ISocketClient>>()
+                GetSubstituteForActiveSocketClient()
             ));
             
             listOfSockets.ToList()
@@ -145,13 +163,13 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.IO
             socketClient.Should()
                .NotBeNull()
                .And
-               .BeAssignableTo<ISubscribedSocket<ISocketClient>>();            
+               .BeAssignableTo<ISocketClient>();            
         }
 
         [Fact] public void Can_Remove_Socket_From_Registry()
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var subscribedSocket = Substitute.For<ISubscribedSocket<ISocketClient>>();
+            var subscribedSocket = GetSubstituteForActiveSocketClient();
             var hashcode = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort).GetHashCode();
             clientSocketRegistry.AddClientToRegistry(hashcode, subscribedSocket);
             
@@ -177,12 +195,12 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.IO
         public void Can_Add_Multiple_Sockets_To_Registry_And_Remove_One()
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var listOfSockets = new ConcurrentDictionary<int, ISubscribedSocket<ISocketClient>>();
+            var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
             var randomPorts = new List<int> {2000, 3000, 4000, 5000, 6000};
             
             randomPorts.ForEach(port => listOfSockets.TryAdd(
                 new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
-                Substitute.For<ISubscribedSocket<ISocketClient>>()
+                GetSubstituteForActiveSocketClient()
             ));
             
             listOfSockets.ToList()

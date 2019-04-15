@@ -21,26 +21,12 @@
 
 #endregion
 
-using System;
-
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.P2P
 {
-    /// <summary>
-    /// Bunches up a network socket and the Rx subscription used to watch its incoming messages
-    /// </summary>
-    /// <typeparam name="TSocketChannel">The type of the socket use to transmit information</typeparam>
-    public interface ISubscribedSocket<out TSocketChannel>
-        where TSocketChannel : class, ISocketClient
+    public enum P2PMessageType
     {
-        /// <summary>
-        /// The socket channel used for out of process communications
-        /// </summary>
-        TSocketChannel SocketChannel { get; }
-
-        /// <summary>
-        /// The (Rx) subscription to the socket channel used to propagate
-        /// messages in-process.
-        /// </summary>
-        IDisposable Subscription { get; }
+        PingRequest,
+        PingResponse,
+        TransactionRequest
     }
 }

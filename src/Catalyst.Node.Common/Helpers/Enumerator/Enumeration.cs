@@ -40,6 +40,7 @@ namespace Catalyst.Node.Common.Helpers.Enumerator
         protected Enumeration(int id, string name)
         {
             Guard.Argument(name, nameof(name)).NotNull();
+            Guard.Argument(id, nameof(id)).Positive();
             Id = id;
             Name = name;
         }
