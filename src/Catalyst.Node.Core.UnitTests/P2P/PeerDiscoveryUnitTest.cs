@@ -55,11 +55,13 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private readonly IRepository<Peer> _peerRepository;
         private readonly ILogger _logger;
         private readonly ILookupClient _lookupClient;
+        private readonly IPeerClient _peerClient;
 
         public PeerDiscoveryUnitTest(ITestOutputHelper output) : base(output)
         {
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
+            _peerClient = Substitute.For<IPeerClient>();
             _lookupClient = Substitute.For<ILookupClient>();
             _dns = new Dns(_lookupClient);
 

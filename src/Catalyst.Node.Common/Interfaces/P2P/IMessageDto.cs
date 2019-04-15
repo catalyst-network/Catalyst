@@ -21,25 +21,17 @@
 
 #endregion
 
-using Catalyst.Node.Common.Helpers.Enumerator;
+using System.Net;
+using Catalyst.Node.Common.P2P;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Helpers.Config
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public class IoClients : Enumeration
+    public interface IMessageDto<out TMessage> where TMessage : class, IMessage
     {
-        public static readonly IoClients NodeRpcTcpClient = new NodeRpcTcp();
-        public static readonly IoClients NodePeerUdpClient = new NodePeerUdp();
-
-        private IoClients(int id, string name) : base(id, name) { }
-
-        private sealed class NodeRpcTcp : IoClients
-        {
-            public NodeRpcTcp() : base(1, "NodeRpcTcp") { }
-        }
-
-        private sealed class NodePeerUdp : IoClients
-        {
-            public NodePeerUdp() : base(2, "NodePeerUdp") { }
-        }
+        P2PMessageType Type { get; }
+        TMessage Message { get; }
+        IPeerIdentifier PeerIdentifier { get; }
+        IPEndPoint Recipient { get; }
     }
 }

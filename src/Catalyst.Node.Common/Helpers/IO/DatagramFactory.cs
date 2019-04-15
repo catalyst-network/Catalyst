@@ -35,11 +35,11 @@ namespace Catalyst.Node.Common.Helpers.IO
         ///     Returns a fully initialised Datagram.
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="target"></param>
+        /// <param name="recipient"></param>
         /// <returns></returns>
-        public static IByteBufferHolder Create(AnySigned message, IPEndPoint target)
+        public static IByteBufferHolder Create(AnySigned message, IPEndPoint recipient)
         {
-            return new DatagramPacket(Unpooled.WrappedBuffer(message.ToByteArray()), target);
+            return new DatagramPacket(Unpooled.WrappedBuffer(message.ToByteArray()), recipient);
         }
     }
 }
