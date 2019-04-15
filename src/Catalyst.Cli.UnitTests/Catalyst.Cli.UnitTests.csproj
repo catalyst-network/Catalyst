@@ -13,6 +13,9 @@
     <Content Include="..\Catalyst.Node.Core\Config\mainnet.json" Link="Config\mainnet.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Catalyst.Node.Core\Config\messageHandlers.json" Link="Config\messageHandlers.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Catalyst.Node.Core\Config\testnet.json" Link="Config\testnet.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

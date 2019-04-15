@@ -1,0 +1,20 @@
+{
+    //a minimal configuration used only for testing
+    "CatalystNodeConfiguration": {
+        "Peer": {
+            "Network": "devnet",
+            "PfxFileName": "somepfx.pfx",
+            "BindAddress": "127.0.0.1",
+            "Port": 5678,
+            "PublicKey": "302a300506032b65700321001783421742816abf",
+            "MaxConnections": 10,
+            "AddressVersion": 23,
+            "Magic": 4206942,
+            "Announce": true,
+            "AnnounceServer": "127.0.0.1:1234",
+            "SeedServers": [
+                "this.is.the.seed"
+            ]
+        }
+    }
+}

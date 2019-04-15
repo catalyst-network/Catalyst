@@ -23,14 +23,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -39,16 +39,14 @@ namespace Catalyst.Node.Core.P2P
 {
     public sealed class P2PService : UdpServer, IP2PService
     {
-        private readonly PingRequestHandler _pingRequestHandler;
-        private readonly PingResponseHandler _pingResponseHandler;
-        private readonly TransactionHandler _transactionHandler;
         private readonly ISocketClientRegistry<IPeerClient> _socketClientRegistry;
 
         public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         public P2PService(IPeerSettings settings,
-            IPeerDiscovery peerDiscovery)
+            IPeerDiscovery peerDiscovery,
+            IEnumerable<IP2PMessageHandler> messageHandlers)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Discovery = peerDiscovery;
@@ -58,9 +56,8 @@ namespace Catalyst.Node.Core.P2P
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
 
             MessageStream = protoDatagramChannelHandler.MessageStream;
-            _pingRequestHandler = new PingRequestHandler(MessageStream, peerIdentifier, Logger);
-            _pingResponseHandler = new PingResponseHandler(MessageStream, Logger);
-            _transactionHandler = new TransactionHandler(MessageStream, Logger);
+            messageHandlers.ToList()
+               .ForEach(h => h.StartObserving(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {

@@ -21,13 +21,20 @@
 
 #endregion
 
+using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Interfaces.Messaging
 {
-    internal interface IMessageHandler
+    public interface IMessageHandler
     {
-        void HandleMessage(IChanneledMessage<AnySigned> message);
+        void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream);
     }
+
+    public interface IP2PMessageHandler : IMessageHandler { }
+
+    public interface IRpcRequestHandler : IMessageHandler { }
+
+    public interface IRpcResponseHandler : IMessageHandler { }
 }
