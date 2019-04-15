@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -33,6 +34,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Autofac;
 using Catalyst.Node.Common.Interfaces.Rpc;
+using DotNetty.Transport.Channels;
 using Serilog;
 using Serilog.Extensions.Logging;
 
@@ -49,8 +51,16 @@ namespace Catalyst.Cli.UnitTests
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
                .Build();
 
-            var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
+            var channel = Substitute.For<IChannel>();
+            channel.Active.Returns(true);
+
             var nodeRpcClient = Substitute.For<INodeRpcClient>();
+            nodeRpcClient.Channel.Returns(channel);
+
+            var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
+            nodeRpcClientFactory
+               .GetClient(Arg.Any<X509Certificate>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
+               .Returns(nodeRpcClient);
 
             ConfigureContainerBuilder(config);
 
@@ -64,12 +74,11 @@ namespace Catalyst.Cli.UnitTests
         public void Cli_Can_Connect_To_Node()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();                    
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
-                scope.Dispose();
             }
         }
 
@@ -77,7 +86,7 @@ namespace Catalyst.Cli.UnitTests
         public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 for (int i = 0; i < 10; i++)
@@ -85,8 +94,6 @@ namespace Catalyst.Cli.UnitTests
                     var canConnect = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                     canConnect.Should().BeTrue();
                 }
-
-                scope.Dispose();
             }
         }
 
@@ -94,7 +101,7 @@ namespace Catalyst.Cli.UnitTests
         public void Cli_Can_Request_Node_Config()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
@@ -102,7 +109,6 @@ namespace Catalyst.Cli.UnitTests
 
                 var result = shell.AdvancedShell.ParseCommand("get", "-i", "node1");
                 result.Should().BeTrue();
-                scope.Dispose();
             }
         }
 
@@ -110,7 +116,7 @@ namespace Catalyst.Cli.UnitTests
         public void Cli_Can_Request_Node_Version()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
@@ -118,7 +124,6 @@ namespace Catalyst.Cli.UnitTests
 
                 var result = shell.AdvancedShell.ParseCommand("get", "-v", "node1");
                 result.Should().BeTrue();
-                scope.Dispose();
             }
         }
 
@@ -126,7 +131,7 @@ namespace Catalyst.Cli.UnitTests
         public void Cli_Can_Request_Node_Mempool()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 
@@ -135,7 +140,6 @@ namespace Catalyst.Cli.UnitTests
 
                 var result = shell.AdvancedShell.ParseCommand("get", "-m", "node1");
                 result.Should().BeTrue();
-                scope.Dispose();
             }
         }
 
@@ -143,7 +147,7 @@ namespace Catalyst.Cli.UnitTests
         public void Cli_Can_Request_Node_To_Sign_A_Message()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
@@ -151,7 +155,6 @@ namespace Catalyst.Cli.UnitTests
 
                 var result = shell.AdvancedShell.ParseCommand("sign", "-m", "test message", "-n", "node1");
                 result.Should().BeTrue();
-                scope.Dispose();
             }
         }
     }

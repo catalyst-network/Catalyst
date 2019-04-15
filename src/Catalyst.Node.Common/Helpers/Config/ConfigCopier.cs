@@ -89,7 +89,8 @@ namespace Catalyst.Node.Common.Helpers.Config
             {
                 Constants.NetworkConfigFile(network),
                 Constants.ComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile
+                Constants.SerilogJsonConfigFile,
+                Constants.MessageHandlersConfigFile
             }.Concat(Constants.AllModuleFiles);
             return requiredConfigFiles;
         }

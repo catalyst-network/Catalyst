@@ -22,9 +22,12 @@
 #endregion
 
 using System;
+using System.Data;
 using System.Reactive.Linq;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Serilog;
@@ -33,15 +36,26 @@ namespace Catalyst.Node.Common.Helpers.IO
 {
     public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable where T : IMessage
     {
-        private readonly IDisposable _messageSubscription;
+        private IDisposable _messageSubscription;
         protected readonly ILogger Logger;
 
-        protected MessageHandlerBase(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
+        protected MessageHandlerBase(ILogger logger)
         {
             Logger = logger;
+        }
+
+        public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream)
+        {
+            if (_messageSubscription != null)
+            {
+                throw new ReadOnlyException($"{this.GetType()} is already listening to a message stream");
+            }
+
             var filterMessageType = typeof(T).ShortenedProtoFullName();
             _messageSubscription = messageStream
-               .Where(m => m != null && m.Payload.TypeUrl == filterMessageType)
+               .Where(m => m != null
+                 && m.Payload.TypeUrl == filterMessageType
+                 && !m.Equals(NullObjects.ChanneledAnySigned))
                .Subscribe(HandleMessage);
         }
 
