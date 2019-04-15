@@ -47,9 +47,8 @@ namespace Catalyst.Node.Core.P2P
         /// <summary>
         ///
         /// </summary>
-        /// <param name="peerIdentifier"></param>
         /// <param name="ipEndPoint"></param>
-        public PeerClient(IPeerIdentifier peerIdentifier, IPEndPoint ipEndPoint)
+        public PeerClient(IPEndPoint ipEndPoint)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Logger.Debug("P2P client starting");

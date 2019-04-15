@@ -27,7 +27,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IMessageDto<TMessage> where TMessage : class, IMessage
+    public interface IMessageDto<out TMessage> where TMessage : class, IMessage
     {
         P2PMessageType Type { get; }
         TMessage Message { get; }

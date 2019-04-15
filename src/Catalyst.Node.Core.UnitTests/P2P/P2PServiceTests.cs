@@ -90,15 +90,14 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(pid, targetHost);
+                    var peerClient = new PeerClient(targetHost);
 
                     var datagramEnvelope = P2PMessageFactory<PingRequest>.GetMessage(
                         new MessageDto<PingRequest>(
                             P2PMessageType.PingRequest,
                             new PingRequest(),
                             targetHost,
-                            pid
+                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
                         )
                     );
                     
