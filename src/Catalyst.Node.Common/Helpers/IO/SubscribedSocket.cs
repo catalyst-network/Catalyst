@@ -27,7 +27,7 @@ using Catalyst.Node.Common.Interfaces;
 namespace Catalyst.Node.Common.Helpers.IO
 {
     /// <inheritdoc />
-    public class SubscribedSocket<TSocketChannel>
+    public sealed class SubscribedSocket<TSocketChannel>
         : ISubscribedSocket<TSocketChannel> where TSocketChannel : class, ISocketClient
     {
         public SubscribedSocket(IDisposable subscription, TSocketChannel socketChannel)

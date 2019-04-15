@@ -21,29 +21,13 @@
 
 #endregion
 
-using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
-using DotNetty.Handlers.Logging;
-using DotNetty.Transport.Channels;
-using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO.Outbound
+namespace Catalyst.Node.Common.Interfaces
 {
-    public class TcpClient<TChannel> : AbstractClient, ITcpClient where TChannel : IChannel, new()
+    public interface ITcpClient : ISocketClient
     {
-        protected TcpClient(ILogger logger) : base(logger) { }
-
-        protected sealed override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
-        {
-            Channel = new Bootstrap()
-               .Group(WorkerEventLoop)
-               .Channel<TChannel>()
-               .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer)
-               .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port).GetAwaiter().GetResult();
-        }
+        Task SendMessage(AnySigned message);
     }
 }
