@@ -32,6 +32,6 @@ namespace Catalyst.Node.Common.Interfaces.P2P
         P2PMessageType Type { get; }
         TMessage Message { get; }
         IPeerIdentifier PeerIdentifier { get; }
-        IPEndPoint Destination { get; }
+        IPEndPoint Recipient { get; }
     }
 }

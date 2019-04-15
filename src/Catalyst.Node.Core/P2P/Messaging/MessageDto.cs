@@ -34,7 +34,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
     {
         public P2PMessageType Type { get; }
         public TMessage Message { get; }
-        public IPEndPoint Destination { get; }
+        public IPEndPoint Recipient { get; }
         public IPeerIdentifier PeerIdentifier { get; }
 
         public MessageDto(P2PMessageType type,
@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             Guard.Argument(peerIdentifier, nameof(peerIdentifier)).Compatible<IPeerIdentifier>().NotNull().HasValue();
             Type = type;
             Message = message;
-            Destination = destination;
+            Recipient = destination;
             PeerIdentifier = peerIdentifier;
         }
     }

@@ -31,7 +31,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public static class MessageFactory<TMessage> where TMessage : class, IMessage<TMessage>
+    public static class P2PMessageFactory<TMessage> where TMessage : class, IMessage<TMessage>
     {
         public static IByteBufferHolder GetMessage(IMessageDto<TMessage> dto)
         {
@@ -39,9 +39,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
             {
                 case P2PMessageType.PingRequest:
                     return BuildAskMessage(dto);
-                case P2PMessageType.PingResponse:                    
+                case P2PMessageType.PingResponse:
                     return BuildTellMessage(dto);
-                case P2PMessageType.TransactionRequest:                    
+                case P2PMessageType.TransactionRequest:
                     return BuildGossipMessage(dto);
                 default:
                     throw new ArgumentException("unknown message type");
@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             return DatagramFactory.Create(
                 dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid()),
-                dto.Destination
+                dto.Recipient
             );
         }
 
@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             return DatagramFactory.Create(
                 dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid()),
-                dto.Destination
+                dto.Recipient
             );
         }
 
@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             return DatagramFactory.Create(
                 dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid()),
-                dto.Destination
+                dto.Recipient
             );
         }
     }
