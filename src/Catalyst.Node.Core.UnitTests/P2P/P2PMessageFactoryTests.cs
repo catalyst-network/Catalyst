@@ -23,10 +23,9 @@
 
 using System;
 using System.Net;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Buffers;
@@ -40,13 +39,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidPingRequestMessage()
         {
-            var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), IPAddress.Loopback, IPEndPoint.MaxPort);
             var pingRequestDatagram = P2PMessageFactory<PingRequest>.GetMessage(
                 new MessageDto<PingRequest>(
                     P2PMessageType.PingRequest,
                     new PingRequest(), 
                     new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort), 
-                    pid
+                    PeerIdentifierHelper.GetPeerIdentifier("Im_A_Frigging_Public_Key")
                 )
             );
 
@@ -57,13 +55,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidPingResponseMessage()
         {
-            var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), IPAddress.Loopback, IPEndPoint.MaxPort);
             var pingResponseDatagram = P2PMessageFactory<PingResponse>.GetMessage(
                 new MessageDto<PingResponse>(
                     P2PMessageType.PingResponse,
                     new PingResponse(), 
                     new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort), 
-                    pid
+                    PeerIdentifierHelper.GetPeerIdentifier("Im_A_Frigging_Public_Key")
                 )
             );
 
@@ -74,13 +71,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidTransactionMessage()
         {
-            var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), IPAddress.Loopback, IPEndPoint.MaxPort);
             var transactionDatagram = P2PMessageFactory<Transaction>.GetMessage(
                 new MessageDto<Transaction>(
                     P2PMessageType.PingResponse,
                     new Transaction(), 
                     new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort), 
-                    pid
+                    PeerIdentifierHelper.GetPeerIdentifier("Im_A_Frigging_Public_Key")
                 )
             );
 
