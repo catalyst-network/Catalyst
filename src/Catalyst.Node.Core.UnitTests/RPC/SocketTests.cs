@@ -250,40 +250,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcServer_Can_Handle_SignMessageRequest()
-        {
-            _rpcClient = new RpcClient(_logger, _certificateStore);
-            _rpcClient.Should().NotBeNull();
-
-            var shell = new Shell(_rpcClient, _config, _logger);
-            var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-            hasConnected.Should().BeTrue();
-
-            var node1 = shell.GetConnectedNode("node1");
-            node1.Should().NotBeNull("we've just connected it");
-
-            var serverObserver = new AnyMessageObserver(0, _logger);
-            var clientObserver = new AnyMessageObserver(1, _logger);
-            using (_rpcServer.MessageStream.Subscribe(serverObserver))
-            using (_rpcClient.MessageStream.Subscribe(clientObserver))
-            {
-                var info = shell.ParseCommand("sign", "-m", "Hello Catalyst", "-n", "node1");
-
-                var tasks = new IChanneledMessageStreamer<Any>[] { _rpcClient, _rpcServer }
-                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAny))
-                   .ToArray();
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
-
-                serverObserver.Received.Should().NotBeNull();
-                serverObserver.Received.Payload.TypeUrl.Should().Be(SignMessageRequest.Descriptor.ShortenedFullName());
-
-                clientObserver.Received.Should().NotBeNull();
-                clientObserver.Received.Payload.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

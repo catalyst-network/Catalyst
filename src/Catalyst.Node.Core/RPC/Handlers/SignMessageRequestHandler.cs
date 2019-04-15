@@ -77,7 +77,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 {
                     OriginalMessage = deserialised.Message,
                     PublicKey = publicKey.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey).ToByteString(),
-                    //PublicKey = ByteString.CopyFrom(keyStoreCrypto.CalculateSha256Hash(exportedPublicKey)),
                     Signature = signature.ToByteString()
                 };
 
