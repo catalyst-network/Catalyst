@@ -8,15 +8,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -45,21 +46,17 @@ namespace Catalyst.Cli.Handlers
         /// <param name="messageStream">The message stream the handler is listening to through which the handler will
         /// receive the response from the server.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public SignMessageResponseHandler(
-            IObservable<IChanneledMessage<Any>> messageStream,
+        public SignMessageResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
             ILogger logger)
-            : base(messageStream, logger)
-        {
-
-        }
+            : base(messageStream, logger) { }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="SignMessageRequestHandler" />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAny)
+            if (message == NullObjects.ChanneledAnySigned)
             {
                 return;
             }
@@ -68,10 +65,10 @@ namespace Catalyst.Cli.Handlers
             {
                 Logger.Debug("Handling SignMessageResponse");
 
-                var deserialised = message.Payload.FromAny<SignMessageResponse>();
+                var deserialised = message.Payload.FromAnySigned<SignMessageResponse>();
 
                 //decode the received message
-                var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.OriginalMessage.ToByteArray())[0].RLPData;
+                var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray())[0].RLPData;
 
                 //get the original message from the decoded message
                 var originalMessage = decodeResult.ToStringFromRLPDecoded();
