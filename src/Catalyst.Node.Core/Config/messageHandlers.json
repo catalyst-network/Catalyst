@@ -1,0 +1,63 @@
+{
+    "defaultAssembly": "Catalyst.Node.Core",
+    "components": [
+        //Rpc request handlers
+        {
+            "type": "Catalyst.Node.Core.RPC.Handlers.GetInfoRequestHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.RPC.Handlers.GetMempoolRequestHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.RPC.Handlers.GetVersionRequestHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.RPC.Handlers.SignMessageRequestHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        //P2P request handlers
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingRequestHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IP2PMessageHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingResponseHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IP2PMessageHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.TransactionHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IP2PMessageHandler, Catalyst.Node.Common"
+                }
+            ]
+        }
+    ]
+}

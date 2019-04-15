@@ -26,6 +26,7 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -33,25 +34,19 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class GetVersionRequestHandler : MessageHandlerBase<VersionRequest>
+    public class GetVersionRequestHandler : MessageHandlerBase<VersionRequest>, IRpcRequestHandler
     {
         private readonly PeerId _peerId;
 
-        public GetVersionRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            IPeerIdentifier peerIdentifier,
+        public GetVersionRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger)
-            : base(messageStream, logger)
+            : base(logger)
         {
             _peerId = peerIdentifier.PeerId;
         }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
             Logger.Debug("received message of type VersionRequest");
             try
             {

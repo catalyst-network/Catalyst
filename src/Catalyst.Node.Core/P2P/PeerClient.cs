@@ -23,12 +23,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Common;
@@ -40,22 +42,22 @@ namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerClient : UdpClient, IPeerClient
     {
-        private readonly PingResponseHandler _pingRequestHandler;
-
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="ipEndPoint"></param>
-        public PeerClient(IPEndPoint ipEndPoint)
+        /// <param name="messageHandlers"></param>
+        public PeerClient(IPEndPoint ipEndPoint,
+            IEnumerable<IP2PMessageHandler> messageHandlers)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Logger.Debug("P2P client starting");
 
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
             MessageStream = protoDatagramChannelHandler.MessageStream;
-            _pingRequestHandler = new PingResponseHandler(protoDatagramChannelHandler.MessageStream, Logger);
+            messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
@@ -71,17 +73,6 @@ namespace Catalyst.Node.Core.P2P
         public async Task SendMessage(IByteBufferHolder datagramPacket)
         {
             await Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Logger.Information("disposing peerClient");
-                _pingRequestHandler.Dispose();
-            }
-
-            base.Dispose();
         }
     }
 }

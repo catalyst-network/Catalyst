@@ -23,12 +23,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
@@ -44,10 +45,6 @@ namespace Catalyst.Cli.Rpc
     /// </summary>
     public sealed class NodeRpcClient : TcpClient<TcpSocketChannel>, INodeRpcClient
     {
-        private readonly GetInfoResponseHandler _getInfoResponseHandler;
-        private readonly GetVersionResponseHandler _getVersionResponseHandler;
-        private readonly GetMempoolResponseHandler _getMempoolResponseHandler;
-
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         /// <summary>
@@ -58,15 +55,17 @@ namespace Catalyst.Cli.Rpc
         /// </summary>
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
-        public NodeRpcClient(X509Certificate certificate, IRpcNodeConfig nodeConfig) 
+        /// <param name="responseHandlers">the collection of handlers used to process incoming response</param>
+        public NodeRpcClient(X509Certificate certificate, 
+            IRpcNodeConfig nodeConfig, 
+            IEnumerable<IRpcResponseHandler> responseHandlers) 
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var anySignedTypeClientHandler = new AnySignedTypeClientHandler();
             MessageStream = anySignedTypeClientHandler.MessageStream;
 
-            _getInfoResponseHandler = new GetInfoResponseHandler(MessageStream, Logger);
-            _getVersionResponseHandler = new GetVersionResponseHandler(MessageStream, Logger);
-            _getMempoolResponseHandler = new GetMempoolResponseHandler(MessageStream, Logger);
+            responseHandlers.ToList()
+               .ForEach(h => h.StartObserving(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
@@ -84,25 +83,6 @@ namespace Catalyst.Cli.Rpc
                     certificate
                 ), EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port)
             );
-        }
-
-        /// <inheritdoc />
-        public IDisposable SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer)
-        {
-            return MessageStream.Subscribe(observer);
-        }
-
-        /// <inheritdoc />
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _getInfoResponseHandler.Dispose();
-                _getVersionResponseHandler.Dispose();
-                _getMempoolResponseHandler.Dispose();
-            }
-
-            base.Dispose(true);
         }
     }
 }

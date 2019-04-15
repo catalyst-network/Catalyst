@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -85,7 +86,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 var logger = container.Resolve<ILogger>();
                 var p2PService = container.Resolve<IP2PService>();
+                var messageHandlers = container.Resolve<IEnumerable<IP2PMessageHandler>>();
                 var serverObserver = new AnySignedMessageObserver(0, logger);
+
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);

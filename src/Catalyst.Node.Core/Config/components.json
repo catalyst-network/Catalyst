@@ -34,6 +34,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Common.P2P.PeerIdentifier, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.P2P.IPeerIdentifier, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Common.Helpers.Keystore.LocalKeyStore, Catalyst.Node.Common",
             "services": [
                 {
@@ -147,6 +155,15 @@
         }
     ],
     "modules": [
+        {
+            "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/messageHandlers.json"
+            }
+        },
+        // The following modules are not only modules in the sense of Autofac,
+        // but also in the sense of the catalyst node architecture, i.e. swappable
+        // components that can customized for different use cases.
         {
             "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
             "parameters": {

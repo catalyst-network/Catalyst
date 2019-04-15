@@ -40,6 +40,7 @@ namespace Catalyst.Node.Common.Helpers.Config
         public static string ShellComponentsJsonConfigFile => "shell.components.json";
         public static string ShellNodesConfigFile => "nodes.json";
         public static string ShellConfigFile => "shell.config.json";
+        public static string MessageHandlersConfigFile => "messageHandlers.json";
 
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
