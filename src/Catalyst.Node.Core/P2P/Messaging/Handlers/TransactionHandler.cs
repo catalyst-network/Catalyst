@@ -27,14 +27,14 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Protocol.Transaction;
 using Serilog;
 using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class TransactionHandler : MessageHandlerBase<Transaction>
+    public class TransactionHandler : MessageHandlerBase<Transaction>, IP2PMessageHandler
     {
-        public TransactionHandler(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
-            : base(messageStream, logger) { }
+        public TransactionHandler(ILogger logger) : base(logger) { }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {

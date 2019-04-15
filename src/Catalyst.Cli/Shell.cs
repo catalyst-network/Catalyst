@@ -341,12 +341,11 @@ namespace Catalyst.Cli
             {
                 //Connect to the node and store it in the socket client registry
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
-                var subscription = nodeRpcClient.SubscribeStream(this);
+
                 var clientHashCode =
                     _socketClientRegistry.GenerateClientHashCode(
                         EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
-                var socketAndSubscription = new SubscribedSocket<INodeRpcClient>(subscription, nodeRpcClient);
-                _socketClientRegistry.AddClientToRegistry(clientHashCode, socketAndSubscription);
+                _socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
             }
 
             //Handle any other exception. This is a generic error message and should not be returned to users but added
@@ -384,8 +383,7 @@ namespace Catalyst.Cli
                     EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
             var node = _socketClientRegistry.GetClientFromRegistry(registryId);
 
-            node.Subscription.Dispose();
-            node.SocketChannel.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
+            node.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
 
             return true;
         }
@@ -587,7 +585,7 @@ namespace Catalyst.Cli
 
             var registryId = _socketClientRegistry.GenerateClientHashCode(
                 EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
-            return _socketClientRegistry.GetClientFromRegistry(registryId).SocketChannel;
+            return _socketClientRegistry.GetClientFromRegistry(registryId);
         }
 
         public IRpcNodeConfig GetNodeConfig(string nodeId)

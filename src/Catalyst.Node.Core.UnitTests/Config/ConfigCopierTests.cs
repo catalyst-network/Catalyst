@@ -45,6 +45,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
                 Add(Constants.NetworkConfigFile(Network.Dev), Network.Dev);
                 Add(Constants.SerilogJsonConfigFile, Network.Dev);
                 Add(Constants.ComponentsJsonConfigFile, Network.Dev);
+                Add(Constants.MessageHandlersConfigFile, Network.Dev);
             }
         }
 
@@ -105,7 +106,8 @@ namespace Catalyst.Node.Core.UnitTest.Config
             {
                 Constants.NetworkConfigFile(network),
                 Constants.ComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile
+                Constants.SerilogJsonConfigFile,
+                Constants.MessageHandlersConfigFile
             }.Concat(Constants.AllModuleFiles);
             return requiredConfigFiles;
         }
