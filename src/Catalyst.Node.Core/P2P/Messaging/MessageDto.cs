@@ -23,28 +23,21 @@
 
 using System.Net;
 using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public interface IMessageDto<TMessage> where TMessage : class, IMessage
+    public sealed class MessageDto<TMessage> : IMessageDto<TMessage> where TMessage : class, IMessage
     {
-        MessageType Type { get; }
-        TMessage Message { get; }
-        IPeerIdentifier PeerIdentifier { get; }
-        IPEndPoint Destination { get; }
-    }
-
-    public class MessageDto<TMessage> : IMessageDto<TMessage> where TMessage : class, IMessage
-    {
-        public MessageType Type { get; }
+        public P2PMessageType Type { get; }
         public TMessage Message { get; }
         public IPEndPoint Destination { get; }
         public IPeerIdentifier PeerIdentifier { get; }
 
-        public MessageDto(MessageType type,
+        public MessageDto(P2PMessageType type,
             TMessage message,
             IPEndPoint destination,
             IPeerIdentifier peerIdentifier)

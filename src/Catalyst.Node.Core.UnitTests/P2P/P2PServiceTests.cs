@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
@@ -96,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
                     var datagramEnvelope = MessageFactory<PingRequest>.GetMessage(
                         new MessageDto<PingRequest>(
-                            MessageType.PingRequest,
+                            P2PMessageType.PingRequest,
                             new PingRequest(),
                             targetHost,
                             pid

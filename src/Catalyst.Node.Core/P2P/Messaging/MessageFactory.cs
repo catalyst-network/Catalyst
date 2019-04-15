@@ -24,6 +24,8 @@
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.P2P;
 using DotNetty.Buffers;
 using Google.Protobuf;
 
@@ -35,14 +37,14 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             switch (dto.Type)
             {
-                case MessageType.PingRequest:
+                case P2PMessageType.PingRequest:
                     return BuildAskMessage(dto);
-                case MessageType.PingResponse:                    
+                case P2PMessageType.PingResponse:                    
                     return BuildTellMessage(dto);
-                case MessageType.Transaction:                    
+                case P2PMessageType.TransactionRequest:                    
                     return BuildGossipMessage(dto);
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException("unknown message type");
             }
         }
 
