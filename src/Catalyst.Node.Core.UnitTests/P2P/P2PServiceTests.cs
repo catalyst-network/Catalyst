@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(targetHost);
+                    var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
 
                     var datagramEnvelope = P2PMessageFactory<PingRequest>.GetMessage(
                         new MessageDto<PingRequest>(
@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                         }
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(4000));
+                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
