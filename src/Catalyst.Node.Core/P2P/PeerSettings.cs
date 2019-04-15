@@ -56,8 +56,6 @@ namespace Catalyst.Node.Core.P2P
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
             MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
-            AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
-            MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
             KnownNodes = Enumerable.ToList(section.GetSection("KnownNodes").GetChildren().Select(p => p.Value));
             SeedServers = Enumerable.ToList(section.GetSection("SeedServers").GetChildren().Select(p => p.Value));
             AnnounceServer =
@@ -69,8 +67,6 @@ namespace Catalyst.Node.Core.P2P
         public string PublicKey { get; set; }
         public bool Announce { get; set; }
         public IPEndPoint AnnounceServer { get; set; }
-        public bool MutualAuthentication { get; set; }
-        public bool AcceptInvalidCerts { get; set; }
         public ushort MaxConnections { get; set; }
         public int Port { get; set; }
         public IPEndPoint EndPoint => new IPEndPoint(BindAddress, Port);
@@ -80,6 +76,5 @@ namespace Catalyst.Node.Core.P2P
         public IList<string> KnownNodes { get; set; }
         public IList<string> SeedServers { get; set; }
         public byte AddressVersion { get; set; }
-        public string SslCertPassword { get; set; }
     }
 }

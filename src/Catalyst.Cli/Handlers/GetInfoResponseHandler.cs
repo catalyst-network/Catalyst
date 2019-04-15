@@ -28,6 +28,7 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Newtonsoft.Json;
@@ -39,7 +40,7 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetInfo request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>
+    public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
@@ -47,9 +48,8 @@ namespace Catalyst.Cli.Handlers
         /// <param name="messageStream">The message stream the handler is listening to through which the handler will
         /// receive the response from the server.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetInfoResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            ILogger logger)
-            : base(messageStream, logger) { }
+        public GetInfoResponseHandler(ILogger logger) 
+            : base(logger) { }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="GetInfoResponseHandler" />.
@@ -57,11 +57,6 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">An object of GetInfoResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
             try
             {
                 Logger.Debug("Handling GetInfoResponse");

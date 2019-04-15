@@ -28,15 +28,5 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.Interfaces.Rpc
 {
-    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned>
-    {
-        /// <summary>
-        /// Subscribes to the message stream of the underlying ISocketClient
-        /// </summary>
-        /// <param name="observer">The observer of the streamed messages</param>
-        /// <returns>The subscription as an IDisposable</returns>
-        IDisposable SubscribeStream(IObserver<IChanneledMessage<AnySigned>> observer);
-
-        void Dispose();
-    }
+    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned> { }
 }

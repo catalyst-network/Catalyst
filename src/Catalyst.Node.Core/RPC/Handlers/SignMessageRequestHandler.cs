@@ -27,6 +27,7 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
@@ -36,16 +37,15 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class SignMessageRequestHandler : MessageHandlerBase<SignMessageRequest>
+    public sealed class SignMessageRequestHandler : MessageHandlerBase<SignMessageRequest>, IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
         private readonly PeerId _peerId;
 
-        public SignMessageRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            IPeerIdentifier peerIdentifier,
+        public SignMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner)
-            : base(messageStream, logger)
+            : base(logger)
         {
             _keySigner = keySigner;
             _peerId = peerIdentifier.PeerId;
@@ -53,11 +53,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
             Logger.Debug("received message of type SignMessageRequest");
             try
             {

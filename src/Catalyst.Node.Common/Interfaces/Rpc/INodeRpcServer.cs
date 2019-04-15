@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 

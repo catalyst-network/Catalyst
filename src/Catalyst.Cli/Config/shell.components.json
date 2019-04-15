@@ -48,6 +48,39 @@
                     "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
                 }
             ]
+        },
+        // Rpc response handlers
+        {
+            "type": "Catalyst.Cli.Handlers.GetInfoResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcResponseHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.GetMempoolResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcResponseHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.GetVersionResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcResponseHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.SignMessageResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcResponseHandler, Catalyst.Node.Common"
+                }
+            ]
         }
     ]
 }

@@ -26,7 +26,7 @@ using System.Text;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.P2P;
@@ -36,16 +36,15 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>
+    public sealed class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>, IRpcRequestHandler
     {
         private readonly IMempool _mempool;
         private readonly PeerId _peerId;
 
-        public GetMempoolRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            IPeerIdentifier peerIdentifier,
-            ILogger logger,
-            IMempool mempool)
-            : base(messageStream, logger)
+        public GetMempoolRequestHandler(IPeerIdentifier peerIdentifier,
+            IMempool mempool,
+            ILogger logger)
+            : base(logger)
         {
             _mempool = mempool;
             _peerId = peerIdentifier.PeerId;
@@ -53,11 +52,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
             Logger.Debug("received message of type GetMempoolRequest");
             try
             {
