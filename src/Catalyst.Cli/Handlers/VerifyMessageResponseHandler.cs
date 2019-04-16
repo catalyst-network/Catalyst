@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -24,9 +26,10 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf.WellKnownTypes;
-using Nethereum.RLP;
+using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -36,7 +39,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public class VerifyMessageResponseHandler : MessageHandlerBase<VerifyMessageResponse>
+    public class VerifyMessageResponseHandler : MessageHandlerBase<VerifyMessageResponse>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
@@ -44,30 +47,23 @@ namespace Catalyst.Cli.Handlers
         /// <param name="messageStream">The message stream the handler is listening to through which the handler will
         /// receive the response from the server.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public VerifyMessageResponseHandler(
-            IObservable<IChanneledMessage<Any>> messageStream,
-            ILogger logger)
-            : base(messageStream, logger)
-        {
-
-        }
+        public VerifyMessageResponseHandler(ILogger logger) : base(logger) { }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="VerifyMessageResponse" />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAny)
-            {
-                return;
-            }
-
+            Guard.Argument(message).NotNull();
+            
             try
             {
                 Logger.Debug("Handling VerifyMessageResponse");
 
-                var deserialised = message.Payload.FromAny<VerifyMessageResponse>();
+                var deserialised = message.Payload.FromAnySigned<VerifyMessageResponse>();
+
+                Guard.Argument(deserialised).NotNull();
 
                 //decode the received message
                 var result = deserialised.IsSignedByKey;
@@ -80,7 +76,7 @@ namespace Catalyst.Cli.Handlers
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetMempoolResponse after receiving message {0}", message);
+                    "Failed to handle VerifyMessageResponse after receiving message {0}", message);
                 throw;
             }
         }

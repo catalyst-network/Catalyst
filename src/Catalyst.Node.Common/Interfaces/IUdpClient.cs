@@ -26,7 +26,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IUdpClient
+    public interface IUdpClient : ISocketClient
     {
         Task SendMessage(AnySigned message);
     }

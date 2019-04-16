@@ -34,8 +34,6 @@ namespace Catalyst.Node.Common.Interfaces.P2P
         string PublicKey { get; }
         bool Announce { get; }
         IPEndPoint AnnounceServer { get; }
-        bool MutualAuthentication { get; }
-        bool AcceptInvalidCerts { get; }
         ushort MaxConnections { get; }
         int Port { get; }
         IPAddress BindAddress { get; }
@@ -45,6 +43,5 @@ namespace Catalyst.Node.Common.Interfaces.P2P
         IList<string> KnownNodes { get; }
         IList<string> SeedServers { get; }
         byte AddressVersion { get; }
-        string SslCertPassword { get; }
     }
 }

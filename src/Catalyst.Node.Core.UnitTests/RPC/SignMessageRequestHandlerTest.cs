@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -32,6 +32,7 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
@@ -85,16 +86,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         
         [Fact] public void RpcServer_Can_Handle_SignMessageRequest()
         {
-            //TODO: Check if we need to do all of this every time we need to use .ToAnySigned()
-            var senderPeerId = PeerIdHelper.GetPeerId("sender");
-
-            var peerIds = Enumerable.Range(0, 3).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier($"dude-{i}")).ToList();
-
-            var correlationIds = Enumerable.Range(0, 3).Select(i => Guid.NewGuid()).ToList();
-
-            //********************************************************************************
-            
             //Substitute for the context and the channel
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
@@ -112,7 +103,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             };
             
             //create a channel using the mock context and request
-            var channeledAny = new ChanneledAnySigned(fakeContext, request.ToAnySigned(peerIds[1].PeerId, correlationIds[1]));
+            var channeledAny = new ChanneledAnySigned(fakeContext, 
+                request.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid()));
             
             //convert the channel created into an IObservable 
             //the .ToObervable() Converts the array to an observable sequence which means we can use it as a message
@@ -127,11 +119,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             
             //pass the created observable sequence as the message stream to the VerifyMessageRequestHandler
             //Calling the constructor will call the 
-            var handler = new SignMessageRequestHandler(signRequest, peerIds[1], _logger, _keySigner);
+            //var handler = new SignMessageRequestHandler(signRequest, peerIds[1], _logger, _keySigner);
+            var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier($"sender"), _logger, _keySigner);
+            handler.StartObserving(signRequest);
             
             //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
             //is finished before we assert for the Received calls in the following statements.
-            Thread.Sleep(10000);
+            Thread.Sleep(500);
 
             //Check the channel received 1 call to 
             var receivedCalls = fakeContext.Channel.ReceivedCalls().ToList();

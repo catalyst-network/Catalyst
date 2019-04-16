@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -40,6 +40,7 @@ using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Multiformats.Base;
 using NSec.Cryptography;
@@ -85,17 +86,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         }
         
         [Fact] public void RpcServer_Can_Handle_VerifyMessageRequest()
-        {
-            //TODO: Check if we need to do all of this every time we need to use .ToAnySigned()
-            var senderPeerId = PeerIdHelper.GetPeerId("sender");
-
-            var peerIds = Enumerable.Range(0, 3).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier($"dude-{i}")).ToList();
-
-            var correlationIds = Enumerable.Range(0, 3).Select(i => Guid.NewGuid()).ToList();
-
-            //********************************************************************************
-            
+        {   
             //Substitute for the context and the channel
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
@@ -122,7 +113,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             };
             
             //create a channel using the mock context and request
-            var channeledAny = new ChanneledAnySigned(fakeContext, request.ToAnySigned(peerIds[1].PeerId, correlationIds[1]));
+            var channeledAny = new ChanneledAnySigned(fakeContext, 
+                request.ToAnySigned(PeerIdHelper.GetPeerId("sender")));
             
             //convert the channel created into an IObservable 
             //the .ToObervable() Converts the array to an observable sequence which means we can use it as a message
@@ -132,19 +124,30 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             //the base class will find a message in the stream. As a result the _keySigner object
             //will have not been instantiated before calling the HandleMessage.
             //This case will not happen in realtime but it is caused by the test environment.
-            var signRequest = new[] {channeledAny}.ToObservable()
+            var verifyRequest = new[] {channeledAny}.ToObservable()
                .DelaySubscription(TimeSpan.FromMilliseconds(50));
             
             //pass the created observable sequence as the message stream to the VerifyMessageRequestHandler
             //Calling the constructor will call the 
-            var handler = new VerifyMessageRequestHandler(signRequest, peerIds[1], _logger, _keySigner);
+            //var handler = new VerifyMessageRequestHandler(signRequest, peerIds[1], _logger, _keySigner);
+            var handler = new VerifyMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier($"sender"), _logger, _keySigner);
+            handler.StartObserving(verifyRequest);
             
             //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
             //is finished before we assert for the Received calls in the following statements.
             Thread.Sleep(500);
-
-            fakeContext.Channel.ReceivedWithAnyArgs(1).WriteAndFlushAsync(new VerifyMessageResponse()
-               .ToAnySigned(peerIds[1].PeerId, correlationIds[1]));
+            
+            //Check the channel received 1 call to 
+            var receivedCalls = fakeContext.Channel.ReceivedCalls().ToList();
+            receivedCalls.Count().Should().Be(1);
+            
+            //Get the received response object and verify it is VerifyMessageResponse
+            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
+            sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
+            
+            //There should be some assertions checking the contents of the response. 
+            //Since the VerifyMessageResponse only has a true/false value those checks seemed 
+            //unnecessary.
         }
 
         protected override void Dispose(bool disposing)

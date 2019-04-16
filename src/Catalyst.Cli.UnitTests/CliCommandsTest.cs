@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -32,7 +33,9 @@ using NSubstitute;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Autofac;
+using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Interfaces.Rpc;
+using DotNetty.Transport.Channels;
 using Serilog;
 using Serilog.Extensions.Logging;
 
@@ -40,6 +43,8 @@ namespace Catalyst.Cli.UnitTests
 {
     public sealed class CliCommandsTests : ConfigFileBasedTest
     {
+        private readonly INodeRpcClientFactory _nodeRpcClientFactory;
+
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
@@ -49,35 +54,40 @@ namespace Catalyst.Cli.UnitTests
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
                .Build();
 
-            var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
+            var channel = Substitute.For<IChannel>();
+            channel.Active.Returns(true);
+
             var nodeRpcClient = Substitute.For<INodeRpcClient>();
+            nodeRpcClient.Channel.Returns(channel);
+
+            _nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
+            _nodeRpcClientFactory
+               .GetClient(Arg.Any<X509Certificate>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
+               .Returns(nodeRpcClient);
 
             ConfigureContainerBuilder(config);
 
-            ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
+            ContainerBuilder.RegisterInstance(_nodeRpcClientFactory).As<INodeRpcClientFactory>();
             ContainerBuilder.RegisterInstance(nodeRpcClient).As<INodeRpcClient>();
         }
 
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
-        [Fact]
-        public void Cli_Can_Connect_To_Node()
+        [Fact] public void Cli_Can_Connect_To_Node()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using(container.BeginLifetimeScope(CurrentTestName))
             {
-                var shell = container.Resolve<ICatalystCli>();                    
+                var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
-                scope.Dispose();
             }
         }
 
-        [Fact]
-        public void Cli_Can_Handle_Multiple_Connection_Attempts()
+        [Fact] public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using(container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 for (int i = 0; i < 10; i++)
@@ -85,16 +95,13 @@ namespace Catalyst.Cli.UnitTests
                     var canConnect = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                     canConnect.Should().BeTrue();
                 }
-
-                scope.Dispose();
             }
         }
 
-        [Fact]
-        public void Cli_Can_Request_Node_Config()
+        [Fact] public void Cli_Can_Request_Node_Config()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using(container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
@@ -102,15 +109,13 @@ namespace Catalyst.Cli.UnitTests
 
                 var result = shell.AdvancedShell.ParseCommand("get", "-i", "node1");
                 result.Should().BeTrue();
-                scope.Dispose();
             }
         }
 
-        [Fact]
-        public void Cli_Can_Request_Node_Version()
+        [Fact] public void Cli_Can_Request_Node_Version()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using(container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
@@ -118,65 +123,64 @@ namespace Catalyst.Cli.UnitTests
 
                 var result = shell.AdvancedShell.ParseCommand("get", "-v", "node1");
                 result.Should().BeTrue();
-                scope.Dispose();
             }
         }
 
-        [Fact]
+        [Fact] 
         public void Cli_Can_Request_Node_Mempool()
         {
-            var channel = Substitute.For<IChannel>();
-            channel.Active.Returns(true);
-            var tcpClient = Substitute.For<ISocketClient>();
-            tcpClient.Channel.Returns(channel);
+            var container = ContainerBuilder.Build();
 
+            using(container.BeginLifetimeScope(CurrentTestName))
+            {
+                var shell = container.Resolve<ICatalystCli>();
 
-            var client = Substitute.For<IRpcClient>();
-            client.GetClientSocketAsync(Arg.Any<IRpcNodeConfig>())
-               .Returns(Task.FromResult(tcpClient));
+                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
 
-            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
-            hasConnected.Should().BeTrue();
+                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
 
-            var node1 = _shell.Ads.GetConnectedNode("node1");
-            node1.Should().NotBeNull("we've just connected it");
-
-            var result = _shell.Ads.ParseCommand("get", "-m", "node1");
-            result.Should().BeTrue();
+                var result = shell.AdvancedShell.ParseCommand("get", "-m", "node1");
+                result.Should().BeTrue();
+            }
         }
 
-        [Fact]
+        [Fact] 
         public void Cli_Can_Request_Node_To_Sign_A_Message()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            
+            using(container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
+                
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
 
                 var result = shell.AdvancedShell.ParseCommand("sign", "-m", "test message", "-n", "node1");
                 result.Should().BeTrue();
-                scope.Dispose();
             }
-            var node1 = _shell.Ads.GetConnectedNode("node1");
-            node1.Should().NotBeNull("we've just connected it");
-
-            var result = _shell.Ads.ParseCommand("sign", "-m", "test message", "-n", "node1");
-            result.Should().BeTrue();
         }
 
-        [Fact]
+        [Fact] 
         public void Cli_Can_Verify_Message()
         {
-            var hasConnected = _shell.Ads.ParseCommand("connect", "-n", "node1");
-            hasConnected.Should().BeTrue();
+            var container = ContainerBuilder.Build();
 
-            var node1 = _shell.Ads.GetConnectedNode("node1");
-            node1.Should().NotBeNull("we've just connected it");
+            using(container.BeginLifetimeScope(CurrentTestName))
+            {
+                var shell = container.Resolve<ICatalystCli>();
+                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
 
-            var result = _shell.Ads.ParseCommand("verify", "-m", "test message", "-k", "public_key", "-s", "signature");
-            result.Should().BeTrue();
+                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+
+                var result = shell.AdvancedShell.ParseCommand(
+                    "verify", "-m", "test message", "-k", "public_key", "-s", "signature", "-n", "node1");
+                result.Should().BeTrue();
+            }
         }
     }
 }

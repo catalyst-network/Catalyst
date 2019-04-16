@@ -105,8 +105,9 @@ namespace Catalyst.Cli
 
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
-            new List<Example> {
-                new Example("Signs a message or a transaction provided.", new SignOptions { Node = "Messsage" })
+            new List<Example> 
+            {
+                new Example("Signs a message or a transaction provided.", new SignOptions {Node = "Messsage"})
             };
     }
 }

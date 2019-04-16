@@ -22,11 +22,10 @@
 #endregion
 
 using System;
-using System.Net;
-using System.Net.Sockets;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -35,16 +34,13 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    internal sealed class PingRequestHandler : MessageHandlerBase<PingRequest>
+    public sealed class PingRequestHandler : MessageHandlerBase<PingRequest>, IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public PingRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            IPeerIdentifier peerIdentifier,
-            ILogger logger)
-            : base(messageStream, logger)
+        public PingRequestHandler(IPeerIdentifier peerIdentifier, ILogger logger)
+            : base(logger)
         {
-            logger.Information("PingRequestHandler ctor");
             _peerIdentifier = peerIdentifier;
         }
 

@@ -25,9 +25,10 @@ using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -37,17 +38,13 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    internal sealed class GetMempoolResponseHandler : MessageHandlerBase<GetMempoolResponse>
+    public sealed class GetMempoolResponseHandler : MessageHandlerBase<GetMempoolResponse>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
         /// </summary>
-        /// <param name="messageStream">The message stream the handler is listening to through which the handler will
-        /// receive the response from the server.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetMempoolResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            ILogger logger)
-            : base(messageStream, logger) { }
+        public GetMempoolResponseHandler(ILogger logger) : base(logger) { }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
@@ -55,24 +52,19 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">An object of GetMempoolResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
+            Guard.Argument(message).NotNull();
+            
             try
             {
                 Logger.Debug("Handling GetMempoolResponse");
 
                 var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
+                
+                Guard.Argument(deserialised.Info).NotNull();
 
-                int index = 0;
-
-                foreach (string encodedTx in deserialised.Info.Values)
+                foreach (var encodedTx in deserialised.Info.Values)
                 {
-                    index++;
-
-                    // Console.WriteLine(@"t{0}: {1},", index, encodedTx); TODO why?
+                    Console.WriteLine(@"t{0}: {1},", deserialised.Info.Values.GetEnumerator().Current, encodedTx);
                 }
             }
             catch (Exception ex)

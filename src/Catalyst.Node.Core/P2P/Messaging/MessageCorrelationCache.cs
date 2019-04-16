@@ -37,7 +37,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class MessageCorrelationCache : IMessageCorrelationCache
+    public sealed class MessageCorrelationCache : IMessageCorrelationCache
     {
         public static readonly int BaseReputationChange = 1;
         private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             return matched.Content.FromAnySigned<TRequest>();
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing)
             {

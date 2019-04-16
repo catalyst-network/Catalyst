@@ -24,10 +24,11 @@
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Helpers.IO.Inbound; 
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -37,7 +38,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public sealed class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>
+    public sealed class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor
@@ -45,9 +46,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="messageStream">Message stream the handler is listening to through which the handler will
         /// receive the response from the server.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetVersionResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            ILogger logger)
-            : base(messageStream, logger) { }
+        public GetVersionResponseHandler(ILogger logger) : base(logger) { }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />.
@@ -55,15 +54,16 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">An object of GetVersionResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
+            Guard.Argument(message).NotNull();
+            
             try
             {
                 Logger.Debug("Handling GetVersionResponse");
+                
                 var deserialised = message.Payload.FromAnySigned<VersionResponse>();
+                
+                Guard.Argument(deserialised.Version).NotNull();
+                
                 Logger.Information("Node Version: {0}", deserialised.Version);
             }
             catch (Exception ex)

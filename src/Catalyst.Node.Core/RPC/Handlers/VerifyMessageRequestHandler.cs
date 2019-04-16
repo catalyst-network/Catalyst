@@ -9,12 +9,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -27,6 +27,7 @@ using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
@@ -37,16 +38,15 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class VerifyMessageRequestHandler : MessageHandlerBase<VerifyMessageRequest>
+    public sealed class VerifyMessageRequestHandler : MessageHandlerBase<VerifyMessageRequest>, IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
         private readonly PeerId _peerId;
 
-        public VerifyMessageRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            IPeerIdentifier peerIdentifier,
+        public VerifyMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner)
-            : base(messageStream, logger)
+            : base(logger)
         {
             _keySigner = keySigner;
             _peerId = peerIdentifier.PeerId;
@@ -54,12 +54,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message) 
         {
-            if (message == NullObjects.ChanneledAnySigned || _keySigner == null)
-            {
-                return;
-            }
-            
             Logger.Debug("received message of type VerifyMessageRequest");
+            
             try
             {
                 var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
@@ -95,6 +91,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 
                 //return response to the CLI
                 var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                
                 message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)

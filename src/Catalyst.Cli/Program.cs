@@ -105,10 +105,10 @@ namespace Catalyst.Cli
                         Console.OpenStandardInput(bufferSize),
                         Console.InputEncoding, false, bufferSize
                     )
-                ); 
+                );
 
                 // Add .Net Core serviceCollection to the Autofac container.
-                using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
+                using(container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
 

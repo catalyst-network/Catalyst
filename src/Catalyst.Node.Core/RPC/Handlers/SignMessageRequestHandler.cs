@@ -27,10 +27,12 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using Nethereum.KeyStore.Crypto;
 using Nethereum.RLP;
 using NSec.Cryptography;
@@ -38,16 +40,15 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class SignMessageRequestHandler : MessageHandlerBase<SignMessageRequest>
+    public sealed class SignMessageRequestHandler : MessageHandlerBase<SignMessageRequest>, IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
         private readonly PeerId _peerId;
 
-        public SignMessageRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            IPeerIdentifier peerIdentifier,
+        public SignMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner)
-            : base(messageStream, logger)
+            : base(logger)
         {
             _keySigner = keySigner;
             _peerId = peerIdentifier.PeerId;
@@ -55,15 +56,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
+            Guard.Argument(message).NotNull();
+            
             Logger.Debug("received message of type SignMessageRequest");
+            
             try
             {
                 var deserialised = message.Payload.FromAnySigned<SignMessageRequest>();
+                
+                Guard.Argument(deserialised).NotNull();
 
                 //decode the received message
                 var decodeResult = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
@@ -73,14 +74,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 //use the keysigner to sign the message
                 var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
+                
                 var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
                 var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
-                var exportedPublicKey = _keySigner.CryptoContext.ExportPublicKey(publicKey);
-
+                
+                Guard.Argument(publicKey).NotNull();
+                Guard.Argument(signature).NotNull();
+                
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                KeyStoreCrypto keyStoreCrypto = new KeyStoreCrypto();
-
                 var response = new SignMessageResponse
                 {
                     OriginalMessage = deserialised.Message,
@@ -89,6 +91,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 };
 
                 var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                
                 message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)

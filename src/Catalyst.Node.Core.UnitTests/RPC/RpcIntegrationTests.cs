@@ -58,8 +58,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private const int MaxWaitInMs = 1000;
         private readonly IConfigurationRoot _config;
-        private readonly INodeRpcClientFactory _nodeRpcClientFactory;
-        
+
         public RpcIntegrationTests(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
@@ -87,11 +86,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             ConfigureContainerBuilder(_config);
             ContainerBuilder.RegisterInstance(mempool).As<IMempool>();
-
-            _nodeRpcClientFactory = new NodeRpcClientFactory();
+            ContainerBuilder.RegisterType<NodeRpcClientFactory>().As<INodeRpcClientFactory>();
         }
 
-        [Fact(Skip = "test hanger")] public void ServerConnectedToCorrectPort()
+        [Fact(Skip = "test hanger")]
+        public void ServerConnectedToCorrectPort()
         {
             var container = ContainerBuilder.Build();
             using(var scope = container.BeginLifetimeScope(CurrentTestName))
@@ -102,26 +101,29 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 {
                     client.Should().NotBeNull();
                     client.Connected.Should().BeTrue();
-                }   
-                
+                }
+
                 rpcServer.Dispose();
                 scope.Dispose();
             }
         }
 
-        [Fact(Skip = "test hanger")] public void RpcServer_Can_Handle_GetInfoRequest()
-        {   
+        [Fact(Skip = "test hanger")]
+        public void RpcServer_Can_Handle_GetInfoRequest()
+        {
             var container = ContainerBuilder.Build();
             using(var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
-                var nodeRpcClient = _nodeRpcClientFactory.GetClient(
+                var nodeRpcClientFactory = container.Resolve<INodeRpcClientFactory>();
+
+                var nodeRpcClient = nodeRpcClientFactory.GetClient(
                     certificateStore.ReadOrCreateCertificateFile("mycert.pfx"),
                     NodeRpcConfig.BuildRpcNodeSettingList(_config).FirstOrDefault()
                 );
-                
+
                 var serverObserver = new AnySignedMessageObserver(0, logger);
                 var clientObserver = new AnySignedMessageObserver(1, logger);
 
@@ -133,7 +135,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                         var peerSettings = new PeerSettings(_config);
                         var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
                         nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
-                    
+
                         var tasks = new IChanneledMessageStreamer<AnySigned>[]
                             {
                                 nodeRpcClient, rpcServer
@@ -147,16 +149,17 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                         clientObserver.Received.Should().NotBeNull();
                         clientObserver.Received.Payload.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
-                    }   
+                    }
                 }
-                
-                nodeRpcClient.Dispose();
+
                 rpcServer.Dispose();
                 scope.Dispose();
             }
         }
 
-        [Fact(Skip = "test hanger")] public void RpcServer_Can_Handle_GetVersionRequest()
+        //[Fact(Skip = "test hanger")]
+        [Fact(Skip = "test hanger")]
+        public void RpcServer_Can_Handle_GetVersionRequest()
         {
             var container = ContainerBuilder.Build();
             using(var scope = container.BeginLifetimeScope(CurrentTestName))
@@ -164,7 +167,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
-                var nodeRpcClient = _nodeRpcClientFactory.GetClient(
+                var nodeRpcClientFactory = container.Resolve<INodeRpcClientFactory>();
+
+                var nodeRpcClient = nodeRpcClientFactory.GetClient(
                     certificateStore.ReadOrCreateCertificateFile("mycert.pfx"),
                     NodeRpcConfig.BuildRpcNodeSettingList(_config).FirstOrDefault()
                 );
@@ -173,13 +178,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 using(rpcServer.MessageStream.Subscribe(serverObserver))
                 {
-                    using(nodeRpcClient.SubscribeStream(clientObserver))
+                    using(nodeRpcClient.MessageStream.Subscribe(clientObserver))
                     {
                         var request = new VersionRequest();
                         var peerSettings = new PeerSettings(_config);
                         var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
                         nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
-                    
+
                         var tasks = new IChanneledMessageStreamer<AnySigned>[]
                             {
                                 nodeRpcClient, rpcServer
@@ -187,21 +192,21 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                            .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                            .ToArray();
                         Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
-        
+
                         serverObserver.Received.Should().NotBeNull();
                         serverObserver.Received.Payload.TypeUrl.Should().Be(VersionRequest.Descriptor.ShortenedFullName());
                         clientObserver.Received.Should().NotBeNull();
                         clientObserver.Received.Payload.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
-                    }     
-                } 
-                
-                nodeRpcClient.Dispose();
+                    }
+                }
+
                 rpcServer.Dispose();
                 scope.Dispose();
             }
         }
-        
-        [Fact(Skip = "test hanger")] public void RpcServer_Can_Handle_GetMempoolRequest()
+
+        [Fact(Skip = "test hanger")]
+        public void RpcServer_Can_Handle_GetMempoolRequest()
         {
             var container = ContainerBuilder.Build();
             using(var scope = container.BeginLifetimeScope(CurrentTestName))
@@ -209,7 +214,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
-                var nodeRpcClient = _nodeRpcClientFactory.GetClient(
+                var nodeRpcClientFactory = container.Resolve<INodeRpcClientFactory>();
+
+                var nodeRpcClient = nodeRpcClientFactory.GetClient(
                     certificateStore.ReadOrCreateCertificateFile("mycert.pfx"),
                     NodeRpcConfig.BuildRpcNodeSettingList(_config).FirstOrDefault()
                 );
@@ -217,13 +224,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var clientObserver = new AnySignedMessageObserver(1, logger);
         
                 using(rpcServer.MessageStream.Subscribe(serverObserver))
-                using(nodeRpcClient.SubscribeStream(clientObserver))
+                using(nodeRpcClient.MessageStream.Subscribe(clientObserver))
                 {
                     var request = new GetMempoolRequest();
                     var peerSettings = new PeerSettings(_config);
                     var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
                     nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
-        
+
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
                             nodeRpcClient, rpcServer
@@ -231,17 +238,18 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
-        
+
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolRequest.Descriptor.ShortenedFullName());
-        
+
                     clientObserver.Received.Should().NotBeNull();
                     clientObserver.Received.Payload.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
                 }
             }
         }
-        
-        [Fact(Skip = "test hanger")] public void RpcServer_Can_Handle_SignMessageRequest()
+
+        [Fact(Skip = "test hanger")]
+        public void RpcServer_Can_Handle_SignMessageRequest()
         {
             var container = ContainerBuilder.Build();
             using(var scope = container.BeginLifetimeScope(CurrentTestName))
@@ -249,16 +257,18 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
                 var certificateStore = container.Resolve<ICertificateStore>();
-                var nodeRpcClient = _nodeRpcClientFactory.GetClient(
+                var nodeRpcClientFactory = container.Resolve<INodeRpcClientFactory>();
+
+                var nodeRpcClient = nodeRpcClientFactory.GetClient(
                     certificateStore.ReadOrCreateCertificateFile("mycert.pfx"),
                     NodeRpcConfig.BuildRpcNodeSettingList(_config).FirstOrDefault()
                 );
-                
+
                 var serverObserver = new AnySignedMessageObserver(0, logger);
                 var clientObserver = new AnySignedMessageObserver(1, logger);
-        
+
                 using(rpcServer.MessageStream.Subscribe(serverObserver))
-                using(nodeRpcClient.SubscribeStream(clientObserver))
+                using(nodeRpcClient.MessageStream.Subscribe(clientObserver))
                 {
                     var message = "lol";
                     var request = new SignMessageRequest();
@@ -270,7 +280,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     var peerSettings = new PeerSettings(_config);
                     var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
                     nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
-        
+
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
                             nodeRpcClient, rpcServer
@@ -278,15 +288,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
-        
+
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(SignMessageRequest.Descriptor.ShortenedFullName());
-        
+
                     clientObserver.Received.Should().NotBeNull();
                     clientObserver.Received.Payload.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
                 }
-                
-                nodeRpcClient.Dispose();
+
                 rpcServer.Dispose();
                 scope.Dispose();
             }

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;

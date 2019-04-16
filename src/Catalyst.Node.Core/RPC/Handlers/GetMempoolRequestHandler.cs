@@ -26,26 +26,26 @@ using System.Text;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using Google.Protobuf.Collections;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>
+    public sealed class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>, IRpcRequestHandler
     {
         private readonly IMempool _mempool;
         private readonly PeerId _peerId;
 
-        public GetMempoolRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            IPeerIdentifier peerIdentifier,
-            ILogger logger,
-            IMempool mempool)
-            : base(messageStream, logger)
+        public GetMempoolRequestHandler(IPeerIdentifier peerIdentifier,
+            IMempool mempool,
+            ILogger logger)
+            : base(logger)
         {
             _mempool = mempool;
             _peerId = peerIdentifier.PeerId;
@@ -53,16 +53,17 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
+            Guard.Argument(message).NotNull();
+            
             Logger.Debug("received message of type GetMempoolRequest");
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolRequest>();
+                
+                Guard.Argument(deserialised).NotNull();
+                
                 Logger.Debug("message content is {0}", deserialised);
+                
                 var response = new GetMempoolResponse
                 {
                     Info =
@@ -72,6 +73,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 };
 
                 var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                
                 message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
@@ -84,22 +86,32 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         private MapField<string, string> GetMempoolContent()
         {
-            var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
             var memPoolMap = new MapField<string, string>();
+            
+            try 
+            { 
+                var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
 
-            for (var i = 0; i < memPoolContentEncoded.Count; i++)
-            {
-                var sb = new StringBuilder("{");
-                foreach (var b in memPoolContentEncoded[i])
+                for (var i = 0; i < memPoolContentEncoded.Count; i++)
                 {
-                    sb.Append(b);
+                    var sb = new StringBuilder("{");
+                    foreach (var b in memPoolContentEncoded[i])
+                    {
+                        sb.Append(b);
+                    }
+
+                    sb.Append("}");
+
+                    memPoolMap.Add(i.ToString(), sb.ToString());
                 }
-
-                sb.Append("}");
-
-                memPoolMap.Add(i.ToString(), sb.ToString());
             }
-
+            catch (Exception ex)
+            {
+                Logger.Error(ex,
+                    "Failed to get the mempool content and format it as MapField<string,string> {0}", ex.Message);
+                throw;
+            }
+            
             return memPoolMap;
         }
     }

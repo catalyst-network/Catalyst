@@ -31,11 +31,11 @@ namespace Catalyst.Node.Common.Helpers.IO
 {
     public sealed class SocketClientRegistry<TSocketChannel> : ISocketClientRegistry<TSocketChannel> where TSocketChannel : class, ISocketClient
     {
-        public IDictionary<int, ISubscribedSocket<TSocketChannel>> Registry { get; }
+        public IDictionary<int, TSocketChannel> Registry { get; }
 
         public SocketClientRegistry()
         {
-            Registry = new ConcurrentDictionary<int, ISubscribedSocket<TSocketChannel>>();
+            Registry = new ConcurrentDictionary<int, TSocketChannel>();
         }
 
         /// <summary>
@@ -50,23 +50,23 @@ namespace Catalyst.Node.Common.Helpers.IO
         }
 
         /// <inheritdoc />
-        public bool AddClientToRegistry(int socketHashCode, ISubscribedSocket<TSocketChannel> subscribedSocket)
+        public bool AddClientToRegistry(int socketHashCode, TSocketChannel socket)
         {
-            Guard.Argument(subscribedSocket, nameof(subscribedSocket)).NotNull();
+            Guard.Argument(socket, nameof(socket)).NotNull();
             Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
-            Guard.Argument(subscribedSocket.SocketChannel.Channel.Active, nameof(subscribedSocket.SocketChannel));
-            Guard.Argument(subscribedSocket.Subscription, nameof(subscribedSocket.Subscription)).NotNull();
-            return Registry.TryAdd(socketHashCode, subscribedSocket);
+            Guard.Argument(socket.Channel.Active, nameof(socket.Channel))
+               .True("Unable to add inactive client to the registry.");
+            return Registry.TryAdd(socketHashCode, socket);
         }
 
         /// <inheritdoc />
-        public ISubscribedSocket<TSocketChannel> GetClientFromRegistry(int socketHashCode)
+        public TSocketChannel GetClientFromRegistry(int socketHashCode)
         {
             Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
-            var socketChannelAndSubscription = Registry.TryGetValue(socketHashCode, out var socketClient)
+            var socketChannel = Registry.TryGetValue(socketHashCode, out var socketClient)
                 ? socketClient
                 : null;
-            return socketChannelAndSubscription;
+            return socketChannel;
         }
 
         /// <inheritdoc />

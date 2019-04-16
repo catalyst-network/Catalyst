@@ -11,6 +11,9 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Deterministic>true</Deterministic>
         <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>Full</DebugType>
+        <DebugSymbols>True</DebugSymbols>
+        <Optimize>False</Optimize>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Version)' == '' ">
         <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">0.0.1</VersionPrefix>

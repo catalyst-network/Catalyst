@@ -23,19 +23,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.RPC.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
@@ -44,14 +44,8 @@ namespace Catalyst.Node.Core.RPC
 {
     public class NodeRpcServer : TcpServer, INodeRpcServer
     {
-        private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
-        private readonly GetInfoRequestHandler _infoRequestHandler;
-        private readonly GetVersionRequestHandler _versionRequestHandler;
-        private readonly GetMempoolRequestHandler _mempoolRequestHandler;
-        private readonly SignMessageRequestHandler _signMessageRequestHandler;
-        private readonly VerifyMessageRequestHandler _verifyMessageRequestHandler;
 
         public IRpcServerSettings Settings { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
@@ -59,28 +53,16 @@ namespace Catalyst.Node.Core.RPC
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
             ICertificateStore certificateStore,
-            IMempool mempool,
-            IKeySigner keySigner,
-            IPeerSettings peerSettings) : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+            IEnumerable<IRpcRequestHandler> requestHandlers) : base(logger)
         {
-            _logger = logger;
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            var anyTypeSignedServerHandler = new AnyTypeSignedServerHandler();
-            MessageStream = anyTypeSignedServerHandler.MessageStream;
-
-            //todo: these handlers need to be instantiated by Autofac to avoid bringing dependencies
-            //all over the RpcServer constructor, and get a proper context for the loggers
-            //https://github.com/catalyst-network/Catalyst.Node/issues/309
-            IPeerIdentifier peerIdentifier = new PeerIdentifier(peerSettings);
-            _infoRequestHandler = new GetInfoRequestHandler(MessageStream, peerIdentifier, Settings, logger);
-            _versionRequestHandler = new GetVersionRequestHandler(MessageStream, peerIdentifier, logger);
-            _mempoolRequestHandler = new GetMempoolRequestHandler(MessageStream, peerIdentifier, logger, mempool);
-            _signMessageRequestHandler = new SignMessageRequestHandler(MessageStream, peerIdentifier, logger, keySigner);
-            _verifyMessageRequestHandler = new VerifyMessageRequestHandler(MessageStream, peerIdentifier, logger, keySigner);
-            
+            var anyTypeServerHandler = new AnyTypeSignedServerHandler();
+            MessageStream = anyTypeServerHandler.MessageStream;
+            requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
+           
             Bootstrap(
                 new InboundChannelInitializer<ISocketChannel>(channel => { },
                     new List<IChannelHandler>
@@ -89,7 +71,7 @@ namespace Catalyst.Node.Core.RPC
                         new ProtobufDecoder(AnySigned.Parser),
                         new ProtobufVarint32LengthFieldPrepender(),
                         new ProtobufEncoder(),
-                        anyTypeSignedServerHandler
+                        anyTypeServerHandler
                     },
                     _certificate
                 ),
@@ -106,11 +88,6 @@ namespace Catalyst.Node.Core.RPC
             if (!disposing) return;
             _cancellationSource?.Dispose();
             _certificate?.Dispose();
-            _infoRequestHandler?.Dispose();
-            _versionRequestHandler.Dispose();
-            _mempoolRequestHandler.Dispose();
-            _signMessageRequestHandler.Dispose();
-            _verifyMessageRequestHandler.Dispose();
         }
     }
 }

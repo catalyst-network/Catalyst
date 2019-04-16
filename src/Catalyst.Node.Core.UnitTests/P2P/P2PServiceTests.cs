@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -30,13 +31,13 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -63,7 +64,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             ConfigureContainerBuilder(_config, true, true);
         }
 
-        [Fact] public void DoesResolveIp2PServiceCorrectly()
+        [Fact]
+        public void DoesResolveIp2PServiceCorrectly()
         {
             var container = ContainerBuilder.Build();
             using(var scope = container.BeginLifetimeScope(CurrentTestName))
@@ -84,16 +86,24 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 var logger = container.Resolve<ILogger>();
                 var p2PService = container.Resolve<IP2PService>();
+                var messageHandlers = container.Resolve<IEnumerable<IP2PMessageHandler>>();
                 var serverObserver = new AnySignedMessageObserver(0, logger);
+
                 using(p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(pid, targetHost);
-                
-                    var pingRequest = new PingRequest();
-                    var datagramEnvelope = DatagramFactory.Create(pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()), targetHost);
+                    var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
+
+                    var datagramEnvelope = P2PMessageFactory<PingRequest>.GetMessage(
+                        new MessageDto<PingRequest>(
+                            P2PMessageType.PingRequest,
+                            new PingRequest(),
+                            targetHost,
+                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
+                        )
+                    );
+                    
                     peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
@@ -102,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                         }
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(4000));
+                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());

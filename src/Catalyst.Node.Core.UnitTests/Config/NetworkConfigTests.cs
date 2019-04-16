@@ -21,12 +21,14 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Autofac;
+using Autofac.Configuration;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Enumerator;
+using Catalyst.Node.Core.P2P;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using SharpRepository.Repository;
@@ -34,19 +36,24 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Config
 {
-    public class ConfigTests
+    public class NetworkConfigTests
     {
-        public static readonly List<object[]> Networks;
+        public static readonly List<object[]> NetworkFiles;
 
-        static ConfigTests() { Networks = Enumeration.GetAll<Network>().Select(n => new[] {n as object}).ToList(); }
+        static NetworkConfigTests()
+        {
+            NetworkFiles = Enumeration.GetAll<Network>()
+               .Select(n => new[]
+                {
+                    Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(n)) as object
+                }).ToList();
+        }
 
         [Theory]
-        [MemberData(nameof(Networks))]
-        public void Config_Should_Contain_a_valid_storage_module(Network network)
+        [MemberData(nameof(NetworkFiles))]
+        public void Network_Config_Should_Contain_a_valid_storage_module(string networkConfig)
         {
-            var configFile = Path.Combine(Environment.CurrentDirectory, Constants.ConfigSubFolder,
-                Constants.NetworkConfigFile(network));
-            var networkConfiguration = new ConfigurationBuilder().AddJsonFile(configFile).Build();
+            var networkConfiguration = new ConfigurationBuilder().AddJsonFile(networkConfig).Build();
             var configurationSection = networkConfiguration
                .GetSection("CatalystNodeConfiguration")
                .GetSection("PersistenceConfiguration");
@@ -55,6 +62,27 @@ namespace Catalyst.Node.Core.UnitTest.Config
             persistenceConfiguration.HasRepository.Should().BeTrue();
             persistenceConfiguration.DefaultRepository.Should().NotBeNullOrEmpty();
             persistenceConfiguration.DefaultRepository.Should().Be("inMemoryNoCaching");
+        }
+
+        [Theory]
+        [MemberData(nameof(NetworkFiles))]
+        public void Network_config_should_allow_building_PeerSettings(string networkConfig)
+        {
+            var configRoot = new ConfigurationBuilder().AddJsonFile(networkConfig).Build();
+
+            var configModule = new ConfigurationModule(configRoot);
+
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule(configModule);
+            containerBuilder.RegisterInstance(configRoot).As<IConfigurationRoot>();
+
+            var peerSettings = new PeerSettings(configRoot);
+
+            peerSettings.Should().NotBeNull();
+            peerSettings.EndPoint.Should().NotBeNull();
+            peerSettings.PublicKey.Should().NotBeNullOrWhiteSpace();
+            peerSettings.SeedServers.Should().NotBeEmpty();
+            peerSettings.Network.Name.Should().NotBeNullOrWhiteSpace();
         }
     }
 }

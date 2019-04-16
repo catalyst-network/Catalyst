@@ -22,13 +22,16 @@
 #endregion
 
 using System.Net;
+using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces;
+using Catalyst.Protocol.Common;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
-    public class TcpClient<TChannel> : AbstractClient where TChannel : IChannel, new()
+    public class TcpClient<TChannel> : AbstractClient, ITcpClient where TChannel : IChannel, new()
     {
         protected TcpClient(ILogger logger) : base(logger) { }
 

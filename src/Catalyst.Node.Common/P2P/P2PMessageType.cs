@@ -21,14 +21,12 @@
 
 #endregion
 
-using System;
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Protocol.Common;
-
-namespace Catalyst.Node.Common.Interfaces.Rpc
+namespace Catalyst.Node.Common.P2P
 {
-    public interface INodeRpcServer : IChanneledMessageStreamer<AnySigned>, IDisposable
+    public enum P2PMessageType
     {
-        IRpcServerSettings Settings { get; }
+        PingRequest,
+        PingResponse,
+        TransactionRequest
     }
 }

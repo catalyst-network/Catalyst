@@ -25,16 +25,16 @@ using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Serilog;
 using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class PingResponseHandler : MessageHandlerBase<PingResponse>
+    public class PingResponseHandler : MessageHandlerBase<PingResponse>, IP2PMessageHandler
     {
-        public PingResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream, ILogger logger)
-            : base(messageStream, logger) { }
+        public PingResponseHandler(ILogger logger) : base(logger) { }
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {

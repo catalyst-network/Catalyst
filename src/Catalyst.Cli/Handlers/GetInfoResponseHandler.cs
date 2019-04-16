@@ -23,13 +23,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 
@@ -39,7 +39,7 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetInfo request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>
+    public sealed class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
@@ -47,9 +47,8 @@ namespace Catalyst.Cli.Handlers
         /// <param name="messageStream">The message stream the handler is listening to through which the handler will
         /// receive the response from the server.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetInfoResponseHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
-            ILogger logger)
-            : base(messageStream, logger) { }
+        public GetInfoResponseHandler(ILogger logger) 
+            : base(logger) { }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="GetInfoResponseHandler" />.
@@ -57,23 +56,31 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">An object of GetInfoResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if (message == NullObjects.ChanneledAnySigned)
-            {
-                return;
-            }
-
+            Guard.Argument(message).NotNull();
+            
+            Logger.Debug("Handling GetInfoResponse");
+            
             try
             {
-                Logger.Debug("Handling GetInfoResponse");
-
                 var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
 
+                Guard.Argument(deserialised.Query).NotNull();
+                    
                 var result = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(deserialised.Query);
+
+                if (result == null)
+                {
+                    Console.WriteLine(@"No config found.");
+                    return;
+                }
 
                 Console.WriteLine(@"[");
 
-                WriteConfiguration(result, 0, result.Count);
-
+                foreach (var (key, value) in result)
+                {
+                    Console.WriteLine(@"Key = {0}, Value = {1}", key, value);
+                }
+                                
                 Console.WriteLine(@"]");
             }
             catch (Exception ex)
@@ -81,47 +88,6 @@ namespace Catalyst.Cli.Handlers
                 Logger.Error(ex,
                     "Failed to handle GetInfoResponse after receiving message {0}", message);
                 throw;
-            }
-        }
-
-        private void WriteConfiguration(IReadOnlyList<KeyValuePair<string, string>> configList, int startIndex, int count)
-        {
-            var childIndex = 0;
-            var childrenCount = 0;
-
-            Console.WriteLine(@"	");
-            for (var j = startIndex; j < startIndex + count; j++)
-            {
-                if (j < childIndex + childrenCount)
-                {
-                    continue;
-                }
-
-                var setting = configList[j];
-                var key = setting.Key;
-                var value = setting.Value ?? "";
-
-                if (value.Contains("subsection"))
-                {
-                    childIndex = j + 1;
-                    childrenCount = Convert.ToInt16(value.Substring(value.IndexOf('_') + 1));
-
-                    if (!configList.First().Equals(setting) && !configList[childIndex].Key.Contains("0"))
-                    {
-                        Console.WriteLine(@"},");
-                        Console.WriteLine(@"" + key + @": {");
-                    }
-                    else
-                    {
-                        Console.WriteLine(@"" + key + @": [");
-                    }
-
-                    WriteConfiguration(configList, childIndex, childrenCount);
-                }
-                else
-                {
-                    Console.WriteLine(@"        {0}: {1},", key, value);
-                }
             }
         }
     }
