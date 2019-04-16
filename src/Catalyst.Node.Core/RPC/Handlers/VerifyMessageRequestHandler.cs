@@ -61,8 +61,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
 
                 //get the original message from the decoded message
-                //var originalMessage = deserialised.Message.ToByteArray().ToStringFromRLPDecoded();
-                //var decodedPublicKey = Convert.FromBase64String(deserialised.PublicKey.ToByteArray());
+                
                 //decode the received message
                 var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
 
@@ -79,12 +78,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 IPublicKey pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
                 
                 //verify that the message was signed by a key corresponding to the provided
-                var result = _keySigner.CryptoContext.Verify(pubKey, deserialised.Message.ToByteArray(),
+                var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
                     decodedSignature);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
 
-                var response = new VerifyMessageResponse()
+                var response = new VerifyMessageResponse
                 {
                     IsSignedByKey = result
                 };

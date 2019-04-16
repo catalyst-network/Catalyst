@@ -76,9 +76,9 @@ namespace Catalyst.Cli.Handlers
 
                 Console.WriteLine(@"[");
 
-                foreach (var (key, value) in result)
+                foreach (var item in result)
                 {
-                    Console.WriteLine(@"Key = {0}, Value = {1}", key, value);
+                    Console.WriteLine(@"Key = {0}, Value = {1}", item.Key, item.Value);
                 }
                                 
                 Console.WriteLine(@"]");
