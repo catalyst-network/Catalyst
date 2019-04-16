@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ContainerBuilder.RegisterType<NodeRpcClientFactory>().As<INodeRpcClientFactory>();
         }
 
-        [Fact(Skip = "test hanger")]
+        [Fact]
         public void ServerConnectedToCorrectPort()
         {
             var container = ContainerBuilder.Build();
@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact(Skip = "test hanger")]
+        [Fact]
         public void RpcServer_Can_Handle_GetInfoRequest()
         {
             var container = ContainerBuilder.Build();
@@ -157,8 +157,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        //[Fact(Skip = "test hanger")]
-        [Fact(Skip = "test hanger")]
+        //[Fact]
+        [Fact]
         public void RpcServer_Can_Handle_GetVersionRequest()
         {
             var container = ContainerBuilder.Build();
@@ -205,7 +205,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact(Skip = "test hanger")]
+        [Fact]
         public void RpcServer_Can_Handle_GetMempoolRequest()
         {
             var container = ContainerBuilder.Build();
@@ -248,7 +248,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        [Fact(Skip = "test hanger")]
+        [Fact]
         public void RpcServer_Can_Handle_SignMessageRequest()
         {
             var container = ContainerBuilder.Build();
