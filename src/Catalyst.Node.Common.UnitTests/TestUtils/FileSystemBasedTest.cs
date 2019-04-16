@@ -1,4 +1,5 @@
-#region LICENSE
+﻿#region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -64,6 +66,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
             CurrentTestName = CurrentTest.TestCase.TestMethod.Method.Name;
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
+
                 //get a unique folder for this run
                 CurrentTestName + $"_{testStartTime:yyMMddHHmmssffff}"));
 
@@ -80,7 +83,10 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || _testDirectory.Parent == null) { return; }
+            if (!disposing || _testDirectory.Parent == null)
+            {
+                return;
+            }
 
             var regex = new Regex(CurrentTestName + @"_(?<timestamp>[\d]{14})");
 

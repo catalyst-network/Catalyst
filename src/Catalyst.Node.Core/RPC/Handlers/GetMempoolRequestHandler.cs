@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -25,70 +27,80 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf.Collections;
-using Google.Protobuf.WellKnownTypes;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>
+    public sealed class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>
     {
         private readonly IMempool _mempool;
+        private readonly PeerId _peerId;
 
-
-        public GetMempoolRequestHandler(
-            IObservable<IChanneledMessage<Any>> messageStream,
+        public GetMempoolRequestHandler(IObservable<IChanneledMessage<AnySigned>> messageStream,
+            IPeerIdentifier peerIdentifier,
             ILogger logger,
             IMempool mempool)
             : base(messageStream, logger)
         {
             _mempool = mempool;
+            _peerId = peerIdentifier.PeerId;
         }
 
-        public override void HandleMessage(IChanneledMessage<Any> message)
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            if(message == NullObjects.ChanneledAny) {return;}
+            if (message == NullObjects.ChanneledAnySigned)
+            {
+                return;
+            }
+
             Logger.Debug("received message of type GetMempoolRequest");
             try
             {
-                var deserialised = message.Payload.FromAny<GetMempoolRequest>();
+                var deserialised = message.Payload.FromAnySigned<GetMempoolRequest>();
                 Logger.Debug("message content is {0}", deserialised);
                 var response = new GetMempoolResponse
                 {
-                    Info = { GetMempoolContent() }
+                    Info =
+                    {
+                        GetMempoolContent()
+                    }
                 };
 
-                message.Context.Channel.WriteAndFlushAsync(response.ToAny()).GetAwaiter().GetResult();
+                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetMempoolRequest after receiving message {0}", message);
+                    "Failed to handle GetInfoRequest after receiving message {0}", message);
                 throw;
             }
         }
 
         private MapField<string, string> GetMempoolContent()
         {
-           var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
-           var memPoolMap = new MapField<string, string>();
+            var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
+            var memPoolMap = new MapField<string, string>();
 
-           for (var i=0; i < memPoolContentEncoded.Count; i++)
-           {
-               var sb = new StringBuilder("{");
-               foreach (var b in memPoolContentEncoded[i])
-               {
-                   sb.Append(b);
-               }
+            for (var i = 0; i < memPoolContentEncoded.Count; i++)
+            {
+                var sb = new StringBuilder("{");
+                foreach (var b in memPoolContentEncoded[i])
+                {
+                    sb.Append(b);
+                }
 
-               sb.Append("}");
+                sb.Append("}");
 
-               memPoolMap.Add(i.ToString(), sb.ToString());
-           }
+                memPoolMap.Add(i.ToString(), sb.ToString());
+            }
 
-           return memPoolMap;
+            return memPoolMap;
         }
     }
 }

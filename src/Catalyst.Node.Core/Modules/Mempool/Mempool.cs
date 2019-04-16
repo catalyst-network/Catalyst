@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,26 +9,26 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
- using System;
+using System;
 using System.Collections.Generic;
- using System.Linq;
- using Catalyst.Node.Common.Helpers.Util;
- using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using System.Linq;
+using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Dawn;
- using Nethereum.RLP;
- using Serilog;
+using Nethereum.RLP;
+using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.Modules.Mempool
@@ -35,18 +36,18 @@ namespace Catalyst.Node.Core.Modules.Mempool
     /// <summary>
     ///     Mempool class wraps around a IKeyValueStore
     /// </summary>
-    public class Mempool : IMempool
+    public sealed class Mempool : IMempool
     {
         private readonly ILogger _logger;
         private readonly IRepository<Transaction, TransactionSignature> _transactionStore;
- 
+
         /// <inheritdoc />
         public Mempool(IRepository<Transaction, TransactionSignature> transactionStore, ILogger logger)
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             _transactionStore = transactionStore;
             _transactionStore.Conventions.GetPrimaryKeyName = _ => nameof(Transaction.Signature);
-            
+
             _logger = logger;
             _transactionStore.CachingEnabled = true;
         }
@@ -61,7 +62,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
         public List<byte[]> GetMemPoolContentEncoded()
         {
             var memPoolContent = GetMemPoolContent();
-            
+
             var encodedTxs = memPoolContent.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
 
             return encodedTxs;
@@ -86,6 +87,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
                 {
                     return false;
                 }
+
                 _transactionStore.Add(transaction);
                 return true;
             }

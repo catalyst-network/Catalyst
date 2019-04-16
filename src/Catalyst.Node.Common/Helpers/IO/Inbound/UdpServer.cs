@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,56 +9,53 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public sealed class UdpServer : AbstractServer
-    {       
+    public abstract class UdpServer : AbstractIo, IUdpServer
+    {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="logger"></param>
-        public UdpServer(ILogger logger) : base(logger) { }
+        protected UdpServer(ILogger logger) : base(logger) { }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="channelInitializer"></param>
         /// <returns></returns>
-        public override ISocketServer Bootstrap(IChannelHandler channelInitializer)
-        { 
-            Server = new ServerBootstrap();
-            ((DotNetty.Transport.Bootstrapping.ServerBootstrap)Server)
+        public void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port)
+        {
+            Channel = new Bootstrap()
                .Group(WorkerEventLoop)
-               //TODO : understand DotNetty inheritance schema
-               //.Channel<SocketDatagramChannel>()
+               .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer);            
-            return this;
-        }
-        
-        public override async Task<ISocketServer> StartServer(IPAddress listenAddress, int port)
-        {
-            Channel = await Server.BindAsync(listenAddress, port).ConfigureAwait(false);
-            return this;
+               .Handler(channelInitializer)
+               .BindAsync(listenAddress, port)
+               .GetAwaiter()
+               .GetResult();
         }
     }
 }

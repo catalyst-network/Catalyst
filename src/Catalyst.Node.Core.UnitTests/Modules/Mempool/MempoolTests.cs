@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -57,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             store.Get(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)))
                .Returns(transaction);
             store.TryGet(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)),
-                        out Arg.Any<Transaction>())     
+                    out Arg.Any<Transaction>())
                .Returns(ci =>
                 {
                     ci[1] = transaction;
@@ -65,7 +67,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                 });
         }
 
-        private class ProducerConsumer
+        private sealed class ProducerConsumer
         {
             private static readonly object Locker = new object();
             private readonly IRepository<Transaction, TransactionSignature> _keyValueStore;
@@ -84,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
                 lock (Locker)
                 {
                     var id = Thread.CurrentThread.ManagedThreadId;
-                    transaction = TransactionHelper.GetTransaction(standardAmount: (uint)id);
+                    transaction = TransactionHelper.GetTransaction(standardAmount: (uint) id);
 
                     if (FirstThreadId == null)
                     {
@@ -124,7 +126,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             const int numTx = 10;
             for (var i = 0; i < numTx; i++)
             {
-                var transaction = TransactionHelper.GetTransaction(standardAmount: (uint) i, signature:$"key{i}");
+                var transaction = TransactionHelper.GetTransaction(standardAmount: (uint) i, signature: $"key{i}");
                 _memPool.SaveTransaction(transaction);
                 AddKeyValueStoreEntryExpectation(transaction, _transactionStore);
             }
@@ -153,11 +155,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             AddKeyValueStoreEntryExpectation(_transaction, _transactionStore);
 
             var overridingTransaction = _transaction.Clone();
-            overridingTransaction.STEntries.Single().Amount = expectedAmount +100;
+            overridingTransaction.STEntries.Single().Amount = expectedAmount + 100;
             _memPool.SaveTransaction(overridingTransaction);
 
             var retrievedTransaction = _memPool.GetTransaction(_transaction.Signature);
-            retrievedTransaction.STEntries.Single().Amount.Should().Be(expectedAmount); 
+            retrievedTransaction.STEntries.Single().Amount.Should().Be(expectedAmount);
         }
 
         [Fact]

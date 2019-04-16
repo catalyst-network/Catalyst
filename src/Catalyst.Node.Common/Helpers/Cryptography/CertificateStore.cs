@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -32,7 +34,7 @@ using Catalyst.Node.Common.Helpers.Util;
 
 namespace Catalyst.Node.Common.Helpers.Cryptography
 {
-    public class CertificateStore : ICertificateStore
+    public sealed class CertificateStore : ICertificateStore
     {
         private const int PasswordReTries = 1;
         private const string LocalHost = "localhost";
@@ -50,19 +52,21 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         public X509Certificate2 ReadOrCreateCertificateFile(string pfxFilePath)
         {
             var foundCertificate = TryGet(pfxFilePath, out var certificate);
-            
+
             if (foundCertificate)
             {
                 return certificate;
             }
 
-            if (Environment.OSVersion.Platform == PlatformID.Unix) {
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
                 throw new PlatformNotSupportedException(
                     "Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
                     $"Please create a password protected certificate at {pfxFilePath}." +
                     Environment.NewLine +
                     "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
             }
+
             certificate = CreateAndSaveSelfSignedCertificate(pfxFilePath);
 
             return certificate;
@@ -72,7 +76,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         {
             var promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
-            using (var password = _passwordReader.ReadSecurePassword(promptMessage))
+            using(var password = _passwordReader.ReadSecurePassword(promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -87,6 +91,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             {
                 targetDirInfo.Create();
             }
+
             var certificateInBytes = certificate.Export(X509ContentType.Pfx, password);
             var fullPathToCertificate = Path.Combine(targetDirInfo.FullName, fileName);
             File.WriteAllBytes(fullPathToCertificate, certificateInBytes);
@@ -119,7 +124,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                 {
                     try
                     {
-                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
+                        using(var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             break;
@@ -130,7 +135,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                         StringUtil.StringComparatorException(ex.Message.ToLowerInvariant(), "password");
 
                         PasswordAttemptCounter(ex.Message, fullPath);
-                    }   
+                    }
                 }
             }
             catch (Exception exception)
@@ -165,8 +170,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             sanBuilder.AddDnsName(Environment.MachineName);
 
             var distinguishedName = new X500DistinguishedName($"CN={commonName}");
-
-            using (var rsa = RSA.Create(2048))
+            using(var rsa = RSA.Create(2048))
             {
                 var request = new CertificateRequest(distinguishedName, rsa, HashAlgorithmName.SHA256,
                     RSASignaturePadding.Pkcs1);

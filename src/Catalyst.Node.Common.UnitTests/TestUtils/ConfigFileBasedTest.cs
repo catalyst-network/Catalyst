@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System.IO;
@@ -31,11 +33,10 @@ using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Common.UnitTests.TestUtils 
+namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
-
-    public class ConfigFileBasedTest : FileSystemBasedTest {
-
+    public class ConfigFileBasedTest : FileSystemBasedTest
+    {
         protected ContainerBuilder ContainerBuilder;
         protected ConfigFileBasedTest(ITestOutputHelper output) : base(output) { }
 
@@ -59,7 +60,7 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
 
             var passwordReader = new TestPasswordReader();
             ContainerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
-            
+
             var certificateStore = new TestCertificateStore();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
 
@@ -71,11 +72,17 @@ namespace Catalyst.Node.Common.UnitTests.TestUtils
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
 
-            if (writeLogsToTestOutput) loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
+            if (writeLogsToTestOutput)
+            {
+                loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
+            }
 
-            if (writeLogsToFile) loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
-                outputTemplate: LogOutputTemplate);
-            
+            if (writeLogsToFile)
+            {
+                loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, "Catalyst.Node.log"), LogEventLevel,
+                    LogOutputTemplate);
+            }
+
             ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
         }
     }

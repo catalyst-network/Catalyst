@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -8,15 +9,16 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 2 of the License, or
 * (at your option) any later version.
-* 
+*
 * Catalyst.Node is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System.Collections.Generic;
@@ -25,7 +27,7 @@ using System.Net;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Enumerator;
 using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
@@ -34,7 +36,7 @@ namespace Catalyst.Node.Core.P2P
     /// <summary>
     ///     Peer settings class.
     /// </summary>
-    public class PeerSettings : IPeerSettings
+    public sealed class PeerSettings : IPeerSettings
     {
         /// <summary>
         ///     Set attributes
@@ -56,8 +58,8 @@ namespace Catalyst.Node.Core.P2P
             MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
             AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
             MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
-            KnownNodes = section.GetSection("KnownNodes").GetChildren().Select(p => p.Value).ToList();
-            SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
+            KnownNodes = Enumerable.ToList(section.GetSection("KnownNodes").GetChildren().Select(p => p.Value));
+            SeedServers = Enumerable.ToList(section.GetSection("SeedServers").GetChildren().Select(p => p.Value));
             AnnounceServer =
                 Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
         }
