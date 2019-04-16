@@ -25,11 +25,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Helpers.Extensions;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
 using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -38,13 +44,14 @@ using Peer = Catalyst.Node.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerDiscovery : IPeerDiscovery
+    public sealed class PeerDiscovery : IPeerDiscovery, IDisposable
     {
         public IDns Dns { get; }
         public ILogger Logger { get; }
         public IList<string> SeedNodes { get; }
         public IList<IPEndPoint> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
+        private IDisposable _streamSubscription;
 
         /// <summary>
         /// </summary>
@@ -110,6 +117,20 @@ namespace Catalyst.Node.Core.P2P
             }
         }
 
+        public void StartObserving(IObservable<IChanneledMessage<AnySigned>> observer)
+        {
+            _streamSubscription = observer
+               .Where(m => m != null && m.Payload.TypeUrl == typeof(PingResponse)
+                   .ShortenedProtoFullName()
+                ).Subscribe(PrintIt);
+        }
+
+        private void PrintIt(IChanneledMessage<AnySigned> message)
+        {
+            Logger.Information("peer discovery stream");
+            Logger.Information(message.Payload.TypeUrl.ToString());
+        }
+
         private async Task PeerCrawler()
         {
             if (Peers.Count == 0)
@@ -123,6 +144,20 @@ namespace Catalyst.Node.Core.P2P
                     Logger.Error(e.Message);
                     throw;
                 }
+            }
+        }
+        
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Logger.Information($"Disposing {GetType().Name}");
+                _streamSubscription?.Dispose();
             }
         }
     }

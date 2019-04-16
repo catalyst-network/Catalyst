@@ -178,7 +178,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 using (rpcServer.MessageStream.Subscribe(serverObserver))
                 {
-                    using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
+                    using (nodeRpcClient.StartObserving(clientObserver))
                     {
                         var request = new VersionRequest();
                         var peerSettings = new PeerSettings(_config);
@@ -224,7 +224,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var clientObserver = new AnySignedMessageObserver(1, logger);
 
                 using (rpcServer.MessageStream.Subscribe(serverObserver))
-                using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
+                using (nodeRpcClient.StartObserving(clientObserver))
                 {
                     var request = new GetMempoolRequest();
                     var peerSettings = new PeerSettings(_config);
@@ -268,7 +268,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var clientObserver = new AnySignedMessageObserver(1, logger);
 
                 using (rpcServer.MessageStream.Subscribe(serverObserver))
-                using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
+                using (nodeRpcClient.StartObserving(clientObserver))
                 {
                     var message = "lol";
                     var request = new SignMessageRequest();

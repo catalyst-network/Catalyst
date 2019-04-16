@@ -21,15 +21,11 @@
 
 #endregion
 
-using System;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Protocol.Common;
-
-namespace Catalyst.Node.Common.Interfaces.Rpc
+namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
-    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned>, IActiveObserver
+    public interface IMessageDto<out TMessageType> where TMessageType : class, IEnummerableMessageType
     {
-        void Dispose();
+        IPeerIdentifier PeerIdentifier { get; }
+        TMessageType Type { get; }
     }
 }

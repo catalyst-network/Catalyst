@@ -21,12 +21,19 @@
 
 #endregion
 
-namespace Catalyst.Node.Common.P2P
+using System.Net;
+using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
+using DotNetty.Transport.Channels.Sockets;
+using Google.Protobuf;
+
+namespace Catalyst.Node.Common.Helpers.Extensions
 {
-    public enum P2PMessageType
+    public static class DatagramExtensions
     {
-        PingRequest,
-        PingResponse,
-        TransactionRequest
+        public static DatagramPacket ToDatagram(this AnySigned anySignedMessage, IPEndPoint recipient)
+        {
+            return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
+        }
     }
 }

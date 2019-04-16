@@ -341,7 +341,7 @@ namespace Catalyst.Cli
             {
                 //Connect to the node and store it in the socket client registry
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
-
+                var subscription = nodeRpcClient.StartObserving(this);
                 var clientHashCode =
                     _socketClientRegistry.GenerateClientHashCode(
                         EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));

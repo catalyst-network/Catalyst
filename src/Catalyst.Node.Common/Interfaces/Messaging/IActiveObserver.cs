@@ -23,13 +23,17 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Interfaces.Rpc
+namespace Catalyst.Node.Common.Interfaces.Messaging
 {
-    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned>, IActiveObserver
+    public interface IActiveObserver
     {
-        void Dispose();
+        /// <summary>
+        ///     Used when the observer wants to subscribe to a stream, and return the a disposable subscription.
+        /// </summary>
+        /// <param name="observer"></param>
+        /// <returns>The subscription as an IDisposable</returns>
+        IDisposable StartObserving(IObserver<IChanneledMessage<AnySigned>> observer);
     }
 }

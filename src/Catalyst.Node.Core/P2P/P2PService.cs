@@ -63,10 +63,12 @@ namespace Catalyst.Node.Core.P2P
             {
                 protoDatagramChannelHandler
             };
-
+            
             Bootstrap(new InboundChannelInitializer<IChannel>(channel => { },
                 channelHandlers
             ), settings.BindAddress, settings.Port);
+
+            peerDiscovery.StartObserving(MessageStream);
         }
     }
 }

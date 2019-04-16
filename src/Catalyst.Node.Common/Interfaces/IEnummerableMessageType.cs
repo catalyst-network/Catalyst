@@ -21,25 +21,14 @@
 
 #endregion
 
-using System.Net;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
-using Google.Protobuf;
+using System;
+using Catalyst.Node.Common.Helpers.Enumerator;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Interfaces
 {
-    public static class DatagramFactory
+    public interface IEnummerableMessageType : IEquatable<Enumeration>
     {
-        /// <summary>
-        ///     Returns a fully initialised Datagram.
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="recipient"></param>
-        /// <returns></returns>
-        public static IByteBufferHolder Create(AnySigned message, IPEndPoint recipient)
-        {
-            return new DatagramPacket(Unpooled.WrappedBuffer(message.ToByteArray()), recipient);
-        }
+        string Name { get; }        
     }
 }
+

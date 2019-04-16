@@ -23,13 +23,16 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Interfaces.Rpc
-{
-    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned>, IActiveObserver
+namespace Catalyst.Node.Common.Interfaces.Messaging
+{   
+    public interface IPassiveObserver
     {
-        void Dispose();
+        /// <summary>
+        ///     Used when class wants to consume an observable stream and not return any subscription.
+        /// </summary>
+        /// <param name="observer"></param>
+        void StartObserving(IObservable<IChanneledMessage<AnySigned>> observer);
     }
 }
