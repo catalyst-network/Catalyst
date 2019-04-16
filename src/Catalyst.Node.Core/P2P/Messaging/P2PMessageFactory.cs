@@ -36,7 +36,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 {
     public sealed class P2PMessageFactory<TMessage, TMessageType> : AbstractMessageFactory<TMessage, TMessageType> 
         where TMessage : class, IMessage<TMessage>
-        where TMessageType : class, IEnummerableMessageType
+        where TMessageType : class, IEnumerableMessageType
     {
         public IByteBufferHolder GetMessageInDatagramEnvelope(IP2PMessageDto<TMessage, TMessageType> dto)
         {

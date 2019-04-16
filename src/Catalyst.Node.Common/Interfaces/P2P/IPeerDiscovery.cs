@@ -21,21 +21,17 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IPeerDiscovery : IPassiveObserver
+    public interface IPeerDiscovery
     {
         IDns Dns { get; }
         ILogger Logger { get; }

@@ -99,19 +99,13 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 var cid = Guid.NewGuid();
                 var channeledAny = new ChanneledAnySigned(fakeContext, pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
             
-                var observableStream = new[] {channeledAny}.ToObservable()
-                   .DelaySubscription(TimeSpan.FromMilliseconds(50));
+                var observableStream = new[] {channeledAny}.ToObservable();
             
                 var handler = new PingRequestHandler(pid, logger);
                 handler.StartObserving(observableStream);
-
-                Thread.Sleep(500);
             
                 fakeContext.Channel.ReceivedWithAnyArgs(1)
-                   .WriteAndFlushAsync(
-                        new PingResponse()
-                           .ToAnySigned(pid.PeerId, cid)
-                    );
+                   .WriteAndFlushAsync(new PingResponse().ToAnySigned(pid.PeerId, cid));
             }          
         }
         

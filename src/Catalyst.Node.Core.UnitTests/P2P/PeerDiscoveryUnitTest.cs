@@ -148,32 +148,22 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Fact]
-        public void CanSubscribeToAStream()
+        public void CanReceiveEventsFromSubscribedStream()
         {
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
-            var stream = Substitute.For<IObservable<IChanneledMessage<AnySigned>>>();
-            peerDiscovery.StartObserving(stream);
-        }
-
-        [Fact]
-        public void CanReceiveEventsFromSubscribedStream()
-        {
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var subbedPeerDiscovery = Substitute.For<IPeerDiscovery>();
-
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-            var channeledAny = new ChanneledAnySigned(fakeContext, pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+            var channeledAny = new ChanneledAnySigned(fakeContext, 
+                pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
             
-            var observableStream = new[] {channeledAny}.ToObservable()
-               .DelaySubscription(TimeSpan.FromMilliseconds(50));
-            
-            subbedPeerDiscovery.StartObserving(observableStream);
+            var observableStream = new[] {channeledAny}.ToObservable();
 
-            fakeContext.Channel.ReceivedWithAnyArgs(1);         
-            
-            Thread.Sleep(500);   
+            peerDiscovery.StartObserving(observableStream);
+
+            _peerRepository.Received(1)
+               .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));
         }
     }
 }

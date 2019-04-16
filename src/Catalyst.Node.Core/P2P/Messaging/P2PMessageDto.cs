@@ -34,7 +34,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
 {
     public sealed class P2PMessageDto<TMessage, TMessageType> : IP2PMessageDto<TMessage, TMessageType>
         where TMessage : class, IMessage
-        where TMessageType : class, IEnummerableMessageType
+        where TMessageType : class, IEnumerableMessageType
     {
         public TMessageType Type { get; }
         public TMessage Message { get; }

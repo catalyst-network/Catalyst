@@ -26,7 +26,7 @@ using Catalyst.Node.Common.Helpers.Enumerator;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface IEnummerableMessageType : IEquatable<Enumeration>
+    public interface IEnumerableMessageType : IEquatable<Enumeration>
     {
         string Name { get; }        
     }

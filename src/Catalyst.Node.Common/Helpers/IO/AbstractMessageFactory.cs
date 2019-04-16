@@ -33,7 +33,7 @@ namespace Catalyst.Node.Common.Helpers.IO
 {
     public abstract class AbstractMessageFactory<TMessage, TMessageType>
         where TMessage : class, IMessage<TMessage>
-        where TMessageType : class, IEnummerableMessageType
+        where TMessageType : class, IEnumerableMessageType
     {
         /// <summary>
         ///     Switch returns message or throws an exception for unknown message type

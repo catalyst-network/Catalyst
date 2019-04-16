@@ -35,7 +35,7 @@ namespace Catalyst.Node.Core.Rpc.Messaging
 {
     public class RpcMessageFactory<TMessage, TMessageType> : AbstractMessageFactory<TMessage, TMessageType>
         where TMessage : class, IMessage<TMessage>
-        where TMessageType : class, IEnummerableMessageType
+        where TMessageType : class, IEnumerableMessageType
     {
         public override AnySigned GetMessage(IP2PMessageDto<TMessage, TMessageType> dto)
         {

@@ -26,7 +26,7 @@ using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Common.Helpers.Config
 {
-    public class P2PMessages : Enumeration, IEnummerableMessageType
+    public class P2PMessages : Enumeration, IEnumerableMessageType
     {
         public static readonly P2PMessages PingRequest = new PingRequestMessage();
         public static readonly P2PMessages PingResponse = new PingResponseMessage();
