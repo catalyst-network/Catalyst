@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ContainerBuilder.RegisterType<NodeRpcClientFactory>().As<INodeRpcClientFactory>();
         }
 
-        [Fact(Skip = "test hanger")]
+        [Fact(Skip="test hanger")]
         public void ServerConnectedToCorrectPort()
         {
             var container = ContainerBuilder.Build();
