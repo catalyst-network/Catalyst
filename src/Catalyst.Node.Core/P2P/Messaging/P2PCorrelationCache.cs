@@ -47,6 +47,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         public P2PCorrelationCache(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default) 
             : base(cache, logger, cacheTtl)
         {
+            logger.Debug("P2PCorrelationCache resolved once");
             _ratingChangeSubject = new ReplaySubject<IPeerReputationChange>(0);
         }
 

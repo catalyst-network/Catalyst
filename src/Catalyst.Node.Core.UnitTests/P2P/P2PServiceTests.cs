@@ -125,10 +125,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
 
-                    var datagramEnvelope = new P2PMessageFactory<PingRequest, P2PMessages>().GetMessageInDatagramEnvelope(
-                        new P2PMessageDto<PingRequest, P2PMessages>(
+                    var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
+                        new P2PMessageDto<PingResponse, P2PMessages>(
                             P2PMessages.PingRequest,
-                            new PingRequest(),
+                            new PingResponse(),
                             targetHost,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
                         )
