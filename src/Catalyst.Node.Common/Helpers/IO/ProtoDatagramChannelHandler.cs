@@ -42,7 +42,7 @@ namespace Catalyst.Node.Common.Helpers.IO
             Guard.Argument(context).NotNull();
             Guard.Argument(packet.Content.ReadableBytes).NotZero().NotNegative();
 
-            using (MemoryStream memoryStream = new MemoryStream())
+            using(MemoryStream memoryStream = new MemoryStream())
             {
                 memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
                 memoryStream.Seek(0, SeekOrigin.Begin);

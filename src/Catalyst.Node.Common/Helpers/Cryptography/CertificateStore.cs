@@ -76,7 +76,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
         {
             var promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
-            using (var password = _passwordReader.ReadSecurePassword(promptMessage))
+            using(var password = _passwordReader.ReadSecurePassword(promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -124,7 +124,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
                 {
                     try
                     {
-                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
+                        using(var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             break;
@@ -170,7 +170,7 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
             sanBuilder.AddDnsName(Environment.MachineName);
 
             var distinguishedName = new X500DistinguishedName($"CN={commonName}");
-            using (var rsa = RSA.Create(2048))
+            using(var rsa = RSA.Create(2048))
             {
                 var request = new CertificateRequest(distinguishedName, rsa, HashAlgorithmName.SHA256,
                     RSASignaturePadding.Pkcs1);
