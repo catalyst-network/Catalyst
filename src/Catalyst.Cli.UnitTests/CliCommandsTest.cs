@@ -68,15 +68,15 @@ namespace Catalyst.Cli.UnitTests
             ConfigureContainerBuilder(config);
 
             ContainerBuilder.RegisterInstance(_nodeRpcClientFactory).As<INodeRpcClientFactory>();
-            ContainerBuilder.RegisterInstance(nodeRpcClient).As<INodeRpcClient>();
         }
 
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
-        [Fact] public void Cli_Can_Connect_To_Node()
+        [Fact]
+        public void Cli_Can_Connect_To_Node()
         {
             var container = ContainerBuilder.Build();
-            using(container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
@@ -84,10 +84,11 @@ namespace Catalyst.Cli.UnitTests
             }
         }
 
-        [Fact] public void Cli_Can_Handle_Multiple_Connection_Attempts()
+        [Fact]
+        public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
             var container = ContainerBuilder.Build();
-            using(container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 for (int i = 0; i < 10; i++)
@@ -98,10 +99,11 @@ namespace Catalyst.Cli.UnitTests
             }
         }
 
-        [Fact] public void Cli_Can_Request_Node_Config()
+        [Fact]
+        public void Cli_Can_Request_Node_Config()
         {
             var container = ContainerBuilder.Build();
-            using(container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
@@ -112,10 +114,11 @@ namespace Catalyst.Cli.UnitTests
             }
         }
 
-        [Fact] public void Cli_Can_Request_Node_Version()
+        [Fact]
+        public void Cli_Can_Request_Node_Version()
         {
             var container = ContainerBuilder.Build();
-            using(container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
@@ -131,7 +134,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var container = ContainerBuilder.Build();
 
-            using(container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
 
@@ -151,7 +154,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var container = ContainerBuilder.Build();
             
-            using(container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 
@@ -168,7 +171,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var container = ContainerBuilder.Build();
 
-            using(container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");

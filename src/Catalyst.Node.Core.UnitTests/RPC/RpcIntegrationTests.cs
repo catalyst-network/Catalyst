@@ -93,10 +93,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void ServerConnectedToCorrectPort()
         {
             var container = ContainerBuilder.Build();
-            using(var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var rpcServer = container.Resolve<INodeRpcServer>();
-                using(var client = new TcpClient(rpcServer.Settings.BindAddress.ToString(),
+                using (var client = new TcpClient(rpcServer.Settings.BindAddress.ToString(),
                     rpcServer.Settings.Port))
                 {
                     client.Should().NotBeNull();
@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void RpcServer_Can_Handle_GetInfoRequest()
         {
             var container = ContainerBuilder.Build();
-            using(var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
@@ -127,9 +127,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var serverObserver = new AnySignedMessageObserver(0, logger);
                 var clientObserver = new AnySignedMessageObserver(1, logger);
 
-                using(rpcServer.MessageStream.Subscribe(serverObserver))
+                using (rpcServer.MessageStream.Subscribe(serverObserver))
                 {
-                    using(nodeRpcClient.MessageStream.Subscribe(clientObserver))
+                    using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
                     {
                         var request = new GetInfoRequest();
                         var peerSettings = new PeerSettings(_config);
@@ -162,7 +162,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void RpcServer_Can_Handle_GetVersionRequest()
         {
             var container = ContainerBuilder.Build();
-            using(var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
@@ -176,9 +176,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var serverObserver = new AnySignedMessageObserver(0, logger);
                 var clientObserver = new AnySignedMessageObserver(1, logger);
 
-                using(rpcServer.MessageStream.Subscribe(serverObserver))
+                using (rpcServer.MessageStream.Subscribe(serverObserver))
                 {
-                    using(nodeRpcClient.MessageStream.Subscribe(clientObserver))
+                    using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
                     {
                         var request = new VersionRequest();
                         var peerSettings = new PeerSettings(_config);
@@ -209,7 +209,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void RpcServer_Can_Handle_GetMempoolRequest()
         {
             var container = ContainerBuilder.Build();
-            using(var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
@@ -223,8 +223,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var serverObserver = new AnySignedMessageObserver(0, logger);
                 var clientObserver = new AnySignedMessageObserver(1, logger);
         
-                using(rpcServer.MessageStream.Subscribe(serverObserver))
-                using(nodeRpcClient.MessageStream.Subscribe(clientObserver))
+                using (rpcServer.MessageStream.Subscribe(serverObserver))
+                using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
                 {
                     var request = new GetMempoolRequest();
                     var peerSettings = new PeerSettings(_config);
@@ -252,7 +252,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void RpcServer_Can_Handle_SignMessageRequest()
         {
             var container = ContainerBuilder.Build();
-            using(var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
@@ -267,8 +267,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 var serverObserver = new AnySignedMessageObserver(0, logger);
                 var clientObserver = new AnySignedMessageObserver(1, logger);
 
-                using(rpcServer.MessageStream.Subscribe(serverObserver))
-                using(nodeRpcClient.MessageStream.Subscribe(clientObserver))
+                using (rpcServer.MessageStream.Subscribe(serverObserver))
+                using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
                 {
                     var message = "lol";
                     var request = new SignMessageRequest();

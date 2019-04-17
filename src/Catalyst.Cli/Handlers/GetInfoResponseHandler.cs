@@ -23,9 +23,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,14 +43,16 @@ namespace Catalyst.Cli.Handlers
     /// </summary>
     public sealed class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>, IRpcResponseHandler
     {
-        /// <summary>
-        /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
-        /// </summary>
-        /// <param name="messageStream">The message stream the handler is listening to through which the handler will
-        /// receive the response from the server.</param>
+        private readonly IUserOutput _output;
+
+        /// <inheritdoc />
+        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetInfoResponseHandler(ILogger logger) 
-            : base(logger) { }
+        public GetInfoResponseHandler(IUserOutput output, ILogger logger) 
+            : base(logger)
+        {
+            _output = output;
+        }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="GetInfoResponseHandler" />.
@@ -56,38 +60,18 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">An object of GetInfoResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            Guard.Argument(message).NotNull();
-            
             Logger.Debug("Handling GetInfoResponse");
             
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
-
-                Guard.Argument(deserialised.Query).NotNull();
-                    
-                var result = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(deserialised.Query);
-
-                if (result == null)
-                {
-                    Console.WriteLine(@"No config found.");
-                    return;
-                }
-
-                Console.WriteLine(@"[");
-
-                foreach (var item in result)
-                {
-                    Console.WriteLine(@"Key = {0}, Value = {1}", item.Key, item.Value);
-                }
-                                
-                Console.WriteLine(@"]");
+                _output.WriteLine(deserialised.Query);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
                     "Failed to handle GetInfoResponse after receiving message {0}", message);
-                throw;
+                _output.WriteLine(ex.Message);
             }
         }
     }

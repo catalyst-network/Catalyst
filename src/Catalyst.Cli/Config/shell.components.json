@@ -26,6 +26,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Common.Helpers.Shell.ConsoleUserOutput, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IUserOutput, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
             "services": [
                 {
