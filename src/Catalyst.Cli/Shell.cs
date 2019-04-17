@@ -46,7 +46,7 @@ using Catalyst.Node.Common.Interfaces.Rpc;
 
 namespace Catalyst.Cli
 {
-    public sealed class Shell : ShellBase, IAdvancedShell, IObserver<IChanneledMessage<AnySigned>>
+    public sealed class Shell : ShellBase, IAdvancedShell
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly ICertificateStore _certificateStore;
@@ -54,7 +54,6 @@ namespace Catalyst.Cli
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
 
-        private IChanneledMessage<AnySigned> Response { get; set; }
         private readonly ILogger _logger;
 
         private const string NoConfigMessage =
@@ -346,7 +345,6 @@ namespace Catalyst.Cli
             {
                 //Connect to the node and store it in the socket client registry
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
-
                 var clientHashCode =
                     _socketClientRegistry.GenerateClientHashCode(
                         EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
@@ -640,27 +638,6 @@ namespace Catalyst.Cli
         private void ReturnUserMessage(string message)
         {
             Console.WriteLine(message);
-        }
-
-        public void OnCompleted()
-        {
-            //Do nothing because this method should include logic to do after the observer
-            //receives a message and handles it.
-        }
-
-        public void OnError(Exception error)
-        {
-            _logger.Error($"RpcClient observer received error : {error.Message}");
-        }
-
-        public void OnNext(IChanneledMessage<AnySigned> value)
-        {
-            if (value == null)
-            {
-                return;
-            }
-
-            Response = value;
         }
     }
 }
