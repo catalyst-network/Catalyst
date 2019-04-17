@@ -27,8 +27,11 @@ using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
@@ -38,14 +41,24 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetMempool request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public class SignMessageResponseHandler : AbstractCorrelatableAbstractMessageHandler<SignMessageResponse, IMessageCorrelationCache>, IRpcResponseHandler
+    public sealed class SignMessageResponseHandler
+        : AbstractCorrelatableAbstractMessageHandler<SignMessageResponse, IMessageCorrelationCache>,
+            IRpcResponseHandler
     {
+        private readonly IUserOutput _output;
+
         /// <summary>
         /// </summary>
+        /// <param name="output"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public SignMessageResponseHandler(IMessageCorrelationCache messageCorrelationCache,
-            ILogger logger) : base(messageCorrelationCache, logger) { }
+        public SignMessageResponseHandler(IUserOutput output,
+            IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger)
+            : base(messageCorrelationCache, logger)
+        {
+            _output = output;
+        }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see />.
@@ -55,27 +68,27 @@ namespace Catalyst.Cli.Handlers
         {
             try
             {
-                Logger.Debug("Handling SignMessageResponse");
-
                 var deserialised = message.Payload.FromAnySigned<SignMessageResponse>();
 
-                //decode the received message
                 var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray())[0].RLPData;
 
-                //get the original message from the decoded message
+                Guard.Argument(decodeResult).NotNull();
+
                 var originalMessage = decodeResult.ToStringFromRLPDecoded();
 
-                //return to the user the signature, public key and the original message that he sent to be signed
-                Logger.Information(@"Signature: {0}
-Public Key: {1}
-Original Message: ""{2}""", deserialised.Signature.ToBase64(),
-                    deserialised.PublicKey.ToBase64(), originalMessage);
+                _output.WriteLine(
+                    $"Signature: {Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray())}\n" +
+                    $"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray())}\nOriginal Message: {originalMessage}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetMempoolResponse after receiving message {0}", message);
-                throw;
+                    "Failed to handle SignMessageResponseHandler after receiving message {0}", message);
+                _output.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Logger.Information("Press Enter to continue ...");
             }
         }
     }

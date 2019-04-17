@@ -32,7 +32,9 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class TransactionHandler : AbstractReputationAskHandler<Transaction, IReputableCache>, IP2PMessageHandler
+    public sealed class TransactionHandler
+        : AbstractReputationAskHandler<Transaction, IReputableCache>,
+            IP2PMessageHandler
     {
         public TransactionHandler(IReputableCache reputableCache,
             ILogger logger)

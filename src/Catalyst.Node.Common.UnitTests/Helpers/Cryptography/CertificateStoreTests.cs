@@ -99,8 +99,7 @@ namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
             _retrievedCertificate?.Dispose();
         }
 
-        [Fact]
-        public void CertificateStore_CanReadAndWriteCertFiles_WithPassword()
+        [Fact] public void CertificateStore_CanReadAndWriteCertFiles_WithPassword()
         {
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {

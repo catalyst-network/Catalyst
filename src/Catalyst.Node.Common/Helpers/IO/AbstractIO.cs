@@ -52,7 +52,10 @@ namespace Catalyst.Node.Common.Helpers.IO
 
             if (WorkerEventLoop != null)
             {
-                await WorkerEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
+                var quietPeriod = TimeSpan.FromMilliseconds(100);
+                await WorkerEventLoop
+                   .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
+                   .ConfigureAwait(false);
             }
         }
 

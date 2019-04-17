@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Protocol.Transaction;
 using Catalyst.Node.Common.Helpers.Extensions;
+using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils
+namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
     public static class TransactionHelper
     {

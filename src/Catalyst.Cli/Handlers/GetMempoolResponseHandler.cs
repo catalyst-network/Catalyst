@@ -27,6 +27,7 @@ using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -38,15 +39,27 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetMempool request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    internal sealed class GetMempoolResponseHandler : AbstractCorrelatableAbstractMessageHandler<GetMempoolResponse, IMessageCorrelationCache>, IRpcResponseHandler
+    public sealed class GetMempoolResponseHandler
+        : AbstractCorrelatableAbstractMessageHandler<GetMempoolResponse, IMessageCorrelationCache>,
+            IRpcResponseHandler
     {
+        private readonly IUserOutput _output;
+
         /// <summary>
         /// Constructor. Calls the base class <see cref="AbstractCorrelatableAbstractMessageHandler{TProto,TCorrelator}"/> constructor.
+        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
+        /// <param name="logger">Logger to log debug related information.</param>
         /// </summary>
+        /// <param name="output"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetMempoolResponseHandler(IMessageCorrelationCache messageCorrelationCache,
-            ILogger logger) : base(messageCorrelationCache, logger) { }
+        public GetMempoolResponseHandler(IUserOutput output,
+            IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger)
+            : base(messageCorrelationCache, logger)
+        {
+            _output = output;
+        }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
@@ -56,24 +69,22 @@ namespace Catalyst.Cli.Handlers
         {
             try
             {
-                Logger.Debug("Handling GetMempoolResponse");
-
                 var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
 
-                int index = 0;
-
-                foreach (string encodedTx in deserialised.Info.Values)
+                foreach (var encodedTx in deserialised.Info.Values)
                 {
-                    index++;
-
-                    // Console.WriteLine(@"t{0}: {1},", index, encodedTx); TODO why?
+                    _output.WriteLine($"t{deserialised.Info.Values.GetEnumerator().Current}: {encodedTx},");
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
                     "Failed to handle GetMempoolResponse after receiving message {0}", message);
-                throw;
+                _output.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Logger.Information("Press Enter to continue ...");
             }
         }
     }

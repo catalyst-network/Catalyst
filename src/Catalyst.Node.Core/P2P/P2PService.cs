@@ -25,10 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.IO;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
@@ -40,22 +38,15 @@ namespace Catalyst.Node.Core.P2P
 {
     public sealed class P2PService : UdpServer, IP2PService
     {
-        private readonly IReputableCache _reputableCache;
-        private readonly ISocketClientRegistry<IPeerClient> _socketClientRegistry;
-
         public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         public P2PService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,
-            IEnumerable<IP2PMessageHandler> messageHandlers,
-            IReputableCache reputableCache)
+            IEnumerable<IP2PMessageHandler> messageHandlers)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            _reputableCache = reputableCache;
             Discovery = peerDiscovery;
-            _socketClientRegistry = new SocketClientRegistry<IPeerClient>();
-
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
 
             MessageStream = protoDatagramChannelHandler.MessageStream;

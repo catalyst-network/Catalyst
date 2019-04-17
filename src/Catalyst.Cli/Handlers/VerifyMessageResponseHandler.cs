@@ -24,10 +24,10 @@
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
@@ -35,51 +35,56 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Cli.Handlers
 {
     /// <summary>
-    /// Handler responsible for handling the server's response for the GetInfo request.
+    /// Handler responsible for handling the server's response for the GetMempool request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public sealed class GetInfoResponseHandler
-        : AbstractReputationAskHandler<GetInfoResponse, IMessageCorrelationCache>,
+    public sealed class VerifyMessageResponseHandler
+        : AbstractCorrelatableAbstractMessageHandler<SignMessageResponse, IMessageCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// 
         /// </summary>
+        /// receive the response from the server.
         /// <param name="output"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetInfoResponseHandler(IUserOutput output,
+        public VerifyMessageResponseHandler(IUserOutput output,
             IMessageCorrelationCache messageCorrelationCache,
-            ILogger logger) 
+            ILogger logger)
             : base(messageCorrelationCache, logger)
         {
             _output = output;
         }
 
         /// <summary>
-        /// Handles the GetInfoResponse message sent from the <see cref="GetInfoResponseHandler" />.
+        /// Handles the VersionResponse message sent from the <see />.
         /// </summary>
-        /// <param name="message">An object of GetInfoResponse</param>
+        /// <param name="message">An object of GetMempoolResponse</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            Logger.Debug("Handling GetInfoResponse");
-            
+        {   
+            Logger.Debug("Handling VerifyMessageResponse");
+
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
-                _output.WriteLine(deserialised.Query);
+                var deserialised = message.Payload.FromAnySigned<VerifyMessageResponse>();
+
+                //decode the received message
+                var result = deserialised.IsSignedByKey;
+
+                //return to the user the signature, public key and the original message that he sent to be signed
+                _output.WriteLine($"{result.ToString()}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", message);
-                _output.WriteLine(ex.Message);
+                    "Failed to handle VerifyMessageResponse after receiving message {0}", message);
+                throw;
             }
             finally
             {
-                Logger.Information("Press Enter to continue ...");
+                Logger.Information(@"Press Enter to continue ...");
             }
         }
     }

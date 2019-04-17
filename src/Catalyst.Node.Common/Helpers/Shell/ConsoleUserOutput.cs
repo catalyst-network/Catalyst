@@ -22,28 +22,15 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Protocol.Common;
-using Serilog;
-using Catalyst.Protocol.IPPN;
+using Catalyst.Node.Common.Interfaces;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Node.Common.Helpers.Shell
 {
-    public sealed class PingResponseHandler
-        : AbstractReputationAskHandler<PingResponse, IReputableCache>,
-            IP2PMessageHandler
+    public class ConsoleUserOutput : IUserOutput
     {
-        public PingResponseHandler(IReputableCache reputableCache,
-            ILogger logger)
-            : base(reputableCache, logger) { }
-
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        public void WriteLine(string content)
         {
-            Logger.Debug("received ping response");
-            var deserialised = message.Payload.FromAnySigned<PingResponse>();
+            Console.WriteLine(content);
         }
     }
 }

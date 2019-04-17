@@ -137,6 +137,8 @@ namespace Catalyst.Node.Common.Helpers.Cryptography
 
                         PasswordAttemptCounter(ex.Message, fullPath);
                     }
+
+                    tryCount++;
                 }
             }
             catch (Exception exception)

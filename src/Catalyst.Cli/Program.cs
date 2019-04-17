@@ -95,7 +95,7 @@ namespace Catalyst.Cli
                         "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                    .CreateLogger().ForContext(DeclaringType);
 
-                containerBuilder.RegisterLogger();
+                containerBuilder.RegisterLogger(_logger);
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();

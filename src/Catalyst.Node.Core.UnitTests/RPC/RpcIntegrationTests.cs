@@ -209,7 +209,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void RpcServer_Can_Handle_GetMempoolRequest()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();
@@ -222,7 +222,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 );
                 var serverObserver = new AnySignedMessageObserver(0, logger);
                 var clientObserver = new AnySignedMessageObserver(1, logger);
-
+        
                 using (rpcServer.MessageStream.Subscribe(serverObserver))
                 using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
                 {

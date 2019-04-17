@@ -117,7 +117,7 @@ namespace Catalyst.Node.Common.Helpers.Network
         /// </summary>
         /// <param name="port"></param>
         /// <returns></returns>
-        public static bool ValidPortRange(int port) { return 1025 <= port && port <= 65535; }
+        internal static bool ValidPortRange(int port) { return 1025 <= port && port <= 65535; }
 
         /// <summary>
         /// </summary>

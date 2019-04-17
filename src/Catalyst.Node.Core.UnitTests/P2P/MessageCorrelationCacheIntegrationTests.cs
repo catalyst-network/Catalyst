@@ -30,7 +30,6 @@ using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;

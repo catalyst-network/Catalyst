@@ -93,11 +93,15 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args, nameof(args)).NotNull().MinCount(1).NotEmpty();
 
-            return Parser.Default.ParseArguments<GetInfoOptions, ConnectOptions, SignOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, bool>(
+            return Parser.Default.ParseArguments<GetInfoOptions, 
+                    ConnectOptions, 
+                    SignOptions, 
+                    VerifyOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
+                    (VerifyOptions opts) => OnVerifyCommands(opts),
                     errs => false);
         }
 
@@ -113,6 +117,8 @@ namespace Catalyst.Cli
         /// Error messages returned to the user is considered a correct command handling</returns>
         private bool OnGetCommands(GetInfoOptions opts)
         {
+            Guard.Argument(opts).NotNull();
+            
             if (opts.Info)
             {
                 return OnGetConfig(opts);
@@ -141,9 +147,29 @@ namespace Catalyst.Cli
         /// Error messages returned to the user is considered a correct command handling</returns>
         private bool OnSignCommands(SignOptions opts)
         {
+            Guard.Argument(opts).NotNull();
+            
             if (opts.Message.Length > 0)
             {
                 return OnSignMessage(opts);
+            }
+
+            return false;
+        }
+        
+        /// <summary>
+        /// Calls the specific option handler method from one of the "sign" command options based on the options passed
+        /// in by he user through the command line.  The available options are:
+        /// 1- sign message
+        /// </summary>
+        /// <param name="opts">An object of <see cref="SignOptions"/> populated by the parser</param>
+        /// <returns>Returns true if the command was correctly handled. This does not mean that the command ended successfully.
+        /// Error messages returned to the user is considered a correct command handling</returns>
+        private bool OnVerifyCommands(VerifyOptions opts)
+        {
+            if (opts.Message.Length > 0)
+            {
+                return OnVerifyMessage(opts);
             }
 
             return false;
@@ -302,40 +328,19 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public bool OnGetCommand(params string[] args)
-        {
-            Guard.Argument(args, nameof(args)).NotNull().MinCount(2);
-            switch (args[1].ToLower(AppCulture))
-            {
-                case "delta":
-                    return OnGetDelta(args);
-                case "mempool":
-                    return OnGetMempool(args.Skip(2).ToList());
-                case "version":
-                    return OnGetVersion(args);
-                default:
-                    return true;
-            }
-        }
-
-        /// <summary>
         /// Connects a valid and configured node to the RPC server.
         /// </summary>
         /// <param name="nodeId">a string including the node ID.</param>
         /// <returns>Returns true unless an unhandled exception occurs.</returns>
         private bool OnConnectNode(string nodeId)
         {
+            Guard.Argument(nodeId).NotEmpty();
+            
             var rpcNodeConfigs = GetNodeConfig(nodeId);
-
+            
             //Check if there is a connection has already been made to the node
-            if (rpcNodeConfigs == null)
-            {
-                return false;
-            }
-
+            Guard.Argument(rpcNodeConfigs).NotNull();
+            
             try
             {
                 //Connect to the node and store it in the socket client registry
@@ -403,16 +408,11 @@ namespace Catalyst.Cli
         /// Gets the version of a node
         /// </summary>
         /// <returns>Returns true if successful and false otherwise.</returns>
-        protected override bool OnGetVersion(Object opts)
+        protected override bool OnGetVersion(object opts)
         {
-            if (!(opts is GetInfoOptions))
-            {
-                return false;
-            }
+            Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var getInfoOptions = (GetInfoOptions) opts;
-
-            var nodeId = getInfoOptions.NodeId;
+            var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -442,6 +442,8 @@ namespace Catalyst.Cli
         /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
         protected override bool OnGetConfig(object opts)
         {
+            Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
+            
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
@@ -452,6 +454,7 @@ namespace Catalyst.Cli
             {
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
+                
                 node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
@@ -478,11 +481,13 @@ namespace Catalyst.Cli
         /// the node specified in the command and then creates a <see cref="GetMempoolRequest"/> object and sends it in a
         /// message to the RPC server in the node.
         /// </summary>
-        /// <param name="args"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
+        /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
         /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
-        protected override bool OnGetMempool(object args)
+        protected override bool OnGetMempool(object opts)
         {
-            var nodeId = ((GetInfoOptions) args).NodeId;
+            Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
+            
+            var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -505,38 +510,30 @@ namespace Catalyst.Cli
         }
 
         /// <summary>
-        /// Handles the command <code>sign -m "[text message]" -n [node-name]</code>.  The method makes sure first the CLI is connected to
-        /// the node specified in the command and then creates a <see cref="SignMessageRequest"/> object , encodes the text message and sends it in a
-        /// message to the RPC server in the node.
+        /// Sign a message with the private key of an address.
         /// </summary>
         /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
         /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
         public bool OnSignMessage(object opts)
         {
-            if (!(opts is SignOptions))
-            {
-                return false;
-            }
+            Guard.Argument(opts).NotNull().Compatible<SignOptions>();
 
             var signOptions = (SignOptions) opts;
-
-            var message = signOptions.Message;
             var nodeId = signOptions.Node;
 
             //Perform validations required before a command call
             var node = GetConnectedNode(nodeId);
-
             Guard.Argument(node).NotNull();
 
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
                 //send the message to the server by writing it to the channel
-                var request = new SignMessageRequest();
-                var bytesForRlpEncoding = message.Trim('\"').ToBytesForRLPEncoding();
-                var encodedMessage = RLP.EncodeElement(bytesForRlpEncoding);
-
-                request.Message = encodedMessage.ToByteString();
+                var request = new SignMessageRequest
+                {
+                    Message = RLP.EncodeElement(signOptions.Message.Trim('\"').ToBytesForRLPEncoding())
+                       .ToByteString()
+                };
 
                 node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid())).Wait();
             }
@@ -546,6 +543,45 @@ namespace Catalyst.Cli
                 throw;
             }
 
+            return true;
+        }
+
+        /// <summary>
+        /// Verifies a signed message.
+        /// </summary>
+        /// <param name="opts"><see cref="GetInfoOptions"/> object including the options entered through the CLI.</param>
+        /// <returns>True if the message is sent successfully to the node and False otherwise.</returns>
+        public override bool OnVerifyMessage(object opts)
+        {
+            Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
+            
+            //get the message to verify, the address/public key who signed it, and the signature 
+            var verifyOptions = (VerifyOptions) opts;
+            
+            //if the node is connected and there are no other errors then send the get info request to the server
+            try
+            {
+                var node = GetConnectedNode(verifyOptions.Node);
+                Guard.Argument(node).NotNull();
+
+                //create and populate a VerifyMessage request
+                var request = new VerifyMessageRequest
+                {
+                    Message =
+                        RLP.EncodeElement(verifyOptions.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
+                    PublicKey = verifyOptions.Address.ToBytesForRLPEncoding().ToByteString(),
+                    Signature = verifyOptions.Signature.ToBytesForRLPEncoding().ToByteString()
+                };
+
+                //send the message to the server for handling by writing it to the channel
+                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid())).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             return true;
         }
 
