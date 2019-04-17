@@ -22,11 +22,8 @@
 #endregion
 
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -34,45 +31,41 @@ using Dawn;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Messaging
+namespace Catalyst.Node.Common.Helpers.IO
 {
-    public sealed class MessageCorrelationCache : IMessageCorrelationCache
+    public abstract class MessageCorrelationCache : IMessageCorrelationCache
     {
-        public static readonly int BaseReputationChange = 1;
         private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
-        private readonly IMemoryCache _pendingRequests;
-        private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
+        protected readonly IMemoryCache PendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
+        protected readonly ILogger Logger;
 
-        public IObservable<IPeerReputationChange> PeerRatingChanges => _ratingChangeSubject.AsObservable();
         public TimeSpan CacheTtl { get; }
 
-        public MessageCorrelationCache(IMemoryCache cache, TimeSpan cacheTtl = default)
+        protected MessageCorrelationCache(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default)
         {
+            Logger = logger;
             CacheTtl = cacheTtl == default ? DefaultTtl : cacheTtl;
-            _pendingRequests = cache;
-            _ratingChangeSubject = new ReplaySubject<IPeerReputationChange>(0);
+            PendingRequests = cache;
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))
-               .RegisterPostEvictionCallback(ChangeReputationOnEviction);
+               .RegisterPostEvictionCallback(GetInheritorDelegate());
+        }
+
+        protected virtual PostEvictionDelegate GetInheritorDelegate()
+        {
+            Logger.Fatal("MessageCorrelationCache.GetInheritorDelegate() called without inheritor.");
+            throw new NotImplementedException("Inheritors that uses the default constructor must implement the GetInheritorDelegate() method."); 
         }
 
         public void AddPendingRequest(PendingRequest pendingRequest)
         {
-            _pendingRequests.Set(pendingRequest.Content.CorrelationId, pendingRequest, _entryOptions);
+            PendingRequests.Set(pendingRequest.Content.CorrelationId, pendingRequest, _entryOptions);
         }
 
-        private void ChangeReputationOnEviction(object key, object value, EvictionReason reason, object state)
-        {
-            //TODO: find a way to trigger the actual remove with correct reason
-            //when the cache is not under pressure, eviction happens by token expiry :(
-            //if (reason == EvictionReason.Removed) {return;}
-            var pendingRequest = (PendingRequest) value;
-            _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.SentTo, -BaseReputationChange));
-        }
-
-        public TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
+        public virtual TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
             where TRequest : class, IMessage<TRequest>
             where TResponse : class, IMessage<TResponse>
         {
@@ -80,28 +73,24 @@ namespace Catalyst.Node.Core.P2P.Messaging
                .Require(r => typeof(TResponse).ShortenedProtoFullName().Equals(response.TypeUrl))
                .Require(r => typeof(TRequest).ShortenedProtoFullName().Equals(r.TypeUrl.GetRequestType()));
 
-            var found = _pendingRequests.TryGetValue(response.CorrelationId, out PendingRequest matched);
+            var found = PendingRequests.TryGetValue(response.CorrelationId, out PendingRequest matched);
 
             if (!found)
             {
                 return null;
             }
 
-            _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId), BaseReputationChange * 2));
-            _pendingRequests.Remove(response.CorrelationId);
-
             return matched.Content.FromAnySigned<TRequest>();
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
             {
                 return;
             }
 
-            _pendingRequests?.Dispose();
-            _ratingChangeSubject.Dispose();
+            PendingRequests?.Dispose();
         }
 
         public void Dispose()
