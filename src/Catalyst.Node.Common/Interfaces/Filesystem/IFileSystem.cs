@@ -23,7 +23,7 @@
 
 using System.IO;
 
-namespace Catalyst.Node.Common.Interfaces.Filesystem
+namespace Catalyst.Node.Common.Interfaces.FileSystem
 {
     public interface IFileSystem
     {

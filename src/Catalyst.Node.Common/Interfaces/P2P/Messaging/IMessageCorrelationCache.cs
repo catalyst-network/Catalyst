@@ -23,7 +23,6 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 

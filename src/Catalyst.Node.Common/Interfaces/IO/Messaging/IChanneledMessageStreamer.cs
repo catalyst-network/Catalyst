@@ -21,12 +21,17 @@
 
 #endregion
 
-using System.IO;
+using System;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.IO.Messaging
 {
-    public interface IFileSystem
+    public interface IChanneledMessageStreamer<out T> where T : IMessage
     {
-        DirectoryInfo GetCatalystHomeDir();
+        /// <summary>
+        ///     Message stream
+        /// </summary>
+        IObservable<IChanneledMessage<T>> MessageStream { get; }
     }
 }

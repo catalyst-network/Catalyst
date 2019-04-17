@@ -24,8 +24,8 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Cryptography;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.KeyStore;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 
 namespace Catalyst.Node.Common.Modules.KeySigner

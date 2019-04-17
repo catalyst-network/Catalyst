@@ -29,12 +29,9 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.IO;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Network;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
@@ -143,7 +140,7 @@ namespace Catalyst.Node.Core.P2P
                 Reputation = 0
             });
 
-            Logger.Information(message.Payload.TypeUrl.ToString());
+            Logger.Information(message.Payload.TypeUrl);
         }
 
         private async Task PeerCrawler()

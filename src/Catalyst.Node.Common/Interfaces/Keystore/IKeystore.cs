@@ -21,14 +21,14 @@
 
 #endregion
 
-using System.Net;
-using System.Threading.Tasks;
-using DotNetty.Transport.Channels;
+using Catalyst.Node.Common.Interfaces.Cryptography;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.KeyStore
 {
-    public interface IServerBootstrap
+    public interface IKeyStore
     {
-        Task<IChannel> BindAsync(IPAddress ipAddress, int port);
+        IPrivateKey GetKey(IPublicKey publicKey, string password);
+        IPrivateKey GetKey(string filePath, string password);
+        bool StoreKey(IPrivateKey privateKey, string address, string password);
     }
 }

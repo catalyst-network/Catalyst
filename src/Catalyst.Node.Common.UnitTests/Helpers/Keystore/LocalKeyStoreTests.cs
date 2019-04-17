@@ -26,10 +26,9 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Cryptography;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Helpers.Keystore;
 using Catalyst.Node.Common.Helpers.KeyStore;
 using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.KeyStore;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using FluentAssertions;
 using NSec.Cryptography;
@@ -39,7 +38,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Common.UnitTests.Helpers.Keystore
+namespace Catalyst.Node.Common.UnitTests.Helpers.KeyStore
 {
     public sealed class LocalKeyStoreTests : FileSystemBasedTest
     {

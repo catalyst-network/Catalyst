@@ -25,7 +25,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Cryptography;
 using Catalyst.Node.Common.Interfaces.Modules.Consensus;
 using Catalyst.Node.Common.Interfaces.Modules.Contract;
 using Catalyst.Node.Common.Interfaces.Modules.Dfs;
@@ -35,6 +34,7 @@ using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using Serilog;
+using ICertificateStore = Catalyst.Node.Common.Interfaces.Cryptography.ICertificateStore;
 
 namespace Catalyst.Node.Core
 {

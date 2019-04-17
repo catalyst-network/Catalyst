@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using System.Net;
-using Catalyst.Node.Common.Helpers.Config;
 
 namespace Catalyst.Node.Common.Interfaces.P2P
 {

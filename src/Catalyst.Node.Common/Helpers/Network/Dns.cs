@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Network;
 using Dawn;
 using DnsClient;

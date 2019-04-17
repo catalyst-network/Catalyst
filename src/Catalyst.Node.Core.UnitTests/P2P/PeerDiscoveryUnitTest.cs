@@ -26,10 +26,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Core.P2P;
 using NSubstitute;
 using SharpRepository.Repository;
@@ -37,13 +35,11 @@ using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Network;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
 using DotNetty.Transport.Channels;
@@ -92,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             ConfigureContainerBuilder(_config);
 
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerDiscovery = container.Resolve<IPeerDiscovery>();
                 Assert.NotNull(peerDiscovery);

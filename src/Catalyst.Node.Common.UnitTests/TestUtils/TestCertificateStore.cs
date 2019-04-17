@@ -23,7 +23,6 @@
 
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Interfaces.Cryptography;
 

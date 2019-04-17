@@ -23,12 +23,10 @@
 
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
-using Moq;
 using NSubstitute;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -36,8 +34,6 @@ using Autofac;
 using Catalyst.Node.Common.Interfaces.Cli;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using DotNetty.Transport.Channels;
-using Serilog;
-using Serilog.Extensions.Logging;
 
 namespace Catalyst.Cli.UnitTests
 {

@@ -21,9 +21,7 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Cli;
-using Serilog;
 
 namespace Catalyst.Cli
 {
@@ -31,7 +29,7 @@ namespace Catalyst.Cli
     {
         public IAdvancedShell AdvancedShell { get; set; }
 
-        public CatalystCli(IAdvancedShell advancedShell, ILogger logger)
+        public CatalystCli(IAdvancedShell advancedShell)
         {
             AdvancedShell = advancedShell;
         }

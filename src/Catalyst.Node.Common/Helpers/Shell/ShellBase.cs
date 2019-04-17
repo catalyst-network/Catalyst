@@ -24,7 +24,6 @@
 using System;
 using System.Reflection;
 using System.Text;
-using Catalyst.Node.Common.Interfaces;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -154,13 +153,6 @@ namespace Catalyst.Node.Common.Helpers.Shell
         /// </summary>
         /// <returns></returns>
         protected abstract bool OnGetMempool(Object args);
-
-        private static void ShellLogKey(ConsoleKeyInfo key)
-        {
-            Console.WriteLine(key.KeyChar.ToString());
-            Console.WriteLine(' '.ToString());
-            Console.WriteLine(key.KeyChar.ToString());
-        }
 
         /// <summary>
         ///     Runs the main cli ui.

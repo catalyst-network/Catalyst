@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Cryptography;
 using Multiformats.Base;
 using NSec.Cryptography;

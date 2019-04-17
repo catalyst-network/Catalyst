@@ -22,10 +22,8 @@
 #endregion
 
 using System.Net;
-using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
-using Catalyst.Node.Common.P2P;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Interfaces.P2P

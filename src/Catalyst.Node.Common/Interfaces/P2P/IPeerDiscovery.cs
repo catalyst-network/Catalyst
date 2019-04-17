@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Network;
 using Catalyst.Node.Common.P2P;
 using Microsoft.Extensions.Configuration;

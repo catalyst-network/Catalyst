@@ -21,12 +21,20 @@
 
 #endregion
 
-using System.Security.Cryptography.X509Certificates;
+using System;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.IO.Messaging
 {
-    public interface ICertificateStore
+    public interface IMessageHandler
     {
-        X509Certificate2 ReadOrCreateCertificateFile(string fileName);
+        void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream);
     }
+
+    public interface IP2PMessageHandler : IMessageHandler { }
+
+    public interface IRpcRequestHandler : IMessageHandler { }
+
+    public interface IRpcResponseHandler : IMessageHandler { }
 }

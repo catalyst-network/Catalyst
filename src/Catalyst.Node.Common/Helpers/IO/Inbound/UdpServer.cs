@@ -23,7 +23,6 @@
 
 using System.Net;
 using System.Net.Sockets;
-using Catalyst.Node.Common.Interfaces.IO;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
@@ -41,9 +40,11 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
         protected UdpServer(ILogger logger) : base(logger) { }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="channelInitializer"></param>
+        /// <param name="listenAddress"></param>
+        /// <param name="port"></param>
         /// <returns></returns>
         public void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port)
         {

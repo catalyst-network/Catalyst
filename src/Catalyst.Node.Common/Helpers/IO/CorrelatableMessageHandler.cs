@@ -22,7 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
@@ -30,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public abstract class CorrelatableMessageHandler<TProto, TCorrelator> : MessageHandlerBase<TProto>
+    public abstract class CorrelatableMessageHandler<TProto, TCorrelator> : AbstractMessageHandlerBase<TProto>
         where TProto : IMessage
         where TCorrelator : IMessageCorrelationCache
     {

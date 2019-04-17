@@ -23,12 +23,9 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Interfaces.IO;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -40,19 +37,18 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handler responsible for handling the server's response for the GetMempool request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
-    /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public class SignAbstractMessageResponseHandler : AbstractCorrelatableAbstractMessageHandler<SignMessageResponse, IMessageCorrelationCache>, IRpcResponseHandler
+    public class SignMessageResponseHandler : AbstractCorrelatableAbstractMessageHandler<SignMessageResponse, IMessageCorrelationCache>, IRpcResponseHandler
     {
         /// <summary>
-        /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
         /// </summary>
+        /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public SignAbstractMessageResponseHandler(IMessageCorrelationCache messageCorrelationCache,
+        public SignMessageResponseHandler(IMessageCorrelationCache messageCorrelationCache,
             ILogger logger) : base(messageCorrelationCache, logger) { }
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="SignMessageRequestHandler" />.
+        /// Handles the VersionResponse message sent from the <see />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)

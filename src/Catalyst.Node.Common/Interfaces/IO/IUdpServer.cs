@@ -33,9 +33,11 @@ namespace Catalyst.Node.Common.Interfaces.IO
         IChannel Channel { get; set; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="channelInitializer"></param>
+        /// <param name="listenAddress"></param>
+        /// <param name="port"></param>
         /// <returns></returns>
         void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
 

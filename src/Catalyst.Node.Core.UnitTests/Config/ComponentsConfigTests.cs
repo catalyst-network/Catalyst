@@ -27,7 +27,7 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using FluentAssertions;
@@ -39,7 +39,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Config
 {
-    public class ComponentsConfigTests
+    public sealed class ComponentsConfigTests
     {
         private readonly string _componentsConfig;
         private const string PeerMiniConfigFile = "peerConfigSection.json";
@@ -95,8 +95,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
             var container = ConfigureAndBuildContainer(_componentsConfig);
 
             var handlers = container.Resolve<IEnumerable<IP2PMessageHandler>>();
-            handlers.Select(h => h.GetType()).Should().BeEquivalentTo(new[]
-                {typeof(PingResponseHandler), typeof(PingRequestAskHandler), typeof(TransactionHandler)});
+            handlers.Select(h => h.GetType()).Should().BeEquivalentTo(typeof(PingResponseHandler), typeof(PingRequestHandler), typeof(TransactionHandler));
         }
     }
 }

@@ -21,10 +21,14 @@
 
 #endregion
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.KeyStore
 {
-    public interface ICatalystCli
+    public interface IKeyStoreWrapper
     {
-        IAdvancedShell AdvancedShell { get; set; }
+        string GetAddressFromKeyStore(string json);
+        string GenerateUTCFileName(string address);
+        byte[] DecryptKeyStoreFromFile(string password, string filePath);
+        byte[] DecryptKeyStoreFromJson(string password, string json);
+        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
     }
 }

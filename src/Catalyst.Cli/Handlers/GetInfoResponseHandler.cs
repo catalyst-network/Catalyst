@@ -25,13 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.IO;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -47,10 +43,9 @@ namespace Catalyst.Cli.Handlers
     public class GetInfoResponseHandler : AbstractReputationAskHandler<GetInfoResponse, IMessageCorrelationCache>, IRpcResponseHandler
     {
         /// <summary>
-        /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
+        ///
         /// </summary>
-        /// <param name="messageStream">The message stream the handler is listening to through which the handler will
-        /// receive the response from the server.</param>
+        /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
         public GetInfoResponseHandler(IMessageCorrelationCache messageCorrelationCache,
             ILogger logger) 

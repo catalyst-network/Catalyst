@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using System.Security;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Cryptography;
 
 namespace Catalyst.Node.Common.Helpers.Cryptography

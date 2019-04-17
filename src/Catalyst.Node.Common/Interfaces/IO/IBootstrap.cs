@@ -23,12 +23,11 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces.IO
 {
-    public interface IBootstrap : IServerBootstrap
+    internal interface IBootstrap : IServerBootstrap
     {
         Task<IChannel> ConnectAsync(IPAddress ipAddress, int port);
     }

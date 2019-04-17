@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Cryptography;
 using NSec.Cryptography;
 

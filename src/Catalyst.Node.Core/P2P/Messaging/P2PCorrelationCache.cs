@@ -24,17 +24,12 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Messaging;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Common.UnitTests.Helpers.IO;
 using Catalyst.Protocol.Common;
-using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 

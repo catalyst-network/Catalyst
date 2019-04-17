@@ -22,18 +22,26 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Google.Protobuf;
+using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.Interfaces.P2P.Messaging;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace Catalyst.Node.Common.Interfaces.Messaging
+namespace Catalyst.Node.Common.Interfaces.IO.Messaging
 {
-    public interface IChanneledMessageStreamer<out T> where T : IMessage
+    public interface IReputableCache : IMessageCorrelationCache
     {
         /// <summary>
-        ///     Message stream
+        /// Stream of reputation changes events raised by requests being answered or expired.
         /// </summary>
-        IObservable<IChanneledMessage<T>> MessageStream { get; }
+        IObservable<IPeerReputationChange> PeerRatingChanges { get; }
+
+        /// <summary>
+        ///     Manipulate a peers reputation on eviction from a cache
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="reason"></param>
+        /// <param name="state"></param>
+        void ChangeReputationOnEviction(object key, object value, EvictionReason reason, object state);
     }
 }
