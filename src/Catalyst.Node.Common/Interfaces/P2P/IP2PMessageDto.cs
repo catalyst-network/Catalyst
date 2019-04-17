@@ -21,10 +21,19 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces.Messaging;
-using Catalyst.Protocol.Common;
+using System.Net;
+using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Node.Common.Interfaces.P2P.Messaging;
+using Catalyst.Node.Common.P2P;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Interfaces.Rpc
+namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned> { }
+    public interface IP2PMessageDto<out TMessage, out TMessageType> : IMessageDto<TMessageType>
+        where TMessage : class, IMessage
+        where TMessageType : class, IEnumerableMessageType
+    {
+        TMessage Message { get; }
+        IPEndPoint Recipient { get; }
+    }
 }

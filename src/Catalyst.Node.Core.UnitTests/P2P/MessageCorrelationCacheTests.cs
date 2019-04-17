@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
+using Catalyst.Node.Common.UnitTests.Helpers.IO;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
@@ -34,6 +35,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 using PendingRequest = Catalyst.Node.Common.P2P.PendingRequest;
@@ -44,7 +46,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
     {
         private readonly IPeerIdentifier[] _peerIds;
         private readonly IList<PendingRequest> _pendingRequests;
-        private readonly MessageCorrelationCache _cache;
+        private readonly P2PCorrelationCache _cache;
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
 
         public MessageCorrelationCacheTests(ITestOutputHelper output)
@@ -75,7 +77,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     return ci[1] != null;
                 });
 
-            _cache = new MessageCorrelationCache(responseStore);
+            var logger = Substitute.For<ILogger>();
+            _cache = new P2PCorrelationCache(responseStore, logger);
             _cache.PeerRatingChanges.Subscribe(change =>
             {
                 if (!_reputationByPeerIdentifier.ContainsKey(change.PeerIdentifier)) return;

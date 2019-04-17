@@ -27,10 +27,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
+using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
@@ -38,11 +40,14 @@ using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -79,6 +84,32 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Fact]
+        public void CanReceiveEventsFromSubscribedStream()
+        {
+            var container = ContainerBuilder.Build();
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            {
+                var logger = container.Resolve<ILogger>();
+                var fakeContext = Substitute.For<IChannelHandlerContext>();
+                var fakeChannel = Substitute.For<IChannel>();
+                fakeContext.Channel.Returns(fakeChannel);
+
+                var pingRequest = new PingRequest();
+                var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
+                var cid = Guid.NewGuid();
+                var channeledAny = new ChanneledAnySigned(fakeContext, pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+            
+                var observableStream = new[] {channeledAny}.ToObservable();
+            
+                var handler = new PingRequestHandler(pid, logger);
+                handler.StartObserving(observableStream);
+            
+                fakeContext.Channel.ReceivedWithAnyArgs(1)
+                   .WriteAndFlushAsync(new PingResponse().ToAnySigned(pid.PeerId, cid));
+            }          
+        }
+        
+        [Fact]
         public void CanReceivePingRequests()
         {
             var container = ContainerBuilder.Build();
@@ -86,7 +117,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 var logger = container.Resolve<ILogger>();
                 var p2PService = container.Resolve<IP2PService>();
-                var messageHandlers = container.Resolve<IEnumerable<IP2PMessageHandler>>();
                 var serverObserver = new AnySignedMessageObserver(0, logger);
 
                 using(p2PService.MessageStream.Subscribe(serverObserver))
@@ -95,10 +125,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
 
-                    var datagramEnvelope = P2PMessageFactory<PingRequest>.GetMessage(
-                        new MessageDto<PingRequest>(
-                            P2PMessageType.PingRequest,
-                            new PingRequest(),
+                    var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
+                        new P2PMessageDto<PingResponse, P2PMessages>(
+                            P2PMessages.PingRequest,
+                            new PingResponse(),
                             targetHost,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
                         )
