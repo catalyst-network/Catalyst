@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
@@ -30,33 +29,35 @@ using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
-using Serilog;
 using Catalyst.Protocol.IPPN;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingRequestHandler : MessageHandlerBase<PingRequest>, IP2PMessageHandler
+    public class GetNeighbourRequestHandler : MessageHandlerBase<PeerNeighborsRequest>, IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public PingRequestHandler(IPeerIdentifier peerIdentifier, ILogger logger)
+        public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier, ILogger logger)
             : base(logger)
         {
             _peerIdentifier = peerIdentifier;
         }
-
+        
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            Logger.Information("Ping Message Received");
-            var deserialised = message.Payload.FromAnySigned<PingRequest>();
-            Logger.Debug("message content is {0}", deserialised);
-            
-            var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
-                new P2PMessageDto<PingResponse, P2PMessages>(
-                    P2PMessages.PingRequest,
-                    new PingResponse(),
-                    new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
-                    _peerIdentifier
+            Logger.Debug("PeerNeighborsRequest Message Received");
+
+            var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
+                new P2PMessageDto<PeerNeighborsResponse, P2PMessages>(
+                    type: P2PMessages.PingRequest,
+                    message: new PeerNeighborsResponse(),
+                    
+                    // {
+                    //     PeerIds = { }
+                    // },
+                    destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
+                    peerIdentifier: _peerIdentifier
                 )
             );
 

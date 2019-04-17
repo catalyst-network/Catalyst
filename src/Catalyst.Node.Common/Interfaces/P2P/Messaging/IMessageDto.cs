@@ -21,12 +21,11 @@
 
 #endregion
 
-namespace Catalyst.Node.Common.P2P
+namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
-    public enum P2PMessageType
+    public interface IMessageDto<out TMessageType> where TMessageType : class, IEnumerableMessageType
     {
-        PingRequest,
-        PingResponse,
-        TransactionRequest
+        IPeerIdentifier PeerIdentifier { get; }
+        TMessageType Type { get; }
     }
 }

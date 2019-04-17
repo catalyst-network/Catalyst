@@ -37,11 +37,6 @@ namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
         TimeSpan CacheTtl { get; }
 
         /// <summary>
-        /// Stream of reputation changes events raised by requests being answered or expired.
-        /// </summary>
-        IObservable<IPeerReputationChange> PeerRatingChanges { get; }
-
-        /// <summary>
         /// Tries to match a given message to a request in from the cache.
         /// </summary>
         /// <typeparam name="TRequest">The (CLR) type of the request for which the response is appropriate.</typeparam>

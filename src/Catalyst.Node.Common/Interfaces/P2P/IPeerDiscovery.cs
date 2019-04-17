@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.P2P;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -31,7 +32,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Node.Common.Interfaces.P2P
 {
-    public interface IPeerDiscovery
+    public interface IPeerDiscovery : IMessageHandler
     {
         IDns Dns { get; }
         ILogger Logger { get; }

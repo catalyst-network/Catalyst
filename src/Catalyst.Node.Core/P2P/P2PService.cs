@@ -39,6 +39,7 @@ namespace Catalyst.Node.Core.P2P
 {
     public sealed class P2PService : UdpServer, IP2PService
     {
+        private readonly IReputableCache _reputableCache;
         private readonly ISocketClientRegistry<IPeerClient> _socketClientRegistry;
 
         public IPeerDiscovery Discovery { get; }
@@ -46,13 +47,14 @@ namespace Catalyst.Node.Core.P2P
 
         public P2PService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,
-            IEnumerable<IP2PMessageHandler> messageHandlers)
+            IEnumerable<IP2PMessageHandler> messageHandlers,
+            IReputableCache reputableCache)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
+            _reputableCache = reputableCache;
             Discovery = peerDiscovery;
             _socketClientRegistry = new SocketClientRegistry<IPeerClient>();
 
-            IPeerIdentifier peerIdentifier = new PeerIdentifier(settings);
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
 
             MessageStream = protoDatagramChannelHandler.MessageStream;
@@ -63,10 +65,12 @@ namespace Catalyst.Node.Core.P2P
             {
                 protoDatagramChannelHandler
             };
-
+            
             Bootstrap(new InboundChannelInitializer<IChannel>(channel => { },
                 channelHandlers
             ), settings.BindAddress, settings.Port);
+
+            peerDiscovery.StartObserving(MessageStream);
         }
     }
 }

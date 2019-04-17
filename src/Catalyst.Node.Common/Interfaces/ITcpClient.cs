@@ -26,8 +26,5 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.Interfaces
 {
-    public interface ITcpClient : ISocketClient
-    {
-        Task SendMessage(AnySigned message);
-    }
+    public interface ITcpClient : ISocketClient { }
 }

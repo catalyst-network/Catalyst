@@ -26,6 +26,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.P2P.Messaging.P2PCorrelationCache",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IReputableCache, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.P2P.PeerSettings",
             "services": [
                 {
