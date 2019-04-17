@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
@@ -71,7 +72,10 @@ namespace Catalyst.Node.Common.Helpers.IO.Inbound
 
             if (_supervisorEventLoop != null)
             {
-                await _supervisorEventLoop.ShutdownGracefullyAsync().ConfigureAwait(false);
+                var quietPeriod = TimeSpan.FromMilliseconds(100);
+                await _supervisorEventLoop
+                   .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
+                   .ConfigureAwait(false);
             }
         }
     }
