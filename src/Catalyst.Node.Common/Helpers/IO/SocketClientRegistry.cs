@@ -29,7 +29,9 @@ using Dawn;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public sealed class SocketClientRegistry<TSocketChannel> : ISocketClientRegistry<TSocketChannel> where TSocketChannel : class, ISocketClient
+    public sealed class SocketClientRegistry<TSocketChannel>
+        : ISocketClientRegistry<TSocketChannel>
+        where TSocketChannel : class, ISocketClient
     {
         public IDictionary<int, TSocketChannel> Registry { get; }
 

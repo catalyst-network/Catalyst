@@ -27,12 +27,13 @@ using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Protocol.Transaction;
 using Serilog;
 using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class TransactionHandler : ReputationBasedAskHandler<Transaction, IReputableCache>, IP2PMessageHandler
+    public sealed class TransactionHandler : AbstractReputationAskHandler<Transaction, IReputableCache>, IP2PMessageHandler
     {
         public TransactionHandler(IReputableCache reputableCache,
             ILogger logger)

@@ -25,13 +25,14 @@ using System;
 using System.IO;
 using System.Reflection;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Dawn;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Helpers.IO.Messaging
 {
     public sealed class ProtoDatagramChannelHandler : AbstractObservableHandler<DatagramPacket>
     {

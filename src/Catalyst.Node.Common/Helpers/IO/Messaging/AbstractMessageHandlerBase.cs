@@ -32,14 +32,14 @@ using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Helpers.IO.Messaging
 {
-    public abstract class MessageHandlerBase<TProto> : IMessageHandler, IDisposable where TProto : IMessage
+    public abstract class AbstractMessageHandlerBase<TProto> : IMessageHandler, IDisposable where TProto : IMessage
     {
         private IDisposable _messageSubscription;
         protected readonly ILogger Logger;
 
-        protected MessageHandlerBase(ILogger logger)
+        protected AbstractMessageHandlerBase(ILogger logger)
         {
             Logger = logger;
         }

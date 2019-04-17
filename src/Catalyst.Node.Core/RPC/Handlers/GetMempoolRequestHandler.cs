@@ -26,6 +26,7 @@ using System.Text;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
@@ -37,7 +38,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class GetMempoolRequestHandler : CorrelatableMessageHandler<GetMempoolRequest, IMessageCorrelationCache>, IRpcRequestHandler
+    public sealed class GetMempoolRequestHandler : AbstractCorrelatableAbstractMessageHandler<GetMempoolRequest, IMessageCorrelationCache>, IRpcRequestHandler
     {
         private readonly IMempool _mempool;
         private readonly PeerId _peerId;

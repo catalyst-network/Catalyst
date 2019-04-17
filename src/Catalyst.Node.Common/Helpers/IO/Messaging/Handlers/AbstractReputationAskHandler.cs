@@ -24,24 +24,31 @@
 using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Helpers.IO.Messaging.Handlers
 {
-    public abstract class ReputationBasedAskHandler<TProto, TReputableCache> : CorrelatableMessageHandler<TProto, TReputableCache>
+    /// <summary>
+    ///     Message handler for Ask message where you want to manipulate reputation of the recipient depending if they respond.
+    /// </summary>
+    /// <typeparam name="TProto"></typeparam>
+    /// <typeparam name="TReputableCache"></typeparam>
+    public abstract class AbstractReputationAskHandler<TProto, TReputableCache> : AbstractCorrelatableAbstractMessageHandler<TProto, TReputableCache>,
+        IReputationAskHandler<TReputableCache>
         where TProto : IMessage
         where TReputableCache : IMessageCorrelationCache
     {
-        private readonly TReputableCache _reputableCache;
-        
-        public ReputationBasedAskHandler(TReputableCache reputableCache, ILogger logger) : base(reputableCache, logger)
+        public TReputableCache ReputableCache { get; }
+
+        protected AbstractReputationAskHandler(TReputableCache reputableCache,
+            ILogger logger)
+            : base(reputableCache, logger)
         {
-            _reputableCache = reputableCache;
+            ReputableCache = reputableCache;
         }
         
         /// <summary>
@@ -50,7 +57,7 @@ namespace Catalyst.Node.Common.Helpers.IO
         /// <param name="message"></param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {           
-            _reputableCache.AddPendingRequest(new PendingRequest
+            ReputableCache.AddPendingRequest(new PendingRequest
             {
                 Content = message.Payload,
                 Recipient = new PeerIdentifier(message.Payload.PeerId),

@@ -22,29 +22,37 @@
 #endregion
 
 using System;
-using System.Reflection;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO.Outbound
+namespace Catalyst.Node.Common.Helpers.IO.Messaging.Handlers
 {
-    public sealed class AnySignedTypeClientHandler : AbstractObservableHandler<AnySigned>
+    public abstract class AbstractObservableHandler<T>
+        : SimpleChannelInboundHandler<T>,
+            IChanneledMessageStreamer<AnySigned>,
+            IDisposable
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        public IObservable<IChanneledMessage<AnySigned>> MessageStream => MessageSubject.AsObservable();
 
-        protected override void ChannelRead0(IChannelHandlerContext context, AnySigned message)
+        protected readonly BehaviorSubject<IChanneledMessage<AnySigned>> MessageSubject 
+            = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
+
+        protected virtual void Dispose(bool disposing)
         {
-            var contextAny = new ChanneledAnySigned(context, message);
-            MessageSubject.OnNext(contextAny);
+            if (disposing)
+            {
+                MessageSubject?.Dispose();
+            }
         }
 
-        public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
+        public void Dispose()
         {
-            Logger.Error(e, "Error in P2P client");
-            context.CloseAsync().ContinueWith(_ => MessageSubject.OnCompleted());
+            Dispose(true);
         }
     }
 }

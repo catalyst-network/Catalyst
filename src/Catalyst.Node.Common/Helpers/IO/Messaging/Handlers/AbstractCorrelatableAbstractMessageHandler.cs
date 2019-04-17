@@ -21,35 +21,31 @@
 
 #endregion
 
-using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
+using Google.Protobuf;
+using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Helpers.IO.Messaging.Handlers
 {
-    public abstract class AbstractObservableHandler<T> : SimpleChannelInboundHandler<T>, IChanneledMessageStreamer<AnySigned>, IDisposable
+    public abstract class AbstractCorrelatableAbstractMessageHandler<TProto, TCorrelator> : AbstractMessageHandlerBase<TProto>
+        where TProto : IMessage
+        where TCorrelator : IMessageCorrelationCache
     {
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream => MessageSubject.AsObservable();
-
-        protected readonly BehaviorSubject<IChanneledMessage<AnySigned>> MessageSubject 
-            = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
-
-        protected virtual void Dispose(bool disposing)
+        private readonly TCorrelator _correlationCache;
+        
+        public AbstractCorrelatableAbstractMessageHandler(TCorrelator correlationCache, ILogger logger) : base(logger)
         {
-            if (disposing)
-            {
-                MessageSubject?.Dispose();
-            }
+            _correlationCache = correlationCache;
         }
-
-        public void Dispose()
+        
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            Dispose(true);
+            Logger.Debug("handle message in correlatable handler");
+            
+            // @TODO check our message is in cache
+            Handler(message);
         }
     }
 }

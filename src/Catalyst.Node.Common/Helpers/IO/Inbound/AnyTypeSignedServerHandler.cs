@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;

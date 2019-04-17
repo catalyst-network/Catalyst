@@ -25,6 +25,7 @@ using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
@@ -33,7 +34,9 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingResponseHandler : ReputationBasedAskHandler<PingResponse, IReputableCache>, IP2PMessageHandler
+    public sealed class PingResponseHandler
+        : AbstractReputationAskHandler<PingResponse, IReputableCache>,
+            IP2PMessageHandler
     {
         public PingResponseHandler(IPeerIdentifier peerIdentifier,
             IReputableCache reputableCache,

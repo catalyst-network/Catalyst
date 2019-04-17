@@ -26,7 +26,6 @@ using System.Threading;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
@@ -34,9 +33,9 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Common.Helpers.IO.Messaging
 {
-    public abstract class MessageCorrelationCache : IMessageCorrelationCache
+    public abstract class AbstractMessageCorrelationCache : IMessageCorrelationCache
     {
         private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
         protected readonly IMemoryCache PendingRequests;
@@ -45,7 +44,7 @@ namespace Catalyst.Node.Common.Helpers.IO
 
         public TimeSpan CacheTtl { get; }
 
-        protected MessageCorrelationCache(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default)
+        protected AbstractMessageCorrelationCache(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default)
         {
             Logger = logger;
             CacheTtl = cacheTtl == default ? DefaultTtl : cacheTtl;

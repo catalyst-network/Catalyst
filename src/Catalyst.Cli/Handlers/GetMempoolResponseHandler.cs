@@ -25,6 +25,7 @@ using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
@@ -37,10 +38,10 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetMempool request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    internal sealed class GetMempoolResponseHandler : CorrelatableMessageHandler<GetMempoolResponse, IMessageCorrelationCache>, IRpcResponseHandler
+    internal sealed class GetMempoolResponseHandler : AbstractCorrelatableAbstractMessageHandler<GetMempoolResponse, IMessageCorrelationCache>, IRpcResponseHandler
     {
         /// <summary>
-        /// Constructor. Calls the base class <see cref="CorrelatableMessageHandler"/> constructor.
+        /// Constructor. Calls the base class <see cref="AbstractCorrelatableAbstractMessageHandler{TProto,TCorrelator}"/> constructor.
         /// </summary>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>

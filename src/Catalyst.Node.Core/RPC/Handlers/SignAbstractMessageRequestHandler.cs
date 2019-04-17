@@ -26,6 +26,7 @@ using System.Text;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
@@ -38,12 +39,12 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class SignMessageRequestHandler : CorrelatableMessageHandler<SignMessageRequest, IMessageCorrelationCache>, IRpcRequestHandler
+    public sealed class SignAbstractMessageRequestHandler : AbstractCorrelatableAbstractMessageHandler<SignMessageRequest, IMessageCorrelationCache>, IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
         private readonly PeerId _peerId;
 
-        public SignMessageRequestHandler(IPeerIdentifier peerIdentifier,
+        public SignAbstractMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner,
             IMessageCorrelationCache messageCorrelationCache)

@@ -24,7 +24,8 @@
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound; 
+using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
@@ -38,7 +39,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public sealed class GetVersionResponseHandler : CorrelatableMessageHandler<VersionResponse, IMessageCorrelationCache>, IRpcResponseHandler
+    public sealed class GetVersionResponseHandler : AbstractCorrelatableAbstractMessageHandler<VersionResponse, IMessageCorrelationCache>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor

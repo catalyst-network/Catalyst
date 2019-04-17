@@ -26,6 +26,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Helpers.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
@@ -38,7 +39,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.Rpc.Messaging
 {
-    public sealed class RpcCorrelationCache : MessageCorrelationCache
+    public sealed class RpcCorrelationCache : AbstractMessageCorrelationCache
     {
         public RpcCorrelationCache(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default) 
             : base(cache, logger, cacheTtl) { }

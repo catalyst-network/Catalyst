@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
 
             var handlers = container.Resolve<IEnumerable<IP2PMessageHandler>>();
             handlers.Select(h => h.GetType()).Should().BeEquivalentTo(new[]
-                {typeof(PingResponseHandler), typeof(PingRequestHandler), typeof(TransactionHandler)});
+                {typeof(PingResponseHandler), typeof(PingRequestAskHandler), typeof(TransactionHandler)});
         }
     }
 }
