@@ -86,8 +86,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             });
         }
 
-        [Fact]
-        public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
+        [Fact] public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
         {
             var responseMatchingIndex1 = new PingResponse().ToAnySigned(
                 _peerIds[1].PeerId,
@@ -97,8 +96,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             request.Should().NotBeNull();
         }
 
-        [Fact]
-        public void TryMatchResponseAsync_when_matching_should_increase_reputation()
+        [Fact] public void TryMatchResponseAsync_when_matching_should_increase_reputation()
         {
             var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
             TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id();
@@ -109,16 +107,14 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .Select(r => r.Value).Should().AllBeEquivalentTo(0);
         }
 
-        [Fact]
-        public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
+        [Fact] public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
         {
             var responseMatchingNothing = new PingResponse().ToAnySigned(_peerIds[1].PeerId, Guid.NewGuid());
             var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingNothing);
             request.Should().BeNull();
         }
 
-        [Fact]
-        public void TryMatchResponseAsync_when_not_matching_correlationId_should_not_change_reputation()
+        [Fact] public void TryMatchResponseAsync_when_not_matching_correlationId_should_not_change_reputation()
         {
             var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
             TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id();
@@ -128,8 +124,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .Should().AllBeEquivalentTo(0);
         }
 
-        [Fact]
-        public void TryMatchResponseAsync_should_not_match_on_wrong_response_type()
+        [Fact] public void TryMatchResponseAsync_should_not_match_on_wrong_response_type()
         {
             var matchingRequest = _pendingRequests[1].Content;
             new Action(() => _cache.TryMatchResponse<PingRequest, PingRequest>(matchingRequest))

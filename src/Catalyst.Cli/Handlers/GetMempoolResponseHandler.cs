@@ -25,6 +25,7 @@ using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -37,40 +38,47 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    internal sealed class GetMempoolResponseHandler : MessageHandlerBase<GetMempoolResponse>, IRpcResponseHandler
+    public sealed class GetMempoolResponseHandler : MessageHandlerBase<GetMempoolResponse>, IRpcResponseHandler
     {
+        private readonly IUserOutput _output;
+
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
         /// </summary>
+        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetMempoolResponseHandler(ILogger logger) : base(logger) { }
+        public GetMempoolResponseHandler(IUserOutput output, ILogger logger)
+            : base(logger)
+        {
+            _output = output;
+        }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
-        {
+        {   
+            Logger.Debug("Handling GetMempoolResponse");
+            
             try
             {
-                Logger.Debug("Handling GetMempoolResponse");
-
                 var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
 
-                int index = 0;
-
-                foreach (string encodedTx in deserialised.Info.Values)
+                foreach (var encodedTx in deserialised.Info.Values)
                 {
-                    index++;
-
-                    // Console.WriteLine(@"t{0}: {1},", index, encodedTx); TODO why?
+                    _output.WriteLine($"t{deserialised.Info.Values.GetEnumerator().Current}: {encodedTx},");
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
                     "Failed to handle GetMempoolResponse after receiving message {0}", message);
-                throw;
+                _output.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Logger.Information("Press Enter to continue ...");
             }
         }
     }

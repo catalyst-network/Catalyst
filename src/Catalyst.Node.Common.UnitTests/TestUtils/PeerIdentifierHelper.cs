@@ -26,9 +26,8 @@ using System.Net;
 using System.Text;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Common.UnitTests.TestUtils;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils
+namespace Catalyst.Node.Common.UnitTests.TestUtils
 {
     public static class PeerIdentifierHelper
     {

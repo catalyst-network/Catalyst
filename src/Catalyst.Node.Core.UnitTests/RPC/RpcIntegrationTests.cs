@@ -222,7 +222,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 );
                 var serverObserver = new AnySignedMessageObserver(0, logger);
                 var clientObserver = new AnySignedMessageObserver(1, logger);
-
+        
                 using (rpcServer.MessageStream.Subscribe(serverObserver))
                 using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
                 {

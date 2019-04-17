@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             ConfigureContainerBuilder(config);
 
             var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope())
+            using(container.BeginLifetimeScope())
             {
                 var mempool = container.Resolve<IMempool>();
 

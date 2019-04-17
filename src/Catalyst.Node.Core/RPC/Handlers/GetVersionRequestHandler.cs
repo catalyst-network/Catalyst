@@ -30,6 +30,7 @@ using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -47,17 +48,24 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
+            Guard.Argument(message).NotNull();
+            
             Logger.Debug("received message of type VersionRequest");
             try
             {
                 var deserialised = message.Payload.FromAnySigned<VersionRequest>();
+                
+                Guard.Argument(deserialised).NotNull();
+                
                 Logger.Debug("message content is {0}", deserialised);
+                
                 var response = new VersionResponse
                 {
                     Version = NodeUtil.GetVersion()
                 };
 
                 var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                
                 message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
