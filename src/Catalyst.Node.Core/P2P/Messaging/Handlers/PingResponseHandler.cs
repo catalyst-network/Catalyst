@@ -33,7 +33,7 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingResponseHandler : ReputableCorrelatorMessageHandler<PingResponse, IReputableCache>, IP2PMessageHandler
+    public sealed class PingResponseHandler : ReputationBasedAskHandler<PingResponse, IReputableCache>, IP2PMessageHandler
     {
         public PingResponseHandler(IPeerIdentifier peerIdentifier,
             IReputableCache reputableCache,

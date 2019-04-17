@@ -25,7 +25,7 @@ namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
     public interface IMessageDto<out TMessageType> where TMessageType : class, IEnumerableMessageType
     {
-        IPeerIdentifier PeerIdentifier { get; }
+        IPeerIdentifier Sender { get; }
         TMessageType Type { get; }
     }
 }

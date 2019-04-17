@@ -45,17 +45,17 @@ namespace Catalyst.Node.Common.Helpers.IO
         
         protected AnySigned BuildTellMessage(IP2PMessageDto<TMessage, TMessageType> dto)
         {
-            return dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid());
+            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
         protected AnySigned BuildAskMessage(IP2PMessageDto<TMessage, TMessageType> dto)
         {
-            return dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid());
+            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
         protected AnySigned BuildGossipMessage(IP2PMessageDto<TMessage, TMessageType> dto)
         {
-            return dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid());
+            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
     }
 }

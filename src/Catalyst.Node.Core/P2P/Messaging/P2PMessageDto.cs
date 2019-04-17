@@ -39,22 +39,22 @@ namespace Catalyst.Node.Core.P2P.Messaging
         public TMessageType Type { get; }
         public TMessage Message { get; }
         public IPEndPoint Recipient { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
+        public IPeerIdentifier Sender { get; }
 
         public P2PMessageDto(TMessageType type,
             TMessage message,
             IPEndPoint destination,
-            IPeerIdentifier peerIdentifier)
+            IPeerIdentifier sender)
         {
             Guard.Argument(type, nameof(type)).HasValue();
             Guard.Argument(message, nameof(message)).NotNull().Compatible<TMessage>().HasValue();
             Guard.Argument(destination.Address, nameof(destination.Address)).NotNull().HasValue();
             Guard.Argument(destination.Port, nameof(destination.Port)).InRange(0, 65535);
-            Guard.Argument(peerIdentifier, nameof(peerIdentifier)).Compatible<IPeerIdentifier>().NotNull().HasValue();
+            Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull().HasValue();
             Type = type;
             Message = message;
             Recipient = destination;
-            PeerIdentifier = peerIdentifier;
+            Sender = sender;
         }
     }
 }

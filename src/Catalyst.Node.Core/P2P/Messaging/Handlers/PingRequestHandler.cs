@@ -35,7 +35,7 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingRequestHandler : ReputableCorrelatorMessageHandler<PingRequest, IReputableCache>, IP2PMessageHandler
+    public sealed class PingRequestHandler : ReputationBasedAskHandler<PingRequest, IReputableCache>, IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
@@ -55,10 +55,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             
             var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                 new P2PMessageDto<PingResponse, P2PMessages>(
-                    P2PMessages.PingRequest,
-                    new PingResponse(),
-                    new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
-                    _peerIdentifier
+                    type: P2PMessages.PingRequest,
+                    message: new PingResponse(),
+                    destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
+                    sender: _peerIdentifier
                 )
             );
 

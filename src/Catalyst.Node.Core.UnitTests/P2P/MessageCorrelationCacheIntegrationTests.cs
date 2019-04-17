@@ -40,7 +40,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using PendingRequest = Catalyst.Node.Common.P2P.PendingRequest;
+using PendingRequest = Catalyst.Node.Common.Helpers.IO.Outbound.PendingRequest;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
@@ -80,11 +80,11 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .Select(c => new PendingRequest
                 {
                     Content = new PingRequest().ToAnySigned(senderPeerId, c.CorrelationId),
-                    SentTo = c.PeerIdentifier,
+                    Recipient = c.PeerIdentifier,
                     SentAt = DateTimeOffset.MinValue
                 }).ToList();
 
-            var reputations = requests.ToDictionary(r => r.SentTo, r => 0);
+            var reputations = requests.ToDictionary(r => r.Recipient, r => 0);
 
             var cache = _scope.Resolve<IMemoryCache>();
             var ttl = TimeSpan.FromMilliseconds(100);

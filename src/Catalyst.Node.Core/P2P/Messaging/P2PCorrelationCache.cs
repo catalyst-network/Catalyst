@@ -26,6 +26,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
+using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
@@ -64,7 +65,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             //when the cache is not under pressure, eviction happens by token expiry :(
             //if (reason == EvictionReason.Removed) {return;}
             var pendingRequest = (PendingRequest) value;
-            _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.SentTo, -BaseReputationChange));
+            _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.Recipient, -BaseReputationChange));
         }
 
         public override TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)

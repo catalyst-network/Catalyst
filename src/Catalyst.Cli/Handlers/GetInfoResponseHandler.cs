@@ -41,7 +41,7 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetInfo request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public class GetInfoResponseHandler : ReputableCorrelatorMessageHandler<GetInfoResponse, IMessageCorrelationCache>, IRpcResponseHandler
+    public class GetInfoResponseHandler : ReputationBasedAskHandler<GetInfoResponse, IMessageCorrelationCache>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.

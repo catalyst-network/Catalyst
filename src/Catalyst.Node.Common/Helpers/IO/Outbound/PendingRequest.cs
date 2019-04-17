@@ -25,12 +25,12 @@ using System;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Common.P2P
+namespace Catalyst.Node.Common.Helpers.IO.Outbound
 {
     public sealed class PendingRequest
     {
         public AnySigned Content { get; set; }
-        public IPeerIdentifier SentTo { get; set; }
+        public IPeerIdentifier Recipient { get; set; }
         public DateTimeOffset SentAt { get; set; }
     }
 }
