@@ -46,6 +46,7 @@ namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerDiscovery : IPeerDiscovery, IDisposable
     {
+        private readonly IReputableCache _reputableCache;
         public IDns Dns { get; }
         public ILogger Logger { get; }
         public IList<string> SeedNodes { get; }
@@ -58,13 +59,15 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="dns"></param>
         /// <param name="repository"></param>
         /// <param name="rootSection"></param>
-        /// <param name="peerClient"></param>
         /// <param name="logger"></param>
+        /// <param name="reputableCache"></param>
         public PeerDiscovery(IDns dns,
             IRepository<Peer> repository,
             IConfigurationRoot rootSection,
-            ILogger logger)
+            ILogger logger,
+            IReputableCache reputableCache)
         {
+            _reputableCache = reputableCache;
             Dns = dns;
             Logger = logger;
             PeerRepository = repository;
