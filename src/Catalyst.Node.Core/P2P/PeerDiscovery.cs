@@ -32,7 +32,6 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -165,7 +164,7 @@ namespace Catalyst.Node.Core.P2P
         {
             if (disposing)
             {
-                Logger.Information($"Disposing {GetType().Name}");
+                Logger.Debug($"Disposing {GetType().Name}");
                 _streamSubscription?.Dispose();
             }
         }
