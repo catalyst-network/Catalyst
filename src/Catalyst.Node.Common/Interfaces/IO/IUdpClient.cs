@@ -21,14 +21,7 @@
 
 #endregion
 
-using System;
-using Catalyst.Node.Common.Helpers.Enumerator;
-
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.IO
 {
-    public interface IEnumerableMessageType : IEquatable<Enumeration>
-    {
-        string Name { get; }        
-    }
+    public interface IUdpClient : ISocketClient { }
 }
-

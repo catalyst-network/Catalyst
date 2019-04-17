@@ -24,6 +24,8 @@
 using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;

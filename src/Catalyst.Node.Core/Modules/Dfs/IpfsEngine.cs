@@ -27,6 +27,8 @@ using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.Filesystem;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Common.Logging.Serilog;
 using Dawn;

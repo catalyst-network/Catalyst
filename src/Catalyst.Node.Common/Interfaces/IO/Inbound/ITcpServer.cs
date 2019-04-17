@@ -21,24 +21,16 @@
 
 #endregion
 
-using System;
 using System.Net;
-using System.Net.Security;
-using System.Net.Sockets;
+using System.Threading.Tasks;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.IO.Inbound
 {
-    public interface IConnection : IDisposable
+    public interface ITcpServer
     {
-        bool Connected { set; get; }
-        bool Disposed { get; set; }
-        TcpClient TcpClient { get; }
-        IPEndPoint EndPoint { get; set; }
-        SslStream SslStream { set; get; }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        bool IsConnected();
+        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
+        Task Shutdown();
+        IChannel Channel { get; set; }
     }
 }

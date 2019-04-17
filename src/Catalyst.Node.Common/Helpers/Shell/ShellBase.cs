@@ -28,6 +28,7 @@ using Catalyst.Node.Common.Interfaces;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Catalyst.Node.Common.Interfaces.Cli;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {

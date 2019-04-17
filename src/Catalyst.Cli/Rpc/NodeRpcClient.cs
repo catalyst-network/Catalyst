@@ -29,6 +29,8 @@ using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;

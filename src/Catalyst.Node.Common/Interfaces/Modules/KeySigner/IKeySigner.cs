@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces.Cryptography;
 
 namespace Catalyst.Node.Common.Interfaces.Modules.KeySigner
 {

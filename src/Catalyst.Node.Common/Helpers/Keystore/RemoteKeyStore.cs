@@ -23,6 +23,7 @@
 
 using Catalyst.Node.Common.Helpers.KeyStore;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Keystore

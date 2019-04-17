@@ -25,6 +25,8 @@ using System;
 using System.IO;
 using Catalyst.Node.Common.Helpers.KeyStore;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.Filesystem;
 using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.Keystore

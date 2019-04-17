@@ -23,6 +23,8 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.Interfaces.Messaging

@@ -21,12 +21,7 @@
 
 #endregion
 
-using System.Security;
-
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.IO.Outbound
 {
-    public interface IPasswordReader
-    {
-        SecureString ReadSecurePassword(string passwordContext = "Please enter your password");
-    }
+    public interface IUdpClient : ISocketClient { }
 }

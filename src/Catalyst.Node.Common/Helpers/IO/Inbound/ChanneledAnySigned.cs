@@ -21,6 +21,8 @@
 
 #endregion
 
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 

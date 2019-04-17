@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Filesystem;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;

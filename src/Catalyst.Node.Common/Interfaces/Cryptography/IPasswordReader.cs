@@ -21,16 +21,12 @@
 
 #endregion
 
-using Google.Protobuf;
+using System.Security;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Cryptography
 {
-    public interface IMessageSender
+    public interface IPasswordReader
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="message"></param>
-        void Send(IConnection connection, IMessage message);
+        SecureString ReadSecurePassword(string passwordContext = "Please enter your password");
     }
 }

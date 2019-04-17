@@ -38,6 +38,7 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.Network;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;

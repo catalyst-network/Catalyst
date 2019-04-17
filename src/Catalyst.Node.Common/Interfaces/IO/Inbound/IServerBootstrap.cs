@@ -25,21 +25,10 @@ using System.Net;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.IO.Inbound
 {
-    public interface IUdpServer
+    public interface IServerBootstrap
     {
-        // IBootstrap UdpListener { get; set; }
-        IChannel Channel { get; set; }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="channelInitializer"></param>
-        /// <returns></returns>
-        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
-
-        // Task<IUdpServer> StartServer(IPAddress listenAddress, int port);
-        Task Shutdown();
+        Task<IChannel> BindAsync(IPAddress ipAddress, int port);
     }
 }

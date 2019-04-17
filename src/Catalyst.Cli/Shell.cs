@@ -41,6 +41,9 @@ using CommandLine;
 using ILogger = Serilog.ILogger;
 using Nethereum.RLP;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.IO;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
 

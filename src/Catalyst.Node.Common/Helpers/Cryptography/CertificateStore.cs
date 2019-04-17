@@ -31,6 +31,8 @@ using System.Security.Cryptography.X509Certificates;
 using Catalyst.Node.Common.Interfaces;
 using Serilog;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.Filesystem;
 
 namespace Catalyst.Node.Common.Helpers.Cryptography
 {

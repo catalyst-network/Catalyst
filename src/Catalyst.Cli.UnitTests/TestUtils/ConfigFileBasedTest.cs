@@ -26,6 +26,7 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Serilog;

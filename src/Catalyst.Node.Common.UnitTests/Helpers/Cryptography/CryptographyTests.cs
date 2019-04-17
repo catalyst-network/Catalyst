@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
 using FluentAssertions;
 using Xunit;
 

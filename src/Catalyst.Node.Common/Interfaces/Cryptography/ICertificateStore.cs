@@ -21,12 +21,12 @@
 
 #endregion
 
-namespace Catalyst.Node.Common.Interfaces
+using System.Security.Cryptography.X509Certificates;
+
+namespace Catalyst.Node.Common.Interfaces.Cryptography
 {
-    public interface IKeyStore
+    public interface ICertificateStore
     {
-        IPrivateKey GetKey(IPublicKey publicKey, string password);
-        IPrivateKey GetKey(string filePath, string password);
-        bool StoreKey(IPrivateKey privateKey, string address, string password);
+        X509Certificate2 ReadOrCreateCertificateFile(string fileName);
     }
 }

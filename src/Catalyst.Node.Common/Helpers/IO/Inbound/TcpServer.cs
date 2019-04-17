@@ -24,6 +24,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotNetty.Handlers.Logging;
@@ -31,13 +33,6 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Inbound
 {
-    public interface ITcpServer
-    {
-        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
-        Task Shutdown();
-        IChannel Channel { get; set; }
-    }
-
     public abstract class TcpServer : AbstractIo, ITcpServer
     {
         public IServerBootstrap Server { get; set; }

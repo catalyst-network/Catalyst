@@ -29,6 +29,7 @@ using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.Keystore;
 using Catalyst.Node.Common.Helpers.KeyStore;
+using Catalyst.Node.Common.Interfaces.Cryptography;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using FluentAssertions;
 using NSec.Cryptography;

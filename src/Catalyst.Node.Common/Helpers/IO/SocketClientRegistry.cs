@@ -25,6 +25,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Outbound;
 using Dawn;
 
 namespace Catalyst.Node.Common.Helpers.IO

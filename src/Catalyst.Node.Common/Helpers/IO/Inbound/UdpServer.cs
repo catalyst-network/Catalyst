@@ -23,8 +23,8 @@
 
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;

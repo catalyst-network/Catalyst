@@ -21,6 +21,9 @@
 
 #endregion
 
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Outbound;
+
 namespace Catalyst.Node.Common.Interfaces.Rpc
 {
     public interface IRpcNode

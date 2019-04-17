@@ -23,6 +23,7 @@
 
 using Catalyst.Node.Common.Helpers.Enumerator;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 
 namespace Catalyst.Node.Common.Helpers.Config
 {

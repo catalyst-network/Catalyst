@@ -29,6 +29,8 @@ using System.Net;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Outbound;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using FluentAssertions;

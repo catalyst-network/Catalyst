@@ -21,6 +21,8 @@
 
 #endregion
 
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Outbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 

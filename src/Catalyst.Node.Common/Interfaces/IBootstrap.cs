@@ -23,6 +23,8 @@
 
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Node.Common.Interfaces.IO;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Common.Interfaces

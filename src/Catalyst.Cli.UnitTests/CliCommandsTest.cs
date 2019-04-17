@@ -33,6 +33,7 @@ using NSubstitute;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Autofac;
+using Catalyst.Node.Common.Interfaces.Cli;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using DotNetty.Transport.Channels;
 using Serilog;

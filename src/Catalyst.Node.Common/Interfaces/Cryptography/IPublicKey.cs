@@ -21,14 +21,15 @@
 
 #endregion
 
-using DotNetty.Transport.Channels;
-using Google.Protobuf;
+using NSec.Cryptography;
 
-namespace Catalyst.Node.Common.Helpers.IO.Inbound
+namespace Catalyst.Node.Common.Interfaces.Cryptography
 {
-    public interface IChanneledMessage<out T> where T : IMessage
+    /// <summary>
+    ///     Wrapper for public key.
+    /// </summary>
+    public interface IPublicKey
     {
-        T Payload { get; }
-        IChannelHandlerContext Context { get; }
+        PublicKey GetNSecFormatPublicKey();
     }
 }

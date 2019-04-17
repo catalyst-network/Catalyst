@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Network;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
