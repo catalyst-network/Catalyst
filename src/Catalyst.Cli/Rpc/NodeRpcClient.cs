@@ -84,11 +84,5 @@ namespace Catalyst.Cli.Rpc
                 ), EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port)
             );
         }
-
-        /// <inheritdoc />
-        public IDisposable StartObserving(IObserver<IChanneledMessage<AnySigned>> observer)
-        {
-            return MessageStream.Subscribe(observer);
-        }
     }
 }

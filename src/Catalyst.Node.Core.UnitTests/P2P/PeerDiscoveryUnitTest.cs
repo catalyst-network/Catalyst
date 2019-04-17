@@ -37,6 +37,7 @@ using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Network;
+using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
@@ -66,6 +67,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private readonly ILogger _logger;
         private readonly ILookupClient _lookupClient;
         private readonly IPeerClient _peerClient;
+        private readonly IReputableCache _reputableCache;
 
         public PeerDiscoveryUnitTest(ITestOutputHelper output) : base(output)
         {
@@ -73,6 +75,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _logger = Substitute.For<ILogger>();
             _peerClient = Substitute.For<IPeerClient>();
             _lookupClient = Substitute.For<ILookupClient>();
+            _reputableCache = Substitute.For<IReputableCache>();
             _dns = new Dns(_lookupClient);
 
             _config = new ConfigurationBuilder()
@@ -118,7 +121,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.1:42069", _lookupClient);
             MockQueryResponse.CreateFakeLookupResult(domain2, "192.0.2.2:42069", _lookupClient);
 
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
+            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger, _reputableCache);
 
             peerDiscovery.ParseDnsServersFromConfig(_config);
             peerDiscovery.SeedNodes.Should().NotBeNullOrEmpty();
@@ -137,7 +140,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             MockQueryResponse.CreateFakeLookupResult(domain1, "192.0.2.2:42069", _lookupClient);
             MockQueryResponse.CreateFakeLookupResult(domain2, "192.0.2.2:42069", _lookupClient);
 
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
+            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger, _reputableCache);
 
             await peerDiscovery.GetSeedNodesFromDns(urlList);
             peerDiscovery.Peers.Should().NotBeNullOrEmpty();
@@ -150,7 +153,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanReceiveEventsFromSubscribedStream()
         {
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
+            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger, _reputableCache);
 
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var pingRequest = new PingResponse();

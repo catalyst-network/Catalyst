@@ -51,10 +51,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                 new P2PMessageDto<PeerNeighborsResponse, P2PMessages>(
                     type: P2PMessages.PingRequest,
-                    message: new PeerNeighborsResponse()
-                    {
-                        PeerIds = { }
-                    },
+                    message: new PeerNeighborsResponse(),
+                    
+                    // {
+                    //     PeerIds = { }
+                    // },
                     destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
                     peerIdentifier: _peerIdentifier
                 )
