@@ -89,6 +89,14 @@
                     "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcResponseHandler, Catalyst.Node.Common"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.VerifyMessageResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcResponseHandler, Catalyst.Node.Common"
+                }
+            ]
         }
     ]
 }
