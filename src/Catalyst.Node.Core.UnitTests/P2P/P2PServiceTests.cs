@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public void DoesResolveIp2PServiceCorrectly()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using(var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = container.Resolve<IP2PService>();
                 Assert.NotNull(p2PService);
@@ -113,13 +113,13 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public void CanReceivePingRequests()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using(var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var logger = container.Resolve<ILogger>();
                 var p2PService = container.Resolve<IP2PService>();
                 var serverObserver = new AnySignedMessageObserver(0, logger);
 
-                using (p2PService.MessageStream.Subscribe(serverObserver))
+                using(p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);

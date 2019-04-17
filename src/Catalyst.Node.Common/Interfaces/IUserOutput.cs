@@ -21,20 +21,10 @@
 
 #endregion
 
-using System.IO;
-using System.Text;
-
-namespace Catalyst.Node.Common.Helpers.Extensions
+namespace Catalyst.Node.Common.Interfaces
 {
-    public static class StreamExtensions
+    public interface IUserOutput
     {
-        public static string ReadAllAsUtf8String(this Stream stream, bool leaveOpen)
-        {
-            using(var reader = new StreamReader(stream, Encoding.UTF8,
-                true, 4096, leaveOpen))
-            {
-                return reader.ReadToEnd();
-            }
-        }
+        void WriteLine(string content);
     }
 }

@@ -32,6 +32,7 @@ using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
@@ -53,15 +54,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
+            Guard.Argument(message).NotNull();
+            
             Logger.Debug("received message of type GetInfoRequest");
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetInfoRequest>();
+                
+                Guard.Argument(deserialised).NotNull();
+                
                 Logger.Debug("message content is {0}", deserialised);
 
-                var configuration = GetConfiguration(_config.NodeConfig.GetSection("CatalystNodeConfiguration"));
-
-                var serializedList = JsonConvert.SerializeObject(configuration, Formatting.Indented);
+                var serializedList = JsonConvert.SerializeObject(
+                    _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
+                    Formatting.Indented);
 
                 var response = new GetInfoResponse
                 {
@@ -69,6 +75,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 };
 
                 var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                
                 message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
@@ -77,34 +84,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     "Failed to handle GetInfoRequest after receiving message {0}", message);
                 throw;
             }
-        }
-
-        /// <summary>
-        /// Creates a list of key value pair objects (string,string) of all configuration items in the passed in configuration section
-        /// </summary>
-        /// <param name="configSection">IConfigurationSection object including configuration read from config files</param>
-        /// <returns>a list of (string,string) key value pairs</returns>
-        private IList<KeyValuePair<string, string>> GetConfiguration(IConfiguration configSection)
-        {
-            IList<KeyValuePair<string, string>> settings = new List<KeyValuePair<string, string>>();
-
-            foreach (var subSection in configSection.GetChildren())
-            {
-                if (subSection.GetChildren().Any())
-                {
-                    var subList = GetConfiguration(subSection);
-
-                    var section = new KeyValuePair<string, string>(subSection.Key, $"subsection_{subList.Count}");
-                    settings.Add(section);
-                    settings = settings.Concat(subList).ToList();
-                    continue;
-                }
-
-                var item = new KeyValuePair<string, string>(subSection.Key, Convert.ToString(subSection.Value));
-                settings.Add(item);
-            }
-
-            return settings;
         }
     }
 }

@@ -47,8 +47,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _validPeerId = PeerIdHelper.GetPeerId();
         }
 
-        [Fact]
-        public void Valid_Peer_should_have_fields_with_correct_sizes()
+        [Fact] public void Valid_Peer_should_have_fields_with_correct_sizes()
         {
             _validPeerId.ClientId.ToByteArray().Length.Should().Be(2);
             _validPeerId.ClientVersion.ToByteArray().Length.Should().Be(2);
