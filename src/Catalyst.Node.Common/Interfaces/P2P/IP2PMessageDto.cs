@@ -31,7 +31,7 @@ namespace Catalyst.Node.Common.Interfaces.P2P
 {
     public interface IP2PMessageDto<out TMessage, out TMessageType> : IMessageDto<TMessageType>
         where TMessage : class, IMessage
-        where TMessageType : class, IEnummerableMessageType
+        where TMessageType : class, IEnumerableMessageType
     {
         TMessage Message { get; }
         IPEndPoint Recipient { get; }

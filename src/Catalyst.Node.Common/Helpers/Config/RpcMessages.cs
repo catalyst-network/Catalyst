@@ -26,7 +26,7 @@ using Catalyst.Node.Common.Interfaces;
 
 namespace Catalyst.Node.Common.Helpers.Config
 {
-    public class RpcMessages : Enumeration, IEnummerableMessageType
+    public class RpcMessages : Enumeration, IEnumerableMessageType
     {
         public static readonly RpcMessages GetInfoRequest = new GetInfoRequestMessage();
         public static readonly RpcMessages GetInfoResponse = new GetInfoResponseMessage();

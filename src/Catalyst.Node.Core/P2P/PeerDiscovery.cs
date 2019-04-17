@@ -34,6 +34,7 @@ using Catalyst.Node.Common.Helpers.Network;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DnsClient.Protocol;
@@ -131,6 +132,14 @@ namespace Catalyst.Node.Core.P2P
         private void PrintIt(IChanneledMessage<AnySigned> message)
         {
             Logger.Information("peer discovery stream");
+            var pingResponse = message.Payload.FromAnySigned<PingResponse>();
+            PeerRepository.Add(new Peer
+            {
+                LastSeen = DateTime.Now,
+                PeerIdentifier = new PeerIdentifier(message.Payload.PeerId),
+                Reputation = 0
+            });
+
             Logger.Information(message.Payload.TypeUrl.ToString());
         }
 
