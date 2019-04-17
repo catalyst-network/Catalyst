@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Handlers
     /// </summary>
     public class VerifyMessageResponseHandler : MessageHandlerBase<VerifyMessageResponse>, IRpcResponseHandler
     {
-        private IUserOutput _output;
+        private readonly IUserOutput _output;
 
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
