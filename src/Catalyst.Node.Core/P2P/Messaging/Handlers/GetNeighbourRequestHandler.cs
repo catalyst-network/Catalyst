@@ -34,17 +34,19 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class GetNeighbourRequestHandler : MessageHandlerBase<PeerNeighborsRequest>, IP2PMessageHandler
+    public class GetNeighbourRequestHandler : ReputableCorrelatorMessageHandler<PeerNeighborsRequest, IReputableCache>, IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier, ILogger logger)
-            : base(logger)
+        public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier,
+            IReputableCache reputableCache,
+            ILogger logger)
+            : base(reputableCache, logger)
         {
             _peerIdentifier = peerIdentifier;
         }
-        
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 

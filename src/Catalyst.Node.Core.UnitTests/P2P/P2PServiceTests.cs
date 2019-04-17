@@ -92,6 +92,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 var logger = container.Resolve<ILogger>();
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var fakeChannel = Substitute.For<IChannel>();
+                var fakeReputationCache = Substitute.For<IReputableCache>();
                 fakeContext.Channel.Returns(fakeChannel);
 
                 var pingRequest = new PingRequest();
@@ -101,7 +102,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             
                 var observableStream = new[] {channeledAny}.ToObservable();
             
-                var handler = new PingRequestHandler(pid, logger);
+                var handler = new PingRequestHandler(pid, fakeReputationCache, logger);
                 handler.StartObserving(observableStream);
             
                 fakeContext.Channel.ReceivedWithAnyArgs(1)

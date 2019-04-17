@@ -22,27 +22,32 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Protocol.Transaction;
-using Serilog;
-using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
+using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Node.Common.Helpers.IO
 {
-    public sealed class TransactionHandler : ReputableCorrelatorMessageHandler<Transaction, IReputableCache>, IP2PMessageHandler
+    public abstract class ReputableCorrelatorMessageHandler<TProto, TReputableCache> : CorrelatableMessageHandler<TProto, TReputableCache>
+        where TProto : IMessage
+        where TReputableCache : IMessageCorrelationCache
     {
-        public TransactionHandler(IReputableCache reputableCache,
-            ILogger logger)
-            : base(reputableCache, logger) { }
-
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        private readonly TReputableCache _reputableCache;
+        
+        public ReputableCorrelatorMessageHandler(TReputableCache reputableCache, ILogger logger) : base(reputableCache, logger)
         {
-            Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAnySigned<Transaction>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
+            _reputableCache = reputableCache;
+        }
+        
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        {
+            Logger.Debug("handle message in reputation correlatable handler");
+            
+            // @TODO check our message is in cache
+            Handler(message);
         }
     }
 }

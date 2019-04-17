@@ -29,6 +29,7 @@ using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -38,20 +39,21 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    internal sealed class GetInfoRequestHandler : MessageHandlerBase<GetInfoRequest>, IRpcRequestHandler
+    internal sealed class GetInfoRequestHandler : CorrelatableMessageHandler<GetInfoRequest, IMessageCorrelationCache>, IRpcRequestHandler
     {
         private readonly PeerId _peerId;
         private readonly IRpcServerSettings _config;
 
         public GetInfoRequestHandler(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
-            ILogger logger) : base(logger)
+            IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger) : base(messageCorrelationCache, logger)
         {
             _peerId = peerIdentifier.PeerId;
             _config = config;
         }
 
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("received message of type GetInfoRequest");
             try

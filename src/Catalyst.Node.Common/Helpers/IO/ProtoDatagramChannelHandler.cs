@@ -55,7 +55,7 @@ namespace Catalyst.Node.Common.Helpers.IO
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
-            Logger.Error(e, "Error in P2P client");
+            Logger.Error(e, "Error in ProtoDatagramChannelHandler");
             context.CloseAsync().ContinueWith(_ => MessageSubject.OnCompleted());
         }
     }

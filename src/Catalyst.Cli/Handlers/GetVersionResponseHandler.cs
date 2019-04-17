@@ -26,6 +26,7 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound; 
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
@@ -37,7 +38,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public sealed class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>, IRpcResponseHandler
+    public sealed class GetVersionResponseHandler : CorrelatableMessageHandler<VersionResponse, IMessageCorrelationCache>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor
@@ -45,13 +46,14 @@ namespace Catalyst.Cli.Handlers
         /// <param name="messageStream">Message stream the handler is listening to through which the handler will
         /// receive the response from the server.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetVersionResponseHandler(ILogger logger) : base(logger) { }
+        public GetVersionResponseHandler(IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger) : base(messageCorrelationCache, logger) { }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />.
         /// </summary>
         /// <param name="message">An object of GetVersionResponse</param>
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             try
             {

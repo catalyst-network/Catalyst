@@ -30,6 +30,7 @@ using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Nethereum.RLP;
@@ -37,21 +38,22 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class SignMessageRequestHandler : MessageHandlerBase<SignMessageRequest>, IRpcRequestHandler
+    public sealed class SignMessageRequestHandler : CorrelatableMessageHandler<SignMessageRequest, IMessageCorrelationCache>, IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
         private readonly PeerId _peerId;
 
         public SignMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IKeySigner keySigner)
-            : base(logger)
+            IKeySigner keySigner,
+            IMessageCorrelationCache messageCorrelationCache)
+            : base(messageCorrelationCache, logger)
         {
             _keySigner = keySigner;
             _peerId = peerIdentifier.PeerId;
         }
 
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("received message of type SignMessageRequest");
             try

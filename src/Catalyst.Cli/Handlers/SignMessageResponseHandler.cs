@@ -26,6 +26,7 @@ using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Nethereum.RLP;
@@ -38,19 +39,20 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public class SignMessageResponseHandler : MessageHandlerBase<SignMessageResponse>, IRpcResponseHandler
+    public class SignMessageResponseHandler : CorrelatableMessageHandler<SignMessageResponse, IMessageCorrelationCache>, IRpcResponseHandler
     {
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
         /// </summary>
         /// <param name="logger">Logger to log debug related information.</param>
-        public SignMessageResponseHandler(ILogger logger) : base(logger) { }
+        public SignMessageResponseHandler(IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger) : base(messageCorrelationCache, logger) { }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="SignMessageRequestHandler" />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             try
             {

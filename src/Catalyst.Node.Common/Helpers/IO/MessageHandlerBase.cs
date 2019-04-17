@@ -34,7 +34,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public abstract class MessageHandlerBase<T> : IMessageHandler, IDisposable where T : IMessage
+    public abstract class MessageHandlerBase<TProto> : IMessageHandler, IDisposable where TProto : IMessage
     {
         private IDisposable _messageSubscription;
         protected readonly ILogger Logger;
@@ -48,10 +48,10 @@ namespace Catalyst.Node.Common.Helpers.IO
         {
             if (_messageSubscription != null)
             {
-                throw new ReadOnlyException($"{this.GetType()} is already listening to a message stream");
+                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
             }
 
-            var filterMessageType = typeof(T).ShortenedProtoFullName();
+            var filterMessageType = typeof(TProto).ShortenedProtoFullName();
             _messageSubscription = messageStream
                .Where(m => m != null
                  && m.Payload.TypeUrl == filterMessageType
@@ -59,7 +59,13 @@ namespace Catalyst.Node.Common.Helpers.IO
                .Subscribe(HandleMessage);
         }
 
-        public abstract void HandleMessage(IChanneledMessage<AnySigned> message);
+        public virtual void HandleMessage(IChanneledMessage<AnySigned> message)
+        {
+            Logger.Debug("Pre Handle Message Called");
+            Handler(message);
+        }
+
+        protected abstract void Handler(IChanneledMessage<AnySigned> message);
 
         protected virtual void Dispose(bool disposing)
         {

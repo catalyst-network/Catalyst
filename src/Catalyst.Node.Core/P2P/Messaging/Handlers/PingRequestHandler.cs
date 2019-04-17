@@ -35,17 +35,19 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingRequestHandler : MessageHandlerBase<PingRequest>, IP2PMessageHandler
+    public sealed class PingRequestHandler : ReputableCorrelatorMessageHandler<PingRequest, IReputableCache>, IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public PingRequestHandler(IPeerIdentifier peerIdentifier, ILogger logger)
-            : base(logger)
+        public PingRequestHandler(IPeerIdentifier peerIdentifier,
+            IReputableCache reputableCache,
+            ILogger logger)
+            : base(reputableCache, logger)
         {
             _peerIdentifier = peerIdentifier;
         }
 
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Information("Ping Message Received");
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
