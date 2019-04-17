@@ -23,8 +23,8 @@
 
 using System;
 using System.Net;
+using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;
@@ -36,14 +36,14 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 {
     public sealed class MessageDtoTests
     {
-        private readonly MessageDto<IMessage> _messageDto;
+        private readonly P2PMessageDto<IMessage, P2PMessages> _p2PMessageDto;
 
         public MessageDtoTests()
         {
             var peerIdentifier = Substitute.For<IPeerIdentifier>();
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
-            _messageDto = new MessageDto<IMessage>(
-                P2PMessageType.PingRequest,
+            _p2PMessageDto = new P2PMessageDto<IMessage, P2PMessages>(
+                P2PMessages.PingRequest,
                 pingRequest,
                 new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort), 
                 peerIdentifier
@@ -53,12 +53,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanInitMessageDtoCorrectly()
         {
-            Assert.NotNull(_messageDto);
-            _messageDto.Should().BeOfType(typeof(MessageDto<IMessage>));
-            _messageDto.Type.Should().BeEquivalentTo(P2PMessageType.PingRequest);
-            _messageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            _messageDto.Recipient.Should().NotBeNull().And.BeOfType(typeof(IPEndPoint));
-            _messageDto.PeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            Assert.NotNull(_p2PMessageDto);
+            _p2PMessageDto.Should().BeOfType(typeof(P2PMessageDto<IMessage, P2PMessages>));
+            _p2PMessageDto.Type.Should().BeEquivalentTo(P2PMessages.PingRequest);
+            _p2PMessageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
+            _p2PMessageDto.Recipient.Should().NotBeNull().And.BeOfType(typeof(IPEndPoint));
+            _p2PMessageDto.PeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }
 }

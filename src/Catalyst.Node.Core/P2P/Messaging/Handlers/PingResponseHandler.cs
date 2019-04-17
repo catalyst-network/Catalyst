@@ -32,7 +32,7 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class PingResponseHandler : MessageHandlerBase<PingResponse>, IP2PMessageHandler
+    public sealed class PingResponseHandler : MessageHandlerBase<PingResponse>, IP2PMessageHandler
     {
         public PingResponseHandler(ILogger logger) : base(logger) { }
 
@@ -40,7 +40,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         {
             Logger.Debug("received ping response");
             var deserialised = message.Payload.FromAnySigned<PingResponse>();
-            Logger.Debug("ping response content is empty");
         }
     }
 }

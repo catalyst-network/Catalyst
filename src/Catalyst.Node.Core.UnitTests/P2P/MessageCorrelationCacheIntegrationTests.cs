@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
+using Catalyst.Node.Common.UnitTests.Helpers.IO;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.UnitTest.TestUtils;
@@ -35,6 +36,8 @@ using Catalyst.Protocol.IPPN;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 using PendingRequest = Catalyst.Node.Common.P2P.PendingRequest;
@@ -44,16 +47,18 @@ namespace Catalyst.Node.Core.UnitTest.P2P
     public sealed class MessageCorrelationCacheIntegrationTests : ConfigFileBasedTest
     {
         private readonly ILifetimeScope _scope;
+        private readonly ILogger _logger;
 
         public MessageCorrelationCacheIntegrationTests(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .Build();
-
+            
             ConfigureContainerBuilder(config);
             var container = ContainerBuilder.Build();
             _scope = container.BeginLifetimeScope(CurrentTestName);
+            _logger = Substitute.For<ILogger>();
         }
 
         [Fact]
@@ -83,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             var cache = _scope.Resolve<IMemoryCache>();
             var ttl = TimeSpan.FromMilliseconds(100);
-            var pendingRequestCache = new MessageCorrelationCache(cache, ttl);
+            var pendingRequestCache = new P2PCorrelationCache(cache, _logger, ttl);
 
             pendingRequestCache.PeerRatingChanges
                .Subscribe(c => reputations[c.PeerIdentifier] += c.ReputationChange);

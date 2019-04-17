@@ -23,7 +23,6 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.P2P;
@@ -32,42 +31,52 @@ using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.P2P.Messaging
+namespace Catalyst.Node.Core.Rpc.Messaging
 {
-    public sealed class P2PMessageFactory<TMessage, TMessageType> : AbstractMessageFactory<TMessage, TMessageType> 
+    public class RpcMessageFactory<TMessage, TMessageType> : AbstractMessageFactory<TMessage, TMessageType>
         where TMessage : class, IMessage<TMessage>
         where TMessageType : class, IEnumerableMessageType
     {
-        public IByteBufferHolder GetMessageInDatagramEnvelope(IP2PMessageDto<TMessage, TMessageType> dto)
-        {
-            return GetMessage(dto).ToDatagram(dto.Recipient);
-        }
-        
         public override AnySigned GetMessage(IP2PMessageDto<TMessage, TMessageType> dto)
         {
-            if (P2PMessages.PingRequest.Equals(dto.Type))
+            if (RpcMessages.GetInfoRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
             
-            if (P2PMessages.PingResponse.Equals(dto.Type))
+            if (RpcMessages.GetInfoResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
             
-            if (P2PMessages.GetNeighbourRequest.Equals(dto.Type))
+            if (RpcMessages.GetMempoolRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
             
-            if (P2PMessages.GetNeighbourResponse.Equals(dto.Type))
+            if (RpcMessages.GetMempoolResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
             
-            if (P2PMessages.BroadcastTransaction.Equals(dto.Type))
+            if (RpcMessages.GetVersionRequest.Equals(dto.Type))
             {
-                return BuildGossipMessage(dto);
+                return BuildAskMessage(dto);
+            }
+            
+            if (RpcMessages.GetVersionResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+            
+            if (RpcMessages.SignMessageRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+            
+            if (RpcMessages.SignMessageResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
             }
             
             throw new ArgumentException("unknown message type");

@@ -22,16 +22,18 @@
 #endregion
 
 using System.Net;
-using Catalyst.Node.Common.P2P;
+using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
+using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Interfaces.P2P
+namespace Catalyst.Node.Common.Helpers.Extensions
 {
-    public interface IMessageDto<out TMessage> where TMessage : class, IMessage
+    public static class DatagramExtensions
     {
-        P2PMessageType Type { get; }
-        TMessage Message { get; }
-        IPeerIdentifier PeerIdentifier { get; }
-        IPEndPoint Recipient { get; }
+        public static DatagramPacket ToDatagram(this AnySigned anySignedMessage, IPEndPoint recipient)
+        {
+            return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
+        }
     }
 }
