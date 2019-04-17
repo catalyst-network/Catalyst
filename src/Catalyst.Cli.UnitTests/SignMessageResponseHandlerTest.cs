@@ -27,36 +27,46 @@ using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
+using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
 
 namespace Catalyst.Cli.UnitTests 
 {
-    public sealed class GetVersionResponseHandlerTest : IDisposable
+    public sealed class SignMessageResponseHandlerTest : IDisposable
     {
-        private readonly IUserOutput _output;
-        public static readonly List<object[]> QueryContents;
-        private readonly IChannelHandlerContext _fakeContext;
-        
         private readonly ILogger _logger;
-        private GetVersionResponseHandler _handler;
+        private readonly IChannelHandlerContext _fakeContext;
+        public static readonly List<object[]> QueryContents;
+        
+        private readonly IUserOutput _output;
+        private SignMessageResponseHandler _handler;
 
-        static GetVersionResponseHandlerTest()
+        public struct SignedResponse
         {
+            internal ByteString signature;
+            internal ByteString publicKey;
+            internal ByteString originalMessage;
+        }
+
+        static SignMessageResponseHandlerTest()
+        {   
             QueryContents = new List<object[]>()
             {
-                new object[] {"0.0.0.0"},
-                new object[] {""},
+                new object[] {SignMessage("hello", "this is a fake signature", "this is a fake public key")},
+                new object[] {SignMessage("", "", "")},
             };
         }
         
-        public GetVersionResponseHandlerTest()
+        public SignMessageResponseHandlerTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -69,22 +79,36 @@ namespace Catalyst.Cli.UnitTests
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }
-        
+
+        public static SignedResponse SignMessage(string messageToSign, string signature, string pubKey)
+        {
+            var signedResponse = new SignedResponse
+            {
+                signature = signature.ToUtf8ByteString(),
+                publicKey = pubKey.ToUtf8ByteString(),
+                originalMessage = RLP.EncodeElement(messageToSign.ToBytesForRLPEncoding()).ToByteString()
+            };
+
+            return signedResponse;
+        }
+
         [Theory]
         [MemberData(nameof(QueryContents))]  
-        public void RpcClient_Can_Handle_GetVersionResponse(string version)
-        {
-            var response = new VersionResponse()
+        public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
+        {   
+            var response = new SignMessageResponse()
             {
-                Version = version
+                OriginalMessage = signedResponse.originalMessage,
+                PublicKey = signedResponse.publicKey,
+                Signature = signedResponse.signature
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
-
-            _handler = new GetVersionResponseHandler(_output, _logger);
+            
+            _handler = new SignMessageResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
             
-            _output.Received(1).WriteLine($"Node Version: {version}");
+            _output.Received(1).WriteLine(Arg.Any<string>());
         }
         
         public void Dispose()

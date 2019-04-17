@@ -25,6 +25,7 @@ using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -42,47 +43,49 @@ namespace Catalyst.Cli.Handlers
     /// </summary>
     public class SignMessageResponseHandler : MessageHandlerBase<SignMessageResponse>, IRpcResponseHandler
     {
+        private IUserOutput _output;
+
         /// <summary>
         /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
         /// </summary>
         /// <param name="logger">Logger to log debug related information.</param>
-        public SignMessageResponseHandler(ILogger logger) : base(logger) { }
+        public SignMessageResponseHandler(IUserOutput output, ILogger logger)
+            : base(logger)
+        {
+            _output = output;
+        }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see cref="SignMessageRequestHandler" />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
-        {
-            Guard.Argument(message).NotNull();
-            
+        { 
+            Logger.Debug("Handling SignMessageResponse");
+
             try
             {
-                Logger.Debug("Handling SignMessageResponse");
-
                 var deserialised = message.Payload.FromAnySigned<SignMessageResponse>();
 
-                //decode the received message
                 var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray())[0].RLPData;
 
-                //get the original message from the decoded message
+                Guard.Argument(decodeResult).NotNull();
+
                 var originalMessage = decodeResult.ToStringFromRLPDecoded();
 
-                //return to the user the signature, public key and the original message that he sent to be signed
-                Console.WriteLine(@"Signature: {0}
-Public Key: {1}
-Original Message: ""{2}""", 
-                    Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray()),
-                    Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray()),
-                    originalMessage);
-
-                Console.WriteLine(@"Press Enter to continue ...");
+                _output.WriteLine(
+                    $"Signature: {Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray())}\n" +
+                    $"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray())}\nOriginal Message: {originalMessage}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetMempoolResponse after receiving message {0}", message);
-                throw;
+                    "Failed to handle SignMessageResponseHandler after receiving message {0}", message);
+                _output.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Logger.Information("Press Enter to continue ...");
             }
         }
     }

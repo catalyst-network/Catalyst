@@ -23,68 +23,61 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading;
-using Autofac;
 using Catalyst.Cli.Handlers;
-using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.Collections;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
-using Serilog.Extensions.Logging;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Cli.UnitTests 
 {
-    public sealed class GetMempoolResponseHandlerTest : ConfigFileBasedTest, IDisposable
+    public sealed class GetMempoolResponseHandlerTest : IDisposable
     {
         private readonly ILogger _logger;
-        private readonly ILifetimeScope _scope;
+        private readonly IChannelHandlerContext _fakeContext;
+        public static readonly List<object[]> QueryContents;
+        
+        private readonly IUserOutput _output;
+        private GetMempoolResponseHandler _handler;
 
-        private readonly IConfigurationSection _configurationRoot;
-
-        public GetMempoolResponseHandlerTest(ITestOutputHelper output) : base(output)
+        static GetMempoolResponseHandlerTest()
         {
-            var targetConfigFolder = FileSystem.GetCatalystHomeDir().FullName;
-
-            new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
-
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
-               .Build();
-
-            _configurationRoot = config.GetChildren().ToList().First();
+            var memPoolData = CreateMemPoolData();
             
-            ConfigureContainerBuilder(config);
-            
-            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            var serviceCollection = new ServiceCollection();
-            var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(CurrentTestName);
-
-            _logger = container.Resolve<ILogger>();
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(
-                new SerilogLoggerProvider(_logger));
+            QueryContents = new List<object[]>()
+            {
+                new object[] {memPoolData},
+                new object[] {new MapField<string, string>()},
+            };
+        }
+        
+        public GetMempoolResponseHandlerTest()
+        {
+            _logger = Substitute.For<ILogger>();
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _output = Substitute.For<IUserOutput>();
+        }
+        
+        private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
+        {
+            var channeledAny = new ChanneledAnySigned(_fakeContext, response);
+            var messageStream = new[] {channeledAny}.ToObservable();
+            return messageStream;
         }
 
-        [Fact] 
-        public void RpcClient_Can_Handle_GetMempoolResponse()
+        public static MapField<string, string> CreateMemPoolData()
         {
             var txLst = new List<Transaction>
             {
@@ -108,99 +101,30 @@ namespace Catalyst.Cli.UnitTests
 
                 memPoolMap.Add(i.ToString(), sb.ToString());
             }
-            
-            //Create a response object and set its return value
-            var response = new GetMempoolResponse()
-            {
-                Info = {memPoolMap}
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
-            
-            //Substitute for the context and the channel
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            fakeContext.Channel.Returns(fakeChannel);
-            
-            //create a channel using the mock context and response
-            var channeledAny = new ChanneledAnySigned(fakeContext, response);
 
-            //convert the channel created into an IObservable 
-            //the .ToObervable() Converts the array to an observable sequence which means we can use it as a message
-            //stream for the handler
-            //The DelaySubscription() is required otherwise the constructor of the base class will call the
-            //HandleMessage before the VerifyMessageRequestHandler constructor is executed. This happens because
-            //the base class will find a message in the stream. As a result the _keySigner object
-            //will have not been instantiated before calling the HandleMessage.
-            //This case will not happen in realtime but it is caused by the test environment.
-            var messageStream = new[] {channeledAny}.ToObservable()
-               .DelaySubscription(TimeSpan.FromMilliseconds(50));
-
-            //Create a VerifyMessageResponseHandler instance and subscribe it to the created message stream
-            //Send the response on the message stream
-            var handler = new GetMempoolResponseHandler(_logger);
-            handler.StartObserving(messageStream);
-            
-            //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
-            //is finished before we assert for the Received calls in the following statements.
-            
-            //Some check needs to be added to verify the handler received the message
-            //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
-            //is finished before we assert for the Received calls in the following statements.
-            Thread.Sleep(500);
+            return memPoolMap;
         }
-        
-        [Fact] 
-        public void RpcClient_Can_Handle_GetMempoolResponse_Without_Transaction_Data()
+
+        [Theory]
+        [MemberData(nameof(QueryContents))]  
+        public void RpcClient_Can_Handle_GetMempoolResponse(MapField<string, string> memPoolMap)
         {   
-            var memPoolMap = new MapField<string, string>();
-            
-            //Create a response object and set its return value
             var response = new GetMempoolResponse()
             {
                 Info = {memPoolMap}
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
-            
-            //Substitute for the context and the channel
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            fakeContext.Channel.Returns(fakeChannel);
-            
-            //create a channel using the mock context and response
-            var channeledAny = new ChanneledAnySigned(fakeContext, response);
 
-            //convert the channel created into an IObservable 
-            //the .ToObervable() Converts the array to an observable sequence which means we can use it as a message
-            //stream for the handler
-            //The DelaySubscription() is required otherwise the constructor of the base class will call the
-            //HandleMessage before the VerifyMessageRequestHandler constructor is executed. This happens because
-            //the base class will find a message in the stream. As a result the _keySigner object
-            //will have not been instantiated before calling the HandleMessage.
-            //This case will not happen in realtime but it is caused by the test environment.
-            var messageStream = new[] {channeledAny}.ToObservable()
-               .DelaySubscription(TimeSpan.FromMilliseconds(50));
-
-            //Create a VerifyMessageResponseHandler instance and subscribe it to the created message stream
-            //Send the response on the message stream
-            var handler = new GetMempoolResponseHandler(_logger);
-            handler.StartObserving(messageStream);
+            var messageStream = CreateStreamWithMessage(response);
             
-            //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
-            //is finished before we assert for the Received calls in the following statements.
+            _handler = new GetMempoolResponseHandler(_output, _logger);
+            _handler.StartObserving(messageStream);
             
-            //Some check needs to be added to verify the handler received the message
-            //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
-            //is finished before we assert for the Received calls in the following statements.
-            Thread.Sleep(500);
+            _output.Received(memPoolMap.Count).WriteLine(Arg.Any<string>());
         }
         
-        protected override void Dispose(bool disposing)
+        public void Dispose()
         {
-            base.Dispose(disposing);
-            if (!disposing)
-            {
-                return;
-            }
-            
-            _scope?.Dispose();
+            _handler?.Dispose();
         }
     }
 }

@@ -22,8 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
@@ -31,8 +29,6 @@ using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
-using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -55,7 +51,7 @@ namespace Catalyst.Cli.Handlers
         }
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="GetInfoResponseHandler" />.
+        /// Handles the GetInfoResponse message sent from the <see cref="GetInfoResponseHandler" />.
         /// </summary>
         /// <param name="message">An object of GetInfoResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
@@ -72,6 +68,10 @@ namespace Catalyst.Cli.Handlers
                 Logger.Error(ex,
                     "Failed to handle GetInfoResponse after receiving message {0}", message);
                 _output.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Logger.Information("Press Enter to continue ...");
             }
         }
     }
