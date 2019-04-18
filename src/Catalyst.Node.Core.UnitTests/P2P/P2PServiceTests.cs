@@ -27,14 +27,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -57,6 +56,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
     public sealed class P2PServiceTests : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
+        private readonly IPeerIdentifier _pid;
+        private readonly Guid _guid;
+        private readonly ILogger _logger;
+        private readonly PingRequest _pingRequest;
 
         public P2PServiceTests(ITestOutputHelper output) : base(output)
         {
@@ -65,6 +68,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build(), CurrentTestName);
+            _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
+            _guid = Guid.NewGuid();
+            _logger = Substitute.For<ILogger>();
+            _pingRequest = new PingRequest();
 
             ConfigureContainerBuilder(_config, true, true);
         }
@@ -73,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public void DoesResolveIp2PServiceCorrectly()
         {
             var container = ContainerBuilder.Build();
-            using(var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = container.Resolve<IP2PService>();
                 Assert.NotNull(p2PService);
@@ -87,39 +94,50 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public void CanReceiveEventsFromSubscribedStream()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
-                var logger = container.Resolve<ILogger>();
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var fakeChannel = Substitute.For<IChannel>();
+                var fakeReputationCache = Substitute.For<IReputableCache>();
                 fakeContext.Channel.Returns(fakeChannel);
-
-                var pingRequest = new PingRequest();
-                var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-                var cid = Guid.NewGuid();
-                var channeledAny = new ChanneledAnySigned(fakeContext, pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
-            
+                var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
             
-                var handler = new PingRequestHandler(pid, logger);
+                var handler = new PingRequestHandler(_pid, fakeReputationCache, _logger);
                 handler.StartObserving(observableStream);
             
                 fakeContext.Channel.ReceivedWithAnyArgs(1)
-                   .WriteAndFlushAsync(new PingResponse().ToAnySigned(pid.PeerId, cid));
-            }          
+                   .WriteAndFlushAsync(new PingResponse().ToAnySigned(_pid.PeerId, _guid));
+            }
         }
         
         [Fact]
+        public void PingRequestIsRegisteredInReputationCache()
+        {
+            var container = ContainerBuilder.Build();
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var fakeReputationCache = Substitute.For<IReputableCache>();
+                var fakeContext = Substitute.For<IChannelHandlerContext>();
+                var handler = new PingRequestHandler(_pid, fakeReputationCache, _logger);
+                var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
+
+                handler.HandleMessage(channeledAny);
+                handler.ReputableCache.ReceivedWithAnyArgs(1);
+            }
+        }
+        
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {
             var container = ContainerBuilder.Build();
-            using(var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
-                var logger = container.Resolve<ILogger>();
                 var p2PService = container.Resolve<IP2PService>();
-                var serverObserver = new AnySignedMessageObserver(0, logger);
+                var serverObserver = new AnySignedMessageObserver(0, _logger);
 
-                using(p2PService.MessageStream.Subscribe(serverObserver))
+                using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
@@ -147,7 +165,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
-                    scope.Dispose();
                 }
             }
         }

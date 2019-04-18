@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             invalidPeer.PublicKey = new byte[21].ToByteString();
         }
 
-        private class IpTestData : TheoryData<byte[]>
+        private sealed class IpTestData : TheoryData<byte[]>
         {
             public IpTestData()
             {

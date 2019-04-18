@@ -25,9 +25,12 @@ using System;
 using System.IO;
 using Catalyst.Node.Common.Helpers.KeyStore;
 using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.FileSystem;
+using Catalyst.Node.Common.Interfaces.KeyStore;
 using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.Keystore
+namespace Catalyst.Node.Common.Helpers.KeyStore
 {
     public class LocalKeyStore : IKeyStore
     {

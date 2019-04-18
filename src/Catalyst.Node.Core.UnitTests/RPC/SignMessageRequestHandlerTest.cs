@@ -30,9 +30,9 @@ using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
@@ -40,7 +40,6 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
@@ -50,12 +49,8 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public sealed class SignMessageRequestHandlerTest : ConfigFileBasedTest, IDisposable
+    public sealed class SignMessageRequestHandlerTest : ConfigFileBasedTest
     {
-        private const int MaxWaitInMs = 1000;
-        private readonly IConfigurationRoot _config;
-
-        private readonly ICertificateStore _certificateStore;
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
 
@@ -63,14 +58,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         public SignMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .Build(), CurrentTestName);
 
-            ConfigureContainerBuilder(_config);
+            ConfigureContainerBuilder(config);
 
             var container = ContainerBuilder.Build();
 
@@ -80,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory
                .AddProvider(new SerilogLoggerProvider(_logger));
 
-            _certificateStore = container.Resolve<ICertificateStore>();
+            container.Resolve<ICertificateStore>();
             _keySigner = container.Resolve<IKeySigner>();
         }
         
@@ -119,8 +114,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             
             //pass the created observable sequence as the message stream to the VerifyMessageRequestHandler
             //Calling the constructor will call the 
-            //var handler = new SignMessageRequestHandler(signRequest, peerIds[1], _logger, _keySigner);
-            var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier($"sender"), _logger, _keySigner);
+            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var handler = new SignMessageRequestHandler(
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                _logger,
+                _keySigner,
+                correlationCache);
             handler.StartObserving(signRequest);
             
             //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
@@ -129,7 +128,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             //Check the channel received 1 call to 
             var receivedCalls = fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
             
             //Get the received response object and verify it is SignMessageResponse
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();

@@ -29,10 +29,9 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.Network;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -47,7 +46,6 @@ namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerDiscovery : IPeerDiscovery, IDisposable
     {
-        private readonly IReputableCache _reputableCache;
         public IDns Dns { get; }
         public ILogger Logger { get; }
         public IList<string> SeedNodes { get; }
@@ -61,14 +59,11 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="repository"></param>
         /// <param name="rootSection"></param>
         /// <param name="logger"></param>
-        /// <param name="reputableCache"></param>
         public PeerDiscovery(IDns dns,
             IRepository<Peer> repository,
             IConfigurationRoot rootSection,
-            ILogger logger,
-            IReputableCache reputableCache)
+            ILogger logger)
         {
-            _reputableCache = reputableCache;
             Dns = dns;
             Logger = logger;
             PeerRepository = repository;
@@ -140,7 +135,7 @@ namespace Catalyst.Node.Core.P2P
                 Reputation = 0
             });
 
-            Logger.Information(message.Payload.TypeUrl.ToString());
+            Logger.Information(message.Payload.TypeUrl);
         }
 
         private async Task PeerCrawler()
@@ -168,7 +163,7 @@ namespace Catalyst.Node.Core.P2P
         {
             if (disposing)
             {
-                Logger.Information($"Disposing {GetType().Name}");
+                Logger.Debug($"Disposing {GetType().Name}");
                 _streamSubscription?.Dispose();
             }
         }

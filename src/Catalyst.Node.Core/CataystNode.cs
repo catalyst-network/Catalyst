@@ -34,6 +34,7 @@ using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using Serilog;
+using ICertificateStore = Catalyst.Node.Common.Interfaces.Cryptography.ICertificateStore;
 
 namespace Catalyst.Node.Core
 {

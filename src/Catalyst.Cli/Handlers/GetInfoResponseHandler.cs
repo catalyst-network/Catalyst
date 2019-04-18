@@ -23,10 +23,10 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
+using Catalyst.Node.Common.Interfaces.Cli;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
@@ -37,15 +37,22 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetInfo request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public sealed class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>, IRpcResponseHandler
+    public sealed class GetInfoResponseHandler
+        : AbstractReputationAskHandler<GetInfoResponse, IMessageCorrelationCache>,
+            IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
-        /// <inheritdoc />
-        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="output"></param>
+        /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetInfoResponseHandler(IUserOutput output, ILogger logger) 
-            : base(logger)
+        public GetInfoResponseHandler(IUserOutput output,
+            IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger) 
+            : base(messageCorrelationCache, logger)
         {
             _output = output;
         }
@@ -54,7 +61,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the GetInfoResponse message sent from the <see cref="GetInfoResponseHandler" />.
         /// </summary>
         /// <param name="message">An object of GetInfoResponse</param>
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("Handling GetInfoResponse");
             

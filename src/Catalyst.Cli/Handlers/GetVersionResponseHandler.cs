@@ -23,10 +23,11 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
+using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
@@ -36,33 +37,29 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handler responsible for handling the server's response for the GetVersion request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
-    /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public sealed class GetVersionResponseHandler : MessageHandlerBase<VersionResponse>, IRpcResponseHandler
+    public sealed class GetVersionResponseHandler
+        : AbstractCorrelatableAbstractMessageHandler<VersionResponse, IMessageCorrelationCache>,
+            IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Constructor
+        /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />.
         /// </summary>
-        /// <param name="messageStream">Message stream the handler is listening to through which the handler will
-        /// receive the response from the server.</param>
         /// <param name="output">A service used to output the result of the messages handling to the user.</param>
+        /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetVersionResponseHandler(IUserOutput output, ILogger logger)
-            : base(logger)
+        public GetVersionResponseHandler(IUserOutput output,
+            IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger)
+            : base(messageCorrelationCache, logger)
         {
             _output = output;
         }
 
-        /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />.
-        /// </summary>
-        /// <param name="message">An object of GetVersionResponse</param>
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
-        {   
-            Logger.Debug("Handling GetVersionResponse");
-            
+        protected override void Handler(IChanneledMessage<AnySigned> message)
+        {
             try
             {    
                 var deserialised = message.Payload.FromAnySigned<VersionResponse>();

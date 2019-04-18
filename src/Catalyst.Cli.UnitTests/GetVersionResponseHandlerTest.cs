@@ -27,7 +27,8 @@ using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -74,14 +75,15 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]  
         public void RpcClient_Can_Handle_GetVersionResponse(string version)
         {
-            var response = new VersionResponse()
+            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var response = new VersionResponse
             {
                 Version = version
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new GetVersionResponseHandler(_output, _logger);
+            _handler = new GetVersionResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(1).WriteLine($"Node Version: {version}");

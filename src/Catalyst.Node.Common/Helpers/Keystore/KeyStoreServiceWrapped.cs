@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Node.Common.Interfaces.KeyStore;
 using Nethereum.KeyStore;
 
 namespace Catalyst.Node.Common.Helpers.KeyStore {

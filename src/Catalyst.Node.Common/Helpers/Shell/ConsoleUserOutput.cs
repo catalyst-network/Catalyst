@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cli;
 
 namespace Catalyst.Node.Common.Helpers.Shell
 {

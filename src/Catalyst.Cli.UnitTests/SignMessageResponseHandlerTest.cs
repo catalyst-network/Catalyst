@@ -28,7 +28,8 @@ using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -50,11 +51,12 @@ namespace Catalyst.Cli.UnitTests
         private readonly IUserOutput _output;
         private SignMessageResponseHandler _handler;
 
+        //@TODO why not mock the actual response object? if we ever change it then the test will pass but fail in real world
         public struct SignedResponse
         {
-            internal ByteString signature;
-            internal ByteString publicKey;
-            internal ByteString originalMessage;
+            internal ByteString Signature;
+            internal ByteString PublicKey;
+            internal ByteString OriginalMessage;
         }
 
         static SignMessageResponseHandlerTest()
@@ -84,9 +86,9 @@ namespace Catalyst.Cli.UnitTests
         {
             var signedResponse = new SignedResponse
             {
-                signature = signature.ToUtf8ByteString(),
-                publicKey = pubKey.ToUtf8ByteString(),
-                originalMessage = RLP.EncodeElement(messageToSign.ToBytesForRLPEncoding()).ToByteString()
+                Signature = signature.ToUtf8ByteString(),
+                PublicKey = pubKey.ToUtf8ByteString(),
+                OriginalMessage = RLP.EncodeElement(messageToSign.ToBytesForRLPEncoding()).ToByteString()
             };
 
             return signedResponse;
@@ -96,16 +98,17 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]  
         public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
         {   
-            var response = new SignMessageResponse()
+            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var response = new SignMessageResponse
             {
-                OriginalMessage = signedResponse.originalMessage,
-                PublicKey = signedResponse.publicKey,
-                Signature = signedResponse.signature
+                OriginalMessage = signedResponse.OriginalMessage,
+                PublicKey = signedResponse.PublicKey,
+                Signature = signedResponse.Signature
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
             
-            _handler = new SignMessageResponseHandler(_output, _logger);
+            _handler = new SignMessageResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(1).WriteLine(Arg.Any<string>());

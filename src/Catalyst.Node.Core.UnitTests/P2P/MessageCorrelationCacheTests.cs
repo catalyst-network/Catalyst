@@ -27,7 +27,6 @@ using System.Linq;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Common.UnitTests.Helpers.IO;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
@@ -38,7 +37,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using PendingRequest = Catalyst.Node.Common.P2P.PendingRequest;
+using PendingRequest = Catalyst.Node.Common.Helpers.IO.Outbound.PendingRequest;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
@@ -63,7 +62,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _pendingRequests = _peerIds.Select((p, i) => new PendingRequest
             {
                 Content = new PingRequest().ToAnySigned(senderPeerId, Guid.NewGuid()),
-                SentTo = p,
+                Recipient = p,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
 

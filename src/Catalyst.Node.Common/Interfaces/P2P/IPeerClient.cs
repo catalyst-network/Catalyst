@@ -22,7 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Outbound;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Common.Interfaces.P2P
