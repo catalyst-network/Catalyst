@@ -63,7 +63,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
 
                 //get the original message from the decoded message
-                
                 //decode the received message
                 var decodeResult = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
 
