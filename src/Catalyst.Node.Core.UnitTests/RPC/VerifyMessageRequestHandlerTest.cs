@@ -55,7 +55,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public sealed class VerifyMessageRequestHandlerTest : ConfigFileBasedTest, IDisposable
+    public class VerifyMessageRequestHandlerTest : ConfigFileBasedTest, IDisposable
     {
         private readonly IConfigurationRoot _config;
 
@@ -64,10 +64,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly ILogger _logger;
         
         private readonly IKeySigner _keySigner;
-        private readonly ICryptoContext _cryptoContext;
         
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IChannel _fakeChannel;
 
         public VerifyMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
@@ -88,8 +86,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _logger = Substitute.For<ILogger>();
             _certificateStore = Substitute.For<ICertificateStore>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(_fakeChannel);
+            var fakeChannel = Substitute.For<IChannel>();
+            _fakeContext.Channel.Returns(fakeChannel);
         }
         
         private IObservable<IChanneledMessage<AnySigned>> CreateStreamWithMessage(AnySigned response)
@@ -126,8 +124,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+            if (!disposing)
+            {
+                return;
+            }
+            
             _scope?.Dispose();
         }
     }
