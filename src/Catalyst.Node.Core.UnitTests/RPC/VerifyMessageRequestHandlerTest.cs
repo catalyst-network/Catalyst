@@ -57,9 +57,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 {
     public class VerifyMessageRequestHandlerTest : ConfigFileBasedTest, IDisposable
     {
-        private readonly IConfigurationRoot _config;
-
-        private readonly ICertificateStore _certificateStore;
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
         
@@ -69,14 +66,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         public VerifyMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .Build(), CurrentTestName);
 
-            ConfigureContainerBuilder(_config);
+            ConfigureContainerBuilder(config);
 
             var container = ContainerBuilder.Build();
             _scope = container.BeginLifetimeScope(CurrentTestName);
@@ -84,35 +81,29 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _keySigner = container.Resolve<IKeySigner>();
             
             _logger = Substitute.For<ILogger>();
-            _certificateStore = Substitute.For<ICertificateStore>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
+            
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
         
-        private IObservable<IChanneledMessage<AnySigned>> CreateStreamWithMessage(AnySigned response)
-        {   
-            var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
-        }
-        
         [Theory]
-        [InlineData("Hello Catalyst", "mWBU1ysTSKCcJDrwjE/IpqGW9NxZtm540ljcnrSw4DBrVi2fG8crf31ERvRo4GtjHZciMC+NWJPB+EGLqpVe5Bw", "zGfHq2tTVk9z4eXgyJQFe1tspKpMmpo1YHunNMtFqBMpgMj7HRU62BD84qZFF")]
-        [InlineData("Different Message", "mWBU1ysTSKCcJDrwjE/IpqGW9NxZtm540ljcnrSw4DBrVi2fG8crf31ERvRo4GtjHZciMC+NWJPB+EGLqpVe5Bw", "zGfHq2tTVk9z4eXgyJQFe1tspKpMmpo1YHunNMtFqBMpgMj7HRU62BD84qZFF")]
-        [InlineData("Hello Catalyst", "any signature", "zGfHq2tTVk9z4eXgyJQFe1tspKpMmpo1YHunNMtFqBMpgMj7HRU62BD84qZFF")]
-        [InlineData("Hello Catalyst", "mWBU1ysTSKCcJDrwjE/IpqGW9NxZtm540ljcnrSw4DBrVi2fG8crf31ERvRo4GtjHZciMC+NWJPB+EGLqpVe5Bw", "any public key")]
-        [InlineData("Hello Catalyst", "any signature", "any public key")]
-        public void VerifyMessageRequest_UsingKeySigner_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey)
+        [InlineData("hello", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", true)]
+        [InlineData("Different Message", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", false)]
+        [InlineData("hello", "any signature", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", false)]
+        [InlineData("hello", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "any public key", false)]
+        [InlineData("hello", "any signature", "any public key", false)]
+        [InlineData("", "", "", false)]
+        public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
         {   
             var request = new VerifyMessageRequest()
             {
-                Message = RLP.EncodeElement(message.ToBytesForRLPEncoding()).ToByteString(),
+                Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                 Signature = signature.ToBytesForRLPEncoding().ToByteString()
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
             
-            var messageStream = CreateStreamWithMessage(request);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             
             var handler = new VerifyMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier($"sender"), _logger, _keySigner);
             handler.StartObserving(messageStream);
@@ -122,6 +113,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
+
+            var responseContent = sentResponse.FromAnySigned<VerifyMessageResponse>();
+
+            responseContent.IsSignedByKey.Should().Be(expectedResult);
         }
 
         protected override void Dispose(bool disposing)
