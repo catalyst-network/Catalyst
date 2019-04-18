@@ -55,7 +55,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public class VerifyMessageRequestHandlerTest : ConfigFileBasedTest, IDisposable
+    public sealed class VerifyMessageRequestHandlerTest : ConfigFileBasedTest, IDisposable
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
