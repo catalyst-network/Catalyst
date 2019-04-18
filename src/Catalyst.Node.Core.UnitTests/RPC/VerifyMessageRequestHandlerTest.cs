@@ -59,9 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
-        
         private readonly IKeySigner _keySigner;
-        
         private readonly IChannelHandlerContext _fakeContext;
 
         public VerifyMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
