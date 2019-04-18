@@ -24,13 +24,13 @@
 using System;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Cryptography;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
 using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Node.Common.UnitTests.Helpers.Cryptography
 {
-    public class CryptographyTests
+    public sealed class CryptographyTests
     {
         public CryptographyTests() { _context = new NSecCryptoContext(); }
 

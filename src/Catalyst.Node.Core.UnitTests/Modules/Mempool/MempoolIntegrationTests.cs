@@ -29,7 +29,6 @@ using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -55,7 +54,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             ConfigureContainerBuilder(config);
 
             var container = ContainerBuilder.Build();
-            using(container.BeginLifetimeScope())
+            using (container.BeginLifetimeScope())
             {
                 var mempool = container.Resolve<IMempool>();
 

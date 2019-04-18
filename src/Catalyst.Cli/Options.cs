@@ -102,7 +102,6 @@ namespace Catalyst.Cli
         [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
         public string Node { get; set; }
 
-
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
             new List<Example> 

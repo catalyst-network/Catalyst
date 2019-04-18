@@ -114,7 +114,7 @@ namespace Catalyst.Node.Core
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
                 var container = containerBuilder.Build();
-                using(container.BeginLifetimeScope(LifetimeTag,
+                using (container.BeginLifetimeScope(LifetimeTag,
 
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))

@@ -23,13 +23,12 @@
 
 using System.Collections.Generic;
 using System.Net;
-using Catalyst.Node.Common.Helpers.Config;
 
 namespace Catalyst.Node.Common.Interfaces.P2P
 {
     public interface IPeerSettings
     {
-        Network Network { get; }
+        Helpers.Config.Network Network { get; }
         string PayoutAddress { get; }
         string PublicKey { get; }
         bool Announce { get; }
