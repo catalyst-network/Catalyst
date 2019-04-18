@@ -30,7 +30,6 @@ using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf.Collections;

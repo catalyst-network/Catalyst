@@ -25,7 +25,7 @@ using System;
 using System.Threading;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Common.Interfaces.P2P.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;

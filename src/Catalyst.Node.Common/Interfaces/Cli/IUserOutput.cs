@@ -21,7 +21,7 @@
 
 #endregion
 
-namespace Catalyst.Node.Common.Interfaces
+namespace Catalyst.Node.Common.Interfaces.Cli
 {
     public interface IUserOutput
     {

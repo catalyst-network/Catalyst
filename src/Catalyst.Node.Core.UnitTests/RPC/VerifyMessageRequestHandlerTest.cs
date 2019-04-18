@@ -32,8 +32,8 @@ using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Node.Common.Interfaces.P2P.Messaging;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
@@ -132,7 +132,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             
             //Check the channel received 1 call to 
             var receivedCalls = fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1);
+            receivedCalls.Count().Should().Be(1);
             
             //Get the received response object and verify it is VerifyMessageResponse
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();

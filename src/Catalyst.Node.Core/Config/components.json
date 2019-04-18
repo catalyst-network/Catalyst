@@ -10,6 +10,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Common.Rpc.RpcCorrelationCache, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
             "services": [
                 {

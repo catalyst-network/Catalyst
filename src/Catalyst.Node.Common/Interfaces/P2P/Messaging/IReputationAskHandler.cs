@@ -21,6 +21,8 @@
 
 #endregion
 
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
+
 namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
 {
     public interface IReputationAskHandler<out TReputableCache> where TReputableCache : IMessageCorrelationCache

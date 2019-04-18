@@ -18,6 +18,30 @@
             ]
         },
         {
+            "type": "Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory",
+            "services": [
+                {
+                    "type": "Microsoft.Extensions.Options.IOptions`1[[Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory]], Microsoft.Extensions.Options"
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Extensions.Caching.Memory.MemoryCache, Microsoft.Extensions.Caching.Memory",
+            "services": [
+                {
+                    "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Common.Rpc.RpcCorrelationCache, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Cli.Shell",
             "services": [
                 {
@@ -29,7 +53,7 @@
             "type": "Catalyst.Node.Common.Helpers.Shell.ConsoleUserOutput, Catalyst.Node.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IUserOutput, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.Cli.IUserOutput, Catalyst.Node.Common"
                 }
             ]
         },
@@ -94,7 +118,7 @@
             "type": "Catalyst.Cli.Handlers.VerifyMessageResponseHandler, Catalyst.Cli",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcResponseHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Node.Common"
                 }
             ]
         }

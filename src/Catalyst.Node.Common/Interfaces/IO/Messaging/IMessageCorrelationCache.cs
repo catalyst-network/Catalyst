@@ -26,7 +26,7 @@ using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Common.Interfaces.P2P.Messaging
+namespace Catalyst.Node.Common.Interfaces.IO.Messaging
 {
     public interface IMessageCorrelationCache : IDisposable
     {

@@ -27,9 +27,9 @@ using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cli;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.P2P.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -70,17 +70,16 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))] 
         public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedbyNode)
         {   
-            var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            
             //Create a response object and set its return value
-            var response = new VerifyMessageResponse
+            var response = new VerifyMessageResponse()
             {
                 IsSignedByKey = isSignedbyNode
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
             
             var messageStream = CreateStreamWithMessage(response);
+            var cache = Substitute.For<IMessageCorrelationCache>();
 
-            _handler = new VerifyMessageResponseHandler(_output, correlationCache, _logger);
+            _handler = new VerifyMessageResponseHandler(_output, cache, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(1).WriteLine(isSignedbyNode.ToString());

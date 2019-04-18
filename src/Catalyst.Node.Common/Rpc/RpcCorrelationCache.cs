@@ -26,7 +26,7 @@ using Catalyst.Node.Common.Helpers.IO.Messaging;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
-namespace Catalyst.Node.Core.Rpc.Messaging
+namespace Catalyst.Node.Common.Rpc
 {
     public sealed class RpcCorrelationCache : AbstractMessageCorrelationCache
     {
