@@ -22,16 +22,13 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Interfaces.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -40,83 +37,41 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetInfo request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>, IRpcResponseHandler
+    public sealed class GetInfoResponseHandler : MessageHandlerBase<GetInfoResponse>, IRpcResponseHandler
     {
-        /// <summary>
-        /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
-        /// </summary>
-        /// <param name="messageStream">The message stream the handler is listening to through which the handler will
-        /// receive the response from the server.</param>
+        private readonly IUserOutput _output;
+
+        /// <inheritdoc />
+        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetInfoResponseHandler(ILogger logger) 
-            : base(logger) { }
+        public GetInfoResponseHandler(IUserOutput output, ILogger logger) 
+            : base(logger)
+        {
+            _output = output;
+        }
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="GetInfoResponseHandler" />.
+        /// Handles the GetInfoResponse message sent from the <see cref="GetInfoResponseHandler" />.
         /// </summary>
         /// <param name="message">An object of GetInfoResponse</param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
+            Logger.Debug("Handling GetInfoResponse");
+            
             try
             {
-                Logger.Debug("Handling GetInfoResponse");
-
                 var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
-
-                var result = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(deserialised.Query);
-
-                Console.WriteLine(@"[");
-
-                WriteConfiguration(result, 0, result.Count);
-
-                Console.WriteLine(@"]");
+                _output.WriteLine(deserialised.Query);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
                     "Failed to handle GetInfoResponse after receiving message {0}", message);
-                throw;
+                _output.WriteLine(ex.Message);
             }
-        }
-
-        private void WriteConfiguration(IReadOnlyList<KeyValuePair<string, string>> configList, int startIndex, int count)
-        {
-            var childIndex = 0;
-            var childrenCount = 0;
-
-            Console.WriteLine(@"	");
-            for (var j = startIndex; j < startIndex + count; j++)
+            finally
             {
-                if (j < childIndex + childrenCount)
-                {
-                    continue;
-                }
-
-                var setting = configList[j];
-                var key = setting.Key;
-                var value = setting.Value ?? "";
-
-                if (value.Contains("subsection"))
-                {
-                    childIndex = j + 1;
-                    childrenCount = Convert.ToInt16(value.Substring(value.IndexOf('_') + 1));
-
-                    if (!configList.First().Equals(setting) && !configList[childIndex].Key.Contains("0"))
-                    {
-                        Console.WriteLine(@"},");
-                        Console.WriteLine(@"" + key + @": {");
-                    }
-                    else
-                    {
-                        Console.WriteLine(@"" + key + @": [");
-                    }
-
-                    WriteConfiguration(configList, childIndex, childrenCount);
-                }
-                else
-                {
-                    Console.WriteLine(@"        {0}: {1},", key, value);
-                }
+                Logger.Information("Press Enter to continue ...");
             }
         }
     }

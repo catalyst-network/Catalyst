@@ -97,8 +97,8 @@ namespace Catalyst.Node.Common.Helpers.Network
             try
             {
                 var req = WebRequest.Create(url);
-                using (var response = await req.GetResponseAsync())
-                using (var reader =
+                using(var response = await req.GetResponseAsync())
+                using(var reader =
                     new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
                 {
                     var responseContent = (await reader.ReadToEndAsync()).Trim();

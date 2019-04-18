@@ -86,4 +86,28 @@ namespace Catalyst.Cli
                 })
             };
     }
+    
+    [Verb("verify", HelpText = "verifies a message")]
+    class VerifyOptions
+    {
+        [Option('m', "message", HelpText = "Directs the CLI to verify the message to be provided as the value")]
+        public string Message { get; set; }
+
+        [Option('k', "address", HelpText = "A valid public key.")]
+        public string Address { get; set; }
+        
+        [Option('s', "signature", HelpText = "A valid signature.")]
+        public string Signature { get; set; }
+        
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
+
+
+        [Usage(ApplicationAlias = "")]
+        public static IEnumerable<Example> Examples =>
+            new List<Example> 
+            {
+                new Example("Signs a message or a transaction provided.", new SignOptions {Node = "Messsage"})
+            };
+    }
 }
