@@ -23,28 +23,27 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Protocol.Transaction;
-using Serilog;
 using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
+using Serilog;
+using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class TransactionHandler
-        : AbstractReputationAskHandler<Transaction, IReputableCache>,
+    public sealed class PingResponseRequestHandler
+        : ReputationAskRequestHandler<PingResponse, IReputableCache>,
             IP2PMessageHandler
     {
-        public TransactionHandler(IReputableCache reputableCache,
+        public PingResponseRequestHandler(IReputableCache reputableCache,
             ILogger logger)
             : base(reputableCache, logger) { }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAnySigned<Transaction>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
+            Logger.Debug("received ping response");
+            var deserialised = message.Payload.FromAnySigned<PingResponse>();
         }
     }
 }

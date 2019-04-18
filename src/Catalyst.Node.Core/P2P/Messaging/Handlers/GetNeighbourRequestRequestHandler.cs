@@ -33,11 +33,11 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class GetNeighbourRequestHandler : AbstractReputationAskHandler<PeerNeighborsRequest, IReputableCache>, IP2PMessageHandler
+    public class GetNeighbourRequestRequestHandler : ReputationAskRequestHandler<PeerNeighborsRequest, IReputableCache>, IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier,
+        public GetNeighbourRequestRequestHandler(IPeerIdentifier peerIdentifier,
             IReputableCache reputableCache,
             ILogger logger)
             : base(reputableCache, logger)

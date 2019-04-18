@@ -38,14 +38,14 @@ namespace Catalyst.Node.Common.Helpers.IO.Messaging.Handlers
     /// </summary>
     /// <typeparam name="TProto"></typeparam>
     /// <typeparam name="TReputableCache"></typeparam>
-    public abstract class AbstractReputationAskHandler<TProto, TReputableCache> : AbstractCorrelatableAbstractMessageHandler<TProto, TReputableCache>,
+    public abstract class ReputationAskRequestHandler<TProto, TReputableCache> : AbstractCorrelatableAbstractMessageHandler<TProto, TReputableCache>,
         IReputationAskHandler<TReputableCache>
         where TProto : IMessage
         where TReputableCache : IMessageCorrelationCache
     {
         public TReputableCache ReputableCache { get; }
 
-        protected AbstractReputationAskHandler(TReputableCache reputableCache,
+        protected ReputationAskRequestHandler(TReputableCache reputableCache,
             ILogger logger)
             : base(reputableCache, logger)
         {
