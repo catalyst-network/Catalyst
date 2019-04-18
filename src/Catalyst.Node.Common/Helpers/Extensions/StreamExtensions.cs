@@ -30,7 +30,7 @@ namespace Catalyst.Node.Common.Helpers.Extensions
     {
         public static string ReadAllAsUtf8String(this Stream stream, bool leaveOpen)
         {
-            using(var reader = new StreamReader(stream, Encoding.UTF8,
+            using (var reader = new StreamReader(stream, Encoding.UTF8,
                 true, 4096, leaveOpen))
             {
                 return reader.ReadToEnd();

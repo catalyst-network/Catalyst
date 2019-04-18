@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Rpc;
 
 namespace Catalyst.Cli.Rpc

@@ -24,10 +24,8 @@
 using System;
 using System.Net;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Buffers;

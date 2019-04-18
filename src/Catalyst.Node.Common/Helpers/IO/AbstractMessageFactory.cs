@@ -23,10 +23,9 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Common.Helpers.IO
@@ -45,17 +44,17 @@ namespace Catalyst.Node.Common.Helpers.IO
         
         protected AnySigned BuildTellMessage(IP2PMessageDto<TMessage, TMessageType> dto)
         {
-            return dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid());
+            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
         protected AnySigned BuildAskMessage(IP2PMessageDto<TMessage, TMessageType> dto)
         {
-            return dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid());
+            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
         protected AnySigned BuildGossipMessage(IP2PMessageDto<TMessage, TMessageType> dto)
         {
-            return dto.Message.ToAnySigned(dto.PeerIdentifier.PeerId, Guid.NewGuid());
+            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
     }
 }

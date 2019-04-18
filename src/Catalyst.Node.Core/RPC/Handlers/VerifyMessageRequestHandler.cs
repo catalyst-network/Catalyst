@@ -23,11 +23,10 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
@@ -39,7 +38,9 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class VerifyMessageRequestHandler : MessageHandlerBase<VerifyMessageRequest>, IRpcRequestHandler
+    public sealed class VerifyMessageRequestHandler
+        : AbstractCorrelatableAbstractMessageHandler<VerifyMessageRequest, IMessageCorrelationCache>,
+            IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
         private readonly PeerId _peerId;
@@ -53,13 +54,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public VerifyMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IKeySigner keySigner)
-            : base(logger)
+            IKeySigner keySigner,
+            IMessageCorrelationCache messageCorrelationCache)
+            : base(messageCorrelationCache, logger)
         {
             _keySigner = keySigner;
             _peerId = peerIdentifier.PeerId;
         }
-
+        
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
             _message = message;

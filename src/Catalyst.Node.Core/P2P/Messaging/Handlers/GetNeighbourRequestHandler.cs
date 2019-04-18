@@ -22,10 +22,9 @@
 #endregion
 
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -34,17 +33,19 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class GetNeighbourRequestHandler : MessageHandlerBase<PeerNeighborsRequest>, IP2PMessageHandler
+    public class GetNeighbourRequestHandler : AbstractReputationAskHandler<PeerNeighborsRequest, IReputableCache>, IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier, ILogger logger)
-            : base(logger)
+        public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier,
+            IReputableCache reputableCache,
+            ILogger logger)
+            : base(reputableCache, logger)
         {
             _peerIdentifier = peerIdentifier;
         }
-        
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 
@@ -57,7 +58,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
                     //     PeerIds = { }
                     // },
                     destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
-                    peerIdentifier: _peerIdentifier
+                    sender: _peerIdentifier
                 )
             );
 

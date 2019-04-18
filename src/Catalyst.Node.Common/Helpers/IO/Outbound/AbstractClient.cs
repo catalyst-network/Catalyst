@@ -23,7 +23,7 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO.Outbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;

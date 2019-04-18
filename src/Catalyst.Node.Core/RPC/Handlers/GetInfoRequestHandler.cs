@@ -22,12 +22,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
@@ -39,20 +37,21 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    internal sealed class GetInfoRequestHandler : MessageHandlerBase<GetInfoRequest>, IRpcRequestHandler
+    internal sealed class GetInfoRequestHandler : AbstractCorrelatableAbstractMessageHandler<GetInfoRequest, IMessageCorrelationCache>, IRpcRequestHandler
     {
         private readonly PeerId _peerId;
         private readonly IRpcServerSettings _config;
 
         public GetInfoRequestHandler(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
-            ILogger logger) : base(logger)
+            IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger) : base(messageCorrelationCache, logger)
         {
             _peerId = peerIdentifier.PeerId;
             _config = config;
         }
 
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Guard.Argument(message).NotNull();
             

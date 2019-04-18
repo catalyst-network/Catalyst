@@ -24,7 +24,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;

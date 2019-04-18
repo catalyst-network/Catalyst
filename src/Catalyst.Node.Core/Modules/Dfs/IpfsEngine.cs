@@ -26,7 +26,8 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.FileSystem;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Common.Logging.Serilog;
 using Dawn;
@@ -41,11 +42,10 @@ namespace Catalyst.Node.Core.Modules.Dfs
     /// Simply a wrapper around the Ipfs.Engine.IpfsEngine to allow us coding
     /// and testing against an interface.
     /// </summary>
-    public class IpfsEngine : IIpfsEngine, IDisposable
+    public sealed class IpfsEngine : IIpfsEngine
     {
         public static readonly string KeyChainDefaultKeyType = "ed25519";
 
-        private readonly ILogger _logger;
         private readonly Ipfs.Engine.IpfsEngine _ipfsEngine;
         private readonly SecureString _passphrase;
 
@@ -57,7 +57,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
                .Require(p => p.SeedServers != null && p.SeedServers.Count > 0,
                     p => $"{nameof(peerSettings)} needs to specify at least one seed server.");
 
-            _logger = logger;
             _passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsEngine = new Ipfs.Engine.IpfsEngine("abcd".ToCharArray());
             _ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
@@ -73,7 +72,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             //TODO: find out why this leaves the build server hanging on the test step
             //_ipfsEngine.StartAsync().GetAwaiter().GetResult();
 
-            _logger.Information("IPFS engine started.");
+            logger.Information("IPFS engine started.");
         }
 
         public IBitswapApi Bitswap => _ipfsEngine.Bitswap;
@@ -112,7 +111,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         public async Task StopAsync() { await _ipfsEngine.StopAsync(); }
         public IpfsEngineOptions Options => _ipfsEngine.Options;
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing)
             {

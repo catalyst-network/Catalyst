@@ -29,7 +29,8 @@ using System.Text;
 using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -108,15 +109,16 @@ namespace Catalyst.Cli.UnitTests
         [Theory]
         [MemberData(nameof(QueryContents))]  
         public void RpcClient_Can_Handle_GetMempoolResponse(MapField<string, string> memPoolMap)
-        {   
-            var response = new GetMempoolResponse()
+        {
+            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var response = new GetMempoolResponse
             {
                 Info = {memPoolMap}
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
             
-            _handler = new GetMempoolResponseHandler(_output, _logger);
+            _handler = new GetMempoolResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(memPoolMap.Count).WriteLine(Arg.Any<string>());

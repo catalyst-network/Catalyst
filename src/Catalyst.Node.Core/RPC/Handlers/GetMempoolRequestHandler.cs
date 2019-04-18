@@ -24,9 +24,9 @@
 using System;
 using System.Text;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.P2P;
@@ -37,21 +37,22 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class GetMempoolRequestHandler : MessageHandlerBase<GetMempoolRequest>, IRpcRequestHandler
+    public sealed class GetMempoolRequestHandler : AbstractCorrelatableAbstractMessageHandler<GetMempoolRequest, IMessageCorrelationCache>, IRpcRequestHandler
     {
         private readonly IMempool _mempool;
         private readonly PeerId _peerId;
 
         public GetMempoolRequestHandler(IPeerIdentifier peerIdentifier,
             IMempool mempool,
+            IMessageCorrelationCache messageCorrelationCache,
             ILogger logger)
-            : base(logger)
+            : base(messageCorrelationCache, logger)
         {
             _mempool = mempool;
             _peerId = peerIdentifier.PeerId;
         }
 
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Guard.Argument(message).NotNull();
             
