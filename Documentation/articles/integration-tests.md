@@ -10,7 +10,7 @@ As an example, this screenshot shows that a few folders have been created in the
 - The _Config_ folder contains configurations similar to the ones used by the node when running normally, which can be referenced to configure the container used in a given integration test.
 - Other folders such as _Mempool_with_InMemoryRepo_... are created as the tests run. Each test run will result in a different timestamp suffix (this is to allow running the same test with different parameters, or the same `Theory` with different `DataAttribute` in Xunit terminology, in separate folder whilst keeping the ability to automatically clean old folders).
 
-![Filesystem Int Tests](filesystem-int-tests.png)
+![Filesystem Int Tests](../images/filesystem-int-tests.png)
 
 From here, we can now use the folders to set up configuration scenarios needed by the test, or to output logs and other diagnostics from the tests.
 
