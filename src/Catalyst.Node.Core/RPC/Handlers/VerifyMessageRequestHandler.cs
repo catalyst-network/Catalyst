@@ -44,12 +44,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IKeySigner _keySigner;
         private readonly PeerId _peerId;
         private IChanneledMessage<AnySigned> _message;
-        
-        private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
-        private const string PublicKeyNotProvided = "PublicKey not provided";
-        private const string SignatureEncodingInvalid = "Invalid Signature encoding";
-        private const string SignatureNotProvided = "Signature not provided";
-        private const string FailedToHandleMessage = "Failed to handle VerifyMessageRequest after receiving message";
 
         public VerifyMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
@@ -76,28 +70,28 @@ namespace Catalyst.Node.Core.RPC.Handlers
             {
                 if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out var encodingUsed, out var decodedPublicKey))
                 {
-                    Logger.Error($"{PublicKeyEncodingInvalid} {encodingUsed}");
+                    Logger.Error($"Invalid PublicKey encoding {encodingUsed}.");
                     ReturnResponse(false);
                     return;
                 }
 
                 if (decodedPublicKey.Length == 0)
                 {
-                    Logger.Error($"{PublicKeyNotProvided}");
+                    Logger.Error($"PublicKey not provided.");
                     ReturnResponse(false);
                     return;
                 }
                 
                 if (!Multibase.TryDecode(signature.ToStringUtf8(), out encodingUsed, out var decodedSignature))
                 {
-                    Logger.Error($"{SignatureEncodingInvalid} {encodingUsed}");
+                    Logger.Error($"Invalid Signature encoding. {encodingUsed}.");
                     ReturnResponse(false);
                     return;
                 }
                 
                 if (decodedSignature.Length == 0)
                 {
-                    Logger.Error($"{SignatureNotProvided}");
+                    Logger.Error($"Signature not provided.");
                     ReturnResponse(false);
                     return;
                 }
@@ -115,7 +109,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"{FailedToHandleMessage} {message}");
+                Logger.Error(ex,
+                    "Failed to handle VerifyMessageRequest after receiving message {0}", message);
+                throw;
             } 
         }
 
