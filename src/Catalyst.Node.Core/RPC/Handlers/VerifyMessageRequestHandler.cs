@@ -38,7 +38,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class VerifyMessageRequestHandler
-        : AbstractCorrelatableAbstractMessageHandler<SignMessageRequest, IMessageCorrelationCache>,
+        : AbstractCorrelatableAbstractMessageHandler<VerifyMessageRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
