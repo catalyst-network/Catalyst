@@ -56,41 +56,47 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             Logger.Debug("received message of type VerifyMessageRequest");
             
+            var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
+
+            var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData.ToStringFromRLPDecoded();
+            var publicKey = deserialised.PublicKey;
+            var signature = deserialised.Signature;
+
+            bool result = true;
+
             try
             {
-                var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
+                MultibaseEncoding encodingUsed;
 
-                //get the original message from the decoded message
-                
-                //decode the received message
-                var decodeResult = Nethereum.RLP.RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
+                if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out encodingUsed, out byte[] decodedPublicKey))
+                {
+                    Logger.Error("PublicKey passed has an unknown encoding.");
+                    result = false;
+                }
 
-                //get the original message from the decoded message
-                var decodedMessage = decodeResult.ToStringFromRLPDecoded();
-                var publicKey = deserialised.PublicKey;
-                var signature = deserialised.Signature;
-                
-                string encodingUsed;
-                var decodedPublicKey = Multibase.Decode(publicKey.ToStringUtf8(), out encodingUsed);
-                var decodedSignature = Multibase.Decode(signature.ToStringUtf8(), out encodingUsed);
+                if (!Multibase.TryDecode(signature.ToStringUtf8(), out encodingUsed, out byte[] decodedSignature))
+                {
+                    Logger.Error("Signature passed has an unknown encoding.");
+                    result = false;
+                }
 
-                //use the keysigner to build an IPublicKey
-                IPublicKey pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
-                
-                //verify that the message was signed by a key corresponding to the provided
-                var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
-                    decodedSignature);
+                if (result)
+                {
+                    IPublicKey pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
 
-                Logger.Debug("message content is {0}", deserialised.Message);
+                    result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
+                        decodedSignature);
+
+                    Logger.Debug("message content is {0}", deserialised.Message);
+                }
 
                 var response = new VerifyMessageResponse
                 {
                     IsSignedByKey = result
                 };
-                
-                //return response to the CLI
+
                 var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
-                
+
                 message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
             }
             catch (Exception ex)
