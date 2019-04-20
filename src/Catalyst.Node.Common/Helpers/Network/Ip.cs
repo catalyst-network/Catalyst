@@ -97,8 +97,8 @@ namespace Catalyst.Node.Common.Helpers.Network
             try
             {
                 var req = WebRequest.Create(url);
-                using(var response = await req.GetResponseAsync())
-                using(var reader =
+                using (var response = await req.GetResponseAsync())
+                using (var reader =
                     new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
                 {
                     var responseContent = (await reader.ReadToEndAsync()).Trim();
@@ -117,7 +117,7 @@ namespace Catalyst.Node.Common.Helpers.Network
         /// </summary>
         /// <param name="port"></param>
         /// <returns></returns>
-        public static bool ValidPortRange(int port) { return 1025 <= port && port <= 65535; }
+        internal static bool ValidPortRange(int port) { return 1025 <= port && port <= 65535; }
 
         /// <summary>
         /// </summary>

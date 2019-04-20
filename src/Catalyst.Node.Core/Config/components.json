@@ -10,6 +10,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Common.Rpc.RpcCorrelationCache, Catalyst.Node.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Node.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
             "services": [
                 {
@@ -29,7 +37,7 @@
             "type": "Catalyst.Node.Core.P2P.Messaging.P2PCorrelationCache",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IReputableCache, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IReputableCache, Catalyst.Node.Common"
                 }
             ]
         },
@@ -50,10 +58,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.Keystore.LocalKeyStore, Catalyst.Node.Common",
+            "type": "Catalyst.Node.Common.Helpers.KeyStore.LocalKeyStore, Catalyst.Node.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IKeyStore, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.KeyStore.IKeyStore, Catalyst.Node.Common"
                 }
             ]
         },
@@ -61,7 +69,7 @@
             "type": "Catalyst.Node.Common.Helpers.KeyStore.KeyStoreServiceWrapped, Catalyst.Node.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Helpers.KeyStore.IKeyStoreWrapper, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.KeyStore.IKeyStoreWrapper, Catalyst.Node.Common"
                 }
             ]
         },
@@ -69,7 +77,7 @@
             "type": "Catalyst.Node.Common.Helpers.Cryptography.NSecCryptoContext, Catalyst.Node.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.ICryptoContext, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Node.Common"
                 }
             ]
         },
@@ -117,7 +125,7 @@
             "type": "Catalyst.Node.Common.Helpers.Network.DevDns, Catalyst.Node.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IDns, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.Network.IDns, Catalyst.Node.Common"
                 }
             ]
         },
@@ -141,7 +149,7 @@
             "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.ICertificateStore, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.Cryptography.ICertificateStore, Catalyst.Node.Common"
                 }
             ]
         },
@@ -149,7 +157,7 @@
             "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IPasswordReader, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Node.Common"
                 }
             ]
         },
@@ -157,7 +165,7 @@
             "type": "Catalyst.Node.Common.Helpers.FileSystem.FileSystem, Catalyst.Node.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IFileSystem, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Node.Common"
                 }
             ]
         }

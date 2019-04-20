@@ -22,9 +22,7 @@
 #endregion
 
 using System.Net;
-using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Protocol.Common;
+using Catalyst.Node.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using Serilog;

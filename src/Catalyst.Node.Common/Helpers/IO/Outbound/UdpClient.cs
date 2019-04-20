@@ -23,7 +23,7 @@
 
 using System.Net;
 using System.Net.Sockets;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;

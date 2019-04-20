@@ -31,9 +31,9 @@ using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
@@ -52,11 +52,8 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
-    public sealed class VerifyMessageRequestHandlerTest : ConfigFileBasedTest, IDisposable
+    public sealed class VerifyMessageRequestHandlerTest : ConfigFileBasedTest
     {
-        private readonly IConfigurationRoot _config;
-
-        private readonly ICertificateStore _certificateStore;
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
 
@@ -64,14 +61,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         public VerifyMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .Build(), CurrentTestName);
 
-            ConfigureContainerBuilder(_config);
+            ConfigureContainerBuilder(config);
 
             var container = ContainerBuilder.Build();
 
@@ -81,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory
                .AddProvider(new SerilogLoggerProvider(_logger));
 
-            _certificateStore = container.Resolve<ICertificateStore>();
+            container.Resolve<ICertificateStore>();
             _keySigner = container.Resolve<IKeySigner>();
         }
         
@@ -115,22 +112,18 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             //create a channel using the mock context and request
             var channeledAny = new ChanneledAnySigned(fakeContext, 
                 request.ToAnySigned(PeerIdHelper.GetPeerId("sender")));
-            
-            //convert the channel created into an IObservable 
-            //the .ToObervable() Converts the array to an observable sequence which means we can use it as a message
-            //stream for the handler
-            //The DelaySubscription() is required otherwise the constructor of the base class will call the
-            //HandleMessage before the VerifyMessageRequestHandler constructor is executed. This happens because
-            //the base class will find a message in the stream. As a result the _keySigner object
-            //will have not been instantiated before calling the HandleMessage.
-            //This case will not happen in realtime but it is caused by the test environment.
+
             var verifyRequest = new[] {channeledAny}.ToObservable()
                .DelaySubscription(TimeSpan.FromMilliseconds(50));
             
             //pass the created observable sequence as the message stream to the VerifyMessageRequestHandler
             //Calling the constructor will call the 
-            //var handler = new VerifyMessageRequestHandler(signRequest, peerIds[1], _logger, _keySigner);
-            var handler = new VerifyMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier($"sender"), _logger, _keySigner);
+            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var handler = new VerifyMessageRequestHandler(
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                _logger,
+                _keySigner,
+                correlationCache);
             handler.StartObserving(verifyRequest);
             
             //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler

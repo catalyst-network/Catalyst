@@ -29,10 +29,10 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
-using Catalyst.Node.Common.Interfaces;
 using Catalyst.Node.Common.Helpers.FileSystem;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Util;
+using Catalyst.Node.Common.Interfaces.Cli;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
@@ -108,7 +108,7 @@ namespace Catalyst.Cli
                 );
 
                 // Add .Net Core serviceCollection to the Autofac container.
-                using(container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
+                using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
 

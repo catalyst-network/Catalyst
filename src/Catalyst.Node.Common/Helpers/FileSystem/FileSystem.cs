@@ -24,11 +24,11 @@
 using System;
 using System.IO;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.FileSystem;
 
 namespace Catalyst.Node.Common.Helpers.FileSystem
 {
-    public class FileSystem : System.IO.Abstractions.FileSystem, IFileSystem
+    public sealed class FileSystem : System.IO.Abstractions.FileSystem, IFileSystem
     {
         public DirectoryInfo GetCatalystHomeDir()
         {

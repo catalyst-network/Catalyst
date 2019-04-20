@@ -29,14 +29,11 @@ using System.Threading;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
-using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Node.Common.Interfaces.Modules.Mempool;
-using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.Interfaces.Rpc;
-using Catalyst.Node.Core.RPC.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
 

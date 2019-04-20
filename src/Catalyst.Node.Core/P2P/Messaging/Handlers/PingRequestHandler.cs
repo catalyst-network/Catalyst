@@ -24,9 +24,9 @@
 using System;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -35,17 +35,21 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingRequestHandler : MessageHandlerBase<PingRequest>, IP2PMessageHandler
+    public sealed class PingRequestHandler 
+        : AbstractReputationAskHandler<PingRequest, IReputableCache>,
+            IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public PingRequestHandler(IPeerIdentifier peerIdentifier, ILogger logger)
-            : base(logger)
+        public PingRequestHandler(IPeerIdentifier peerIdentifier,
+            IReputableCache reputableCache,
+            ILogger logger)
+            : base(reputableCache, logger)
         {
             _peerIdentifier = peerIdentifier;
         }
 
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Information("Ping Message Received");
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
@@ -53,10 +57,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             
             var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                 new P2PMessageDto<PingResponse, P2PMessages>(
-                    P2PMessages.PingRequest,
-                    new PingResponse(),
-                    new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
-                    _peerIdentifier
+                    type: P2PMessages.PingRequest,
+                    message: new PingResponse(),
+                    destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
+                    sender: _peerIdentifier
                 )
             );
 

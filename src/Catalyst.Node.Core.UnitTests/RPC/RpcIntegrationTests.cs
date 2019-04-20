@@ -33,8 +33,8 @@ using Catalyst.Cli.Rpc;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Common.Interfaces.Rpc;
 using Catalyst.Node.Common.P2P;
@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ContainerBuilder.RegisterType<NodeRpcClientFactory>().As<INodeRpcClientFactory>();
         }
 
-        [Fact(Skip="test hanger")]
+        [Fact(Skip = "test hanger")]
         public void ServerConnectedToCorrectPort()
         {
             var container = ContainerBuilder.Build();
@@ -209,7 +209,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void RpcServer_Can_Handle_GetMempoolRequest()
         {
             var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var rpcServer = container.Resolve<INodeRpcServer>();
                 var logger = container.Resolve<ILogger>();

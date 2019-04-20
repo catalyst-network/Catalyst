@@ -30,7 +30,8 @@ using Catalyst.Cli.Handlers;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -91,14 +92,15 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]        
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
-            var response = new GetInfoResponse()
+            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var response = new GetInfoResponse
             {
                 Query = query
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
             
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new GetInfoResponseHandler(_output, _logger);
+            _handler = new GetInfoResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
 
             _output.Received(1).WriteLine(query);

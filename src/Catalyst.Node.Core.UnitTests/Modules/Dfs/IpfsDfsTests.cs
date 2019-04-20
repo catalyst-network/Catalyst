@@ -39,8 +39,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
     public sealed class IpfsDfsTests : IDisposable
     {
-        private const int DelayInMs = 100;
-        private const int DelayMultiplier = 3;
+        private const int DelayInMs = 50;
+        private const int DelayMultiplier = 4;
         private readonly IIpfsEngine _ipfsEngine;
         private readonly ILogger _logger;
         private readonly Cid _expectedCid;
@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.AddTextAsync("good morning", Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c => Task.FromResult(_addedRecord));
 
-            using(var dfs = new IpfsDfs(_ipfsEngine, _logger))
+            using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 var record = await dfs.AddTextAsync("good morning");
                 Cid.Decode(record).Should().Be(_expectedCid);
@@ -85,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.AddAsync(Stream.Null, Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c => Task.FromResult(_addedRecord));
 
-            using(var dfs = new IpfsDfs(_ipfsEngine, _logger))
+            using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 var record = await dfs.AddAsync(Stream.Null);
                 Cid.Decode(record).Should().Be(_expectedCid);
@@ -99,8 +99,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                .ReadFileAsync("some path", Arg.Any<CancellationToken>())
                .Returns(c => "the content".ToMemoryStream());
 
-            using(var dfs = new IpfsDfs(_ipfsEngine, _logger))
-            using(var stream = await dfs.ReadAsync("some path"))
+            using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
+            using (var stream = await dfs.ReadAsync("some path"))
             {
                 stream.ReadAllAsUtf8String(false).Should().Be("the content");
             }
@@ -113,7 +113,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                .ReadAllTextAsync("some path", Arg.Any<CancellationToken>())
                .Returns(c => "the other content");
 
-            using(var dfs = new IpfsDfs(_ipfsEngine, _logger))
+            using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 var text = await dfs.ReadTextAsync("some path");
                 text.Should().Be("the other content");
@@ -130,7 +130,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                     return Task.FromResult(_addedRecord);
                 });
 
-            using(var dfs = new IpfsDfs(_ipfsEngine, _logger))
+            using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 new Action(() => dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token)
                        .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
@@ -144,11 +144,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * 2, (CancellationToken) c[3]).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[3]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
 
-            using(var dfs = new IpfsDfs(_ipfsEngine, _logger))
+            using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 new Action(() => dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token)
                        .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
@@ -162,11 +162,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.ReadAllTextAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * 2, (CancellationToken) c[1]).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult("some content");
                 });
 
-            using(var dfs = new IpfsDfs(_ipfsEngine, _logger))
+            using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 new Action(() => dfs.ReadTextAsync("path", _cancellationTokenSource.Token)
                        .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
@@ -180,11 +180,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _ipfsEngine.FileSystem.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * 2, (CancellationToken) c[1]).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult(Stream.Null);
                 });
 
-            using(var dfs = new IpfsDfs(_ipfsEngine, _logger))
+            using (var dfs = new IpfsDfs(_ipfsEngine, _logger))
             {
                 new Action(() => dfs.ReadAsync("path", _cancellationTokenSource.Token)
                        .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()

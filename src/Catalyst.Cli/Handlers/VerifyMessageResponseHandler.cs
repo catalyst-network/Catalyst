@@ -23,14 +23,12 @@
 
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Messaging;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
+using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Node.Common.Interfaces.IO.Inbound;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -38,29 +36,32 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handler responsible for handling the server's response for the GetMempool request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
-    /// The handler implements <see cref="MessageHandlerBase"/>.
     /// </summary>
-    public class VerifyMessageResponseHandler : MessageHandlerBase<VerifyMessageResponse>, IRpcResponseHandler
+    public sealed class VerifyMessageResponseHandler
+        : AbstractCorrelatableAbstractMessageHandler<VerifyMessageResponse, IMessageCorrelationCache>,
+            IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Constructor. Calls the base class <see cref="MessageHandlerBase"/> constructor.
         /// </summary>
-        /// <param name="messageStream">The message stream the handler is listening to through which the handler will
-        /// receive the response from the server.</param>
+        /// receive the response from the server.
+        /// <param name="output"></param>
+        /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public VerifyMessageResponseHandler(IUserOutput output, ILogger logger)
-            : base(logger)
+        public VerifyMessageResponseHandler(IUserOutput output,
+            IMessageCorrelationCache messageCorrelationCache,
+            ILogger logger)
+            : base(messageCorrelationCache, logger)
         {
             _output = output;
         }
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="VerifyMessageResponse" />.
+        /// Handles the VersionResponse message sent from the <see />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {   
             Logger.Debug("Handling VerifyMessageResponse");
 
