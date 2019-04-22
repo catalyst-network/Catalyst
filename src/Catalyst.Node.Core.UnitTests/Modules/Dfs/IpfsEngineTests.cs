@@ -83,6 +83,13 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                .Be(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, Core.Config.Constants.IpfsSubFolder));
         }
 
+        [Fact]
+        public void Constructor_should_use_ipfs_private_network()
+        {
+            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
+            _ipfsEngine.Options.Swarm.PrivateNetworkKey.Should().NotBeNull();
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

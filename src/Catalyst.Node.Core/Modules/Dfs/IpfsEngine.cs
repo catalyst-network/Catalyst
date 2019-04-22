@@ -68,6 +68,11 @@ namespace Catalyst.Node.Core.Modules.Dfs
                .Select(s => $"/dns/{s}/tcp/4001")
                .Select(ma => new MultiAddress(ma))
                .ToArray();
+            _ipfsEngine.Options.Swarm.PrivateNetworkKey = new PeerTalk.Cryptography.PreSharedKey
+            {
+                Value = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3".ToHexBuffer()
+
+            };
 
             //TODO: find out why this leaves the build server hanging on the test step
             //_ipfsEngine.StartAsync().GetAwaiter().GetResult();
