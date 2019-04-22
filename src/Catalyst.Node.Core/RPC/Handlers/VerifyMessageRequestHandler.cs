@@ -24,7 +24,6 @@
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Interfaces.Cryptography;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
@@ -61,8 +60,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
             _keySigner = keySigner;
             _peerId = peerIdentifier.PeerId;
         }
-        
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             _message = message;
             

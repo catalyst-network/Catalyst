@@ -24,16 +24,11 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Cryptography;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
 using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -43,12 +38,9 @@ using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using Multiformats.Base;
 using Nethereum.RLP;
-using NSec.Cryptography;
 using NSubstitute;
 using Serilog;
-using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -93,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("", "", "", false)]
         public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
         {   
-            var request = new VerifyMessageRequest()
+            var request = new VerifyMessageRequest
             {
                 Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -101,8 +93,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            
-            var handler = new VerifyMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier($"sender"), _logger, _keySigner);
+            var subbedCache = Substitute.For<IMessageCorrelationCache>();
+            var handler = new VerifyMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, subbedCache);
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
