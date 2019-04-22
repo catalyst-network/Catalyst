@@ -31,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Inbound
 {
-    public abstract class UdpServer
+    public class UdpServer
         : IoBase,
             IUdpServer
     {
@@ -39,7 +39,8 @@ namespace Catalyst.Common.IO.Inbound
         ///
         /// </summary>
         /// <param name="logger"></param>
-        protected UdpServer(ILogger logger) : base(logger) { }
+        protected UdpServer(ILogger logger)
+            : base(logger) { }
 
         /// <summary>
         /// 

@@ -33,7 +33,7 @@ namespace Catalyst.Common.Enumerator
     /// <summary>
     ///     <see href="https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/enumeration-classes-over-enum-types" />
     /// </summary>
-    public abstract class Enumeration
+    public class Enumeration
         : IEquatable<Enumeration>
     {
         protected Enumeration(int id, string name)

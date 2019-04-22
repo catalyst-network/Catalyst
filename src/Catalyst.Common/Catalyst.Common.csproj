@@ -205,8 +205,6 @@
     <Folder Include="FileSystem" />
     <Folder Include="Hex\HexConverters\Extensions\" />
     <Folder Include="Hex\HexTypes\" />
-    <Folder Include="IO\Inbound\Messaging" />
-    <Folder Include="IO\Outbound\Messaging" />
     <Folder Include="NSec\Cryptography\Buffer\" />
     <Folder Include="NSec\Cryptography\Formatting\" />
     <Folder Include="NSec\Interop\" />

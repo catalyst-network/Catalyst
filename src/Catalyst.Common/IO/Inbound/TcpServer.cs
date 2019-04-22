@@ -32,18 +32,18 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Inbound
 {
-    public abstract class TcpServer
+    public class TcpServer
         : IoBase,
             ITcpServer
     {
-        public IServerBootstrap Server { get; set; }
         private readonly IEventLoopGroup _supervisorEventLoop;
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="logger"></param>
-        protected TcpServer(ILogger logger) : base(logger)
+        protected TcpServer(ILogger logger)
+            : base(logger)
         {
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }

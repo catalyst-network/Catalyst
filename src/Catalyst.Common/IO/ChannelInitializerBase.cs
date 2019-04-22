@@ -32,7 +32,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO
 {
-    public abstract class ChannelInitializerBase<T>
+    public class ChannelInitializerBase<T>
         : ChannelInitializer<T>
         where T : IChannel
     {

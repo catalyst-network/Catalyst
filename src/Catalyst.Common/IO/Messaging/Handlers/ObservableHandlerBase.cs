@@ -42,7 +42,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         protected readonly BehaviorSubject<IChanneledMessage<AnySigned>> MessageSubject 
             = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

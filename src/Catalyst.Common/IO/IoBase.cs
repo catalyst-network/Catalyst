@@ -29,7 +29,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO
 {
-    public abstract class IoBase : ISocket, IDisposable
+    public class IoBase : ISocket, IDisposable
     {
         protected const int BackLogValue = 100;
         protected readonly ILogger Logger;
