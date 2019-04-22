@@ -35,7 +35,7 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Messaging
 {
-    public abstract class AbstractMessageCorrelationCache
+    public class AbstractMessageCorrelationCache
         : IMessageCorrelationCache
     {
         private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
@@ -45,7 +45,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Messaging
 
         public TimeSpan CacheTtl { get; }
 
-        protected AbstractMessageCorrelationCache(IMemoryCache cache,
+        private AbstractMessageCorrelationCache(IMemoryCache cache,
             ILogger logger,
             TimeSpan cacheTtl = default)
         {

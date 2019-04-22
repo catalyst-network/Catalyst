@@ -35,8 +35,8 @@ namespace Catalyst.Node.Common.Helpers.IO.Messaging.Handlers
         where TCorrelator : IMessageCorrelationCache
     {
         private readonly TCorrelator _correlationCache;
-        
-        public CorrelatableMessageHandlerBase(TCorrelator correlationCache,
+
+        protected CorrelatableMessageHandlerBase(TCorrelator correlationCache,
             ILogger logger)
             : base(logger)
         {
