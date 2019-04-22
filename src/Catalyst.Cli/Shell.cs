@@ -627,7 +627,7 @@ namespace Catalyst.Cli
             return _socketClientRegistry.GetClientFromRegistry(registryId);
         }
 
-        public IRpcNodeConfig GetNodeConfig(string nodeId)
+        private IRpcNodeConfig GetNodeConfig(string nodeId)
         {
             var config = _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
 
