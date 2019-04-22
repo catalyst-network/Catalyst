@@ -189,6 +189,8 @@
 !include .\/Catalyst.Node.Core/Modules/Dfs/IpfsDfs.puml
 !include .\/Catalyst.Node.Core/Modules/Mempool/Mempool.puml
 !include .\/Catalyst.Common.UnitTests/obj/Debug/netcoreapp2.2/Catalyst.Common.UnitTests.AssemblyInfo.puml
+!include .\/Catalyst.Node.Common/obj/Debug/netcoreapp2.2/Catalyst.Node.Common.AssemblyInfo.puml
+!include .\/Catalyst.Node.Common.UnitTests/obj/Debug/netcoreapp2.2/Catalyst.Node.Common.UnitTests.AssemblyInfo.puml
 !include .\/Catalyst.Cli.UnitTests/obj/Debug/netcoreapp2.2/Catalyst.Cli.UnitTests.AssemblyInfo.puml
 !include .\/Catalyst.Cli/obj/Debug/netcoreapp2.2/Catalyst.Cli.AssemblyInfo.puml
 !include .\/Catalyst.Node.Core.UnitTests/obj/Debug/netcoreapp2.2/Catalyst.Node.Core.UnitTest.AssemblyInfo.puml

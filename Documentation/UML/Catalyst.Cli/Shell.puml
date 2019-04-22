@@ -28,7 +28,7 @@ class Shell <<sealed>> {
     - OnMessageCommand(args:string[]) : bool
     + IsSocketChannelActive(node:INodeRpcClient) : bool
     + GetConnectedNode(nodeId:string) : INodeRpcClient
-    + GetNodeConfig(nodeId:string) : IRpcNodeConfig
+    - GetNodeConfig(nodeId:string) : IRpcNodeConfig
     - ReturnUserMessage(message:string) : void
 }
 class "IList`1"<T> {
