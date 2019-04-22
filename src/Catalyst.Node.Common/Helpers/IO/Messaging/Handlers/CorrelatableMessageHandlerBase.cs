@@ -29,22 +29,23 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Messaging.Handlers
 {
-    public abstract class AbstractCorrelatableAbstractMessageHandler<TProto, TCorrelator> : AbstractMessageHandlerBase<TProto>
+    public abstract class CorrelatableMessageHandlerBase<TProto, TCorrelator>
+        : MessageHandlerBase<TProto>
         where TProto : IMessage
         where TCorrelator : IMessageCorrelationCache
     {
         private readonly TCorrelator _correlationCache;
         
-        public AbstractCorrelatableAbstractMessageHandler(TCorrelator correlationCache, ILogger logger) : base(logger)
+        public CorrelatableMessageHandlerBase(TCorrelator correlationCache,
+            ILogger logger)
+            : base(logger)
         {
             _correlationCache = correlationCache;
         }
         
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            Logger.Debug("handle message in correlatable handler");
-            
-            // @TODO check our message is in cache
+            Logger.Debug("handle message in correlatable handler");            
             Handler(message);
         }
     }

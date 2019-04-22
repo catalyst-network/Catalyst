@@ -22,11 +22,9 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.IO.Outbound;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.P2P.Messaging;
-using Catalyst.Node.Common.P2P;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Serilog;
@@ -38,14 +36,19 @@ namespace Catalyst.Node.Common.Helpers.IO.Messaging.Handlers
     /// </summary>
     /// <typeparam name="TProto"></typeparam>
     /// <typeparam name="TReputableCache"></typeparam>
-    public abstract class ReputationAskRequestHandler<TProto, TReputableCache> : AbstractCorrelatableAbstractMessageHandler<TProto, TReputableCache>,
-        IReputationAskHandler<TReputableCache>
-        where TProto : IMessage
+    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    public abstract class ReputableTellResponseHandlerBase<TProto, TReputableCache, TRequest, TResponse>
+        : CorrelatableMessageHandlerBase<TProto, TReputableCache>,
+            IReputationAskHandler<TReputableCache>
+        where TProto : class, IMessage
         where TReputableCache : IMessageCorrelationCache
+        where TRequest : class, IMessage<TRequest>
+        where TResponse : class, IMessage<TResponse>
     {
         public TReputableCache ReputableCache { get; }
 
-        protected ReputationAskRequestHandler(TReputableCache reputableCache,
+        protected ReputableTellResponseHandlerBase(TReputableCache reputableCache,
             ILogger logger)
             : base(reputableCache, logger)
         {
@@ -56,16 +59,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Messaging.Handlers
         ///     Adds a new message to the correlation cache before we flush it away down the socket.
         /// </summary>
         /// <param name="message"></param>
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
-        {           
-            ReputableCache.AddPendingRequest(new PendingRequest
-            {
-                Content = message.Payload,
-                Recipient = new PeerIdentifier(message.Payload.PeerId),
-                SentAt = DateTimeOffset.UtcNow
-            });
-            
-            Handler(message);
+        protected override void Handler(IChanneledMessage<AnySigned> message)
+        {
+            ReputableCache.TryMatchResponse<TRequest, TResponse>(message.Payload);            
         }
     }
 }

@@ -31,13 +31,16 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO
 {
-    public abstract class CorrelatableMessageHandler<TProto, TCorrelator> : AbstractMessageHandlerBase<TProto>
+    public abstract class CorrelatableMessageHandler<TProto, TCorrelator>
+        : MessageHandlerBase<TProto>
         where TProto : IMessage
         where TCorrelator : IMessageCorrelationCache
     {
         private readonly TCorrelator _correlationCache;
         
-        public CorrelatableMessageHandler(TCorrelator correlationCache, ILogger logger) : base(logger)
+        public CorrelatableMessageHandler(TCorrelator correlationCache,
+            ILogger logger)
+            : base(logger)
         {
             _correlationCache = correlationCache;
         }

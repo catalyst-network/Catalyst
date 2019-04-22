@@ -33,7 +33,7 @@ using Catalyst.Protocol.Common;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class TransactionRequestHandler
-        : ReputationAskRequestHandler<Transaction, IReputableCache>,
+        : ReputableAskRequestHandlerBase<Transaction, IReputableCache>,
             IP2PMessageHandler
     {
         public TransactionRequestHandler(IReputableCache reputableCache,

@@ -44,7 +44,7 @@
         },
         //P2P request handlers
         {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingRequestHandler",
+            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingRequestAskHandler",
             "services": [
                 {
                     "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Node.Common"

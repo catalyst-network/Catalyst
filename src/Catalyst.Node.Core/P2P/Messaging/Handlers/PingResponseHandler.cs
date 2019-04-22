@@ -33,7 +33,7 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class PingResponseHandler
-        : AbstractReputationAskHandler<PingResponse, IReputableCache>,
+        : ReputableTellResponseHandlerBase<PingResponse, IReputableCache, PingRequest, PingResponse>,
             IP2PMessageHandler
     {
         public PingResponseHandler(IReputableCache reputableCache,
