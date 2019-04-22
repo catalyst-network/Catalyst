@@ -38,7 +38,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.VerifyMessageRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
                 }
             ]
         },
