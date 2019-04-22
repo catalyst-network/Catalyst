@@ -37,7 +37,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    internal sealed class GetInfoRequestHandler : AbstractCorrelatableAbstractMessageHandler<GetInfoRequest, IMessageCorrelationCache>, IRpcRequestHandler
+    internal sealed class GetInfoRequestHandler : CorrelatableMessageHandlerBase<GetInfoRequest, IMessageCorrelationCache>, IRpcRequestHandler
     {
         private readonly PeerId _peerId;
         private readonly IRpcServerSettings _config;

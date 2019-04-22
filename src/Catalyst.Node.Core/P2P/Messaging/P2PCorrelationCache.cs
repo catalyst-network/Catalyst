@@ -35,13 +35,17 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public sealed class P2PCorrelationCache : AbstractMessageCorrelationCache, IReputableCache
+    public sealed class P2PCorrelationCache
+        : AbstractMessageCorrelationCache,
+            IReputableCache
     {
         private static readonly int BaseReputationChange = 1;
         private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
         public IObservable<IPeerReputationChange> PeerRatingChanges => _ratingChangeSubject.AsObservable();
 
-        public P2PCorrelationCache(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default) 
+        public P2PCorrelationCache(IMemoryCache cache,
+            ILogger logger,
+            TimeSpan cacheTtl = default) 
             : base(cache, logger, cacheTtl)
         {
             logger.Debug("P2PCorrelationCache resolved once");

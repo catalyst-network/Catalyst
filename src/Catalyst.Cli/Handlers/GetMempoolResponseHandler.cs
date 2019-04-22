@@ -39,13 +39,13 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetMempoolResponseHandler
-        : AbstractCorrelatableAbstractMessageHandler<GetMempoolResponse, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<GetMempoolResponse, IMessageCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Constructor. Calls the base class <see cref="AbstractCorrelatableAbstractMessageHandler{TProto,TCorrelator}"/> constructor.
+        /// Constructor. Calls the base class <see cref="CorrelatableMessageHandlerBase{TProto,TCorrelator}"/> constructor.
         /// <param name="output">A service used to output the result of the messages handling to the user.</param>
         /// <param name="logger">Logger to log debug related information.</param>
         /// </summary>
