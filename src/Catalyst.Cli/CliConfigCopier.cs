@@ -22,15 +22,15 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Node.Common.Helpers.Config;
+using Catalyst.Common.Config;
 
 namespace Catalyst.Cli
 {
-    public sealed class CliConfigCopier : ConfigCopier
+    public sealed class CliConfigCopier
+        : ConfigCopier
     {
         protected override IEnumerable<string> RequiredConfigFiles(Network network)
         {
-            //var baseConfigs = base.RequiredConfigFiles(network);
             return new[]
             {
                 Constants.ShellNodesConfigFile,

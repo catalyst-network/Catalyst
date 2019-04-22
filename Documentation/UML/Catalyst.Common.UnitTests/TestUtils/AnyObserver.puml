@@ -1,0 +1,16 @@
+@startuml
+class AnySignedMessageObserver <<sealed>> {
+    + AnySignedMessageObserver(index:int, logger:ILogger)
+    + Index : int <<get>>
+    + OnCompleted() : void
+    + OnError(error:Exception) : void
+    + OnNext(value:IChanneledMessage<AnySigned>) : void
+}
+class "IObserver`1"<T> {
+}
+class "IChanneledMessage`1"<T> {
+}
+"IObserver`1" "<IChanneledMessage<AnySigned>>" <|-- AnySignedMessageObserver
+AnySignedMessageObserver --> "_logger" ILogger
+AnySignedMessageObserver --> "Received<AnySigned>" "IChanneledMessage`1"
+@enduml

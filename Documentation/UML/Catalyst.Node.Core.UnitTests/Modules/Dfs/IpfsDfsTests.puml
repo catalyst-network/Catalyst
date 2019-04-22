@@ -1,0 +1,22 @@
+@startuml
+class IpfsDfsTests <<sealed>> {
+    - <<const>> DelayInMs : int = 50
+    - <<const>> DelayMultiplier : int = 4
+    + IpfsDfsTests()
+    + <<async>> AddTextAsync_should_rely_on_ipfsEngine_and_return_record_id() : Task
+    + <<async>> AddAsync_should_rely_on_ipfsEngine_and_return_record_id() : Task
+    + <<async>> ReadAsync_should_rely_on_ipfsEngine_and_return_streamed_content() : Task
+    + <<async>> ReadTextAsync_should_rely_on_ipfsEngine_and_return_text_content() : Task
+    + AddTextAsync_should_be_cancellable() : void
+    + AddAsync_should_be_cancellable() : void
+    + ReadTextAsync_should_be_cancellable() : void
+    + ReadAsync_should_be_cancellable() : void
+    + Dispose() : void
+}
+IDisposable <|-- IpfsDfsTests
+IpfsDfsTests --> "_ipfsEngine" IIpfsEngine
+IpfsDfsTests --> "_logger" ILogger
+IpfsDfsTests --> "_expectedCid" Cid
+IpfsDfsTests --> "_addedRecord" IFileSystemNode
+IpfsDfsTests --> "_cancellationTokenSource" CancellationTokenSource
+@enduml

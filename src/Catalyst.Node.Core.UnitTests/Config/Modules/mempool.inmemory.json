@@ -2,10 +2,10 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Protocol.Transaction.Transaction, Catalyst.Node.Common], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
+      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Protocol.Transaction.Transaction, Catalyst.Common], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Common]], SharpRepository.InMemoryRepository",
       "services": [
         {
-          "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Protocol.Transaction.Transaction, Catalyst.Node.Common], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Node.Common]], SharpRepository.Repository"
+          "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Protocol.Transaction.Transaction, Catalyst.Common], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Common]], SharpRepository.Repository"
         }
       ]
     },
@@ -13,7 +13,7 @@
       "type": "Catalyst.Node.Core.Modules.Mempool.Mempool",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Node.Common"
+          "type": "Catalyst.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Common"
         }
       ]
     }

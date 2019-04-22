@@ -1,0 +1,9 @@
+@startuml
+interface IP2PService {
+}
+class "IChanneledMessageStreamer`1"<T> {
+}
+"IChanneledMessageStreamer`1" "<AnySigned>" <|-- IP2PService
+IDisposable <|-- IP2PService
+IP2PService --> "Discovery" IPeerDiscovery
+@enduml

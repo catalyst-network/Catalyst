@@ -24,10 +24,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;
@@ -37,7 +37,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using PendingRequest = Catalyst.Node.Common.Helpers.IO.Outbound.PendingRequest;
+using PendingRequest = Catalyst.Common.IO.Outbound.PendingRequest;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {

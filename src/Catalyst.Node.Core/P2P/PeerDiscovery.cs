@@ -27,24 +27,25 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Network;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.P2P;
+using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Network;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.Network;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
-using Peer = Catalyst.Node.Common.P2P.Peer;
+using Peer = Catalyst.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerDiscovery : IPeerDiscovery, IDisposable
+    public sealed class PeerDiscovery
+        : IPeerDiscovery, IDisposable
     {
         public IDns Dns { get; }
         public ILogger Logger { get; }

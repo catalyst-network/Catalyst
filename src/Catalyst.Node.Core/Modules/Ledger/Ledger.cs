@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces.Modules.Ledger;
+using Catalyst.Common.Interfaces.Modules.Ledger;
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {

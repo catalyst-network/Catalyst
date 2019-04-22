@@ -27,11 +27,11 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Helpers.IO.Messaging;
-using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
@@ -39,7 +39,9 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerClient : UdpClient, IPeerClient
+    public sealed class PeerClient
+        : UdpClient,
+            IPeerClient
     {
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
@@ -54,7 +56,7 @@ namespace Catalyst.Node.Core.P2P
         {
             Logger.Debug("P2P client starting");
 
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+            var protoDatagramChannelHandler = new ProtoDatagramChannelHandlerBase();
             MessageStream = protoDatagramChannelHandler.MessageStream;
             messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
 
@@ -63,7 +65,7 @@ namespace Catalyst.Node.Core.P2P
                 protoDatagramChannelHandler
             };
 
-            Bootstrap(new OutboundChannelInitializer<IChannel>(channel => { },
+            Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
                 channelHandlers,
                 ipEndPoint.Address
             ), ipEndPoint);

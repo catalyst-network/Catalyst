@@ -1,0 +1,20 @@
+@startuml
+class PeerIdentifierTests {
+    + PeerIdentifierTests(output:ITestOutputHelper)
+    + Valid_Peer_should_have_fields_with_correct_sizes() : void
+    + Constructor_should_fail_on_wrong_public_key(pubKeySize:int) : void
+    + Constructor_should_fail_on_wrong_ip(ipBytes:byte[]) : void
+    + Constructor_should_fail_on_wrong_ClientId(clientId:string) : void
+    + Constructor_should_fail_on_wrong_ClientVersion(version:string) : void
+    + Constructor_should_fail_on_wrong_Port(port:ushort) : void
+}
+class IpTestData <<sealed>> {
+    + IpTestData()
+}
+class "TheoryData`1"<T> {
+}
+PeerIdentifierTests --> "_output" ITestOutputHelper
+PeerIdentifierTests --> "_validPeerId" PeerId
+PeerIdentifierTests +-- IpTestData
+"TheoryData`1" "<byte[]>" <|-- IpTestData
+@enduml

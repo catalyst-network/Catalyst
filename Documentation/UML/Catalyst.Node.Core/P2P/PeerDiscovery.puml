@@ -1,14 +1,24 @@
 @startuml
-class PeerDiscovery {
-    + PeerDiscovery(dns:IDns, repository:IRepository<Peer>)
-    <<internal>> <<async>> GetSeedNodes(seedServers:List<string>) : Task
+class PeerDiscovery <<sealed>> {
+    + PeerDiscovery(dns:IDns, repository:IRepository<Peer>, rootSection:IConfigurationRoot, logger:ILogger)
+    + ParseDnsServersFromConfig(rootSection:IConfigurationRoot) : void
+    + <<async>> GetSeedNodesFromDns(seedServers:IList<string>) : Task
+    + StartObserving(observer:IObservable<IChanneledMessage<AnySigned>>) : void
+    - PrintIt(message:IChanneledMessage<AnySigned>) : void
+    - <<async>> PeerCrawler() : Task
+    + Dispose() : void
+    - Dispose(disposing:bool) : void
+}
+class "IList`1"<T> {
 }
 class "IRepository`1"<T> {
 }
-class "List`1"<T> {
-}
 IPeerDiscovery <|-- PeerDiscovery
-PeerDiscovery --> "_dns" IDns
-PeerDiscovery --> "_peerRepository<Peer>" "IRepository`1"
-PeerDiscovery --> "SeedNodes<IPEndPoint>" "List`1"
+IDisposable <|-- PeerDiscovery
+PeerDiscovery --> "Dns" IDns
+PeerDiscovery --> "Logger" ILogger
+PeerDiscovery --> "SeedNodes<string>" "IList`1"
+PeerDiscovery --> "Peers<IPEndPoint>" "IList`1"
+PeerDiscovery --> "PeerRepository<Peer>" "IRepository`1"
+PeerDiscovery --> "_streamSubscription" IDisposable
 @enduml

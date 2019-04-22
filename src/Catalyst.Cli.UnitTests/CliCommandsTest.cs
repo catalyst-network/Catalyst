@@ -23,16 +23,16 @@
 
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Common.Config;
+using Catalyst.Common.UnitTests.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
 using NSubstitute;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Autofac;
-using Catalyst.Node.Common.Interfaces.Cli;
-using Catalyst.Node.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Rpc;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Cli.UnitTests

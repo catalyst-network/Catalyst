@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces.Modules.Contract;
+using Catalyst.Common.Interfaces.Modules.Contract;
 
 namespace Catalyst.Node.Core.Modules.Contract
 {

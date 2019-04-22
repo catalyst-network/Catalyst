@@ -1,0 +1,19 @@
+@startuml
+abstract class "ObservableHandlerBase`1"<T> {
+    - Dispose(disposing:bool) : void
+    + Dispose() : void
+}
+class "SimpleChannelInboundHandler`1"<T> {
+}
+class "IChanneledMessageStreamer`1"<T> {
+}
+class "IObservable`1"<T> {
+}
+class "BehaviorSubject`1"<T> {
+}
+"SimpleChannelInboundHandler`1" "<T>" <|-- "ObservableHandlerBase`1"
+"IChanneledMessageStreamer`1" "<AnySigned>" <|-- "ObservableHandlerBase`1"
+IDisposable <|-- "ObservableHandlerBase`1"
+"ObservableHandlerBase`1" --> "MessageStream<IChanneledMessage<AnySigned>>" "IObservable`1"
+"ObservableHandlerBase`1" o-> "MessageSubject<IChanneledMessage<AnySigned>>" "BehaviorSubject`1"
+@enduml

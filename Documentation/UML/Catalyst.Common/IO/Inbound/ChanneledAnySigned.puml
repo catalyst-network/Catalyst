@@ -1,0 +1,10 @@
+@startuml
+class ChanneledAnySigned <<sealed>> {
+    + ChanneledAnySigned(context:IChannelHandlerContext, message:AnySigned)
+}
+class "IChanneledMessage`1"<T> {
+}
+"IChanneledMessage`1" "<AnySigned>" <|-- ChanneledAnySigned
+ChanneledAnySigned --> "Payload" AnySigned
+ChanneledAnySigned --> "Context" IChannelHandlerContext
+@enduml

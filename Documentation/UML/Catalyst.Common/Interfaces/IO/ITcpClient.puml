@@ -1,0 +1,5 @@
+@startuml
+interface ITcpClient {
+}
+ISocketClient <|-- ITcpClient
+@enduml

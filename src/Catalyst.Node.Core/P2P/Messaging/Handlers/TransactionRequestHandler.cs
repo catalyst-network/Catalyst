@@ -22,12 +22,12 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.Extensions;
+using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Transaction;
 using Serilog;
-using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers

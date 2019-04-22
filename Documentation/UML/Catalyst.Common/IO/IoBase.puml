@@ -1,0 +1,14 @@
+@startuml
+class IoBase {
+    # <<const>> BackLogValue : int = 100
+    # IoBase(logger:ILogger)
+    + <<virtual>> <<async>> Shutdown() : Task
+    + Dispose() : void
+    # <<virtual>> Dispose(disposing:bool) : void
+}
+ISocket <|-- IoBase
+IDisposable <|-- IoBase
+IoBase --> "Logger" ILogger
+IoBase --> "WorkerEventLoop" IEventLoopGroup
+IoBase --> "Channel" IChannel
+@enduml

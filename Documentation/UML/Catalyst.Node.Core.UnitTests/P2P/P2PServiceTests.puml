@@ -1,0 +1,15 @@
+@startuml
+class P2PServiceTests <<sealed>> {
+    + P2PServiceTests(output:ITestOutputHelper)
+    + DoesResolveIp2PServiceCorrectly() : void
+    + CanReceiveEventsFromSubscribedStream() : void
+    + PingRequestIsRegisteredInReputationCache() : void
+    + CanReceivePingRequests() : void
+}
+ConfigFileBasedTest <|-- P2PServiceTests
+P2PServiceTests --> "_config" IConfigurationRoot
+P2PServiceTests --> "_pid" IPeerIdentifier
+P2PServiceTests --> "_guid" Guid
+P2PServiceTests --> "_logger" ILogger
+P2PServiceTests --> "_pingRequest" PingRequest
+@enduml

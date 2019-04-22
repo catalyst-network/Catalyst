@@ -1,0 +1,5 @@
+@startuml
+class MessageStreamHelper <<static>> {
+    + {static} CreateStreamWithMessage(fakeContext:IChannelHandlerContext, response:AnySigned) : IObservable<IChanneledMessage<AnySigned>>
+}
+@enduml

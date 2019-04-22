@@ -1,0 +1,5 @@
+@startuml
+class PeerIdentifierHelper <<static>> {
+    + {static} GetPeerIdentifier(publicKeySeed:string, clientId:string, clientVersion:int, ipAddress:IPAddress, port:int) : IPeerIdentifier
+}
+@enduml

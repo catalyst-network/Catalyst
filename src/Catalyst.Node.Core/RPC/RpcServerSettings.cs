@@ -23,7 +23,7 @@
 
 using Microsoft.Extensions.Configuration;
 using System.Net;
-using Catalyst.Node.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.Rpc;
 using Dawn;
 
 namespace Catalyst.Node.Core.RPC
@@ -31,7 +31,8 @@ namespace Catalyst.Node.Core.RPC
     /// <summary>
     ///     This class provides the settings for the RpcServer class.
     /// </summary>
-    public class RpcServerSettings : IRpcServerSettings
+    public class RpcServerSettings
+        : IRpcServerSettings
     {
         /// <summary>
         ///     Sets RpcServerSetting Attributes

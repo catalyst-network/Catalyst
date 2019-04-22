@@ -21,11 +21,12 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cli;
 
 namespace Catalyst.Cli
 {
-    public class CatalystCli : ICatalystCli
+    public class CatalystCli
+        : ICatalystCli
     {
         public IAdvancedShell AdvancedShell { get; set; }
 
