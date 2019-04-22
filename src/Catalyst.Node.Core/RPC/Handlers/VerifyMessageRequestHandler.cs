@@ -24,13 +24,13 @@
 using System;
 using Catalyst.Node.Common.Helpers.Extensions;
 using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Interfaces.Cryptography;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
@@ -43,6 +43,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IKeySigner _keySigner;
         private readonly PeerId _peerId;
+        private IChanneledMessage<AnySigned> _message;
+        
+        private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
+        private const string PublicKeyNotProvided = "PublicKey not provided";
+        private const string SignatureEncodingInvalid = "Invalid Signature encoding";
+        private const string SignatureNotProvided = "Signature not provided";
+        private const string FailedToHandleMessage = "Failed to handle VerifyMessageRequest after receiving message";
 
         public VerifyMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
@@ -56,49 +63,73 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
+            _message = message;
+            
             Logger.Debug("received message of type VerifyMessageRequest");
             
+            var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
+
+            var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData.ToStringFromRLPDecoded();
+            var publicKey = deserialised.PublicKey;
+            var signature = deserialised.Signature;
+
             try
             {
-                var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
+                if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out var encodingUsed, out var decodedPublicKey))
+                {
+                    Logger.Error($"{PublicKeyEncodingInvalid} {encodingUsed}");
+                    ReturnResponse(false);
+                    return;
+                }
 
-                //get the original message from the decoded message
-                //decode the received message
-                var decodeResult = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
-
-                //get the original message from the decoded message
-                var decodedMessage = decodeResult.ToStringFromRLPDecoded();
-                var publicKey = deserialised.PublicKey;
-                var signature = deserialised.Signature;
-
-                var decodedPublicKey = Multibase.Decode(publicKey.ToStringUtf8(), out string _);
-                var decodedSignature = Multibase.Decode(signature.ToStringUtf8(), out string _);
-
-                //use the keysigner to build an IPublicKey
-                IPublicKey pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
+                if (decodedPublicKey.Length == 0)
+                {
+                    Logger.Error($"{PublicKeyNotProvided}");
+                    ReturnResponse(false);
+                    return;
+                }
                 
-                //verify that the message was signed by a key corresponding to the provided
+                if (!Multibase.TryDecode(signature.ToStringUtf8(), out encodingUsed, out var decodedSignature))
+                {
+                    Logger.Error($"{SignatureEncodingInvalid} {encodingUsed}");
+                    ReturnResponse(false);
+                    return;
+                }
+                
+                if (decodedSignature.Length == 0)
+                {
+                    Logger.Error($"{SignatureNotProvided}");
+                    ReturnResponse(false);
+                    return;
+                }
+                
+                var pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
+
+                Guard.Argument(pubKey).HasValue();
+
                 var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
                     decodedSignature);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
-
-                var response = new VerifyMessageResponse
-                {
-                    IsSignedByKey = result
-                };
                 
-                //return response to the CLI
-                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
-                
-                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+                ReturnResponse(result);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex,
-                    "Failed to handle VerifyMessageRequest after receiving message {0}", message);
-                throw;
+                Logger.Error(ex, $"{FailedToHandleMessage} {message}");
             } 
+        }
+
+        private void ReturnResponse(bool result)
+        {
+            var response = new VerifyMessageResponse
+            {
+                IsSignedByKey = result
+            };
+
+            var anySignedResponse = response.ToAnySigned(_peerId, _message.Payload.CorrelationId.ToGuid());
+
+            _message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
         }
     }
 }

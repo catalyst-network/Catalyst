@@ -24,14 +24,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading;
 using Autofac;
 using Catalyst.Node.Common.Helpers.Config;
 using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.Cryptography;
+using Catalyst.Node.Common.Helpers.Util;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Node.Common.UnitTests.TestUtils;
@@ -42,11 +38,9 @@ using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using Multiformats.Base;
-using NSec.Cryptography;
+using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
-using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -56,8 +50,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
-
         private readonly IKeySigner _keySigner;
+        private readonly IChannelHandlerContext _fakeContext;
 
         public VerifyMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
@@ -71,76 +65,47 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ConfigureContainerBuilder(config);
 
             var container = ContainerBuilder.Build();
-
             _scope = container.BeginLifetimeScope(CurrentTestName);
-
-            _logger = container.Resolve<ILogger>();
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory
-               .AddProvider(new SerilogLoggerProvider(_logger));
-
-            container.Resolve<ICertificateStore>();
+            
             _keySigner = container.Resolve<IKeySigner>();
+            
+            _logger = Substitute.For<ILogger>();
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+            
+            var fakeChannel = Substitute.For<IChannel>();
+            _fakeContext.Channel.Returns(fakeChannel);
         }
         
-        [Fact] public void RpcServer_Can_Handle_VerifyMessageRequest()
+        [Theory]
+        [InlineData("hello", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", true)]
+        [InlineData("Different Message", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", false)]
+        [InlineData("hello", "any signature", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", false)]
+        [InlineData("hello", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "any public key", false)]
+        [InlineData("hello", "any signature", "any public key", false)]
+        [InlineData("", "", "", false)]
+        public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
         {   
-            //Substitute for the context and the channel
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            
-            fakeContext.Channel.Returns(fakeChannel);
-
-            //Matching the SignMessageRequestHandler
-            //sign a message to get the signature and the public key
-            const string message = "Hello Catalyst";
-            var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
-            var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(message));
-            var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey).GetNSecFormatPublicKey()
-               .Export(KeyBlobFormat.PkixPublicKey);
-
-            var encodedSignature = Multibase.Encode(MultibaseEncoding.Base64, signature);
-            var encodedPublicKey = Multibase.Encode(MultibaseEncoding.Base58Btc, publicKey);
-            
-            //create a verify message request and populate with the data returned from the signed message
-            var request = new VerifyMessageRequest()
+            var request = new VerifyMessageRequest
             {
-                Message = message.ToUtf8ByteString(),
-                PublicKey = encodedPublicKey.ToUtf8ByteString(),
-                Signature = encodedSignature.ToUtf8ByteString()
-            };
+                Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
+                PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
+                Signature = signature.ToBytesForRLPEncoding().ToByteString()
+            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
             
-            //create a channel using the mock context and request
-            var channeledAny = new ChanneledAnySigned(fakeContext, 
-                request.ToAnySigned(PeerIdHelper.GetPeerId("sender")));
-
-            var verifyRequest = new[] {channeledAny}.ToObservable()
-               .DelaySubscription(TimeSpan.FromMilliseconds(50));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
+            var subbedCache = Substitute.For<IMessageCorrelationCache>();
+            var handler = new VerifyMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, subbedCache);
+            handler.StartObserving(messageStream);
             
-            //pass the created observable sequence as the message stream to the VerifyMessageRequestHandler
-            //Calling the constructor will call the 
-            var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new VerifyMessageRequestHandler(
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                _logger,
-                _keySigner,
-                correlationCache);
-            handler.StartObserving(verifyRequest);
-            
-            //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
-            //is finished before we assert for the Received calls in the following statements.
-            Thread.Sleep(500);
-            
-            //Check the channel received 1 call to 
-            var receivedCalls = fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);
             
-            //Get the received response object and verify it is VerifyMessageResponse
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
-            
-            //There should be some assertions checking the contents of the response. 
-            //Since the VerifyMessageResponse only has a true/false value those checks seemed 
-            //unnecessary.
+
+            var responseContent = sentResponse.FromAnySigned<VerifyMessageResponse>();
+
+            responseContent.IsSignedByKey.Should().Be(expectedResult);
         }
 
         protected override void Dispose(bool disposing)
@@ -150,7 +115,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             {
                 return;
             }
-
+            
             _scope?.Dispose();
         }
     }

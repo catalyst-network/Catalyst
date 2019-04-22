@@ -34,6 +34,14 @@
                 }
             ]
         },
+        {
+            "type": "Catalyst.Node.Core.RPC.Handlers.VerifyMessageRequestHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                }
+            ]
+        },
         //P2P request handlers
         {
             "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingRequestHandler",
