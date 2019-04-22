@@ -1,7 +1,10 @@
 @startuml
 class Program <<static>> {
-    - {static} CatalystSubfolder : string <<get>>
-    - {static} ShellFileName : string <<get>>
-    + {static} Main(args:string[]) : int
+    - {static} <<readonly>> LifetimeTag : string
+    - {static} <<readonly>> LogFileName : string = "Catalyst.Cli..log"
+    {static} Program()
+    + {static} Main() : int
 }
+Program --> "_logger" ILogger
+Program --> "DeclaringType" Type
 @enduml

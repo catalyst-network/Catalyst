@@ -1,5 +1,0 @@
-@startuml
-interface IMessageSender {
-    Send(connection:IConnection, message:IMessage) : void
-}
-@enduml

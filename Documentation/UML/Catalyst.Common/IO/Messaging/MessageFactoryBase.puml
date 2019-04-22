@@ -1,0 +1,10 @@
+@startuml
+abstract class "MessageFactoryBase`2"<TMessage,TMessageType> {
+    + {abstract} GetMessage(dto:IP2PMessageDto<TMessage, TMessageType>) : AnySigned
+    # BuildTellMessage(dto:IP2PMessageDto<TMessage, TMessageType>) : AnySigned
+    # BuildAskMessage(dto:IP2PMessageDto<TMessage, TMessageType>) : AnySigned
+    # BuildGossipMessage(dto:IP2PMessageDto<TMessage, TMessageType>) : AnySigned
+}
+class "IMessage`1"<T> {
+}
+@enduml

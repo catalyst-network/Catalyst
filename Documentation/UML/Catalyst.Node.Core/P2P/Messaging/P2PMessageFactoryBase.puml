@@ -1,0 +1,11 @@
+@startuml
+class "P2PMessageFactoryBase`2"<TMessage,TMessageType> <<sealed>> {
+    + GetMessageInDatagramEnvelope(dto:IP2PMessageDto<TMessage, TMessageType>) : IByteBufferHolder
+    + <<override>> GetMessage(dto:IP2PMessageDto<TMessage, TMessageType>) : AnySigned
+}
+class "MessageFactoryBase`2"<T1,T2> {
+}
+class "IMessage`1"<T> {
+}
+"MessageFactoryBase`2" "<TMessage,TMessageType>" <|-- "P2PMessageFactoryBase`2"
+@enduml

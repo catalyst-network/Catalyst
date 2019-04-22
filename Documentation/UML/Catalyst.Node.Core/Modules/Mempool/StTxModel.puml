@@ -1,6 +1,0 @@
-@startuml
-class StTxModel {
-}
-StTxModel --> "Key" Key
-StTxModel --> "Transaction" StTx
-@enduml

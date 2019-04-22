@@ -1,7 +1,7 @@
 @startuml
 class MempoolTests {
     + MempoolTests()
-    - {static} AddKeyValueStoreEntryExpectation(key:Key, tx:StTx, keyValueStore:IRepository<StTxModel, Key>) : void
+    - {static} AddKeyValueStoreEntryExpectation(transaction:Transaction, store:IRepository<Transaction, TransactionSignature>) : void
     + Get_should_retrieve_a_saved_transaction() : void
     + Get_should_retrieve_saved_transaction_matching_their_keys() : void
     + GetNonExistentKey() : void
@@ -12,17 +12,14 @@ class MempoolTests {
 }
 class "IRepository`2"<T1,T2> {
 }
-class ProducerConsumer {
+class ProducerConsumer <<sealed>> {
     - {static} <<readonly>> Locker : object
-    + ProducerConsumer(memPool:IMempool, key:Key, keyValueStore:IRepository<StTxModel, Key>)
+    + ProducerConsumer(memPool:IMempool, keyValueStore:IRepository<Transaction, TransactionSignature>)
     + Writer() : void
 }
-MempoolTests --> "_keyValueStore<StTxModel,Key>" "IRepository`2"
-MempoolTests --> "_key" Key
-MempoolTests --> "_transaction" StTx
-MempoolTests --> "_logger" ILogger
+MempoolTests --> "_transactionStore<Transaction,TransactionSignature>" "IRepository`2"
+MempoolTests --> "_transaction" Transaction
 MempoolTests +-- ProducerConsumer
-ProducerConsumer --> "_key" Key
-ProducerConsumer --> "_keyValueStore<StTxModel,Key>" "IRepository`2"
+ProducerConsumer --> "_keyValueStore<Transaction,TransactionSignature>" "IRepository`2"
 ProducerConsumer --> "_memPool" IMempool
 @enduml

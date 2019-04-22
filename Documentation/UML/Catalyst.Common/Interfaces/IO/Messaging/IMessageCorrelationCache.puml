@@ -1,0 +1,8 @@
+@startuml
+interface IMessageCorrelationCache {
+    TryMatchResponse(response:AnySigned) : TRequest
+    AddPendingRequest(pendingRequest:PendingRequest) : void
+}
+IDisposable <|-- IMessageCorrelationCache
+IMessageCorrelationCache --> "CacheTtl" TimeSpan
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+class "ChannelInitializerBase`1"<T> {
+    # ChannelInitializerBase(initializationAction:Action<T>, handlers:IList<IChannelHandler>, tlsHandler:TlsHandler)
+    # <<override>> InitChannel(channel:T) : void
+}
+class "ChannelInitializer`1"<T> {
+}
+class "Action`1"<T> {
+}
+class "IReadOnlyCollection`1"<T> {
+}
+"ChannelInitializer`1" "<T>" <|-- "ChannelInitializerBase`1"
+"ChannelInitializerBase`1" --> "_initializationAction<T>" "Action`1"
+"ChannelInitializerBase`1" --> "_handlers<IChannelHandler>" "IReadOnlyCollection`1"
+"ChannelInitializerBase`1" --> "_tlsHandler" TlsHandler
+@enduml

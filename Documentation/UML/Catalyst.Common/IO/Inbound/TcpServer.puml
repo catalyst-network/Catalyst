@@ -1,0 +1,10 @@
+@startuml
+class TcpServer {
+    # TcpServer(logger:ILogger)
+    + Bootstrap(channelInitializer:IChannelHandler, listenAddress:IPAddress, port:int) : void
+    + <<override>> <<async>> Shutdown() : Task
+}
+IoBase <|-- TcpServer
+ITcpServer <|-- TcpServer
+TcpServer --> "_supervisorEventLoop" IEventLoopGroup
+@enduml

@@ -1,8 +1,0 @@
-@startuml
-interface ISocketClient {
-    ConnectClient(listenAddress:IPAddress, port:int) : Task<ISocketClient>
-}
-IISocket <|-- ISocketClient
-ISocketClient --> "Channel" IChannel
-ISocketClient --> "Client" IBootstrap
-@enduml

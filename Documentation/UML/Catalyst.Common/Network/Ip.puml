@@ -1,0 +1,15 @@
+@startuml
+class Ip <<static>> {
+    {static} Ip()
+    + {static} <<async>> GetPublicIpAsync(ipEchoUrls:IObservable<string>) : Task<IPAddress>
+    + {static} To16Bytes(address:IPAddress) : byte[]
+    - {static} <<async>> TryGetExternalIpFromEchoUrl(url:string) : Task<IPAddress>
+    <<internal>> {static} ValidPortRange(port:int) : bool
+    + {static} BuildIpAddress(ipOrHost:string) : IPAddress
+    <<internal>> {static} ValidateIp(ip:string) : IPAddress
+}
+class "ReadOnlyCollection`1"<T> {
+}
+Ip o-> "Logger" ILogger
+Ip --> "DefaultIpEchoUrls<string>" "ReadOnlyCollection`1"
+@enduml

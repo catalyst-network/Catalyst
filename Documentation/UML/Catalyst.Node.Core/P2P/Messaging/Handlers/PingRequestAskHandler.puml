@@ -1,0 +1,11 @@
+@startuml
+class PingRequestAskHandler <<sealed>> {
+    + PingRequestAskHandler(peerIdentifier:IPeerIdentifier, reputableCache:IReputableCache, logger:ILogger)
+    # <<override>> Handler(message:IChanneledMessage<AnySigned>) : void
+}
+class "ReputableAskRequestHandlerBase`2"<T1,T2> {
+}
+"ReputableAskRequestHandlerBase`2" "<PingRequest,IReputableCache>" <|-- PingRequestAskHandler
+IP2PMessageHandler <|-- PingRequestAskHandler
+PingRequestAskHandler --> "_peerIdentifier" IPeerIdentifier
+@enduml

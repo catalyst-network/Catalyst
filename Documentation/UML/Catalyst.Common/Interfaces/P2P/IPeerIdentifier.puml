@@ -1,0 +1,13 @@
+@startuml
+interface IPeerIdentifier {
+    ClientId : string <<get>>
+    ClientVersion : string <<get>>
+    Port : int <<get>>
+}
+class "IEquatable`1"<T> {
+}
+"IEquatable`1" "<IPeerIdentifier>" <|-- IPeerIdentifier
+IPeerIdentifier --> "PeerId" PeerId
+IPeerIdentifier --> "Ip" IPAddress
+IPeerIdentifier --> "IpEndPoint" IPEndPoint
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+class CliCommandsTests <<sealed>> {
+    + CliCommandsTests(output:ITestOutputHelper)
+    + Cli_Can_Connect_To_Node() : void
+    + Cli_Can_Handle_Multiple_Connection_Attempts() : void
+    + Cli_Can_Request_Node_Config() : void
+    + Cli_Can_Request_Node_Version() : void
+    + Cli_Can_Request_Node_Mempool() : void
+    + Cli_Can_Request_Node_To_Sign_A_Message() : void
+    + Cli_Can_Verify_Message() : void
+}
+ConfigFileBasedTest <|-- CliCommandsTests
+@enduml

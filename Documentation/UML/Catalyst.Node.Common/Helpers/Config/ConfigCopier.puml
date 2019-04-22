@@ -1,7 +1,0 @@
-@startuml
-class ConfigCopier {
-    - <<const>> OverwriteFilesByDefault : bool = false
-    + RunConfigStartUp(dataDir:string, network:Network, overwrite:bool) : void
-    - CopyConfigFileToFolder(targetFolder:string, fileName:string, overwrite:bool) : void
-}
-@enduml

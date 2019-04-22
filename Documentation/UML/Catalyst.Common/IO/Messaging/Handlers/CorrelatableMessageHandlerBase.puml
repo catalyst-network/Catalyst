@@ -1,0 +1,10 @@
+@startuml
+abstract class "CorrelatableMessageHandlerBase`2"<TProto,TCorrelator> {
+    - <<readonly>> _correlationCache : TCorrelator
+    # CorrelatableMessageHandlerBase(correlationCache:TCorrelator, logger:ILogger)
+    + <<override>> HandleMessage(message:IChanneledMessage<AnySigned>) : void
+}
+class "MessageHandlerBase`1"<T> {
+}
+"MessageHandlerBase`1" "<TProto>" <|-- "CorrelatableMessageHandlerBase`2"
+@enduml

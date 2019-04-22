@@ -1,0 +1,10 @@
+@startuml
+class AnySignedTypeClientHandlerBase <<sealed>> {
+    # <<override>> ChannelRead0(context:IChannelHandlerContext, message:AnySigned) : void
+    + <<override>> ExceptionCaught(context:IChannelHandlerContext, e:Exception) : void
+}
+class "ObservableHandlerBase`1"<T> {
+}
+"ObservableHandlerBase`1" "<AnySigned>" <|-- AnySignedTypeClientHandlerBase
+AnySignedTypeClientHandlerBase o-> "Logger" ILogger
+@enduml

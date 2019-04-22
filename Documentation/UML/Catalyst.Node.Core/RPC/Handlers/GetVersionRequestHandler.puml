@@ -1,0 +1,11 @@
+@startuml
+class GetVersionRequestHandler {
+    + GetVersionRequestHandler(peerIdentifier:IPeerIdentifier, logger:ILogger, messageCorrelationCache:IMessageCorrelationCache)
+    # <<override>> Handler(message:IChanneledMessage<AnySigned>) : void
+}
+class "CorrelatableMessageHandlerBase`2"<T1,T2> {
+}
+"CorrelatableMessageHandlerBase`2" "<VersionRequest,IMessageCorrelationCache>" <|-- GetVersionRequestHandler
+IRpcRequestHandler <|-- GetVersionRequestHandler
+GetVersionRequestHandler --> "_peerId" PeerId
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+class VerifyMessageRequestHandlerTest <<sealed>> {
+    + VerifyMessageRequestHandlerTest(output:ITestOutputHelper)
+    + VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(message:string, signature:string, publicKey:string, expectedResult:bool) : void
+    # <<override>> Dispose(disposing:bool) : void
+}
+ConfigFileBasedTest <|-- VerifyMessageRequestHandlerTest
+VerifyMessageRequestHandlerTest --> "_scope" ILifetimeScope
+VerifyMessageRequestHandlerTest --> "_logger" ILogger
+VerifyMessageRequestHandlerTest --> "_keySigner" IKeySigner
+VerifyMessageRequestHandlerTest --> "_fakeContext" IChannelHandlerContext
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+interface IReputableCache {
+    ChangeReputationOnEviction(key:object, value:object, reason:EvictionReason, state:object) : void
+}
+class "IObservable`1"<T> {
+}
+IMessageCorrelationCache <|-- IReputableCache
+IReputableCache --> "PeerRatingChanges<IPeerReputationChange>" "IObservable`1"
+@enduml

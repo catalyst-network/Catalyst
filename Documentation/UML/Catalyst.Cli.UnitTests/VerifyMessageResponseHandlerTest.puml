@@ -1,0 +1,17 @@
+@startuml
+class VerifyMessageResponseHandlerTest <<sealed>> {
+    {static} VerifyMessageResponseHandlerTest()
+    + VerifyMessageResponseHandlerTest()
+    + RpcClient_Can_Handle_VerifyMessageResponse(isSignedbyNode:bool) : void
+    - CreateStreamWithMessage(response:AnySigned) : IObservable<IChanneledMessage<AnySigned>>
+    + Dispose() : void
+}
+class "List`1"<T> {
+}
+IDisposable <|-- VerifyMessageResponseHandlerTest
+VerifyMessageResponseHandlerTest --> "_logger" ILogger
+VerifyMessageResponseHandlerTest --> "_fakeContext" IChannelHandlerContext
+VerifyMessageResponseHandlerTest --> "_output" IUserOutput
+VerifyMessageResponseHandlerTest --> "QueryContents<object[]>" "List`1"
+VerifyMessageResponseHandlerTest --> "_handler" VerifyMessageResponseHandler
+@enduml
