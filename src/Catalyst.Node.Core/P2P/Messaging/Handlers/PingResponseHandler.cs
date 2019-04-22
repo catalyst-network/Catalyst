@@ -27,16 +27,16 @@ using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
-using Serilog;
 using Catalyst.Protocol.IPPN;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingResponseRequestHandler
-        : ReputationAskRequestHandler<PingResponse, IReputableCache>,
+    public sealed class PingResponseHandler
+        : AbstractReputationAskHandler<PingResponse, IReputableCache>,
             IP2PMessageHandler
     {
-        public PingResponseRequestHandler(IReputableCache reputableCache,
+        public PingResponseHandler(IReputableCache reputableCache,
             ILogger logger)
             : base(reputableCache, logger) { }
 

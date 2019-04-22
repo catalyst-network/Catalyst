@@ -35,13 +35,13 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingRequestRequestHandler 
-        : ReputationAskRequestHandler<PingRequest, IReputableCache>,
+    public sealed class PingRequestHandler 
+        : AbstractReputationAskHandler<PingRequest, IReputableCache>,
             IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public PingRequestRequestHandler(IPeerIdentifier peerIdentifier,
+        public PingRequestHandler(IPeerIdentifier peerIdentifier,
             IReputableCache reputableCache,
             ILogger logger)
             : base(reputableCache, logger)

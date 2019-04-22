@@ -37,8 +37,8 @@ namespace Catalyst.Cli.Handlers
     /// Handler responsible for handling the server's response for the GetInfo request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public sealed class GetInfoResponseRequestHandler
-        : ReputationAskRequestHandler<GetInfoResponse, IMessageCorrelationCache>,
+    public sealed class GetInfoResponseHandler
+        : AbstractReputationAskHandler<GetInfoResponse, IMessageCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
@@ -49,7 +49,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="output"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetInfoResponseRequestHandler(IUserOutput output,
+        public GetInfoResponseHandler(IUserOutput output,
             IMessageCorrelationCache messageCorrelationCache,
             ILogger logger) 
             : base(messageCorrelationCache, logger)
@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Handlers
         }
 
         /// <summary>
-        /// Handles the GetInfoResponse message sent from the <see cref="GetInfoResponseRequestHandler" />.
+        /// Handles the GetInfoResponse message.
         /// </summary>
         /// <param name="message">An object of GetInfoResponse</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)

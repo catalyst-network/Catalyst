@@ -52,7 +52,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.TransactionHandler",
+            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.TransactionRequestHandler",
             "services": [
                 {
                     "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Node.Common"
