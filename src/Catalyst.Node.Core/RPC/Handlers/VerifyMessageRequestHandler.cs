@@ -22,12 +22,12 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;

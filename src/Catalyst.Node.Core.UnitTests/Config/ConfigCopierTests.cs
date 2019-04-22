@@ -24,8 +24,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Common.Config;
+using Catalyst.Common.UnitTests.TestUtils;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;

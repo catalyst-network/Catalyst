@@ -23,8 +23,8 @@
 
 using System;
 using System.Net;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;

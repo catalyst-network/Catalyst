@@ -22,13 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.P2P;
+using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Serilog;
 using Catalyst.Protocol.IPPN;
@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
             Logger.Debug("message content is {0}", deserialised);
             
-            var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
+            var datagramEnvelope = new P2PMessageFactoryBase<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                 new P2PMessageDto<PingResponse, P2PMessages>(
                     type: P2PMessages.PingRequest,
                     message: new PingResponse(),

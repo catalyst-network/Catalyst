@@ -24,10 +24,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Enumerator;
-using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
+using Catalyst.Common.Network;
+using Catalyst.Common.Interfaces.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
@@ -36,7 +36,8 @@ namespace Catalyst.Node.Core.P2P
     /// <summary>
     ///     Peer settings class.
     /// </summary>
-    public sealed class PeerSettings : IPeerSettings
+    public sealed class PeerSettings
+        : IPeerSettings
     {
         /// <summary>
         ///     Set attributes

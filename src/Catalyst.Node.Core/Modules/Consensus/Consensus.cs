@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces.Modules.Consensus;
+using Catalyst.Common.Interfaces.Modules.Consensus;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {

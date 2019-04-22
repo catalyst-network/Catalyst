@@ -8,9 +8,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Core", "Catal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Core.UnitTest", "Catalyst.Node.Core.UnitTests\Catalyst.Node.Core.UnitTest.csproj", "{8E7033A3-C758-460F-A551-E58BC7DE464D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Common", "Catalyst.Node.Common\Catalyst.Node.Common.csproj", "{E03E56AF-8B05-41D1-AA57-A4FE965B794E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Common", "Catalyst.Common\Catalyst.Common.csproj", "{E03E56AF-8B05-41D1-AA57-A4FE965B794E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Common.UnitTests", "Catalyst.Node.Common.UnitTests\Catalyst.Node.Common.UnitTests.csproj", "{3EF81EDA-CA6C-46EB-A561-DEE52B4DD168}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Common.UnitTests", "Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj", "{3EF81EDA-CA6C-46EB-A561-DEE52B4DD168}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{93E23E42-2699-4265-B6D0-EEE61612ADE7}"
 EndProject

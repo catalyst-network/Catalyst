@@ -24,10 +24,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Util;
+using Catalyst.Common.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using FluentAssertions;
 using Google.Protobuf;

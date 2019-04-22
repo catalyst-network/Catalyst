@@ -29,10 +29,10 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
-using Catalyst.Node.Common.Helpers.FileSystem;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.Cli;
+using Catalyst.Common.FileSystem;
+using Catalyst.Common.Config;
+using Catalyst.Common.Util;
+using Catalyst.Common.Interfaces.Cli;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 

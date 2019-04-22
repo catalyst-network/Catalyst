@@ -6,7 +6,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.GetInfoRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
                 }
             ]
         },
@@ -14,7 +14,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.GetMempoolRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
                 }
             ]
         },
@@ -22,7 +22,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.GetVersionRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
                 }
             ]
         },
@@ -30,7 +30,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.SignMessageRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
                 }
             ]
         },
@@ -38,7 +38,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.VerifyMessageRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
                 }
             ]
         },
@@ -47,7 +47,7 @@
             "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingRequestAskHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
                 }
             ]
         },
@@ -55,7 +55,7 @@
             "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingResponseHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
                 }
             ]
         },
@@ -63,7 +63,7 @@
             "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.TransactionRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
                 }
             ]
         }

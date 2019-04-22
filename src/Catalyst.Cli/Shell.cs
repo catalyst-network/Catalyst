@@ -26,27 +26,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Catalyst.Cli.Rpc;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO;
-using Catalyst.Node.Common.Helpers.Shell;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.IO;
+using Catalyst.Common.Shell;
 using Dawn;
 using Microsoft.Extensions.Configuration;
-using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.P2P;
+using Catalyst.Common.Network;
+using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using CommandLine;
 using ILogger = Serilog.ILogger;
 using Nethereum.RLP;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.Cli;
-using Catalyst.Node.Common.Interfaces.Cryptography;
-using Catalyst.Node.Common.Interfaces.IO;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.Interfaces.Rpc;
+using Catalyst.Common.Util;
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
 
 namespace Catalyst.Cli
 {
-    public sealed class Shell : ShellBase, IAdvancedShell
+    public sealed class Shell
+        : ShellBase,
+            IAdvancedShell
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly ICertificateStore _certificateStore;
@@ -61,7 +63,10 @@ namespace Catalyst.Cli
 
         /// <summary>
         /// </summary>
-        public Shell(INodeRpcClientFactory nodeRpcClientFactory, IConfigurationRoot config, ILogger logger, ICertificateStore certificateStore)
+        public Shell(INodeRpcClientFactory nodeRpcClientFactory,
+            IConfigurationRoot config,
+            ILogger logger,
+            ICertificateStore certificateStore)
         {
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;

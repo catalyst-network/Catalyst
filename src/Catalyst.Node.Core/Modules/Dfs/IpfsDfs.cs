@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces.Modules.Dfs;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Ipfs.CoreApi;
 using Serilog;
 

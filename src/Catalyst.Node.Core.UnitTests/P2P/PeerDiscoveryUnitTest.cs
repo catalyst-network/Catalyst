@@ -31,13 +31,13 @@ using Autofac;
 using Catalyst.Node.Core.P2P;
 using NSubstitute;
 using SharpRepository.Repository;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Interfaces.Network;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.Network;
+using Catalyst.Common.Interfaces.Network;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
 using DotNetty.Transport.Channels;
@@ -48,9 +48,9 @@ using Serilog.Core;
 using SharpRepository.InMemoryRepository;
 using Xunit;
 using Xunit.Abstractions;
-using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
-using Dns = Catalyst.Node.Common.Helpers.Network.Dns;
-using Peer = Catalyst.Node.Common.P2P.Peer;
+using Constants = Catalyst.Common.Config.Constants;
+using Dns = Catalyst.Common.Network.Dns;
+using Peer = Catalyst.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {

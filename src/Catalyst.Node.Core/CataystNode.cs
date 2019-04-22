@@ -24,21 +24,23 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces;
-using Catalyst.Node.Common.Interfaces.Modules.Consensus;
-using Catalyst.Node.Common.Interfaces.Modules.Contract;
-using Catalyst.Node.Common.Interfaces.Modules.Dfs;
-using Catalyst.Node.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Node.Common.Interfaces.Modules.Ledger;
-using Catalyst.Node.Common.Interfaces.Modules.Mempool;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.Modules.Consensus;
+using Catalyst.Common.Interfaces.Modules.Contract;
+using Catalyst.Common.Interfaces.Modules.Dfs;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.Modules.Ledger;
+using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
 using Serilog;
-using ICertificateStore = Catalyst.Node.Common.Interfaces.Cryptography.ICertificateStore;
+using ICertificateStore = Catalyst.Common.Interfaces.Cryptography.ICertificateStore;
 
 namespace Catalyst.Node.Core
 {
-    public class CatalystNode : IDisposable, ICatalystNode
+    public class CatalystNode
+        : IDisposable,
+            ICatalystNode
     {
         private readonly IConsensus _consensus;
         private readonly IContract _contract;
