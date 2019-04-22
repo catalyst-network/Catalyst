@@ -47,7 +47,7 @@ namespace Catalyst.Cli.UnitTests
     public sealed class GetInfoResponseHandlerTest : IDisposable
     {
         private readonly ILogger _logger;
-        private GetInfoResponseHandler _handler;
+        private GetInfoResponseHandler _requestHandler;
 
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
@@ -100,15 +100,15 @@ namespace Catalyst.Cli.UnitTests
             
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new GetInfoResponseHandler(_output, correlationCache, _logger);
-            _handler.StartObserving(messageStream);
+            _requestHandler = new GetInfoResponseHandler(_output, correlationCache, _logger);
+            _requestHandler.StartObserving(messageStream);
 
             _output.Received(1).WriteLine(query);
         }
 
         public void Dispose()
         {
-            _handler?.Dispose();
+            _requestHandler?.Dispose();
         }
     }
 }

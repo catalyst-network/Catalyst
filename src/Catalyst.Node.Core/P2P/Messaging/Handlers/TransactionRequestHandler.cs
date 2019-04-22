@@ -22,32 +22,29 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.IO.Messaging;
+using Catalyst.Node.Common.Helpers.Extensions;
+using Catalyst.Protocol.Transaction;
+using Serilog;
+using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
 using Catalyst.Node.Common.Interfaces.IO.Inbound;
 using Catalyst.Node.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
-using Serilog;
 
-namespace Catalyst.Node.Common.Helpers.IO
+namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public abstract class CorrelatableMessageHandler<TProto, TCorrelator> : AbstractMessageHandlerBase<TProto>
-        where TProto : IMessage
-        where TCorrelator : IMessageCorrelationCache
+    public sealed class TransactionRequestHandler
+        : ReputableAskRequestHandlerBase<Transaction, IReputableCache>,
+            IP2PMessageHandler
     {
-        private readonly TCorrelator _correlationCache;
-        
-        public CorrelatableMessageHandler(TCorrelator correlationCache, ILogger logger) : base(logger)
+        public TransactionRequestHandler(IReputableCache reputableCache,
+            ILogger logger)
+            : base(reputableCache, logger) { }
+
+        protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            _correlationCache = correlationCache;
-        }
-        
-        public override void HandleMessage(IChanneledMessage<AnySigned> message)
-        {
-            Logger.Debug("handle message in correlatable handler");
-            
-            // @TODO check our message is in cache
-            Handler(message);
+            Logger.Debug("received pong");
+            var deserialised = message.Payload.FromAnySigned<Transaction>();
+            Logger.Debug("transaction pong is {0}", deserialised.Signature);
         }
     }
 }

@@ -35,7 +35,8 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Helpers.IO.Messaging
 {
-    public abstract class AbstractMessageCorrelationCache : IMessageCorrelationCache
+    public class AbstractMessageCorrelationCache
+        : IMessageCorrelationCache
     {
         private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
         protected readonly IMemoryCache PendingRequests;
@@ -44,7 +45,9 @@ namespace Catalyst.Node.Common.Helpers.IO.Messaging
 
         public TimeSpan CacheTtl { get; }
 
-        protected AbstractMessageCorrelationCache(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default)
+        public AbstractMessageCorrelationCache(IMemoryCache cache,
+            ILogger logger,
+            TimeSpan cacheTtl = default)
         {
             Logger = logger;
             CacheTtl = cacheTtl == default ? DefaultTtl : cacheTtl;
@@ -75,12 +78,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Messaging
 
             var found = PendingRequests.TryGetValue(response.CorrelationId, out PendingRequest matched);
 
-            if (!found)
-            {
-                return null;
-            }
-
-            return matched.Content.FromAnySigned<TRequest>();
+            return !found ? null : matched.Content.FromAnySigned<TRequest>();
         }
 
         protected virtual void Dispose(bool disposing)

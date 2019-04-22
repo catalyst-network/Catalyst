@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
             
-                var handler = new PingRequestHandler(_pid, fakeReputationCache, _logger);
+                var handler = new PingRequestAskHandler(_pid, fakeReputationCache, _logger);
                 handler.StartObserving(observableStream);
             
                 fakeContext.Channel.ReceivedWithAnyArgs(1)
@@ -119,7 +119,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 var fakeReputationCache = Substitute.For<IReputableCache>();
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
-                var handler = new PingRequestHandler(_pid, fakeReputationCache, _logger);
+                var handler = new PingRequestAskHandler(_pid, fakeReputationCache, _logger);
                 var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
 
                 handler.HandleMessage(channeledAny);

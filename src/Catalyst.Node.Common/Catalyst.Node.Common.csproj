@@ -204,6 +204,8 @@
     <Folder Include="Helpers\FileSystem" />
     <Folder Include="Helpers\Hex\HexConverters\Extensions\" />
     <Folder Include="Helpers\Hex\HexTypes\" />
+    <Folder Include="Helpers\IO\Inbound\Messaging" />
+    <Folder Include="Helpers\IO\Outbound\Messaging" />
     <Folder Include="Helpers\NSec\Cryptography\Buffer\" />
     <Folder Include="Helpers\NSec\Cryptography\Formatting\" />
     <Folder Include="Helpers\NSec\Interop\" />
