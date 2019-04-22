@@ -28,9 +28,12 @@ using Serilog;
 
 namespace Catalyst.Node.Common.Rpc
 {
-    public sealed class RpcCorrelationCache : AbstractMessageCorrelationCache
+    public sealed class RpcCorrelationCache
+        : AbstractMessageCorrelationCache
     {
-        public RpcCorrelationCache(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default) 
+        public RpcCorrelationCache(IMemoryCache cache,
+            ILogger logger,
+            TimeSpan cacheTtl = default) 
             : base(cache, logger, cacheTtl) { }
 
         /// <summary>

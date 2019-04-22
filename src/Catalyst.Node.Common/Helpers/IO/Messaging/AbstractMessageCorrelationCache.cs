@@ -45,7 +45,7 @@ namespace Catalyst.Node.Common.Helpers.IO.Messaging
 
         public TimeSpan CacheTtl { get; }
 
-        private AbstractMessageCorrelationCache(IMemoryCache cache,
+        public AbstractMessageCorrelationCache(IMemoryCache cache,
             ILogger logger,
             TimeSpan cacheTtl = default)
         {
