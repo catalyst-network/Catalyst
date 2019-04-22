@@ -1,8 +1,0 @@
-@startuml
-interface IServerBootstrap {
-    BindAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
-}
-class "IComparable`1"<T> {
-}
-"IComparable`1" "<IServerBootstrap>" <|-- IServerBootstrap
-@enduml

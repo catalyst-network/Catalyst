@@ -1,0 +1,16 @@
+@startuml
+interface IPeerDiscovery {
+    GetSeedNodesFromDns(seedServers:IList<string>) : Task
+    ParseDnsServersFromConfig(rootSection:IConfigurationRoot) : void
+}
+class "IList`1"<T> {
+}
+class "IRepository`1"<T> {
+}
+IMessageHandler <|-- IPeerDiscovery
+IPeerDiscovery --> "Dns" IDns
+IPeerDiscovery --> "Logger" ILogger
+IPeerDiscovery --> "SeedNodes<string>" "IList`1"
+IPeerDiscovery --> "Peers<IPEndPoint>" "IList`1"
+IPeerDiscovery --> "PeerRepository<Peer>" "IRepository`1"
+@enduml

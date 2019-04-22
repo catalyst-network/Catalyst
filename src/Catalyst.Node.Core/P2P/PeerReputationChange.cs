@@ -21,11 +21,12 @@
 
 #endregion
 
-using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P;
 
 namespace Catalyst.Node.Core.P2P
 {
-    internal sealed class PeerReputationChange : IPeerReputationChange
+    internal sealed class PeerReputationChange
+        : IPeerReputationChange
     {
         public IPeerIdentifier PeerIdentifier { get; }
         public int ReputationChange { get; }

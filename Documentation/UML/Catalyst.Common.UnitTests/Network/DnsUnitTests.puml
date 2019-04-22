@@ -1,0 +1,13 @@
+@startuml
+class DnsUnitTests {
+    + DnsUnitTests()
+    + <<async>> Dns_GetTxtRecords_from_list_should_return_IDnsQueryResponse_for_valid_list_of_strings_param() : Task
+    + <<async>> Dns_GetTxtRecords_from_list_should_return_IDnsQueryResponse_for_valid_list_of_strings_param_even_when_one_lookup_is_null() : Task
+    + <<async>> Dns_GetTxtRecords_should_return_IDnsQueryResponse_from_lookup_client() : Task
+    + <<async>> Dns_GetTxtRecords_When_Lookup_Throws_should_return_null() : Task
+    + <<async>> GetTxtRecords_should_return_seeds_for_realz() : Task
+}
+DnsUnitTests --> "_dns" IDns
+DnsUnitTests --> "_lookupClient" ILookupClient
+DnsUnitTests --> "_ipEndPoint" IPEndPoint
+@enduml

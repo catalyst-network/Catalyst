@@ -1,0 +1,6 @@
+@startuml
+class PeerIdHelper <<static>> {
+    + {static} GetPeerId(publicKey:byte[], clientId:string, clientVersion:int, ipAddress:IPAddress, port:int) : PeerId
+    + {static} GetPeerId(publicKeySeed:string, clientId:string, clientVersion:int, ipAddress:IPAddress, port:int) : PeerId
+}
+@enduml

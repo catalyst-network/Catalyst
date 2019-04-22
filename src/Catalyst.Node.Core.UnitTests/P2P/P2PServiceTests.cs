@@ -29,14 +29,14 @@ using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.P2P;
-using Catalyst.Node.Common.UnitTests.TestUtils;
+using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.Util;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
@@ -143,7 +143,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
 
-                    var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
+                    var datagramEnvelope = new P2PMessageFactoryBase<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                         new P2PMessageDto<PingResponse, P2PMessages>(
                             P2PMessages.PingRequest,
                             new PingResponse(),

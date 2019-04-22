@@ -26,20 +26,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using Catalyst.Node.Common.Helpers.IO.Inbound;
+using Catalyst.Common.IO.Inbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Catalyst.Node.Common.Interfaces.Cryptography;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
-using Catalyst.Node.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.Rpc;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Core.RPC
 {
-    public class NodeRpcServer : TcpServer, INodeRpcServer
+    public class NodeRpcServer
+        : TcpServer,
+            INodeRpcServer
     {
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
@@ -56,12 +58,12 @@ namespace Catalyst.Node.Core.RPC
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            var anyTypeServerHandler = new AnyTypeSignedServerHandler();
+            var anyTypeServerHandler = new AnyTypeSignedServerHandlerBase();
             MessageStream = anyTypeServerHandler.MessageStream;
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
            
             Bootstrap(
-                new InboundChannelInitializer<ISocketChannel>(channel => { },
+                new InboundChannelInitializerBase<ISocketChannel>(channel => { },
                     new List<IChannelHandler>
                     {
                         new ProtobufVarint32FrameDecoder(),

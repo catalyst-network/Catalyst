@@ -22,14 +22,15 @@
 #endregion
 
 using System.Net;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
 using Dawn;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public sealed class P2PMessageDto<TMessage, TMessageType> : IP2PMessageDto<TMessage, TMessageType>
+    public sealed class P2PMessageDto<TMessage, TMessageType>
+        : IP2PMessageDto<TMessage, TMessageType>
         where TMessage : class, IMessage
         where TMessageType : class, IEnumerableMessageType
     {

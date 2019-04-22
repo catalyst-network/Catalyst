@@ -5,7 +5,7 @@
       "type": "Catalyst.Node.Core.Modules.Contract.Contract",
       "services": [
         {
-          "type": "Catalyst.Node.Common.Interfaces.Modules.Contract.IContract, Catalyst.Node.Common"
+          "type": "Catalyst.Common.Interfaces.Modules.Contract.IContract, Catalyst.Common"
         }
       ]
     }

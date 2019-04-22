@@ -1,0 +1,5 @@
+@startuml
+class StringExtensions <<static>> {
+    + {static} ToMemoryStream(s:string) : Stream
+}
+@enduml

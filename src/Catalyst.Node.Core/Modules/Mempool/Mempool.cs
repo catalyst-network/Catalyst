@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Node.Common.Interfaces.Modules.Mempool;
+using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Nethereum.RLP;

@@ -5,15 +5,15 @@
             "type": "Catalyst.Node.Core.CatalystNode",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.ICatalystNode, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.ICatalystNode, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Rpc.RpcCorrelationCache, Catalyst.Node.Common",
+            "type": "Catalyst.Common.Rpc.RpcCorrelationCacheBase, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Common"
                 }
             ]
         },
@@ -21,7 +21,7 @@
             "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Rpc.INodeRpcServer, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.Rpc.INodeRpcServer, Catalyst.Common"
                 }
             ]
         },
@@ -29,7 +29,7 @@
             "type": "Catalyst.Node.Core.RPC.RpcServerSettings",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Rpc.IRpcServerSettings, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcServerSettings, Catalyst.Common"
                 }
             ]
         },
@@ -37,7 +37,7 @@
             "type": "Catalyst.Node.Core.P2P.Messaging.P2PCorrelationCache",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.IO.Messaging.IReputableCache, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IReputableCache, Catalyst.Common"
                 }
             ]
         },
@@ -45,47 +45,47 @@
             "type": "Catalyst.Node.Core.P2P.PeerSettings",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.P2P.IPeerSettings, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerSettings, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.P2P.PeerIdentifier, Catalyst.Node.Common",
+            "type": "Catalyst.Common.P2P.PeerIdentifier, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.P2P.IPeerIdentifier, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdentifier, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.KeyStore.LocalKeyStore, Catalyst.Node.Common",
+            "type": "Catalyst.Common.KeyStore.LocalKeyStore, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.KeyStore.IKeyStore, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStore, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.KeyStore.KeyStoreServiceWrapped, Catalyst.Node.Common",
+            "type": "Catalyst.Common.KeyStore.KeyStoreServiceWrapped, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.KeyStore.IKeyStoreWrapper, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStoreWrapper, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.Cryptography.NSecCryptoContext, Catalyst.Node.Common",
+            "type": "Catalyst.Common.Cryptography.NSecCryptoContext, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Common.P2P.Peer, Catalyst.Node.Common]], SharpRepository.InMemoryRepository",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.InMemoryRepository",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Common.P2P.Peer, Catalyst.Node.Common]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.Repository"
                 }
             ]
         },
@@ -106,10 +106,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Common.P2P.Peer, Catalyst.Node.Common",
+            "type": "Catalyst.Common.P2P.Peer, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.P2P.IPeer, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeer, Catalyst.Common"
                 }
             ]
         },
@@ -117,20 +117,20 @@
             "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.Network.DevDns, Catalyst.Node.Common",
+            "type": "Catalyst.Common.Network.DevDns, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Network.IDns, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.Network.IDns, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.Network.InjectableLookupClient, Catalyst.Node.Common",
+            "type": "Catalyst.Common.Network.InjectableLookupClient, Catalyst.Common",
             "services": [
                 {
                     "type": "DnsClient.ILookupClient, DnsClient"
@@ -141,31 +141,31 @@
             "type": "Catalyst.Node.Core.P2P.P2PService",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.P2P.IP2PService, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IP2PService, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.Cryptography.CertificateStore, Catalyst.Node.Common",
+            "type": "Catalyst.Common.Cryptography.CertificateStore, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Cryptography.ICertificateStore, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.Cryptography.ICertificateStore, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.Cryptography.ConsolePasswordReader, Catalyst.Node.Common",
+            "type": "Catalyst.Common.Cryptography.ConsolePasswordReader, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Common.Helpers.FileSystem.FileSystem, Catalyst.Node.Common",
+            "type": "Catalyst.Common.FileSystem.FileSystem, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Node.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Node.Common"
+                    "type": "Catalyst.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Common"
                 }
             ]
         }

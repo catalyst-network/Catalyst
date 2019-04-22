@@ -1,15 +1,11 @@
 @startuml
-class P2PService {
-    + P2PService(settings:IPeerSettings, peerDiscovery:IPeerDiscovery, messaging:IP2PMessaging)
-    + FindNode(queryingNode:IPeerIdentifier, targetNode:IPeerIdentifier) : List<IPeerIdentifier>
-    + GetPeers(queryingNode:IPeerIdentifier) : List<IPeerIdentifier>
-    + Store(k:string, v:byte[]) : bool
-    + FindValue(k:string) : dynamic
-    + PeerExchange(queryingNode:IPeerIdentifier) : List<IPeerIdentifier>
+class P2PService <<sealed>> {
+    + P2PService(settings:IPeerSettings, peerDiscovery:IPeerDiscovery, messageHandlers:IEnumerable<IP2PMessageHandler>)
 }
-IP2P <|-- P2PService
+class "IObservable`1"<T> {
+}
+UdpServer <|-- P2PService
+IP2PService <|-- P2PService
 P2PService --> "Discovery" IPeerDiscovery
-P2PService --> "Identifier" IPeerIdentifier
-P2PService --> "Settings" IPeerSettings
-P2PService --> "Messaging" IP2PMessaging
+P2PService --> "MessageStream<IChanneledMessage<AnySigned>>" "IObservable`1"
 @enduml

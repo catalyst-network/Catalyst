@@ -1,6 +1,0 @@
-@startuml
-class Events <<static>> {
-    + {static} AsyncRaiseEvent(handler:EventHandler<T>, sender:object, args:T) : Task
-}
-Events o-> "Logger" ILogger
-@enduml

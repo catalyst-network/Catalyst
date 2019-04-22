@@ -26,9 +26,9 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
-using Catalyst.Node.Common.Interfaces.Cryptography;
-using Catalyst.Node.Common.Interfaces.FileSystem;
-using Catalyst.Node.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Interfaces.P2P;
 using Common.Logging.Serilog;
 using Dawn;
 using Ipfs;
@@ -38,6 +38,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
+    /// <inheritdoc />
     /// <summary>
     /// Simply a wrapper around the Ipfs.Engine.IpfsEngine to allow us coding
     /// and testing against an interface.

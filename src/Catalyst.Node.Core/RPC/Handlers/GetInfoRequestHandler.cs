@@ -22,12 +22,12 @@
 #endregion
 
 using System;
-using Catalyst.Node.Common.Helpers.Extensions;
-using Catalyst.Node.Common.Helpers.IO.Messaging.Handlers;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.Interfaces.Rpc;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -37,7 +37,9 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    internal sealed class GetInfoRequestHandler : CorrelatableMessageHandlerBase<GetInfoRequest, IMessageCorrelationCache>, IRpcRequestHandler
+    internal sealed class GetInfoRequestHandler
+        : CorrelatableMessageHandlerBase<GetInfoRequest, IMessageCorrelationCache>,
+            IRpcRequestHandler
     {
         private readonly PeerId _peerId;
         private readonly IRpcServerSettings _config;

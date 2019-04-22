@@ -1,0 +1,5 @@
+@startuml
+interface ISocket {
+    Shutdown() : Task
+}
+@enduml

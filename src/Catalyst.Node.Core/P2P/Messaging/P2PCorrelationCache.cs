@@ -24,11 +24,11 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Catalyst.Node.Common.Helpers.IO.Messaging;
-using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.P2P;
-using Catalyst.Node.Common.P2P;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
@@ -36,7 +36,7 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Messaging
 {
     public sealed class P2PCorrelationCache
-        : AbstractMessageCorrelationCache,
+        : MessageCorrelationCacheBase,
             IReputableCache
     {
         private static readonly int BaseReputationChange = 1;

@@ -1,0 +1,10 @@
+@startuml
+class PingResponseHandler <<sealed>> {
+    + PingResponseHandler(reputableCache:IReputableCache, logger:ILogger)
+    # <<override>> Handler(message:IChanneledMessage<AnySigned>) : void
+}
+class "ReputableTellResponseHandlerBase`4"<T1,T2,T3,T4> {
+}
+"ReputableTellResponseHandlerBase`4" "<PingResponse,IReputableCache,PingRequest,PingResponse>" <|-- PingResponseHandler
+IP2PMessageHandler <|-- PingResponseHandler
+@enduml

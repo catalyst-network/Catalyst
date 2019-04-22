@@ -26,11 +26,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Node.Common.Helpers.IO.Outbound;
-using Catalyst.Node.Common.Helpers.Network;
-using Catalyst.Node.Common.Interfaces.IO.Inbound;
-using Catalyst.Node.Common.Interfaces.IO.Messaging;
-using Catalyst.Node.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.Network;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -61,7 +61,7 @@ namespace Catalyst.Cli.Rpc
             IEnumerable<IRpcResponseHandler> responseHandlers) 
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            var anySignedTypeClientHandler = new AnySignedTypeClientHandler();
+            var anySignedTypeClientHandler = new AnySignedTypeClientHandlerBase();
             MessageStream = anySignedTypeClientHandler.MessageStream;
 
             responseHandlers.ToList()
@@ -77,7 +77,7 @@ namespace Catalyst.Cli.Rpc
             };
 
             Bootstrap(
-                new OutboundChannelInitializer<ISocketChannel>(channel => { },
+                new OutboundChannelInitializerBase<ISocketChannel>(channel => { },
                     channelHandlers,
                     nodeConfig.HostAddress,
                     certificate

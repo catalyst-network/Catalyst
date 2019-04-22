@@ -1,0 +1,5 @@
+@startuml
+class MockQueryResponse <<static>> {
+    + {static} CreateFakeLookupResult(domainName:string, value:string, lookupClient:ILookupClient) : void
+}
+@enduml

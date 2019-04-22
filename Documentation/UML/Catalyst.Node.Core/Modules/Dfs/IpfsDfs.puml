@@ -1,0 +1,17 @@
+@startuml
+class IpfsDfs {
+    + {static} <<readonly>> HashAlgorithm : string = "blake2b-256"
+    + IpfsDfs(ipfsEngine:IIpfsEngine, logger:ILogger)
+    + <<async>> AddTextAsync(content:string, cancellationToken:CancellationToken) : Task<string>
+    + <<async>> ReadTextAsync(id:string, cancellationToken:CancellationToken) : Task<string>
+    + <<async>> AddAsync(content:Stream, name:string, cancellationToken:CancellationToken) : Task<string>
+    + <<async>> ReadAsync(id:string, cancellationToken:CancellationToken) : Task<Stream>
+    + Dispose() : void
+    # <<virtual>> Dispose(disposing:bool) : void
+}
+IDfs <|-- IpfsDfs
+IDisposable <|-- IpfsDfs
+IpfsDfs o-> "AddFileOptions" AddFileOptions
+IpfsDfs --> "_ipfsEngine" IIpfsEngine
+IpfsDfs --> "_logger" ILogger
+@enduml

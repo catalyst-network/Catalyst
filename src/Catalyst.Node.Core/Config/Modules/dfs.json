@@ -5,7 +5,7 @@
         "type": "Catalyst.Node.Core.Modules.Dfs.IpfsDfs",
         "services": [
             {
-                "type": "Catalyst.Node.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Node.Common"
+                "type": "Catalyst.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Common"
             }
         ]
     },

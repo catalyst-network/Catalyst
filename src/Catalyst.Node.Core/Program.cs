@@ -30,16 +30,16 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
-using Catalyst.Node.Common.Helpers.Config;
-using Catalyst.Node.Common.Helpers.FileSystem;
-using Catalyst.Node.Common.Helpers.Util;
-using Catalyst.Node.Common.Interfaces;
+using Catalyst.Common.Config;
+using Catalyst.Common.FileSystem;
+using Catalyst.Common.Util;
+using Catalyst.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
-using Constants = Catalyst.Node.Common.Helpers.Config.Constants;
+using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Node.Core
 {

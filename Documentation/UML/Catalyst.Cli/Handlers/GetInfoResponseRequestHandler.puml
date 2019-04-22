@@ -1,0 +1,11 @@
+@startuml
+class GetInfoResponseHandler <<sealed>> {
+    + GetInfoResponseHandler(output:IUserOutput, messageCorrelationCache:IMessageCorrelationCache, logger:ILogger)
+    # <<override>> Handler(message:IChanneledMessage<AnySigned>) : void
+}
+class "ReputableAskRequestHandlerBase`2"<T1,T2> {
+}
+"ReputableAskRequestHandlerBase`2" "<GetInfoResponse,IMessageCorrelationCache>" <|-- GetInfoResponseHandler
+IRpcResponseHandler <|-- GetInfoResponseHandler
+GetInfoResponseHandler --> "_output" IUserOutput
+@enduml

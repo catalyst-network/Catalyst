@@ -1,0 +1,5 @@
+@startuml
+class SocketPortHelper <<static>> {
+    + {static} AlterConfigurationToGetUniquePort(config:IConfigurationRoot, currentTestName:string) : IConfigurationRoot
+}
+@enduml

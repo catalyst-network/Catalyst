@@ -1,0 +1,10 @@
+@startuml
+class NetworkConfigTests {
+    {static} NetworkConfigTests()
+    + Network_Config_Should_Contain_a_valid_storage_module(networkConfig:string) : void
+    + Network_config_should_allow_building_PeerSettings(networkConfig:string) : void
+}
+class "List`1"<T> {
+}
+NetworkConfigTests --> "NetworkFiles<object[]>" "List`1"
+@enduml

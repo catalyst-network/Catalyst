@@ -1,0 +1,5 @@
+@startuml
+interface IUdpClient {
+}
+ISocketClient <|-- IUdpClient
+@enduml

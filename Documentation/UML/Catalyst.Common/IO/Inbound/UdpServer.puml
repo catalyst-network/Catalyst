@@ -1,0 +1,8 @@
+@startuml
+class UdpServer {
+    # UdpServer(logger:ILogger)
+    + Bootstrap(channelInitializer:IChannelHandler, listenAddress:IPAddress, port:int) : void
+}
+IoBase <|-- UdpServer
+IUdpServer <|-- UdpServer
+@enduml
