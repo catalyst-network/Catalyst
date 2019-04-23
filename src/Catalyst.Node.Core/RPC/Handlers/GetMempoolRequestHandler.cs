@@ -55,15 +55,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            Guard.Argument(message).NotNull();
-            
+        {   
             Logger.Debug("received message of type GetMempoolRequest");
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolRequest>();
-                
-                Guard.Argument(deserialised).NotNull();
                 
                 Logger.Debug("message content is {0}", deserialised);
                 
