@@ -60,7 +60,7 @@ namespace Catalyst.Cli.UnitTests
             QueryContents = new List<object[]>()
             {
                 new object[] {memPoolData},
-                new object[] {new MapField<string, string>()},
+                new object[] {new List<string>()},
             };
         }
         
@@ -78,7 +78,7 @@ namespace Catalyst.Cli.UnitTests
             return messageStream;
         }
 
-        public static MapField<string, string> CreateMemPoolData()
+        public static IEnumerable<string> CreateMemPoolData()
         {
             var txLst = new List<Transaction>
             {
@@ -88,32 +88,26 @@ namespace Catalyst.Cli.UnitTests
             
             var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
             
-            var memPoolMap = new MapField<string, string>();
-
-            for (var i = 0; i < txEncodedLst.Count; i++)
+            var mempoolList = new List<string>();
+            
+            foreach (var tx in txEncodedLst)
             {
-                var sb = new StringBuilder("{");
-                foreach (var b in txEncodedLst[i])
-                {
-                    sb.Append(b);
-                }
-
-                sb.Append("}");
-
-                memPoolMap.Add(i.ToString(), sb.ToString());
+                mempoolList.Add(tx.ToString());
             }
 
-            return memPoolMap;
+            return mempoolList;
         }
 
         [Theory]
         [MemberData(nameof(QueryContents))]  
-        public void RpcClient_Can_Handle_GetMempoolResponse(MapField<string, string> memPoolMap)
+        public void RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var txList = mempoolContent.ToList();
+            
             var response = new GetMempoolResponse
             {
-                Info = {memPoolMap}
+                Mempool = {txList}
             }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
@@ -121,7 +115,7 @@ namespace Catalyst.Cli.UnitTests
             _handler = new GetMempoolResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
             
-            _output.Received(memPoolMap.Count).WriteLine(Arg.Any<string>());
+            _output.Received(txList.Count).WriteLine(Arg.Any<string>());
         }
         
         public void Dispose()

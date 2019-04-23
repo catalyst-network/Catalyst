@@ -70,9 +70,9 @@ namespace Catalyst.Cli.Handlers
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
 
-                foreach (var encodedTx in deserialised.Info.Values)
+                for (var i = 0; i < deserialised.Mempool.Count; i++)
                 {
-                    _output.WriteLine($"t{deserialised.Info.Values.GetEnumerator().Current}: {encodedTx},");
+                    _output.WriteLine($"tx{i}: {deserialised.Mempool[i]},");
                 }
             }
             catch (Exception ex)

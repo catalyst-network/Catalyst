@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
@@ -65,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 
                 var response = new GetMempoolResponse
                 {
-                    Info =
+                    Mempool =
                     {
                         GetMempoolContent()
                     }
@@ -83,26 +84,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
             }
         }
 
-        private MapField<string, string> GetMempoolContent()
+        private IEnumerable<string> GetMempoolContent()
         {
-            var memPoolMap = new MapField<string, string>();
-            
-            try 
-            { 
+            var mempoolList = new List<string>();
+
+            try
+            {
                 var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
 
-                for (var i = 0; i < memPoolContentEncoded.Count; i++)
+                foreach (var tx in memPoolContentEncoded)
                 {
-                    var sb = new StringBuilder("{");
-                    foreach (var b in memPoolContentEncoded[i])
-                    {
-                        sb.Append(b);
-                    }
-
-                    sb.Append("}");
-
-                    memPoolMap.Add(i.ToString(), sb.ToString());
+                    mempoolList.Add(tx.ToString());
                 }
+
+                return mempoolList;
             }
             catch (Exception ex)
             {
@@ -110,8 +105,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     "Failed to get the mempool content and format it as MapField<string,string> {0}", ex.Message);
                 throw;
             }
-            
-            return memPoolMap;
         }
     }
 }
