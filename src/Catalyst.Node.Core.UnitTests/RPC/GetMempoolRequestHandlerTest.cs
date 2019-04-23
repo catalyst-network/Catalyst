@@ -99,8 +99,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             responseContent.Mempool.Should().NotBeEmpty();
             responseContent.Mempool.Count.Should().Be(2);
-            responseContent.Mempool[0].Should().ContainEquivalentOf(
-                txLst[0].ToString().ToBytesForRLPEncoding().ToString());
         }
         
         [Fact]

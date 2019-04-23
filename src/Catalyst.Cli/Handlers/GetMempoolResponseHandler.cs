@@ -70,10 +70,14 @@ namespace Catalyst.Cli.Handlers
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
 
+                _output.WriteLine("[");
+                
                 for (var i = 0; i < deserialised.Mempool.Count; i++)
                 {
                     _output.WriteLine($"tx{i}: {deserialised.Mempool[i]},");
                 }
+                
+                _output.WriteLine("]");
             }
             catch (Exception ex)
             {
