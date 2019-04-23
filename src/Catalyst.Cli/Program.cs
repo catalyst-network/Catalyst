@@ -71,7 +71,7 @@ namespace Catalyst.Cli
             try
             {
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
-                new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
+                new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev, overwrite: true);
 
                 var config = new ConfigurationBuilder()
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))

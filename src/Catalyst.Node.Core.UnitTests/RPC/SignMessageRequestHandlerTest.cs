@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading;
 using Autofac;
 using Catalyst.Common.Config;
@@ -34,13 +35,16 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -55,6 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly ILogger _logger;
 
         private readonly IKeySigner _keySigner;
+        private readonly IChannelHandlerContext _fakeContext;
 
         public SignMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
@@ -68,82 +73,44 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ConfigureContainerBuilder(config);
 
             var container = ContainerBuilder.Build();
-
             _scope = container.BeginLifetimeScope(CurrentTestName);
-
-            _logger = container.Resolve<ILogger>();
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory
-               .AddProvider(new SerilogLoggerProvider(_logger));
-
-            container.Resolve<ICertificateStore>();
+            
             _keySigner = container.Resolve<IKeySigner>();
+            
+            _logger = Substitute.For<ILogger>();
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+            
+            var fakeChannel = Substitute.For<IChannel>();
+            _fakeContext.Channel.Returns(fakeChannel);
         }
         
-        [Fact] public void RpcServer_Can_Handle_SignMessageRequest()
-        {
-            //Substitute for the context and the channel
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            
-            fakeContext.Channel.Returns(fakeChannel);
-
-            //Matching the SignMessageRequestHandler
-            //sign a message to get the signature and the public key
-            const string message = "\"Hello Catalyst\"";
-
-            //create a verify message request and populate with the data returned from the signed message
+        [Theory]
+        [InlineData("Hello Catalyst")]
+        [InlineData("")]
+        public void RpcServer_Can_Handle_SignMessageRequest(string message)
+        {            
             var request = new SignMessageRequest()
             {
-                Message = message.ToUtf8ByteString()
-            };
+                Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8),
+            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
             
-            //create a channel using the mock context and request
-            var channeledAny = new ChanneledAnySigned(fakeContext, 
-                request.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid()));
-            
-            //convert the channel created into an IObservable 
-            //the .ToObervable() Converts the array to an observable sequence which means we can use it as a message
-            //stream for the handler
-            //The DelaySubscription() is required otherwise the constructor of the base class will call the
-            //HandleMessage before the VerifyMessageRequestHandler constructor is executed. This happens because
-            //the base class will find a message in the stream. As a result the _keySigner object
-            //will have not been instantiated before calling the HandleMessage.
-            //This case will not happen in realtime but it is caused by the test environment.
-            var signRequest = new[] {channeledAny}.ToObservable()
-               .DelaySubscription(TimeSpan.FromMilliseconds(50));
-            
-            //pass the created observable sequence as the message stream to the VerifyMessageRequestHandler
-            //Calling the constructor will call the 
-            var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new SignMessageRequestHandler(
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                _logger,
-                _keySigner,
-                correlationCache);
-            handler.StartObserving(signRequest);
-            
-            //Another time delay is required so that the call to HandleMessage inside the VerifyMessageRequestHandler
-            //is finished before we assert for the Received calls in the following statements.
-            Thread.Sleep(500);
-
-            //Check the channel received 1 call to 
-            var receivedCalls = fakeContext.Channel.ReceivedCalls().ToList();
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
+            var subbedCache = Substitute.For<IMessageCorrelationCache>();
+            var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, subbedCache);
+            handler.StartObserving(messageStream);
+             
+            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            //Get the received response object and verify it is SignMessageResponse
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
             
-            //Get the contents of the response
             var responseContent = sentResponse.FromAnySigned<SignMessageResponse>();
             
-            //Assert that the message sent in the response is the same message sent to sign
             responseContent.OriginalMessage.Should().Equal(message);
             
-            //Assert that a signature was sent in the response
             responseContent.Signature.Should().NotBeEmpty();
 
-            //Asset that a public key was sent in the response
             responseContent.PublicKey.Should().NotBeEmpty();
         }
 

@@ -57,27 +57,19 @@ namespace Catalyst.Node.Core.RPC.Handlers
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            Guard.Argument(message).NotNull();
-            
+        {   
             Logger.Debug("received message of type SignMessageRequest");
             
             try
             {
                 var deserialised = message.Payload.FromAnySigned<SignMessageRequest>();
-                
-                Guard.Argument(deserialised).NotNull();
 
-                //decode the received message
-                var decodeResult = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
+                var decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
 
-                //get the original message from the decoded message
-                var decodedMessage = decodeResult.ToStringFromRLPDecoded();
-
-                //use the keysigner to sign the message
                 var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
                 
                 var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
+                
                 var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
                 
                 Guard.Argument(publicKey).NotNull();
