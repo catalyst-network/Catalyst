@@ -70,10 +70,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 
                 var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
                 
+                Guard.Argument(signature).NotNull();
+                
                 var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
                 
                 Guard.Argument(publicKey).NotNull();
-                Guard.Argument(signature).NotNull();
                 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 

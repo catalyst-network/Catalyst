@@ -87,6 +87,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Theory]
         [InlineData("Hello Catalyst")]
         [InlineData("")]
+        [InlineData("Hello&?!1253Catalyst")]
         public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {            
             var request = new SignMessageRequest()
