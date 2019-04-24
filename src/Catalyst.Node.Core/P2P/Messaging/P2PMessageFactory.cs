@@ -33,7 +33,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public sealed class P2PMessageFactoryBase<TMessage, TMessageType>
+    public sealed class P2PMessageFactory<TMessage, TMessageType>
         : MessageFactoryBase<TMessage, TMessageType> 
         where TMessage : class, IMessage<TMessage>
         where TMessageType : class, IEnumerableMessageType
