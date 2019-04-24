@@ -59,9 +59,9 @@ namespace Catalyst.Cli.Handlers
         }
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see />.
+        /// Handles the peer list response.
         /// </summary>
-        /// <param name="message">An object of GetMempoolResponse</param>
+        /// <param name="message">The PeerListResponse message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {   
             Logger.Debug("Handling PeerListResponse");
