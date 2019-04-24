@@ -86,7 +86,7 @@ namespace Catalyst.Cli
                 })
             };
     }
-    
+
     [Verb("verify", HelpText = "verifies a message")]
     class VerifyOptions
     {
@@ -95,18 +95,47 @@ namespace Catalyst.Cli
 
         [Option('k', "address", HelpText = "A valid public key.")]
         public string Address { get; set; }
-        
+
         [Option('s', "signature", HelpText = "A valid signature.")]
         public string Signature { get; set; }
-        
+
         [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
         public string Node { get; set; }
 
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
-            new List<Example> 
+            new List<Example>
             {
                 new Example("Signs a message or a transaction provided.", new SignOptions {Node = "Messsage"})
             };
+    }
+
+    /// <summary>
+    /// Class contains the options for the peer list command
+    /// </summary>
+    [Verb("listpeers", HelpText = "displays peer list")]
+    class PeerListOptions
+    {
+        /// <summary>
+        /// Gets or sets the node.
+        /// </summary>
+        /// <value>
+        /// The node.
+        /// </value>
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
+
+        /// <summary>
+        /// Gets the examples.
+        /// </summary>
+        /// <value>
+        /// The examples.
+        /// </value>
+        [Usage(ApplicationAlias = "")]
+        public static IEnumerable<Example> Examples =>
+           new List<Example>
+           {
+                new Example("Displays peer list for the specified node.", new PeerListOptions {Node = "node1"})
+           };
     }
 }
