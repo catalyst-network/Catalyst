@@ -56,11 +56,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
-        {   
+        {
+            Guard.Argument(message).NotNull();
+            
             Logger.Debug("received message of type GetMempoolRequest");
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolRequest>();
+
+                Guard.Argument(deserialised).NotNull();
                 
                 Logger.Debug("message content is {0}", deserialised);
                 
@@ -70,11 +74,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     {
                         GetMempoolContent()
                     }
-                };
-
-                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                }.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
                 
-                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+                message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -94,7 +96,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 foreach (var tx in memPoolContentEncoded)
                 {
-                    mempoolList.Add(tx.ToString());
+                    mempoolList.Add(Encoding.Default.GetString(tx));
                 }
 
                 return mempoolList;

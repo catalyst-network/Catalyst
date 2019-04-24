@@ -92,14 +92,14 @@ namespace Catalyst.Cli.UnitTests
             
             foreach (var tx in txEncodedLst)
             {
-                mempoolList.Add(tx.ToString());
+                mempoolList.Add(Encoding.Default.GetString(tx));
             }
 
             return mempoolList;
         }
 
         [Theory]
-        [MemberData(nameof(QueryContents))]  
+        [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();

@@ -99,6 +99,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             responseContent.Mempool.Should().NotBeEmpty();
             responseContent.Mempool.Count.Should().Be(2);
+
+            var mempoolContent = responseContent.Mempool.ToList();
+
+            for (var i = 0; i < mempoolContent.Count; i++)
+            {
+                var tx = mempoolContent[i];
+
+                tx.Should().NotBeEmpty().And.ContainEquivalentOf(txLst[i].Signature.ToString());
+            }
         }
         
         [Fact]

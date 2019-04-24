@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -66,28 +67,24 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">An object of GetMempoolResponse</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
+            Guard.Argument(message).NotNull();
+            
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
 
-                _output.WriteLine("[");
+                Guard.Argument(deserialised).NotNull();
                 
                 for (var i = 0; i < deserialised.Mempool.Count; i++)
                 {
                     _output.WriteLine($"tx{i}: {deserialised.Mempool[i]},");
                 }
-                
-                _output.WriteLine("]");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
                     "Failed to handle GetMempoolResponse after receiving message {0}", message);
                 _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
             }
         }
     }
