@@ -47,6 +47,7 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -98,12 +99,11 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var fakeChannel = Substitute.For<IChannel>();
-                var fakeReputationCache = Substitute.For<IReputableCache>();
                 fakeContext.Channel.Returns(fakeChannel);
                 var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
             
-                var handler = new PingRequestAskHandler(_pid, fakeReputationCache, _logger);
+                var handler = new PingRequestAskHandler(_pid, _logger);
                 handler.StartObserving(observableStream);
             
                 fakeContext.Channel.ReceivedWithAnyArgs(1)
@@ -111,21 +111,21 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             }
         }
         
-        [Fact]
-        public void PingRequestIsRegisteredInReputationCache()
-        {
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
-            {
-                var fakeReputationCache = Substitute.For<IReputableCache>();
-                var fakeContext = Substitute.For<IChannelHandlerContext>();
-                var handler = new PingRequestAskHandler(_pid, fakeReputationCache, _logger);
-                var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
-
-                handler.HandleMessage(channeledAny);
-                handler.ReputableCache.ReceivedWithAnyArgs(1);
-            }
-        }
+        // [Fact]
+        // public void PingRequestIsRegisteredInReputationCache()
+        // {
+        //     var container = ContainerBuilder.Build();
+        //     using (container.BeginLifetimeScope(CurrentTestName))
+        //     {
+        //         var fakeContext = Substitute.For<IChannelHandlerContext>();
+        //         var handler = new PingRequestAskHandler(_pid, _logger);
+        //         var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
+        //
+        //         handler.HandleMessage(channeledAny);
+        //         
+        //         handler.ReputableCache.ReceivedWithAnyArgs(1);
+        //     }
+        // }
         
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]

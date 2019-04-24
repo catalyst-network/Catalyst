@@ -28,6 +28,7 @@ using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Serilog;
@@ -36,15 +37,14 @@ using Catalyst.Protocol.IPPN;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class PingRequestAskHandler 
-        : ReputableAskRequestHandlerBase<PingRequest, IReputableCache>,
+        : MessageHandlerBase<PingRequest>,
             IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
         public PingRequestAskHandler(IPeerIdentifier peerIdentifier,
-            IReputableCache reputableCache,
             ILogger logger)
-            : base(reputableCache, logger)
+            : base(logger)
         {
             _peerIdentifier = peerIdentifier;
         }

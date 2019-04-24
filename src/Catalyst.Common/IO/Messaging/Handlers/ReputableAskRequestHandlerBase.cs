@@ -59,12 +59,12 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// <param name="message"></param>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {           
-            ReputableCache.AddPendingRequest(new PendingRequest
-            {
-                Content = message.Payload,
-                Recipient = new PeerIdentifier(message.Payload.PeerId),
-                SentAt = DateTimeOffset.UtcNow
-            });
+            // ReputableCache.AddPendingRequest(new PendingRequest
+            // {
+            //     Content = message.Payload,
+            //     Recipient = new PeerIdentifier(message.Payload.PeerId),
+            //     SentAt = DateTimeOffset.UtcNow
+            // });
             
             Handler(message);
         }
