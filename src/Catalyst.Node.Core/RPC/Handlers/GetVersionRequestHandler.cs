@@ -65,11 +65,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var response = new VersionResponse
                 {
                     Version = NodeUtil.GetVersion()
-                };
-
-                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                }.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
                 
-                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+                message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
