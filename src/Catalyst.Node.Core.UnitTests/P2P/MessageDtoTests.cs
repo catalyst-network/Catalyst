@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _p2PMessageDto.Should().BeOfType(typeof(P2PMessageDto<IMessage, P2PMessages>));
             _p2PMessageDto.Type.Should().BeEquivalentTo(P2PMessages.PingRequest);
             _p2PMessageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            _p2PMessageDto.Recipient.Should().NotBeNull().And.BeOfType(typeof(IPEndPoint));
+            _p2PMessageDto.Recipient.Should().NotBeNull().And.BeOfType(typeof(IPeerIdentifier));
             _p2PMessageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }
