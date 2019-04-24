@@ -57,12 +57,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
-        {   
+        {
+            Guard.Argument(message).NotNull();
+            
             Logger.Debug("received message of type SignMessageRequest");
             
             try
             {
                 var deserialised = message.Payload.FromAnySigned<SignMessageRequest>();
+                
+                Guard.Argument(message).NotNull();
 
                 var decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
 
