@@ -434,7 +434,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var nodeId = ((GetInfoOptions)opts).NodeId;
+            var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -466,7 +466,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var nodeId = ((GetInfoOptions)opts).NodeId;
+            var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -509,7 +509,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var nodeId = ((GetInfoOptions)opts).NodeId;
+            var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -540,7 +540,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<SignOptions>();
 
-            var signOptions = (SignOptions)opts;
+            var signOptions = (SignOptions) opts;
             var nodeId = signOptions.Node;
 
             //Perform validations required before a command call
@@ -578,7 +578,7 @@ namespace Catalyst.Cli
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
 
             //get the message to verify, the address/public key who signed it, and the signature 
-            var verifyOptions = (VerifyOptions)opts;
+            var verifyOptions = (VerifyOptions) opts;
 
             //if the node is connected and there are no other errors then send the get info request to the server
             try
@@ -672,8 +672,8 @@ namespace Catalyst.Cli
             try
             {
                 Guard.Argument(opts).NotNull().Compatible<PeerListOptions>();
-                
-                var peerListOptions = (PeerListOptions)opts;
+
+                var peerListOptions = (PeerListOptions) opts;
                 var node = GetConnectedNode(peerListOptions.Node);
 
                 Guard.Argument(node).NotNull();

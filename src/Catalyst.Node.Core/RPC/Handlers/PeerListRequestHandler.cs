@@ -37,8 +37,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     /// Handles the PeerListRequest message
     /// </summary>
-    /// <seealso cref="Catalyst.Common.IO.Messaging.Handlers.CorrelatableMessageHandlerBase{Catalyst.Protocol.Rpc.Node.GetPeerListRequest, Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationCache}" />
-    /// <seealso cref="Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListRequest, IMessageCorrelationCache}" />
+    /// <seealso cref="IRpcRequestHandler" />
     public sealed class PeerListRequestHandler
         : CorrelatableMessageHandlerBase<GetPeerListRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="peerDiscovery">The peer list</param>
         public PeerListRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IMessageCorrelationCache messageCorrelationCache, 
+            IMessageCorrelationCache messageCorrelationCache,
             IPeerDiscovery peerDiscovery)
             : base(messageCorrelationCache, logger)
         {
@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             _message = message;
 
             ReturnResponse(this._peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId));
-            
+
             Logger.Debug("received message of type PeerListRequest");
         }
 

@@ -36,8 +36,8 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handles the Peer list response from the node
     /// </summary>
-    /// <seealso cref="Catalyst.Common.IO.Messaging.Handlers.CorrelatableMessageHandlerBase{Catalyst.Protocol.Rpc.Node.GetPeerListResponse, Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationCache}" />
-    /// <seealso cref="Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="IRpcResponseHandler" />
     public sealed class PeerListResponseHandler
         : CorrelatableMessageHandlerBase<GetPeerListResponse, IMessageCorrelationCache>,
             IRpcResponseHandler
@@ -63,14 +63,14 @@ namespace Catalyst.Cli.Handlers
         /// </summary>
         /// <param name="message">The PeerListResponse message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
-        {   
+        {
             Logger.Debug("Handling PeerListResponse");
 
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetPeerListResponse>();
                 var result = string.Join(", ", deserialised.Peers);
-                _output.WriteLine(result.ToString());
+                _output.WriteLine(result);
             }
             catch (Exception ex)
             {

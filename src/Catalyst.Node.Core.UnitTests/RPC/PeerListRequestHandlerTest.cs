@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            
+
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
@@ -92,10 +92,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void TestPeerListRequestResponse(params string[] fakePeers)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
-            
+
             var peerDiscovery = _container.Resolve<IPeerDiscovery>();
 
-            fakePeers.ToList().ForEach(fakePeer => {
+            fakePeers.ToList().ForEach(fakePeer =>
+            {
                 peerDiscovery.PeerRepository.Add(new Peer()
                 {
                     LastSeen = DateTime.Now.Subtract(TimeSpan.FromSeconds(1)),
@@ -105,7 +106,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             });
 
             var request = new GetPeerListRequest().ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
-            
+
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
             var handler = new PeerListRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, subbedCache, peerDiscovery);
@@ -113,7 +114,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);
-            
+
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerListResponse.Descriptor.ShortenedFullName());
 
