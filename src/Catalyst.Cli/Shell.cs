@@ -98,15 +98,17 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args, nameof(args)).NotNull().MinCount(1).NotEmpty();
 
-            return Parser.Default.ParseArguments<GetInfoOptions, 
-                    ConnectOptions, 
-                    SignOptions, 
-                    VerifyOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, bool>(
+            return Parser.Default.ParseArguments<GetInfoOptions,
+                    ConnectOptions,
+                    SignOptions,
+                    VerifyOptions,
+                    AddFileOnDfsOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, AddFileOnDfsOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
                     (VerifyOptions opts) => OnVerifyCommands(opts),
+                    (AddFileOnDfsOptions opts) => OnAddFileToDfs(opts),
                     errs => false);
         }
 
@@ -123,7 +125,7 @@ namespace Catalyst.Cli
         private bool OnGetCommands(GetInfoOptions opts)
         {
             Guard.Argument(opts).NotNull();
-            
+
             if (opts.Info)
             {
                 return OnGetConfig(opts);
@@ -153,7 +155,7 @@ namespace Catalyst.Cli
         private bool OnSignCommands(SignOptions opts)
         {
             Guard.Argument(opts).NotNull();
-            
+
             if (opts.Message.Length > 0)
             {
                 return OnSignMessage(opts);
@@ -161,7 +163,7 @@ namespace Catalyst.Cli
 
             return false;
         }
-        
+
         /// <summary>
         /// Calls the specific option handler method from one of the "sign" command options based on the options passed
         /// in by he user through the command line.  The available options are:
@@ -177,6 +179,20 @@ namespace Catalyst.Cli
                 return OnVerifyMessage(opts);
             }
 
+            return false;
+        }
+
+        /// <summary>
+        /// Adds the file on DFS.
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns></returns>
+        private bool OnAddFileToDfs(AddFileOnDfsOptions opts)
+        {
+            if (opts.File.Length > 0 && opts.Node.Length > 0)
+            {
+                return OnAddFileOnDfsMessage(opts);
+            }
             return false;
         }
 
@@ -340,12 +356,12 @@ namespace Catalyst.Cli
         private bool OnConnectNode(string nodeId)
         {
             Guard.Argument(nodeId).NotEmpty();
-            
+
             var rpcNodeConfigs = GetNodeConfig(nodeId);
-            
+
             //Check if there is a connection has already been made to the node
             Guard.Argument(rpcNodeConfigs).NotNull();
-            
+
             try
             {
                 //Connect to the node and store it in the socket client registry
@@ -417,7 +433,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var nodeId = ((GetInfoOptions) opts).NodeId;
+            var nodeId = ((GetInfoOptions)opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -448,8 +464,8 @@ namespace Catalyst.Cli
         protected override bool OnGetConfig(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
-            
-            var nodeId = ((GetInfoOptions) opts).NodeId;
+
+            var nodeId = ((GetInfoOptions)opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -459,7 +475,7 @@ namespace Catalyst.Cli
             {
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
-                
+
                 node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
@@ -491,8 +507,8 @@ namespace Catalyst.Cli
         protected override bool OnGetMempool(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
-            
-            var nodeId = ((GetInfoOptions) opts).NodeId;
+
+            var nodeId = ((GetInfoOptions)opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -523,7 +539,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<SignOptions>();
 
-            var signOptions = (SignOptions) opts;
+            var signOptions = (SignOptions)opts;
             var nodeId = signOptions.Node;
 
             //Perform validations required before a command call
@@ -559,10 +575,10 @@ namespace Catalyst.Cli
         public override bool OnVerifyMessage(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
-            
+
             //get the message to verify, the address/public key who signed it, and the signature 
-            var verifyOptions = (VerifyOptions) opts;
-            
+            var verifyOptions = (VerifyOptions)opts;
+
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
@@ -586,7 +602,7 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
-            
+
             return true;
         }
 
@@ -643,6 +659,15 @@ namespace Catalyst.Cli
         private void ReturnUserMessage(string message)
         {
             Console.WriteLine(message);
+        }
+
+        public override bool OnAddFileOnDfsMessage(object opts)
+        {
+            Guard.Argument(opts).NotNull().Compatible<AddFileOnDfsOptions>();
+
+            var addFileOnDfsOptions = (AddFileOnDfsOptions)opts;
+
+            return true;
         }
     }
 }
