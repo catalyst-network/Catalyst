@@ -2,4 +2,3 @@
 *.cs text eol=lf
 *.md text eol=lf
 COPYING text eol=lf
-*.dll text eol=crlf
