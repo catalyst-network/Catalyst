@@ -3,7 +3,6 @@
   "components": [
     {
         "type": "Catalyst.Node.Core.Modules.Dfs.IpfsDfs",
-        "instanceScope": "singleinstance",
         "services": [
             {
                 "type": "Catalyst.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Common"
@@ -12,7 +11,6 @@
     },
     {
         "type": "Catalyst.Node.Core.Modules.Dfs.IpfsEngine",
-        "instanceScope": "singleinstance",
         "services": [
             {
                 "type": "Catalyst.Node.Core.Modules.Dfs.IIpfsEngine"
