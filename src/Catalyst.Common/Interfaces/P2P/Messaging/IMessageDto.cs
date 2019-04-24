@@ -22,11 +22,16 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.P2P.Messaging
 {
-    public interface IMessageDto<out TMessageType> where TMessageType : class, IEnumerableMessageType
+    public interface IMessageDto<out TMessage, out TMessageType> 
+        where TMessage : class, IMessage
+        where TMessageType : class, IEnumerableMessageType
     {
+        TMessage Message { get; }
+        IPeerIdentifier Recipient { get; }
         IPeerIdentifier Sender { get; }
         TMessageType Type { get; }
     }

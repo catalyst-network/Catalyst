@@ -24,11 +24,6 @@
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -76,11 +71,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
                 peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
             }
             
-            var datagramEnvelope = new P2PMessageFactoryBase<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
+            var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                 new P2PMessageDto<PeerNeighborsResponse, P2PMessages>(
                     type: P2PMessages.GetNeighbourResponse,
                     message: peerNeighborsResponseMessage,
-                    destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
+                    recipient: new PeerIdentifier(message.Payload.PeerId),
                     sender: _peerIdentifier
                 )
             );

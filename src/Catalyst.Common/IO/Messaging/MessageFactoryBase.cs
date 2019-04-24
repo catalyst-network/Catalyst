@@ -25,6 +25,7 @@ using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
@@ -40,19 +41,19 @@ namespace Catalyst.Common.IO.Messaging
         /// <param name="dto"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public abstract AnySigned GetMessage(IP2PMessageDto<TMessage, TMessageType> dto);
+        public abstract AnySigned GetMessage(IMessageDto<TMessage, TMessageType> dto);
         
-        protected AnySigned BuildTellMessage(IP2PMessageDto<TMessage, TMessageType> dto)
+        protected AnySigned BuildTellMessage(IMessageDto<TMessage, TMessageType> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
-        protected AnySigned BuildAskMessage(IP2PMessageDto<TMessage, TMessageType> dto)
+        protected AnySigned BuildAskMessage(IMessageDto<TMessage, TMessageType> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
-        protected AnySigned BuildGossipMessage(IP2PMessageDto<TMessage, TMessageType> dto)
+        protected AnySigned BuildGossipMessage(IMessageDto<TMessage, TMessageType> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }

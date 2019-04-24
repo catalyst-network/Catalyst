@@ -36,13 +36,13 @@ using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public sealed class PingRequestAskHandler 
+    public sealed class PingRequestHandler 
         : MessageHandlerBase<PingRequest>,
             IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
-        public PingRequestAskHandler(IPeerIdentifier peerIdentifier,
+        public PingRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger)
             : base(logger)
         {
@@ -55,11 +55,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
             Logger.Debug("message content is {0}", deserialised);
             
-            var datagramEnvelope = new P2PMessageFactoryBase<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
+            var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                 new P2PMessageDto<PingResponse, P2PMessages>(
                     type: P2PMessages.PingRequest,
                     message: new PingResponse(),
-                    destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
+                    recipient: new PeerIdentifier(message.Payload.PeerId),
                     sender: _peerIdentifier
                 )
             );
