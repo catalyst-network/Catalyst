@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -33,19 +32,16 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Xunit;
 using SharpRepository.Repository;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.P2P;
-using Catalyst.Common.Interfaces.Network;
-using DnsClient;
 using Catalyst.Common.Network;
 using System.Collections.Generic;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Interfaces.P2P;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
@@ -60,12 +56,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
-        /// <summary>The Dns</summary>
-        private readonly IDns _dns;
-
-        /// <summary>The configuration</summary>
-        private readonly IConfigurationRoot _config;
-        
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
         /// </summary>
@@ -73,17 +63,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build();
-
+            
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-
-            var lookupClient = Substitute.For<ILookupClient>();
-            _dns = new Dns(lookupClient);
         }
 
         /// <summary>
@@ -114,7 +96,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var peerDiscovery = new PeerDiscovery(_dns, peerRepository, _config, _logger);
+            var peerDiscovery = Substitute.For<IPeerDiscovery>();
+            peerDiscovery.PeerRepository.Returns(peerRepository);
             
             var rpcMessageFactory = new RpcMessageFactoryBase<GetPeerListRequest, RpcMessages>();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
