@@ -79,8 +79,12 @@ namespace Catalyst.Node.Core
                 var targetConfigFolder = new FileSystem().GetCatalystHomeDir().FullName;
                 var network = Network.Dev;
 
+#if (DEBUG)                
                 new ConfigCopier().RunConfigStartUp(targetConfigFolder, network, overwrite: true);
-
+#elif (RELEASE)
+                new ConfigCopier().RunConfigStartUp(targetConfigFolder, network);
+#endif
+                
                 var config = new ConfigurationBuilder()
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.NetworkConfigFile(network)))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ComponentsJsonConfigFile))
