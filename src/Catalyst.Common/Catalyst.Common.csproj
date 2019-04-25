@@ -171,7 +171,14 @@
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\LetterCasing.cs" Link="Multiformats.Base\LetterCasing.cs" />
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Multibase.cs" Link="Multiformats.Base\Multibase.cs" />
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\MultibaseEncoding.cs" Link="Multiformats.Base\MultibaseEncoding.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\CryptoWrapper.cs" Link="Helpers\Cryptography.IWrapper\CryptoWrapper.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\FFI.cs" Link="Helpers\Cryptography.IWrapper\FFI.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\IWrapper.cs" Link="Helpers\Cryptography.IWrapper\IWrapper.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\MockCrypto.cs" Link="Helpers\Cryptography.IWrapper\MockCrypto.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\Byte32.cs" Link="Helpers\Cryptography.IWrapper\Types\Byte32.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\Byte64.cs" Link="Helpers\Cryptography.IWrapper\Types\Byte64.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\FixedSizedBytes.cs" Link="Helpers\Cryptography.IWrapper\Types\FixedSizedBytes.cs" />
+      <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />

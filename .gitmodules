@@ -10,3 +10,6 @@
 [submodule "submodules/protocol-protobuffs"]
 	path = submodules/protocol-protobuffs
 	url = https://github.com/catalyst-network/protocol-protobuffs.git
+[submodule "submodules/Rust.Cryptography.FFI.Wrapper"]
+	path = submodules/Rust.Cryptography.FFI.Wrapper
+	url = git@github.com:catalyst-network/Rust.Cryptography.FFI.Wrapper.git
