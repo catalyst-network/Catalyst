@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
         { 
-            var request = new RpcMessageFactoryBase<VersionRequest, RpcMessages>().GetMessage(
+            var request = new RpcMessageFactory<VersionRequest, RpcMessages>().GetMessage(
                 new P2PMessageDto<VersionRequest, RpcMessages>(
                     RpcMessages.GetVersionRequest,
                     new VersionRequest(),

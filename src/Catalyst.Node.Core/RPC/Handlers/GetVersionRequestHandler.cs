@@ -61,7 +61,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             
             try
             {
-                var response = new RpcMessageFactoryBase<VersionResponse, RpcMessages>().GetMessage(
+                var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
                     new P2PMessageDto<VersionResponse, RpcMessages>(
                         RpcMessages.GetVersionRequest,
                         new VersionResponse

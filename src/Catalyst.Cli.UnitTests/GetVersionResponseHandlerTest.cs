@@ -82,7 +82,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             
-            var response = new RpcMessageFactoryBase<VersionResponse, RpcMessages>().GetMessage(
+            var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
                 new P2PMessageDto<VersionResponse, RpcMessages>(
                     RpcMessages.GetVersionRequest,
                     new VersionResponse
