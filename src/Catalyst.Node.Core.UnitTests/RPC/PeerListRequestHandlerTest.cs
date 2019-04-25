@@ -43,72 +43,86 @@ using Xunit.Abstractions;
 using Catalyst.Common.Interfaces.P2P;
 using SharpRepository.Repository;
 using Catalyst.Common.P2P;
+using Catalyst.Node.Core.P2P;
+using Catalyst.Common.Interfaces.Network;
+using DnsClient;
+using Catalyst.Common.Network;
+using System.Collections.Generic;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
     /// <summary>
     /// Tests the peer list CLI and RPC calls
     /// </summary>
-    /// <seealso cref="Catalyst.Common.UnitTests.TestUtils.ConfigFileBasedTest" />
-    public sealed class PeerListRequestHandlerTest : ConfigFileBasedTest
+    public sealed class PeerListRequestHandlerTest
     {
-        private readonly ILifetimeScope _scope;
+        /// <summary>The logger</summary>
         private readonly ILogger _logger;
+
+        /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
+
+        /// <summary>The Dns</summary>
+        private readonly IDns _dns;
+
+        /// <summary>The configuration</summary>
         private readonly IConfigurationRoot _config;
-        private IContainer _container;
+
+        /// <summary>The lookup client</summary>
+        private readonly ILookupClient _lookupClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
         /// </summary>
-        /// <param name="output">The test output.</param>
-        public PeerListRequestHandlerTest(ITestOutputHelper output) : base(output)
+        public PeerListRequestHandlerTest()
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            _logger = Substitute.For<ILogger>();
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build(), CurrentTestName);
-
-            ConfigureContainerBuilder(_config);
-
-            _container = ContainerBuilder.Build();
-            _scope = _container.BeginLifetimeScope(CurrentTestName);
-
-            _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
+               .Build();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+
+            _lookupClient = Substitute.For<ILookupClient>();
+            _dns = new Dns(_lookupClient);
         }
 
         /// <summary>
         /// Tests the peer list request and response.
         /// </summary>
-        /// <param name="fakePeers">The fake peers.</param>
+        /// <param name="fakePeeers">The fake peers.</param>
         [Theory]
-        [InlineData("127.0.0.1")]
+        [InlineData("FakePeer1", "FakePeer2")]
+        [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public void TestPeerListRequestResponse(params string[] fakePeers)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
-
-            var peerDiscovery = _container.Resolve<IPeerDiscovery>();
+            var peerList = new List<Peer>();
 
             fakePeers.ToList().ForEach(fakePeer =>
             {
-                peerDiscovery.PeerRepository.Add(new Peer()
+                peerList.Add(new Peer
                 {
-                    LastSeen = DateTime.Now.Subtract(TimeSpan.FromSeconds(1)),
-                    PeerIdentifier = new PeerIdentifier(PeerIdHelper.GetPeerId(fakePeer, "tc", 1, System.Net.IPAddress.Parse(fakePeer), 12345)),
-                    Reputation = 0
+                    Reputation = 0,
+                    LastSeen = DateTime.Now,
+                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(fakePeer)
                 });
             });
+
+            // Let peerRepository return the fake peer list
+            peerRepository.GetAll().Returns(peerList.ToArray());
+
+            var peerDiscovery = new PeerDiscovery(_dns, peerRepository, _config, _logger);
 
             var request = new GetPeerListRequest().ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
+
             var handler = new PeerListRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, subbedCache, peerDiscovery);
             handler.StartObserving(messageStream);
 
@@ -121,22 +135,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var responseContent = sentResponse.FromAnySigned<GetPeerListResponse>();
 
             responseContent.Peers.Count.Should().Be(fakePeers.Length);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        /// <param name="disposing">
-        ///   <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (!disposing)
-            {
-                return;
-            }
-
-            _scope?.Dispose();
         }
     }
 }

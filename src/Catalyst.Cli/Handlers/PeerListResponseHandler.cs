@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
+using Dawn;
 
 namespace Catalyst.Cli.Handlers
 {
@@ -64,6 +65,8 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">The PeerListResponse message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
+            Guard.Argument(message).NotNull();
+
             Logger.Debug("Handling PeerListResponse");
 
             try
@@ -77,10 +80,6 @@ namespace Catalyst.Cli.Handlers
                 Logger.Error(ex,
                     "Failed to handle PeerListResponse after receiving message {0}", message);
                 throw;
-            }
-            finally
-            {
-                Logger.Information(@"Press Enter to continue ...");
             }
         }
     }
