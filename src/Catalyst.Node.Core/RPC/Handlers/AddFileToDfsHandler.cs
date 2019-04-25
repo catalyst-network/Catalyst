@@ -74,8 +74,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             Guard.Argument(deserialised).NotNull();
 
-            int chunkSize = (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize);
-
+            int chunkSize = Math.Max(1, (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
+            
             FileTransferInformation fileTransferInformation = new FileTransferInformation(Guid.NewGuid().ToString(), deserialised.FileName, chunkSize);
 
             AddFileToDfsResponseCode responseCode = AddFileToDfsResponseCode.Successful;
