@@ -70,11 +70,15 @@ namespace Catalyst.Common.FileSystem
                     }
                     else if (fileTransferInformation.IsExpired())
                     {
+                        lock(_lockObject)
+                        {
+                            _pendingFileTransfers.Remove(fileTransferInformation.Hash);
+                        }
                         fileTransferInformation.CleanUpExpired();
                         fileTransferInformation.OnExpired?.Invoke();
                         tokenSource.Cancel();
                     }
-                }, TimeSpan.FromMinutes(FileTransferConstants.ExpiryMinutes), tokenSource.Token);
+                }, TimeSpan.FromSeconds( (FileTransferConstants.ExpiryMinutes * 60) / 2), tokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 return AddFileToDfsResponseCode.Successful;

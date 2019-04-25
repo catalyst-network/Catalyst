@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error(e.ToString());
                 responseCode = AddFileToDfsResponseCode.Error;
             }
 
@@ -95,10 +95,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         private void ReturnResponse(FileTransferInformation fileTransferInformation, AddFileToDfsResponseCode responseCode, ulong fileSize)
         {
-            Console.WriteLine("File transfer response code: " + responseCode);
+            Logger.Information("File transfer response code: " + responseCode);
             if (responseCode == AddFileToDfsResponseCode.Successful)
             {
-                Console.WriteLine($"Initialised file transfer, FileName: {fileTransferInformation.FileName}, Chunks: {fileTransferInformation.MaxChunk}, FileLen: {fileSize}");
+                Logger.Information($"Initialised file transfer, FileName: {fileTransferInformation.FileName}, Chunks: {fileTransferInformation.MaxChunk}, FileLen: {fileSize}");
             }
         }
     }

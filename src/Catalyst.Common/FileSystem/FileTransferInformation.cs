@@ -35,13 +35,14 @@ namespace Catalyst.Common.FileSystem
         public void Init()
         {
             this.RandomAccessStream = new BinaryWriter(File.Open(_tempPath, FileMode.CreateNew));
+            _timeSinceLastChunk = DateTime.Now;
         }
 
         /// <summary>Determines whether this instance is expired.</summary>
         /// <returns><c>true</c> if this instance is expired; otherwise, <c>false</c>.</returns>
         public bool IsExpired()
         {
-            return DateTime.Now.Subtract(_timeSinceLastChunk) > FileTransferConstants.ExpiredTimeSpan;
+            return DateTime.Now.Subtract(_timeSinceLastChunk).TotalMinutes > FileTransferConstants.ExpiryMinutes;
         }
 
         public bool IsComplete()
