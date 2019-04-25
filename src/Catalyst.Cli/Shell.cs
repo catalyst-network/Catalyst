@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Catalyst.Cli.Rpc;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO;
 using Catalyst.Common.Shell;
@@ -43,6 +44,8 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 
 namespace Catalyst.Cli
 {
@@ -495,15 +498,19 @@ namespace Catalyst.Cli
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
-            Guard.Argument(node).NotNull();
+            Guard.Argument(node).NotNull("The shell must be able to connect to a valid node to be able to send the request.");
 
-            //if the node is connected and there are no other errors then send the get info request to the server
             try
-            {
-                //send the message to the server by writing it to the channel
-                var request = new GetMempoolRequest();
+            {   
+                var request = new RpcMessageFactoryBase<GetMempoolRequest, RpcMessages>().GetMessage(
+                    new P2PMessageDto<GetMempoolRequest, RpcMessages>(
+                        RpcMessages.GetMempoolRequest,
+                        new GetMempoolRequest(),
+                        (IPEndPoint) node.Channel.RemoteAddress,
+                        _peerIdentifier)
+                );
 
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request);
             }
             catch (Exception e)
             {
