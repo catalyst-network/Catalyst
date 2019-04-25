@@ -21,31 +21,26 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Autofac;
+using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Common.Util;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
-using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.RPC 
 {
@@ -60,17 +55,31 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+            _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
         
-        [Fact]
-        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse()
+        public static IEnumerable<object[]> QueryContents =>
+            new List<object[]>
+            {
+                new object[] {CreateTestTransactions(), 2},
+                new object[] {new List<Transaction>(), 0},
+            };
+
+        private static List<Transaction> CreateTestTransactions()
         {
             var txLst = new List<Transaction>
             {
                 TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
             };
-            
+
+            return txLst;
+        }
+
+        [Theory]
+        [MemberData(nameof(QueryContents))]
+        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<Transaction> txLst, int expectedTxs)
+        {
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
@@ -78,11 +87,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     return txEncodedLst;
                 }
             );
-            
-            var request = new GetMempoolRequest()
-            {
-                Query = true
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
+
+            var request = new RpcMessageFactoryBase<GetMempoolRequest, RpcMessages>().GetMessage(
+                new P2PMessageDto<GetMempoolRequest, RpcMessages>(
+                    RpcMessages.GetMempoolRequest,
+                    new GetMempoolRequest(),
+                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort),
+                    PeerIdentifierHelper.GetPeerIdentifier("public_key"))
+            );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
@@ -90,16 +102,21 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count().Should().Be(2);
             
-            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
+            var sentResponse = (AnySigned) receivedCalls[1].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
-
             var responseContent = sentResponse.FromAnySigned<GetMempoolResponse>();
 
-            responseContent.Mempool.Should().NotBeEmpty();
-            responseContent.Mempool.Count.Should().Be(2);
+            if (expectedTxs == 0)
+            {
+                responseContent.Mempool.Should().BeEmpty();
+                return;
+            }
 
+            responseContent.Mempool.Should().NotBeEmpty();
+            responseContent.Mempool.Count.Should().Be(expectedTxs);
+            
             var mempoolContent = responseContent.Mempool.ToList();
 
             for (var i = 0; i < mempoolContent.Count; i++)
@@ -108,38 +125,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                 tx.Should().NotBeEmpty().And.ContainEquivalentOf(txLst[i].Signature.ToString());
             }
-        }
-        
-        [Fact]
-        public void GetMempool_UsingEmptyMempool_ShouldSendGetMempoolResponse()
-        {
-            var mempool = Substitute.For<IMempool>();
-            mempool.GetMemPoolContentEncoded().Returns(x =>
-                {
-                    var txEncodedLst = new List<byte[]>();
-                    return txEncodedLst;
-                }
-            );
-            
-            var request = new GetMempoolRequest()
-            {
-                Query = true
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new GetMempoolRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, subbedCache, _logger);
-            handler.StartObserving(messageStream);
-            
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
-            
-            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
-
-            var responseContent = sentResponse.FromAnySigned<GetMempoolResponse>();
-
-            responseContent.Mempool.Should().BeEmpty();
         }
     }
 }

@@ -24,14 +24,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using Catalyst.Cli.Handlers;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
@@ -105,10 +109,16 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
             
-            var response = new GetMempoolResponse
-            {
-                Mempool = {txList}
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
+            var response = new RpcMessageFactoryBase<GetMempoolResponse, RpcMessages>().GetMessage(
+                new P2PMessageDto<GetMempoolResponse, RpcMessages>(
+                    RpcMessages.GetMempoolRequest,
+                    new GetMempoolResponse
+                    {
+                        Mempool = {txList}
+                    },
+                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort),
+                    PeerIdentifierHelper.GetPeerIdentifier("public_key"))
+            );
 
             var messageStream = CreateStreamWithMessage(response);
             
