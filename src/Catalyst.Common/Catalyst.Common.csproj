@@ -202,7 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Enumerator" />
-    <Folder Include="FileSystem" />
     <Folder Include="Hex\HexConverters\Extensions\" />
     <Folder Include="Hex\HexTypes\" />
     <Folder Include="NSec\Cryptography\Buffer\" />

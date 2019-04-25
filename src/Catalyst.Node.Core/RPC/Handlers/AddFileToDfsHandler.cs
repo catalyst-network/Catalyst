@@ -34,6 +34,9 @@ using System.IO;
 using System.Linq;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Config;
+using Catalyst.Common.FileSystem;
+using System;
+using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -45,20 +48,19 @@ namespace Catalyst.Node.Core.RPC.Handlers
     public class AddFileToDfsRequestHandler : CorrelatableMessageHandlerBase<AddFileToDfsRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
-        /// <summary>The DFS</summary>
-        private readonly IDfs _dfs;
-
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages> _rpcMessageFactory;
+
+        private readonly IFileTransfer _fileTransfer;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="dfs">The DFS.</param>
-        public AddFileToDfsRequestHandler(IMessageCorrelationCache correlationCache, ILogger logger, IDfs dfs) : base(correlationCache, logger)
+        public AddFileToDfsRequestHandler(IFileTransfer fileTransfer, IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger)
         {
-            _dfs = dfs;
-            this._rpcMessageFactory = new RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages>();
+            _fileTransfer = fileTransfer;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -68,11 +70,35 @@ namespace Catalyst.Node.Core.RPC.Handlers
             Guard.Argument(message).NotNull();
 
             var deserialised = message.Payload.FromAnySigned<AddFileToDfsRequest>();
-           
+
             Guard.Argument(deserialised).NotNull();
 
-           
-            _dfs.AddAsync(new MemoryStream());
+            int chunkSize = (int) Math.Min(1d, Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
+
+            FileTransferInformation fileTransferInformation = new FileTransferInformation(Guid.NewGuid().ToString(), deserialised.FileName, chunkSize);
+
+            AddFileToDfsResponseCode responseCode = AddFileToDfsResponseCode.Successful;
+
+            try
+            {
+                responseCode = _fileTransfer.InitializeTransfer(fileTransferInformation);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                responseCode = AddFileToDfsResponseCode.Error;
+            }
+
+            ReturnResponse(fileTransferInformation, responseCode, deserialised.FileSize);
+        }
+
+        private void ReturnResponse(FileTransferInformation fileTransferInformation, AddFileToDfsResponseCode responseCode, ulong fileSize)
+        {
+            Console.WriteLine("File transfer response code: " + responseCode);
+            if (responseCode == AddFileToDfsResponseCode.Successful)
+            {
+                Console.WriteLine($"Initialised file transfer, FileName: {fileTransferInformation.FileName}, Chunks: {fileTransferInformation.MaxChunk}, FileLen: {fileSize}");
+            }
         }
     }
 }

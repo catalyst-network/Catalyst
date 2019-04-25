@@ -6,9 +6,6 @@ namespace Catalyst.Common.FileSystem
 {
     public class FileTransferInformation : IDisposable
     {
-        /// <summary>The expired time span</summary>
-        public static readonly TimeSpan ExpiredTimeSpan = TimeSpan.FromMinutes(1);
-
         /// <summary>The time since last chunk</summary>
         private DateTime _timeSinceLastChunk;
 
@@ -18,35 +15,55 @@ namespace Catalyst.Common.FileSystem
         /// <summary>The maximum chunk</summary>
         private readonly int _maxChunk;
 
-        public FileTransferInformation(string hash, int maxChunk)
+        public FileTransferInformation(string hash, string fileName, int maxChunk)
         {
             _tempPath = Path.GetTempPath() + hash;
-            CurrentChunk = 0;
-            this._maxChunk = maxChunk;
+            _maxChunk = maxChunk;
+            this.CurrentChunk = 0;
             this.Hash = hash;
-            this.RandomAccessStream = new BinaryWriter(File.Open(_tempPath, FileMode.CreateNew));
+            this.FileName = fileName;
         }
 
         public void WriteToStream(int chunk, byte[] fileBytes)
         {
             this.RandomAccessStream.Seek(0, SeekOrigin.End);
             this.RandomAccessStream.Write(fileBytes);
-            CurrentChunk = chunk;
+            this.CurrentChunk = chunk;
             _timeSinceLastChunk = DateTime.Now;
+        }
+
+        public void Init()
+        {
+            this.RandomAccessStream = new BinaryWriter(File.Open(_tempPath, FileMode.CreateNew));
         }
 
         /// <summary>Determines whether this instance is expired.</summary>
         /// <returns><c>true</c> if this instance is expired; otherwise, <c>false</c>.</returns>
         public bool IsExpired()
         {
-            return DateTime.Now.Subtract(_timeSinceLastChunk) > ExpiredTimeSpan;
+            return DateTime.Now.Subtract(_timeSinceLastChunk) > FileTransferConstants.ExpiredTimeSpan;
+        }
+
+        public bool IsComplete()
+        {
+            return this.CurrentChunk == this.MaxChunk;
+        }
+
+        public void CleanUpExpired()
+        {
+            this.Dispose();
+            File.Delete(_tempPath);
         }
 
         public void Dispose()
         {
             this.RandomAccessStream.Close();
-
+            this.RandomAccessStream.Dispose();
         }
+
+        public Action OnExpired { get; set; }
+
+        public Action OnSuccess { get; set; }
 
         public int CurrentChunk { get; set; }
 
@@ -55,5 +72,9 @@ namespace Catalyst.Common.FileSystem
         public string Hash { get; set; }
 
         public BinaryWriter RandomAccessStream { get; set; }
+
+        public string TempPath { get => _tempPath; }
+
+        public string FileName { get; set; }
     }
 }

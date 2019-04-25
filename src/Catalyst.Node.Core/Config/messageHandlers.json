@@ -42,6 +42,14 @@
                 }
             ]
         },
+        {
+            "type": "Catalyst.Node.Core.RPC.Handlers.AddFileToDfsRequestHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+                }
+            ]
+        },
         //P2P request handlers
         {
             "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingRequestAskHandler",

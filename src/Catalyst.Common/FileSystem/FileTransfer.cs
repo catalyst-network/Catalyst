@@ -5,8 +5,11 @@
 #endregion
 
 using Catalyst.Common.Rpc;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -30,7 +33,7 @@ namespace Catalyst.Common.FileSystem
     /// <summary>
     /// The file transfer class
     /// </summary>
-    public sealed class FileTransfer
+    public sealed class FileTransfer : IFileTransfer
     {
         private readonly Dictionary<string, FileTransferInformation> _pendingFileTransfers;
 
@@ -41,8 +44,10 @@ namespace Catalyst.Common.FileSystem
             _pendingFileTransfers = new Dictionary<string, FileTransferInformation>();
         }
 
-        public AddFileToDfsResponseCode InitializeTransfer(string fileHash, FileTransferInformation fileTransferInformation)
+        public AddFileToDfsResponseCode InitializeTransfer(FileTransferInformation fileTransferInformation)
         {
+            var fileHash = fileTransferInformation.Hash;
+
             lock (_lockObject)
             {
                 if (_pendingFileTransfers.ContainsKey(fileHash))
@@ -50,13 +55,35 @@ namespace Catalyst.Common.FileSystem
                     return AddFileToDfsResponseCode.FileAlreadyExists;
                 }
 
+                fileTransferInformation.Init();
                 _pendingFileTransfers.Add(fileHash, fileTransferInformation);
+
+                var tokenSource = new CancellationTokenSource();
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                FileTaskHelper.Run(() =>
+                {
+                    if (fileTransferInformation.IsComplete())
+                    {
+                        tokenSource.Cancel();
+                    }
+                    else if (fileTransferInformation.IsExpired())
+                    {
+                        fileTransferInformation.CleanUpExpired();
+                        fileTransferInformation.OnExpired?.Invoke();
+                        tokenSource.Cancel();
+                    }
+                }, TimeSpan.FromMinutes(FileTransferConstants.ExpiryMinutes), tokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                 return AddFileToDfsResponseCode.Successful;
             }
         }
 
         public AddFileToDfsResponseCode WriteChunk(string fileHash, int chunkId, byte[] fileChunk)
         {
+            FileTransferInformation fileTransferInformation = null;
+
             lock (_lockObject)
             {
                 if (!_pendingFileTransfers.ContainsKey(fileHash))
@@ -64,18 +91,23 @@ namespace Catalyst.Common.FileSystem
                     return AddFileToDfsResponseCode.Expired;
                 }
 
-                FileTransferInformation fileTransferInformation = _pendingFileTransfers[fileHash];
-                
-                // Chunks should be sequential
-                if(fileTransferInformation.CurrentChunk != chunkId-1)
-                {
-                    return AddFileToDfsResponseCode.Error;
-                }
-
-                fileTransferInformation.WriteToStream(chunkId, fileChunk);
-
-                return AddFileToDfsResponseCode.Successful;
+                fileTransferInformation = _pendingFileTransfers[fileHash];
             }
+
+            // Chunks should be sequential
+            if (fileTransferInformation.CurrentChunk != chunkId - 1)
+            {
+                return AddFileToDfsResponseCode.Error;
+            }
+
+            fileTransferInformation.WriteToStream(chunkId, fileChunk);
+
+            if (fileTransferInformation.MaxChunk == chunkId)
+            {
+                fileTransferInformation.OnSuccess?.Invoke();
+                fileTransferInformation.Dispose();
+            }
+            return AddFileToDfsResponseCode.Successful;
         }
     }
 }

@@ -43,6 +43,10 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using System.IO;
+using Catalyst.Common.Config;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Node.Core.P2P.Messaging;
 
 namespace Catalyst.Cli
 {
@@ -433,7 +437,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var nodeId = ((GetInfoOptions)opts).NodeId;
+            var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -465,7 +469,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var nodeId = ((GetInfoOptions)opts).NodeId;
+            var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -508,7 +512,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var nodeId = ((GetInfoOptions)opts).NodeId;
+            var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull();
@@ -539,7 +543,7 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<SignOptions>();
 
-            var signOptions = (SignOptions)opts;
+            var signOptions = (SignOptions) opts;
             var nodeId = signOptions.Node;
 
             //Perform validations required before a command call
@@ -577,7 +581,7 @@ namespace Catalyst.Cli
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
 
             //get the message to verify, the address/public key who signed it, and the signature 
-            var verifyOptions = (VerifyOptions)opts;
+            var verifyOptions = (VerifyOptions) opts;
 
             //if the node is connected and there are no other errors then send the get info request to the server
             try
@@ -665,7 +669,35 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<AddFileOnDfsOptions>();
 
-            var addFileOnDfsOptions = (AddFileOnDfsOptions)opts;
+            var addFileOnDfsOptions = (AddFileOnDfsOptions) opts;
+            var node = GetConnectedNode(addFileOnDfsOptions.Node);
+
+            Guard.Argument(node).NotNull();
+
+            if (!File.Exists(addFileOnDfsOptions.File))
+            {
+                ReturnUserMessage("File does not exist.");
+                return false;
+            }
+
+            AddFileToDfsRequest request = new AddFileToDfsRequest();
+            request.FileName = Path.GetFileName(addFileOnDfsOptions.File);
+
+            using (FileStream fileStream = File.Open(addFileOnDfsOptions.File, FileMode.Open))
+            {
+                request.FileSize = (ulong) fileStream.Length;
+            }
+
+            var rpcMessageFactory = new RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages>();
+
+            var requestMessage = rpcMessageFactory.GetMessage(new P2PMessageDto<AddFileToDfsRequest, RpcMessages>(
+                type: RpcMessages.AddFileToDfsRequest,
+                message: request,
+                destination: (IPEndPoint) node.Channel.RemoteAddress,
+                sender: _peerIdentifier
+            ));
+
+            node.SendMessage(requestMessage);
 
             return true;
         }
