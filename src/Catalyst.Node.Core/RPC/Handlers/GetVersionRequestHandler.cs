@@ -22,12 +22,16 @@
 #endregion
 
 using System;
+using System.Net;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -39,33 +43,34 @@ namespace Catalyst.Node.Core.RPC.Handlers
         : CorrelatableMessageHandlerBase<VersionRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
-        private readonly PeerId _peerId;
+        private readonly IPeerIdentifier _peerIdentifier;
 
         public GetVersionRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IMessageCorrelationCache messageCorrelationCache)
             : base(messageCorrelationCache, logger)
         {
-            _peerId = peerIdentifier.PeerId;
+            _peerIdentifier = peerIdentifier;
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Guard.Argument(message).NotNull();
+            Guard.Argument(message).NotNull("Received message cannot be null");
             
             Logger.Debug("received message of type VersionRequest");
+            
             try
             {
-                var deserialised = message.Payload.FromAnySigned<VersionRequest>();
-                
-                Guard.Argument(deserialised).NotNull();
-                
-                Logger.Debug("message content is {0}", deserialised);
-                
-                var response = new VersionResponse
-                {
-                    Version = NodeUtil.GetVersion()
-                }.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                var response = new RpcMessageFactoryBase<VersionResponse, RpcMessages>().GetMessage(
+                    new P2PMessageDto<VersionResponse, RpcMessages>(
+                        RpcMessages.GetVersionRequest,
+                        new VersionResponse
+                        {
+                            Version = NodeUtil.GetVersion()
+                        }, 
+                        (IPEndPoint) message.Context.Channel.RemoteAddress,
+                        _peerIdentifier)
+                );
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }

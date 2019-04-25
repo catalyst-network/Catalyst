@@ -23,10 +23,14 @@
 
 using System;
 using System.Linq;
+using System.Net;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -50,15 +54,19 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+            _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
         
         [Fact]
         public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
-        {   
-            var request = new VersionRequest()
-            {
-                Query = true
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
+        { 
+            var request = new RpcMessageFactoryBase<VersionRequest, RpcMessages>().GetMessage(
+                new P2PMessageDto<VersionRequest, RpcMessages>(
+                    RpcMessages.GetVersionRequest,
+                    new VersionRequest(),
+                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort),
+                    PeerIdentifierHelper.GetPeerIdentifier("public_key"))
+            );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
@@ -66,9 +74,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count().Should().Be(2);
             
-            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
+            var sentResponse = (AnySigned) receivedCalls[1].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
 
             var responseContent = sentResponse.FromAnySigned<VersionResponse>();
