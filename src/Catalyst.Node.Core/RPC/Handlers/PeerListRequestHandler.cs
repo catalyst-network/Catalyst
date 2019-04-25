@@ -49,11 +49,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         /// <summary>
-        /// The peer identifier
-        /// </summary>
-        private readonly PeerId _peerId;
-
-        /// <summary>
         /// The peer list
         /// </summary>
         private readonly IPeerDiscovery _peerDiscovery;
@@ -64,10 +59,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private IChanneledMessage<AnySigned> _message;
 
         /// <summary>The peer identifier</summary>
-        private IPeerIdentifier _peerIdentifier;
+        private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The RPC message factory</summary>
-        private RpcMessageFactoryBase<GetPeerListResponse, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactoryBase<GetPeerListResponse, RpcMessages> _rpcMessageFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
