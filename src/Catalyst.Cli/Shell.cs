@@ -43,6 +43,9 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Config;
+using Catalyst.Node.Core.P2P.Messaging;
 
 namespace Catalyst.Cli
 {
@@ -678,8 +681,18 @@ namespace Catalyst.Cli
 
                 Guard.Argument(node).NotNull();
 
+                var rpcMessageFactory = new RpcMessageFactoryBase<GetPeerListRequest, RpcMessages>();
                 var request = new GetPeerListRequest();
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid())).Wait();
+
+                var requestMessage = rpcMessageFactory.GetMessage(new P2PMessageDto<GetPeerListRequest, RpcMessages>
+                (
+                    type: RpcMessages.GetPeerListRequest,
+                    message: request,
+                    destination: (IPEndPoint) node.Channel.RemoteAddress,
+                    sender: _peerIdentifier
+                ));
+
+                node.SendMessage(requestMessage).Wait();
             }
             catch (Exception e)
             {

@@ -31,6 +31,11 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
 using System.Collections.Generic;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Config;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Common.P2P;
+using System.Net;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -58,6 +63,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         private IChanneledMessage<AnySigned> _message;
 
+        /// <summary>The peer identifier</summary>
+        private IPeerIdentifier _peerIdentifier;
+
+        /// <summary>The RPC message factory</summary>
+        private RpcMessageFactoryBase<GetPeerListResponse, RpcMessages> _rpcMessageFactory;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
         /// </summary>
@@ -71,8 +82,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IPeerDiscovery peerDiscovery)
             : base(messageCorrelationCache, logger)
         {
-            _peerId = peerIdentifier.PeerId;
+            _peerIdentifier = peerIdentifier;
             _peerDiscovery = peerDiscovery;
+            _rpcMessageFactory = new RpcMessageFactoryBase<GetPeerListResponse, RpcMessages>();
         }
 
         /// <summary>
@@ -97,9 +109,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);
 
-            var anySignedResponse = response.ToAnySigned(_peerId, _message.Payload.CorrelationId.ToGuid());
+            var responseMessage = _rpcMessageFactory.GetMessage(new P2PMessageDto<GetPeerListResponse, RpcMessages>
+            (
+                type: RpcMessages.GetPeerListResponse,
+                message: response,
+                destination: (IPEndPoint) _message.Context.Channel.RemoteAddress,
+                sender: _peerIdentifier
+            ));
 
-            _message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+            _message.Context.Channel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
         }
     }
 }

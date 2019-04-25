@@ -44,6 +44,8 @@ using Catalyst.Common.Interfaces.Network;
 using DnsClient;
 using Catalyst.Common.Network;
 using System.Collections.Generic;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
@@ -112,20 +114,32 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             // Let peerRepository return the fake peer list
             peerRepository.GetAll().Returns(peerList.ToArray());
 
+            // Build a fake remote endpoint
+            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
+
             var peerDiscovery = new PeerDiscovery(_dns, peerRepository, _config, _logger);
+            
+            var rpcMessageFactory = new RpcMessageFactoryBase<GetPeerListRequest, RpcMessages>();
+            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var request = new GetPeerListRequest().ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
-
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
+            var requestMessage = rpcMessageFactory.GetMessage(new P2PMessageDto<GetPeerListRequest, RpcMessages>
+            (
+                type: RpcMessages.GetPeerListRequest,
+                message: new GetPeerListRequest(),
+                destination: (System.Net.IPEndPoint) _fakeContext.Channel.RemoteAddress,
+                sender: sendPeerIdentifier
+            ));
+            
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
-            var handler = new PeerListRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, subbedCache, peerDiscovery);
+            var handler = new PeerListRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerDiscovery);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count().Should().Be(3);
 
-            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
+            var sentResponse = (AnySigned) receivedCalls[2].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerListResponse.Descriptor.ShortenedFullName());
 
             var responseContent = sentResponse.FromAnySigned<GetPeerListResponse>();
