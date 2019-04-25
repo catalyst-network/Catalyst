@@ -32,6 +32,8 @@ using Serilog;
 using Catalyst.Common.Extensions;
 using System.IO;
 using System.Linq;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Config;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -46,6 +48,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>The DFS</summary>
         private readonly IDfs _dfs;
 
+        /// <summary>The RPC message factory</summary>
+        private readonly RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages> _rpcMessageFactory;
+
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
@@ -53,6 +58,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public AddFileToDfsRequestHandler(IMessageCorrelationCache correlationCache, ILogger logger, IDfs dfs) : base(correlationCache, logger)
         {
             _dfs = dfs;
+            this._rpcMessageFactory = new RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages>();
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -62,11 +68,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
             Guard.Argument(message).NotNull();
 
             var deserialised = message.Payload.FromAnySigned<AddFileToDfsRequest>();
-
+           
             Guard.Argument(deserialised).NotNull();
 
-           //Stream stream = deserialised.FileBytes.CreateCodedInput().;
-
+           
             _dfs.AddAsync(new MemoryStream());
         }
     }
