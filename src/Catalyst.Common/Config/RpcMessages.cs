@@ -38,6 +38,8 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages GetVersionResponse = new GetVersionResponseMessage();
         public static readonly RpcMessages SignMessageRequest = new SignMessageRequestMessage();
         public static readonly RpcMessages SignMessageResponse = new SignMessageResponseMessage();
+        public static readonly RpcMessages AddFileToDfsRequest = new AddFileToDfsRequestMessage();
+        public static readonly RpcMessages AddFileToDfsResponse = new AddFileToDfsResponseMessage();
 
         private RpcMessages(int id, string name) : base(id, name) { }
 
@@ -79,6 +81,16 @@ namespace Catalyst.Common.Config
         private sealed class SignMessageResponseMessage : RpcMessages
         {
             public SignMessageResponseMessage() : base(8, "SignMessageResponse") { }
+        }
+
+        private sealed class AddFileToDfsRequestMessage : RpcMessages
+        {
+            public AddFileToDfsRequestMessage() : base(9, "AddFileToDfsRequest") { }
+        }
+
+        private sealed class AddFileToDfsResponseMessage : RpcMessages
+        {
+            public AddFileToDfsResponseMessage() : base(10, "AddFileToDfsResponse") { }
         }
     }
 }
