@@ -31,7 +31,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Rpc.Messaging
 {
-    public class RpcMessageFactoryBase<TMessage, TMessageType>
+    public sealed class RpcMessageFactory<TMessage, TMessageType>
         : MessageFactoryBase<TMessage, TMessageType>
         where TMessage : class, IMessage<TMessage>
         where TMessageType : class, IEnumerableMessageType

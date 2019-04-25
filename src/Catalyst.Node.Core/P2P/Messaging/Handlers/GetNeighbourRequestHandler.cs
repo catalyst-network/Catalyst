@@ -22,27 +22,27 @@
 #endregion
 
 using Catalyst.Common.Config;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Serilog;
+using Catalyst.Node.Core.P2P.Messaging;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public class GetNeighbourRequestHandler
-        : ReputableAskRequestHandlerBase<PeerNeighborsRequest, IReputableCache>,
+    public sealed class GetNeighbourRequestHandler
+        : MessageHandlerBase<PeerNeighborsRequest>,
             IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
 
         public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier,
-            IReputableCache reputableCache,
             ILogger logger)
-            : base(reputableCache, logger)
+            : base(logger)
         {
             _peerIdentifier = peerIdentifier;
         }
@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 
-            var datagramEnvelope = new P2PMessageFactoryBase<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
+            var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                 new P2PMessageDto<PeerNeighborsResponse, P2PMessages>(
                     type: P2PMessages.PingRequest,
                     message: new PeerNeighborsResponse(),
