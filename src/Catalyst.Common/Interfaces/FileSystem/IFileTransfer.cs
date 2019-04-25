@@ -1,6 +1,7 @@
+using Catalyst.Common.FileSystem;
 using Catalyst.Common.Rpc;
 
-namespace Catalyst.Common.FileSystem
+namespace Catalyst.Common.Interfaces.FileSystem
 {
     public interface IFileTransfer
     {

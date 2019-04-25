@@ -4,6 +4,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Rpc;
 using System;
 using System.Collections.Generic;

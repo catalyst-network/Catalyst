@@ -37,6 +37,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
 using System;
 using Catalyst.Common.Rpc;
+using Catalyst.Common.Interfaces.FileSystem;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -73,7 +74,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             Guard.Argument(deserialised).NotNull();
 
-            int chunkSize = (int) Math.Min(1d, Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
+            int chunkSize = (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize);
 
             FileTransferInformation fileTransferInformation = new FileTransferInformation(Guid.NewGuid().ToString(), deserialised.FileName, chunkSize);
 
