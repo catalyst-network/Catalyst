@@ -35,6 +35,12 @@ namespace Catalyst.Common.Rpc
         FileAlreadyExists = 1,
 
         /// <summary>Error adding file</summary>
-        Error = 2
+        Error = 2,
+
+        /// <summary>Finished adding file to DFS</summary>
+        Finished = 3,
+
+        /// <summary>Expired file transfer</summary>
+        Expired = 4
     }
 }
