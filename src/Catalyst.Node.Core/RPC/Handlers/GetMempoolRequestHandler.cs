@@ -33,13 +33,10 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Google.Protobuf.Collections;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -75,7 +72,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
                 
-                var response = new RpcMessageFactoryBase<GetMempoolResponse, RpcMessages>().GetMessage(
+                var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
                     new P2PMessageDto<GetMempoolResponse, RpcMessages>(
                         RpcMessages.GetMempoolRequest,
                         new GetMempoolResponse

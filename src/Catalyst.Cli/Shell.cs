@@ -504,7 +504,7 @@ namespace Catalyst.Cli
 
             try
             {   
-                var request = new RpcMessageFactoryBase<GetMempoolRequest, RpcMessages>().GetMessage(
+                var request = new RpcMessageFactory<GetMempoolRequest, RpcMessages>().GetMessage(
                     new P2PMessageDto<GetMempoolRequest, RpcMessages>(
                         RpcMessages.GetMempoolRequest,
                         new GetMempoolRequest(),

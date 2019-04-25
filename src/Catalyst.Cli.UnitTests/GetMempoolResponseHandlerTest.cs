@@ -109,7 +109,7 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
             
-            var response = new RpcMessageFactoryBase<GetMempoolResponse, RpcMessages>().GetMessage(
+            var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
                 new P2PMessageDto<GetMempoolResponse, RpcMessages>(
                     RpcMessages.GetMempoolRequest,
                     new GetMempoolResponse
