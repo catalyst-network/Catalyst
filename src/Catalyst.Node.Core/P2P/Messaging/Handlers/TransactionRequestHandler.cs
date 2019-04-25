@@ -25,7 +25,7 @@ using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Transaction;
 using Serilog;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
@@ -33,12 +33,11 @@ using Catalyst.Protocol.Common;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class TransactionRequestHandler
-        : ReputableAskRequestHandlerBase<Transaction, IReputableCache>,
+        : MessageHandlerBase<Transaction>,
             IP2PMessageHandler
     {
-        public TransactionRequestHandler(IReputableCache reputableCache,
-            ILogger logger)
-            : base(reputableCache, logger) { }
+        public TransactionRequestHandler(ILogger logger)
+            : base(logger) { }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
