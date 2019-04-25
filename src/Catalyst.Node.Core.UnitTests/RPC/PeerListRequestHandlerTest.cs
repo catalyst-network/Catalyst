@@ -65,10 +65,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         /// <summary>The configuration</summary>
         private readonly IConfigurationRoot _config;
-
-        /// <summary>The lookup client</summary>
-        private readonly ILookupClient _lookupClient;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
         /// </summary>
@@ -85,8 +82,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
 
-            _lookupClient = Substitute.For<ILookupClient>();
-            _dns = new Dns(_lookupClient);
+            var lookupClient = Substitute.For<ILookupClient>();
+            _dns = new Dns(lookupClient);
         }
 
         /// <summary>
