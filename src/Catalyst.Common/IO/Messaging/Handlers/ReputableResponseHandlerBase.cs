@@ -38,7 +38,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
     /// <typeparam name="TReputableCache"></typeparam>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public abstract class ReputableTellResponseHandlerBase<TProto, TReputableCache, TRequest, TResponse>
+    public abstract class ReputableResponseHandlerBase<TProto, TReputableCache, TRequest, TResponse>
         : CorrelatableMessageHandlerBase<TProto, TReputableCache>,
             IReputationAskHandler<TReputableCache>
         where TProto : class, IMessage
@@ -48,7 +48,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
     {
         public TReputableCache ReputableCache { get; }
 
-        protected ReputableTellResponseHandlerBase(TReputableCache reputableCache,
+        protected ReputableResponseHandlerBase(TReputableCache reputableCache,
             ILogger logger)
             : base(reputableCache, logger)
         {
@@ -61,7 +61,8 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// <param name="message"></param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            ReputableCache.TryMatchResponse<TRequest, TResponse>(message.Payload);            
+            // @TODO handle null response
+            ReputableCache.TryMatchResponse<TRequest, TResponse>(message.Payload);
         }
     }
 }
