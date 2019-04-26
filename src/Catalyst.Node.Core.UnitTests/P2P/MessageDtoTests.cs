@@ -25,6 +25,7 @@ using System;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;
@@ -45,7 +46,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _p2PMessageDto = new P2PMessageDto<IMessage, P2PMessages>(
                 P2PMessages.PingRequest,
                 pingRequest,
-                new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort), 
+                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
                 peerIdentifier
             );
         }
@@ -57,7 +58,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _p2PMessageDto.Should().BeOfType(typeof(P2PMessageDto<IMessage, P2PMessages>));
             _p2PMessageDto.Type.Should().BeEquivalentTo(P2PMessages.PingRequest);
             _p2PMessageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            _p2PMessageDto.Recipient.Should().NotBeNull().And.BeOfType(typeof(IPEndPoint));
+            _p2PMessageDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
             _p2PMessageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }

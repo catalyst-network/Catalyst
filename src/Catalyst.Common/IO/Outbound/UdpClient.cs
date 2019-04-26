@@ -31,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public class UdpClient : Client, IUdpClient
+    public class UdpClient : ClientBase, IUdpClient
     {
         protected UdpClient(ILogger logger) : base(logger) { }
 

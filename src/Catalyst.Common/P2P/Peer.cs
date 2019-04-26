@@ -29,7 +29,7 @@ using Serilog;
 
 namespace Catalyst.Common.P2P
 {
-    public class Peer : IDisposable, IPeer
+    public sealed class Peer : IDisposable, IPeer
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -41,10 +41,12 @@ namespace Catalyst.Common.P2P
 
         public void Dispose() { Dispose(true); }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void IncreaseReputation(int mer = 1)
@@ -52,6 +54,7 @@ namespace Catalyst.Common.P2P
             Reputation += mer;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void DecreaseReputation(int mer = 1)
@@ -59,7 +62,7 @@ namespace Catalyst.Common.P2P
             Reputation += mer;
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
