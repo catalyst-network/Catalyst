@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Cli.Rpc;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO;
 using Catalyst.Common.Shell;
@@ -44,6 +45,9 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Google.Protobuf;
 
 namespace Catalyst.Cli
@@ -454,15 +458,22 @@ namespace Catalyst.Cli
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
-            Guard.Argument(node).NotNull();
+            Guard.Argument(node).NotNull("The node cannot be null");
 
-            //if the node is connected and there are no other errors then send the get info request to the server
             try
-            {
-                //send the message to the server by writing it to the channel
-                var request = new GetInfoRequest();
+            {   
+                var request = new RpcMessageFactory<GetInfoRequest, RpcMessages>().GetMessage(
+                    new P2PMessageDto<GetInfoRequest, RpcMessages>(
+                        RpcMessages.GetInfoRequest,
+                        new GetInfoRequest
+                        {
+                            Query = true
+                        },
+                        (IPEndPoint) node.Channel.RemoteAddress,
+                        _peerIdentifier)
+                );
                 
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request);
             }
             catch (Exception e)
             {
