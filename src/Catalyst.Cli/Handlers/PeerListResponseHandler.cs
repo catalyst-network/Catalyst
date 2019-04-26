@@ -65,8 +65,6 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">The PeerListResponse message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Guard.Argument(message).NotNull();
-
             Logger.Debug("Handling PeerListResponse");
             Guard.Argument(message).NotNull("Received message cannot be null");
 

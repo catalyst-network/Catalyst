@@ -682,6 +682,7 @@ namespace Catalyst.Cli
 
                 var peerListOptions = (PeerListOptions) opts;
                 var node = GetConnectedNode(peerListOptions.Node);
+                var nodeConfig = GetNodeConfig(peerListOptions.Node);
 
                 Guard.Argument(node).NotNull();
 
@@ -692,7 +693,7 @@ namespace Catalyst.Cli
                 (
                     type: RpcMessages.GetPeerListRequest,
                     message: request,
-                    recipient: (IPEndPoint) node.Channel.RemoteAddress,
+                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
                     sender: _peerIdentifier
                 ));
 

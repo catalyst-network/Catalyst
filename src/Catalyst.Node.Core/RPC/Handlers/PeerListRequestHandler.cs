@@ -37,6 +37,7 @@ using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Common.P2P;
 using System.Net;
 using Catalyst.Common.IO.Messaging;
+using Dawn;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -53,12 +54,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// The peer list
         /// </summary>
         private readonly IPeerDiscovery _peerDiscovery;
-
-        /// <summary>
-        /// The message
-        /// </summary>
-        private IChanneledMessage<AnySigned> _message;
-
+        
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
@@ -89,9 +85,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="message">The message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            _message = message;
+            Guard.Argument(message).NotNull("Received message cannot be null");
 
-            ReturnResponse(this._peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId));
+            ReturnResponse(this._peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
 
             Logger.Debug("received message of type PeerListRequest");
         }
@@ -100,20 +96,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Returns the response.
         /// </summary>
         /// <param name="peers">The peers list</param>
-        private void ReturnResponse(IEnumerable<PeerId> peers)
+        private void ReturnResponse(IEnumerable<PeerId> peers, IChanneledMessage<AnySigned> message)
         {
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);
-
+            
             var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto<GetPeerListResponse, RpcMessages>
             (
                 type: RpcMessages.GetPeerListResponse,
                 message: response,
-                recipient: (IPEndPoint) _message.Context.Channel.RemoteAddress,
+                recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier
             ));
 
-            _message.Context.Channel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
+            message.Context.Channel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
         }
     }
 }
