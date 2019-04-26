@@ -24,6 +24,7 @@
 using System;
 using System.Net;
 using Catalyst.Common.Config;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
@@ -40,7 +41,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public void CanProduceAValidPingRequestMessage()
         {
             var pingRequestDatagram = new P2PMessageFactory<PingRequest, P2PMessages>().GetMessageInDatagramEnvelope(
-                new P2PMessageDto<PingRequest, P2PMessages>(
+                new MessageDto<PingRequest, P2PMessages>(
                     P2PMessages.PingRequest,
                     new PingRequest(), 
                     PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
@@ -56,7 +57,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public void CanProduceAValidPingResponseMessage()
         {
             var pingResponseDatagram = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
-                new P2PMessageDto<PingResponse, P2PMessages>(
+                new MessageDto<PingResponse, P2PMessages>(
                     P2PMessages.PingResponse,
                     new PingResponse(), 
                     PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
@@ -72,7 +73,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public void CanProduceAValidTransactionMessage()
         {
             var transactionDatagram = new P2PMessageFactory<Transaction, P2PMessages>().GetMessageInDatagramEnvelope(
-                new P2PMessageDto<Transaction, P2PMessages>(
+                new MessageDto<Transaction, P2PMessages>(
                     P2PMessages.PingResponse,
                     new Transaction(), 
                     PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 

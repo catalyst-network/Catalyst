@@ -33,6 +33,8 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
@@ -73,13 +75,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
                 
                 var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
-                    new P2PMessageDto<GetMempoolResponse, RpcMessages>(
+                    new MessageDto<GetMempoolResponse, RpcMessages>(
                         RpcMessages.GetMempoolRequest,
                         new GetMempoolResponse
                         {
                             Mempool = {GetMempoolContent()}
                         },
-                        (IPEndPoint) message.Context.Channel.RemoteAddress,
+                        PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                         _peerIdentifier)
                 );
                 

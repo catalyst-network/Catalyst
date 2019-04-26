@@ -45,7 +45,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Google.Protobuf;
 
@@ -103,15 +103,17 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args, nameof(args)).NotNull().MinCount(1).NotEmpty();
 
-            return Parser.Default.ParseArguments<GetInfoOptions, 
-                    ConnectOptions, 
-                    SignOptions, 
-                    VerifyOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, bool>(
+            return Parser.Default.ParseArguments<GetInfoOptions,
+                    ConnectOptions,
+                    SignOptions,
+                    VerifyOptions,
+                    PeerListOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
                     (VerifyOptions opts) => OnVerifyCommands(opts),
+                    (PeerListOptions opts) => OnPeerListCommands(opts),
                     errs => false);
         }
 
@@ -128,7 +130,7 @@ namespace Catalyst.Cli
         private bool OnGetCommands(GetInfoOptions opts)
         {
             Guard.Argument(opts).NotNull();
-            
+
             if (opts.Info)
             {
                 return OnGetConfig(opts);
@@ -158,7 +160,7 @@ namespace Catalyst.Cli
         private bool OnSignCommands(SignOptions opts)
         {
             Guard.Argument(opts).NotNull();
-            
+
             if (opts.Message.Length > 0)
             {
                 return OnSignMessage(opts);
@@ -166,7 +168,7 @@ namespace Catalyst.Cli
 
             return false;
         }
-        
+
         /// <summary>
         /// Calls the specific option handler method from one of the "sign" command options based on the options passed
         /// in by he user through the command line.  The available options are:
@@ -180,6 +182,21 @@ namespace Catalyst.Cli
             if (opts.Message.Length > 0)
             {
                 return OnVerifyMessage(opts);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Called when [peer list commands].
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns>[true] if correct arguments, [false] if arguments are invalid</returns>
+        private bool OnPeerListCommands(PeerListOptions opts)
+        {
+            if (opts.Node.Length > 0)
+            {
+                return OnListPeerNodes(opts);
             }
 
             return false;
@@ -345,12 +362,12 @@ namespace Catalyst.Cli
         private bool OnConnectNode(string nodeId)
         {
             Guard.Argument(nodeId).NotEmpty();
-            
+
             var rpcNodeConfigs = GetNodeConfig(nodeId);
-            
+
             //Check if there is a connection has already been made to the node
             Guard.Argument(rpcNodeConfigs).NotNull();
-            
+
             try
             {
                 //Connect to the node and store it in the socket client registry
@@ -453,7 +470,7 @@ namespace Catalyst.Cli
         protected override bool OnGetConfig(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
-            
+
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
@@ -464,7 +481,7 @@ namespace Catalyst.Cli
             {
                 //send the message to the server by writing it to the channel
                 var request = new GetInfoRequest();
-                
+
                 node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
@@ -496,19 +513,20 @@ namespace Catalyst.Cli
         protected override bool OnGetMempool(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
-            
-            var nodeId = ((GetInfoOptions) opts).NodeId;
 
-            var node = GetConnectedNode(nodeId);
+            var peerListOptions = (PeerListOptions) opts;
+            var node = GetConnectedNode(peerListOptions.Node);
+            var nodeConfig = GetNodeConfig(peerListOptions.Node);
+            
             Guard.Argument(node).NotNull("The shell must be able to connect to a valid node to be able to send the request.");
 
             try
             {   
                 var request = new RpcMessageFactory<GetMempoolRequest, RpcMessages>().GetMessage(
-                    new P2PMessageDto<GetMempoolRequest, RpcMessages>(
+                    new MessageDto<GetMempoolRequest, RpcMessages>(
                         RpcMessages.GetMempoolRequest,
                         new GetMempoolRequest(),
-                        (IPEndPoint) node.Channel.RemoteAddress,
+                        recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
                         _peerIdentifier)
                 );
 
@@ -568,10 +586,10 @@ namespace Catalyst.Cli
         public override bool OnVerifyMessage(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
-            
+
             //get the message to verify, the address/public key who signed it, and the signature 
             var verifyOptions = (VerifyOptions) opts;
-            
+
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
@@ -595,7 +613,7 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
-            
+
             return true;
         }
 
@@ -652,6 +670,46 @@ namespace Catalyst.Cli
         private void ReturnUserMessage(string message)
         {
             Console.WriteLine(message);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Called when [list peer nodes].
+        /// </summary>
+        /// <param name="opts">The arguments.</param>
+        /// <returns>True if command was successful</returns>
+        protected override bool OnListPeerNodes(object opts)
+        {
+            try
+            {
+                Guard.Argument(opts).NotNull().Compatible<PeerListOptions>();
+
+                var peerListOptions = (PeerListOptions) opts;
+                var node = GetConnectedNode(peerListOptions.Node);
+                var nodeConfig = GetNodeConfig(peerListOptions.Node);
+
+                Guard.Argument(node).NotNull();
+
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest, RpcMessages>();
+                var request = new GetPeerListRequest();
+
+                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerListRequest, RpcMessages>
+                (
+                    type: RpcMessages.GetPeerListRequest,
+                    message: request,
+                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                    sender: _peerIdentifier
+                ));
+
+                node.SendMessage(requestMessage).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+            return true;
         }
     }
 }

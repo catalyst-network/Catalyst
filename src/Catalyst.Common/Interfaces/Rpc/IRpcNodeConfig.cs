@@ -32,5 +32,6 @@ namespace Catalyst.Common.Interfaces.Rpc
         int Port { get; set; }
         string PfxFileName { get; set; }
         string SslCertPassword { get; set; }
+        string PublicKey { get; set; }
     }
 }
