@@ -30,7 +30,6 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -64,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             try
             {
                 var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
-                    new MessageDto<VersionResponse, RpcMessages>(
+                    new P2PMessageDto<VersionResponse, RpcMessages>(
                         RpcMessages.GetVersionRequest,
                         new VersionResponse
                         {

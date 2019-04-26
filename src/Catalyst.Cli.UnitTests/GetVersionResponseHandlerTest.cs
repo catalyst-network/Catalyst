@@ -31,7 +31,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -84,7 +83,7 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             
             var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
-                new MessageDto<VersionResponse, RpcMessages>(
+                new P2PMessageDto<VersionResponse, RpcMessages>(
                     RpcMessages.GetVersionRequest,
                     new VersionResponse
                     {
