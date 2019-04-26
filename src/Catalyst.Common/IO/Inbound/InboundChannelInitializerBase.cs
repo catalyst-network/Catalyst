@@ -43,7 +43,7 @@ namespace Catalyst.Common.IO.Inbound
 
         public override string ToString()
         {
-            return $"InboundChannelInitializer[" + StringUtil.SimpleClassName(typeof(T)) + "]";
+            return "InboundChannelInitializer[" + StringUtil.SimpleClassName(typeof(T)) + "]";
         }
     }
 }

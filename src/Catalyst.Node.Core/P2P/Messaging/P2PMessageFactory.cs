@@ -23,59 +23,51 @@
 
 using System;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.Rpc.Messaging
+namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public class RpcMessageFactoryBase<TMessage, TMessageType>
-        : MessageFactoryBase<TMessage, TMessageType>
+    public sealed class P2PMessageFactory<TMessage, TMessageType>
+        : MessageFactoryBase<TMessage, TMessageType> 
         where TMessage : class, IMessage<TMessage>
         where TMessageType : class, IEnumerableMessageType
     {
-        public override AnySigned GetMessage(IP2PMessageDto<TMessage, TMessageType> dto)
+        public IByteBufferHolder GetMessageInDatagramEnvelope(IMessageDto<TMessage, TMessageType> dto)
         {
-            if (RpcMessages.GetInfoRequest.Equals(dto.Type))
+            return GetMessage(dto).ToDatagram(dto.Recipient.IpEndPoint);
+        }
+        
+        public override AnySigned GetMessage(IMessageDto<TMessage, TMessageType> dto)
+        {
+            if (P2PMessages.PingRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
             
-            if (RpcMessages.GetInfoResponse.Equals(dto.Type))
+            if (P2PMessages.PingResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
             
-            if (RpcMessages.GetMempoolRequest.Equals(dto.Type))
+            if (P2PMessages.GetNeighbourRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
             
-            if (RpcMessages.GetMempoolResponse.Equals(dto.Type))
+            if (P2PMessages.GetNeighbourResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
             
-            if (RpcMessages.GetVersionRequest.Equals(dto.Type))
+            if (P2PMessages.BroadcastTransaction.Equals(dto.Type))
             {
-                return BuildAskMessage(dto);
-            }
-            
-            if (RpcMessages.GetVersionResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-            
-            if (RpcMessages.SignMessageRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-            
-            if (RpcMessages.SignMessageResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
+                return BuildGossipMessage(dto);
             }
             
             throw new ArgumentException("unknown message type");
