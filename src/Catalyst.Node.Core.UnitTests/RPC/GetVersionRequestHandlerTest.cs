@@ -27,7 +27,6 @@ using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -62,7 +61,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
         { 
             var request = new RpcMessageFactory<VersionRequest, RpcMessages>().GetMessage(
-                new MessageDto<VersionRequest, RpcMessages>(
+                new P2PMessageDto<VersionRequest, RpcMessages>(
                     RpcMessages.GetVersionRequest,
                     new VersionRequest(),
                     PeerIdentifierHelper.GetPeerIdentifier("recipient"),
