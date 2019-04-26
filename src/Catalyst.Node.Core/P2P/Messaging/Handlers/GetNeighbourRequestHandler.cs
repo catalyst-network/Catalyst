@@ -21,7 +21,9 @@
 
 #endregion
 
+using System.Linq;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -29,8 +31,9 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Dawn;
 using Serilog;
-using Catalyst.Node.Core.P2P.Messaging;
+using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
@@ -38,28 +41,41 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         : MessageHandlerBase<PeerNeighborsRequest>,
             IP2PMessageHandler
     {
+        private const int NumberOfRandomPeers = 5;
+
         private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IRepository<Peer> _repository;
 
         public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier,
+            IRepository<Peer> repository,
             ILogger logger)
             : base(logger)
         {
             _peerIdentifier = peerIdentifier;
+            _repository = repository;
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 
+            // @TODO can't mock FindAll return properly so just do GetAll and filter with link for now
+            // var activePeersList = _repository.FindAll(new Specification<Peer>(p => p.IsAwolPeer == false));
+            var activePeersList = _repository.GetAll().Where(p => p.IsAwolPeer == false).ToList();
+            Guard.Argument(activePeersList).MinCount(1);
+
+            var peerNeighborsResponseMessage = new PeerNeighborsResponse();
+            
+            for (var i = 0; i < NumberOfRandomPeers; i++)
+            {
+                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
+            }
+            
             var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
                 new P2PMessageDto<PeerNeighborsResponse, P2PMessages>(
-                    type: P2PMessages.PingRequest,
-                    message: new PeerNeighborsResponse(),
-                    
-                    // {
-                    //     PeerIds = { }
-                    // },
-                    destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
+                    type: P2PMessages.GetNeighbourResponse,
+                    message: peerNeighborsResponseMessage,
+                    recipient: new PeerIdentifier(message.Payload.PeerId),
                     sender: _peerIdentifier
                 )
             );

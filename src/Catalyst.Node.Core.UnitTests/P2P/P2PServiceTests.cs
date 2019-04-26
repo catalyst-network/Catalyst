@@ -47,6 +47,7 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -98,7 +99,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var fakeChannel = Substitute.For<IChannel>();
-                var fakeReputationCache = Substitute.For<IReputableCache>();
                 fakeContext.Channel.Returns(fakeChannel);
                 var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
@@ -131,7 +131,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                         new P2PMessageDto<PingResponse, P2PMessages>(
                             P2PMessages.PingRequest,
                             new PingResponse(),
-                            targetHost,
+                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
                         )
                     );

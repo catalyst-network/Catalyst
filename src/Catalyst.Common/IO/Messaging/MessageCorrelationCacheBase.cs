@@ -45,7 +45,7 @@ namespace Catalyst.Common.IO.Messaging
 
         public TimeSpan CacheTtl { get; }
 
-        public MessageCorrelationCacheBase(IMemoryCache cache,
+        protected MessageCorrelationCacheBase(IMemoryCache cache,
             ILogger logger,
             TimeSpan cacheTtl = default)
         {
