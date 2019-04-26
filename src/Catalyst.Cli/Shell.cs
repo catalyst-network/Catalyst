@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Catalyst.Cli.Rpc;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO;
@@ -43,6 +44,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Google.Protobuf;
 
 namespace Catalyst.Cli
 {
@@ -536,7 +538,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new SignMessageRequest
                 {
-                    Message = RLP.EncodeElement(signOptions.Message.Trim('\"').ToBytesForRLPEncoding())
+                    Message = ByteString.CopyFrom(signOptions.Message.Trim('\"'), Encoding.UTF8)
                        .ToByteString()
                 };
 
