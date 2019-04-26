@@ -21,16 +21,15 @@
 
 #endregion
 
-using System.Net;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Dawn;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.P2P.Messaging
+namespace Catalyst.Common.IO.Messaging
 {
-    public sealed class P2PMessageDto<TMessage, TMessageType>
+    public sealed class MessageDto<TMessage, TMessageType>
         : IMessageDto<TMessage, TMessageType>
         where TMessage : class, IMessage
         where TMessageType : class, IEnumerableMessageType
@@ -40,7 +39,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         public IPeerIdentifier Recipient { get; }
         public IPeerIdentifier Sender { get; }
 
-        public P2PMessageDto(TMessageType type,
+        public MessageDto(TMessageType type,
             TMessage message,
             IPeerIdentifier recipient,
             IPeerIdentifier sender)
