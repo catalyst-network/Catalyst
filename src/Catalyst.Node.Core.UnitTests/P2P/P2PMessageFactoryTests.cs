@@ -43,8 +43,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 new P2PMessageDto<PingRequest, P2PMessages>(
                     P2PMessages.PingRequest,
                     new PingRequest(), 
-                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort), 
-                    PeerIdentifierHelper.GetPeerIdentifier("Im_A_Frigging_Public_Key")
+                    PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
+                    PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
                 )
             );
 
@@ -59,8 +59,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 new P2PMessageDto<PingResponse, P2PMessages>(
                     P2PMessages.PingResponse,
                     new PingResponse(), 
-                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort), 
-                    PeerIdentifierHelper.GetPeerIdentifier("Im_A_Frigging_Public_Key")
+                    PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
+                    PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
                 )
             );
 
@@ -75,8 +75,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 new P2PMessageDto<Transaction, P2PMessages>(
                     P2PMessages.PingResponse,
                     new Transaction(), 
-                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort), 
-                    PeerIdentifierHelper.GetPeerIdentifier("Im_A_Frigging_Public_Key")
+                    PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
+                    PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
                 )
             );
 

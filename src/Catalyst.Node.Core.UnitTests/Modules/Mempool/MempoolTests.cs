@@ -37,7 +37,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 {
-    public class MempoolTests
+    public sealed class MempoolTests
     {
         public MempoolTests()
         {
