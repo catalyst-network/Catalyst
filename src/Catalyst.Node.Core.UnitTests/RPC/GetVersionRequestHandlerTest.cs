@@ -64,9 +64,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 new P2PMessageDto<VersionRequest, RpcMessages>(
                     RpcMessages.GetVersionRequest,
                     new VersionRequest(),
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")
-                )
+                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort),
+                    PeerIdentifierHelper.GetPeerIdentifier("public_key"))
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);

@@ -89,9 +89,8 @@ namespace Catalyst.Cli.UnitTests
                     {
                         Version = version
                     }, 
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")
-                )
+                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort),
+                    PeerIdentifierHelper.GetPeerIdentifier("public_key"))
             );
 
             var messageStream = CreateStreamWithMessage(response);
