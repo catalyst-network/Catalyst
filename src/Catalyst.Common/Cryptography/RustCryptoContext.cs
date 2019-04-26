@@ -23,12 +23,14 @@
 
 using System;
 using Catalyst.Common.Interfaces.Cryptography;
+using Cryptography.IWrapper.Types;
+using Cryptography.IWrapper;
 
 namespace Catalyst.Common.Cryptography
 {
-    public class RustCryptoContext: ICryptoContext
+    public class RustCryptoContext : ICryptoContext
     {
-        public IPrivateKey GeneratePrivateKey() { throw new NotImplementedException(); }
+        public IPrivateKey GeneratePrivateKey() { return ; }
         public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob) { throw new NotImplementedException(); }
         public byte[] ExportPublicKey(IPublicKey key) { throw new NotImplementedException(); }
         public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob) { throw new NotImplementedException(); }
