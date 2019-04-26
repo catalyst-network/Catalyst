@@ -85,18 +85,18 @@ namespace Catalyst.Common.FileSystem
             }
         }
 
-        public AddFileToDfsResponseCode WriteChunk(string fileHash, int chunkId, byte[] fileChunk)
+        public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk)
         {
             FileTransferInformation fileTransferInformation = null;
 
             lock (_lockObject)
             {
-                if (!_pendingFileTransfers.ContainsKey(fileHash))
+                if (!_pendingFileTransfers.ContainsKey(fileName))
                 {
                     return AddFileToDfsResponseCode.Expired;
                 }
 
-                fileTransferInformation = _pendingFileTransfers[fileHash];
+                fileTransferInformation = _pendingFileTransfers[fileName];
             }
 
             // Chunks should be sequential

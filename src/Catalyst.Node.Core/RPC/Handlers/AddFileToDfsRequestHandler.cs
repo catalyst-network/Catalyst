@@ -23,21 +23,22 @@
 
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Serilog;
 using Catalyst.Common.Extensions;
-using System.IO;
-using System.Linq;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
 using System;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Node.Core.P2P.Messaging;
+using System.Net;
+using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -50,36 +51,37 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactoryBase<AddFileToDfsResponse, RpcMessages> _rpcMessageFactory;
 
+        /// <summary>The file transfer</summary>
         private readonly IFileTransfer _fileTransfer;
 
+        /// <summary>The peer identifier</summary>
+        private readonly IPeerIdentifier _peerIdentifier;
+        
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="dfs">The DFS.</param>
-        public AddFileToDfsRequestHandler(IFileTransfer fileTransfer, IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger)
+        public AddFileToDfsRequestHandler(IPeerIdentifier peerIdentifier, IFileTransfer fileTransfer, IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger)
         {
-            _rpcMessageFactory = new RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactoryBase<AddFileToDfsResponse, RpcMessages>();
             _fileTransfer = fileTransfer;
+            _peerIdentifier = peerIdentifier;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Guard.Argument(message).NotNull();
-
             var deserialised = message.Payload.FromAnySigned<AddFileToDfsRequest>();
 
-            Guard.Argument(deserialised).NotNull();
+            Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-            int chunkSize = Math.Max(1, (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
-            
-            FileTransferInformation fileTransferInformation = new FileTransferInformation(Guid.NewGuid().ToString(), deserialised.FileName, chunkSize);
+            uint chunkSize = (uint) Math.Max(1, (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
 
-            AddFileToDfsResponseCode responseCode = AddFileToDfsResponseCode.Successful;
-
+            FileTransferInformation fileTransferInformation = new FileTransferInformation(message.Payload.CorrelationId.ToGuid().ToString(), deserialised.FileName, chunkSize);
+            AddFileToDfsResponseCode responseCode;
             try
             {
                 responseCode = _fileTransfer.InitializeTransfer(fileTransferInformation);
@@ -90,16 +92,37 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 responseCode = AddFileToDfsResponseCode.Error;
             }
 
-            ReturnResponse(fileTransferInformation, responseCode, deserialised.FileSize);
+            ReturnResponse(message, fileTransferInformation, responseCode, deserialised.FileSize);
         }
 
-        private void ReturnResponse(FileTransferInformation fileTransferInformation, AddFileToDfsResponseCode responseCode, ulong fileSize)
+        /// <summary>Returns the response.</summary>
+        /// <param name="message">The message sent by client</param>
+        /// <param name="fileTransferInformation">The file transfer information.</param>
+        /// <param name="responseCode">The response code.</param>
+        /// <param name="fileSize">Size of the file.</param>
+        private void ReturnResponse(IChanneledMessage<AnySigned> message, FileTransferInformation fileTransferInformation, AddFileToDfsResponseCode responseCode, ulong fileSize)
         {
             Logger.Information("File transfer response code: " + responseCode);
             if (responseCode == AddFileToDfsResponseCode.Successful)
             {
                 Logger.Information($"Initialised file transfer, FileName: {fileTransferInformation.FileName}, Chunks: {fileTransferInformation.MaxChunk}, FileLen: {fileSize}");
             }
+
+            // Build Response
+            AddFileToDfsResponse response = new AddFileToDfsResponse
+            {
+                ResponseCode = ByteString.CopyFrom((byte) responseCode)
+            };
+
+            // Send Response
+            var responseMessage = _rpcMessageFactory.GetMessage(new P2PMessageDto<AddFileToDfsResponse, RpcMessages>(
+                type: RpcMessages.AddFileToDfsResponse,
+                message: response,
+                destination: (IPEndPoint) message.Context.Channel.RemoteAddress,
+                sender: _peerIdentifier
+            ));
+            
+            message.Context.Channel.WriteAndFlushAsync(responseMessage);
         }
     }
 }

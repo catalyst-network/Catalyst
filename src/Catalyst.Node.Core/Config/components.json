@@ -168,7 +168,7 @@
                     "type": "Catalyst.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Common"
                 }
             ],
-            "instanceScope": "single-instance"
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Common.FileSystem.FileTransfer, Catalyst.Common",

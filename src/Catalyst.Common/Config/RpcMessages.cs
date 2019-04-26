@@ -40,6 +40,8 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages SignMessageResponse = new SignMessageResponseMessage();
         public static readonly RpcMessages AddFileToDfsRequest = new AddFileToDfsRequestMessage();
         public static readonly RpcMessages AddFileToDfsResponse = new AddFileToDfsResponseMessage();
+        public static readonly RpcMessages TransferFileBytesRequest = new TransferFileBytesRequestMessage();
+        public static readonly RpcMessages TransferFileBytesResponse = new TransferFileBytesResponseMessage();
 
         private RpcMessages(int id, string name) : base(id, name) { }
 
@@ -91,6 +93,16 @@ namespace Catalyst.Common.Config
         private sealed class AddFileToDfsResponseMessage : RpcMessages
         {
             public AddFileToDfsResponseMessage() : base(10, "AddFileToDfsResponse") { }
+        }
+
+        private sealed class TransferFileBytesRequestMessage : RpcMessages
+        {
+            public TransferFileBytesRequestMessage() : base(11, "TransferFileBytesRequest") { }
+        }
+
+        private sealed class TransferFileBytesResponseMessage : RpcMessages
+        {
+            public TransferFileBytesResponseMessage() : base(12, "TransferFileBytesResponse") { }
         }
     }
 }

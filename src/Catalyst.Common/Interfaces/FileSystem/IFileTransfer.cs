@@ -6,6 +6,6 @@ namespace Catalyst.Common.Interfaces.FileSystem
     public interface IFileTransfer
     {
         AddFileToDfsResponseCode InitializeTransfer(FileTransferInformation fileTransferInformation);
-        AddFileToDfsResponseCode WriteChunk(string fileHash, int chunkId, byte[] fileChunk);
+        AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk);
     }
 }

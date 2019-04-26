@@ -47,6 +47,8 @@ using System.IO;
 using Catalyst.Common.Config;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Cli.FileTransfer;
+using Catalyst.Common.Rpc;
 
 namespace Catalyst.Cli
 {
@@ -697,7 +699,27 @@ namespace Catalyst.Cli
                 sender: _peerIdentifier
             ));
 
+            var cliFileTransfer = CliFileTransfer.Instance;
             node.SendMessage(requestMessage);
+            
+            bool responseRecieved = cliFileTransfer.Wait();
+
+            if (!responseRecieved)
+            {
+                ReturnUserMessage("Timeout - No response recieved from node");
+                return false;
+            } else
+            {
+                if(cliFileTransfer.InitialiseFileTransferResponse != AddFileToDfsResponseCode.Successful)
+                {
+                    ReturnUserMessage("Error initialising file transfer, Node Response: " + cliFileTransfer.InitialiseFileTransferResponse);
+                    return false;
+                } else
+                {
+                    ReturnUserMessage("Initialising File Transfer");
+                    cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node, _peerIdentifier);
+                }
+            }
 
             return true;
         }

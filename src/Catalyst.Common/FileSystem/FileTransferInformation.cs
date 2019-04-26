@@ -13,9 +13,9 @@ namespace Catalyst.Common.FileSystem
         private readonly string _tempPath;
 
         /// <summary>The maximum chunk</summary>
-        private readonly int _maxChunk;
+        private readonly uint _maxChunk;
 
-        public FileTransferInformation(string hash, string fileName, int maxChunk)
+        public FileTransferInformation(string hash, string fileName, uint maxChunk)
         {
             _tempPath = Path.GetTempPath() + hash;
             _maxChunk = maxChunk;
@@ -24,7 +24,7 @@ namespace Catalyst.Common.FileSystem
             this.FileName = fileName;
         }
 
-        public void WriteToStream(int chunk, byte[] fileBytes)
+        public void WriteToStream(uint chunk, byte[] fileBytes)
         {
             this.RandomAccessStream.Seek(0, SeekOrigin.End);
             this.RandomAccessStream.Write(fileBytes);
@@ -66,9 +66,9 @@ namespace Catalyst.Common.FileSystem
 
         public Action OnSuccess { get; set; }
 
-        public int CurrentChunk { get; set; }
+        public uint CurrentChunk { get; set; }
 
-        public int MaxChunk { get => _maxChunk; }
+        public uint MaxChunk { get => _maxChunk; }
 
         public string Hash { get; set; }
 
