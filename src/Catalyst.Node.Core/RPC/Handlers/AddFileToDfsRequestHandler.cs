@@ -39,6 +39,7 @@ using Catalyst.Node.Core.P2P.Messaging;
 using System.Net;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
+using NSubstitute.Extensions;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -48,7 +49,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsRequest, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public class AddFileToDfsRequestHandler : CorrelatableMessageHandlerBase<AddFileToDfsRequest, IMessageCorrelationCache>,
-            IRpcRequestHandler
+        IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactoryBase<AddFileToDfsResponse, RpcMessages> _rpcMessageFactory;

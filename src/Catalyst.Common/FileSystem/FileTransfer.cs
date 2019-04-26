@@ -1,16 +1,5 @@
 #region LICENSE
 
-
-
-#endregion
-
-using Catalyst.Common.Interfaces.FileSystem;
-using Catalyst.Common.Rpc;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -29,6 +18,17 @@ using System.Threading.Tasks;
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
+#endregion
+
+using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Rpc;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Catalyst.Common.FileSystem
 {
     /// <summary>
@@ -70,15 +70,16 @@ namespace Catalyst.Common.FileSystem
                     }
                     else if (fileTransferInformation.IsExpired())
                     {
-                        lock(_lockObject)
+                        lock (_lockObject)
                         {
                             _pendingFileTransfers.Remove(fileTransferInformation.Hash);
                         }
+
                         fileTransferInformation.CleanUpExpired();
                         fileTransferInformation.OnExpired?.Invoke();
                         tokenSource.Cancel();
                     }
-                }, TimeSpan.FromSeconds( (FileTransferConstants.ExpiryMinutes * 60) / 2), tokenSource.Token);
+                }, TimeSpan.FromSeconds((FileTransferConstants.ExpiryMinutes * 60) / 2), tokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 return AddFileToDfsResponseCode.Successful;
@@ -112,6 +113,7 @@ namespace Catalyst.Common.FileSystem
                 fileTransferInformation.OnSuccess?.Invoke();
                 fileTransferInformation.Dispose();
             }
+
             return AddFileToDfsResponseCode.Successful;
         }
     }

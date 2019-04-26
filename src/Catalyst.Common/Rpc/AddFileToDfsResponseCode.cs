@@ -29,7 +29,7 @@ namespace Catalyst.Common.Rpc
     public enum AddFileToDfsResponseCode : byte
     {
         /// <summary>Successful file added to DFS</summary>
-        Successful =  0,
+        Successful = 0,
 
         /// <summary>File already exists</summary>
         FileAlreadyExists = 1,

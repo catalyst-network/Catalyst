@@ -76,7 +76,6 @@ namespace Catalyst.Cli.FileTransfer
         /// <value>The retry count.</value>
         public int RetryCount { get; set; }
 
-
         /// <summary>Gets the instance.</summary>
         /// <value>The instance.</value>
         public static CliFileTransfer Instance
@@ -90,7 +89,7 @@ namespace Catalyst.Cli.FileTransfer
         public void TransferFile(string filePath, Guid correlationGuid, INodeRpcClient node, IPeerIdentifier peerIdentifier)
         {
             WaitHandle.Reset();
-
+            
             Console.WriteLine("Transfering file: 0%");
             ByteString correlationBytes = ByteString.CopyFrom(correlationGuid.ToByteArray());
 
@@ -153,6 +152,8 @@ namespace Catalyst.Cli.FileTransfer
                         }
                     }
                 }
+
+                Dispose();
             }
         }
 
@@ -170,6 +171,7 @@ namespace Catalyst.Cli.FileTransfer
                 {
                     this.Dispose();
                 }
+
                 WaitHandle.Reset();
             }
             else
@@ -184,7 +186,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <returns>Current percentage</returns>
         private int GetPercentage()
         {
-            return (int) Math.Ceiling((_currentChunk / _maxChunk) * 100D);
+            return (int) Math.Ceiling((double) _currentChunk / _maxChunk * 100D);
         }
 
         private bool Retry(ref uint index)
