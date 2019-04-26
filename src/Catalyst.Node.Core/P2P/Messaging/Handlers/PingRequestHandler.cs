@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             Logger.Debug("message content is {0}", deserialised);
             
             var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
-                new P2PMessageDto<PingResponse, P2PMessages>(
+                new MessageDto<PingResponse, P2PMessages>(
                     type: P2PMessages.PingRequest,
                     message: new PingResponse(),
                     recipient: new PeerIdentifier(message.Payload.PeerId),

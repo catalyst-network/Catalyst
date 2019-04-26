@@ -38,6 +38,8 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages GetVersionResponse = new GetVersionResponseMessage();
         public static readonly RpcMessages SignMessageRequest = new SignMessageRequestMessage();
         public static readonly RpcMessages SignMessageResponse = new SignMessageResponseMessage();
+        public static readonly RpcMessages GetPeerListRequest = new GetPeerListRequestMessage();
+        public static readonly RpcMessages GetPeerListResponse = new GetPeerListResponseMessage();
 
         private RpcMessages(int id, string name) : base(id, name) { }
 
@@ -79,6 +81,16 @@ namespace Catalyst.Common.Config
         private sealed class SignMessageResponseMessage : RpcMessages
         {
             public SignMessageResponseMessage() : base(8, "SignMessageResponse") { }
+        }
+
+        private sealed class GetPeerListRequestMessage : RpcMessages
+        {
+            public GetPeerListRequestMessage() : base(9, "GetPeerListRequest") { }
+        }
+
+        private sealed class GetPeerListResponseMessage : RpcMessages
+        {
+            public GetPeerListResponseMessage() : base(10, "GetPeerListResponse") { }
         }
     }
 }

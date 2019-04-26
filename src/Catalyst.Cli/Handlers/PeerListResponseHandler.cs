@@ -24,33 +24,34 @@
 using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
+using Dawn;
 
 namespace Catalyst.Cli.Handlers
 {
     /// <summary>
-    /// Handler responsible for handling the server's response for the GetVersion request.
-    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
+    /// Handles the Peer list response from the node
     /// </summary>
-    public sealed class GetVersionResponseHandler
-        : CorrelatableMessageHandlerBase<VersionResponse, IMessageCorrelationCache>,
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="IRpcResponseHandler" />
+    public sealed class PeerListResponseHandler
+        : CorrelatableMessageHandlerBase<GetPeerListResponse, IMessageCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />.
+        /// Initializes a new instance of the <see cref="PeerListResponseHandler"/> class.
         /// </summary>
-        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
-        /// <param name="messageCorrelationCache"></param>
-        /// <param name="logger">Logger to log debug related information.</param>
-        public GetVersionResponseHandler(IUserOutput output,
+        /// <param name="output">The output.</param>
+        /// <param name="messageCorrelationCache">The message correlation cache.</param>
+        /// <param name="logger">The logger.</param>
+        public PeerListResponseHandler(IUserOutput output,
             IMessageCorrelationCache messageCorrelationCache,
             ILogger logger)
             : base(messageCorrelationCache, logger)
@@ -58,31 +59,26 @@ namespace Catalyst.Cli.Handlers
             _output = output;
         }
 
+        /// <summary>
+        /// Handles the peer list response.
+        /// </summary>
+        /// <param name="message">The PeerListResponse message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Guard.Argument(message).NotNull("The message cannot be null");
-            
-            Logger.Debug("GetVersionResponseHandler starting ...");
-            
+            Logger.Debug("Handling PeerListResponse");
+            Guard.Argument(message).NotNull("Received message cannot be null");
+
             try
             {
-                var deserialised = message.Payload.FromAnySigned<VersionResponse>();
-                
-                Guard.Argument(deserialised, nameof(deserialised)).NotNull("The VersionResponse cannot be null")
-                   .Require(d => d.Version != null,
-                        d => $"{nameof(deserialised)} must have a valid Version.");
-                
-                _output.WriteLine($"Node Version: {deserialised.Version}");
+                var deserialised = message.Payload.FromAnySigned<GetPeerListResponse>();
+                var result = string.Join(", ", deserialised.Peers);
+                _output.WriteLine(result);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", message);
-                _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
+                    "Failed to handle PeerListResponse after receiving message {0}", message);
+                throw;
             }
         }
     }

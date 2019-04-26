@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             }
             
             var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
-                new P2PMessageDto<PeerNeighborsResponse, P2PMessages>(
+                new MessageDto<PeerNeighborsResponse, P2PMessages>(
                     type: P2PMessages.GetNeighbourResponse,
                     message: peerNeighborsResponseMessage,
                     recipient: new PeerIdentifier(message.Payload.PeerId),
