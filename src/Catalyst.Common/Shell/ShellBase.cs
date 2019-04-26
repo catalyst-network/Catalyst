@@ -149,6 +149,13 @@ namespace Catalyst.Common.Shell
         protected abstract bool OnGetVersion(Object args);
 
         /// <summary>
+        /// Called when [list peer nodes].
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected abstract bool OnListPeerNodes(Object args);
+
+        /// <summary>
         ///     Prints stats about the mempool implementation.
         /// </summary>
         /// <returns></returns>

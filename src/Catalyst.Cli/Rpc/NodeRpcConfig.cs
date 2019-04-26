@@ -41,7 +41,8 @@ namespace Catalyst.Cli.Rpc
                 HostAddress = IPAddress.Parse(child.GetSection("host").Value),
                 Port = int.Parse(child.GetSection("port").Value),
                 PfxFileName = child.GetSection("PfxFileName").Value,
-                SslCertPassword = child.GetSection("SslCertPassword").Value
+                SslCertPassword = child.GetSection("SslCertPassword").Value,
+                PublicKey = child.GetSection("PublicKey").Value
             } as IRpcNodeConfig).ToList();
 
             return nodeList;
@@ -52,5 +53,6 @@ namespace Catalyst.Cli.Rpc
         public int Port { get; set; }
         public string PfxFileName { get; set; }
         public string SslCertPassword { get; set; }
+        public string PublicKey { get; set; }
     }
 }

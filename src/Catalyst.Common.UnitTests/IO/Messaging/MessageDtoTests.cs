@@ -21,29 +21,27 @@
 
 #endregion
 
-using System;
-using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.P2P
+namespace Catalyst.Common.UnitTests.IO.Messaging
 {
     public sealed class MessageDtoTests
     {
-        private readonly P2PMessageDto<IMessage, P2PMessages> _p2PMessageDto;
+        private readonly MessageDto<IMessage, P2PMessages> _messageDto;
 
         public MessageDtoTests()
         {
             var peerIdentifier = Substitute.For<IPeerIdentifier>();
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
-            _p2PMessageDto = new P2PMessageDto<IMessage, P2PMessages>(
+            _messageDto = new MessageDto<IMessage, P2PMessages>(
                 P2PMessages.PingRequest,
                 pingRequest,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
@@ -54,12 +52,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanInitMessageDtoCorrectly()
         {
-            Assert.NotNull(_p2PMessageDto);
-            _p2PMessageDto.Should().BeOfType(typeof(P2PMessageDto<IMessage, P2PMessages>));
-            _p2PMessageDto.Type.Should().BeEquivalentTo(P2PMessages.PingRequest);
-            _p2PMessageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            _p2PMessageDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
-            _p2PMessageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            Assert.NotNull(_messageDto);
+            AssertionExtensions.Should((object) _messageDto).BeOfType(typeof(MessageDto<IMessage, P2PMessages>));
+            AssertionExtensions.Should((object) _messageDto.Type).BeEquivalentTo(P2PMessages.PingRequest);
+            AssertionExtensions.Should((object) _messageDto.Message).NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
+            AssertionExtensions.Should((object) _messageDto.Recipient).NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            AssertionExtensions.Should((object) _messageDto.Sender).NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }
 }
