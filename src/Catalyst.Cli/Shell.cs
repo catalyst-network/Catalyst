@@ -458,6 +458,8 @@ namespace Catalyst.Cli
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull("Node cannot be null. The shell must be able to connect to a valid node to be able to send the request.");
+
+            var nodeConfig = GetNodeConfig(nodeId);
             
             try
             {
@@ -468,7 +470,7 @@ namespace Catalyst.Cli
                         {
                             Query = true
                         },
-                        (IPEndPoint) node.Channel.RemoteAddress,
+                        new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
                         _peerIdentifier)
                 );
                 

@@ -30,6 +30,7 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
@@ -68,7 +69,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                         {
                             Version = NodeUtil.GetVersion()
                         }, 
-                        (IPEndPoint) message.Context.Channel.RemoteAddress,
+                        new PeerIdentifier(message.Payload.PeerId),
                         _peerIdentifier)
                 );
                 
