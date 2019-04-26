@@ -68,6 +68,7 @@ namespace Catalyst.Cli.Handlers
             Guard.Argument(message).NotNull();
 
             Logger.Debug("Handling PeerListResponse");
+            Guard.Argument(message).NotNull("Received message cannot be null");
 
             try
             {
