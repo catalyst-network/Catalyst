@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Catalyst.Cli.Rpc;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO;
@@ -43,9 +44,11 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Config;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Google.Protobuf;
 
 namespace Catalyst.Cli
 {
@@ -556,7 +559,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new SignMessageRequest
                 {
-                    Message = RLP.EncodeElement(signOptions.Message.Trim('\"').ToBytesForRLPEncoding())
+                    Message = ByteString.CopyFrom(signOptions.Message.Trim('\"'), Encoding.UTF8)
                        .ToByteString()
                 };
 
@@ -665,6 +668,7 @@ namespace Catalyst.Cli
             Console.WriteLine(message);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Called when [list peer nodes].
         /// </summary>
@@ -681,14 +685,14 @@ namespace Catalyst.Cli
 
                 Guard.Argument(node).NotNull();
 
-                var rpcMessageFactory = new RpcMessageFactoryBase<GetPeerListRequest, RpcMessages>();
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest, RpcMessages>();
                 var request = new GetPeerListRequest();
 
-                var requestMessage = rpcMessageFactory.GetMessage(new P2PMessageDto<GetPeerListRequest, RpcMessages>
+                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerListRequest, RpcMessages>
                 (
                     type: RpcMessages.GetPeerListRequest,
                     message: request,
-                    destination: (IPEndPoint) node.Channel.RemoteAddress,
+                    recipient: (IPEndPoint) node.Channel.RemoteAddress,
                     sender: _peerIdentifier
                 ));
 
@@ -699,6 +703,7 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
+            
             return true;
         }
     }

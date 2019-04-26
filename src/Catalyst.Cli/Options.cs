@@ -133,9 +133,9 @@ namespace Catalyst.Cli
         /// </value>
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
-           new List<Example>
-           {
+            new List<Example>
+            {
                 new Example("Displays peer list for the specified node.", new PeerListOptions {Node = "node1"})
-           };
+            };
     }
 }

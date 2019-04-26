@@ -29,7 +29,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public class TcpClient<TChannel> : Client, ITcpClient where TChannel : IChannel, new()
+    public class TcpClient<TChannel> : ClientBase, ITcpClient where TChannel : IChannel, new()
     {
         protected TcpClient(ILogger logger) : base(logger) { }
 

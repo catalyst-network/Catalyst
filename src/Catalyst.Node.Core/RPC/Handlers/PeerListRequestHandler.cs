@@ -36,6 +36,7 @@ using Catalyst.Common.Config;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Common.P2P;
 using System.Net;
+using Catalyst.Common.IO.Messaging;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -62,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactoryBase<GetPeerListResponse, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactory<GetPeerListResponse, RpcMessages> _rpcMessageFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
@@ -79,7 +80,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             _peerIdentifier = peerIdentifier;
             _peerDiscovery = peerDiscovery;
-            _rpcMessageFactory = new RpcMessageFactoryBase<GetPeerListResponse, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactory<GetPeerListResponse, RpcMessages>();
         }
 
         /// <summary>
@@ -104,11 +105,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);
 
-            var responseMessage = _rpcMessageFactory.GetMessage(new P2PMessageDto<GetPeerListResponse, RpcMessages>
+            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto<GetPeerListResponse, RpcMessages>
             (
                 type: RpcMessages.GetPeerListResponse,
                 message: response,
-                destination: (IPEndPoint) _message.Context.Channel.RemoteAddress,
+                recipient: (IPEndPoint) _message.Context.Channel.RemoteAddress,
                 sender: _peerIdentifier
             ));
 

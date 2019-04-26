@@ -42,6 +42,7 @@ using System.Collections.Generic;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
@@ -99,14 +100,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var peerDiscovery = Substitute.For<IPeerDiscovery>();
             peerDiscovery.PeerRepository.Returns(peerRepository);
             
-            var rpcMessageFactory = new RpcMessageFactoryBase<GetPeerListRequest, RpcMessages>();
+            var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest, RpcMessages>();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var requestMessage = rpcMessageFactory.GetMessage(new P2PMessageDto<GetPeerListRequest, RpcMessages>
+            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerListRequest, RpcMessages>
             (
                 type: RpcMessages.GetPeerListRequest,
                 message: new GetPeerListRequest(),
-                destination: (System.Net.IPEndPoint) _fakeContext.Channel.RemoteAddress,
+                recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 sender: sendPeerIdentifier
             ));
             
