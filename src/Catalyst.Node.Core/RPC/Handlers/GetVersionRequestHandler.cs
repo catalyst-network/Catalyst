@@ -27,6 +27,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Util;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -36,6 +37,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
+using Catalyst.Common.P2P;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -62,15 +64,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
             try
             {
                 var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
-                    new P2PMessageDto<VersionResponse, RpcMessages>(
+                    new MessageDto<VersionResponse, RpcMessages>(
                         RpcMessages.GetVersionRequest,
                         new VersionResponse
                         {
                             Version = NodeUtil.GetVersion()
                         }, 
-                        (IPEndPoint) message.Context.Channel.RemoteAddress,
+                        new PeerIdentifier(message.Payload.PeerId),
                         _peerIdentifier)
-                );
+                ); 
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }

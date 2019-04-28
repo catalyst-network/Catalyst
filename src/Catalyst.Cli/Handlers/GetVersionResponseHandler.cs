@@ -31,6 +31,7 @@ using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
+using Dawn;
 
 namespace Catalyst.Cli.Handlers
 {
