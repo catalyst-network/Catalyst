@@ -24,61 +24,61 @@
 using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
+using Dawn;
 
 namespace Catalyst.Cli.Handlers
 {
     /// <summary>
-    /// Handler responsible for handling the server's response for the GetInfo request.
-    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
+    /// Handles the Peer list response from the node
     /// </summary>
-    public sealed class GetInfoResponseHandler
-        : CorrelatableMessageHandlerBase<GetInfoResponse, IMessageCorrelationCache>,
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="IRpcResponseHandler" />
+    public sealed class PeerListResponseHandler
+        : CorrelatableMessageHandlerBase<GetPeerListResponse, IMessageCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="PeerListResponseHandler"/> class.
         /// </summary>
-        /// <param name="output"></param>
-        /// <param name="messageCorrelationCache"></param>
-        /// <param name="logger">Logger to log debug related information.</param>
-        public GetInfoResponseHandler(IUserOutput output,
+        /// <param name="output">The output.</param>
+        /// <param name="messageCorrelationCache">The message correlation cache.</param>
+        /// <param name="logger">The logger.</param>
+        public PeerListResponseHandler(IUserOutput output,
             IMessageCorrelationCache messageCorrelationCache,
-            ILogger logger) 
+            ILogger logger)
             : base(messageCorrelationCache, logger)
         {
             _output = output;
         }
 
         /// <summary>
-        /// Handles the GetInfoResponse message.
+        /// Handles the peer list response.
         /// </summary>
-        /// <param name="message">An object of GetInfoResponse</param>
+        /// <param name="message">The PeerListResponse message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Logger.Debug("Handling GetInfoResponse");
-            
+            Logger.Debug("Handling PeerListResponse");
+            Guard.Argument(message).NotNull("Received message cannot be null");
+
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
-                _output.WriteLine(deserialised.Query);
+                var deserialised = message.Payload.FromAnySigned<GetPeerListResponse>();
+                var result = string.Join(", ", deserialised.Peers);
+                _output.WriteLine(result);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", message);
-                _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
+                    "Failed to handle PeerListResponse after receiving message {0}", message);
+                throw;
             }
         }
     }

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dawn;
 
 namespace Catalyst.Common.Extensions
 {
@@ -33,7 +34,9 @@ namespace Catalyst.Common.Extensions
 
         public static T RandomElement<T>(this IEnumerable<T> list)
         {
-            var enumerable = list as T[] ?? list.ToArray();
+            var value = list.ToList();
+            Guard.Argument(value).MinCount(1);
+            var enumerable = list as T[] ?? value.ToArray();
             return enumerable[Rng.Next(enumerable.Length)];
         }
     }

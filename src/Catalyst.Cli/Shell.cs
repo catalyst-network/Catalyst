@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Catalyst.Cli.Rpc;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO;
@@ -43,6 +44,11 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Config;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Google.Protobuf;
 using System.IO;
 using Catalyst.Common.Config;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -110,12 +116,13 @@ namespace Catalyst.Cli
                     ConnectOptions,
                     SignOptions,
                     VerifyOptions,
-                    AddFileOnDfsOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, AddFileOnDfsOptions, bool>(
+                    PeerListOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, AddFileOnDfsOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
                     (VerifyOptions opts) => OnVerifyCommands(opts),
+                    (PeerListOptions opts) => OnPeerListCommands(opts),
                     (AddFileOnDfsOptions opts) => OnAddFileToDfs(opts),
                     errs => false);
         }
@@ -185,6 +192,21 @@ namespace Catalyst.Cli
             if (opts.Message.Length > 0)
             {
                 return OnVerifyMessage(opts);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Called when [peer list commands].
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns>[true] if correct arguments, [false] if arguments are invalid</returns>
+        private bool OnPeerListCommands(PeerListOptions opts)
+        {
+            if (opts.Node.Length > 0)
+            {
+                return OnListPeerNodes(opts);
             }
 
             return false;
@@ -560,7 +582,7 @@ namespace Catalyst.Cli
                 //send the message to the server by writing it to the channel
                 var request = new SignMessageRequest
                 {
-                    Message = RLP.EncodeElement(signOptions.Message.Trim('\"').ToBytesForRLPEncoding())
+                    Message = ByteString.CopyFrom(signOptions.Message.Trim('\"'), Encoding.UTF8)
                        .ToByteString()
                 };
 
@@ -667,6 +689,46 @@ namespace Catalyst.Cli
         private void ReturnUserMessage(string message)
         {
             Console.WriteLine(message);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Called when [list peer nodes].
+        /// </summary>
+        /// <param name="opts">The arguments.</param>
+        /// <returns>True if command was successful</returns>
+        protected override bool OnListPeerNodes(object opts)
+        {
+            try
+            {
+                Guard.Argument(opts).NotNull().Compatible<PeerListOptions>();
+
+                var peerListOptions = (PeerListOptions) opts;
+                var node = GetConnectedNode(peerListOptions.Node);
+                var nodeConfig = GetNodeConfig(peerListOptions.Node);
+
+                Guard.Argument(node).NotNull();
+
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest, RpcMessages>();
+                var request = new GetPeerListRequest();
+
+                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerListRequest, RpcMessages>
+                (
+                    type: RpcMessages.GetPeerListRequest,
+                    message: request,
+                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                    sender: _peerIdentifier
+                ));
+
+                node.SendMessage(requestMessage).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+            return true;
         }
 
         public override bool OnAddFileOnDfsMessage(object opts)

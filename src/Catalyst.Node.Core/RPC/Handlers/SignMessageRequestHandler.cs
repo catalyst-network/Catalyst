@@ -66,22 +66,19 @@ namespace Catalyst.Node.Core.RPC.Handlers
             {
                 var deserialised = message.Payload.FromAnySigned<SignMessageRequest>();
                 
-                Guard.Argument(deserialised).NotNull();
+                Guard.Argument(message).NotNull();
 
-                //decode the received message
-                var decodeResult = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
+                var decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
 
-                //get the original message from the decoded message
-                var decodedMessage = decodeResult.ToStringFromRLPDecoded();
-
-                //use the keysigner to sign the message
                 var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
                 
                 var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
+                
+                Guard.Argument(signature).NotNull();
+                
                 var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
                 
                 Guard.Argument(publicKey).NotNull();
-                Guard.Argument(signature).NotNull();
                 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 

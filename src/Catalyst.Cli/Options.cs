@@ -111,6 +111,35 @@ namespace Catalyst.Cli
     }
 
     /// <summary>
+    /// Class contains the options for the peer list command
+    /// </summary>
+    [Verb("listpeers", HelpText = "displays peer list")]
+    class PeerListOptions
+    {
+        /// <summary>
+        /// Gets or sets the node.
+        /// </summary>
+        /// <value>
+        /// The node.
+        /// </value>
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
+
+        /// <summary>
+        /// Gets the examples.
+        /// </summary>
+        /// <value>
+        /// The examples.
+        /// </value>
+        [Usage(ApplicationAlias = "")]
+        public static IEnumerable<Example> Examples =>
+            new List<Example>
+            {
+                new Example("Displays peer list for the specified node.", new PeerListOptions {Node = "node1"})
+            };
+    }
+
+    /// <summary>
     /// Add file onto DFS CLI options
     /// </summary>
     [Verb("addfile", HelpText = "Adds a file onto the DFS")]

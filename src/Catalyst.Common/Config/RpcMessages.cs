@@ -38,6 +38,8 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages GetVersionResponse = new GetVersionResponseMessage();
         public static readonly RpcMessages SignMessageRequest = new SignMessageRequestMessage();
         public static readonly RpcMessages SignMessageResponse = new SignMessageResponseMessage();
+        public static readonly RpcMessages GetPeerListRequest = new GetPeerListRequestMessage();
+        public static readonly RpcMessages GetPeerListResponse = new GetPeerListResponseMessage();
         public static readonly RpcMessages AddFileToDfsRequest = new AddFileToDfsRequestMessage();
         public static readonly RpcMessages AddFileToDfsResponse = new AddFileToDfsResponseMessage();
         public static readonly RpcMessages TransferFileBytesRequest = new TransferFileBytesRequestMessage();
@@ -85,24 +87,34 @@ namespace Catalyst.Common.Config
             public SignMessageResponseMessage() : base(8, "SignMessageResponse") { }
         }
 
+        private sealed class GetPeerListRequestMessage : RpcMessages
+        {
+            public GetPeerListRequestMessage() : base(9, "GetPeerListRequest") { }
+        }
+
+        private sealed class GetPeerListResponseMessage : RpcMessages
+        {
+            public GetPeerListResponseMessage() : base(10, "GetPeerListResponse") { }
+        }
+
         private sealed class AddFileToDfsRequestMessage : RpcMessages
         {
-            public AddFileToDfsRequestMessage() : base(9, "AddFileToDfsRequest") { }
+            public AddFileToDfsRequestMessage() : base(11, "AddFileToDfsRequest") { }
         }
 
         private sealed class AddFileToDfsResponseMessage : RpcMessages
         {
-            public AddFileToDfsResponseMessage() : base(10, "AddFileToDfsResponse") { }
+            public AddFileToDfsResponseMessage() : base(12, "AddFileToDfsResponse") { }
         }
 
         private sealed class TransferFileBytesRequestMessage : RpcMessages
         {
-            public TransferFileBytesRequestMessage() : base(11, "TransferFileBytesRequest") { }
+            public TransferFileBytesRequestMessage() : base(13, "TransferFileBytesRequest") { }
         }
 
         private sealed class TransferFileBytesResponseMessage : RpcMessages
         {
-            public TransferFileBytesResponseMessage() : base(12, "TransferFileBytesResponse") { }
+            public TransferFileBytesResponseMessage() : base(14, "TransferFileBytesResponse") { }
         }
     }
 }
