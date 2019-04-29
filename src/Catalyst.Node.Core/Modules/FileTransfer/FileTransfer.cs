@@ -25,6 +25,7 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Rpc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace Catalyst.Node.Core.Modules.FileTransfer
@@ -39,6 +40,10 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
 
         /// <summary>The lock object</summary>
         private static readonly object _lockObject = new object();
+
+        /// <summary>Gets the keys.</summary>
+        /// <value>The keys.</value>
+        public string[] Keys => _pendingFileTransfers.Keys.ToArray();
 
         /// <summary>Initializes a new instance of the <see cref="FileTransfer"/> class.</summary>
         public FileTransfer()
@@ -74,11 +79,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
                     }
                     else if (fileTransferInformation.IsExpired())
                     {
-                        lock (_lockObject)
-                        {
-                            _pendingFileTransfers.Remove(fileTransferInformation.UniqueFileName);
-                        }
-
+                        Remove(fileTransferInformation.UniqueFileName);
                         fileTransferInformation.OnExpired?.Invoke(fileTransferInformation);
                         fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
@@ -97,15 +98,10 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <returns>Response code</returns>
         public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk, out FileTransferInformation fileTransferInformation)
         {
-            lock (_lockObject)
+            fileTransferInformation = GetFileTransferInformation(fileName);
+            if (fileTransferInformation == null)
             {
-                if (!_pendingFileTransfers.ContainsKey(fileName))
-                {
-                    fileTransferInformation = null;
-                    return AddFileToDfsResponseCode.Expired;
-                }
-
-                fileTransferInformation = _pendingFileTransfers[fileName];
+                return AddFileToDfsResponseCode.Expired;
             }
 
             // Chunks should be sequential
@@ -118,13 +114,36 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
 
             if (fileTransferInformation.IsComplete())
             {
-                lock (_lockObject)
-                {
-                    _pendingFileTransfers.Remove(fileTransferInformation.UniqueFileName);
-                }
+                Remove(fileTransferInformation.UniqueFileName);
             }
 
             return AddFileToDfsResponseCode.Successful;
+        }
+
+        /// <summary>Gets the file transfer information.</summary>
+        /// <param name="key">The unique file name.</param>
+        /// <returns>File transfer information</returns>
+        public FileTransferInformation GetFileTransferInformation(string key)
+        {
+            lock (_lockObject)
+            {
+                if (!_pendingFileTransfers.ContainsKey(key))
+                {
+                    return null;
+                }
+
+                return _pendingFileTransfers[key];
+            }
+        }
+
+        /// <summary>Removes the specified key.</summary>
+        /// <param name="key">The key.</param>
+        private void Remove(string key)
+        {
+            lock (_lockObject)
+            {
+                _pendingFileTransfers.Remove(key);
+            }
         }
     }
 }

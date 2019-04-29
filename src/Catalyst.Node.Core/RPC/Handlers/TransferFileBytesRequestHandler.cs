@@ -43,7 +43,7 @@ using Catalyst.Common.P2P;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    class TransferFileBytesRequestHandler : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
+    public class TransferFileBytesRequestHandler : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
         /// <summary>The file transfer</summary>

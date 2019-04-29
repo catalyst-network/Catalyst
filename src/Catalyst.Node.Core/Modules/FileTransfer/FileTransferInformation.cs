@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <param name="maxChunk">The maximum chunk.</param>
         public FileTransferInformation(IPeerIdentifier recepientIdentifier, IChannel reciepientChannel, string uniqueFileName, string fileName, uint maxChunk)
         {
-            _tempPath = Path.GetTempPath() + uniqueFileName;
+            _tempPath = Path.GetTempPath() + uniqueFileName + ".tmp";
             _maxChunk = maxChunk;
             this.CurrentChunk = 0;
             this.ReciepientChannel = reciepientChannel;

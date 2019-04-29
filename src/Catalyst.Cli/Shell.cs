@@ -732,6 +732,9 @@ namespace Catalyst.Cli
             return true;
         }
 
+        /// <summary>Called when [add file on DFS message].</summary>
+        /// <param name="opts">The options.</param>
+        /// <returns>True if command was successful</returns>
         public override bool OnAddFileOnDfsMessage(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<AddFileOnDfsOptions>();

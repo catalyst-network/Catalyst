@@ -143,25 +143,7 @@ namespace Catalyst.Cli.FileTransfer
 
                 for (uint i = 0; i < _maxChunk; i++)
                 {
-                    uint chunkId = i + 1;
-                    long startPos = i * FileTransferConstants.ChunkSize;
-                    long endPos = chunkId * FileTransferConstants.ChunkSize;
-                    if (endPos > fileLen)
-                    {
-                        endPos = fileLen;
-                    }
-
-                    int bufferSize = (int) (endPos - startPos);
-                    byte[] chunk = new byte[bufferSize];
-                    fileStream.Position = startPos;
-                    fileStream.Read(chunk, 0, bufferSize);
-
-                    var transferMessage = new TransferFileBytesRequest
-                    {
-                        ChunkBytes = ByteString.CopyFrom(chunk),
-                        ChunkId = chunkId,
-                        CorrelationFileName = correlationBytes
-                    };
+                    var transferMessage = GetFileTransferRequestMessage(fileStream, correlationBytes, fileLen, i);
 
                     var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto<TransferFileBytesRequest, RpcMessages>(
                         type: RpcMessages.TransferFileBytesRequest,
@@ -196,6 +178,36 @@ namespace Catalyst.Cli.FileTransfer
 
                 Dispose();
             }
+        }
+
+        /// <summary>Gets the file transfer request message.</summary>
+        /// <param name="fileStream">The file stream.</param>
+        /// <param name="correlationBytes">The correlation bytes.</param>
+        /// <param name="fileLen">Length of the file.</param>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
+        public TransferFileBytesRequest GetFileTransferRequestMessage(FileStream fileStream, ByteString correlationBytes, long fileLen, uint index)
+        {
+            uint chunkId = index + 1;
+            long startPos = index * FileTransferConstants.ChunkSize;
+            long endPos = chunkId * FileTransferConstants.ChunkSize;
+            if (endPos > fileLen)
+            {
+                endPos = fileLen;
+            }
+
+            int bufferSize = (int) (endPos - startPos);
+            byte[] chunk = new byte[bufferSize];
+            fileStream.Position = startPos;
+            fileStream.Read(chunk, 0, bufferSize);
+
+            var transferMessage = new TransferFileBytesRequest
+            {
+                ChunkBytes = ByteString.CopyFrom(chunk),
+                ChunkId = chunkId,
+                CorrelationFileName = correlationBytes
+            };
+            return transferMessage;
         }
 
         /// <summary>Processes the chunk response.</summary>

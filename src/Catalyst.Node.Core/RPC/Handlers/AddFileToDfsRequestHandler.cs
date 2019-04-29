@@ -131,7 +131,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
             finally
             {
                 ReturnResponse(fileTransferInformation, responseCode);
-                fileTransferInformation.CleanUp();
             }
         }
 
