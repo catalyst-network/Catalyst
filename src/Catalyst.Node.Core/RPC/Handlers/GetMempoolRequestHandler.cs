@@ -34,6 +34,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -81,7 +82,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                         {
                             Mempool = {GetMempoolContent()}
                         },
-                        PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                        new PeerIdentifier(message.Payload.PeerId), 
                         _peerIdentifier)
                 );
                 

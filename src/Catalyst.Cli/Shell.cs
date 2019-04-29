@@ -514,9 +514,9 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var peerListOptions = (PeerListOptions) opts;
-            var node = GetConnectedNode(peerListOptions.Node);
-            var nodeConfig = GetNodeConfig(peerListOptions.Node);
+            var options = (GetInfoOptions) opts;
+            var node = GetConnectedNode(options.NodeId);
+            var nodeConfig = GetNodeConfig(options.NodeId);
             
             Guard.Argument(node).NotNull("The shell must be able to connect to a valid node to be able to send the request.");
 

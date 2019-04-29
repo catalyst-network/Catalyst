@@ -103,9 +103,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(2);
+            receivedCalls.Count().Should().Be(1);
             
-            var sentResponse = (AnySigned) receivedCalls[1].GetArguments().Single();
+            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
             var responseContent = sentResponse.FromAnySigned<GetMempoolResponse>();
 
