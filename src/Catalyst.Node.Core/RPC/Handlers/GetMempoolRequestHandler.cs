@@ -22,7 +22,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Text;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -30,9 +33,13 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Google.Protobuf.Collections;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -42,7 +49,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         private readonly IMempool _mempool;
-        private readonly PeerId _peerId;
+        private readonly IPeerIdentifier _peerIdentifier;
 
         public GetMempoolRequestHandler(IPeerIdentifier peerIdentifier,
             IMempool mempool,
@@ -51,33 +58,35 @@ namespace Catalyst.Node.Core.RPC.Handlers
             : base(messageCorrelationCache, logger)
         {
             _mempool = mempool;
-            _peerId = peerIdentifier.PeerId;
+            _peerIdentifier = peerIdentifier;
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Guard.Argument(message).NotNull();
             
-            Logger.Debug("received message of type GetMempoolRequest");
+            Logger.Debug("GetMempoolRequestHandler starting ...");
+            
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolRequest>();
-                
-                Guard.Argument(deserialised).NotNull();
-                
-                Logger.Debug("message content is {0}", deserialised);
-                
-                var response = new GetMempoolResponse
-                {
-                    Info =
-                    {
-                        GetMempoolContent()
-                    }
-                };
 
-                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                Guard.Argument(deserialised).NotNull("The shell GetMempoolRequest cannot be null.");
                 
-                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+                Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
+                
+                var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
+                    new MessageDto<GetMempoolResponse, RpcMessages>(
+                        RpcMessages.GetMempoolRequest,
+                        new GetMempoolResponse
+                        {
+                            Mempool = {GetMempoolContent()}
+                        },
+                        new PeerIdentifier(message.Payload.PeerId), 
+                        _peerIdentifier)
+                );
+                
+                message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -87,26 +96,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
             }
         }
 
-        private MapField<string, string> GetMempoolContent()
+        private IEnumerable<string> GetMempoolContent()
         {
-            var memPoolMap = new MapField<string, string>();
-            
-            try 
-            { 
+            var mempoolList = new List<string>();
+
+            try
+            {
                 var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
 
-                for (var i = 0; i < memPoolContentEncoded.Count; i++)
+                foreach (var tx in memPoolContentEncoded)
                 {
-                    var sb = new StringBuilder("{");
-                    foreach (var b in memPoolContentEncoded[i])
-                    {
-                        sb.Append(b);
-                    }
-
-                    sb.Append("}");
-
-                    memPoolMap.Add(i.ToString(), sb.ToString());
+                    mempoolList.Add(Encoding.Default.GetString(tx));
                 }
+
+                return mempoolList;
             }
             catch (Exception ex)
             {
@@ -114,8 +117,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     "Failed to get the mempool content and format it as MapField<string,string> {0}", ex.Message);
                 throw;
             }
-            
-            return memPoolMap;
         }
     }
 }
