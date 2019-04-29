@@ -33,6 +33,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -97,14 +98,14 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             
             var response = new RpcMessageFactory<GetInfoResponse, RpcMessages>().GetMessage(
-                new P2PMessageDto<GetInfoResponse, RpcMessages>(
+                new MessageDto<GetInfoResponse, RpcMessages>(
                     RpcMessages.GetInfoResponse,
                     new GetInfoResponse
                     {
                         Query = query
                     },
-                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort),
-                    PeerIdentifierHelper.GetPeerIdentifier("public_key"))
+                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender"))
             );
             
             var messageStream = CreateStreamWithMessage(response);

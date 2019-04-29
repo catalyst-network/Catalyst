@@ -24,7 +24,6 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -56,10 +55,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             Logger.Debug("message content is {0}", deserialised);
             
             var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
-                new P2PMessageDto<PingResponse, P2PMessages>(
+                new MessageDto<PingResponse, P2PMessages>(
                     type: P2PMessages.PingRequest,
                     message: new PingResponse(),
-                    destination: new PeerIdentifier(message.Payload.PeerId).IpEndPoint,
+                    recipient: new PeerIdentifier(message.Payload.PeerId),
                     sender: _peerIdentifier
                 )
             );

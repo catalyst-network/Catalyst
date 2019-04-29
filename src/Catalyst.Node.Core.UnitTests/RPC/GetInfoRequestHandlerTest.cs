@@ -28,6 +28,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -79,14 +80,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         public void GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {   
             var request = new RpcMessageFactory<GetInfoRequest, RpcMessages>().GetMessage(
-                new P2PMessageDto<GetInfoRequest, RpcMessages>(
+                new MessageDto<GetInfoRequest, RpcMessages>(
                     RpcMessages.GetInfoRequest,
                     new GetInfoRequest
                     {
                         Query = true
                     },
-                    new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort),
-                    PeerIdentifierHelper.GetPeerIdentifier("public_key"))
+                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender"))
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
@@ -95,9 +96,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(2);
+            receivedCalls.Count().Should().Be(1);
             
-            var sentResponse = (AnySigned) receivedCalls[1].GetArguments().Single();
+            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
 
             var responseContent = sentResponse.FromAnySigned<GetInfoResponse>();

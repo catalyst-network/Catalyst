@@ -26,7 +26,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using Google.Protobuf;
@@ -38,12 +38,12 @@ namespace Catalyst.Node.Core.P2P.Messaging
         where TMessage : class, IMessage<TMessage>
         where TMessageType : class, IEnumerableMessageType
     {
-        public IByteBufferHolder GetMessageInDatagramEnvelope(IP2PMessageDto<TMessage, TMessageType> dto)
+        public IByteBufferHolder GetMessageInDatagramEnvelope(IMessageDto<TMessage, TMessageType> dto)
         {
-            return GetMessage(dto).ToDatagram(dto.Recipient);
+            return GetMessage(dto).ToDatagram(dto.Recipient.IpEndPoint);
         }
         
-        public override AnySigned GetMessage(IP2PMessageDto<TMessage, TMessageType> dto)
+        public override AnySigned GetMessage(IMessageDto<TMessage, TMessageType> dto)
         {
             if (P2PMessages.PingRequest.Equals(dto.Type))
             {
