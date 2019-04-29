@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using Catalyst.Common.FileSystem;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -37,7 +38,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesRequest>();
-
+            FileTransferInformation fileTransferInformation = null;
             AddFileToDfsResponseCode responseCode;
 
             try
@@ -45,7 +46,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Guard.Argument(deserialised).NotNull("Message cannot be null");
 
                 Guid correlationId = new Guid(deserialised.CorrelationFileName.ToByteArray());
-                responseCode = _fileTransfer.WriteChunk(correlationId.ToString(), deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
+                responseCode = _fileTransfer.WriteChunk(correlationId.ToString(), deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray(), out fileTransferInformation);
             } catch(Exception e)
             {
                 Logger.Error(e.ToString());
@@ -62,6 +63,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 sender: _peerIdentifier
             ));
             message.Context.Channel.WriteAndFlushAsync(responseDto);
+
+            if (fileTransferInformation != null && fileTransferInformation.IsComplete())
+            {
+                fileTransferInformation.OnSuccess?.Invoke(fileTransferInformation);
+                fileTransferInformation.CleanUp();
+            }
         }
     }
 }

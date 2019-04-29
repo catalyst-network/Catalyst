@@ -41,6 +41,9 @@ namespace Catalyst.Common.Rpc
         Finished = 3,
 
         /// <summary>Expired file transfer</summary>
-        Expired = 4
+        Expired = 4,
+
+        /// <summary>The failed</summary>
+        Failed = 5
     }
 }

@@ -1,4 +1,6 @@
+using Catalyst.Common.Interfaces.P2P;
 using Dawn;
+using DotNetty.Transport.Channels;
 using System;
 using System.IO;
 
@@ -15,12 +17,13 @@ namespace Catalyst.Common.FileSystem
         /// <summary>The maximum chunk</summary>
         private readonly uint _maxChunk;
 
-        public FileTransferInformation(string hash, string fileName, uint maxChunk)
+        public FileTransferInformation(IChannel reciepientChannel, string uniqueFileName, string fileName, uint maxChunk)
         {
-            _tempPath = Path.GetTempPath() + hash;
+            _tempPath = Path.GetTempPath() + uniqueFileName;
             _maxChunk = maxChunk;
             this.CurrentChunk = 0;
-            this.Hash = hash;
+            this.ReciepientChannel = reciepientChannel;
+            this.UniqueFileName = uniqueFileName;
             this.FileName = fileName;
         }
 
@@ -50,7 +53,7 @@ namespace Catalyst.Common.FileSystem
             return this.CurrentChunk == this.MaxChunk;
         }
 
-        public void CleanUpExpired()
+        public void CleanUp()
         {
             this.Dispose();
             File.Delete(_tempPath);
@@ -62,20 +65,24 @@ namespace Catalyst.Common.FileSystem
             this.RandomAccessStream.Dispose();
         }
 
-        public Action OnExpired { get; set; }
+        public Action<FileTransferInformation> OnExpired { get; set; }
 
-        public Action OnSuccess { get; set; }
+        public Action<FileTransferInformation> OnSuccess { get; set; }
 
         public uint CurrentChunk { get; set; }
 
+        public string DfsHash { get; set; }
+
         public uint MaxChunk { get => _maxChunk; }
 
-        public string Hash { get; set; }
+        public string UniqueFileName { get; set; }
 
         public BinaryWriter RandomAccessStream { get; set; }
 
         public string TempPath { get => _tempPath; }
 
         public string FileName { get; set; }
+        
+        public IChannel ReciepientChannel { get; set; }
     }
 }

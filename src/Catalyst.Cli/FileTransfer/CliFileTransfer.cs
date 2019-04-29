@@ -58,6 +58,7 @@ namespace Catalyst.Cli.FileTransfer
         public void Dispose()
         {
             WaitHandle.Reset();
+            RetryCount = 0;
             InitialiseFileTransferResponse = default;
             CurrentChunkResponse = default;
         }
@@ -90,7 +91,6 @@ namespace Catalyst.Cli.FileTransfer
         {
             WaitHandle.Reset();
             
-            Console.WriteLine("Transfering file: 0%");
             ByteString correlationBytes = ByteString.CopyFrom(correlationGuid.ToByteArray());
 
             using (FileStream fileStream = File.Open(filePath, FileMode.Open))
@@ -138,7 +138,7 @@ namespace Catalyst.Cli.FileTransfer
                         bool retrySuccess = Retry(ref i);
                         if (!retrySuccess)
                         {
-                            Console.WriteLine("Error transfering file. Node Timeout");
+                            WriteUserMessage("Error transfering file. Node Timeout");
                             break;
                         }
                     }
@@ -147,7 +147,7 @@ namespace Catalyst.Cli.FileTransfer
                         bool processSuccess = ProcessChunkResponse(ref i);
                         if (!processSuccess)
                         {
-                            Console.WriteLine("Error transfering file. Node Response: " + CurrentChunkResponse);
+                            WriteUserMessage("Error transfering file. Node Response: " + CurrentChunkResponse);
                             break;
                         }
                     }
@@ -165,10 +165,12 @@ namespace Catalyst.Cli.FileTransfer
             }
             else if (CurrentChunkResponse == AddFileToDfsResponseCode.Successful)
             {
-                _currentChunk = index;
-                Console.Write("\rTransfering file: " + GetPercentage() + " %");
+                _currentChunk = index + 1;
+                RetryCount = 0;
+                WriteUserMessage("Transfering file: " + GetPercentage() + " %");
                 if (_currentChunk == _maxChunk)
                 {
+                    WriteUserMessage("\nSuccessful transfer\n");
                     this.Dispose();
                 }
 
@@ -186,7 +188,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <returns>Current percentage</returns>
         private int GetPercentage()
         {
-            return (int) Math.Ceiling((double) _currentChunk / _maxChunk * 100D);
+            return (int) (Math.Ceiling((double) _currentChunk / _maxChunk * 100D));
         }
 
         private bool Retry(ref uint index)
@@ -197,9 +199,16 @@ namespace Catalyst.Cli.FileTransfer
             }
             else
             {
+                WriteUserMessage($"Retrying Chunk: {index}, Retry Count: {RetryCount}");
+                RetryCount += 1;
                 index--;
                 return true;
             }
+        }
+
+        private void WriteUserMessage(string message)
+        {
+            Console.Write($"\r{message}");
         }
     }
 }

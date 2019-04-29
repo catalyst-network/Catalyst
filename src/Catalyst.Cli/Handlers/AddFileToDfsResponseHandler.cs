@@ -1,3 +1,4 @@
+using System;
 using Catalyst.Cli.FileTransfer;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -23,11 +24,21 @@ namespace Catalyst.Cli.Handlers
         {
             var deserialised = message.Payload.FromAnySigned<AddFileToDfsResponse>();
 
-            Guard.Argument(deserialised).NotNull();
+            Guard.Argument(deserialised).NotNull("Message cannot be null");
 
             AddFileToDfsResponseCode responseCode = (AddFileToDfsResponseCode) deserialised.ResponseCode[0];
 
-            CliFileTransfer.Instance.InitialiseFileTransferResponseCallback(responseCode);
+            switch (responseCode)
+            {
+                case AddFileToDfsResponseCode.Failed:
+                case AddFileToDfsResponseCode.Finished:
+                    Console.WriteLine($"Added file to DFS, FileHash: {deserialised.DfsHash}");
+                    break;
+
+                default:
+                    CliFileTransfer.Instance.InitialiseFileTransferResponseCallback(responseCode);
+                    break;
+            }
         }
     }
 }

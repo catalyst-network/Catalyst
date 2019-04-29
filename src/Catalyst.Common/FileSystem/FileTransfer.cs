@@ -25,9 +25,7 @@ using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Rpc;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Catalyst.Common.FileSystem
 {
@@ -36,18 +34,24 @@ namespace Catalyst.Common.FileSystem
     /// </summary>
     public sealed class FileTransfer : IFileTransfer
     {
+        /// <summary>The pending file transfers</summary>
         private readonly Dictionary<string, FileTransferInformation> _pendingFileTransfers;
 
+        /// <summary>The lock object</summary>
         private static readonly object _lockObject = new object();
 
+        /// <summary>Initializes a new instance of the <see cref="FileTransfer"/> class.</summary>
         public FileTransfer()
         {
             _pendingFileTransfers = new Dictionary<string, FileTransferInformation>();
         }
 
+        /// <summary>Initializes the transfer.</summary>
+        /// <param name="fileTransferInformation">The file transfer information.</param>
+        /// <returns>Response code</returns>
         public AddFileToDfsResponseCode InitializeTransfer(FileTransferInformation fileTransferInformation)
         {
-            var fileHash = fileTransferInformation.Hash;
+            var fileHash = fileTransferInformation.UniqueFileName;
 
             lock (_lockObject)
             {
@@ -72,11 +76,11 @@ namespace Catalyst.Common.FileSystem
                     {
                         lock (_lockObject)
                         {
-                            _pendingFileTransfers.Remove(fileTransferInformation.Hash);
+                            _pendingFileTransfers.Remove(fileTransferInformation.UniqueFileName);
                         }
 
-                        fileTransferInformation.CleanUpExpired();
-                        fileTransferInformation.OnExpired?.Invoke();
+                        fileTransferInformation.OnExpired?.Invoke(fileTransferInformation);
+                        fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
                     }
                 }, TimeSpan.FromSeconds((FileTransferConstants.ExpiryMinutes * 60) / 2), tokenSource.Token);
@@ -86,14 +90,18 @@ namespace Catalyst.Common.FileSystem
             }
         }
 
-        public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk)
+        /// <summary>Writes the chunk.</summary>
+        /// <param name="fileName">Unique name of the file.</param>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <param name="fileChunk">The file chunk.</param>
+        /// <returns></returns>
+        public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk, out FileTransferInformation fileTransferInformation)
         {
-            FileTransferInformation fileTransferInformation = null;
-
             lock (_lockObject)
             {
                 if (!_pendingFileTransfers.ContainsKey(fileName))
                 {
+                    fileTransferInformation = null;
                     return AddFileToDfsResponseCode.Expired;
                 }
 
@@ -101,17 +109,19 @@ namespace Catalyst.Common.FileSystem
             }
 
             // Chunks should be sequential
-            if (fileTransferInformation.CurrentChunk != chunkId - 1)
+            if (fileTransferInformation.CurrentChunk != chunkId - 1 || fileChunk.Length > FileTransferConstants.ChunkSize)
             {
                 return AddFileToDfsResponseCode.Error;
             }
 
             fileTransferInformation.WriteToStream(chunkId, fileChunk);
 
-            if (fileTransferInformation.MaxChunk == chunkId)
+            if (fileTransferInformation.IsComplete())
             {
-                fileTransferInformation.OnSuccess?.Invoke();
-                fileTransferInformation.Dispose();
+                lock (_lockObject)
+                {
+                    _pendingFileTransfers.Remove(fileTransferInformation.UniqueFileName);
+                }
             }
 
             return AddFileToDfsResponseCode.Successful;

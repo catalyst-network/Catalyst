@@ -49,6 +49,8 @@ using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Cli.FileTransfer;
 using Catalyst.Common.Rpc;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace Catalyst.Cli
 {
@@ -716,8 +718,11 @@ namespace Catalyst.Cli
                     return false;
                 } else
                 {
+                    var minLevel = Program.LogLevelSwitch.MinimumLevel;
+                    Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
                     ReturnUserMessage("Initialising File Transfer");
                     cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node, _peerIdentifier);
+                    Program.LogLevelSwitch.MinimumLevel = minLevel;
                 }
             }
 
