@@ -21,13 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Catalyst.Common.FileSystem
+namespace Catalyst.Node.Core.Modules.FileTransfer
 {
     /// <summary>
     /// The file transfer class
@@ -94,7 +94,7 @@ namespace Catalyst.Common.FileSystem
         /// <param name="fileName">Unique name of the file.</param>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <param name="fileChunk">The file chunk.</param>
-        /// <returns></returns>
+        /// <returns>Response code</returns>
         public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk, out FileTransferInformation fileTransferInformation)
         {
             lock (_lockObject)

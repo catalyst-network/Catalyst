@@ -31,18 +31,16 @@ using Serilog;
 using Catalyst.Common.Extensions;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Config;
-using Catalyst.Common.FileSystem;
 using System;
 using System.IO;
 using Catalyst.Common.Rpc;
-using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Node.Core.P2P.Messaging;
 using System.Net;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
 using Google.Protobuf;
-using NSubstitute.Extensions;
+using Catalyst.Node.Core.Modules.FileTransfer;
+using Catalyst.Common.FileTransfer;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -113,8 +111,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             try
             {
-                fileTransferInformation.RandomAccessStream.Seek(0, SeekOrigin.Begin);
-                var fileHash = _dfs.AddAsync(fileTransferInformation.RandomAccessStream.BaseStream, fileTransferInformation.FileName).Result;
+                string fileHash = null;
+                using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open))
+                {
+                    fileHash = _dfs.AddAsync(fileStream).Result;
+                }
+
                 responseCode = AddFileToDfsResponseCode.Successful;
                 fileTransferInformation.DfsHash = fileHash;
 

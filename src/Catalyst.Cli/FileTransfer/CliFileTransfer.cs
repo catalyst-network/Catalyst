@@ -1,12 +1,34 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using Catalyst.Common.Config;
-using Catalyst.Common.FileSystem;
+using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Rpc;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using System;
 using System.IO;
@@ -15,15 +37,22 @@ using System.Threading;
 
 namespace Catalyst.Cli.FileTransfer
 {
+    /// <summary>
+    /// Handles file transfer on the CLI
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
     public class CliFileTransfer : IDisposable
     {
         /// <summary>The instance</summary>
         private static CliFileTransfer _instance;
 
+        /// <summary>The current chunk</summary>
         private uint _currentChunk;
 
+        /// <summary>The maximum chunk</summary>
         private uint _maxChunk;
 
+        /// <summary>The RPC message factory</summary>
         private RpcMessageFactoryBase<TransferFileBytesRequest, RpcMessages> _rpcMessageFactory;
 
         /// <summary>Initializes a new instance of the <see cref="CliFileTransfer"/> class.</summary>
@@ -41,6 +70,8 @@ namespace Catalyst.Cli.FileTransfer
             return WaitHandle.WaitOne(TimeSpan.FromSeconds(FileTransferConstants.CliFileTransferWaitTime));
         }
 
+        /// <summary>Chunk write callback.</summary>
+        /// <param name="responseCode">The response code.</param>
         public void FileTransferCallback(AddFileToDfsResponseCode responseCode)
         {
             CurrentChunkResponse = responseCode;
@@ -55,6 +86,7 @@ namespace Catalyst.Cli.FileTransfer
             WaitHandle.Set();
         }
 
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
             WaitHandle.Reset();
@@ -71,6 +103,8 @@ namespace Catalyst.Cli.FileTransfer
         /// <value>The current chunk response.</value>
         public AddFileToDfsResponseCode CurrentChunkResponse { get; set; }
 
+        /// <summary>Gets or sets the wait handle.</summary>
+        /// <value>The wait handle.</value>
         public ManualResetEvent WaitHandle { get; set; }
 
         /// <summary>Gets or sets the retry count.</summary>
@@ -87,6 +121,11 @@ namespace Catalyst.Cli.FileTransfer
             }
         }
 
+        /// <summary>Transfers the file.</summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="node">The node.</param>
+        /// <param name="peerIdentifier">The peer identifier.</param>
         public void TransferFile(string filePath, Guid correlationGuid, INodeRpcClient node, IPeerIdentifier peerIdentifier)
         {
             WaitHandle.Reset();
@@ -157,6 +196,9 @@ namespace Catalyst.Cli.FileTransfer
             }
         }
 
+        /// <summary>Processes the chunk response.</summary>
+        /// <param name="index">The index.</param>
+        /// <returns>True if success, False if failure</returns>
         private bool ProcessChunkResponse(ref uint index)
         {
             if (CurrentChunkResponse == AddFileToDfsResponseCode.Expired)
@@ -191,6 +233,9 @@ namespace Catalyst.Cli.FileTransfer
             return (int) (Math.Ceiling((double) _currentChunk / _maxChunk * 100D));
         }
 
+        /// <summary>Retries the specified index.</summary>
+        /// <param name="index">The index.</param>
+        /// <returns>True if retry success, false if retry failure</returns>
         private bool Retry(ref uint index)
         {
             if (RetryCount >= FileTransferConstants.MaxChunkRetryCount)
@@ -206,6 +251,8 @@ namespace Catalyst.Cli.FileTransfer
             }
         }
 
+        /// <summary>Writes the user message to console.</summary>
+        /// <param name="message">The message.</param>
         private void WriteUserMessage(string message)
         {
             Console.Write($"\r{message}");
