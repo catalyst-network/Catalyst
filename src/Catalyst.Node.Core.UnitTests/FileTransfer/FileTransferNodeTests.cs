@@ -212,11 +212,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var transferFileBytesHandler = new TransferFileBytesRequestHandler(_fileTransfer, senderPeerId, cache, _logger);
             transferFileBytesHandler.StartObserving(messageStream);
 
-            while (storedCrc32Value == -1)
-            {
-                Thread.Sleep(500);
-            }
-
             Assert.Equal(crc32OriginalValue, storedCrc32Value);
             File.Delete(fileToTransfer);
         }
