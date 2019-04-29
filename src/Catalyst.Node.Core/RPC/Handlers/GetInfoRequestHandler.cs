@@ -30,6 +30,8 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -76,13 +78,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     Formatting.Indented);
 
                 var response = new RpcMessageFactory<GetInfoResponse, RpcMessages>().GetMessage(
-                    new P2PMessageDto<GetInfoResponse, RpcMessages>(
+                    new MessageDto<GetInfoResponse, RpcMessages>(
                         RpcMessages.GetInfoResponse,
                         new GetInfoResponse
                         {
                             Query = serializedList
                         },
-                        (IPEndPoint) message.Context.Channel.RemoteAddress,
+                        new PeerIdentifier(message.Payload.PeerId), 
                         _peerIdentifier)
                 );
                 
