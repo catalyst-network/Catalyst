@@ -38,6 +38,8 @@ using Serilog;
 using System;
 using System.Net;
 using Catalyst.Node.Core.Modules.FileTransfer;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.P2P;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -48,7 +50,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private IFileTransfer _fileTransfer;
 
         /// <summary>The RPC message factory</summary>
-        private RpcMessageFactoryBase<TransferFileBytesResponse, RpcMessages> _rpcMessageFactory;
+        private RpcMessageFactory<TransferFileBytesResponse, RpcMessages> _rpcMessageFactory;
 
         /// <summary>The peer identifier</summary>
         private IPeerIdentifier _peerIdentifier;
@@ -61,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public TransferFileBytesRequestHandler(IFileTransfer fileTransfer, IPeerIdentifier peerIdentifier, IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger)
         {
             _fileTransfer = fileTransfer;
-            _rpcMessageFactory = new RpcMessageFactoryBase<TransferFileBytesResponse, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse, RpcMessages>();
             _peerIdentifier = peerIdentifier;
         }
 
@@ -88,10 +90,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
             TransferFileBytesResponse responseMessage = new TransferFileBytesResponse();
             responseMessage.ResponseCode = ByteString.CopyFrom((byte)responseCode);
 
-            var responseDto = _rpcMessageFactory.GetMessage(new P2PMessageDto<TransferFileBytesResponse, RpcMessages>(
+            var responseDto = _rpcMessageFactory.GetMessage(new MessageDto<TransferFileBytesResponse, RpcMessages>(
                 type: RpcMessages.TransferFileBytesResponse,
                 message: responseMessage,
-                destination: (IPEndPoint) message.Context.Channel.RemoteAddress,
+                recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier
             ));
             message.Context.Channel.WriteAndFlushAsync(responseDto);

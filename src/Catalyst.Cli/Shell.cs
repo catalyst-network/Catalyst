@@ -116,7 +116,8 @@ namespace Catalyst.Cli
                     ConnectOptions,
                     SignOptions,
                     VerifyOptions,
-                    PeerListOptions>(args)
+                    PeerListOptions,
+                    AddFileOnDfsOptions>(args)
                .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, AddFileOnDfsOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
@@ -737,6 +738,9 @@ namespace Catalyst.Cli
 
             var addFileOnDfsOptions = (AddFileOnDfsOptions) opts;
             var node = GetConnectedNode(addFileOnDfsOptions.Node);
+            var nodeConfig = GetNodeConfig(addFileOnDfsOptions.Node);
+            var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
+                nodeConfig.HostAddress, nodeConfig.Port);
 
             Guard.Argument(node).NotNull();
 
@@ -754,12 +758,12 @@ namespace Catalyst.Cli
                 request.FileSize = (ulong) fileStream.Length;
             }
 
-            var rpcMessageFactory = new RpcMessageFactoryBase<AddFileToDfsRequest, RpcMessages>();
+            var rpcMessageFactory = new RpcMessageFactory<AddFileToDfsRequest, RpcMessages>();
 
-            var requestMessage = rpcMessageFactory.GetMessage(new P2PMessageDto<AddFileToDfsRequest, RpcMessages>(
+            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<AddFileToDfsRequest, RpcMessages>(
                 type: RpcMessages.AddFileToDfsRequest,
                 message: request,
-                destination: (IPEndPoint) node.Channel.RemoteAddress,
+                recipient: nodePeerIdentifier,
                 sender: _peerIdentifier
             ));
 
@@ -783,7 +787,7 @@ namespace Catalyst.Cli
                     var minLevel = Program.LogLevelSwitch.MinimumLevel;
                     Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
                     ReturnUserMessage("Initialising File Transfer");
-                    cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node, _peerIdentifier);
+                    cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node, nodePeerIdentifier, _peerIdentifier);
                     Program.LogLevelSwitch.MinimumLevel = minLevel;
                 }
             }

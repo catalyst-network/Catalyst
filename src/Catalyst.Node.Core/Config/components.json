@@ -170,10 +170,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.FileSystem.FileTransfer, Catalyst.Common",
+            "type": "Catalyst.Node.Core.Modules.FileTransfer.FileTransfer",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.FileSystem.IFileTransfer, Catalyst.Common"
+                    "type": "Catalyst.Node.Core.Modules.FileTransfer.IFileTransfer"
                 }
             ],
             "instanceScope": "singleinstance"

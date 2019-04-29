@@ -25,6 +25,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -53,14 +54,14 @@ namespace Catalyst.Cli.FileTransfer
         private uint _maxChunk;
 
         /// <summary>The RPC message factory</summary>
-        private RpcMessageFactoryBase<TransferFileBytesRequest, RpcMessages> _rpcMessageFactory;
+        private RpcMessageFactory<TransferFileBytesRequest, RpcMessages> _rpcMessageFactory;
 
         /// <summary>Initializes a new instance of the <see cref="CliFileTransfer"/> class.</summary>
         public CliFileTransfer()
         {
             RetryCount = 0;
             WaitHandle = new ManualResetEvent(false);
-            _rpcMessageFactory = new RpcMessageFactoryBase<TransferFileBytesRequest, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesRequest, RpcMessages>();
         }
 
         /// <summary>Waits this instance.</summary>
@@ -125,8 +126,9 @@ namespace Catalyst.Cli.FileTransfer
         /// <param name="filePath">The file path.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="node">The node.</param>
+        /// <param name="nodePeerIdentifier">The node peer identifier</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        public void TransferFile(string filePath, Guid correlationGuid, INodeRpcClient node, IPeerIdentifier peerIdentifier)
+        public void TransferFile(string filePath, Guid correlationGuid, INodeRpcClient node, IPeerIdentifier nodePeerIdentifier, IPeerIdentifier peerIdentifier)
         {
             WaitHandle.Reset();
             
@@ -161,10 +163,10 @@ namespace Catalyst.Cli.FileTransfer
                         CorrelationFileName = correlationBytes
                     };
 
-                    var requestMessage = _rpcMessageFactory.GetMessage(new P2PMessageDto<TransferFileBytesRequest, RpcMessages>(
+                    var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto<TransferFileBytesRequest, RpcMessages>(
                         type: RpcMessages.TransferFileBytesRequest,
                         message: transferMessage,
-                        destination: (IPEndPoint) node.Channel.RemoteAddress,
+                        recipient: nodePeerIdentifier,
                         sender: peerIdentifier
                     ));
 

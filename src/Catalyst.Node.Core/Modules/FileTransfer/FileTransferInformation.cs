@@ -25,6 +25,7 @@ using Catalyst.Common.FileTransfer;
 using DotNetty.Transport.Channels;
 using System;
 using System.IO;
+using Catalyst.Common.Interfaces.P2P;
 
 namespace Catalyst.Node.Core.Modules.FileTransfer
 {
@@ -44,12 +45,13 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <param name="uniqueFileName">Temporary unique file name.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="maxChunk">The maximum chunk.</param>
-        public FileTransferInformation(IChannel reciepientChannel, string uniqueFileName, string fileName, uint maxChunk)
+        public FileTransferInformation(IPeerIdentifier recepientIdentifier, IChannel reciepientChannel, string uniqueFileName, string fileName, uint maxChunk)
         {
             _tempPath = Path.GetTempPath() + uniqueFileName;
             _maxChunk = maxChunk;
             this.CurrentChunk = 0;
             this.ReciepientChannel = reciepientChannel;
+            this.RecepientIdentifier = recepientIdentifier;
             this.UniqueFileName = uniqueFileName;
             this.FileName = fileName;
         }
@@ -145,5 +147,9 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>Gets or sets the reciepient channel.</summary>
         /// <value>The reciepient channel.</value>
         public IChannel ReciepientChannel { get; set; }
+
+        /// <summary>Gets or sets the recepient identifier.</summary>
+        /// <value>The recepient identifier.</value>
+        public IPeerIdentifier RecepientIdentifier { get; set; }
     }
 }
