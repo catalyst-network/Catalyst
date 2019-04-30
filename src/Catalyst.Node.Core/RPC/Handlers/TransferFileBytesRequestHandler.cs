@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Rpc;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -36,7 +35,6 @@ using Dawn;
 using Google.Protobuf;
 using Serilog;
 using System;
-using System.Net;
 using Catalyst.Node.Core.Modules.FileTransfer;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
@@ -44,16 +42,16 @@ using Catalyst.Common.P2P;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public class TransferFileBytesRequestHandler : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
-            IRpcRequestHandler
+        IRpcRequestHandler
     {
         /// <summary>The file transfer</summary>
-        private IFileTransfer _fileTransfer;
+        private readonly IFileTransfer _fileTransfer;
 
         /// <summary>The RPC message factory</summary>
-        private RpcMessageFactory<TransferFileBytesResponse, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactory<TransferFileBytesResponse, RpcMessages> _rpcMessageFactory;
 
         /// <summary>The peer identifier</summary>
-        private IPeerIdentifier _peerIdentifier;
+        private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
         /// <param name="fileTransfer">The file transfer.</param>
@@ -79,16 +77,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
             {
                 Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-                Guid correlationId = new Guid(deserialised.CorrelationFileName.ToByteArray());
-                responseCode = _fileTransfer.WriteChunk(correlationId.ToString(), deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray(), out fileTransferInformation);
-            } catch(Exception e)
+                var correlationId = new Guid(deserialised.CorrelationFileName.ToByteArray());
+                fileTransferInformation = _fileTransfer.GetFileTransferInformation(correlationId.ToString());
+                responseCode = _fileTransfer.WriteChunk(correlationId.ToString(), deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
+            }
+            catch (Exception e)
             {
                 Logger.Error(e.ToString());
                 responseCode = AddFileToDfsResponseCode.Error;
             }
 
-            TransferFileBytesResponse responseMessage = new TransferFileBytesResponse();
-            responseMessage.ResponseCode = ByteString.CopyFrom((byte)responseCode);
+            TransferFileBytesResponse responseMessage = new TransferFileBytesResponse
+            {
+                ResponseCode = ByteString.CopyFrom((byte) responseCode)
+            };
 
             var responseDto = _rpcMessageFactory.GetMessage(new MessageDto<TransferFileBytesResponse, RpcMessages>(
                 type: RpcMessages.TransferFileBytesResponse,

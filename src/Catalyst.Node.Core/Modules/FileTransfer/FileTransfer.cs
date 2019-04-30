@@ -96,9 +96,9 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <param name="chunkId">The chunk identifier.</param>
         /// <param name="fileChunk">The file chunk.</param>
         /// <returns>Response code</returns>
-        public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk, out FileTransferInformation fileTransferInformation)
+        public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk)
         {
-            fileTransferInformation = GetFileTransferInformation(fileName);
+            FileTransferInformation fileTransferInformation = GetFileTransferInformation(fileName);
             if (fileTransferInformation == null)
             {
                 return AddFileToDfsResponseCode.Expired;

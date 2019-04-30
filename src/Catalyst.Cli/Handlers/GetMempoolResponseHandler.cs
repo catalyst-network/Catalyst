@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -66,13 +67,21 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">An object of GetMempoolResponse</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
+            Guard.Argument(message).NotNull("The message cannot be null");
+
+            Logger.Debug("GetMempoolResponseHandler starting ...");
+
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
 
-                foreach (var encodedTx in deserialised.Info.Values)
+                Guard.Argument(deserialised, nameof(deserialised)).NotNull("The GetMempoolResponse cannot be null")
+                   .Require(d => d.Mempool != null,
+                        d => $"{nameof(deserialised)} must have a valid Mempool.");
+
+                for (var i = 0; i < deserialised.Mempool.Count; i++)
                 {
-                    _output.WriteLine($"t{deserialised.Info.Values.GetEnumerator().Current}: {encodedTx},");
+                    _output.WriteLine($"tx{i}: {deserialised.Mempool[i]},");
                 }
             }
             catch (Exception ex)
@@ -80,10 +89,6 @@ namespace Catalyst.Cli.Handlers
                 Logger.Error(ex,
                     "Failed to handle GetMempoolResponse after receiving message {0}", message);
                 _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
             }
         }
     }

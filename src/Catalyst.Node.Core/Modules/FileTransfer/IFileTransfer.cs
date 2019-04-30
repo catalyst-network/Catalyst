@@ -18,7 +18,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <param name="fileChunk">The file chunk.</param>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns>Writing chunk response code</returns>
-        AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk, out FileTransferInformation fileTransferInformation);
+        AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk);
 
         /// <summary>Gets the file transfer information.</summary>
         /// <param name="key">The unique file name.</param>

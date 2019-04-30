@@ -55,11 +55,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IFileTransfer _fileTransfer;
         private readonly IIpfsEngine _ipfsEngine;
-        private readonly Cid _cid;
-        private readonly IFileSystemNode _fileSystemNode;
-
-        public static List<object[]> QueryContents;
-
         private AddFileToDfsRequestHandler _handler;
 
         public FileTransferNodeTests()
@@ -73,15 +68,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
             _logger = Substitute.For<ILogger>();
-            var hashBits = Guid.NewGuid().ToByteArray().Concat(new byte[16]).ToArray();
-            _cid = new Cid
-            {
-                Encoding = "base64",
-                Hash = new MultiHash(IpfsDfs.HashAlgorithm, hashBits)
-            };
-
-            _fileSystemNode = Substitute.For<IFileSystemNode>();
-            _fileSystemNode.Id.ReturnsForAnyArgs(_cid);
         }
 
         [Fact]
@@ -128,7 +114,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var uniqueFileKey = _fileTransfer.Keys.ToList().Single();
 
             var fileTransferInformation = _fileTransfer.GetFileTransferInformation(uniqueFileKey);
-            _fileTransfer.GetFileTransferInformation(uniqueFileKey).OnExpired += delegate (FileTransferInformation information) { expiredDelegateHit = true; };
+            _fileTransfer.GetFileTransferInformation(uniqueFileKey).OnExpired += delegate (FileTransferInformation info) { expiredDelegateHit = true; };
             Thread.Sleep((FileTransferConstants.ExpiryMinutes * 60 * 1000) + 1000);
             bool fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
 
@@ -159,7 +145,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var reciepient = PeerIdHelper.GetPeerId("reciepient");
 
             var senderPeerId = new PeerIdentifier(sender);
-            var reciepientPeerId = new PeerIdentifier(reciepient);
 
             var uniqueFileKey = Guid.NewGuid();
 
@@ -174,7 +159,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             long storedCrc32Value = -1;
 
             //Create a response object and set its return value
-            var request = new AddFileToDfsRequest()
+            var request = new AddFileToDfsRequest
             {
                 Node = "node1",
                 FileName = fileToTransfer,

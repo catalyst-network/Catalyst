@@ -30,7 +30,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
     /// <summary>
     /// The file task helper
     /// </summary>
-    public class FileTaskHelper
+    public static class FileTaskHelper
     {
         /// <summary>Runs the specified action.</summary>
         /// <param name="action">The action.</param>
@@ -41,10 +41,12 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(period, cancellationToken);
+                await Task.Delay(period, cancellationToken).ConfigureAwait(false);
 
                 if (!cancellationToken.IsCancellationRequested)
+                {
                     action();
+                }
             }
         }
 

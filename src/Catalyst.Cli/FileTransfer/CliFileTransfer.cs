@@ -54,7 +54,7 @@ namespace Catalyst.Cli.FileTransfer
         private uint _maxChunk;
 
         /// <summary>The RPC message factory</summary>
-        private RpcMessageFactory<TransferFileBytesRequest, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactory<TransferFileBytesRequest, RpcMessages> _rpcMessageFactory;
 
         /// <summary>Initializes a new instance of the <see cref="CliFileTransfer"/> class.</summary>
         public CliFileTransfer()
@@ -267,7 +267,7 @@ namespace Catalyst.Cli.FileTransfer
 
         /// <summary>Writes the user message to console.</summary>
         /// <param name="message">The message.</param>
-        private void WriteUserMessage(string message)
+        private static void WriteUserMessage(string message)
         {
             Console.Write($"\r{message}");
         }
