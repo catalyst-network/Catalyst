@@ -92,9 +92,9 @@ namespace Catalyst.Cli.UnitTests
             };
 
             var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
-
+            
             var mempoolList = new List<string>();
-
+            
             foreach (var tx in txEncodedLst)
             {
                 mempoolList.Add(Encoding.Default.GetString(tx));
@@ -109,13 +109,13 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
-
+            
             var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
                 new MessageDto<GetMempoolResponse, RpcMessages>(
                     RpcMessages.GetMempoolRequest,
                     new GetMempoolResponse
                     {
-                        Mempool = { txList }
+                        Mempool = {txList}
                     },
                     PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                     PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
@@ -125,7 +125,7 @@ namespace Catalyst.Cli.UnitTests
 
             _handler = new GetMempoolResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
-
+            
             _output.Received(txList.Count).WriteLine(Arg.Any<string>());
         }
 

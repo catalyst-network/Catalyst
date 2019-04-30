@@ -64,28 +64,28 @@ namespace Catalyst.Node.Core.RPC.Handlers
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Guard.Argument(message).NotNull();
-
+            
             Logger.Debug("GetMempoolRequestHandler starting ...");
-
+            
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolRequest>();
 
                 Guard.Argument(deserialised).NotNull("The shell GetMempoolRequest cannot be null.");
-
+                
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
-
+                
                 var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
                     new MessageDto<GetMempoolResponse, RpcMessages>(
                         RpcMessages.GetMempoolRequest,
                         new GetMempoolResponse
                         {
-                            Mempool = { GetMempoolContent() }
+                            Mempool = {GetMempoolContent()}
                         },
-                        new PeerIdentifier(message.Payload.PeerId),
+                        new PeerIdentifier(message.Payload.PeerId), 
                         _peerIdentifier)
                 );
-
+                
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }
             catch (Exception ex)

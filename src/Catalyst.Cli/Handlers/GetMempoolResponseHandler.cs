@@ -68,17 +68,17 @@ namespace Catalyst.Cli.Handlers
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Guard.Argument(message).NotNull("The message cannot be null");
-
+            
             Logger.Debug("GetMempoolResponseHandler starting ...");
-
+            
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
-
+                
                 Guard.Argument(deserialised, nameof(deserialised)).NotNull("The GetMempoolResponse cannot be null")
                    .Require(d => d.Mempool != null,
                         d => $"{nameof(deserialised)} must have a valid Mempool.");
-
+                
                 for (var i = 0; i < deserialised.Mempool.Count; i++)
                 {
                     _output.WriteLine($"tx{i}: {deserialised.Mempool[i]},");

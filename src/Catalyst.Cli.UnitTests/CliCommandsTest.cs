@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Config;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -53,6 +54,7 @@ namespace Catalyst.Cli.UnitTests
 
             var nodeRpcClient = Substitute.For<INodeRpcClient>();
             nodeRpcClient.Channel.Returns(channel);
+            nodeRpcClient.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
 
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             nodeRpcClientFactory
