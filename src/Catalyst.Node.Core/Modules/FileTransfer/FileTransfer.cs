@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
                     else if (fileTransferInformation.IsExpired())
                     {
                         Remove(fileTransferInformation.UniqueFileName);
-                        fileTransferInformation.OnExpired?.Invoke(fileTransferInformation);
+                        fileTransferInformation.ExecuteOnExpired();
                         fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
                     }

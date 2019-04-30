@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             if (fileTransferInformation != null && fileTransferInformation.IsComplete())
             {
                 fileTransferInformation.Dispose();
-                fileTransferInformation.OnSuccess?.Invoke(fileTransferInformation);
+                fileTransferInformation.ExecuteOnSuccess();
                 fileTransferInformation.Delete();
             }
         }

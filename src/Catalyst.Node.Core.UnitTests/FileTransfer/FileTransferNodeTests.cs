@@ -43,6 +43,9 @@ using System.Threading;
 using Catalyst.Common.FileTransfer;
 using System.IO;
 using Catalyst.Cli.FileTransfer;
+using Catalyst.Common.FileSystem;
+using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using ICSharpCode.SharpZipLib.Checksum;
@@ -63,9 +66,11 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _fileTransfer = new Node.Core.Modules.FileTransfer.FileTransfer();
 
-            _ipfsEngine = Substitute.For<IIpfsEngine>();
-            var fileSystem = Substitute.For<IFileSystemApi>();
-            _ipfsEngine.FileSystem.Returns(fileSystem);
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.SeedServers.Returns(new[] {"seed1.server.va", "island.domain.tv"});
+            var passwordReader = Substitute.For<IPasswordReader>();
+            passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            _ipfsEngine = new IpfsEngine(passwordReader, peerSettings, new FileSystem(), _logger);
 
             _logger = Substitute.For<ILogger>();
         }
@@ -133,7 +138,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         {
             var fileToTransfer = Path.GetTempPath() + Guid.NewGuid().ToString();
             INodeRpcClient fakeNode = Substitute.For<INodeRpcClient>();
-
             if (File.Exists(fileToTransfer))
             {
                 File.Delete(fileToTransfer);

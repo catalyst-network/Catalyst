@@ -107,14 +107,24 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
             this.RandomAccessStream.Close();
             this.RandomAccessStream.Dispose();
         }
+        
+        /// <summary>Executes the on expired.</summary>
+        public void ExecuteOnExpired()
+        {
+            OnExpired?.Invoke(this);
+        }
 
-        /// <summary>Gets or sets the expired callback.</summary>
-        /// <value>Expired callback.</value>
-        public Action<FileTransferInformation> OnExpired { get; set; }
+        /// <summary>Executes the on success.</summary>
+        public void ExecuteOnSuccess()
+        {
+            OnSuccess?.Invoke(this);
+        }
 
-        /// <summary>Gets or sets the success callback.</summary>
-        /// <value>Success callback.</value>
-        public Action<FileTransferInformation> OnSuccess { get; set; }
+        /// <summary>Occurs when [on expired].</summary>
+        public event FileTransferDelegate OnExpired;
+
+        /// <summary>Occurs when [on success].</summary>
+        public event FileTransferDelegate OnSuccess;
 
         /// <summary>Gets or sets the current chunk.</summary>
         /// <value>The current chunk.</value>
@@ -151,5 +161,9 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>Gets or sets the recepient identifier.</summary>
         /// <value>The recepient identifier.</value>
         public IPeerIdentifier RecepientIdentifier { get; set; }
+
+        /// <summary>File transfer delegate</summary>
+        /// <param name="fileTransferInformation">The file transfer information.</param>
+        public delegate void FileTransferDelegate(FileTransferInformation fileTransferInformation);
     }
 }

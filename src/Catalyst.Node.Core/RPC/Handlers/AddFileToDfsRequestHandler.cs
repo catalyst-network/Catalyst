@@ -115,7 +115,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 string fileHash = null;
                 using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open))
                 {
-                    fileHash = _dfs.AddAsync(fileStream).Result;
+                    fileHash = _dfs.AddAsync(fileStream, fileTransferInformation.FileName).Result;
                 }
 
                 responseCode = AddFileToDfsResponseCode.Successful;
