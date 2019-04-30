@@ -223,6 +223,7 @@ namespace Catalyst.Cli
             {
                 return OnAddFileOnDfsMessage(opts);
             }
+
             return false;
         }
 
@@ -783,13 +784,15 @@ namespace Catalyst.Cli
             {
                 ReturnUserMessage("Timeout - No response recieved from node");
                 return false;
-            } else
+            }
+            else
             {
-                if(cliFileTransfer.InitialiseFileTransferResponse != AddFileToDfsResponseCode.Successful)
+                if (cliFileTransfer.InitialiseFileTransferResponse != AddFileToDfsResponseCode.Successful)
                 {
                     ReturnUserMessage("Error initialising file transfer, Node Response: " + cliFileTransfer.InitialiseFileTransferResponse);
                     return false;
-                } else
+                }
+                else
                 {
                     var minLevel = Program.LogLevelSwitch.MinimumLevel;
                     Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
