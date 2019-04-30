@@ -107,13 +107,15 @@ namespace Catalyst.Cli
                     ConnectOptions,
                     SignOptions,
                     VerifyOptions,
-                    PeerListOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, bool>(
+                    PeerListOptions,
+                    RemovePeerOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, RemovePeerOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
                     (VerifyOptions opts) => OnVerifyCommands(opts),
                     (PeerListOptions opts) => OnPeerListCommands(opts),
+                    (RemovePeerOptions opts) => OnRemovePeerCommands(opts),
                     errs => false);
         }
 
@@ -197,6 +199,19 @@ namespace Catalyst.Cli
             if (opts.Node.Length > 0)
             {
                 return OnListPeerNodes(opts);
+            }
+
+            return false;
+        }
+
+        /// <summary>Called when [remove peer commands].</summary>
+        /// <param name="opts">The options.</param>
+        /// <returns></returns>
+        private bool OnRemovePeerCommands(RemovePeerOptions opts)
+        {
+            if (opts.Node.Length > 0 && opts.Ip.Length > 0 && opts.PublicKey.Length > 0)
+            {
+                return OnRemovePeer(opts);
             }
 
             return false;
@@ -480,12 +495,12 @@ namespace Catalyst.Cli
         protected override bool OnGetConfig(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
-            
+
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull("Node cannot be null. The shell must be able to connect to a valid node to be able to send the request.");
-            
+
             var nodeConfig = GetNodeConfig(nodeId);
             try
             {
@@ -499,7 +514,7 @@ namespace Catalyst.Cli
                         new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
                         _peerIdentifier)
                 );
-                
+
                 node.SendMessage(request);
             }
             catch (Exception e)
@@ -521,6 +536,42 @@ namespace Catalyst.Cli
             throw new NotImplementedException();
         }
 
+        /// <summary>Called when [remove peer].</summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected override bool OnRemovePeer(object args)
+        {
+            Guard.Argument(args).NotNull().Compatible<RemovePeerOptions>();
+
+            var removePeerOptions = (RemovePeerOptions) args;
+            var node = GetConnectedNode(removePeerOptions.Node);
+            var nodeConfig = GetNodeConfig(removePeerOptions.Node);
+
+            Guard.Argument(node).NotNull();
+
+            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest, RpcMessages>();
+
+            IPAddress ip = IPAddress.Parse(removePeerOptions.Ip);
+            
+            var request = new RemovePeerRequest()
+            {
+                PeerIp = ByteString.CopyFrom(ip.GetAddressBytes()),
+                PublicKey = ByteString.CopyFrom(removePeerOptions.PublicKey.ToBytesForRLPEncoding())
+            };
+            
+            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<RemovePeerRequest, RpcMessages>
+            (
+                type: RpcMessages.RemovePeerRequest,
+                message: request,
+                recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                sender: _peerIdentifier
+            ));
+
+            node.SendMessage(requestMessage).Wait();
+
+            return true;
+        }
+
         /// <summary>
         /// Handles the command <code>get -m [node-name]</code>.  The method makes sure first the CLI is connected to
         /// the node specified in the command and then creates a <see cref="GetMempoolRequest"/> object and sends it in a
@@ -535,11 +586,11 @@ namespace Catalyst.Cli
             var options = (GetInfoOptions) opts;
             var node = GetConnectedNode(options.NodeId);
             var nodeConfig = GetNodeConfig(options.NodeId);
-            
+
             Guard.Argument(node).NotNull("The shell must be able to connect to a valid node to be able to send the request.");
 
             try
-            {   
+            {
                 var request = new RpcMessageFactory<GetMempoolRequest, RpcMessages>().GetMessage(
                     new MessageDto<GetMempoolRequest, RpcMessages>(
                         RpcMessages.GetMempoolRequest,
@@ -723,7 +774,7 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
-            
+
             return true;
         }
     }

@@ -138,4 +138,44 @@ namespace Catalyst.Cli
                 new Example("Displays peer list for the specified node.", new PeerListOptions {Node = "node1"})
             };
     }
+
+    /// <summary>
+    /// Class contains the options for the peer list command
+    /// </summary>
+    [Verb("removepeer", HelpText = "removes a peer")]
+    class RemovePeerOptions
+    {
+        /// <summary>
+        /// Gets or sets the node.
+        /// </summary>
+        /// <value>
+        /// The node.
+        /// </value>
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
+
+        /// <summary>Gets or sets the public key.</summary>
+        /// <value>The public key.</value>
+        [Option('k', "publickey", HelpText = "The peer public key")]
+        public string PublicKey { get; set; }
+
+        /// <summary>Gets or sets the ip.</summary>
+        /// <value>The ip.</value>
+        [Option('i', "ip", HelpText = "The peer IP")]
+        public string Ip { get; set; }
+
+        /// <summary>
+        /// Gets the examples.
+        /// </summary>
+        /// <value>
+        /// The examples.
+        /// </value>
+        [Usage(ApplicationAlias = "")]
+        public static IEnumerable<Example> Examples =>
+            new List<Example>
+            {
+                new Example("Removes a peer from the specified node.",
+                    new RemovePeerOptions() {Ip = "127.0.0.1", Node = "node1", PublicKey = "302a300506032b657003"})
+            };
+    }
 }

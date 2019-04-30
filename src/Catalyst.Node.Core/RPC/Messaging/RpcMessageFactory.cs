@@ -88,6 +88,16 @@ namespace Catalyst.Node.Core.Rpc.Messaging
             {
                 return BuildTellMessage(dto);
             }
+
+            if (RpcMessages.RemovePeerRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.RemovePeerResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
             
             throw new ArgumentException("unknown message type");
         }

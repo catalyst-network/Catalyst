@@ -155,6 +155,11 @@ namespace Catalyst.Common.Shell
         /// <returns></returns>
         protected abstract bool OnListPeerNodes(Object args);
 
+        /// <summary>Called when [remove peer].</summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected abstract bool OnRemovePeer(object args);
+
         /// <summary>
         ///     Prints stats about the mempool implementation.
         /// </summary>
