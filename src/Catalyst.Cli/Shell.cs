@@ -524,18 +524,23 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
 
-            var nodeId = ((GetInfoOptions) opts).NodeId;
+            var options = (GetInfoOptions) opts;
+            var node = GetConnectedNode(options.NodeId);
+            var nodeConfig = GetNodeConfig(options.NodeId);
+            
+            Guard.Argument(node).NotNull("The shell must be able to connect to a valid node to be able to send the request.");
 
-            var node = GetConnectedNode(nodeId);
-            Guard.Argument(node).NotNull();
-
-            //if the node is connected and there are no other errors then send the get info request to the server
             try
-            {
-                //send the message to the server by writing it to the channel
-                var request = new GetMempoolRequest();
+            {   
+                var request = new RpcMessageFactory<GetMempoolRequest, RpcMessages>().GetMessage(
+                    new MessageDto<GetMempoolRequest, RpcMessages>(
+                        RpcMessages.GetMempoolRequest,
+                        new GetMempoolRequest(),
+                        recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                        _peerIdentifier)
+                );
 
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request);
             }
             catch (Exception e)
             {
