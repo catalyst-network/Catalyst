@@ -107,7 +107,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
             this.RandomAccessStream.Close();
             this.RandomAccessStream.Dispose();
         }
-        
+
         /// <summary>Executes the on expired.</summary>
         public void ExecuteOnExpired()
         {

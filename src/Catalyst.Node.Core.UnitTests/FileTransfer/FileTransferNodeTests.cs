@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var sender = PeerIdHelper.GetPeerId("sender");
 
             //Create a response object and set its return value
-            var request = new AddFileToDfsRequest()
+            var request = new AddFileToDfsRequest
             {
                 Node = "node1",
                 FileName = "Test.dat",
@@ -125,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var uniqueFileKey = _fileTransfer.Keys.ToList().Single();
 
             var fileTransferInformation = _fileTransfer.GetFileTransferInformation(uniqueFileKey);
-            _fileTransfer.GetFileTransferInformation(uniqueFileKey).OnExpired += delegate(FileTransferInformation info) { expiredDelegateHit = true; };
+            _fileTransfer.GetFileTransferInformation(uniqueFileKey).OnExpired += delegate { expiredDelegateHit = true; };
             Thread.Sleep((FileTransferConstants.ExpiryMinutes * 60 * 1000) + 1000);
             bool fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
 

@@ -35,6 +35,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Threading;
+using Dawn;
 
 namespace Catalyst.Cli.FileTransfer
 {
@@ -199,7 +200,9 @@ namespace Catalyst.Cli.FileTransfer
             int bufferSize = (int) (endPos - startPos);
             byte[] chunk = new byte[bufferSize];
             fileStream.Position = startPos;
-            fileStream.Read(chunk, 0, bufferSize);
+
+            int bytesRead = 0;
+            while ((bytesRead += fileStream.Read(chunk, 0, bufferSize - bytesRead)) < bufferSize) { }
 
             var transferMessage = new TransferFileBytesRequest
             {
