@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -36,19 +35,20 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Ipfs.CoreApi;
-using Ipfs;
 using Catalyst.Common.P2P;
 using System.Threading;
 using Catalyst.Common.FileTransfer;
 using System.IO;
 using Catalyst.Cli.FileTransfer;
+using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using ICSharpCode.SharpZipLib.Checksum;
+using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer
 {
@@ -62,12 +62,17 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
         public FileTransferNodeTests()
         {
+            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
+               .Build(), "FileTransferNodeTests");
+
+            var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _fileTransfer = new Node.Core.Modules.FileTransfer.FileTransfer();
+            _fileTransfer = new Core.Modules.FileTransfer.FileTransfer();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.SeedServers.Returns(new[] {"seed1.server.va", "island.domain.tv"});
             var passwordReader = Substitute.For<IPasswordReader>();
             passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _ipfsEngine = new IpfsEngine(passwordReader, peerSettings, new FileSystem(), _logger);
@@ -202,6 +207,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var transferFileBytesHandler = new TransferFileBytesRequestHandler(_fileTransfer, senderPeerId, cache, _logger);
             transferFileBytesHandler.StartObserving(messageStream);
 
+            Assert.NotNull(fileTransferInformation.DfsHash);
             Assert.Equal(crc32OriginalValue, storedCrc32Value);
             File.Delete(fileToTransfer);
         }
