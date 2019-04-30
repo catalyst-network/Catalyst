@@ -48,7 +48,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
         public static readonly string KeyChainDefaultKeyType = "ed25519";
 
         private readonly Ipfs.Engine.IpfsEngine _ipfsEngine;
-        private readonly SecureString _passphrase;
 
         static IpfsEngine() { global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
 
@@ -58,8 +57,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
                .Require(p => p.SeedServers != null && p.SeedServers.Count > 0,
                     p => $"{nameof(peerSettings)} needs to specify at least one seed server.");
 
-            _passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
-            _ipfsEngine = new Ipfs.Engine.IpfsEngine("abcd".ToCharArray());
+            var passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
+            _ipfsEngine = new Ipfs.Engine.IpfsEngine(passphrase);
             _ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
             _ipfsEngine.Options.Repository.Folder = Path.Combine(
                 fileSystem.GetCatalystHomeDir().FullName,
@@ -125,7 +124,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
             //TODO: find out why this leaves the build server hanging on the test step
             //_ipfsEngine?.Dispose();
-            _passphrase?.Dispose();
         }
 
         public void Dispose()
