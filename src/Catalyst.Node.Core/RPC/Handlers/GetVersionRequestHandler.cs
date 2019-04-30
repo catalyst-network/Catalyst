@@ -22,16 +22,22 @@
 #endregion
 
 using System;
+using System.Net;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Util;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
+using Catalyst.Common.P2P;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -39,37 +45,36 @@ namespace Catalyst.Node.Core.RPC.Handlers
         : CorrelatableMessageHandlerBase<VersionRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
-        private readonly PeerId _peerId;
+        private readonly IPeerIdentifier _peerIdentifier;
 
         public GetVersionRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IMessageCorrelationCache messageCorrelationCache)
             : base(messageCorrelationCache, logger)
         {
-            _peerId = peerIdentifier.PeerId;
+            _peerIdentifier = peerIdentifier;
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Guard.Argument(message).NotNull();
+            Guard.Argument(message).NotNull("Received message cannot be null");
             
             Logger.Debug("received message of type VersionRequest");
+            
             try
             {
-                var deserialised = message.Payload.FromAnySigned<VersionRequest>();
+                var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
+                    new MessageDto<VersionResponse, RpcMessages>(
+                        RpcMessages.GetVersionRequest,
+                        new VersionResponse
+                        {
+                            Version = NodeUtil.GetVersion()
+                        }, 
+                        new PeerIdentifier(message.Payload.PeerId),
+                        _peerIdentifier)
+                ); 
                 
-                Guard.Argument(deserialised).NotNull();
-                
-                Logger.Debug("message content is {0}", deserialised);
-                
-                var response = new VersionResponse
-                {
-                    Version = NodeUtil.GetVersion()
-                };
-
-                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
-                
-                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+                message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
