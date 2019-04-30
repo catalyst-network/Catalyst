@@ -73,8 +73,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 Value = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3".ToHexBuffer()
             };
 
-            //TODO: find out why this leaves the build server hanging on the test step
-            //_ipfsEngine.StartAsync().GetAwaiter().GetResult();
+            _ipfsEngine.StartAsync().Wait();
 
             logger.Information("IPFS engine started.");
         }
@@ -122,8 +121,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 return;
             }
 
-            //TODO: find out why this leaves the build server hanging on the test step
-            //_ipfsEngine?.Dispose();
+            _ipfsEngine?.Dispose();
         }
 
         public void Dispose()

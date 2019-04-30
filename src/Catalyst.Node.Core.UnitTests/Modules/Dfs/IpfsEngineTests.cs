@@ -41,7 +41,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         private readonly IPeerSettings _peerSettings;
         private readonly IPasswordReader _passwordReader;
         private readonly ILogger _logger;
-        private IpfsEngine _ipfsEngine;
 
         public IpfsEngineTests(ITestOutputHelper output) : base(output)
         {
@@ -55,8 +54,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         [Fact]
         public void Constructor_should_read_seed_servers_addresses_from_peerSettings()
         {
-            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
-            _ipfsEngine.Options.Discovery.BootstrapPeers.Count().Should().Be(2);
+            using (var ipfs = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
+            {
+                ipfs.Options.Discovery.BootstrapPeers.Count().Should().Be(2);
+
+            }
         }
 
         [Fact]
@@ -71,29 +73,30 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         [Fact]
         public void Constructor_should_read_a_password()
         {
-            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
-            _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePassword();
+            using (var ipfs = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
+            {
+                _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePassword();
+            }
         }
 
         [Fact]
         public void Constructor_should_use_ipfs_subfolder()
         {
-            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
-            _ipfsEngine.Options.Repository.Folder.Should()
+            using (var ipfs = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
+            {
+                ipfs.Options.Repository.Folder.Should()
                .Be(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, Core.Config.Constants.IpfsSubFolder));
+            }
         }
 
         [Fact]
         public void Constructor_should_use_ipfs_private_network()
         {
-            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
-            _ipfsEngine.Options.Swarm.PrivateNetworkKey.Should().NotBeNull();
+            using (var ipfs = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
+            {
+                ipfs.Options.Swarm.PrivateNetworkKey.Should().NotBeNull();
+            }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            _ipfsEngine?.Dispose();
-        }
     }
 }
