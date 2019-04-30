@@ -138,4 +138,33 @@ namespace Catalyst.Cli
                 new Example("Displays peer list for the specified node.", new PeerListOptions {Node = "node1"})
             };
     }
+
+    /// <summary>
+    /// Class contains the options for the peer count command
+    /// </summary>
+    [Verb("peercount", HelpText = "Gets the peer count")]
+    class PeerCountOptions
+    {
+        /// <summary>
+        /// Gets or sets the node.
+        /// </summary>
+        /// <value>
+        /// The node.
+        /// </value>
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
+
+        /// <summary>
+        /// Gets the examples.
+        /// </summary>
+        /// <value>
+        /// The examples.
+        /// </value>
+        [Usage(ApplicationAlias = "")]
+        public static IEnumerable<Example> Examples =>
+            new List<Example>
+            {
+                new Example("Displays peer count for the specified node.", new PeerListOptions {Node = "node1"})
+            };
+    }
 }
