@@ -66,10 +66,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IDfs _dfs;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestHandler"/> class.</summary>
+        /// <param name="dfs">The DFS.</param>
+        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <param name="fileTransfer">The file transfer.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="dfs">The DFS.</param>
-        public AddFileToDfsRequestHandler(IDfs dfs, IPeerIdentifier peerIdentifier, IFileTransfer fileTransfer, IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger)
+        public AddFileToDfsRequestHandler(IDfs dfs,
+            IPeerIdentifier peerIdentifier,
+            IFileTransfer fileTransfer,
+            IMessageCorrelationCache correlationCache,
+            ILogger logger) : base(correlationCache, logger)
         {
             _rpcMessageFactory = new RpcMessageFactory<AddFileToDfsResponse, RpcMessages>();
             _fileTransfer = fileTransfer;
@@ -85,9 +91,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-            uint chunkSize = (uint) Math.Max(1, (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
+            uint chunkSize = (uint) Math.Max(1,
+                (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
 
-            FileTransferInformation fileTransferInformation = new FileTransferInformation(new PeerIdentifier(message.Payload.PeerId), message.Context.Channel, message.Payload.CorrelationId.ToGuid().ToString(), deserialised.FileName, chunkSize);
+            FileTransferInformation fileTransferInformation = new FileTransferInformation(
+                new PeerIdentifier(message.Payload.PeerId),
+                message.Context.Channel,
+                message.Payload.CorrelationId.ToGuid().ToString(),
+                deserialised.FileName, chunkSize);
             fileTransferInformation.OnSuccess += OnSuccess;
 
             AddFileToDfsResponseCode responseCode;

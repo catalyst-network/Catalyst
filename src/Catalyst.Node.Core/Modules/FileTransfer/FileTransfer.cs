@@ -70,7 +70,6 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
 
                 var tokenSource = new CancellationTokenSource();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 FileTaskHelper.Run(() =>
                 {
                     if (fileTransferInformation.IsComplete())
@@ -84,8 +83,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
                         fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
                     }
-                }, TimeSpan.FromSeconds((FileTransferConstants.ExpiryMinutes * 60) / 2), tokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }, TimeSpan.FromSeconds((FileTransferConstants.ExpiryMinutes * 60) / 2), tokenSource.Token).ConfigureAwait(false);
 
                 return AddFileToDfsResponseCode.Successful;
             }

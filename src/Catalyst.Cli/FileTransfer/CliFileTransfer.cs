@@ -162,7 +162,7 @@ namespace Catalyst.Cli.FileTransfer
                         bool retrySuccess = Retry(ref i);
                         if (!retrySuccess)
                         {
-                            WriteUserMessage("Error transfering file. Node Timeout");
+                            WriteUserMessage("Error transferring file. Node Timeout");
                             break;
                         }
                     }
@@ -171,7 +171,7 @@ namespace Catalyst.Cli.FileTransfer
                         bool processSuccess = ProcessChunkResponse(ref i);
                         if (!processSuccess)
                         {
-                            WriteUserMessage("Error transfering file. Node Response: " + CurrentChunkResponse);
+                            WriteUserMessage("Error transferring file. Node Response: " + CurrentChunkResponse);
                             break;
                         }
                     }
@@ -226,7 +226,7 @@ namespace Catalyst.Cli.FileTransfer
             {
                 _currentChunk = index + 1;
                 RetryCount = 0;
-                WriteUserMessage("Transfering file: " + GetPercentage() + " %");
+                WriteUserMessage("Transferring file: " + GetPercentage() + " %");
                 if (_currentChunk == _maxChunk)
                 {
                     WriteUserMessage("\nSuccessful transfer\n");
