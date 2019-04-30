@@ -23,13 +23,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -76,10 +81,17 @@ namespace Catalyst.Cli.UnitTests
         public void RpcClient_Can_Handle_GetVersionResponse(string version)
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            var response = new VersionResponse
-            {
-                Version = version
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
+            
+            var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
+                new P2PMessageDto<VersionResponse, RpcMessages>(
+                    RpcMessages.GetVersionRequest,
+                    new VersionResponse
+                    {
+                        Version = version
+                    }, 
+                    PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender"))
+            );
 
             var messageStream = CreateStreamWithMessage(response);
 
