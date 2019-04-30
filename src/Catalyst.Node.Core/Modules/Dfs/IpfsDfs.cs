@@ -31,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public class IpfsDfs : IDfs, IDisposable
+    public class IpfsDfs : IDfs
     {
         public static readonly string HashAlgorithm = "blake2b-256";
 
@@ -92,18 +92,5 @@ namespace Catalyst.Node.Core.Modules.Dfs
             return await _ipfsEngine.FileSystem.ReadFileAsync(id, cancellationToken);
         }
 
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _ipfsEngine.Dispose();
-            }
-        }
     }
 }
