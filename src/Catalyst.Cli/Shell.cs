@@ -604,10 +604,8 @@ namespace Catalyst.Cli
         public override bool OnVerifyMessage(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
-            
             //get the message to verify, the address/public key who signed it, and the signature 
             var verifyOptions = (VerifyOptions) opts;
-            
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
@@ -631,7 +629,6 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
-            
             return true;
         }
 
