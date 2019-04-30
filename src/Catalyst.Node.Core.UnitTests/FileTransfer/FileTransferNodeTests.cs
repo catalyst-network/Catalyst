@@ -74,6 +74,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         public void Node_Initialize_File_Transfer()
         {
             var sender = PeerIdHelper.GetPeerId("sender");
+
             //Create a response object and set its return value
             var request = new AddFileToDfsRequest()
             {
@@ -114,7 +115,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var uniqueFileKey = _fileTransfer.Keys.ToList().Single();
 
             var fileTransferInformation = _fileTransfer.GetFileTransferInformation(uniqueFileKey);
-            _fileTransfer.GetFileTransferInformation(uniqueFileKey).OnExpired += delegate (FileTransferInformation info) { expiredDelegateHit = true; };
+            _fileTransfer.GetFileTransferInformation(uniqueFileKey).OnExpired += delegate(FileTransferInformation info) { expiredDelegateHit = true; };
             Thread.Sleep((FileTransferConstants.ExpiryMinutes * 60 * 1000) + 1000);
             bool fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
 
@@ -130,7 +131,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         [InlineData(100000L)]
         public void Verify_File_Integrity_On_Transfer(long byteSize)
         {
-            
             var fileToTransfer = Path.GetTempPath() + Guid.NewGuid().ToString();
             INodeRpcClient fakeNode = Substitute.For<INodeRpcClient>();
 
@@ -176,7 +176,8 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             FileTransferInformation fileTransferInformation =
                 _fileTransfer.GetFileTransferInformation(uniqueFileKey.ToString());
-            fileTransferInformation.OnSuccess += information => {
+            fileTransferInformation.OnSuccess += information =>
+            {
                 crc32.Reset();
                 crc32.Update(File.ReadAllBytes(information.TempPath));
                 storedCrc32Value = crc32.Value;
