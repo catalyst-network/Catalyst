@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Cli.FileTransfer;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
@@ -43,10 +44,17 @@ namespace Catalyst.Cli.Handlers
     public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IMessageCorrelationCache>,
         IRpcResponseHandler
     {
+        private IUserOutput _userOutput;
+
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger) { }
+        public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
+            ILogger logger,
+            IUserOutput userOutput) : base(correlationCache, logger)
+        {
+            _userOutput = userOutput;
+        }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
@@ -62,7 +70,7 @@ namespace Catalyst.Cli.Handlers
             {
                 case AddFileToDfsResponseCode.Failed:
                 case AddFileToDfsResponseCode.Finished:
-                    Console.WriteLine($"Added file to DFS, FileHash: {deserialised.DfsHash}");
+                    _userOutput.WriteLine($"Added file to DFS, FileHash: {deserialised.DfsHash}");
                     break;
 
                 default:

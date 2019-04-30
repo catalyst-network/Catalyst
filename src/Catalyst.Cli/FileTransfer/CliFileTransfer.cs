@@ -35,6 +35,8 @@ using System;
 using System.IO;
 using System.Net;
 using System.Threading;
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Shell;
 using Dawn;
 
 namespace Catalyst.Cli.FileTransfer
@@ -57,11 +59,15 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactory<TransferFileBytesRequest, RpcMessages> _rpcMessageFactory;
 
+        /// <summary>The user output</summary>
+        private readonly IUserOutput _userOutput;
+
         /// <summary>Initializes a new instance of the <see cref="CliFileTransfer"/> class.</summary>
         public CliFileTransfer()
         {
             RetryCount = 0;
             WaitHandle = new ManualResetEvent(false);
+            _userOutput = new ConsoleUserOutput();
             _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesRequest, RpcMessages>();
         }
 
@@ -270,9 +276,9 @@ namespace Catalyst.Cli.FileTransfer
 
         /// <summary>Writes the user message to console.</summary>
         /// <param name="message">The message.</param>
-        private static void WriteUserMessage(string message)
+        private void WriteUserMessage(string message)
         {
-            Console.Write($"\r{message}");
+            _userOutput.Write($"\r{message}");
         }
     }
 }

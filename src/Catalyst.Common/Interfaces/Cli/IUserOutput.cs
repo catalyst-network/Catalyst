@@ -26,5 +26,7 @@ namespace Catalyst.Common.Interfaces.Cli
     public interface IUserOutput
     {
         void WriteLine(string content);
+
+        void Write(string content);
     }
 }
