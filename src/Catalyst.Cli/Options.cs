@@ -164,7 +164,7 @@ namespace Catalyst.Cli
         public static IEnumerable<Example> Examples =>
             new List<Example>
             {
-                new Example("Displays peer count for the specified node.", new PeerListOptions {Node = "node1"})
+                new Example("Displays peer count for the specified node.", new PeerCountOptions {Node = "node1"})
             };
     }
 }
