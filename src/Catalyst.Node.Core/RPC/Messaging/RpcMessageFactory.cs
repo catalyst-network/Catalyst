@@ -33,7 +33,7 @@ using Google.Protobuf;
 namespace Catalyst.Node.Core.Rpc.Messaging
 {
     public sealed class RpcMessageFactory<TMessage, TMessageType>
-        : MessageFactoryBase<TMessage, TMessageType> 
+        : MessageFactoryBase<TMessage, TMessageType>
         where TMessage : class, IMessage<TMessage>
         where TMessageType : class, IEnumerableMessageType
     {
@@ -43,37 +43,37 @@ namespace Catalyst.Node.Core.Rpc.Messaging
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetInfoResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.GetMempoolRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetMempoolResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.GetVersionRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetVersionResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.SignMessageRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.SignMessageResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
@@ -88,28 +88,27 @@ namespace Catalyst.Node.Core.Rpc.Messaging
             {
                 return BuildTellMessage(dto);
             }
-            
 
-            if(RpcMessages.AddFileToDfsRequest.Equals(dto.Type))
+            if (RpcMessages.AddFileToDfsRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
 
-            if(RpcMessages.AddFileToDfsResponse.Equals(dto.Type))
+            if (RpcMessages.AddFileToDfsResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
 
-            if(RpcMessages.TransferFileBytesRequest.Equals(dto.Type))
+            if (RpcMessages.TransferFileBytesRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
 
-            if(RpcMessages.TransferFileBytesResponse.Equals(dto.Type))
+            if (RpcMessages.TransferFileBytesResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             throw new ArgumentException("unknown message type");
         }
     }

@@ -46,10 +46,7 @@ namespace Catalyst.Cli.Handlers
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger)
-        {
-
-        }
+        public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger) { }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
