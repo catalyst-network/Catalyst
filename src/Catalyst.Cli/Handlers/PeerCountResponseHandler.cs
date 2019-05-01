@@ -71,7 +71,7 @@ namespace Catalyst.Cli.Handlers
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetPeerCountResponse>();
-                _output.WriteLine("Peer count Response: " + deserialised.PeerCount);
+                _output.WriteLine("Peer count: " + deserialised.PeerCount);
             }
             catch (Exception ex)
             {
