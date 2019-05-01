@@ -33,12 +33,15 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 
@@ -49,7 +52,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// </summary>
     /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerRequest, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
-    internal sealed class RemovePeerRequestHandler
+    public sealed class RemovePeerRequestHandler
         : CorrelatableMessageHandlerBase<RemovePeerRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
@@ -61,6 +64,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactory<RemovePeerResponse, RpcMessages> _rpcMessageFactory;
+
+        private readonly Expression<Func<Peer, bool>> searchQuery;
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestHandler"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
@@ -86,28 +91,29 @@ namespace Catalyst.Node.Core.RPC.Handlers
             Logger.Debug("Received message of type RemovePeerRequest");
             try
             {
-                bool peerDeleted = false;
+                UInt32 peerDeletedCount = 0;
+
                 var deserialised = message.Payload.FromAnySigned<RemovePeerRequest>();
+                var publicKeyIsEmpty = deserialised.PublicKey.IsEmpty;
 
                 Guard.Argument(deserialised).NotNull();
-
-                IPAddress ipAddress = new IPAddress(deserialised.PeerIp.ToByteArray());
-
-                Expression<Func<Peer, bool>> searchQuery = peer =>
-                    peer.PeerIdentifier.Ip.Equals(ipAddress) &&
-                    peer.PeerIdentifier.PublicKey == deserialised.PublicKey.ToByteArray();
-
-                var peerToDelete = _peerDiscovery.PeerRepository.GetAll().FirstOrDefault(searchQuery.Compile());
-
-                if (peerToDelete != null)
+                
+                var peersToDelete = _peerDiscovery.PeerRepository.GetAll().TakeWhile(peer =>
+                    peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(deserialised.PeerIp.ToByteArray()) &&
+                    (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(deserialised.PublicKey.ToByteArray()))).ToArray();
+                
+                if (peersToDelete.Length > 0)
                 {
-                    _peerDiscovery.PeerRepository.Delete(peerToDelete);
-                    peerDeleted = true;
+                    foreach (var peerToDelete in peersToDelete)
+                    {
+                        _peerDiscovery.PeerRepository.Delete(peerToDelete);
+                        peerDeletedCount += 1;
+                    }
                 }
 
                 var removePeerResponse = new RemovePeerResponse
                 {
-                    Deleted = peerDeleted
+                    DeletedCount = peerDeletedCount
                 };
 
                 var removePeerMessage = _rpcMessageFactory.GetMessage(new MessageDto<RemovePeerResponse, RpcMessages>(

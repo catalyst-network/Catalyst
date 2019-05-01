@@ -209,7 +209,7 @@ namespace Catalyst.Cli
         /// <returns></returns>
         private bool OnRemovePeerCommands(RemovePeerOptions opts)
         {
-            if (opts.Node.Length > 0 && opts.Ip.Length > 0 && opts.PublicKey.Length > 0)
+            if (opts.Node.Length > 0 && opts.Ip.Length > 0)
             {
                 return OnRemovePeer(opts);
             }
@@ -552,13 +552,15 @@ namespace Catalyst.Cli
             var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest, RpcMessages>();
 
             IPAddress ip = IPAddress.Parse(removePeerOptions.Ip);
-            
+
             var request = new RemovePeerRequest()
             {
-                PeerIp = ByteString.CopyFrom(ip.GetAddressBytes()),
-                PublicKey = ByteString.CopyFrom(removePeerOptions.PublicKey.ToBytesForRLPEncoding())
+                PeerIp = ByteString.CopyFrom(ip.To16Bytes()),
+                PublicKey = string.IsNullOrEmpty(removePeerOptions.PublicKey)
+                    ? ByteString.Empty
+                    : ByteString.CopyFrom(removePeerOptions.PublicKey.ToBytesForRLPEncoding())
             };
-            
+
             var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<RemovePeerRequest, RpcMessages>
             (
                 type: RpcMessages.RemovePeerRequest,
@@ -655,8 +657,10 @@ namespace Catalyst.Cli
         public override bool OnVerifyMessage(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
+
             //get the message to verify, the address/public key who signed it, and the signature 
             var verifyOptions = (VerifyOptions) opts;
+
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
@@ -680,6 +684,7 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
+
             return true;
         }
 

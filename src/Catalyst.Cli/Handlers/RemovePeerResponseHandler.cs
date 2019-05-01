@@ -47,7 +47,9 @@ namespace Catalyst.Cli.Handlers
             try
             {
                 var deserialised = message.Payload.FromAnySigned<RemovePeerResponse>();
-                _userOutput.WriteLine("Deleted peer: " + deserialised.Deleted);
+                var deletedCount = deserialised.DeletedCount;
+
+                _userOutput.WriteLine($"Deleted {deletedCount} peers");
             }
             catch (Exception ex)
             {

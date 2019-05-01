@@ -151,17 +151,17 @@ namespace Catalyst.Cli
         /// <value>
         /// The node.
         /// </value>
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.", Required = true)]
         public string Node { get; set; }
 
         /// <summary>Gets or sets the public key.</summary>
         /// <value>The public key.</value>
-        [Option('k', "publickey", HelpText = "The peer public key")]
+        [Option('k', "publickey", HelpText = "The peer public key", Required = false)]
         public string PublicKey { get; set; }
 
         /// <summary>Gets or sets the ip.</summary>
         /// <value>The ip.</value>
-        [Option('i', "ip", HelpText = "The peer IP")]
+        [Option('i', "ip", HelpText = "The peer IP", Required = true)]
         public string Ip { get; set; }
 
         /// <summary>
