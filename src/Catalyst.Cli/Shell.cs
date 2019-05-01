@@ -442,12 +442,22 @@ namespace Catalyst.Cli
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
-            Guard.Argument(node).NotNull();
+            Guard.Argument(node).NotNull("Node cannot be null. The shell must be able to connect to a valid node to be able to send the request.");
+
+            var nodeConfig = GetNodeConfig(nodeId);
 
             try
             {
-                //send the message to the server by writing it to the channel
-                var request = new VersionRequest();
+                var request = new RpcMessageFactory<VersionRequest, RpcMessages>().GetMessage(
+                    new MessageDto<VersionRequest, RpcMessages>(
+                        RpcMessages.GetVersionRequest,
+                        new VersionRequest
+                        {
+                            Query = true
+                        },
+                        new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                        _peerIdentifier)
+                );
 
                 node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
@@ -470,7 +480,7 @@ namespace Catalyst.Cli
         protected override bool OnGetConfig(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
-
+            
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
