@@ -97,10 +97,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            WaitHandle.Reset();
-            RetryCount = 0;
-            InitialiseFileTransferResponse = default;
-            CurrentChunkResponse = default;
+            Dispose(true);
         }
 
         /// <summary>Gets or sets the initialise file transfer response.</summary>
@@ -138,7 +135,7 @@ namespace Catalyst.Cli.FileTransfer
         public void TransferFile(string filePath, Guid correlationGuid, INodeRpcClient node, IPeerIdentifier nodePeerIdentifier, IPeerIdentifier peerIdentifier)
         {
             WaitHandle.Reset();
-            
+
             ByteString correlationBytes = ByteString.CopyFrom(correlationGuid.ToByteArray());
 
             using (FileStream fileStream = File.Open(filePath, FileMode.Open))
@@ -208,7 +205,7 @@ namespace Catalyst.Cli.FileTransfer
             fileStream.Position = startPos;
 
             int bytesRead = 0;
-            while ((bytesRead += fileStream.Read(chunk, 0, bufferSize - bytesRead)) < bufferSize) { }
+            while ((bytesRead += fileStream.Read(chunk, 0, bufferSize - bytesRead)) < bufferSize) ;
 
             var transferMessage = new TransferFileBytesRequest
             {
@@ -279,6 +276,20 @@ namespace Catalyst.Cli.FileTransfer
         private void WriteUserMessage(string message)
         {
             _userOutput.Write($"\r{message}");
+        }
+
+        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to
+        /// release only unmanaged resources.</param>
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                WaitHandle.Reset();
+                RetryCount = 0;
+                InitialiseFileTransferResponse = default;
+                CurrentChunkResponse = default;
+            }
         }
     }
 }

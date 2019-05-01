@@ -44,11 +44,12 @@ namespace Catalyst.Cli.Handlers
     public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IMessageCorrelationCache>,
         IRpcResponseHandler
     {
-        private IUserOutput _userOutput;
+        private readonly IUserOutput _userOutput;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="userOutput">The user output</param>
         public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
             IUserOutput userOutput) : base(correlationCache, logger)
