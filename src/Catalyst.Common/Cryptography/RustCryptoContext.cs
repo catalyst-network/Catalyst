@@ -23,19 +23,25 @@
 
 using System;
 using Catalyst.Common.Interfaces.Cryptography;
-using Cryptography.IWrapper.Types;
+using Cryptography.IWrapper.Interfaces;
 using Cryptography.IWrapper;
 
 namespace Catalyst.Common.Cryptography
 {
     public class RustCryptoContext : ICryptoContext
     {
-        public IPrivateKey GeneratePrivateKey() { return ; }
+        private static readonly IWrapper _wrapper = new CryptoWrapper();
+        public IPrivateKey GeneratePrivateKey() { return _wrapper.GenerateKey(); }
+
         public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob) { throw new NotImplementedException(); }
         public byte[] ExportPublicKey(IPublicKey key) { throw new NotImplementedException(); }
         public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob) { throw new NotImplementedException(); }
         public byte[] ExportPrivateKey(IPrivateKey key) { throw new NotImplementedException(); }
-        public byte[] Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data) { throw new NotImplementedException(); }
+
+        public byte[] Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
+        {
+            return _wrapper.StdSign(privateKey., data.ToArray());
+        }
         public bool Verify(IPublicKey key, ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature) { throw new NotImplementedException(); }
         public IPublicKey GetPublicKey(IPrivateKey key) { throw new NotImplementedException(); }
         public string AddressFromKey(IPublicKey key) { throw new NotImplementedException(); }

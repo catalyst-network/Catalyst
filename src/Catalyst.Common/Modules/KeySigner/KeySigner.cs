@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
+using Cryptography.IWrapper.Interfaces;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;

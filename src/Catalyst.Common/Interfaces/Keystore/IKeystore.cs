@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cryptography;
+using Cryptography.IWrapper.Interfaces;
 
 namespace Catalyst.Common.Interfaces.KeyStore
 {

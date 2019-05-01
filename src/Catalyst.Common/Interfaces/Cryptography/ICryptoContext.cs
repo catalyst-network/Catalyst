@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-
+using Cryptography.IWrapper.Interfaces;
 namespace Catalyst.Common.Interfaces.Cryptography
 {
     public interface ICryptoContext

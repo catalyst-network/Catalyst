@@ -30,8 +30,8 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.KeyStore;
 using Catalyst.Common.UnitTests.TestUtils;
+using Cryptography.IWrapper.Interfaces;
 using FluentAssertions;
-using NSec.Cryptography;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
@@ -45,7 +45,7 @@ namespace Catalyst.Common.UnitTests.Keystore
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
         private readonly IKeyStoreWrapper _keyStoreService;
-        private readonly NSecPrivateKeyWrapper _privateKey;
+        private readonly IPrivateKey _privateKey;
         private readonly byte[] _privateKeyBytes;
         private readonly string _fileName;
         private readonly string _password;
@@ -54,17 +54,13 @@ namespace Catalyst.Common.UnitTests.Keystore
         {
             //we cannot currently use a mock for CryptoContext because part of the interface uses the "in"
             //parameter modifier: https://github.com/castleproject/Core/issues/430
-            _context = new NSecCryptoContext();
+            _context = new RustCryptoContext();
 
             var logger = Substitute.For<ILogger>();
             _keyStoreService = Substitute.For<IKeyStoreWrapper>();
             _keystore = new LocalKeyStore(_context, _keyStoreService, FileSystem, logger);
 
-            _privateKey = new NSecPrivateKeyWrapper(new Key(SignatureAlgorithm.Ed25519,
-                new KeyCreationParameters
-                {
-                    ExportPolicy = KeyExportPolicies.AllowPlaintextExport
-                }));
+            _privateKey = _context.GeneratePrivateKey();
             _privateKeyBytes = _context.ExportPrivateKey(_privateKey);
             _fileName = "myKey.json";
             _password = "password123";

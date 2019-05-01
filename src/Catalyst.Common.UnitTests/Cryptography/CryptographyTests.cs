@@ -25,6 +25,8 @@ using System;
 using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
+using Cryptography.IWrapper.Interfaces;
+using Cryptography.IWrapper.Types;
 using FluentAssertions;
 using Xunit;
 
@@ -32,9 +34,16 @@ namespace Catalyst.Common.UnitTests.Cryptography
 {
     public sealed class CryptographyTests
     {
-        public CryptographyTests() { _context = new NSecCryptoContext(); }
+        public CryptographyTests() { _context = new RustCryptoContext(); }
 
         private readonly ICryptoContext _context;
+
+        [Fact]
+        public void TestGeneratePrivateKey()
+        {
+            var privateKey = _context.GeneratePrivateKey();
+            privateKey.Should().BeOfType(typeof(PrivateKey));
+        }
 
         [Fact]
         public void TestFailurePrivateKeyImport()
@@ -73,8 +82,9 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var signature = _context.Sign(key1, data);
 
             var key2 = _context.GeneratePrivateKey();
+            var publicKey2 = _context.GetPublicKey(key2);
 
-            _context.Verify(key2, data, signature)
+            _context.Verify(publicKey2, data, signature)
                .Should().BeFalse("signature should not verify with incorrect key");
         }
 
@@ -93,7 +103,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var privateKey = _context.GeneratePrivateKey();
             var blob = _context.ExportPrivateKey(privateKey);
 
-            IPublicKey importedPrivateKey = _context.ImportPrivateKey(blob);
+            IPrivateKey importedPrivateKey = _context.ImportPrivateKey(blob);
             importedPrivateKey.Should().NotBeNull("private key should be importable from a valid blob");
         }
 
@@ -110,9 +120,11 @@ namespace Catalyst.Common.UnitTests.Cryptography
         public void TestPublicKeyImport()
         {
             var privateKey = _context.GeneratePrivateKey();
-            var blob = _context.ExportPublicKey(privateKey);
+            var publicKey = _context.GetPublicKey(privateKey);
 
-            var publicKey = _context.ImportPublicKey(blob);
+            var blob = _context.ExportPublicKey(publicKey);
+
+            var publicKey2 = _context.ImportPublicKey(blob);
             publicKey.Should().NotBeNull("public key should be importable from a valid blob");
         }
 
@@ -120,10 +132,11 @@ namespace Catalyst.Common.UnitTests.Cryptography
         public void TestSigningVerification()
         {
             var privateKey = _context.GeneratePrivateKey();
+            var publicKey = _context.GetPublicKey(privateKey);
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
             var signature = _context.Sign(privateKey, data);
 
-            _context.Verify(privateKey, data, signature)
+            _context.Verify(publicKey, data, signature)
                .Should().BeTrue("signature generated with private key should verify with corresponding public key");
         }
 
@@ -131,9 +144,10 @@ namespace Catalyst.Common.UnitTests.Cryptography
         public void TestVerifyWithImportedPublicKey()
         {
             var privateKey = _context.GeneratePrivateKey();
+            var publicKey = _context.GetPublicKey(privateKey);
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
             var signature = _context.Sign(privateKey, data);
-            var blob = _context.ExportPublicKey(privateKey);
+            var blob = _context.ExportPublicKey(publicKey);
 
             var importedKey = _context.ImportPublicKey(blob);
             _context.Verify(importedKey, data, signature).Should()

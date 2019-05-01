@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var response = new SignMessageResponse
                 {
                     OriginalMessage = deserialised.Message,
-                    PublicKey = publicKey.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey).ToByteString(),
+                    PublicKey = publicKey.GetBytes().ToByteString(),
                     Signature = signature.ToByteString()
                 };
 
