@@ -34,17 +34,15 @@ namespace Catalyst.Common.IO.Messaging.Handlers
     /// <summary>
     ///     Message handler for Ask message where you want to manipulate reputation of the recipient depending if they respond.
     /// </summary>
-    /// <typeparam name="TProto"></typeparam>
+    /// <typeparam name="TProto">The message</typeparam>
     /// <typeparam name="TReputableCache"></typeparam>
-    /// <typeparam name="TRequest"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
-    public abstract class ReputableResponseHandlerBase<TProto, TReputableCache, TRequest, TResponse>
+    /// <typeparam name="TCounterpartMessage">The counterpart message to the TProto message</typeparam>
+    public abstract class ReputableResponseHandlerBase<TProto, TCounterpartMessage, TReputableCache>
         : CorrelatableMessageHandlerBase<TProto, TReputableCache>,
             IReputationAskHandler<TReputableCache>
-        where TProto : class, IMessage
+        where TProto : class, IMessage<TProto>
         where TReputableCache : IMessageCorrelationCache
-        where TRequest : class, IMessage<TRequest>
-        where TResponse : class, IMessage<TResponse>
+        where TCounterpartMessage : class, IMessage<TCounterpartMessage>
     {
         public TReputableCache ReputableCache { get; }
 
@@ -61,8 +59,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// <param name="message"></param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            // @TODO handle null response
-            ReputableCache.TryMatchResponse<TRequest, TResponse>(message.Payload);
+            ReputableCache.TryMatchResponse<TCounterpartMessage, TProto>(message.Payload);
         }
     }
 }
