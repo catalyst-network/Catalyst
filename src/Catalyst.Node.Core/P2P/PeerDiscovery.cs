@@ -52,7 +52,8 @@ namespace Catalyst.Node.Core.P2P
         public IList<string> SeedNodes { get; }
         public IList<IPEndPoint> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
-        private IDisposable _streamSubscription;
+        public IDisposable PingResponseMessageStream { get; private set; }
+        public IDisposable GetNeighbourResponseStream { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -119,15 +120,20 @@ namespace Catalyst.Node.Core.P2P
 
         public void StartObserving(IObservable<IChanneledMessage<AnySigned>> observer)
         {
-            _streamSubscription = observer
+            PingResponseMessageStream = observer
                .Where(m => m != null && m.Payload.TypeUrl == typeof(PingResponse)
                    .ShortenedProtoFullName()
-                ).Subscribe(PrintIt);
+                ).Subscribe(PingSubscriptionHandler);
+            
+            GetNeighbourResponseStream = observer
+               .Where(m => m != null && m.Payload.TypeUrl == typeof(PeerNeighborsResponse)
+                   .ShortenedProtoFullName()
+                ).Subscribe(PeerNeighbourSubscriptionHandler);
         }
 
-        private void PrintIt(IChanneledMessage<AnySigned> message)
+        public void PingSubscriptionHandler(IChanneledMessage<AnySigned> message)
         {
-            Logger.Information("peer discovery stream");
+            Logger.Information("processing ping message stream");
             var pingResponse = message.Payload.FromAnySigned<PingResponse>();
             PeerRepository.Add(new Peer
             {
@@ -136,6 +142,13 @@ namespace Catalyst.Node.Core.P2P
                 Reputation = 0
             });
 
+            Logger.Information(message.Payload.TypeUrl);
+        }
+        
+        public void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message)
+        {
+            Logger.Information("processing peer neighbour message stream");
+            var peerNeighborsResponse = message.Payload.FromAnySigned<PeerNeighborsResponse>();
             Logger.Information(message.Payload.TypeUrl);
         }
 
@@ -165,7 +178,7 @@ namespace Catalyst.Node.Core.P2P
             if (disposing)
             {
                 Logger.Debug($"Disposing {GetType().Name}");
-                _streamSubscription?.Dispose();
+                PingResponseMessageStream?.Dispose();
             }
         }
     }

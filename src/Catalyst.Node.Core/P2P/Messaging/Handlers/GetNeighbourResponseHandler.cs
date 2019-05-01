@@ -21,32 +21,27 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Network;
-using Catalyst.Common.P2P;
+using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
-using Microsoft.Extensions.Configuration;
+using Catalyst.Protocol.IPPN;
 using Serilog;
-using SharpRepository.Repository;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
-    public interface IPeerDiscovery : IMessageHandler
+    public sealed class GetNeighbourResponseHandler
+        : ReputableResponseHandlerBase<PeerNeighborsResponse, IReputableCache, PeerNeighborsRequest, PeerNeighborsResponse>,
+            IP2PMessageHandler
     {
-        IDisposable PingResponseMessageStream { get; }
-        IDisposable GetNeighbourResponseStream { get; }
-        IDns Dns { get; }
-        ILogger Logger { get; }
-        IList<string> SeedNodes { get; }
-        IList<IPEndPoint> Peers { get; }
-        IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(IList<string> seedServers);
-        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
-        void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message);
+        public GetNeighbourResponseHandler(IReputableCache reputableCache, ILogger logger) : base(reputableCache, logger) { }
+        
+        protected override void Handler(IChanneledMessage<AnySigned> message)
+        {
+            base.Handler(message);
+            Logger.Debug("received peer NeighbourResponse");
+            var deserialised = message.Payload.FromAnySigned<PeerNeighborsResponse>();
+        }
     }
 }

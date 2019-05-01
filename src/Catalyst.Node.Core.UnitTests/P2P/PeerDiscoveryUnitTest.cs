@@ -76,7 +76,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .Build();
         }
 
-        [Fact] public void ResolvesIPeerDiscoveryCorrectly()
+        [Fact]
+        public void ResolvesIPeerDiscoveryCorrectly()
         {
             ConfigureContainerBuilder(_config);
 
@@ -99,7 +100,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             }
         }
 
-        [Fact] public void CanParseDnsNodesFromConfig()
+        [Fact]
+        public void CanParseDnsNodesFromConfig()
         {
             var urlList = new List<string>();
             var domain1 = "seed1.catalystnetwork.io";
@@ -117,11 +119,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             peerDiscovery.SeedNodes.Should().Contain(urlList);
         }
 
-        [Fact] public async Task CanGetSeedNodesFromDns()
+        [Fact]
+        public async Task CanGetSeedNodesFromDns()
         {
             var urlList = new List<string>();
-            var domain1 = "seed1.catalystnetwork.io";
-            var domain2 = "seed1.catalystnetwork.io";
+            const string domain1 = "seed1.catalystnetwork.io";
+            const string domain2 = "seed1.catalystnetwork.io";
             urlList.Add(domain1);
             urlList.Add(domain2);
 
@@ -139,7 +142,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Fact]
-        public void CanReceiveEventsFromSubscribedStream()
+        public void CanReceivePingEventsFromSubscribedStream()
         {
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 

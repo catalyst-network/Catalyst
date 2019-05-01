@@ -23,7 +23,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
+using Autofac;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -37,19 +41,21 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
+using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
 {
-    public sealed class GetNeighbourRequestHandlerTests
+    public sealed class GetNeighbourRequestHandlerTests : ConfigFileBasedTest
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IReputableCache _subbedReputableCache;
         private readonly IRepository<Peer> _subbedPeerRepository;
         private readonly ILogger _subbedLogger;
 
-        public GetNeighbourRequestHandlerTests()
+        public GetNeighbourRequestHandlerTests(ITestOutputHelper output) : base(output)
         {
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
             _subbedReputableCache = Substitute.For<IReputableCache>();
@@ -78,7 +84,25 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             neighbourRequestHandler.Should().NotBeNull();
         }
         
-        // do a resolution from container test
+        [Fact]
+        public void CanResolveGetNeighbourRequestHandlerFromContainer()
+        {
+            var config = new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
+               .Build();
+            
+            ConfigureContainerBuilder(config, true, true);
+
+            var container = ContainerBuilder.Build();
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageHandler>>();
+                IEnumerable<IP2PMessageHandler> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourRequestHandler>();
+                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourRequestHandler));
+            }
+        }
 
         [Fact]
         public void CanHandlerGetNeighbourRequestHandlerCorrectly()
