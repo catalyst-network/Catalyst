@@ -39,5 +39,8 @@ namespace Catalyst.Common.FileTransfer
 
         /// <summary>The maximum chunk retry count</summary>
         public static readonly int MaxChunkRetryCount = 3;
+
+        /// <summary>The maximum chunk read tries</summary>
+        public static readonly int MaxChunkReadTries = 3;
     }
 }

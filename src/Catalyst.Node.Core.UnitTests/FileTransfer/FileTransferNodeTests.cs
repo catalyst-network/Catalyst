@@ -52,7 +52,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer
 {
-    public sealed class FileTransferNodeTests : IDisposable
+    public sealed class FileTransferNodeTests
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
@@ -210,11 +210,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             Assert.NotNull(fileTransferInformation.DfsHash);
             Assert.Equal(crc32OriginalValue, storedCrc32Value);
             File.Delete(fileToTransfer);
-        }
-
-        public void Dispose()
-        {
-            _handler.Dispose();
         }
     }
 }

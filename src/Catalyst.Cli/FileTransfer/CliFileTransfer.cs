@@ -204,15 +204,36 @@ namespace Catalyst.Cli.FileTransfer
             byte[] chunk = new byte[bufferSize];
             fileStream.Position = startPos;
 
+            int readTries = 0;
             int bytesRead = 0;
-            while ((bytesRead += fileStream.Read(chunk, 0, bufferSize - bytesRead)) < bufferSize) ;
+            bool readSuccess = false;
 
-            var transferMessage = new TransferFileBytesRequest
+            while ((bytesRead += fileStream.Read(chunk, 0, bufferSize - bytesRead)) < bufferSize)
             {
-                ChunkBytes = ByteString.CopyFrom(chunk),
-                ChunkId = chunkId,
-                CorrelationFileName = correlationBytes
-            };
+                readTries++;
+                if (readTries >= FileTransferConstants.MaxChunkReadTries)
+                {
+                    break;
+                }
+            }
+            
+            readSuccess = bytesRead == bufferSize;
+            TransferFileBytesRequest transferMessage = null;
+
+            if (readSuccess)
+            {
+                transferMessage = new TransferFileBytesRequest
+                {
+                    ChunkBytes = ByteString.CopyFrom(chunk),
+                    ChunkId = chunkId,
+                    CorrelationFileName = correlationBytes
+                };
+            }
+            else
+            {
+                _userOutput.WriteLine("Error transferring chunk: " + chunkId);
+            }
+
             return transferMessage;
         }
 
@@ -281,7 +302,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to
         /// release only unmanaged resources.</param>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
