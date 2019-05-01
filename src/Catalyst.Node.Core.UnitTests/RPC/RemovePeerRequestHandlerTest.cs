@@ -121,7 +121,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<RemovePeerRequest, RpcMessages>
             (
                 type: RpcMessages.RemovePeerRequest,
-                message: new RemovePeerRequest()
+                message: new RemovePeerRequest
                 {
                     PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
                     PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty

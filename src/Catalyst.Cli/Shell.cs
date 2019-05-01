@@ -553,7 +553,7 @@ namespace Catalyst.Cli
 
             IPAddress ip = IPAddress.Parse(removePeerOptions.Ip);
 
-            var request = new RemovePeerRequest()
+            var request = new RemovePeerRequest
             {
                 PeerIp = ByteString.CopyFrom(ip.To16Bytes()),
                 PublicKey = string.IsNullOrEmpty(removePeerOptions.PublicKey)

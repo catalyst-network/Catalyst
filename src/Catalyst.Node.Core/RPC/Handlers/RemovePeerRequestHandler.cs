@@ -64,9 +64,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactory<RemovePeerResponse, RpcMessages> _rpcMessageFactory;
-
-        private readonly Expression<Func<Peer, bool>> searchQuery;
-
+        
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestHandler"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerDiscovery">The peer discovery.</param>

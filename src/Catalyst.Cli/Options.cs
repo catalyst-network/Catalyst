@@ -175,7 +175,7 @@ namespace Catalyst.Cli
             new List<Example>
             {
                 new Example("Removes a peer from the specified node.",
-                    new RemovePeerOptions() {Ip = "127.0.0.1", Node = "node1", PublicKey = "302a300506032b657003"})
+                    new RemovePeerOptions {Ip = "127.0.0.1", Node = "node1", PublicKey = "302a300506032b657003"})
             };
     }
 }
