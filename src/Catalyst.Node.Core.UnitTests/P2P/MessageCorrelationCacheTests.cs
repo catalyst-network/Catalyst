@@ -106,6 +106,18 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .Select(r => r.Value).Should().AllBeEquivalentTo(0);
         }
 
+        [Fact] public void UncorrelatedMessage_should_decrease_reputation()
+        {
+            var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
+            var responseMatchingIndex1 = new PingResponse().ToAnySigned(
+                _peerIds[1].PeerId,
+                Guid.NewGuid());
+
+            var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingIndex1);
+            var reputationAfter = _reputationByPeerIdentifier[_peerIds[1]];
+            reputationAfter.Should().BeLessThan(reputationBefore);
+        }
+
         [Fact] public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
         {
             var responseMatchingNothing = new PingResponse().ToAnySigned(_peerIds[1].PeerId, Guid.NewGuid());

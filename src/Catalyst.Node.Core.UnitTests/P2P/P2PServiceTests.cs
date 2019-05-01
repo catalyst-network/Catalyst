@@ -115,27 +115,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Fact]
-        public void TestDerepNonCorrelatedMessage()
-        {
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
-            {
-                var fakeContext = Substitute.For<IChannelHandlerContext>();
-                var fakeChannel = Substitute.For<IChannel>();
-                var memoryCache = Substitute.For<IMemoryCache>();
-
-                var repCache = new P2PCorrelationCache(memoryCache, _logger, TimeSpan.FromSeconds(30));
-                
-                fakeContext.Channel.Returns(fakeChannel);
-                var channeledAny = new ChanneledAnySigned(fakeContext, new PingResponse().ToAnySigned(_pid.PeerId, _guid));
-                var observableStream = new[] {channeledAny}.ToObservable();
-
-                var handler = new PingResponseHandler(repCache, _logger);
-                handler.StartObserving(observableStream);
-            }
-        }
-
-        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {

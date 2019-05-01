@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             if (matched == null)
             {
                 _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId),
-                    -BaseReputationChange));
+                    -BaseReputationChange * 10));
                 return null;
             }
 
