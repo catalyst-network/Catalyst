@@ -512,8 +512,10 @@ namespace Catalyst.Cli
             Guard.Argument(node).NotNull("Node cannot be null. The shell must be able to connect to a valid node to be able to send the request.");
 
             var nodeConfig = GetNodeConfig(nodeId);
+            Guard.Argument(nodeConfig).NotNull("The node configuration cannot be null");
+
             try
-            {
+            {   
                 var request = new RpcMessageFactory<GetInfoRequest, RpcMessages>().GetMessage(
                     new MessageDto<GetInfoRequest, RpcMessages>(
                         RpcMessages.GetInfoRequest,
@@ -521,7 +523,7 @@ namespace Catalyst.Cli
                         {
                             Query = true
                         },
-                        new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                        new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
                         _peerIdentifier)
                 );
 
@@ -665,8 +667,10 @@ namespace Catalyst.Cli
         public override bool OnVerifyMessage(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
+
             //get the message to verify, the address/public key who signed it, and the signature 
             var verifyOptions = (VerifyOptions) opts;
+
             //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
@@ -690,6 +694,7 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
+
             return true;
         }
 
