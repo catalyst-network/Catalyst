@@ -157,7 +157,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        //[Fact(Skip = "test hanger")]
         [Fact(Skip = "test hanger")]
         public void RpcServer_Can_Handle_GetVersionRequest()
         {

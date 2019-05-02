@@ -133,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
-            await peerDiscovery.GetSeedNodesFromDns(urlList);
+            peerDiscovery.GetSeedNodesFromDns(urlList);
             peerDiscovery.Peers.Should().NotBeNullOrEmpty();
             peerDiscovery.Peers.Should().HaveCount(3);
             peerDiscovery.Peers.Should().NotContainNulls();

@@ -53,11 +53,11 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         public void CanInitMessageDtoCorrectly()
         {
             Assert.NotNull(_messageDto);
-            AssertionExtensions.Should((object) _messageDto).BeOfType(typeof(MessageDto<IMessage, P2PMessages>));
-            AssertionExtensions.Should((object) _messageDto.Type).BeEquivalentTo(P2PMessages.PingRequest);
-            AssertionExtensions.Should((object) _messageDto.Message).NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            AssertionExtensions.Should((object) _messageDto.Recipient).NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
-            AssertionExtensions.Should((object) _messageDto.Sender).NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            AssertionExtensions.Should(_messageDto).BeOfType(typeof(MessageDto<IMessage, P2PMessages>));
+            AssertionExtensions.Should(_messageDto.Type).BeEquivalentTo(P2PMessages.PingRequest);
+            AssertionExtensions.Should(_messageDto.Message).NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
+            AssertionExtensions.Should(_messageDto.Recipient).NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            AssertionExtensions.Should(_messageDto.Sender).NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }
 }

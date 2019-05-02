@@ -23,16 +23,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;

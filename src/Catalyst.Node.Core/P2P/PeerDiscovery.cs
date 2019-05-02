@@ -159,7 +159,7 @@ namespace Catalyst.Node.Core.P2P
             {
                 try
                 {
-                    await GetSeedNodesFromDns(SeedNodes).ConfigureAwait(false);
+                    GetSeedNodesFromDns(SeedNodes);
                 }
                 catch (Exception e)
                 {

@@ -25,7 +25,6 @@ using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
@@ -98,7 +97,6 @@ namespace Catalyst.Node.Core.Rpc.Messaging
             {
                 return BuildTellMessage(dto);
             }
-
 
             if (RpcMessages.RemovePeerRequest.Equals(dto.Type))
             {

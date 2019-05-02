@@ -32,7 +32,7 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class GetNeighbourResponseHandler
-        : ReputableResponseHandlerBase<PeerNeighborsResponse, IReputableCache, PeerNeighborsRequest, PeerNeighborsResponse>,
+        : ReputableResponseHandlerBase<PeerNeighborsResponse, PeerNeighborsRequest, IReputableCache>,
             IP2PMessageHandler
     {
         public GetNeighbourResponseHandler(IReputableCache reputableCache, ILogger logger) : base(reputableCache, logger) { }
