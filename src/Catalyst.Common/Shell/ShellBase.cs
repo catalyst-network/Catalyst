@@ -155,6 +155,21 @@ namespace Catalyst.Common.Shell
         /// <returns></returns>
         protected abstract bool OnListPeerNodes(Object args);
 
+        /// <summary>Called when [remove peer].</summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected abstract bool OnRemovePeer(object args);
+
+        /// <summary>Called when [get peer count].</summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected abstract bool OnGetPeerCount(Object args);
+
+        /// <summary>
+        ///     Prints stats about the mempool implementation.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
         /// Called when checking node peer reputation.
@@ -162,12 +177,6 @@ namespace Catalyst.Common.Shell
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
         protected abstract bool OnGetPeerNodeReputation(Object args);
-
-        /// <summary>
-        ///     Prints stats about the mempool implementation.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
         ///     Runs the main cli ui.

@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
@@ -32,7 +33,10 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -63,7 +67,6 @@ namespace Catalyst.Cli.UnitTests
 
             var configurationRoot = config.GetChildren().ToList().First();
 
-            //Create a response object and set its return value
             var query = JsonConvert.SerializeObject(configurationRoot.AsEnumerable(),
                 Formatting.Indented);
 
@@ -93,10 +96,17 @@ namespace Catalyst.Cli.UnitTests
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            var response = new GetInfoResponse
-            {
-                Query = query
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
+            
+            var response = new RpcMessageFactory<GetInfoResponse, RpcMessages>().GetMessage(
+                new MessageDto<GetInfoResponse, RpcMessages>(
+                    RpcMessages.GetInfoResponse,
+                    new GetInfoResponse
+                    {
+                        Query = query
+                    },
+                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender"))
+            );
             
             var messageStream = CreateStreamWithMessage(response);
 

@@ -30,59 +30,56 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Multiformats.Base;
-using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
 {
     /// <summary>
-    /// Handler responsible for handling the server's response for the GetMempool request.
+    /// Handler responsible for handling the server's response for the GetInfo request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public sealed class SignMessageResponseHandler
-        : CorrelatableMessageHandlerBase<SignMessageResponse, IMessageCorrelationCache>,
+    public sealed class GetInfoResponseHandler
+        : CorrelatableMessageHandlerBase<GetInfoResponse, IMessageCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
+        /// 
         /// </summary>
         /// <param name="output"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public SignMessageResponseHandler(IUserOutput output,
+        public GetInfoResponseHandler(IUserOutput output,
             IMessageCorrelationCache messageCorrelationCache,
-            ILogger logger)
+            ILogger logger) 
             : base(messageCorrelationCache, logger)
         {
             _output = output;
         }
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see />.
+        /// Handles the GetInfoResponse message.
         /// </summary>
-        /// <param name="message">An object of GetMempoolResponse</param>
+        /// <param name="message">An object of GetInfoResponse</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
+            Guard.Argument(message).NotNull("The message cannot be null");
+            
+            Logger.Debug("Handling GetInfoResponse");
+            
             try
             {
-                var deserialised = message.Payload.FromAnySigned<SignMessageResponse>();
-
-                var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray())[0].RLPData;
-
-                Guard.Argument(decodeResult).NotNull("The sign message response cannot be null.");
-
-                var originalMessage = decodeResult.ToStringFromRLPDecoded();
-
-                _output.WriteLine(
-                    $"Signature: {Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray())}\n" +
-                    $"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray())}\nOriginal Message: {originalMessage}");
+                var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
+                
+                Guard.Argument(deserialised).NotNull().Require(d => d.Query != null, d => $"{nameof(deserialised)} must have a valid configuration response.");
+                
+                _output.WriteLine(deserialised.Query);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle SignMessageResponseHandler after receiving message {0}", message);
+                    "Failed to handle GetInfoResponse after receiving message {0}", message);
                 _output.WriteLine(ex.Message);
             }
             finally

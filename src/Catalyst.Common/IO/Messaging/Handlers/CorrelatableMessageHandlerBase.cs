@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Serilog;
@@ -45,8 +46,17 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            Logger.Debug("handle message in correlatable handler");            
-            Handler(message);
+            bool nextHandler = true;
+            if (this is IReputationAskHandler<TCorrelator>)
+            {
+                nextHandler = ((IReputationAskHandler<TCorrelator>) this).CanExecuteNextHandler(message);
+            }
+
+            if (nextHandler)
+            {
+                Logger.Debug("handle message in correlatable handler");
+                Handler(message);
+            }
         }
     }
 }

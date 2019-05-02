@@ -33,9 +33,7 @@ using ILogger = Serilog.ILogger;
 using System.Collections.Generic;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Config;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Common.P2P;
-using System.Net;
 using Catalyst.Common.IO.Messaging;
 using Dawn;
 

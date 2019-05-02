@@ -31,6 +31,7 @@ using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
+using Dawn;
 
 namespace Catalyst.Cli.Handlers
 {
@@ -60,9 +61,18 @@ namespace Catalyst.Cli.Handlers
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
+            Guard.Argument(message).NotNull("The message cannot be null");
+            
+            Logger.Debug("GetVersionResponseHandler starting ...");
+            
             try
-            {    
+            {
                 var deserialised = message.Payload.FromAnySigned<VersionResponse>();
+                
+                Guard.Argument(deserialised, nameof(deserialised)).NotNull("The VersionResponse cannot be null")
+                   .Require(d => d.Version != null,
+                        d => $"{nameof(deserialised)} must have a valid Version.");
+                
                 _output.WriteLine($"Node Version: {deserialised.Version}");
             }
             catch (Exception ex)
