@@ -34,8 +34,10 @@ using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
@@ -90,10 +92,16 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("Hello&?!1253Catalyst")]
         public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {            
-            var request = new SignMessageRequest()
-            {
-                Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8),
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
+            var request = new RpcMessageFactory<SignMessageRequest, RpcMessages>().GetMessage(
+                new MessageDto<SignMessageRequest, RpcMessages>(
+                    RpcMessages.SignMessageRequest,
+                    new SignMessageRequest
+                    {
+                        Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
+                    }, 
+                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
+            );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

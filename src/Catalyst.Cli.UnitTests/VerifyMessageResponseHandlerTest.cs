@@ -76,7 +76,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var response = new RpcMessageFactory<VerifyMessageResponse, RpcMessages>().GetMessage(
                 new MessageDto<VerifyMessageResponse, RpcMessages>(
-                    RpcMessages.GetInfoResponse,
+                    RpcMessages.VerifyMessageResponse,
                     new VerifyMessageResponse
                     {
                         IsSignedByKey = isSignedbyNode
@@ -85,20 +85,13 @@ namespace Catalyst.Cli.UnitTests
                     PeerIdentifierHelper.GetPeerIdentifier("sender"))
             );
 
-            var messageStream = CreateStreamWithMessage(response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
             var cache = Substitute.For<IMessageCorrelationCache>();
 
             _handler = new VerifyMessageResponseHandler(_output, cache, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(1).WriteLine(isSignedbyNode.ToString());
-        }
-
-        private IObservable<IChanneledMessage<AnySigned>> CreateStreamWithMessage(AnySigned response)
-        {
-            var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
         }
 
         public void Dispose()

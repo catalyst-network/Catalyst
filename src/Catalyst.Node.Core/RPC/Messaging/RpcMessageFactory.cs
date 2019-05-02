@@ -99,13 +99,22 @@ namespace Catalyst.Node.Core.Rpc.Messaging
                 return BuildTellMessage(dto);
             }
 
-
             if (RpcMessages.RemovePeerRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
 
             if (RpcMessages.RemovePeerResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+            
+            if (RpcMessages.VerifyMessageRequest.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+            
+            if (RpcMessages.VerifyMessageResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
