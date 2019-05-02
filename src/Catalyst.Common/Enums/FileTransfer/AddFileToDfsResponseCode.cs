@@ -21,7 +21,7 @@
 
 #endregion
 
-namespace Catalyst.Common.Rpc
+namespace Catalyst.Common.Enums.FileTransfer
 {
     /// <summary>
     /// Response code sent by the node when a file is added to DFS

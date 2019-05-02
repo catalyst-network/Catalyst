@@ -21,14 +21,12 @@
 
 #endregion
 
-using System;
-using Catalyst.Cli.FileTransfer;
+using Catalyst.Common.Enums.FileTransfer;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -44,17 +42,18 @@ namespace Catalyst.Cli.Handlers
     public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IMessageCorrelationCache>,
         IRpcResponseHandler
     {
-        private readonly IUserOutput _userOutput;
+        /// <summary>The cli file transfer</summary>
+        private readonly ICliFileTransfer _cliFileTransfer;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="userOutput">The user output</param>
+        /// <param name="cliFileTransfer">The CLI file transfer</param>
         public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            IUserOutput userOutput) : base(correlationCache, logger)
+            ICliFileTransfer cliFileTransfer) : base(correlationCache, logger)
         {
-            _userOutput = userOutput;
+            _cliFileTransfer = cliFileTransfer;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -71,11 +70,11 @@ namespace Catalyst.Cli.Handlers
             {
                 case AddFileToDfsResponseCode.Failed:
                 case AddFileToDfsResponseCode.Finished:
-                    _userOutput.WriteLine($"Added file to DFS, FileHash: {deserialised.DfsHash}");
+                    _cliFileTransfer.ProcessCompletedCallback(responseCode, deserialised.DfsHash);
                     break;
 
                 default:
-                    CliFileTransfer.Instance.InitialiseFileTransferResponseCallback(responseCode);
+                    _cliFileTransfer.InitialiseFileTransferResponseCallback(responseCode);
                     break;
             }
         }

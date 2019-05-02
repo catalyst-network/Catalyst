@@ -25,11 +25,12 @@ using Catalyst.Common.FileTransfer;
 using DotNetty.Transport.Channels;
 using System;
 using System.IO;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
 
 namespace Catalyst.Node.Core.Modules.FileTransfer
 {
-    public class FileTransferInformation : IDisposable
+    public class FileTransferInformation : IDisposable, IFileTransferInformation
     {
         /// <summary>The time since last chunk</summary>
         private DateTime _timeSinceLastChunk;
@@ -40,18 +41,24 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>The maximum chunk</summary>
         private readonly uint _maxChunk;
 
+        /// <summary>Occurs when [on expired].</summary>
+        private event Action<IFileTransferInformation> _onExpired;
+
+        /// <summary>Occurs when [on success].</summary>
+        private event Action<IFileTransferInformation> _onSuccess;
+
         /// <summary>Initializes a new instance of the <see cref="FileTransferInformation"/> class.</summary>
-        /// <param name="reciepientChannel">The reciepient channel.</param>
+        /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="uniqueFileName">Temporary unique file name.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="maxChunk">The maximum chunk.</param>
-        public FileTransferInformation(IPeerIdentifier recepientIdentifier, IChannel reciepientChannel, string uniqueFileName, string fileName, uint maxChunk)
+        public FileTransferInformation(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, string uniqueFileName, string fileName, uint maxChunk)
         {
             _tempPath = Path.GetTempPath() + uniqueFileName + ".tmp";
             _maxChunk = maxChunk;
             this.CurrentChunk = 0;
-            this.ReciepientChannel = reciepientChannel;
-            this.RecepientIdentifier = recepientIdentifier;
+            this.RecipientChannel = recipientChannel;
+            this.RecipientIdentifier = recipientIdentifier;
             this.UniqueFileName = uniqueFileName;
             this.FileName = fileName;
         }
@@ -119,20 +126,38 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>Executes the on expired.</summary>
         public void ExecuteOnExpired()
         {
-            OnExpired?.Invoke(this);
+            if (_onExpired == null)
+            {
+                return;
+            }
+
+            foreach (var action in _onExpired.GetInvocationList())
+            {
+                action.DynamicInvoke(this);
+            }
         }
 
         /// <summary>Executes the on success.</summary>
         public void ExecuteOnSuccess()
         {
-            OnSuccess?.Invoke(this);
+            if (_onSuccess == null)
+            {
+                return;
+            }
+
+            foreach (var action in _onSuccess.GetInvocationList())
+            {
+                action.DynamicInvoke(this);
+            }
         }
+        
+        /// <summary>Gets the maximum chunk.</summary>
+        /// <value>The maximum chunk.</value>
+        public uint MaxChunk => _maxChunk;
 
-        /// <summary>Occurs when [on expired].</summary>
-        public event FileTransferDelegate OnExpired;
-
-        /// <summary>Occurs when [on success].</summary>
-        public event FileTransferDelegate OnSuccess;
+        /// <summary>Gets the temporary path.</summary>
+        /// <value>The temporary path.</value>
+        public string TempPath => _tempPath;
 
         /// <summary>Gets or sets the current chunk.</summary>
         /// <value>The current chunk.</value>
@@ -141,11 +166,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>Gets or sets the DFS hash.</summary>
         /// <value>The DFS hash.</value>
         public string DfsHash { get; set; }
-
-        /// <summary>Gets the maximum chunk.</summary>
-        /// <value>The maximum chunk.</value>
-        public uint MaxChunk { get => _maxChunk; }
-
+        
         /// <summary>Gets or sets the name of the unique file.</summary>
         /// <value>The name of the unique file.</value>
         public string UniqueFileName { get; set; }
@@ -153,25 +174,27 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>Gets or sets the random access stream.</summary>
         /// <value>The random access stream.</value>
         public BinaryWriter RandomAccessStream { get; set; }
-
-        /// <summary>Gets the temporary path.</summary>
-        /// <value>The temporary path.</value>
-        public string TempPath { get => _tempPath; }
-
+        
         /// <summary>Gets or sets the name of the file.</summary>
         /// <value>The name of the file.</value>
         public string FileName { get; set; }
 
-        /// <summary>Gets or sets the reciepient channel.</summary>
-        /// <value>The reciepient channel.</value>
-        public IChannel ReciepientChannel { get; set; }
+        /// <summary>Gets or sets the recipient channel.</summary>
+        /// <value>The recipient channel.</value>
+        public IChannel RecipientChannel { get; set; }
 
-        /// <summary>Gets or sets the recepient identifier.</summary>
-        /// <value>The recepient identifier.</value>
-        public IPeerIdentifier RecepientIdentifier { get; set; }
+        /// <summary>Gets or sets the recipient identifier.</summary>
+        /// <value>The recipient identifier.</value>
+        public IPeerIdentifier RecipientIdentifier { get; set; }
 
-        /// <summary>File transfer delegate</summary>
-        /// <param name="fileTransferInformation">The file transfer information.</param>
-        public delegate void FileTransferDelegate(FileTransferInformation fileTransferInformation);
+        public void AddExpiredCallback(Action<IFileTransferInformation> callback)
+        {
+            _onExpired += callback;
+        }
+
+        public void AddSuccessCallback(Action<IFileTransferInformation> callback)
+        {
+            _onSuccess += callback;
+        }
     }
 }

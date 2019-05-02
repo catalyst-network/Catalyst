@@ -22,11 +22,12 @@
 #endregion
 
 using Catalyst.Cli.FileTransfer;
+using Catalyst.Common.Enums.FileTransfer;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
@@ -39,13 +40,20 @@ namespace Catalyst.Cli.Handlers
     /// <seealso cref="CorrelatableMessageHandlerBase{TransferFileBytesResponse, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public class TransferFileBytesResponseHandler : CorrelatableMessageHandlerBase<TransferFileBytesResponse, IMessageCorrelationCache>,
-            IRpcResponseHandler
+        IRpcResponseHandler
     {
+        /// <summary>The CLI file transfer</summary>
+        private readonly ICliFileTransfer _cliFileTransfer;
+
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesResponseHandler(IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger)
+        /// <param name="cliFileTransfer">The CLI file transfer</param>
+        public TransferFileBytesResponseHandler(IMessageCorrelationCache correlationCache,
+            ILogger logger,
+            ICliFileTransfer cliFileTransfer) : base(correlationCache, logger)
         {
+            _cliFileTransfer = cliFileTransfer;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -56,7 +64,7 @@ namespace Catalyst.Cli.Handlers
 
             var responseCode = (AddFileToDfsResponseCode) deserialised.ResponseCode[0];
 
-            CliFileTransfer.Instance.FileTransferCallback(responseCode);
+            _cliFileTransfer.FileTransferCallback(responseCode);
         }
     }
 }

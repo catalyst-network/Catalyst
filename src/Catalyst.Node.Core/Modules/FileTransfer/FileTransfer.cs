@@ -22,11 +22,12 @@
 #endregion
 
 using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Interfaces.FileTransfer;
 
 namespace Catalyst.Node.Core.Modules.FileTransfer
 {
@@ -36,7 +37,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
     public sealed class FileTransfer : IFileTransfer
     {
         /// <summary>The pending file transfers</summary>
-        private readonly Dictionary<string, FileTransferInformation> _pendingFileTransfers;
+        private readonly Dictionary<string, IFileTransferInformation> _pendingFileTransfers;
 
         /// <summary>The lock object</summary>
         private static readonly object _lockObject = new object();
@@ -48,13 +49,13 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>Initializes a new instance of the <see cref="FileTransfer"/> class.</summary>
         public FileTransfer()
         {
-            _pendingFileTransfers = new Dictionary<string, FileTransferInformation>();
+            _pendingFileTransfers = new Dictionary<string, IFileTransferInformation>();
         }
 
         /// <summary>Initializes the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns>Response code</returns>
-        public AddFileToDfsResponseCode InitializeTransfer(FileTransferInformation fileTransferInformation)
+        public AddFileToDfsResponseCode InitializeTransfer(IFileTransferInformation fileTransferInformation)
         {
             var fileHash = fileTransferInformation.UniqueFileName;
 
@@ -96,7 +97,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <returns>Response code</returns>
         public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk)
         {
-            FileTransferInformation fileTransferInformation = GetFileTransferInformation(fileName);
+            IFileTransferInformation fileTransferInformation = GetFileTransferInformation(fileName);
             if (fileTransferInformation == null)
             {
                 return AddFileToDfsResponseCode.Expired;
@@ -121,7 +122,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>Gets the file transfer information.</summary>
         /// <param name="key">The unique file name.</param>
         /// <returns>File transfer information</returns>
-        public FileTransferInformation GetFileTransferInformation(string key)
+        public IFileTransferInformation GetFileTransferInformation(string key)
         {
             lock (_lockObject)
             {

@@ -153,6 +153,15 @@
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Cli.FileTransfer.CliFileTransfer, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.ICliFileTransfer, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
     ]
 }

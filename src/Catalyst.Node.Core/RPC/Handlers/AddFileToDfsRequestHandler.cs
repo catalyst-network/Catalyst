@@ -32,13 +32,14 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Config;
 using System;
 using System.IO;
-using Catalyst.Common.Rpc;
-using System.Net;
+using System.Threading.Tasks;
+using Catalyst.Common.Enums.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 using Catalyst.Node.Core.Modules.FileTransfer;
 using Catalyst.Common.FileTransfer;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
@@ -94,12 +95,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
             uint chunkSize = (uint) Math.Max(1,
                 (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
 
-            FileTransferInformation fileTransferInformation = new FileTransferInformation(
+            IFileTransferInformation fileTransferInformation = new FileTransferInformation(
                 new PeerIdentifier(message.Payload.PeerId),
                 message.Context.Channel,
                 message.Payload.CorrelationId.ToGuid().ToString(),
                 deserialised.FileName, chunkSize);
-            fileTransferInformation.OnSuccess += OnSuccess;
+            fileTransferInformation.AddSuccessCallback(OnSuccess);
 
             AddFileToDfsResponseCode responseCode;
             try
@@ -117,40 +118,40 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         /// <summary>Called when [success] on file transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        private void OnSuccess(FileTransferInformation fileTransferInformation)
+        private void OnSuccess(IFileTransferInformation fileTransferInformation)
         {
-            AddFileToDfsResponseCode responseCode = AddFileToDfsResponseCode.Finished;
-
-            try
+            var addFileResponseCode = Task.Run(() =>
             {
-                string fileHash = null;
-                using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open))
+                AddFileToDfsResponseCode responseCode = AddFileToDfsResponseCode.Finished;
+
+                try
                 {
-                    fileHash = _dfs.AddAsync(fileStream, fileTransferInformation.FileName).Result;
+                    string fileHash = null;
+                    using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open))
+                    {
+                        fileHash = _dfs.AddAsync(fileStream, fileTransferInformation.FileName).Result;
+                    }
+
+                    fileTransferInformation.DfsHash = fileHash;
+
+                    Logger.Information($"Added File Name {fileTransferInformation.FileName} to DFS, Hash: {fileHash}");
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e.ToString());
+                    responseCode = AddFileToDfsResponseCode.Failed;
                 }
 
-                responseCode = AddFileToDfsResponseCode.Successful;
-                fileTransferInformation.DfsHash = fileHash;
+                return responseCode;
+            }).GetAwaiter().GetResult();
 
-                Logger.Information($"Added File Name {fileTransferInformation.FileName} to DFS, Hash: {fileHash}");
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e.ToString());
-                responseCode = AddFileToDfsResponseCode.Failed;
-            }
-            finally
-            {
-                ReturnResponse(fileTransferInformation, responseCode);
-            }
+            ReturnResponse(fileTransferInformation, addFileResponseCode);
         }
 
-        /// <summary>Returns the response.</summary>
         /// <param name="message">The message sent by client</param>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <param name="responseCode">The response code.</param>
-        /// <param name="fileSize">Size of the file.</param>
-        private void ReturnResponse(FileTransferInformation fileTransferInformation, AddFileToDfsResponseCode responseCode)
+        private void ReturnResponse(IFileTransferInformation fileTransferInformation, AddFileToDfsResponseCode responseCode)
         {
             Logger.Information("File transfer response code: " + responseCode);
             if (responseCode == AddFileToDfsResponseCode.Successful)
@@ -171,11 +172,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto<AddFileToDfsResponse, RpcMessages>(
                 type: RpcMessages.AddFileToDfsResponse,
                 message: response,
-                recipient: fileTransferInformation.RecepientIdentifier,
+                recipient: fileTransferInformation.RecipientIdentifier,
                 sender: _peerIdentifier
             ));
 
-            fileTransferInformation.ReciepientChannel.WriteAndFlushAsync(responseMessage);
+            fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage);
         }
     }
 }

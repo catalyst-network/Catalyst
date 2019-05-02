@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Common.Rpc;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -35,7 +34,8 @@ using Dawn;
 using Google.Protobuf;
 using Serilog;
 using System;
-using Catalyst.Node.Core.Modules.FileTransfer;
+using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 
@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesRequest>();
-            FileTransferInformation fileTransferInformation = null;
+            IFileTransferInformation fileTransferInformation = null;
             AddFileToDfsResponseCode responseCode;
 
             try

@@ -26,18 +26,16 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using System;
 using System.IO;
-using System.Net;
 using System.Threading;
+using Catalyst.Common.Enums.FileTransfer;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Shell;
-using Dawn;
 
 namespace Catalyst.Cli.FileTransfer
 {
@@ -45,11 +43,8 @@ namespace Catalyst.Cli.FileTransfer
     /// Handles file transfer on the CLI
     /// </summary>
     /// <seealso cref="System.IDisposable" />
-    public class CliFileTransfer : IDisposable
+    public class CliFileTransfer : IDisposable, ICliFileTransfer
     {
-        /// <summary>The instance</summary>
-        private static CliFileTransfer _instance;
-
         /// <summary>The current chunk</summary>
         private uint _currentChunk;
 
@@ -62,36 +57,74 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>The user output</summary>
         private readonly IUserOutput _userOutput;
 
+        /// <summary>Gets or sets the wait handle.</summary>
+        /// <value>The wait handle.</value>
+        private readonly ManualResetEvent _waitHandle;
+        
+        /// <summary>The initialise file transfer response</summary>
+        private AddFileToDfsResponseCode _initialiseFileTransferResponse;
+
+        /// <summary>The current chunk response</summary>
+        private AddFileToDfsResponseCode _currentChunkResponse;
+
         /// <summary>Initializes a new instance of the <see cref="CliFileTransfer"/> class.</summary>
+        /// <param name="peerIdentifier">The peer identifier.</param>
         public CliFileTransfer()
         {
             RetryCount = 0;
-            WaitHandle = new ManualResetEvent(false);
+            _waitHandle = new ManualResetEvent(false);
             _userOutput = new ConsoleUserOutput();
             _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesRequest, RpcMessages>();
         }
 
         /// <summary>Waits this instance.</summary>
-        /// <returns>False if no signal was recieved, true if signal wait recieved</returns>
+        /// <returns>False if no signal was Received, true if signal wait Received</returns>
         public bool Wait()
         {
-            return WaitHandle.WaitOne(TimeSpan.FromSeconds(FileTransferConstants.CliFileTransferWaitTime));
+            return _waitHandle.WaitOne(TimeSpan.FromSeconds(FileTransferConstants.CliFileTransferWaitTime));
         }
 
         /// <summary>Chunk write callback.</summary>
         /// <param name="responseCode">The response code.</param>
         public void FileTransferCallback(AddFileToDfsResponseCode responseCode)
         {
-            CurrentChunkResponse = responseCode;
-            WaitHandle.Set();
+            _currentChunkResponse = responseCode;
+            _waitHandle.Set();
         }
 
         /// <summary>The file transfer initialisation response callback.</summary>
         /// <param name="code">The code.</param>
         public void InitialiseFileTransferResponseCallback(AddFileToDfsResponseCode code)
         {
-            InitialiseFileTransferResponse = code;
-            WaitHandle.Set();
+            _initialiseFileTransferResponse = code;
+
+            if (InitialiseSuccess())
+            {
+                _userOutput.WriteLine("Initialising File Transfer");
+            }
+            else
+            {
+                _userOutput.WriteLine("Error initialising file transfer, Node Response: " + code);
+            }
+
+            _waitHandle.Set();
+        }
+
+        /// <summary>Processes the completed callback.</summary>
+        /// <param name="responseCode">The response code.</param>
+        /// <param name="dfsHash">The DFS hash.</param>
+        public void ProcessCompletedCallback(AddFileToDfsResponseCode responseCode, string dfsHash)
+        {
+            if (responseCode == AddFileToDfsResponseCode.Finished)
+            {
+                _userOutput.WriteLine($"Successfully added file to DFS, DFS Hash: {dfsHash}");
+            }
+            else
+            {
+                _userOutput.WriteLine($"Failed to add file to DFS");
+            }
+
+            _waitHandle.Set();
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
@@ -100,30 +133,30 @@ namespace Catalyst.Cli.FileTransfer
             Dispose(true);
         }
 
-        /// <summary>Gets or sets the initialise file transfer response.</summary>
-        /// <value>The initialise file transfer response.</value>
-        public AddFileToDfsResponseCode InitialiseFileTransferResponse { get; set; }
-
-        /// <summary>Gets or sets the current chunk response.</summary>
-        /// <value>The current chunk response.</value>
-        public AddFileToDfsResponseCode CurrentChunkResponse { get; set; }
-
-        /// <summary>Gets or sets the wait handle.</summary>
-        /// <value>The wait handle.</value>
-        public ManualResetEvent WaitHandle { get; set; }
-
         /// <summary>Gets or sets the retry count.</summary>
         /// <value>The retry count.</value>
         public int RetryCount { get; set; }
-
-        /// <summary>Gets the instance.</summary>
-        /// <value>The instance.</value>
-        public static CliFileTransfer Instance
+        
+        /// <summary>Flag to check for successful initialise.</summary>
+        /// <returns></returns>
+        public bool InitialiseSuccess()
         {
-            get
+            return _initialiseFileTransferResponse == AddFileToDfsResponseCode.Successful;
+        }
+
+        /// <summary>Waits for DFS hash.</summary>
+        public void WaitForDfsHash()
+        {
+            _userOutput.WriteLine("Waiting for node to return DFS Hash");
+            _waitHandle.Reset();
+            bool signalReceived = Wait();
+
+            if (!signalReceived)
             {
-                return (_instance ?? (_instance = new CliFileTransfer()));
+                PrintTimeoutMessage();
             }
+
+            _waitHandle.Reset();
         }
 
         /// <summary>Transfers the file.</summary>
@@ -131,10 +164,10 @@ namespace Catalyst.Cli.FileTransfer
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="node">The node.</param>
         /// <param name="nodePeerIdentifier">The node peer identifier</param>
-        /// <param name="peerIdentifier">The peer identifier.</param>
-        public void TransferFile(string filePath, Guid correlationGuid, INodeRpcClient node, IPeerIdentifier nodePeerIdentifier, IPeerIdentifier peerIdentifier)
+        /// <param name="senderPeerIdentifier">The sender peer identifier.</param>
+        public void TransferFile(string filePath, Guid correlationGuid, INodeRpcClient node, IPeerIdentifier nodePeerIdentifier, IPeerIdentifier senderPeerIdentifier)
         {
-            WaitHandle.Reset();
+            _waitHandle.Reset();
 
             ByteString correlationBytes = ByteString.CopyFrom(correlationGuid.ToByteArray());
 
@@ -153,19 +186,19 @@ namespace Catalyst.Cli.FileTransfer
                         type: RpcMessages.TransferFileBytesRequest,
                         message: transferMessage,
                         recipient: nodePeerIdentifier,
-                        sender: peerIdentifier
+                        sender: senderPeerIdentifier
                     ));
 
                     node.SendMessage(requestMessage);
 
-                    bool responseRecieved = Wait();
+                    bool responseReceived = Wait();
 
-                    if (!responseRecieved)
+                    if (!responseReceived)
                     {
                         bool retrySuccess = Retry(ref i);
                         if (!retrySuccess)
                         {
-                            WriteUserMessage("Error transferring file. Node Timeout");
+                            PrintTimeoutMessage();
                             break;
                         }
                     }
@@ -174,7 +207,7 @@ namespace Catalyst.Cli.FileTransfer
                         bool processSuccess = ProcessChunkResponse(ref i);
                         if (!processSuccess)
                         {
-                            WriteUserMessage("Error transferring file. Node Response: " + CurrentChunkResponse);
+                            WriteUserMessage("Error transferring file. Node Response: " + _currentChunkResponse);
                             break;
                         }
                     }
@@ -216,7 +249,7 @@ namespace Catalyst.Cli.FileTransfer
                     break;
                 }
             }
-            
+
             readSuccess = bytesRead == bufferSize;
             TransferFileBytesRequest transferMessage = null;
 
@@ -242,11 +275,11 @@ namespace Catalyst.Cli.FileTransfer
         /// <returns>True if success, False if failure</returns>
         private bool ProcessChunkResponse(ref uint index)
         {
-            if (CurrentChunkResponse == AddFileToDfsResponseCode.Expired)
+            if (_currentChunkResponse == AddFileToDfsResponseCode.Expired)
             {
                 return false;
             }
-            else if (CurrentChunkResponse == AddFileToDfsResponseCode.Successful)
+            else if (_currentChunkResponse == AddFileToDfsResponseCode.Successful)
             {
                 _currentChunk = index + 1;
                 RetryCount = 0;
@@ -257,7 +290,7 @@ namespace Catalyst.Cli.FileTransfer
                     this.Dispose();
                 }
 
-                WaitHandle.Reset();
+                _waitHandle.Reset();
             }
             else
             {
@@ -292,6 +325,12 @@ namespace Catalyst.Cli.FileTransfer
             }
         }
 
+        /// <summary>Prints the timeout message.</summary>
+        private void PrintTimeoutMessage()
+        {
+            WriteUserMessage("Error transferring file. Node Timeout");
+        }
+
         /// <summary>Writes the user message to console.</summary>
         /// <param name="message">The message.</param>
         private void WriteUserMessage(string message)
@@ -306,10 +345,10 @@ namespace Catalyst.Cli.FileTransfer
         {
             if (disposing)
             {
-                WaitHandle.Reset();
+                _waitHandle.Reset();
                 RetryCount = 0;
-                InitialiseFileTransferResponse = default;
-                CurrentChunkResponse = default;
+                _initialiseFileTransferResponse = default;
+                _currentChunkResponse = default;
             }
         }
     }

@@ -49,12 +49,7 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Google.Protobuf;
 using System.IO;
-using Catalyst.Common.Config;
-using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Cli.FileTransfer;
-using Catalyst.Common.Rpc;
-using Serilog.Core;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Serilog.Events;
 
 namespace Catalyst.Cli
@@ -68,7 +63,7 @@ namespace Catalyst.Cli
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
-
+        private readonly ICliFileTransfer _cliFileTransfer;
         private readonly ILogger _logger;
 
         private const string NoConfigMessage =
@@ -79,13 +74,15 @@ namespace Catalyst.Cli
         public Shell(INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
-            ICertificateStore certificateStore)
+            ICertificateStore certificateStore,
+            ICliFileTransfer cliFileTransfer)
         {
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _logger = logger;
+            _cliFileTransfer = cliFileTransfer;
             _peerIdentifier = BuildCliPeerId(config);
 
             Console.WriteLine(@"Koopa Shell Start");
@@ -840,10 +837,12 @@ namespace Catalyst.Cli
                 return false;
             }
 
-            AddFileToDfsRequest request = new AddFileToDfsRequest();
-            request.FileName = Path.GetFileName(addFileOnDfsOptions.File);
+            AddFileToDfsRequest request = new AddFileToDfsRequest
+            {
+                FileName = Path.GetFileName(addFileOnDfsOptions.File)
+            };
 
-            using (FileStream fileStream = File.Open(addFileOnDfsOptions.File, FileMode.Open))
+            using (var fileStream = File.Open(addFileOnDfsOptions.File, FileMode.Open))
             {
                 request.FileSize = (ulong) fileStream.Length;
             }
@@ -857,30 +856,24 @@ namespace Catalyst.Cli
                 sender: _peerIdentifier
             ));
 
-            var cliFileTransfer = CliFileTransfer.Instance;
             node.SendMessage(requestMessage);
             
-            bool responseRecieved = cliFileTransfer.Wait();
+            bool responseReceived = _cliFileTransfer.Wait();
 
-            if (!responseRecieved)
+            if (!responseReceived)
             {
-                ReturnUserMessage("Timeout - No response recieved from node");
+                ReturnUserMessage("Timeout - No response received from node");
                 return false;
             }
             else
             {
-                if (cliFileTransfer.InitialiseFileTransferResponse != AddFileToDfsResponseCode.Successful)
-                {
-                    ReturnUserMessage("Error initialising file transfer, Node Response: " + cliFileTransfer.InitialiseFileTransferResponse);
-                    return false;
-                }
-                else
+                if (_cliFileTransfer.InitialiseSuccess())
                 {
                     var minLevel = Program.LogLevelSwitch.MinimumLevel;
                     Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
-                    ReturnUserMessage("Initialising File Transfer");
-                    cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node, nodePeerIdentifier, _peerIdentifier);
+                    _cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node, nodePeerIdentifier, _peerIdentifier);
                     Program.LogLevelSwitch.MinimumLevel = minLevel;
+                    _cliFileTransfer.WaitForDfsHash();
                 }
             }
 
