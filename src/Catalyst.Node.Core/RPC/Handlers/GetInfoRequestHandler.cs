@@ -22,12 +22,19 @@
 #endregion
 
 using System;
+using System.Net;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -37,11 +44,11 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    internal sealed class GetInfoRequestHandler
+    public sealed class GetInfoRequestHandler
         : CorrelatableMessageHandlerBase<GetInfoRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
-        private readonly PeerId _peerId;
+        private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRpcServerSettings _config;
 
         public GetInfoRequestHandler(IPeerIdentifier peerIdentifier,
@@ -49,7 +56,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IMessageCorrelationCache messageCorrelationCache,
             ILogger logger) : base(messageCorrelationCache, logger)
         {
-            _peerId = peerIdentifier.PeerId;
+            _peerIdentifier = peerIdentifier;
             _config = config;
         }
 
@@ -70,14 +77,18 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
                     Formatting.Indented);
 
-                var response = new GetInfoResponse
-                {
-                    Query = serializedList
-                };
-
-                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                var response = new RpcMessageFactory<GetInfoResponse, RpcMessages>().GetMessage(
+                    new MessageDto<GetInfoResponse, RpcMessages>(
+                        RpcMessages.GetInfoResponse,
+                        new GetInfoResponse
+                        {
+                            Query = serializedList
+                        },
+                        new PeerIdentifier(message.Payload.PeerId), 
+                        _peerIdentifier)
+                );
                 
-                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+                message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

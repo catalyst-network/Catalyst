@@ -33,7 +33,7 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class PingResponseHandler
-        : ReputableResponseHandlerBase<PingResponse, IReputableCache, PingRequest, PingResponse>,
+        : ReputableResponseHandlerBase<PingResponse, PingRequest, IReputableCache>,
             IP2PMessageHandler
     {
         public PingResponseHandler(IReputableCache reputableCache,
@@ -42,7 +42,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            base.Handler(message);
             Logger.Debug("received ping response");
             var deserialised = message.Payload.FromAnySigned<PingResponse>();
         }
