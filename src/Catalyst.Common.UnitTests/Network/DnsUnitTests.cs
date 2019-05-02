@@ -31,6 +31,8 @@ using Catalyst.Common.UnitTests.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
 using FluentAssertions;
+using Nethereum.Hex.HexConvertors.Extensions;
+using Nethereum.RLP;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
@@ -120,7 +122,7 @@ namespace Catalyst.Common.UnitTests.Network
             txtRecords.Should().BeNull();
         }
 
-        [Fact(Skip = "DNS WIP")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetTxtRecords_should_return_seeds_for_realz()
         {
@@ -130,7 +132,7 @@ namespace Catalyst.Common.UnitTests.Network
                 await dns.GetTxtRecords("seed1.network.atlascity.io");
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
             var seedIp = answerSection.EscapedText.FirstOrDefault();
-            seedIp.Should().Be("92.207.178.198:42069");
+            seedIp.Should().Be("0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839");
         }
     }
 }
