@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -43,9 +44,9 @@ namespace Catalyst.Common.Interfaces.P2P
         IDns Dns { get; }
         ILogger Logger { get; }
         IList<string> SeedNodes { get; }
-        IList<IPEndPoint> Peers { get; }
+        IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(IList<string> seedServers);
+        void GetSeedNodesFromDns(IEnumerable<string> seedServers);
         void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
         void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message);
     }

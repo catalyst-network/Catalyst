@@ -41,7 +41,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         {
             base.Handler(message);
             Logger.Debug("received peer NeighbourResponse");
-            var deserialised = message.Payload.FromAnySigned<PeerNeighborsResponse>();
         }
     }
 }

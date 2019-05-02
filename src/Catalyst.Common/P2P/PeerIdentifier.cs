@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -31,6 +33,7 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
+using Google.Protobuf;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 
@@ -63,13 +66,31 @@ namespace Catalyst.Common.P2P
             PeerId = peerId;
         }
 
-        public PeerIdentifier(byte[] publicKey, IPAddress ipAddress, int port)
-            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
+        public PeerIdentifier(IReadOnlyList<string> rawPidChunks)
+        {
+            Guard.Argument(rawPidChunks[0]).Length(2);
+            Guard.Argument(rawPidChunks[1]).Length(2);
+            Guard.Argument(rawPidChunks[2]).Length(16);
+            Guard.Argument(rawPidChunks[3]).Length(2);
+            Guard.Argument(rawPidChunks[4]).Length(20);
+            
+            var peerByteChunks = new List<ByteString>();
+            rawPidChunks.AsParallel().ForAll(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));
+            
+            PeerId = new PeerId
+            {
+                ClientId = peerByteChunks[0],
+                ClientVersion = peerByteChunks[1],
+                Ip = peerByteChunks[2],
+                Port = peerByteChunks[3],
+                PublicKey = peerByteChunks[4]
+            };
+        }
 
-        public PeerIdentifier(IPeerSettings settings)
-            : this(settings.PublicKey.ToBytesForRLPEncoding(), settings.EndPoint) { }
+        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
+            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
         
-        private PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
+        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint)
         {
             PeerId = new PeerId
             {

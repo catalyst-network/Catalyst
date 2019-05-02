@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -36,8 +37,10 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Dawn;
 using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
 using Serilog;
 using SharpRepository.Repository;
 using Peer = Catalyst.Common.P2P.Peer;
@@ -50,7 +53,7 @@ namespace Catalyst.Node.Core.P2P
         public IDns Dns { get; }
         public ILogger Logger { get; }
         public IList<string> SeedNodes { get; }
-        public IList<IPEndPoint> Peers { get; }
+        public IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
         public IDisposable PingResponseMessageStream { get; private set; }
         public IDisposable GetNeighbourResponseStream { get; private set; }
@@ -70,7 +73,7 @@ namespace Catalyst.Node.Core.P2P
             Logger = logger;
             PeerRepository = repository;
             SeedNodes = new List<string>();
-            Peers = new List<IPEndPoint>();
+            Peers = new ConcurrentQueue<IPeerIdentifier>();
 
             ParseDnsServersFromConfig(rootSection);
 
@@ -97,25 +100,24 @@ namespace Catalyst.Node.Core.P2P
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        public async Task GetSeedNodesFromDns(IList<string> seedServers)
+        public void GetSeedNodesFromDns(IEnumerable<string> seedServers)
         {
-            foreach (var seedServer in seedServers)
+            seedServers.ToList().ForEach(async seedServer =>
             {
                 var dnsQueryAnswer = await Dns.GetTxtRecords(seedServer).ConfigureAwait(false);
-
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                if (answerSection != null)
+
+                Guard.Argument(answerSection).NotNull();
+                
+                IList<IPeerIdentifier> seedPeerIdentifiers = new List<IPeerIdentifier>();
+                
+                answerSection?.EscapedText.ToList().ForEach(rawPid =>
                 {
-                    foreach (var seedNode in answerSection.EscapedText)
-                    {
-                        var pingResponse = true;
-                        if (pingResponse == true) // pointless but place holder until we have a ping system
-                        {
-                            Peers.Add(EndpointBuilder.BuildNewEndPoint(seedNode));
-                        }
-                    }
-                }
-            }
+                    var peerChunks = rawPid.Split("|");
+                    Guard.Argument(peerChunks).Count(5);
+                    seedPeerIdentifiers.Add(new PeerIdentifier(peerChunks));
+                });
+            });
         }
 
         public void StartObserving(IObservable<IChanneledMessage<AnySigned>> observer)
@@ -149,7 +151,6 @@ namespace Catalyst.Node.Core.P2P
         {
             Logger.Information("processing peer neighbour message stream");
             var peerNeighborsResponse = message.Payload.FromAnySigned<PeerNeighborsResponse>();
-            Logger.Information(message.Payload.TypeUrl);
         }
 
         private async Task PeerCrawler()
