@@ -103,18 +103,28 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args, nameof(args)).NotNull().MinCount(1).NotEmpty();
 
-            return Parser.Default.ParseArguments<GetInfoOptions,
+            return Parser.Default.ParseArguments<
+                    GetInfoOptions,
                     ConnectOptions,
                     SignOptions,
                     VerifyOptions,
                     PeerListOptions,
-                    RemovePeerOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, RemovePeerOptions, bool>(
+                    PeerCountOptions>(args)
+               .MapResult<
+                    GetInfoOptions, 
+                    ConnectOptions, 
+                    SignOptions, 
+                    VerifyOptions,
+                    PeerListOptions,
+                    PeerCountOptions,
+                    RemovePeerOptions,
+                    bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
                     (VerifyOptions opts) => OnVerifyCommands(opts),
                     (PeerListOptions opts) => OnPeerListCommands(opts),
+                    (PeerCountOptions opts) => OnPeerCountCommands(opts),
                     (RemovePeerOptions opts) => OnRemovePeerCommands(opts),
                     errs => false);
         }
@@ -212,6 +222,21 @@ namespace Catalyst.Cli
             if (opts.Node.Length > 0 && opts.Ip.Length > 0)
             {
                 return OnRemovePeer(opts);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Called when [peer list commands].
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns>[true] if correct arguments, [false] if arguments are invalid</returns>
+        private bool OnPeerCountCommands(PeerCountOptions opts)
+        {
+            if (opts.Node.Length > 0)
+            {
+                return OnGetPeerCount(opts);
             }
 
             return false;
@@ -502,8 +527,10 @@ namespace Catalyst.Cli
             Guard.Argument(node).NotNull("Node cannot be null. The shell must be able to connect to a valid node to be able to send the request.");
 
             var nodeConfig = GetNodeConfig(nodeId);
+            Guard.Argument(nodeConfig).NotNull("The node configuration cannot be null");
+
             try
-            {
+            {   
                 var request = new RpcMessageFactory<GetInfoRequest, RpcMessages>().GetMessage(
                     new MessageDto<GetInfoRequest, RpcMessages>(
                         RpcMessages.GetInfoRequest,
@@ -511,7 +538,7 @@ namespace Catalyst.Cli
                         {
                             Query = true
                         },
-                        new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                        new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
                         _peerIdentifier)
                 );
 
@@ -534,6 +561,42 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args).Contains(typeof(string));
             throw new NotImplementedException();
+        }
+
+        /// <summary>Called when [get peer count].</summary>
+        /// <param name="opts">The opts.</param>
+        /// <returns></returns>
+        protected override bool OnGetPeerCount(object opts)
+        {
+            try
+            {
+                Guard.Argument(opts).NotNull().Compatible<PeerCountOptions>();
+
+                var peerCountOptions = (PeerCountOptions) opts;
+                var node = GetConnectedNode(peerCountOptions.Node);
+                var nodeConfig = GetNodeConfig(peerCountOptions.Node);
+
+                Guard.Argument(node).NotNull();
+
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerCountRequest, RpcMessages>();
+
+                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerCountRequest, RpcMessages>
+                (
+                    type: RpcMessages.PeerListCountRequest,
+                    message: new GetPeerCountRequest(), 
+                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                    sender: _peerIdentifier
+                ));
+
+                node.SendMessage(requestMessage).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return true;
         }
 
         /// <summary>Called when [remove peer].</summary>

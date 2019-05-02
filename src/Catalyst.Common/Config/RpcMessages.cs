@@ -40,6 +40,8 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages SignMessageResponse = new SignMessageResponseMessage();
         public static readonly RpcMessages GetPeerListRequest = new GetPeerListRequestMessage();
         public static readonly RpcMessages GetPeerListResponse = new GetPeerListResponseMessage();
+        public static readonly RpcMessages PeerListCountRequest = new PeerListCountRequestMessage();
+        public static readonly RpcMessages PeerListCountResponse = new PeerListCountResponseMessage();
         public static readonly RpcMessages RemovePeerRequest = new RemovePeerRequestMessage();
         public static readonly RpcMessages RemovePeerResponse = new RemovePeerResponseMessage();
 
@@ -93,6 +95,16 @@ namespace Catalyst.Common.Config
         private sealed class GetPeerListResponseMessage : RpcMessages
         {
             public GetPeerListResponseMessage() : base(10, "GetPeerListResponse") { }
+        }
+
+        private sealed class PeerListCountRequestMessage : RpcMessages
+        {
+            public PeerListCountRequestMessage() : base(11, "PeerListCountRequest") { }
+        }
+
+        private sealed class PeerListCountResponseMessage : RpcMessages
+        {
+            public PeerListCountResponseMessage() : base(12, "PeerListCountResponse") { }
         }
 
         private sealed class RemovePeerRequestMessage : RpcMessages

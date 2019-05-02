@@ -131,6 +131,14 @@
             ]
         },
         {
+            "type": "Catalyst.Cli.Handlers.PeerCountResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Cli.Handlers.RemovePeerResponseHandler, Catalyst.Cli",
             "services": [
                 {

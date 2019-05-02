@@ -32,21 +32,28 @@ using Serilog;
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
     /// <summary>
-    ///     Message handler for Ask message where you want to manipulate reputation of the recipient depending if they respond.
+    /// Handler for Ask message where you want to manipulate reputation of the recipient depending if they respond/have a correlation.
     /// </summary>
-    /// <typeparam name="TProto"></typeparam>
+    /// <typeparam name="TProto">The message</typeparam>
     /// <typeparam name="TReputableCache"></typeparam>
-    /// <typeparam name="TRequest"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
-    public abstract class ReputableResponseHandlerBase<TProto, TReputableCache, TRequest, TResponse>
+    /// <typeparam name="TCounterpartMessage">The counterpart message to the TProto message</typeparam>
+    public abstract class ReputableResponseHandlerBase<TProto, TCounterpartMessage, TReputableCache>
         : CorrelatableMessageHandlerBase<TProto, TReputableCache>,
             IReputationAskHandler<TReputableCache>
-        where TProto : class, IMessage
+        where TProto : class, IMessage<TProto>
         where TReputableCache : IMessageCorrelationCache
-        where TRequest : class, IMessage<TRequest>
-        where TResponse : class, IMessage<TResponse>
+        where TCounterpartMessage : class, IMessage<TCounterpartMessage>
     {
         public TReputableCache ReputableCache { get; }
+
+        /// <summary>Determines whether this instance [can execute next handler] the specified message.</summary>
+        /// <param name="message">The message.</param>
+        /// <returns><c>true</c> if this instance [can execute next handler] the specified message; otherwise, <c>false</c>.</returns>
+        public bool CanExecuteNextHandler(IChanneledMessage<AnySigned> message)
+        {
+            var otherMessage = ReputableCache.TryMatchResponse<TCounterpartMessage, TProto>(message.Payload);
+            return otherMessage != null;
+        }
 
         protected ReputableResponseHandlerBase(TReputableCache reputableCache,
             ILogger logger)
@@ -59,10 +66,6 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         ///     Adds a new message to the correlation cache before we flush it away down the socket.
         /// </summary>
         /// <param name="message"></param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            // @TODO handle null response
-            ReputableCache.TryMatchResponse<TRequest, TResponse>(message.Payload);
-        }
+        protected override void Handler(IChanneledMessage<AnySigned> message) { }
     }
 }

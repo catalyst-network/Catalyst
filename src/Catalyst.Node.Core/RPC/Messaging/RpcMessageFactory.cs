@@ -33,7 +33,7 @@ using Google.Protobuf;
 namespace Catalyst.Node.Core.Rpc.Messaging
 {
     public sealed class RpcMessageFactory<TMessage, TMessageType>
-        : MessageFactoryBase<TMessage, TMessageType> 
+        : MessageFactoryBase<TMessage, TMessageType>
         where TMessage : class, IMessage<TMessage>
         where TMessageType : class, IEnumerableMessageType
     {
@@ -43,37 +43,37 @@ namespace Catalyst.Node.Core.Rpc.Messaging
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetInfoResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.GetMempoolRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetMempoolResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.GetVersionRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetVersionResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.SignMessageRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.SignMessageResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
@@ -88,6 +88,17 @@ namespace Catalyst.Node.Core.Rpc.Messaging
             {
                 return BuildTellMessage(dto);
             }
+
+            if (RpcMessages.PeerListCountRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.PeerListCountResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+
 
             if (RpcMessages.RemovePeerRequest.Equals(dto.Type))
             {
