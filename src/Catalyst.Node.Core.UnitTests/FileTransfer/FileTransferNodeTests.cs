@@ -58,7 +58,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IFileTransfer _fileTransfer;
         private readonly IIpfsEngine _ipfsEngine;
-        private AddFileToDfsRequestHandler _handler;
 
         public FileTransferNodeTests()
         {
@@ -99,9 +98,9 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var cache = Substitute.For<IMessageCorrelationCache>();
-            _handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _fileTransfer, cache, _logger);
-            _handler.StartObserving(messageStream);
+            handler.StartObserving(messageStream);
 
             Assert.Equal(1, _fileTransfer.Keys.Length);
         }
@@ -113,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var expiredDelegateHit = false;
 
             //Create a response object and set its return value
-            var request = new AddFileToDfsRequest()
+            var request = new AddFileToDfsRequest
             {
                 Node = "node1",
                 FileName = "Test.dat",
@@ -122,9 +121,9 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var cache = Substitute.For<IMessageCorrelationCache>();
-            _handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _fileTransfer, cache, _logger);
-            _handler.StartObserving(messageStream);
+            handler.StartObserving(messageStream);
 
             Assert.Equal(1, _fileTransfer.Keys.Length);
 
@@ -188,9 +187,9 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var cache = Substitute.For<IMessageCorrelationCache>();
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
 
-            _handler = new AddFileToDfsRequestHandler(dfs, senderPeerId, _fileTransfer,
+            var handler = new AddFileToDfsRequestHandler(dfs, senderPeerId, _fileTransfer,
                 cache, _logger);
-            _handler.StartObserving(messageStream);
+            handler.StartObserving(messageStream);
 
             Assert.Equal(1, _fileTransfer.Keys.Length);
 
@@ -204,7 +203,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
                 storedCrc32Value = crc32.Value;
                 dfsHash = information.DfsHash;
             });
-            
+
             List<AnySigned> chunkMessages = new List<AnySigned>();
             using (fs = File.Open(fileToTransfer, FileMode.Open))
             {
