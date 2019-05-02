@@ -109,7 +109,8 @@ namespace Catalyst.Cli
                     SignOptions,
                     VerifyOptions,
                     PeerListOptions,
-                    PeerCountOptions>(args)
+                    PeerCountOptions,
+                    RemovePeerOptions>(args)
                .MapResult<
                     GetInfoOptions, 
                     ConnectOptions, 
