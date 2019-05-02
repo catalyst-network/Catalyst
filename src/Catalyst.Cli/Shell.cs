@@ -739,7 +739,7 @@ namespace Catalyst.Cli
                 var request = new RpcMessageFactory<VerifyMessageRequest, RpcMessages>().GetMessage(
                     new MessageDto<VerifyMessageRequest, RpcMessages>(
                         RpcMessages.VerifyMessageRequest,
-                        new VerifyMessageRequest()
+                        new VerifyMessageRequest
                         {
                             Message =
                                 RLP.EncodeElement(verifyOptions.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
