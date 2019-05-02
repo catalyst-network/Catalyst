@@ -148,7 +148,12 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         [InlineData(100000L)]
         public void Verify_File_Integrity_On_Transfer(long byteSize)
         {
-            Directory.Delete(Path.GetTempPath() + "ipfs", true);
+            var ipfsPath = Path.GetTempPath() + "ipfs";
+
+            if (Directory.Exists(ipfsPath))
+            {
+                Directory.Delete(ipfsPath, true);
+            }
 
             var fileToTransfer = Path.GetTempPath() + Guid.NewGuid();
             var fakeNode = Substitute.For<INodeRpcClient>();
