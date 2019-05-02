@@ -117,8 +117,8 @@ namespace Catalyst.Cli
                     SignOptions,
                     VerifyOptions,
                     PeerListOptions,
-                    PeerCountOptions
-                    AddFileOnDfsOptions> (args)
+                    PeerCountOptions,
+                    AddFileOnDfsOptions>(args)
                .MapResult<
                     GetInfoOptions, 
                     ConnectOptions, 
