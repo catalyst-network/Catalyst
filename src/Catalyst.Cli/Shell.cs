@@ -109,7 +109,8 @@ namespace Catalyst.Cli
                     SignOptions,
                     VerifyOptions,
                     PeerListOptions,
-                    PeerCountOptions>(args)
+                    PeerCountOptions,
+                    RemovePeerOptions>(args)
                .MapResult<
                     GetInfoOptions, 
                     ConnectOptions, 
@@ -117,6 +118,7 @@ namespace Catalyst.Cli
                     VerifyOptions,
                     PeerListOptions,
                     PeerCountOptions,
+                    RemovePeerOptions,
                     bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
@@ -124,6 +126,7 @@ namespace Catalyst.Cli
                     (VerifyOptions opts) => OnVerifyCommands(opts),
                     (PeerListOptions opts) => OnPeerListCommands(opts),
                     (PeerCountOptions opts) => OnPeerCountCommands(opts),
+                    (RemovePeerOptions opts) => OnRemovePeerCommands(opts),
                     errs => false);
         }
 
@@ -207,6 +210,19 @@ namespace Catalyst.Cli
             if (opts.Node.Length > 0)
             {
                 return OnListPeerNodes(opts);
+            }
+
+            return false;
+        }
+
+        /// <summary>Called when [remove peer commands].</summary>
+        /// <param name="opts">The options.</param>
+        /// <returns></returns>
+        private bool OnRemovePeerCommands(RemovePeerOptions opts)
+        {
+            if (opts.Node.Length > 0 && opts.Ip.Length > 0)
+            {
+                return OnRemovePeer(opts);
             }
 
             return false;
@@ -580,6 +596,44 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
+
+            return true;
+        }
+
+        /// <summary>Called when [remove peer].</summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected override bool OnRemovePeer(object args)
+        {
+            Guard.Argument(args).NotNull().Compatible<RemovePeerOptions>();
+
+            var removePeerOptions = (RemovePeerOptions) args;
+            var node = GetConnectedNode(removePeerOptions.Node);
+            var nodeConfig = GetNodeConfig(removePeerOptions.Node);
+
+            Guard.Argument(node).NotNull();
+
+            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest, RpcMessages>();
+
+            IPAddress ip = IPAddress.Parse(removePeerOptions.Ip);
+
+            var request = new RemovePeerRequest
+            {
+                PeerIp = ByteString.CopyFrom(ip.To16Bytes()),
+                PublicKey = string.IsNullOrEmpty(removePeerOptions.PublicKey)
+                    ? ByteString.Empty
+                    : ByteString.CopyFrom(removePeerOptions.PublicKey.ToBytesForRLPEncoding())
+            };
+
+            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<RemovePeerRequest, RpcMessages>
+            (
+                type: RpcMessages.RemovePeerRequest,
+                message: request,
+                recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                sender: _peerIdentifier
+            ));
+
+            node.SendMessage(requestMessage).Wait();
 
             return true;
         }
