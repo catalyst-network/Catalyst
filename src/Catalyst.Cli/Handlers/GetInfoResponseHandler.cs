@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -63,11 +64,16 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">An object of GetInfoResponse</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
+            Guard.Argument(message).NotNull("The message cannot be null");
+            
             Logger.Debug("Handling GetInfoResponse");
             
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
+                
+                Guard.Argument(deserialised).NotNull().Require(d => d.Query != null, d => $"{nameof(deserialised)} must have a valid configuration response.");
+                
                 _output.WriteLine(deserialised.Query);
             }
             catch (Exception ex)
