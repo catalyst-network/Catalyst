@@ -24,12 +24,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.IPPN;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
@@ -47,6 +51,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private readonly IList<PendingRequest> _pendingRequests;
         private readonly P2PCorrelationCache _cache;
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
+        private readonly ILogger _logger;
 
         public MessageCorrelationCacheTests(ITestOutputHelper output)
         {
@@ -76,8 +81,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     return ci[1] != null;
                 });
 
-            var logger = Substitute.For<ILogger>();
-            _cache = new P2PCorrelationCache(responseStore, logger);
+            _logger = Substitute.For<ILogger>();
+            _cache = new P2PCorrelationCache(responseStore, _logger);
             _cache.PeerRatingChanges.Subscribe(change =>
             {
                 if (!_reputationByPeerIdentifier.ContainsKey(change.PeerIdentifier)) return;
@@ -85,7 +90,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             });
         }
 
-        [Fact] public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
+        [Fact]
+        public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
         {
             var responseMatchingIndex1 = new PingResponse().ToAnySigned(
                 _peerIds[1].PeerId,
@@ -95,7 +101,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             request.Should().NotBeNull();
         }
 
-        [Fact] public void TryMatchResponseAsync_when_matching_should_increase_reputation()
+        [Fact]
+        public void TryMatchResponseAsync_when_matching_should_increase_reputation()
         {
             var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
             TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id();
@@ -106,24 +113,47 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .Select(r => r.Value).Should().AllBeEquivalentTo(0);
         }
 
-        [Fact] public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
+        [Fact]
+        public void UncorrelatedMessage_should_decrease_reputation()
+        {
+            var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
+            var responseMatchingIndex1 = new PingResponse().ToAnySigned(
+                _peerIds[1].PeerId,
+                Guid.NewGuid());
+
+            var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingIndex1);
+            var reputationAfter = _reputationByPeerIdentifier[_peerIds[1]];
+            reputationAfter.Should().BeLessThan(reputationBefore);
+        }
+
+        [Fact]
+        public void UncorrelatedMessage_should_block_handler()
+        {
+            var fakeContext = Substitute.For<IChannelHandlerContext>();
+            var fakeChannel = Substitute.For<IChannel>();
+            var nonCorrelatedMessage = new PingResponse().ToAnySigned(_peerIds[0].PeerId, Guid.NewGuid());
+
+            fakeContext.Channel.Returns(fakeChannel);
+
+            var channeledAny = new ChanneledAnySigned(fakeContext, nonCorrelatedMessage);
+            var observableStream = new[] {channeledAny}.ToObservable();
+
+            var handler = new PingResponseHandler(_cache, _logger);
+            handler.StartObserving(observableStream);
+
+            Assert.False(handler.CanExecuteNextHandler(channeledAny));
+        }
+
+        [Fact]
+        public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
         {
             var responseMatchingNothing = new PingResponse().ToAnySigned(_peerIds[1].PeerId, Guid.NewGuid());
             var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingNothing);
             request.Should().BeNull();
         }
 
-        [Fact] public void TryMatchResponseAsync_when_not_matching_correlationId_should_not_change_reputation()
-        {
-            var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
-            TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id();
-            var reputationAfter = _reputationByPeerIdentifier[_peerIds[1]];
-
-            _reputationByPeerIdentifier.Select(r => r.Value)
-               .Should().AllBeEquivalentTo(0);
-        }
-
-        [Fact] public void TryMatchResponseAsync_should_not_match_on_wrong_response_type()
+        [Fact]
+        public void TryMatchResponseAsync_should_not_match_on_wrong_response_type()
         {
             var matchingRequest = _pendingRequests[1].Content;
             new Action(() => _cache.TryMatchResponse<PingRequest, PingRequest>(matchingRequest))
