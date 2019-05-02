@@ -103,17 +103,27 @@ namespace Catalyst.Cli
         {
             Guard.Argument(args, nameof(args)).NotNull().MinCount(1).NotEmpty();
 
-            return Parser.Default.ParseArguments<GetInfoOptions,
+            return Parser.Default.ParseArguments<
+                    GetInfoOptions,
                     ConnectOptions,
                     SignOptions,
                     VerifyOptions,
-                    PeerListOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, bool>(
+                    PeerListOptions,
+                    PeerCountOptions>(args)
+               .MapResult<
+                    GetInfoOptions, 
+                    ConnectOptions, 
+                    SignOptions, 
+                    VerifyOptions,
+                    PeerListOptions,
+                    PeerCountOptions,
+                    bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
                     (VerifyOptions opts) => OnVerifyCommands(opts),
                     (PeerListOptions opts) => OnPeerListCommands(opts),
+                    (PeerCountOptions opts) => OnPeerCountCommands(opts),
                     errs => false);
         }
 
@@ -197,6 +207,21 @@ namespace Catalyst.Cli
             if (opts.Node.Length > 0)
             {
                 return OnListPeerNodes(opts);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Called when [peer list commands].
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns>[true] if correct arguments, [false] if arguments are invalid</returns>
+        private bool OnPeerCountCommands(PeerCountOptions opts)
+        {
+            if (opts.Node.Length > 0)
+            {
+                return OnGetPeerCount(opts);
             }
 
             return false;
@@ -480,12 +505,12 @@ namespace Catalyst.Cli
         protected override bool OnGetConfig(object opts)
         {
             Guard.Argument(opts).NotNull().Compatible<GetInfoOptions>();
-            
+
             var nodeId = ((GetInfoOptions) opts).NodeId;
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull("Node cannot be null. The shell must be able to connect to a valid node to be able to send the request.");
-            
+
             var nodeConfig = GetNodeConfig(nodeId);
             try
             {
@@ -499,7 +524,7 @@ namespace Catalyst.Cli
                         new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
                         _peerIdentifier)
                 );
-                
+
                 node.SendMessage(request);
             }
             catch (Exception e)
@@ -521,6 +546,42 @@ namespace Catalyst.Cli
             throw new NotImplementedException();
         }
 
+        /// <summary>Called when [get peer count].</summary>
+        /// <param name="opts">The opts.</param>
+        /// <returns></returns>
+        protected override bool OnGetPeerCount(object opts)
+        {
+            try
+            {
+                Guard.Argument(opts).NotNull().Compatible<PeerCountOptions>();
+
+                var peerCountOptions = (PeerCountOptions) opts;
+                var node = GetConnectedNode(peerCountOptions.Node);
+                var nodeConfig = GetNodeConfig(peerCountOptions.Node);
+
+                Guard.Argument(node).NotNull();
+
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerCountRequest, RpcMessages>();
+
+                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerCountRequest, RpcMessages>
+                (
+                    type: RpcMessages.PeerListCountRequest,
+                    message: new GetPeerCountRequest(), 
+                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                    sender: _peerIdentifier
+                ));
+
+                node.SendMessage(requestMessage).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Handles the command <code>get -m [node-name]</code>.  The method makes sure first the CLI is connected to
         /// the node specified in the command and then creates a <see cref="GetMempoolRequest"/> object and sends it in a
@@ -535,11 +596,11 @@ namespace Catalyst.Cli
             var options = (GetInfoOptions) opts;
             var node = GetConnectedNode(options.NodeId);
             var nodeConfig = GetNodeConfig(options.NodeId);
-            
+
             Guard.Argument(node).NotNull("The shell must be able to connect to a valid node to be able to send the request.");
 
             try
-            {   
+            {
                 var request = new RpcMessageFactory<GetMempoolRequest, RpcMessages>().GetMessage(
                     new MessageDto<GetMempoolRequest, RpcMessages>(
                         RpcMessages.GetMempoolRequest,
@@ -723,7 +784,7 @@ namespace Catalyst.Cli
                 Console.WriteLine(e);
                 throw;
             }
-            
+
             return true;
         }
     }
