@@ -57,6 +57,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_read_text()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -68,6 +69,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_read_binary()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
