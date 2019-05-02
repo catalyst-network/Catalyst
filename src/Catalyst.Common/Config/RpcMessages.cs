@@ -109,12 +109,12 @@ namespace Catalyst.Common.Config
 
         private sealed class RemovePeerRequestMessage : RpcMessages
         {
-            public RemovePeerRequestMessage() : base(11, "RemovePeerRequest") { }
+            public RemovePeerRequestMessage() : base(13, "RemovePeerRequest") { }
         }
 
         private sealed class RemovePeerResponseMessage : RpcMessages
         {
-            public RemovePeerResponseMessage() : base(12, "RemovePeerResponse") { }
+            public RemovePeerResponseMessage() : base(14, "RemovePeerResponse") { }
         }
     }
 }
