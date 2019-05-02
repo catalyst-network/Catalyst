@@ -19,7 +19,7 @@
     <PackageReference Include="DotNetty.Common" Version="0.6.0" />
     <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
     <PackageReference Include="Ipfs.Core" Version="0.41.0" />
-    <PackageReference Include="Ipfs.Engine" Version="0.6.0" />
+    <PackageReference Include="Ipfs.Engine" Version="0.7.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
