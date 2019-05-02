@@ -120,7 +120,7 @@ namespace Catalyst.Common.UnitTests.Network
             txtRecords.Should().BeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "DNS WIP")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetTxtRecords_should_return_seeds_for_realz()
         {
