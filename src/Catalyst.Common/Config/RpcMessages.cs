@@ -135,22 +135,22 @@ namespace Catalyst.Common.Config
 
         private sealed class RemovePeerRequestMessage : RpcMessages
         {
-            public RemovePeerRequestMessage() : base(13, "RemovePeerRequest") { }
+            public RemovePeerRequestMessage() : base(17, "RemovePeerRequest") { }
         }
 
         private sealed class RemovePeerResponseMessage : RpcMessages
         {
-            public RemovePeerResponseMessage() : base(14, "RemovePeerResponse") { }
+            public RemovePeerResponseMessage() : base(18, "RemovePeerResponse") { }
         }
         
         private sealed class VerifyMessageRequestMessage : RpcMessages
         {
-            public VerifyMessageRequestMessage() : base(15, "VerifyMessageRequest") { }
+            public VerifyMessageRequestMessage() : base(19, "VerifyMessageRequest") { }
         }
 
         private sealed class VerifyMessageResponseMessage : RpcMessages
         {
-            public VerifyMessageResponseMessage() : base(16, "VerifyMessageResponse") { }
+            public VerifyMessageResponseMessage() : base(20, "VerifyMessageResponse") { }
         }
     }
 }
