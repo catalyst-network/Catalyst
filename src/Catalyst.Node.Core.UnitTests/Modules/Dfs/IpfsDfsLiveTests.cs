@@ -59,21 +59,23 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         [Fact]
         public async Task DFS_should_add_and_read_text()
         {
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             const string text = "good morning";
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
-            var id = await dfs.AddTextAsync(text);
-            var content = await dfs.ReadTextAsync(id);
+            var id = await dfs.AddTextAsync(text, cts.Token);
+            var content = await dfs.ReadTextAsync(id, cts.Token);
             content.Should().Be(text);
         }
 
         [Fact]
         public async Task DFS_should_add_and_read_binary()
         {
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var binary = new byte[] { 1, 2, 3 };
             var ms = new MemoryStream(binary);
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
-            var id = await dfs.AddAsync(ms);
-            using (var stream = await dfs.ReadAsync(id))
+            var id = await dfs.AddAsync(ms, "", cts.Token);
+            using (var stream = await dfs.ReadAsync(id, cts.Token))
             {
                 var content = new byte[binary.Length];
                 stream.Read(content, 0, content.Length);
