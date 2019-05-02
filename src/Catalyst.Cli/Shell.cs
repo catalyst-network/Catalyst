@@ -107,13 +107,15 @@ namespace Catalyst.Cli
                     ConnectOptions,
                     SignOptions,
                     VerifyOptions,
-                    PeerListOptions>(args)
-               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, bool>(
+                    PeerListOptions,
+                    PeerReputationOptions>(args)
+               .MapResult<GetInfoOptions, ConnectOptions, SignOptions, VerifyOptions, PeerListOptions, PeerReputationOptions, bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (SignOptions opts) => OnSignCommands(opts),
                     (VerifyOptions opts) => OnVerifyCommands(opts),
                     (PeerListOptions opts) => OnPeerListCommands(opts),
+                    (PeerReputationOptions opts) => OnGetPeerNodeReputation(opts),
                     errs => false);
         }
 
@@ -701,6 +703,7 @@ namespace Catalyst.Cli
                     sender: _peerIdentifier
                 ));
 
+
                 node.SendMessage(requestMessage).Wait();
             }
             catch (Exception e)
@@ -711,5 +714,49 @@ namespace Catalyst.Cli
             
             return true;
         }
+
+        protected override bool OnGetPeerNodeReputation(object opts)
+        {
+            try
+            {
+                Guard.Argument(opts).NotNull().Compatible<PeerReputationOptions>();
+
+                var peerReputationOptions = (PeerReputationOptions)opts;
+                var node = GetConnectedNode(peerReputationOptions.Node);
+                var nodeConfig = GetNodeConfig(peerReputationOptions.Node);
+
+                var peerPublicKey = peerReputationOptions.PublicKey;
+                var peerIP = peerReputationOptions.IpAddress;
+
+                Guard.Argument(node).NotNull();
+
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerReputationRequest, RpcMessages>();
+
+                var request = new GetPeerReputationRequest
+                {
+                    PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
+                    Ip = peerIP.ToBytesForRLPEncoding().ToByteString()
+                };
+
+                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerReputationRequest, RpcMessages>
+                (
+                    type: RpcMessages.GetPeerReputationRequest,
+                    message: request,
+                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                    sender: _peerIdentifier
+                ));
+
+                node.SendMessage(requestMessage).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return true;
+        }
+
+
     }
 }

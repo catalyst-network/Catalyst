@@ -88,7 +88,17 @@ namespace Catalyst.Node.Core.Rpc.Messaging
             {
                 return BuildTellMessage(dto);
             }
-            
+
+            if (RpcMessages.GetPeerReputationRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.GetPeerReputationResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+
             throw new ArgumentException("unknown message type");
         }
     }

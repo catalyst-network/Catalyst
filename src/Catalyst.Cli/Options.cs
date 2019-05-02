@@ -138,4 +138,40 @@ namespace Catalyst.Cli
                 new Example("Displays peer list for the specified node.", new PeerListOptions {Node = "node1"})
             };
     }
+
+    /// <summary>
+    /// Class contains the options for the peer list command
+    /// </summary>
+    [Verb("peerrep", HelpText = "displays the reputation of the peer")]
+    class PeerReputationOptions
+    {
+        /// <summary>
+        /// Gets or sets the node.
+        /// </summary>
+        /// <value>
+        /// The node.
+        /// </value>
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
+
+        [Option('l', "ip", HelpText = "IP address of the peer whose reputation is of interest.")]
+        public string IpAddress { get; set; }
+
+        [Option('p', "publickey", HelpText = "Public key of the peer whose reputation is of interest.")]
+        public string PublicKey { get; set; }
+
+        /// <summary>
+        /// Gets the examples.
+        /// </summary>
+        /// <value>
+        /// The examples.
+        /// </value>
+        [Usage(ApplicationAlias = "")]
+        public static IEnumerable<Example> Examples =>
+            new List<Example>
+            {
+                new Example("Displays peer the reputation for the specified node.", new PeerReputationOptions {Node = "node1"})
+            };
+    }
+
 }
