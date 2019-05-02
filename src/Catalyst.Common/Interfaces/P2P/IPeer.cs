@@ -27,10 +27,28 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeer
     {
+        /// <summary>Gets or sets the primary key identifier.</summary>
+        /// <value>The primary key identifier.</value>
+        int PkId { get; set; }
+
+        /// <summary>Gets the reputation.</summary>
+        /// <value>The reputation.</value>
         int Reputation { get; }
+
+        /// <summary>Gets the last seen.</summary>
+        /// <value>The last seen.</value>
         DateTime LastSeen { get; }
+
+        /// <summary>Gets the peer identifier.</summary>
+        /// <value>The peer identifier.</value>
         IPeerIdentifier PeerIdentifier { get; }
+
+        /// <summary>Gets a value indicating whether this instance is awol peer.</summary>
+        /// <value><c>true</c> if this instance is awol peer; otherwise, <c>false</c>.</value>
         bool IsAwolPeer { get; }
+
+        /// <summary>Gets the inactive for.</summary>
+        /// <value>The inactive for.</value>
         TimeSpan InactiveFor { get; }
 
         /// <summary>
