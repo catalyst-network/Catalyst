@@ -71,7 +71,7 @@ namespace Catalyst.Cli.Handlers
 
                 var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray())[0].RLPData;
 
-                Guard.Argument(decodeResult).NotNull();
+                Guard.Argument(decodeResult).NotNull("The sign message response cannot be null.");
 
                 var originalMessage = decodeResult.ToStringFromRLPDecoded();
 

@@ -44,6 +44,8 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages PeerListCountResponse = new PeerListCountResponseMessage();
         public static readonly RpcMessages RemovePeerRequest = new RemovePeerRequestMessage();
         public static readonly RpcMessages RemovePeerResponse = new RemovePeerResponseMessage();
+        public static readonly RpcMessages VerifyMessageRequest = new VerifyMessageRequestMessage();
+        public static readonly RpcMessages VerifyMessageResponse = new VerifyMessageResponseMessage();
 
         private RpcMessages(int id, string name) : base(id, name) { }
 
@@ -115,6 +117,16 @@ namespace Catalyst.Common.Config
         private sealed class RemovePeerResponseMessage : RpcMessages
         {
             public RemovePeerResponseMessage() : base(14, "RemovePeerResponse") { }
+        }
+        
+        private sealed class VerifyMessageRequestMessage : RpcMessages
+        {
+            public VerifyMessageRequestMessage() : base(15, "VerifyMessageRequest") { }
+        }
+
+        private sealed class VerifyMessageResponseMessage : RpcMessages
+        {
+            public VerifyMessageResponseMessage() : base(16, "VerifyMessageResponse") { }
         }
     }
 }

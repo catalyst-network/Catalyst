@@ -688,21 +688,26 @@ namespace Catalyst.Cli
             var signOptions = (SignOptions) opts;
             var nodeId = signOptions.Node;
 
-            //Perform validations required before a command call
             var node = GetConnectedNode(nodeId);
-            Guard.Argument(node).NotNull();
+            Guard.Argument(node).NotNull("The connected node cannot be null.");
+            
+            var nodeConfig = GetNodeConfig(signOptions.Node);
 
-            //if the node is connected and there are no other errors then send the get info request to the server
             try
             {
-                //send the message to the server by writing it to the channel
-                var request = new SignMessageRequest
-                {
-                    Message = ByteString.CopyFrom(signOptions.Message.Trim('\"'), Encoding.UTF8)
-                       .ToByteString()
-                };
+                var request = new RpcMessageFactory<SignMessageRequest, RpcMessages>().GetMessage(
+                    new MessageDto<SignMessageRequest, RpcMessages>(
+                        RpcMessages.SignMessageRequest,
+                        new SignMessageRequest
+                        {
+                            Message = ByteString.CopyFrom(signOptions.Message.Trim('\"'), Encoding.UTF8)
+                               .ToByteString()
+                        }, 
+                        recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                        _peerIdentifier)
+                );
 
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid())).Wait();
+                node.SendMessage(request).Wait();
             }
             catch (Exception e)
             {
@@ -722,26 +727,30 @@ namespace Catalyst.Cli
         {
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
 
-            //get the message to verify, the address/public key who signed it, and the signature 
             var verifyOptions = (VerifyOptions) opts;
-
-            //if the node is connected and there are no other errors then send the get info request to the server
+            
+            var node = GetConnectedNode(verifyOptions.Node);
+            Guard.Argument(node).NotNull("The connected node cannot be null.");
+            
+            var nodeConfig = GetNodeConfig(verifyOptions.Node);
+            
             try
-            {
-                var node = GetConnectedNode(verifyOptions.Node);
-                Guard.Argument(node).NotNull();
+            {   
+                var request = new RpcMessageFactory<VerifyMessageRequest, RpcMessages>().GetMessage(
+                    new MessageDto<VerifyMessageRequest, RpcMessages>(
+                        RpcMessages.VerifyMessageRequest,
+                        new VerifyMessageRequest
+                        {
+                            Message =
+                                RLP.EncodeElement(verifyOptions.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
+                            PublicKey = verifyOptions.Address.ToBytesForRLPEncoding().ToByteString(),
+                            Signature = verifyOptions.Signature.ToBytesForRLPEncoding().ToByteString()
+                        }, 
+                        recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
+                        _peerIdentifier)
+                );
 
-                //create and populate a VerifyMessage request
-                var request = new VerifyMessageRequest
-                {
-                    Message =
-                        RLP.EncodeElement(verifyOptions.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
-                    PublicKey = verifyOptions.Address.ToBytesForRLPEncoding().ToByteString(),
-                    Signature = verifyOptions.Signature.ToBytesForRLPEncoding().ToByteString()
-                };
-
-                //send the message to the server for handling by writing it to the channel
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid())).Wait();
+                node.SendMessage(request).Wait();
             }
             catch (Exception e)
             {

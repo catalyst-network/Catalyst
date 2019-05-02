@@ -25,12 +25,15 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -74,13 +77,6 @@ namespace Catalyst.Cli.UnitTests
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
-        
-        private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
-        {
-            var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
-        }
 
         public static SignedResponse SignMessage(string messageToSign, string signature, string pubKey)
         {
@@ -99,14 +95,21 @@ namespace Catalyst.Cli.UnitTests
         public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
         {   
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            var response = new SignMessageResponse
-            {
-                OriginalMessage = signedResponse.OriginalMessage,
-                PublicKey = signedResponse.PublicKey,
-                Signature = signedResponse.Signature
-            }.ToAnySigned(PeerIdHelper.GetPeerId("sender"), Guid.NewGuid());
+            
+            var response = new RpcMessageFactory<SignMessageResponse, RpcMessages>().GetMessage(
+                new MessageDto<SignMessageResponse, RpcMessages>(
+                    RpcMessages.SignMessageResponse,
+                    new SignMessageResponse
+                    {
+                        OriginalMessage = signedResponse.OriginalMessage,
+                        PublicKey = signedResponse.PublicKey,
+                        Signature = signedResponse.Signature
+                    },
+                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
+            );
 
-            var messageStream = CreateStreamWithMessage(response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
             
             _handler = new SignMessageResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
