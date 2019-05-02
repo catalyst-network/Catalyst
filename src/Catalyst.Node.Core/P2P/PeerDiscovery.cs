@@ -40,6 +40,7 @@ using Catalyst.Protocol.IPPN;
 using Dawn;
 using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 using Serilog;
 using SharpRepository.Repository;
@@ -85,10 +86,10 @@ namespace Catalyst.Node.Core.P2P
         {
             try
             {
-                foreach (var seedNode in ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList())
+                ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList().ForEach(seedNode =>
                 {
-                    SeedNodes.Add(seedNode);
-                }
+                    SeedNodes.Add(seedNode); 
+                });
             }
             catch (Exception e)
             {
@@ -107,16 +108,15 @@ namespace Catalyst.Node.Core.P2P
                 var dnsQueryAnswer = await Dns.GetTxtRecords(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
 
-                Guard.Argument(answerSection).NotNull();
+                Guard.Argument(answerSection.EscapedText).NotNull().Count(1);
                 
-                IList<IPeerIdentifier> seedPeerIdentifiers = new List<IPeerIdentifier>();
-                
-                answerSection?.EscapedText.ToList().ForEach(rawPid =>
+                answerSection.EscapedText.ToList().AsParallel().ForAll(hexPid =>
                 {
-                    var peerChunks = rawPid.Split("|");
-                    Guard.Argument(peerChunks).Count(5);
-                    seedPeerIdentifiers.Add(new PeerIdentifier(peerChunks));
+                    var peerChunks = hexPid.HexToUTF8String().Split("|");
+                    Peers.TryAdd(new PeerIdentifier(peerChunks));
                 });
+
+                Guard.Argument(Peers).MinCount(1);
             });
         }
 
@@ -155,18 +155,18 @@ namespace Catalyst.Node.Core.P2P
 
         private async Task PeerCrawler()
         {
-            if (Peers.Count == 0)
+            if (Peers.Count != 0) return;
+            try
             {
-                try
-                {
-                    GetSeedNodesFromDns(SeedNodes);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e.Message);
-                    throw;
-                }
+                GetSeedNodesFromDns(SeedNodes);
             }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message);
+                throw;
+            }
+
+            await Task.Delay(5000);
         }
         
         public void Dispose()

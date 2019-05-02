@@ -36,7 +36,6 @@ using Nethereum.RLP;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
-using Dns = Catalyst.Common.Network.Dns;
 
 namespace Catalyst.Common.UnitTests.Network
 {
@@ -46,7 +45,7 @@ namespace Catalyst.Common.UnitTests.Network
         {
             _lookupClient = Substitute.For<ILookupClient>();
             _ipEndPoint = new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53);
-            _dns = new Dns(_lookupClient);
+            _dns = new Common.Network.DnsClient(_lookupClient);
         }
 
         private readonly IDns _dns;
@@ -127,7 +126,7 @@ namespace Catalyst.Common.UnitTests.Network
         public async Task GetTxtRecords_should_return_seeds_for_realz()
         {
             var trueClient = new LookupClient(_ipEndPoint);
-            var dns = new Dns(trueClient);
+            var dns = new Common.Network.DnsClient(trueClient);
             var dnsQueryResponse =
                 await dns.GetTxtRecords("seed1.network.atlascity.io");
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();

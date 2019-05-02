@@ -32,15 +32,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Common.Network
 {
-    public class DevDns : IDns
+    public sealed class DevDnsClient : IDns
     {
         private readonly IList<string> _seedServers;
-        private readonly IList<IPEndPoint> _dnsQueryAnswerValues;
+        private readonly IList<string> _dnsQueryAnswerValues;
 
-        public DevDns(IConfigurationRoot configurationRoot)
+        public DevDnsClient(IConfigurationRoot configurationRoot)
         {
             _seedServers = ConfigValueParser.GetStringArrValues(configurationRoot, "SeedServers");
-            _dnsQueryAnswerValues = ConfigValueParser.GetIpEndpointArrValues(configurationRoot, "QueryAnswerValues");
+            _dnsQueryAnswerValues = configurationRoot.GetSection("QueryAnswerValues").GetChildren().Select(p => p.Value).ToArray();
         }
 
         public async Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames = null)
@@ -55,7 +55,7 @@ namespace Catalyst.Common.Network
         {
             var devDnsQueryResponse = new DevDnsQueryResponse
             {
-                Answers = DevDnsQueryResponse.BuildDnsResourceRecords(hostname, _dnsQueryAnswerValues.FirstOrDefault()?.ToString())
+                Answers = DevDnsQueryResponse.BuildDnsResourceRecords(hostname, _dnsQueryAnswerValues.FirstOrDefault())
             };
             return await Task.FromResult<IDnsQueryResponse>(devDnsQueryResponse).ConfigureAwait(false);
         }

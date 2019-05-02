@@ -74,14 +74,15 @@ namespace Catalyst.Common.P2P
 
         public PeerIdentifier(IReadOnlyList<string> rawPidChunks)
         {
+            Guard.Argument(rawPidChunks).Count(5);
             Guard.Argument(rawPidChunks[0]).Length(2);
             Guard.Argument(rawPidChunks[1]).Length(2);
-            Guard.Argument(rawPidChunks[2]).Length(16);
-            Guard.Argument(rawPidChunks[3]).Length(2);
+            Guard.Argument(rawPidChunks[2]).Length(14);
+            Guard.Argument(rawPidChunks[3]).MinLength(4).MaxLength(5);
             Guard.Argument(rawPidChunks[4]).Length(20);
             
             var peerByteChunks = new List<ByteString>();
-            rawPidChunks.AsParallel().ForAll(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));
+            rawPidChunks.ToList().ForEach(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));
             
             PeerId = new PeerId
             {

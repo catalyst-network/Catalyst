@@ -31,14 +31,14 @@ using DnsClient;
 
 namespace Catalyst.Common.Network
 {
-    public sealed class Dns : IDns
+    public sealed class DnsClient : IDns
     {
         private readonly ILookupClient _client;
 
         /// <summary>
         /// </summary>
         /// <param name="client"></param>
-        public Dns(ILookupClient client)
+        public DnsClient(ILookupClient client)
         {
             Guard.Argument(client, nameof(client)).NotNull();
             _client = client;

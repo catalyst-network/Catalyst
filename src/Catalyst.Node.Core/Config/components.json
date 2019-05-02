@@ -122,7 +122,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Network.DevDns, Catalyst.Common",
+            "type": "Catalyst.Common.Network.DevDnsClient, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Network.IDns, Catalyst.Common"
