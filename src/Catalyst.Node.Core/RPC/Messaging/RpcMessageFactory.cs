@@ -108,8 +108,7 @@ namespace Catalyst.Node.Core.Rpc.Messaging
             {
                 return BuildTellMessage(dto);
             }
-
-
+            
             if (RpcMessages.PeerListCountRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
