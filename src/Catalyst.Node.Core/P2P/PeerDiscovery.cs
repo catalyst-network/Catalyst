@@ -111,6 +111,8 @@ namespace Catalyst.Node.Core.P2P
                 Guard.Argument(answerSection.EscapedText).NotNull().Count(1);
                 
                 answerSection.EscapedText.ToList().AsParallel().ForAll(hexPid =>
+                    
+                    // put this in dns helper
                 {
                     var peerChunks = hexPid.HexToUTF8String().Split("|");
                     Peers.TryAdd(new PeerIdentifier(peerChunks));
