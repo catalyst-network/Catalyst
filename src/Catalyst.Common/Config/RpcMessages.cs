@@ -46,6 +46,10 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages TransferFileBytesResponse = new TransferFileBytesResponseMessage();
         public static readonly RpcMessages PeerListCountRequest = new PeerListCountRequestMessage();
         public static readonly RpcMessages PeerListCountResponse = new PeerListCountResponseMessage();
+        public static readonly RpcMessages RemovePeerRequest = new RemovePeerRequestMessage();
+        public static readonly RpcMessages RemovePeerResponse = new RemovePeerResponseMessage();
+        public static readonly RpcMessages VerifyMessageRequest = new VerifyMessageRequestMessage();
+        public static readonly RpcMessages VerifyMessageResponse = new VerifyMessageResponseMessage();
 
         private RpcMessages(int id, string name) : base(id, name) { }
 
@@ -53,37 +57,37 @@ namespace Catalyst.Common.Config
         {
             public GetInfoRequestMessage() : base(1, "GetInfoRequest") { }
         }
-        
+
         private sealed class GetInfoResponseMessage : RpcMessages
         {
             public GetInfoResponseMessage() : base(2, "GetInfoResponse") { }
         }
-        
+
         private sealed class GetMempoolRequestMessage : RpcMessages
         {
             public GetMempoolRequestMessage() : base(3, "GetMempoolRequest") { }
         }
-        
+
         private sealed class GetMempoolResponseMessage : RpcMessages
         {
             public GetMempoolResponseMessage() : base(4, "GetMempoolResponse") { }
         }
-        
+
         private sealed class GetVersionRequestMessage : RpcMessages
         {
             public GetVersionRequestMessage() : base(5, "GetVersionRequest") { }
         }
-        
+
         private sealed class GetVersionResponseMessage : RpcMessages
         {
             public GetVersionResponseMessage() : base(6, "GetVersionResponse") { }
         }
-        
+
         private sealed class SignMessageRequestMessage : RpcMessages
         {
             public SignMessageRequestMessage() : base(7, "SignMessageRequest") { }
         }
-        
+
         private sealed class SignMessageResponseMessage : RpcMessages
         {
             public SignMessageResponseMessage() : base(8, "SignMessageResponse") { }
@@ -127,6 +131,26 @@ namespace Catalyst.Common.Config
         private sealed class PeerListCountResponseMessage : RpcMessages
         {
             public PeerListCountResponseMessage() : base(16, "PeerListCountResponse") { }
+        }
+
+        private sealed class RemovePeerRequestMessage : RpcMessages
+        {
+            public RemovePeerRequestMessage() : base(13, "RemovePeerRequest") { }
+        }
+
+        private sealed class RemovePeerResponseMessage : RpcMessages
+        {
+            public RemovePeerResponseMessage() : base(14, "RemovePeerResponse") { }
+        }
+        
+        private sealed class VerifyMessageRequestMessage : RpcMessages
+        {
+            public VerifyMessageRequestMessage() : base(15, "VerifyMessageRequest") { }
+        }
+
+        private sealed class VerifyMessageResponseMessage : RpcMessages
+        {
+            public VerifyMessageResponseMessage() : base(16, "VerifyMessageResponse") { }
         }
     }
 }
