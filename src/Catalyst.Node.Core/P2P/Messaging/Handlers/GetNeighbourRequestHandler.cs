@@ -75,7 +75,8 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
                 message: peerNeighborsResponseMessage,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell
+                messageType: DtoMessageType.Tell,
+                message.Payload.CorrelationId.ToGuid()
             );
 
             message.Context.Channel.WriteAndFlushAsync(datagramEnvelope);

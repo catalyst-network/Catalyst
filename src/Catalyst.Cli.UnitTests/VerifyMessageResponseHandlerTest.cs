@@ -74,7 +74,8 @@ namespace Catalyst.Cli.UnitTests
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                DtoMessageType.Tell);
+                DtoMessageType.Tell,
+                Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
             var cache = Substitute.For<IMessageCorrelationCache>();

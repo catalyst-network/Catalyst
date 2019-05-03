@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -55,7 +56,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 new PingResponse(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                DtoMessageType.Tell
+                DtoMessageType.Tell,
+                Guid.NewGuid()
             );
 
             pingResponseDatagram.Should().BeAssignableTo(typeof(IByteBufferHolder));

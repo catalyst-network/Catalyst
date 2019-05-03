@@ -31,6 +31,10 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging
 {
+    /// <summary>
+    /// The base class to handle building of AnySigned messages
+    /// </summary>
+    /// <typeparam name="TMessage">The type of the message.</typeparam>
     public abstract class MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
     {
@@ -39,19 +43,35 @@ namespace Catalyst.Common.IO.Messaging
         /// <param name="recipient">The recipient.</param>
         /// <param name="sender">The sender.</param>
         /// <param name="messageType">Type of the message.</param>
-        /// <returns></returns>
-        public abstract AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType);
-        
-        protected AnySigned BuildTellMessage(IMessageDto<TMessage> dto)
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        public abstract AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default);
+
+        /// <summary>Builds the tell message.</summary>
+        /// <param name="dto">The dto.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        protected AnySigned BuildTellMessage(IMessageDto<TMessage> dto, Guid correlationId)
         {
-            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
+            if (correlationId == default)
+            {
+                throw new ArgumentException("Correlation ID cannot be null for a tell message");
+            }
+
+            return dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
         }
 
+        /// <summary>Builds the ask message.</summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns>AnySigned message</returns>
         protected AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
+        /// <summary>Builds the gossip message.</summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns>AnySigned message</returns>
         protected AnySigned BuildGossipMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());

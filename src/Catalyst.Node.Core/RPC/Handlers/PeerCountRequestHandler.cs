@@ -23,6 +23,7 @@
 
 using System.Linq;
 using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -81,7 +82,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 message: response,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell
+                messageType: DtoMessageType.Tell,
+                message.Payload.CorrelationId.ToGuid()
             );
 
             message.Context.Channel.WriteAndFlushAsync(responseMessage);

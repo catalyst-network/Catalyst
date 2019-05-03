@@ -174,7 +174,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 message: response,
                 recipient: fileTransferInformation.RecipientIdentifier,
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell
+                messageType: DtoMessageType.Tell,
+                Guid.NewGuid()
             );
 
             fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage);

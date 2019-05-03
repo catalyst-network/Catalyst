@@ -76,34 +76,35 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData.ToStringFromRLPDecoded();
             var publicKey = deserialised.PublicKey;
             var signature = deserialised.Signature;
+            var correlationGuid = message.Payload.CorrelationId.ToGuid();
 
             try
             {
                 if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out var encodingUsed, out var decodedPublicKey))
                 {
                     Logger.Error($"{PublicKeyEncodingInvalid} {encodingUsed}");
-                    ReturnResponse(false);
+                    ReturnResponse(false, correlationGuid);
                     return;
                 }
 
                 if (decodedPublicKey.Length == 0)
                 {
                     Logger.Error($"{PublicKeyNotProvided}");
-                    ReturnResponse(false);
+                    ReturnResponse(false, correlationGuid);
                     return;
                 }
                 
                 if (!Multibase.TryDecode(signature.ToStringUtf8(), out encodingUsed, out var decodedSignature))
                 {
                     Logger.Error($"{SignatureEncodingInvalid} {encodingUsed}");
-                    ReturnResponse(false);
+                    ReturnResponse(false, correlationGuid);
                     return;
                 }
                 
                 if (decodedSignature.Length == 0)
                 {
                     Logger.Error($"{SignatureNotProvided}");
-                    ReturnResponse(false);
+                    ReturnResponse(false, correlationGuid);
                     return;
                 }
                 
@@ -116,7 +117,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                ReturnResponse(result);
+                ReturnResponse(result, correlationGuid);
             }
             catch (Exception ex)
             {
@@ -124,7 +125,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             } 
         }
 
-        private void ReturnResponse(bool result)
+        private void ReturnResponse(bool result, Guid correlationGuid)
         {
             var response = new RpcMessageFactory<VerifyMessageResponse>().GetMessage(
                 new VerifyMessageResponse
@@ -133,7 +134,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 },
                 new PeerIdentifier(_message.Payload.PeerId),
                 _peerIdentifier,
-                DtoMessageType.Tell);
+                DtoMessageType.Tell,
+                correlationGuid);
 
             _message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
         }

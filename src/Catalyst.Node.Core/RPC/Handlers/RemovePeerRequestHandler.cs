@@ -110,7 +110,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     message: removePeerResponse,
                     recipient: new PeerIdentifier(message.Payload.PeerId),
                     sender: _peerIdentifier,
-                    messageType: DtoMessageType.Tell
+                    messageType: DtoMessageType.Tell,
+                    message.Payload.CorrelationId.ToGuid()
                 );
 
                 message.Context.Channel.WriteAndFlushAsync(removePeerMessage);

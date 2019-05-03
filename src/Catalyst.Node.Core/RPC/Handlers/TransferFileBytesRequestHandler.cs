@@ -97,7 +97,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 message: responseMessage,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell
+                messageType: DtoMessageType.Tell,
+                message.Payload.CorrelationId.ToGuid()
             );
 
             message.Context.Channel.WriteAndFlushAsync(responseDto);

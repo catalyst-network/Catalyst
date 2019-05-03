@@ -80,7 +80,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     },
                     new PeerIdentifier(message.Payload.PeerId), 
                     _peerIdentifier,
-                    DtoMessageType.Tell);
+                    DtoMessageType.Tell,
+                    message.Payload.CorrelationId.ToGuid());
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }

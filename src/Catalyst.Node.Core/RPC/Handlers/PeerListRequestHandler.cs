@@ -32,6 +32,7 @@ using ILogger = Serilog.ILogger;
 using System.Collections.Generic;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.P2P;
 using Dawn;
 
@@ -101,7 +102,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 message: response,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell
+                messageType: DtoMessageType.Tell,
+                message.Payload.CorrelationId.ToGuid()
             );
 
             message.Context.Channel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();

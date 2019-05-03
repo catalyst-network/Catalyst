@@ -30,6 +30,11 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Rpc.Messaging
 {
+    /// <summary>
+    /// The RpcMessageFactory builds AnySigned objects
+    /// </summary>
+    /// <typeparam name="TMessage">The type of the message.</typeparam>
+    /// <seealso cref="Catalyst.Common.IO.Messaging.MessageFactoryBase{TMessage}" />
     public sealed class RpcMessageFactory<TMessage>
         : MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
@@ -39,9 +44,10 @@ namespace Catalyst.Node.Core.Rpc.Messaging
         /// <param name="recipient">The recipient.</param>
         /// <param name="sender">The sender.</param>
         /// <param name="messageType">Type of the message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException">unknown message type</exception>
-        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType)
+        /// <exception cref="ArgumentException">Not specified correlationId</exception>
+        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
         {
             var dto = new MessageDto<TMessage>(message, recipient, sender);
 
@@ -50,7 +56,7 @@ namespace Catalyst.Node.Core.Rpc.Messaging
                 case DtoMessageType.Ask:
                     return BuildAskMessage(dto);
                 case DtoMessageType.Tell:
-                    return BuildTellMessage(dto);
+                    return BuildTellMessage(dto, correlationId);
                 case DtoMessageType.Gossip:
                     return BuildGossipMessage(dto);
             }

@@ -133,7 +133,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                             peerSettings.Port),
                         new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
                             peerSettings.Port),
-                        DtoMessageType.Tell
+                        DtoMessageType.Tell,
+                        Guid.NewGuid()
                     );
                     
                     peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();

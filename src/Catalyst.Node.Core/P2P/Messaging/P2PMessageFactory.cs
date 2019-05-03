@@ -41,10 +41,11 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <param name="recipient">The recipient.</param>
         /// <param name="sender">The sender.</param>
         /// <param name="messageType">Type of the message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
         /// <returns></returns>
-        public IByteBufferHolder GetMessageInDatagramEnvelope(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType)
+        public IByteBufferHolder GetMessageInDatagramEnvelope(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
         {
-            return GetMessage(message, recipient, sender, messageType).ToDatagram(recipient.IpEndPoint);
+            return GetMessage(message, recipient, sender, messageType, correlationId).ToDatagram(recipient.IpEndPoint);
         }
 
         /// <summary>Gets the message.</summary>
@@ -54,7 +55,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <param name="messageType">Type of the message.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException">unknown message type</exception>
-        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType)
+        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
         {
             var dto = new P2PMessageDto<TMessage>(message, recipient, sender);
 
@@ -63,7 +64,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
                 case DtoMessageType.Ask:
                     return BuildAskMessage(dto);
                 case DtoMessageType.Tell:
-                    return BuildTellMessage(dto);
+                    return BuildTellMessage(dto, correlationId);
                 case DtoMessageType.Gossip:
                     return BuildGossipMessage(dto);
             }
