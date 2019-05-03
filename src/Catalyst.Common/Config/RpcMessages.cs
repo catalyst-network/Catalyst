@@ -40,6 +40,10 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages SignMessageResponse = new SignMessageResponseMessage();
         public static readonly RpcMessages GetPeerListRequest = new GetPeerListRequestMessage();
         public static readonly RpcMessages GetPeerListResponse = new GetPeerListResponseMessage();
+        public static readonly RpcMessages AddFileToDfsRequest = new AddFileToDfsRequestMessage();
+        public static readonly RpcMessages AddFileToDfsResponse = new AddFileToDfsResponseMessage();
+        public static readonly RpcMessages TransferFileBytesRequest = new TransferFileBytesRequestMessage();
+        public static readonly RpcMessages TransferFileBytesResponse = new TransferFileBytesResponseMessage();
         public static readonly RpcMessages PeerListCountRequest = new PeerListCountRequestMessage();
         public static readonly RpcMessages PeerListCountResponse = new PeerListCountResponseMessage();
         public static readonly RpcMessages RemovePeerRequest = new RemovePeerRequestMessage();
@@ -99,34 +103,54 @@ namespace Catalyst.Common.Config
             public GetPeerListResponseMessage() : base(10, "GetPeerListResponse") { }
         }
 
+        private sealed class AddFileToDfsRequestMessage : RpcMessages
+        {
+            public AddFileToDfsRequestMessage() : base(11, "AddFileToDfsRequest") { }
+        }
+
+        private sealed class AddFileToDfsResponseMessage : RpcMessages
+        {
+            public AddFileToDfsResponseMessage() : base(12, "AddFileToDfsResponse") { }
+        }
+
+        private sealed class TransferFileBytesRequestMessage : RpcMessages
+        {
+            public TransferFileBytesRequestMessage() : base(13, "TransferFileBytesRequest") { }
+        }
+
+        private sealed class TransferFileBytesResponseMessage : RpcMessages
+        {
+            public TransferFileBytesResponseMessage() : base(14, "TransferFileBytesResponse") { }
+        }
+
         private sealed class PeerListCountRequestMessage : RpcMessages
         {
-            public PeerListCountRequestMessage() : base(11, "PeerListCountRequest") { }
+            public PeerListCountRequestMessage() : base(15, "PeerListCountRequest") { }
         }
 
         private sealed class PeerListCountResponseMessage : RpcMessages
         {
-            public PeerListCountResponseMessage() : base(12, "PeerListCountResponse") { }
+            public PeerListCountResponseMessage() : base(16, "PeerListCountResponse") { }
         }
 
         private sealed class RemovePeerRequestMessage : RpcMessages
         {
-            public RemovePeerRequestMessage() : base(13, "RemovePeerRequest") { }
+            public RemovePeerRequestMessage() : base(17, "RemovePeerRequest") { }
         }
 
         private sealed class RemovePeerResponseMessage : RpcMessages
         {
-            public RemovePeerResponseMessage() : base(14, "RemovePeerResponse") { }
+            public RemovePeerResponseMessage() : base(18, "RemovePeerResponse") { }
         }
         
         private sealed class VerifyMessageRequestMessage : RpcMessages
         {
-            public VerifyMessageRequestMessage() : base(15, "VerifyMessageRequest") { }
+            public VerifyMessageRequestMessage() : base(19, "VerifyMessageRequest") { }
         }
 
         private sealed class VerifyMessageResponseMessage : RpcMessages
         {
-            public VerifyMessageResponseMessage() : base(16, "VerifyMessageResponse") { }
+            public VerifyMessageResponseMessage() : base(20, "VerifyMessageResponse") { }
         }
     }
 }

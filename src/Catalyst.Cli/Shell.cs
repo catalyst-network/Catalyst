@@ -48,6 +48,9 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Google.Protobuf;
+using System.IO;
+using Catalyst.Common.Interfaces.FileTransfer;
+using Serilog.Events;
 
 namespace Catalyst.Cli
 {
@@ -60,7 +63,7 @@ namespace Catalyst.Cli
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
-
+        private readonly ICliFileTransfer _cliFileTransfer;
         private readonly ILogger _logger;
 
         private const string NoConfigMessage =
@@ -71,13 +74,15 @@ namespace Catalyst.Cli
         public Shell(INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
-            ICertificateStore certificateStore)
+            ICertificateStore certificateStore,
+            ICliFileTransfer cliFileTransfer)
         {
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _logger = logger;
+            _cliFileTransfer = cliFileTransfer;
             _peerIdentifier = BuildCliPeerId(config);
 
             Console.WriteLine(@"Koopa Shell Start");
@@ -110,7 +115,8 @@ namespace Catalyst.Cli
                     VerifyOptions,
                     PeerListOptions,
                     PeerCountOptions,
-                    RemovePeerOptions>(args)
+                    RemovePeerOptions,
+                    AddFileOnDfsOptions>(args)
                .MapResult<
                     GetInfoOptions, 
                     ConnectOptions, 
@@ -119,6 +125,7 @@ namespace Catalyst.Cli
                     PeerListOptions,
                     PeerCountOptions,
                     RemovePeerOptions,
+                    AddFileOnDfsOptions,
                     bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
@@ -127,6 +134,7 @@ namespace Catalyst.Cli
                     (PeerListOptions opts) => OnPeerListCommands(opts),
                     (PeerCountOptions opts) => OnPeerCountCommands(opts),
                     (RemovePeerOptions opts) => OnRemovePeerCommands(opts),
+                    (AddFileOnDfsOptions opts) => OnAddFileToDfs(opts),
                     errs => false);
         }
 
@@ -238,6 +246,21 @@ namespace Catalyst.Cli
             if (opts.Node.Length > 0)
             {
                 return OnGetPeerCount(opts);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Adds the file on DFS.
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns></returns>
+        private bool OnAddFileToDfs(AddFileOnDfsOptions opts)
+        {
+            if (opts.File.Length > 0 && opts.Node.Length > 0)
+            {
+                return OnAddFileOnDfsMessage(opts);
             }
 
             return false;
@@ -851,6 +874,70 @@ namespace Catalyst.Cli
             {
                 Console.WriteLine(e);
                 throw;
+            }
+
+            return true;
+        }
+
+        /// <summary>Called when [add file on DFS message].</summary>
+        /// <param name="opts">The options.</param>
+        /// <returns>True if command was successful</returns>
+        public override bool OnAddFileOnDfsMessage(object opts)
+        {
+            Guard.Argument(opts).NotNull().Compatible<AddFileOnDfsOptions>();
+
+            var addFileOnDfsOptions = (AddFileOnDfsOptions) opts;
+            var node = GetConnectedNode(addFileOnDfsOptions.Node);
+            var nodeConfig = GetNodeConfig(addFileOnDfsOptions.Node);
+            var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
+                nodeConfig.HostAddress, nodeConfig.Port);
+
+            Guard.Argument(node).NotNull();
+
+            if (!File.Exists(addFileOnDfsOptions.File))
+            {
+                ReturnUserMessage("File does not exist.");
+                return false;
+            }
+
+            AddFileToDfsRequest request = new AddFileToDfsRequest
+            {
+                FileName = Path.GetFileName(addFileOnDfsOptions.File)
+            };
+
+            using (var fileStream = File.Open(addFileOnDfsOptions.File, FileMode.Open))
+            {
+                request.FileSize = (ulong) fileStream.Length;
+            }
+
+            var rpcMessageFactory = new RpcMessageFactory<AddFileToDfsRequest, RpcMessages>();
+
+            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<AddFileToDfsRequest, RpcMessages>(
+                type: RpcMessages.AddFileToDfsRequest,
+                message: request,
+                recipient: nodePeerIdentifier,
+                sender: _peerIdentifier
+            ));
+
+            node.SendMessage(requestMessage);
+            
+            bool responseReceived = _cliFileTransfer.Wait();
+
+            if (!responseReceived)
+            {
+                ReturnUserMessage("Timeout - No response received from node");
+                return false;
+            }
+            else
+            {
+                if (_cliFileTransfer.InitialiseSuccess())
+                {
+                    var minLevel = Program.LogLevelSwitch.MinimumLevel;
+                    Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
+                    _cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node, nodePeerIdentifier, _peerIdentifier);
+                    Program.LogLevelSwitch.MinimumLevel = minLevel;
+                    _cliFileTransfer.WaitForDfsHash();
+                }
             }
 
             return true;
