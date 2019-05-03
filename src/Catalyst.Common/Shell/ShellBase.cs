@@ -172,6 +172,13 @@ namespace Catalyst.Common.Shell
         protected abstract bool OnGetMempool(Object args);
 
         /// <summary>
+        /// Called when checking node peer reputation.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected abstract bool OnGetPeerNodeReputation(Object args);
+
+        /// <summary>
         ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>

@@ -1,111 +1,119 @@
 {
     "defaultAssembly": "Catalyst.Node.Core",
-    "components": [
-        //Rpc request handlers
+  "components": [
+    //Rpc request handlers
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.GetInfoRequestHandler",
+      "services": [
         {
-            "type": "Catalyst.Node.Core.RPC.Handlers.GetInfoRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.GetMempoolRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.GetVersionRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.SignMessageRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.VerifyMessageRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.PeerListRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.AddFileToDfsRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.PeerCountRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.RPC.Handlers.RemovePeerRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
-                }
-            ]
-        },
-        //P2P request handlers
-        {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingResponseHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.TransactionRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
-                }
-            ]
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
         }
-    ]
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.GetMempoolRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.GetVersionRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.SignMessageRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.VerifyMessageRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.PeerListRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.AddFileToDfsRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.PeerCountRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.RemovePeerRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.RPC.Handlers.PeerReputationRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+        }
+      ]
+    },
+    //P2P request handlers
+    {
+      "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PingResponseHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
+        }
+      ]
+    },
+    {
+      "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.TransactionRequestHandler",
+      "services": [
+        {
+          "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
+        }
+      ]
+    }
+  ]
 }

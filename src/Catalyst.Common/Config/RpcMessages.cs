@@ -51,7 +51,7 @@ namespace Catalyst.Common.Config
             _messageMap = new Dictionary<string, RpcMessages>();
             var types = AppDomain.CurrentDomain.GetAssemblies()
                .SelectMany(t => t.GetTypes())
-               .Where(t => t.IsClass && t.Namespace == _messageNamespace 
+               .Where(t => t.IsClass && t.Namespace == _messageNamespace
                  && typeof(IMessage).IsAssignableFrom(t));
 
             int id = 0;
