@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Cryptography.IWrapper.Types;
 using Dawn;
 using Multiformats.Base;
 using Nethereum.RLP;
@@ -108,7 +109,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Guard.Argument(pubKey).HasValue();
 
                 var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
-                    decodedSignature);
+                    new Signature(decodedSignature));
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 

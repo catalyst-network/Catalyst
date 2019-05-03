@@ -38,12 +38,16 @@ namespace Catalyst.Common.Cryptography
         public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob) { throw new NotImplementedException(); }
         public byte[] ExportPrivateKey(IPrivateKey key) { throw new NotImplementedException(); }
 
-        public byte[] Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
+        public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
         {
-            return _wrapper.StdSign(privateKey., data.ToArray());
+            return _wrapper.StdSign(privateKey, data.ToArray());
         }
-        public bool Verify(IPublicKey key, ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature) { throw new NotImplementedException(); }
-        public IPublicKey GetPublicKey(IPrivateKey key) { throw new NotImplementedException(); }
+
+        public bool Verify(IPublicKey key, ReadOnlySpan<byte> message, ISignature signature)
+        {
+            return _wrapper.StdVerify(signature, key, message.ToArray());
+        }
+        public IPublicKey GetPublicKey(IPrivateKey key) { return _wrapper.GetPublicKeyFromPrivate(key); }
         public string AddressFromKey(IPublicKey key) { throw new NotImplementedException(); }
     }
 }

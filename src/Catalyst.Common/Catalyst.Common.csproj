@@ -180,9 +180,11 @@
     <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\FixedSizedBytes.cs" Link="Helpers\Cryptography.IWrapper\Types\FixedSizedBytes.cs" />
     <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\PrivateKey.cs" Link="Helpers\Cryptography.IWrapper\Types\PrivateKey.cs" />
     <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\PublicKey.cs" Link="Helpers\Cryptography.IWrapper\Types\PublicKey.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Interfaces\IPrivateKey.cs" Link="Helpers\Cryptography.IWrapper\Interfaces\IPrivateKey.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\Signature.cs" Link="Helpers\Cryptography.IWrapper\Types\Signature.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Interfaces\IPrivateKey.cs" Link="Helpers\Cryptography.IWrapper\Interfaces\IPrivateKey.cs" />
     <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Interfaces\IPublicKey.cs" Link="Helpers\Cryptography.IWrapper\Interfaces\IPublicKey.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Interfaces\ISignature.cs" Link="Helpers\Cryptography.IWrapper\Interfaces\ISignature.cs" />
+      <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />

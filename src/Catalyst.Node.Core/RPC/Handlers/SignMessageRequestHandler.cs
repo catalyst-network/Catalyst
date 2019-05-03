@@ -88,8 +88,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 var response = new SignMessageResponse
                 {
                     OriginalMessage = deserialised.Message,
-                    PublicKey = publicKey.GetBytes().ToByteString(),
-                    Signature = signature.ToByteString()
+                    PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
+                    Signature = signature.Bytes.RawBytes.ToByteString()
                 };
 
                 var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
