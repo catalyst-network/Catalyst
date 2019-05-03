@@ -149,6 +149,23 @@ namespace Catalyst.Common.Shell
         protected abstract bool OnGetVersion(Object args);
 
         /// <summary>
+        /// Called when [list peer nodes].
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected abstract bool OnListPeerNodes(Object args);
+
+        /// <summary>Called when [remove peer].</summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected abstract bool OnRemovePeer(object args);
+
+        /// <summary>Called when [get peer count].</summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected abstract bool OnGetPeerCount(Object args);
+
+        /// <summary>
         ///     Prints stats about the mempool implementation.
         /// </summary>
         /// <returns></returns>
@@ -216,5 +233,12 @@ namespace Catalyst.Common.Shell
         }
 
         public abstract bool OnVerifyMessage(object opts);
+
+        /// <summary>
+        /// Called when [add file on DFS message].
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns></returns>
+        public abstract bool OnAddFileOnDfsMessage(object opts);
     }
 }

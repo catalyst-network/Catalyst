@@ -30,9 +30,9 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public abstract class Client : IoBase, ISocketClient
+    public abstract class ClientBase : IoBase, ISocketClient
     {
-        protected Client(ILogger logger) : base(logger) { }
+        protected ClientBase(ILogger logger) : base(logger) { }
 
         protected abstract void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
 

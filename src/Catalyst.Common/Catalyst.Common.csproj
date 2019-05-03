@@ -215,7 +215,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Enumerator" />
-    <Folder Include="FileSystem" />
     <Folder Include="Hex\HexConverters\Extensions\" />
     <Folder Include="Hex\HexTypes\" />
     <Folder Include="NSec\Cryptography\Buffer\" />
@@ -223,7 +222,6 @@
     <Folder Include="NSec\Interop\" />
     <Folder Include="RLP\" />
     <Folder Include="Interfaces\Cli" />
-    <Folder Include="Interfaces\FileSystem" />
     <Folder Include="Interfaces\Modules\Consensus" />
     <Folder Include="Interfaces\Modules\Contract" />
     <Folder Include="Interfaces\Modules\KeySigner" />

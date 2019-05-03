@@ -26,54 +26,115 @@ using Catalyst.Common.Config;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Rpc.Messaging
 {
-    public class RpcMessageFactoryBase<TMessage, TMessageType>
+    public sealed class RpcMessageFactory<TMessage, TMessageType>
         : MessageFactoryBase<TMessage, TMessageType>
         where TMessage : class, IMessage<TMessage>
         where TMessageType : class, IEnumerableMessageType
     {
-        public override AnySigned GetMessage(IP2PMessageDto<TMessage, TMessageType> dto)
+        public override AnySigned GetMessage(IMessageDto<TMessage, TMessageType> dto)
         {
             if (RpcMessages.GetInfoRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetInfoResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.GetMempoolRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetMempoolResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.GetVersionRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.GetVersionResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }
-            
+
             if (RpcMessages.SignMessageRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
             }
-            
+
             if (RpcMessages.SignMessageResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+
+            if (RpcMessages.GetPeerListRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.GetPeerListResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+
+            if (RpcMessages.AddFileToDfsRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.AddFileToDfsResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+
+            if (RpcMessages.TransferFileBytesRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.TransferFileBytesResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+            
+            if (RpcMessages.PeerListCountRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.PeerListCountResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+
+            if (RpcMessages.RemovePeerRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.RemovePeerResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+            
+            if (RpcMessages.VerifyMessageRequest.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+            
+            if (RpcMessages.VerifyMessageResponse.Equals(dto.Type))
             {
                 return BuildTellMessage(dto);
             }

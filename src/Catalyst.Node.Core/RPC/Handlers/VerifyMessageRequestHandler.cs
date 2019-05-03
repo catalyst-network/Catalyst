@@ -22,18 +22,23 @@
 #endregion
 
 using System;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.P2P;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Cryptography.IWrapper.Types;
 using Dawn;
 using Multiformats.Base;
 using Nethereum.RLP;
+using NSec.Cryptography;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -43,7 +48,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
-        private readonly PeerId _peerId;
+        private readonly IPeerIdentifier _peerIdentifier;
         private IChanneledMessage<AnySigned> _message;
         
         private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
@@ -59,7 +64,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             : base(messageCorrelationCache, logger)
         {
             _keySigner = keySigner;
-            _peerId = peerIdentifier.PeerId;
+            _peerIdentifier = peerIdentifier;
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
@@ -69,6 +74,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             Logger.Debug("received message of type VerifyMessageRequest");
             
             var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
+            Guard.Argument(deserialised).NotNull("The verify message request cannot be null");
 
             var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData.ToStringFromRLPDecoded();
             var publicKey = deserialised.PublicKey;
@@ -123,14 +129,18 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         private void ReturnResponse(bool result)
         {
-            var response = new VerifyMessageResponse
-            {
-                IsSignedByKey = result
-            };
+            var response = new RpcMessageFactory<VerifyMessageResponse, RpcMessages>().GetMessage(
+                new MessageDto<VerifyMessageResponse, RpcMessages>(
+                    RpcMessages.VerifyMessageResponse,
+                    new VerifyMessageResponse
+                    {
+                        IsSignedByKey = result
+                    },
+                    new PeerIdentifier(_message.Payload.PeerId), 
+                    _peerIdentifier)
+            );
 
-            var anySignedResponse = response.ToAnySigned(_peerId, _message.Payload.CorrelationId.ToGuid());
-
-            _message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+            _message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
         }
     }
 }

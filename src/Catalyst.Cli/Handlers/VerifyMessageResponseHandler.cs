@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Handlers
@@ -68,6 +69,7 @@ namespace Catalyst.Cli.Handlers
             try
             {
                 var deserialised = message.Payload.FromAnySigned<VerifyMessageResponse>();
+                Guard.Argument(deserialised).NotNull("The verify message response cannot be null");
 
                 //decode the received message
                 var result = deserialised.IsSignedByKey;

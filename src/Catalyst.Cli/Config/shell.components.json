@@ -34,7 +34,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Rpc.RpcCorrelationCacheBase, Catalyst.Common",
+            "type": "Catalyst.Common.Rpc.RpcCorrelationCache, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Common"
@@ -121,6 +121,55 @@
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.AddFileToDfsResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.TransferFileBytesResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.PeerListResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.PeerCountResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.RemovePeerResponseHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.FileTransfer.CliFileTransfer, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.ICliFileTransfer, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
     ]
 }

@@ -23,6 +23,7 @@
 
 using System;
 using System.Text;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Util;
@@ -30,6 +31,9 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.P2P;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -44,7 +48,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;
-        private readonly PeerId _peerId;
+        private readonly IPeerIdentifier _peerIdentifier;
 
         public SignMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
@@ -53,7 +57,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             : base(messageCorrelationCache, logger)
         {
             _keySigner = keySigner;
-            _peerId = peerIdentifier.PeerId;
+            _peerIdentifier = peerIdentifier;
         }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
@@ -66,35 +70,36 @@ namespace Catalyst.Node.Core.RPC.Handlers
             {
                 var deserialised = message.Payload.FromAnySigned<SignMessageRequest>();
                 
-                Guard.Argument(deserialised).NotNull();
+                Guard.Argument(message).NotNull("The request cannot be null");
 
-                //decode the received message
-                var decodeResult = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData;
+                var decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
 
-                //get the original message from the decoded message
-                var decodedMessage = decodeResult.ToStringFromRLPDecoded();
-
-                //use the keysigner to sign the message
                 var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
                 
                 var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
+                
+                Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
+                
                 var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
                 
-                Guard.Argument(publicKey).NotNull();
-                Guard.Argument(signature).NotNull();
+                Guard.Argument(publicKey).NotNull("Failed to get the public key.  Public key cannot be null.");
                 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                var response = new SignMessageResponse
-                {
-                    OriginalMessage = deserialised.Message,
-                    PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
-                    Signature = signature.Bytes.RawBytes.ToByteString()
-                };
-
-                var anySignedResponse = response.ToAnySigned(_peerId, message.Payload.CorrelationId.ToGuid());
+                var response = new RpcMessageFactory<SignMessageResponse, RpcMessages>().GetMessage(
+                    new MessageDto<SignMessageResponse, RpcMessages>(
+                        RpcMessages.SignMessageResponse,
+                        new SignMessageResponse
+                        {
+                            OriginalMessage = deserialised.Message,
+                            PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
+                            Signature = signature.Bytes.RawBytes.ToByteString()
+                        },
+                        new PeerIdentifier(message.Payload.PeerId), 
+                        _peerIdentifier)
+                );
                 
-                message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
+                message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

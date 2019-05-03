@@ -32,5 +32,10 @@ namespace Catalyst.Common.Shell
         {
             Console.WriteLine(content);
         }
+
+        public void Write(string content)
+        {
+            Console.Write(content);
+        }
     }
 }

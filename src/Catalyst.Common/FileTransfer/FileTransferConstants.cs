@@ -21,18 +21,26 @@
 
 #endregion
 
-using System.Net;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P.Messaging;
-using Google.Protobuf;
-
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.FileTransfer
 {
-    public interface IP2PMessageDto<out TMessage, out TMessageType> : IMessageDto<TMessageType>
-        where TMessage : class, IMessage
-        where TMessageType : class, IEnumerableMessageType
+    /// <summary>
+    /// File transfer constants
+    /// </summary>
+    public static class FileTransferConstants
     {
-        TMessage Message { get; }
-        IPEndPoint Recipient { get; }
+        /// <summary>The expiry minutes of initialization</summary>
+        public static readonly int ExpiryMinutes = 1;
+
+        /// <summary>The chunk size in bytes</summary>
+        public static readonly int ChunkSize = 1000000;
+
+        /// <summary>The CLI chunk writing wait time</summary>
+        public static readonly int CliFileTransferWaitTime = 30;
+
+        /// <summary>The maximum chunk retry count</summary>
+        public static readonly int MaxChunkRetryCount = 3;
+
+        /// <summary>The maximum chunk read tries</summary>
+        public static readonly int MaxChunkReadTries = 3;
     }
 }
