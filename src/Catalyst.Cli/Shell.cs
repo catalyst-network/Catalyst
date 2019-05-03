@@ -902,17 +902,17 @@ namespace Catalyst.Cli
                 request.FileSize = (ulong) fileStream.Length;
             }
 
-            var rpcMessageFactory = new RpcMessageFactory<AddFileToDfsRequest, RpcMessages>();
+            var rpcMessageFactory = new RpcMessageFactory<AddFileToDfsRequest>();
 
-            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<AddFileToDfsRequest, RpcMessages>(
-                type: RpcMessages.AddFileToDfsRequest,
+            var requestMessage = rpcMessageFactory.GetMessage(
                 message: request,
                 recipient: nodePeerIdentifier,
-                sender: _peerIdentifier
-            ));
+                sender: _peerIdentifier,
+                messageType: DtoMessageType.Ask
+            );
 
             node.SendMessage(requestMessage);
-            
+
             bool responseReceived = _cliFileTransfer.Wait();
 
             if (!responseReceived)
