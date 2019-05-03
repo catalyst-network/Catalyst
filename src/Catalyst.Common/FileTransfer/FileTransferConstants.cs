@@ -21,21 +21,26 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.Cli;
-
-namespace Catalyst.Common.Shell
+namespace Catalyst.Common.FileTransfer
 {
-    public class ConsoleUserOutput : IUserOutput
+    /// <summary>
+    /// File transfer constants
+    /// </summary>
+    public static class FileTransferConstants
     {
-        public void WriteLine(string content)
-        {
-            Console.WriteLine(content);
-        }
+        /// <summary>The expiry minutes of initialization</summary>
+        public static readonly int ExpiryMinutes = 1;
 
-        public void Write(string content)
-        {
-            Console.Write(content);
-        }
+        /// <summary>The chunk size in bytes</summary>
+        public static readonly int ChunkSize = 1000000;
+
+        /// <summary>The CLI chunk writing wait time</summary>
+        public static readonly int CliFileTransferWaitTime = 30;
+
+        /// <summary>The maximum chunk retry count</summary>
+        public static readonly int MaxChunkRetryCount = 3;
+
+        /// <summary>The maximum chunk read tries</summary>
+        public static readonly int MaxChunkReadTries = 3;
     }
 }
