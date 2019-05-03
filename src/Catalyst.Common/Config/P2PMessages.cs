@@ -34,9 +34,13 @@ namespace Catalyst.Common.Config
         : Enumeration,
             IEnumerableMessageType
     {
+        /// <summary>The message map</summary>
         private static Dictionary<string, P2PMessages> _messageMap;
+
+        /// <summary>The message namespace</summary>
         private static readonly string _messageNamespace = "Catalyst.Protocol.IPPN";
 
+        /// <summary>Initializes the <see cref="P2PMessages"/> class.</summary>
         static P2PMessages()
         {
             _messageMap = new Dictionary<string, P2PMessages>();
@@ -53,8 +57,13 @@ namespace Catalyst.Common.Config
             }
         }
 
+        /// <summary>Gets the messages.</summary>
+        /// <value>The messages.</value>
         public IEnumerable<P2PMessages> Messages => _messageMap.Values.AsEnumerable();
 
+        /// <summary>Initializes a new instance of the <see cref="P2PMessages"/> class.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="name">The name.</param>
         protected P2PMessages(int id, string name) : base(id, name) { }
     }
 }

@@ -30,6 +30,11 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.Config
 {
+    /// <summary>
+    /// The Rpc Messages
+    /// </summary>
+    /// <seealso cref="Catalyst.Common.Enumerator.Enumeration" />
+    /// <seealso cref="Catalyst.Common.Interfaces.IO.Messaging.IEnumerableMessageType" />
     public class RpcMessages
         : Enumeration,
             IEnumerableMessageType
@@ -57,6 +62,8 @@ namespace Catalyst.Common.Config
             }
         }
 
+        /// <summary>Gets the messages.</summary>
+        /// <value>The messages.</value>
         public static IEnumerable<RpcMessages> Messages => _messageMap.Values.AsEnumerable();
 
         /// <summary>Initializes a new instance of the <see cref="RpcMessages"/> class.</summary>
