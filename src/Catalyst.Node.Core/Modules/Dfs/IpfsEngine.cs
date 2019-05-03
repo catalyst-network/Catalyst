@@ -92,7 +92,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 {
                     if (!_isStarted)
                     {
-                        // TODO: _ipfsEngine.Start();
+                        _ipfsEngine.Start();
                         _isStarted = true;
                     }
                 }
@@ -150,7 +150,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public void Dispose()
         {
-            Dispose(true);
+            //TODO: Dispose(true);
         }
     }
 }
