@@ -60,7 +60,7 @@ namespace Catalyst.Common.IO.Messaging
                 case DtoMessageType.Tell:
                     return BuildTellMessage(messageDto, correlationId);
                 default:
-                    return null;
+                    throw new ArgumentException();
             }
         }
 
