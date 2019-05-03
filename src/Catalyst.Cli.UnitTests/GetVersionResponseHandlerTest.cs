@@ -85,7 +85,8 @@ namespace Catalyst.Cli.UnitTests
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("recpient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"), 
-                DtoMessageType.Gossip);
+                DtoMessageType.Tell,
+                Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
 
