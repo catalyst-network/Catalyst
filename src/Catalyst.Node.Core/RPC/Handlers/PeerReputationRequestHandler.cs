@@ -48,14 +48,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         /// <summary>
-        /// The peer list
+        /// The PeerReputationRequestHandler 
         /// </summary>
         private readonly IPeerDiscovery _peerDiscovery;
 
         private IChanneledMessage<AnySigned> _message;
 
         private readonly PeerId _peerId;
-
 
         public PeerReputationRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,

@@ -45,35 +45,18 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using System.Net;
 using Nethereum.RLP;
-
-
-
 using System.IO;
-
 using Autofac;
-
-
 using Catalyst.Common.Util;
-
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-
 using Catalyst.Node.Core.UnitTest.TestUtils;
-
 using Microsoft.Extensions.Configuration;
-
 using Xunit.Abstractions;
-
-
-
-
-
-
-
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
     /// <summary>
-    /// Tests the peer list CLI and RPC calls
+    /// Tests the PeerReputationRequestHandler
     /// </summary>
     public sealed class PeerReputationRequestHandlerTest
     {
@@ -84,7 +67,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly IChannelHandlerContext _fakeContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
+        /// Initializes a new instance of the <see cref="PeerReputationRequestHandlerTest"/> class.
         /// </summary>
         public PeerReputationRequestHandlerTest()
         {
@@ -108,7 +91,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             var fakePeers = new List<Peer>
             {
-                new Peer {Reputation = 0, PeerIdentifier = new PeerIdentifier("mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.168.0.1"), 1542), LastSeen = DateTime.Now},
+                new Peer {Reputation = 0, PeerIdentifierHelper.GetPeerIdentifier("im_a_random_string_for_public_key"), ), LastSeen = DateTime.Now},
                 new Peer {Reputation = 0, PeerIdentifier = new PeerIdentifier("mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.154.12.2"), 3542), LastSeen = DateTime.Now},
                 new Peer {Reputation = 4, PeerIdentifier = new PeerIdentifier("mFRT+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7d19/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIFR".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.251.12.45"), 1258), LastSeen = DateTime.Now},
                 new Peer {Reputation = 2, PeerIdentifier = new PeerIdentifier("bL4Z+e0gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm7EPSjJ2YicTIcXvfzIAw".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.154.12.2"), 1114), LastSeen = DateTime.Now},
@@ -142,7 +125,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 sender: sendPeerIdentifier
             ));
-
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

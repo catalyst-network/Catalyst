@@ -848,7 +848,6 @@ namespace Catalyst.Cli
                     sender: _peerIdentifier
                 ));
 
-
                 node.SendMessage(requestMessage).Wait();
             }
             catch (Exception e)
@@ -901,7 +900,6 @@ namespace Catalyst.Cli
 
             return true;
         }
-
 
     }
 }

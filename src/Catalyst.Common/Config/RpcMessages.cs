@@ -49,7 +49,6 @@ namespace Catalyst.Common.Config
         public static readonly RpcMessages GetPeerReputationRequest = new GetPeerReputationRequestMessage();
         public static readonly RpcMessages GetPeerReputationResponse = new GetPeerReputationResponseMessage();
 
-
         private RpcMessages(int id, string name) : base(id, name) { }
 
         private sealed class GetInfoRequestMessage : RpcMessages
@@ -146,7 +145,6 @@ namespace Catalyst.Common.Config
         {
             public GetPeerCountRequestMessage() : base(19, "GetPeerCountRequest") { }
         }
-
         private sealed class GetPeerCountResponseMessage : RpcMessages
         {
             public GetPeerCountResponseMessage() : base(20, "GetPeerCountResponse") { }
