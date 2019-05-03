@@ -63,17 +63,17 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void DFS_should_add_and_read_text()
+        public async Task DFS_should_add_and_read_text()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             const string text = "good morning";
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
-            var id = _exponentialBackOffRetryPolicy.ExecuteAsync(
+            var id = await _exponentialBackOffRetryPolicy.ExecuteAsync(
                 () => dfs.AddTextAsync(text, cts.Token)
-            ).Result;
-            var content = _exponentialBackOffRetryPolicy.ExecuteAsync(
+            );
+            var content = await _exponentialBackOffRetryPolicy.ExecuteAsync(
                 () => dfs.ReadTextAsync(id, cts.Token)
-            ).Result;
+            );
             content.Should().Be(text);
         }
 
