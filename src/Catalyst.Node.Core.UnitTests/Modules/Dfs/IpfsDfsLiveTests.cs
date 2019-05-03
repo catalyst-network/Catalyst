@@ -23,10 +23,8 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using Serilog;
@@ -36,6 +34,8 @@ using Xunit.Abstractions;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Cryptography;
+using Polly;
+using Polly.Retry;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
@@ -61,10 +61,23 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         public async Task DFS_should_add_and_read_text()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
+               .WaitAndRetryAsync(5, retryAttempt =>
+                {
+                    var timeSpan = TimeSpan.FromMilliseconds(retryAttempt + 5);
+                    cts = new CancellationTokenSource(timeSpan);
+                    return timeSpan;
+                });
+
             const string text = "good morning";
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
-            var id = await dfs.AddTextAsync(text, cts.Token);
-            var content = await dfs.ReadTextAsync(id, cts.Token);
+            var id = await linearBackOffRetryPolicy.ExecuteAsync(
+                () => dfs.AddTextAsync(text, cts.Token)
+            );
+            var content = await linearBackOffRetryPolicy.ExecuteAsync(
+                () => dfs.ReadTextAsync(id, cts.Token)
+            );
             content.Should().Be(text);
         }
 

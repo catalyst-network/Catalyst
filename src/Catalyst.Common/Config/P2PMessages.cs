@@ -21,8 +21,12 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Config
 {
@@ -30,37 +34,36 @@ namespace Catalyst.Common.Config
         : Enumeration,
             IEnumerableMessageType
     {
-        public static readonly P2PMessages PingRequest = new PingRequestMessage();
-        public static readonly P2PMessages PingResponse = new PingResponseMessage();
-        public static readonly P2PMessages GetNeighbourRequest = new GetNeighbourRequestMessage();
-        public static readonly P2PMessages GetNeighbourResponse = new GetNeighbourResponseMessage();
-        public static readonly P2PMessages BroadcastTransaction = new BroadcastTransactionMessage();
+        /// <summary>The message map</summary>
+        private static Dictionary<string, P2PMessages> _messageMap;
 
-        private P2PMessages(int id, string name) : base(id, name) { }
+        /// <summary>The message namespace</summary>
+        private static readonly string _messageNamespace = "Catalyst.Protocol.IPPN";
 
-        private sealed class PingRequestMessage : P2PMessages
+        /// <summary>Initializes the <see cref="P2PMessages"/> class.</summary>
+        static P2PMessages()
         {
-            public PingRequestMessage() : base(1, "PingRequest") { }
+            _messageMap = new Dictionary<string, P2PMessages>();
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+               .SelectMany(t => t.GetTypes())
+               .Where(t => t.IsClass && t.Namespace == _messageNamespace
+                 && typeof(IMessage).IsAssignableFrom(t));
+
+            int id = 0;
+            foreach (Type type in types)
+            {
+                _messageMap.Add(type.Name, new P2PMessages(id, type.Name));
+                id += 1;
+            }
         }
 
-        private sealed class PingResponseMessage : P2PMessages
-        {
-            public PingResponseMessage() : base(2, "PingResponse") { }
-        }
-        
-        private sealed class GetNeighbourRequestMessage : P2PMessages
-        {
-            public GetNeighbourRequestMessage() : base(3, "GetNeighbourRequest") { }
-        }
+        /// <summary>Gets the messages.</summary>
+        /// <value>The messages.</value>
+        public IEnumerable<P2PMessages> Messages => _messageMap.Values.AsEnumerable();
 
-        private sealed class GetNeighbourResponseMessage : P2PMessages
-        {
-            public GetNeighbourResponseMessage() : base(4, "GetNeighbourResponse") { }
-        }
-        
-        private sealed class BroadcastTransactionMessage : P2PMessages
-        {
-            public BroadcastTransactionMessage() : base(5, "BroadcastTransaction") { }
-        }
+        /// <summary>Initializes a new instance of the <see cref="P2PMessages"/> class.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="name">The name.</param>
+        protected P2PMessages(int id, string name) : base(id, name) { }
     }
 }

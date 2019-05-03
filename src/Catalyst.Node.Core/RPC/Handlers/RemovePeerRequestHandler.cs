@@ -23,26 +23,18 @@
 
 using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Net;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Google.Protobuf;
-using Microsoft.Extensions.Configuration;
-using Nethereum.RLP;
-using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -63,7 +55,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerDiscovery _peerDiscovery;
 
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<RemovePeerResponse, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactory<RemovePeerResponse> _rpcMessageFactory;
         
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestHandler"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
@@ -77,7 +69,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             _peerIdentifier = peerIdentifier;
             _peerDiscovery = peerDiscovery;
-            _rpcMessageFactory = new RpcMessageFactory<RemovePeerResponse, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactory<RemovePeerResponse>();
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -114,12 +106,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     DeletedCount = peerDeletedCount
                 };
 
-                var removePeerMessage = _rpcMessageFactory.GetMessage(new MessageDto<RemovePeerResponse, RpcMessages>(
-                    type: RpcMessages.RemovePeerResponse,
+                var removePeerMessage = _rpcMessageFactory.GetMessage(
                     message: removePeerResponse,
                     recipient: new PeerIdentifier(message.Payload.PeerId),
-                    sender: _peerIdentifier
-                ));
+                    sender: _peerIdentifier,
+                    messageType: DtoMessageType.Tell,
+                    message.Payload.CorrelationId.ToGuid()
+                );
 
                 message.Context.Channel.WriteAndFlushAsync(removePeerMessage);
             }
