@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("highscored-126\0\0\0\0\0\0", "192.168.0.126")]
         public void TestPeerReputationRequestResponse(string publicKey, string ipAddress)
         {
-            var responseContent = TestPeerReputation(publicKey, ipAddress);
+            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
 
             responseContent.Reputation.Should().Be(125);
         }
