@@ -51,14 +51,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
     public sealed class GetNeighbourRequestHandlerTests : ConfigFileBasedTest
     {
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IReputableCache _subbedReputableCache;
         private readonly IRepository<Peer> _subbedPeerRepository;
         private readonly ILogger _subbedLogger;
 
         public GetNeighbourRequestHandlerTests(ITestOutputHelper output) : base(output)
         {
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
-            _subbedReputableCache = Substitute.For<IReputableCache>();
             _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
             _subbedLogger = Substitute.For<ILogger>();
         }
@@ -90,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
                .Build();
             
             ConfigureContainerBuilder(config, true, true);

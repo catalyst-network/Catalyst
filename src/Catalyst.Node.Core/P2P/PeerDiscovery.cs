@@ -53,7 +53,6 @@ namespace Catalyst.Node.Core.P2P
     {
         public IDns Dns { get; }
         public ILogger Logger { get; }
-        public IList<string> SeedNodes { get; }
         public IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
         public IDisposable PingResponseMessageStream { get; private set; }
@@ -73,22 +72,22 @@ namespace Catalyst.Node.Core.P2P
             Dns = dns;
             Logger = logger;
             PeerRepository = repository;
-            SeedNodes = new List<string>();
             Peers = new ConcurrentQueue<IPeerIdentifier>();
 
-            ParseDnsServersFromConfig(rootSection);
+            Peers.TryAdd(Dns.GetSeedNodesFromDns(ParseDnsServersFromConfig(rootSection)).RandomElement());
 
             var longRunningTasks = new[] {PeerCrawler()};
             Task.WaitAll(longRunningTasks);
         }
 
-        public void ParseDnsServersFromConfig(IConfigurationRoot rootSection)
+        public IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection)
         {
+            var seedDnsUrls = new List<string>();
             try
             {
-                ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList().ForEach(seedNode =>
+                ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList().ForEach(SeedUrl =>
                 {
-                    SeedNodes.Add(seedNode); 
+                    seedDnsUrls.Add(SeedUrl); 
                 });
             }
             catch (Exception e)
@@ -96,30 +95,8 @@ namespace Catalyst.Node.Core.P2P
                 Logger.Error(e.Message);
                 throw;
             }
-        }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="seedServers"></param>
-        public void GetSeedNodesFromDns(IEnumerable<string> seedServers)
-        {
-            seedServers.ToList().ForEach(async seedServer =>
-            {
-                var dnsQueryAnswer = await Dns.GetTxtRecords(seedServer).ConfigureAwait(false);
-                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-
-                Guard.Argument(answerSection.EscapedText).NotNull().Count(1);
-                
-                answerSection.EscapedText.ToList().AsParallel().ForAll(hexPid =>
-                    
-                    // put this in dns helper
-                {
-                    var peerChunks = hexPid.HexToUTF8String().Split("|");
-                    Peers.TryAdd(new PeerIdentifier(peerChunks));
-                });
-
-                Guard.Argument(Peers).MinCount(1);
-            });
+            return seedDnsUrls;
         }
 
         public void StartObserving(IObservable<IChanneledMessage<AnySigned>> observer)
@@ -158,10 +135,7 @@ namespace Catalyst.Node.Core.P2P
         private async Task PeerCrawler()
         {
             if (Peers.Count != 0) return;
-            try
-            {
-                GetSeedNodesFromDns(SeedNodes);
-            }
+            try { }
             catch (Exception e)
             {
                 Logger.Error(e.Message);

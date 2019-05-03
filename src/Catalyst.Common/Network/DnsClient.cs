@@ -22,12 +22,17 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Network;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 using Dawn;
 using DnsClient;
+using DnsClient.Protocol;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Common.Network
 {
@@ -65,6 +70,29 @@ namespace Catalyst.Common.Network
                .NotWhiteSpace();
 
             return await Query(hostname, QueryType.TXT);
+        }
+        
+        /// <summary>
+        /// </summary>
+        /// <param name="seedServers"></param>
+        public IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+        {
+            var peers = new List<IPeerIdentifier>();
+            seedServers.ToList().ForEach(async seedServer =>
+            {
+                var dnsQueryAnswer = await GetTxtRecords(seedServer).ConfigureAwait(false);
+                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
+        
+                Guard.Argument(answerSection.EscapedText).NotNull().Count(1);        
+                answerSection.EscapedText.ToList().ForEach(hexPid =>
+                {
+                    var peerChunks = hexPid.HexToUTF8String().Split("|");
+                    peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+                });
+        
+                Guard.Argument(peers).MinCount(1);
+            });
+            return peers;
         }
 
         private async Task<IDnsQueryResponse> Query(string hostname, QueryType type)

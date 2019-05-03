@@ -43,11 +43,9 @@ namespace Catalyst.Common.Interfaces.P2P
         IDisposable GetNeighbourResponseStream { get; }
         IDns Dns { get; }
         ILogger Logger { get; }
-        IList<string> SeedNodes { get; }
         IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         IRepository<Peer> PeerRepository { get; }
-        void GetSeedNodesFromDns(IEnumerable<string> seedServers);
-        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
         void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message);
     }
 }

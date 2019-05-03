@@ -105,8 +105,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 peerDiscovery.Dns.Should().BeOfType(typeof(DevDnsClient));
                 Assert.NotNull(peerDiscovery.Logger);
                 peerDiscovery.Logger.Should().BeOfType(typeof(Logger));
-                Assert.NotNull(peerDiscovery.SeedNodes);
-                peerDiscovery.SeedNodes.Should().BeOfType(typeof(List<string>));
                 Assert.NotNull(peerDiscovery.Peers);
                 peerDiscovery.Peers.Should().BeOfType(typeof(ConcurrentQueue<IPeerIdentifier>));
                 Assert.NotNull(peerDiscovery.PeerRepository);
@@ -124,8 +122,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
-            peerDiscovery.SeedNodes.Should().NotBeNullOrEmpty();
-            peerDiscovery.SeedNodes.Should().Contain(_dnsDomains);
+            var seedServers = peerDiscovery.ParseDnsServersFromConfig(_config);
+
+            seedServers.Should().NotBeNullOrEmpty();
+            seedServers.Should().Contain(_dnsDomains);
         }
 
         [Fact]
@@ -139,15 +139,19 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
             peerDiscovery.Peers.Should().NotBeNullOrEmpty();
-            peerDiscovery.Peers.Should().HaveCount(5);
+            peerDiscovery.Peers.Should().HaveCount(1);
             peerDiscovery.Peers.Should().NotContainNulls();
-            peerDiscovery.SeedNodes.Should().Contain(_dnsDomains);
             peerDiscovery.Peers.Should().ContainItemsAssignableTo<IPeerIdentifier>();
         }
 
         [Fact]
         public void CanReceivePingEventsFromSubscribedStream()
         {
+            _dnsDomains.ForEach(domain =>
+            {
+                MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
+            });
+            
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
             var fakeContext = Substitute.For<IChannelHandlerContext>();

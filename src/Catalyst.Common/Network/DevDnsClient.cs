@@ -21,14 +21,20 @@
 
 #endregion
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Network;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Dawn;
 using DnsClient;
+using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Common.Network
 {
@@ -58,6 +64,24 @@ namespace Catalyst.Common.Network
                 Answers = DevDnsQueryResponse.BuildDnsResourceRecords(hostname, _dnsQueryAnswerValues.FirstOrDefault())
             };
             return await Task.FromResult<IDnsQueryResponse>(devDnsQueryResponse).ConfigureAwait(false);
+        }
+        
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="seedServers"></param>
+        public IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+        {
+            var peers = new List<IPeerIdentifier>();
+            var peerChunks = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839".HexToUTF8String().Split("|");
+
+            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+
+            return peers;
         }
     }
 }

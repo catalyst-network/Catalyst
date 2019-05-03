@@ -49,21 +49,16 @@ namespace Catalyst.Common.P2P
     /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
-        public static readonly string AssemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
-        public static readonly byte[] AssemblyMajorVersion2Bytes = Encoding.UTF8.GetBytes(AssemblyMajorVersion2Digits);
-        public static readonly byte[] AtlasClientId = Encoding.UTF8.GetBytes("AC");
+        private static readonly string AssemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
+        private static readonly byte[] AssemblyMajorVersion2Bytes = Encoding.UTF8.GetBytes(AssemblyMajorVersion2Digits);
+        private static readonly byte[] AtlasClientId = Encoding.UTF8.GetBytes("AC");
 
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
-
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
-
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
-
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
-        
         public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
-
         public PeerId PeerId { get; }
 
         public PeerIdentifier(PeerId peerId)
@@ -72,7 +67,12 @@ namespace Catalyst.Common.P2P
             PeerId = peerId;
         }
 
-        public PeerIdentifier(IReadOnlyList<string> rawPidChunks)
+        /// <summary>
+        ///     Parses a hex string containing the chunks that make up a valid PeerIdentifier that are delimited by '|'
+        /// </summary>
+        /// <param name="rawPidChunks"></param>
+        /// <returns></returns>
+        internal static PeerIdentifier ParseHexPeerIdentifier(IReadOnlyList<string> rawPidChunks)
         {
             Guard.Argument(rawPidChunks).Count(5);
             Guard.Argument(rawPidChunks[0]).Length(2);
@@ -83,21 +83,24 @@ namespace Catalyst.Common.P2P
             
             var peerByteChunks = new List<ByteString>();
             rawPidChunks.ToList().ForEach(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));
-            
-            PeerId = new PeerId
+
+            return new PeerIdentifier(new PeerId
             {
                 ClientId = peerByteChunks[0],
                 ClientVersion = peerByteChunks[1],
-                Ip = peerByteChunks[2],
+                Ip = IPAddress.Parse(rawPidChunks[2]).MapToIPv4().To16Bytes().ToByteString(),
                 Port = peerByteChunks[3],
                 PublicKey = peerByteChunks[4]
-            };
+            });
         }
 
-        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
+        public PeerIdentifier(byte[] publicKey, IPAddress ipAddress, int port)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
+
+        public PeerIdentifier(IPeerSettings settings)
+            : this(settings.PublicKey.ToBytesForRLPEncoding(), settings.EndPoint) { }
         
-        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint)
+        private PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
         {
             PeerId = new PeerId
             {
