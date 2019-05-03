@@ -23,10 +23,8 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using Serilog;
@@ -36,6 +34,8 @@ using Xunit.Abstractions;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Cryptography;
+using Polly;
+using Polly.Retry;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
@@ -45,26 +45,35 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         private readonly ILogger _logger;
         private readonly IPeerSettings _peerSettings;
         private readonly IPasswordReader _passwordReader;
+        private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
 
         public IpfsDfsLiveTests(ITestOutputHelper output) : base(output)
         {
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.SeedServers.Returns(new[] { "seed1.server.va", "island.domain.tv" });
+            _peerSettings.SeedServers.Returns(new[] {"seed1.server.va", "island.domain.tv"});
             _passwordReader = Substitute.For<IPasswordReader>();
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
             _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
+            _exponentialBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
+               .WaitAndRetryAsync(5, retryAttempt =>
+                    TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt))
+                );
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task DFS_should_add_and_read_text()
+        public void DFS_should_add_and_read_text()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             const string text = "good morning";
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
-            var id = await dfs.AddTextAsync(text, cts.Token);
-            var content = await dfs.ReadTextAsync(id, cts.Token);
+            var id = _exponentialBackOffRetryPolicy.ExecuteAsync(
+                () => dfs.AddTextAsync(text, cts.Token)
+            ).Result;
+            var content = _exponentialBackOffRetryPolicy.ExecuteAsync(
+                () => dfs.ReadTextAsync(id, cts.Token)
+            ).Result;
             content.Should().Be(text);
         }
 
@@ -73,7 +82,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         public async Task DFS_should_add_and_read_binary()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var binary = new byte[] { 1, 2, 3 };
+            var binary = new byte[] {1, 2, 3};
             var ms = new MemoryStream(binary);
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             var id = await dfs.AddAsync(ms, "", cts.Token);
