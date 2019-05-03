@@ -81,10 +81,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var publicKey = deserialised.PublicKey.ToStringUtf8(); 
             var Ip = deserialised.Ip.ToStringUtf8();
 
-            //ensure conversion are correct - DOA
-            ReturnResponse(this._peerDiscovery.PeerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == Ip.ToString() 
+            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == Ip.ToString()
             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
-                .Select(x => x.Reputation).FirstOrDefault(), message);
+                .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First(), message);
 
             Logger.Debug("received message of type PeerReputationRequest");
         }

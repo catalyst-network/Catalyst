@@ -45,27 +45,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using System.Net;
 using Nethereum.RLP;
-
-
-
-using System.IO;
-
-using Autofac;
-
-
 using Catalyst.Common.Util;
-
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-
-using Catalyst.Node.Core.UnitTest.TestUtils;
-
-using Microsoft.Extensions.Configuration;
-
-using Xunit.Abstractions;
-
-
-
-
 
 
 
@@ -73,7 +53,7 @@ using Xunit.Abstractions;
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
     /// <summary>
-    /// Tests the peer list CLI and RPC calls
+    /// Tests the peer reputation calls
     /// </summary>
     public sealed class PeerReputationRequestHandlerTest
     {
@@ -97,25 +77,44 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         /// <summary>
         /// Tests the peer reputation request and response via RPC.
+        /// Peer is expected to be found in this case
         /// </summary>
-        /// <param name="fakePeeers">The fake peers.</param>
+        /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
+        /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
-        [InlineData("mFRT+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7d19/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIFR", "192.251.12.45")]
-        [InlineData("cve2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "192.104.100.36")]
+        [InlineData("highscored-125\0\0\0\0\0\0", "192.168.0.125")]
+        [InlineData("highscored-126\0\0\0\0\0\0", "192.168.0.126")]
         public void TestPeerReputationRequestResponse(string publicKey, string ipAddress)
+        {
+            var responseContent = TestPeerReputation(publicKey, ipAddress);
+
+            responseContent.Reputation.Should().Be(125);
+        }
+
+        /// <summary>
+        /// Tests the peer reputation request and response via RPC.
+        /// Peer is NOT expected to be found in this case, as they do not exist
+        /// </summary>
+        /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
+        /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
+        [Theory]
+        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "192.200.200.22")]
+        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "192.111.100.26")]
+        public void TestPeerReputationRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
+        {
+            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
+
+            responseContent.Reputation.Should().Be(int.MinValue);
+        }
+
+        private GetPeerReputationResponse GetPeerReputationTest(string publicKey, string ipAddress)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
 
-            var fakePeers = new List<Peer>
-            {
-                new Peer {Reputation = 0, PeerIdentifier = new PeerIdentifier("mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.168.0.1"), 1542), LastSeen = DateTime.Now},
-                new Peer {Reputation = 0, PeerIdentifier = new PeerIdentifier("mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.154.12.2"), 3542), LastSeen = DateTime.Now},
-                new Peer {Reputation = 4, PeerIdentifier = new PeerIdentifier("mFRT+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7d19/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIFR".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.251.12.45"), 1258), LastSeen = DateTime.Now},
-                new Peer {Reputation = 2, PeerIdentifier = new PeerIdentifier("bL4Z+e0gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm7EPSjJ2YicTIcXvfzIAw".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.154.12.2"), 1114), LastSeen = DateTime.Now},
-                new Peer {Reputation = 0, PeerIdentifier = new PeerIdentifier("cdfZ+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7d25/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzISa".ToUtf8ByteString().ToArray(), IPAddress.Parse("209.154.12.2"), 56895), LastSeen = DateTime.Now},
-                new Peer {Reputation = 1, PeerIdentifier = new PeerIdentifier("p8lg+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIBn".ToUtf8ByteString().ToArray(), IPAddress.Parse("208.164.78.15"), 6985), LastSeen = DateTime.Now},
-                new Peer {Reputation = 4, PeerIdentifier = new PeerIdentifier("cve2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp".ToUtf8ByteString().ToArray(), IPAddress.Parse("192.104.100.36"), 7482), LastSeen = DateTime.Now}
-            };
+            var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer() { Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}") }).ToList();
+
+            //peers we are interested in
+            fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer() { Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i), 12345) }));
 
             // Let peerRepository return the fake peer list
             peerRepository.GetAll().Returns(fakePeers.ToArray());
@@ -143,22 +142,20 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 sender: sendPeerIdentifier
             ));
 
-
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
             var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerDiscovery);
             handler.StartObserving(messageStream);
 
+
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);
 
-            var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
+            var sentResponse = (AnySigned)receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerReputationResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromAnySigned<GetPeerReputationResponse>();
-
-            responseContent.Reputation.Should().Be(4);
+            return sentResponse.FromAnySigned<GetPeerReputationResponse>();
         }
     }
 }
