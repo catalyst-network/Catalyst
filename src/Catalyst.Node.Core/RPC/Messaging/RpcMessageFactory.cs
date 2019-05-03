@@ -88,6 +88,26 @@ namespace Catalyst.Node.Core.Rpc.Messaging
                 return BuildTellMessage(dto);
             }
 
+            if (RpcMessages.AddFileToDfsRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.AddFileToDfsResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+
+            if (RpcMessages.TransferFileBytesRequest.Equals(dto.Type))
+            {
+                return BuildAskMessage(dto);
+            }
+
+            if (RpcMessages.TransferFileBytesResponse.Equals(dto.Type))
+            {
+                return BuildTellMessage(dto);
+            }
+            
             if (RpcMessages.PeerListCountRequest.Equals(dto.Type))
             {
                 return BuildAskMessage(dto);
