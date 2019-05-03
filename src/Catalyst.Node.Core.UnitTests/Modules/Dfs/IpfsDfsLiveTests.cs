@@ -49,7 +49,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         public IpfsDfsLiveTests(ITestOutputHelper output) : base(output)
         {
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.SeedServers.Returns(new[] { "seed1.server.va", "island.domain.tv" });
+            _peerSettings.SeedServers.Returns(new[]
+            {
+                "seed1.server.va",
+                "island.domain.tv"
+            });
             _passwordReader = Substitute.For<IPasswordReader>();
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
@@ -73,7 +77,10 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         public async Task DFS_should_add_and_read_binary()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var binary = new byte[] { 1, 2, 3 };
+            var binary = new byte[]
+            {
+                1, 2, 3
+            };
             var ms = new MemoryStream(binary);
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             var id = await dfs.AddAsync(ms, "", cts.Token);

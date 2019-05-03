@@ -57,7 +57,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             using (var ipfs = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
             {
                 ipfs.Options.Discovery.BootstrapPeers.Count().Should().Be(2);
-
             }
         }
 
@@ -85,7 +84,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             using (var ipfs = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
             {
                 ipfs.Options.Repository.Folder.Should()
-               .Be(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, Core.Config.Constants.IpfsSubFolder));
+                   .Be(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, Core.Config.Constants.IpfsSubFolder));
             }
         }
 
@@ -97,6 +96,5 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 ipfs.Options.Swarm.PrivateNetworkKey.Should().NotBeNull();
             }
         }
-
     }
 }

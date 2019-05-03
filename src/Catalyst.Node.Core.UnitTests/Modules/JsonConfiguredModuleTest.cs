@@ -98,6 +98,5 @@ namespace Catalyst.Node.Core.UnitTest.Modules
                 ((IDisposable) resolvedType).Dispose();
             }
         }
-
     }
 }
