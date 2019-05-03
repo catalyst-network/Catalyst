@@ -23,7 +23,7 @@
 
 using System;
 using System.Linq;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -39,10 +39,8 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Google.Protobuf;
-using Nethereum.RLP;
 using SharpRepository.InMemoryRepository;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
@@ -115,20 +113,19 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var peerDiscovery = Substitute.For<IPeerDiscovery>();
             peerDiscovery.PeerRepository.Returns(peerRepository);
 
-            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest, RpcMessages>();
+            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest>();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var peerToDelete = peerRepository.Get(1);
-            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<RemovePeerRequest, RpcMessages>
-            (
-                type: RpcMessages.RemovePeerRequest,
+            var requestMessage = rpcMessageFactory.GetMessage(
                 message: new RemovePeerRequest
                 {
                     PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
                     PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
                 },
                 recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sender: sendPeerIdentifier
-            ));
+                sender: sendPeerIdentifier,
+                messageType: DtoMessageType.Ask
+            );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

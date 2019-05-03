@@ -24,24 +24,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using Catalyst.Cli.Handlers;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
-using Google.Protobuf.Collections;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
@@ -109,17 +104,15 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
-            
-            var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
-                new MessageDto<GetMempoolResponse, RpcMessages>(
-                    RpcMessages.GetMempoolRequest,
-                    new GetMempoolResponse
-                    {
-                        Mempool = {txList}
-                    },
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
-            );
+
+            var response = new RpcMessageFactory<GetMempoolResponse>().GetMessage(
+                new GetMempoolResponse
+                {
+                    Mempool = {txList}
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                DtoMessageType.Tell);
 
             var messageStream = CreateStreamWithMessage(response);
             

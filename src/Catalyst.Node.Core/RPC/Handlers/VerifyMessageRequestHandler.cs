@@ -22,14 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
@@ -37,7 +36,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Multiformats.Base;
 using Nethereum.RLP;
-using NSec.Cryptography;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -128,16 +126,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         private void ReturnResponse(bool result)
         {
-            var response = new RpcMessageFactory<VerifyMessageResponse, RpcMessages>().GetMessage(
-                new MessageDto<VerifyMessageResponse, RpcMessages>(
-                    RpcMessages.VerifyMessageResponse,
-                    new VerifyMessageResponse
-                    {
-                        IsSignedByKey = result
-                    },
-                    new PeerIdentifier(_message.Payload.PeerId), 
-                    _peerIdentifier)
-            );
+            var response = new RpcMessageFactory<VerifyMessageResponse>().GetMessage(
+                new VerifyMessageResponse
+                {
+                    IsSignedByKey = result
+                },
+                new PeerIdentifier(_message.Payload.PeerId),
+                _peerIdentifier,
+                DtoMessageType.Tell);
 
             _message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
         }

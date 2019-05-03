@@ -25,17 +25,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -46,7 +43,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests 
+namespace Catalyst.Cli.UnitTests
 {
     public sealed class GetInfoResponseHandlerTest : IDisposable
     {
@@ -92,22 +89,20 @@ namespace Catalyst.Cli.UnitTests
         }
 
         [Theory]
-        [MemberData(nameof(QueryContents))]        
+        [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            
-            var response = new RpcMessageFactory<GetInfoResponse, RpcMessages>().GetMessage(
-                new MessageDto<GetInfoResponse, RpcMessages>(
-                    RpcMessages.GetInfoResponse,
-                    new GetInfoResponse
-                    {
-                        Query = query
-                    },
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender"))
-            );
-            
+
+            var response = new RpcMessageFactory<GetInfoResponse>().GetMessage(
+                new GetInfoResponse
+                {
+                    Query = query
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                DtoMessageType.Tell);
+
             var messageStream = CreateStreamWithMessage(response);
 
             _requestHandler = new GetInfoResponseHandler(_output, correlationCache, _logger);

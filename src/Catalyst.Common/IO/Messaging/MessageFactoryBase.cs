@@ -22,8 +22,8 @@
 #endregion
 
 using System;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
@@ -31,29 +31,28 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public abstract class MessageFactoryBase<TMessage, TMessageType>
+    public abstract class MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
-        where TMessageType : class, IEnumerableMessageType
     {
-        /// <summary>
-        ///     Switch returns message or throws an exception for unknown message type
-        /// </summary>
-        /// <param name="dto"></param>
+        /// <summary>Gets the message.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="messageType">Type of the message.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public abstract AnySigned GetMessage(IMessageDto<TMessage, TMessageType> dto);
+        public abstract AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType);
         
-        protected AnySigned BuildTellMessage(IMessageDto<TMessage, TMessageType> dto)
+        protected AnySigned BuildTellMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
-        protected AnySigned BuildAskMessage(IMessageDto<TMessage, TMessageType> dto)
+        protected AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
-        protected AnySigned BuildGossipMessage(IMessageDto<TMessage, TMessageType> dto)
+        protected AnySigned BuildGossipMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }

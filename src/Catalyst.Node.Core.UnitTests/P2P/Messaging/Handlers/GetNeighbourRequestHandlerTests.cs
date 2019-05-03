@@ -38,7 +38,6 @@ using Serilog;
 using Xunit;
 using FluentAssertions;
 using SharpRepository.Repository;
-using SharpRepository.Repository.Specifications;
 
 namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
 {

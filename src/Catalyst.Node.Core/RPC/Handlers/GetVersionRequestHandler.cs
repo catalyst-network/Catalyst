@@ -22,16 +22,12 @@
 #endregion
 
 using System;
-using System.Net;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Util;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -63,16 +59,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
             
             try
             {
-                var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
-                    new MessageDto<VersionResponse, RpcMessages>(
-                        RpcMessages.GetVersionRequest,
-                        new VersionResponse
-                        {
-                            Version = NodeUtil.GetVersion()
-                        }, 
-                        new PeerIdentifier(message.Payload.PeerId),
-                        _peerIdentifier)
-                ); 
+                var response = new RpcMessageFactory<VersionResponse>().GetMessage(
+                    new VersionResponse
+                    {
+                        Version = NodeUtil.GetVersion()
+                    },
+                    new PeerIdentifier(message.Payload.PeerId),
+                    _peerIdentifier,
+                    DtoMessageType.Tell);
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }

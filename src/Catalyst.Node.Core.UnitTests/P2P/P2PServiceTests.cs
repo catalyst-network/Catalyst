@@ -27,16 +27,15 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
@@ -47,10 +46,8 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -130,13 +127,13 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
 
-                    var datagramEnvelope = new P2PMessageFactory<PingResponse, P2PMessages>().GetMessageInDatagramEnvelope(
-                        new MessageDto<PingResponse, P2PMessages>(
-                            P2PMessages.PingRequest,
-                            new PingResponse(),
-                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
-                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
-                        )
+                    var datagramEnvelope = new P2PMessageFactory<PingResponse>().GetMessageInDatagramEnvelope(
+                        new PingResponse(),
+                        new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
+                            peerSettings.Port),
+                        new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
+                            peerSettings.Port),
+                        DtoMessageType.Tell
                     );
                     
                     peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();

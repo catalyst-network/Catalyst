@@ -21,8 +21,12 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Config
 {
@@ -30,103 +34,34 @@ namespace Catalyst.Common.Config
         : Enumeration,
             IEnumerableMessageType
     {
-        public static readonly RpcMessages GetInfoRequest = new GetInfoRequestMessage();
-        public static readonly RpcMessages GetInfoResponse = new GetInfoResponseMessage();
-        public static readonly RpcMessages GetMempoolRequest = new GetMempoolRequestMessage();
-        public static readonly RpcMessages GetMempoolResponse = new GetMempoolResponseMessage();
-        public static readonly RpcMessages GetVersionRequest = new GetVersionRequestMessage();
-        public static readonly RpcMessages GetVersionResponse = new GetVersionResponseMessage();
-        public static readonly RpcMessages SignMessageRequest = new SignMessageRequestMessage();
-        public static readonly RpcMessages SignMessageResponse = new SignMessageResponseMessage();
-        public static readonly RpcMessages GetPeerListRequest = new GetPeerListRequestMessage();
-        public static readonly RpcMessages GetPeerListResponse = new GetPeerListResponseMessage();
-        public static readonly RpcMessages PeerListCountRequest = new PeerListCountRequestMessage();
-        public static readonly RpcMessages PeerListCountResponse = new PeerListCountResponseMessage();
-        public static readonly RpcMessages RemovePeerRequest = new RemovePeerRequestMessage();
-        public static readonly RpcMessages RemovePeerResponse = new RemovePeerResponseMessage();
-        public static readonly RpcMessages VerifyMessageRequest = new VerifyMessageRequestMessage();
-        public static readonly RpcMessages VerifyMessageResponse = new VerifyMessageResponseMessage();
+        /// <summary>The message map</summary>
+        private static Dictionary<string, RpcMessages> _messageMap;
 
-        private RpcMessages(int id, string name) : base(id, name) { }
+        /// <summary>The RPC message namespace</summary>
+        private static readonly string _messageNamespace = "Catalyst.Protocol.Rpc.Node";
 
-        private sealed class GetInfoRequestMessage : RpcMessages
+        /// <summary>Initializes the <see cref="RpcMessages"/> class.</summary>
+        static RpcMessages()
         {
-            public GetInfoRequestMessage() : base(1, "GetInfoRequest") { }
+            _messageMap = new Dictionary<string, RpcMessages>();
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+               .SelectMany(t => t.GetTypes())
+               .Where(t => t.IsClass && t.Namespace == _messageNamespace 
+                 && typeof(IMessage).IsAssignableFrom(t));
+
+            int id = 0;
+            foreach (Type type in types)
+            {
+                _messageMap.Add(type.Name, new RpcMessages(id, type.Name));
+                id += 1;
+            }
         }
 
-        private sealed class GetInfoResponseMessage : RpcMessages
-        {
-            public GetInfoResponseMessage() : base(2, "GetInfoResponse") { }
-        }
+        public static IEnumerable<RpcMessages> Messages => _messageMap.Values.AsEnumerable();
 
-        private sealed class GetMempoolRequestMessage : RpcMessages
-        {
-            public GetMempoolRequestMessage() : base(3, "GetMempoolRequest") { }
-        }
-
-        private sealed class GetMempoolResponseMessage : RpcMessages
-        {
-            public GetMempoolResponseMessage() : base(4, "GetMempoolResponse") { }
-        }
-
-        private sealed class GetVersionRequestMessage : RpcMessages
-        {
-            public GetVersionRequestMessage() : base(5, "GetVersionRequest") { }
-        }
-
-        private sealed class GetVersionResponseMessage : RpcMessages
-        {
-            public GetVersionResponseMessage() : base(6, "GetVersionResponse") { }
-        }
-
-        private sealed class SignMessageRequestMessage : RpcMessages
-        {
-            public SignMessageRequestMessage() : base(7, "SignMessageRequest") { }
-        }
-
-        private sealed class SignMessageResponseMessage : RpcMessages
-        {
-            public SignMessageResponseMessage() : base(8, "SignMessageResponse") { }
-        }
-
-        private sealed class GetPeerListRequestMessage : RpcMessages
-        {
-            public GetPeerListRequestMessage() : base(9, "GetPeerListRequest") { }
-        }
-
-        private sealed class GetPeerListResponseMessage : RpcMessages
-        {
-            public GetPeerListResponseMessage() : base(10, "GetPeerListResponse") { }
-        }
-
-        private sealed class PeerListCountRequestMessage : RpcMessages
-        {
-            public PeerListCountRequestMessage() : base(11, "PeerListCountRequest") { }
-        }
-
-        private sealed class PeerListCountResponseMessage : RpcMessages
-        {
-            public PeerListCountResponseMessage() : base(12, "PeerListCountResponse") { }
-        }
-
-        private sealed class RemovePeerRequestMessage : RpcMessages
-        {
-            public RemovePeerRequestMessage() : base(13, "RemovePeerRequest") { }
-        }
-
-        private sealed class RemovePeerResponseMessage : RpcMessages
-        {
-            public RemovePeerResponseMessage() : base(14, "RemovePeerResponse") { }
-        }
-        
-        private sealed class VerifyMessageRequestMessage : RpcMessages
-        {
-            public VerifyMessageRequestMessage() : base(15, "VerifyMessageRequest") { }
-        }
-
-        private sealed class VerifyMessageResponseMessage : RpcMessages
-        {
-            public VerifyMessageResponseMessage() : base(16, "VerifyMessageResponse") { }
-        }
+        /// <summary>Initializes a new instance of the <see cref="RpcMessages"/> class.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="name">The name.</param>
+        protected RpcMessages(int id, string name) : base(id, name) { }
     }
 }
