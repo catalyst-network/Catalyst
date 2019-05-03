@@ -25,6 +25,7 @@ using System;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
@@ -39,29 +40,16 @@ namespace Catalyst.Node.Core.Rpc.Messaging
         : MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
     {
-        /// <summary>Gets the message.</summary>
+        /// <summary>Gets the message dto.</summary>
         /// <param name="message">The message.</param>
         /// <param name="recipient">The recipient.</param>
         /// <param name="sender">The sender.</param>
-        /// <param name="messageType">Type of the message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException">Not specified correlationId</exception>
-        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
+        protected override IMessageDto<TMessage> GetMessageDto(TMessage message,
+            IPeerIdentifier recipient,
+            IPeerIdentifier sender)
         {
-            var dto = new MessageDto<TMessage>(message, recipient, sender);
-
-            switch (messageType)
-            {
-                case DtoMessageType.Ask:
-                    return BuildAskMessage(dto);
-                case DtoMessageType.Tell:
-                    return BuildTellMessage(dto, correlationId);
-                case DtoMessageType.Gossip:
-                    return BuildGossipMessage(dto);
-            }
-
-            throw new ArgumentException("unknown message type");
+            return new MessageDto<TMessage>(message, recipient, sender);
         }
     }
 }

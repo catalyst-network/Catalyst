@@ -45,7 +45,31 @@ namespace Catalyst.Common.IO.Messaging
         /// <param name="messageType">Type of the message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>AnySigned message</returns>
-        public abstract AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default);
+        public virtual AnySigned GetMessage(TMessage message,
+            IPeerIdentifier recipient,
+            IPeerIdentifier sender,
+            DtoMessageType messageType,
+            Guid correlationId = default)
+        {
+            var messageDto = GetMessageDto(message, recipient, sender);
+
+            switch (messageType)
+            {
+                case DtoMessageType.Ask:
+                    return BuildAskMessage(messageDto);
+                case DtoMessageType.Tell:
+                    return BuildTellMessage(messageDto, correlationId);
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>Gets the message dto.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="sender">The sender.</param>
+        /// <returns></returns>
+        protected abstract IMessageDto<TMessage> GetMessageDto(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender);
 
         /// <summary>Builds the tell message.</summary>
         /// <param name="dto">The dto.</param>

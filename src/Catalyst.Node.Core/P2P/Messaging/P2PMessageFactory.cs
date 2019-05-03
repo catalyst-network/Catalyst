@@ -26,6 +26,7 @@ using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using Google.Protobuf;
@@ -57,19 +58,26 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <exception cref="ArgumentException">unknown message type</exception>
         public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
         {
-            var dto = new P2PMessageDto<TMessage>(message, recipient, sender);
-
-            switch (messageType)
+            if (messageType == DtoMessageType.Gossip)
             {
-                case DtoMessageType.Ask:
-                    return BuildAskMessage(dto);
-                case DtoMessageType.Tell:
-                    return BuildTellMessage(dto, correlationId);
-                case DtoMessageType.Gossip:
-                    return BuildGossipMessage(dto);
+                return BuildGossipMessage(GetMessageDto(message, recipient, sender));
             }
+            else
+            {
+                return base.GetMessage(message, recipient, sender, messageType, correlationId);
+            }
+        }
 
-            throw new ArgumentException("unknown message type");
+        /// <summary>Gets the message dto.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="sender">The sender.</param>
+        /// <returns></returns>
+        protected override IMessageDto<TMessage> GetMessageDto(TMessage message,
+            IPeerIdentifier recipient,
+            IPeerIdentifier sender)
+        {
+            return new P2PMessageDto<TMessage>(message, recipient, sender);
         }
     }
 }
