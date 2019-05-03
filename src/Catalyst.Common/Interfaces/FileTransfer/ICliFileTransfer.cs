@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 
+
 namespace Catalyst.Common.Interfaces.FileTransfer
 {
     public interface ICliFileTransfer

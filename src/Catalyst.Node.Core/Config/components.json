@@ -74,7 +74,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Cryptography.NSecCryptoContext, Catalyst.Common",
+            "type": "Catalyst.Common.Cryptography.RustCryptoContext, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Common"

@@ -46,34 +46,6 @@ namespace Catalyst.Common.UnitTests.Cryptography
         }
 
         [Fact]
-        public void TestFailurePrivateKeyImport()
-        {
-            var blob = Encoding.UTF8.GetBytes("this string is not a formatted private key");
-
-            Action action = () => _context.ImportPrivateKey(blob);
-            action.Should().Throw<FormatException>("The key BLOB is not in the correct format.");
-        }
-
-        [Fact]
-        public void TestFailurePrivateKeySecondExport()
-        {
-            var privateKey = _context.GeneratePrivateKey();
-            _context.ExportPrivateKey(privateKey);
-
-            Action action = () => _context.ExportPrivateKey(privateKey);
-            action.Should().Throw<InvalidOperationException>("The key can be exported only once.");
-        }
-
-        [Fact]
-        public void TestFailurePublicKeyImport()
-        {
-            var blob = Encoding.UTF8.GetBytes("this string is not a formatted public key");
-
-            Action action = () => _context.ImportPublicKey(blob);
-            action.Should().Throw<FormatException>("The key BLOB is not in the correct format.");
-        }
-
-        [Fact]
         public void TestFailureSigningVerification()
         {
             var key1 = _context.GeneratePrivateKey();
@@ -89,43 +61,12 @@ namespace Catalyst.Common.UnitTests.Cryptography
         }
 
         [Fact]
-        public void TestPrivateKeyExport()
-        {
-            var privateKey = _context.GeneratePrivateKey();
-
-            var blob = _context.ExportPrivateKey(privateKey);
-            blob.Should().NotBeNull("newly generated private key should be exportable once");
-        }
-
-        [Fact]
-        public void TestPrivateKeyImportFromExported()
-        {
-            var privateKey = _context.GeneratePrivateKey();
-            var blob = _context.ExportPrivateKey(privateKey);
-
-            IPrivateKey importedPrivateKey = _context.ImportPrivateKey(blob);
-            importedPrivateKey.Should().NotBeNull("private key should be importable from a valid blob");
-        }
-
-        [Fact]
         public void TestPublicKeyFromPrivateKey()
         {
             var privateKey = _context.GeneratePrivateKey();
             var publicKey = _context.GetPublicKey(privateKey);
 
             publicKey.Should().NotBeNull(" a valid public key should be created from a private key");
-        }
-
-        [Fact]
-        public void TestPublicKeyImport()
-        {
-            var privateKey = _context.GeneratePrivateKey();
-            var publicKey = _context.GetPublicKey(privateKey);
-
-            var blob = _context.ExportPublicKey(publicKey);
-
-            var publicKey2 = _context.ImportPublicKey(blob);
-            publicKey.Should().NotBeNull("public key should be importable from a valid blob");
         }
 
         [Fact]

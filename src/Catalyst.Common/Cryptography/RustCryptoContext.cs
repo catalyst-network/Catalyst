@@ -25,6 +25,8 @@ using System;
 using Catalyst.Common.Interfaces.Cryptography;
 using Cryptography.IWrapper.Interfaces;
 using Cryptography.IWrapper;
+using Cryptography.IWrapper.Types;
+using Multiformats.Base;
 
 namespace Catalyst.Common.Cryptography
 {
@@ -33,10 +35,13 @@ namespace Catalyst.Common.Cryptography
         private static readonly IWrapper _wrapper = new CryptoWrapper();
         public IPrivateKey GeneratePrivateKey() { return _wrapper.GenerateKey(); }
 
-        public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob) { throw new NotImplementedException(); }
-        public byte[] ExportPublicKey(IPublicKey key) { throw new NotImplementedException(); }
-        public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob) { throw new NotImplementedException(); }
-        public byte[] ExportPrivateKey(IPrivateKey key) { throw new NotImplementedException(); }
+        public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob) { return new PublicKey(blob.ToArray()); }
+
+        public byte[] ExportPublicKey(IPublicKey key) { return key.Bytes.RawBytes; }
+
+        public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob) { return new PrivateKey(blob.ToArray()); }
+
+        public byte[] ExportPrivateKey(IPrivateKey key) { return key.Bytes.RawBytes; }
 
         public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
         {
@@ -47,7 +52,9 @@ namespace Catalyst.Common.Cryptography
         {
             return _wrapper.StdVerify(signature, key, message.ToArray());
         }
+
         public IPublicKey GetPublicKey(IPrivateKey key) { return _wrapper.GetPublicKeyFromPrivate(key); }
-        public string AddressFromKey(IPublicKey key) { throw new NotImplementedException(); }
+
+        public string AddressFromKey(IPublicKey key) { return Multibase.Encode(MultibaseEncoding.Base58Btc, key.Bytes.RawBytes); }
     }
 }
