@@ -22,9 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
@@ -32,104 +31,25 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Rpc.Messaging
 {
-    public sealed class RpcMessageFactory<TMessage, TMessageType>
-        : MessageFactoryBase<TMessage, TMessageType>
+    /// <summary>
+    /// The RpcMessageFactory builds AnySigned objects
+    /// </summary>
+    /// <typeparam name="TMessage">The type of the message.</typeparam>
+    /// <seealso cref="Catalyst.Common.IO.Messaging.MessageFactoryBase{TMessage}" />
+    public sealed class RpcMessageFactory<TMessage>
+        : MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
-        where TMessageType : class, IEnumerableMessageType
     {
-        public override AnySigned GetMessage(IMessageDto<TMessage, TMessageType> dto)
+        /// <summary>Gets the message dto.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="sender">The sender.</param>
+        /// <returns></returns>
+        protected override IMessageDto<TMessage> GetMessageDto(TMessage message,
+            IPeerIdentifier recipient,
+            IPeerIdentifier sender)
         {
-            if (RpcMessages.GetInfoRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-
-            if (RpcMessages.GetInfoResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-
-            if (RpcMessages.GetMempoolRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-
-            if (RpcMessages.GetMempoolResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-
-            if (RpcMessages.GetVersionRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-
-            if (RpcMessages.GetVersionResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-
-            if (RpcMessages.SignMessageRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-
-            if (RpcMessages.SignMessageResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-
-            if (RpcMessages.GetPeerListRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-
-            if (RpcMessages.GetPeerListResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-
-            if (RpcMessages.PeerListCountRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-
-            if (RpcMessages.PeerListCountResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-
-            if (RpcMessages.RemovePeerRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-
-            if (RpcMessages.RemovePeerResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-            
-            if (RpcMessages.VerifyMessageRequest.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-            
-            if (RpcMessages.VerifyMessageResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-
-            if (RpcMessages.GetPeerReputationRequest.Equals(dto.Type))
-            {
-                return BuildAskMessage(dto);
-            }
-
-            if (RpcMessages.GetPeerReputationResponse.Equals(dto.Type))
-            {
-                return BuildTellMessage(dto);
-            }
-
-            throw new ArgumentException("unknown message type");
+            return new MessageDto<TMessage>(message, recipient, sender);
         }
     }
 }

@@ -23,7 +23,7 @@
 
 using System;
 using System.Linq;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -127,20 +127,20 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var rpcMessageFactory = new RpcMessageFactory<GetPeerReputationRequest, RpcMessages>();
+            var rpcMessageFactory = new RpcMessageFactory<GetPeerReputationRequest>();
             var request = new GetPeerReputationRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = ipAddress.ToBytesForRLPEncoding().ToByteString()
             };
 
-            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerReputationRequest, RpcMessages>
-            (
-                type: RpcMessages.GetPeerReputationRequest,
+            var requestMessage = rpcMessageFactory.GetMessage(
                 message: request,
                 recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sender: sendPeerIdentifier
-            ));
+                sender: sendPeerIdentifier,
+                messageType: DtoMessageType.Ask
+            );
+
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

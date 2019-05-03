@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             return jsonTestingFile;
         }
 
-        [Fact]
+        [Fact(Skip = "test hanger")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Mempool_with_InMemoryRepo_can_save_and_retrieve()
         {
@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             await Mempool_can_save_and_retrieve(fi);
         }
 
-        [Fact]
+        [Fact(Skip = "test hanger")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Mempool_with_XmlRepo_can_save_and_retrieve()
         {

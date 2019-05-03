@@ -33,7 +33,6 @@ using Catalyst.Protocol.Common;
 using Dawn;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
-using SharpRepository.Repository;
 
 namespace Catalyst.Common.P2P
 {

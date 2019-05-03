@@ -27,7 +27,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Cli.Rpc;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO;
 using Catalyst.Common.Shell;
@@ -45,9 +45,11 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Google.Protobuf;
+using System.IO;
+using Catalyst.Common.Interfaces.FileTransfer;
+using Serilog.Events;
 
 namespace Catalyst.Cli
 {
@@ -60,7 +62,7 @@ namespace Catalyst.Cli
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
-
+        private readonly ICliFileTransfer _cliFileTransfer;
         private readonly ILogger _logger;
 
         private const string NoConfigMessage =
@@ -71,13 +73,15 @@ namespace Catalyst.Cli
         public Shell(INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
-            ICertificateStore certificateStore)
+            ICertificateStore certificateStore,
+            ICliFileTransfer cliFileTransfer)
         {
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _logger = logger;
+            _cliFileTransfer = cliFileTransfer;
             _peerIdentifier = BuildCliPeerId(config);
 
             Console.WriteLine(@"Koopa Shell Start");
@@ -110,17 +114,19 @@ namespace Catalyst.Cli
                     VerifyOptions,
                     PeerListOptions,
                     PeerCountOptions,
+                    RemovePeerOptions,
                     PeerReputationOptions,
-                    RemovePeerOptions >(args)
+                    AddFileOnDfsOptions>(args)
                .MapResult<
-                    GetInfoOptions, 
-                    ConnectOptions, 
-                    SignOptions, 
+                    GetInfoOptions,
+                    ConnectOptions,
+                    SignOptions,
                     VerifyOptions,
                     PeerListOptions,
                     PeerCountOptions,
                     RemovePeerOptions,
                     PeerReputationOptions,
+                    AddFileOnDfsOptions,
                     bool>(
                     (GetInfoOptions opts) => OnGetCommands(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
@@ -130,6 +136,7 @@ namespace Catalyst.Cli
                     (PeerCountOptions opts) => OnPeerCountCommands(opts),
                     (RemovePeerOptions opts) => OnRemovePeerCommands(opts),
                     (PeerReputationOptions opts) => OnGetPeerNodeReputation(opts),
+                    (AddFileOnDfsOptions opts) => OnAddFileToDfs(opts),
                     errs => false);
         }
 
@@ -241,6 +248,21 @@ namespace Catalyst.Cli
             if (opts.Node.Length > 0)
             {
                 return OnGetPeerCount(opts);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Adds the file on DFS.
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns></returns>
+        private bool OnAddFileToDfs(AddFileOnDfsOptions opts)
+        {
+            if (opts.File.Length > 0 && opts.Node.Length > 0)
+            {
+                return OnAddFileOnDfsMessage(opts);
             }
 
             return false;
@@ -492,16 +514,15 @@ namespace Catalyst.Cli
 
             try
             {
-                var request = new RpcMessageFactory<VersionRequest, RpcMessages>().GetMessage(
-                    new MessageDto<VersionRequest, RpcMessages>(
-                        RpcMessages.GetVersionRequest,
-                        new VersionRequest
-                        {
-                            Query = true
-                        },
-                        new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
-                        _peerIdentifier)
-                );
+                var request = new RpcMessageFactory<VersionRequest>().GetMessage(
+                    new VersionRequest
+                    {
+                        Query = true
+                    },
+                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
+                        nodeConfig.Port),
+                    _peerIdentifier,
+                    DtoMessageType.Ask);
 
                 node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
@@ -534,17 +555,16 @@ namespace Catalyst.Cli
             Guard.Argument(nodeConfig).NotNull("The node configuration cannot be null");
 
             try
-            {   
-                var request = new RpcMessageFactory<GetInfoRequest, RpcMessages>().GetMessage(
-                    new MessageDto<GetInfoRequest, RpcMessages>(
-                        RpcMessages.GetInfoRequest,
-                        new GetInfoRequest
-                        {
-                            Query = true
-                        },
-                        new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
-                        _peerIdentifier)
-                );
+            {
+                var request = new RpcMessageFactory<GetInfoRequest>().GetMessage(
+                    new GetInfoRequest
+                    {
+                        Query = true
+                    },
+                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
+                        nodeConfig.Port),
+                    _peerIdentifier,
+                    DtoMessageType.Ask);
 
                 node.SendMessage(request);
             }
@@ -582,15 +602,14 @@ namespace Catalyst.Cli
 
                 Guard.Argument(node).NotNull();
 
-                var rpcMessageFactory = new RpcMessageFactory<GetPeerCountRequest, RpcMessages>();
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerCountRequest>();
 
-                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerCountRequest, RpcMessages>
-                (
-                    type: RpcMessages.PeerListCountRequest,
-                    message: new GetPeerCountRequest(), 
+                var requestMessage = rpcMessageFactory.GetMessage(
+                    message: new GetPeerCountRequest(),
                     recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
-                    sender: _peerIdentifier
-                ));
+                    sender: _peerIdentifier,
+                    messageType: DtoMessageType.Ask
+                );
 
                 node.SendMessage(requestMessage).Wait();
             }
@@ -616,7 +635,7 @@ namespace Catalyst.Cli
 
             Guard.Argument(node).NotNull();
 
-            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest, RpcMessages>();
+            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest>();
 
             IPAddress ip = IPAddress.Parse(removePeerOptions.Ip);
 
@@ -628,13 +647,12 @@ namespace Catalyst.Cli
                     : ByteString.CopyFrom(removePeerOptions.PublicKey.ToBytesForRLPEncoding())
             };
 
-            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<RemovePeerRequest, RpcMessages>
-            (
-                type: RpcMessages.RemovePeerRequest,
+            var requestMessage = rpcMessageFactory.GetMessage(
                 message: request,
                 recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
-                sender: _peerIdentifier
-            ));
+                sender: _peerIdentifier,
+                messageType: DtoMessageType.Ask
+            );
 
             node.SendMessage(requestMessage).Wait();
 
@@ -660,13 +678,13 @@ namespace Catalyst.Cli
 
             try
             {
-                var request = new RpcMessageFactory<GetMempoolRequest, RpcMessages>().GetMessage(
-                    new MessageDto<GetMempoolRequest, RpcMessages>(
-                        RpcMessages.GetMempoolRequest,
-                        new GetMempoolRequest(),
-                        recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
-                        _peerIdentifier)
-                );
+                var request = new RpcMessageFactory<GetMempoolRequest>().GetMessage(
+                    new GetMempoolRequest(),
+                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
+                        nodeConfig.HostAddress,
+                        nodeConfig.Port),
+                    _peerIdentifier,
+                    DtoMessageType.Ask);
 
                 node.SendMessage(request);
             }
@@ -693,22 +711,21 @@ namespace Catalyst.Cli
 
             var node = GetConnectedNode(nodeId);
             Guard.Argument(node).NotNull("The connected node cannot be null.");
-            
+
             var nodeConfig = GetNodeConfig(signOptions.Node);
 
             try
             {
-                var request = new RpcMessageFactory<SignMessageRequest, RpcMessages>().GetMessage(
-                    new MessageDto<SignMessageRequest, RpcMessages>(
-                        RpcMessages.SignMessageRequest,
-                        new SignMessageRequest
-                        {
-                            Message = ByteString.CopyFrom(signOptions.Message.Trim('\"'), Encoding.UTF8)
-                               .ToByteString()
-                        }, 
-                        recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
-                        _peerIdentifier)
-                );
+                var request = new RpcMessageFactory<SignMessageRequest>().GetMessage(
+                    new SignMessageRequest
+                    {
+                        Message = ByteString.CopyFrom(signOptions.Message.Trim('\"'), Encoding.UTF8)
+                           .ToByteString()
+                    },
+                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
+                        nodeConfig.Port),
+                    _peerIdentifier,
+                    DtoMessageType.Ask);
 
                 node.SendMessage(request).Wait();
             }
@@ -731,27 +748,26 @@ namespace Catalyst.Cli
             Guard.Argument(opts).NotNull().Compatible<VerifyOptions>();
 
             var verifyOptions = (VerifyOptions) opts;
-            
+
             var node = GetConnectedNode(verifyOptions.Node);
             Guard.Argument(node).NotNull("The connected node cannot be null.");
-            
+
             var nodeConfig = GetNodeConfig(verifyOptions.Node);
-            
+
             try
-            {   
-                var request = new RpcMessageFactory<VerifyMessageRequest, RpcMessages>().GetMessage(
-                    new MessageDto<VerifyMessageRequest, RpcMessages>(
-                        RpcMessages.VerifyMessageRequest,
-                        new VerifyMessageRequest
-                        {
-                            Message =
-                                RLP.EncodeElement(verifyOptions.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
-                            PublicKey = verifyOptions.Address.ToBytesForRLPEncoding().ToByteString(),
-                            Signature = verifyOptions.Signature.ToBytesForRLPEncoding().ToByteString()
-                        }, 
-                        recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
-                        _peerIdentifier)
-                );
+            {
+                var request = new RpcMessageFactory<VerifyMessageRequest>().GetMessage(
+                    new VerifyMessageRequest
+                    {
+                        Message =
+                            RLP.EncodeElement(verifyOptions.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
+                        PublicKey = verifyOptions.Address.ToBytesForRLPEncoding().ToByteString(),
+                        Signature = verifyOptions.Signature.ToBytesForRLPEncoding().ToByteString()
+                    },
+                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
+                        nodeConfig.Port),
+                    _peerIdentifier,
+                    DtoMessageType.Ask);
 
                 node.SendMessage(request).Wait();
             }
@@ -837,16 +853,15 @@ namespace Catalyst.Cli
 
                 Guard.Argument(node).NotNull();
 
-                var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest, RpcMessages>();
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest>();
                 var request = new GetPeerListRequest();
 
-                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerListRequest, RpcMessages>
-                (
-                    type: RpcMessages.GetPeerListRequest,
+                var requestMessage = rpcMessageFactory.GetMessage(
                     message: request,
                     recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
-                    sender: _peerIdentifier
-                ));
+                    sender: _peerIdentifier,
+                    messageType: DtoMessageType.Ask
+                );
 
                 node.SendMessage(requestMessage).Wait();
             }
@@ -854,6 +869,70 @@ namespace Catalyst.Cli
             {
                 Console.WriteLine(e);
                 throw;
+            }
+
+            return true;
+        }
+
+        /// <summary>Called when [add file on DFS message].</summary>
+        /// <param name="opts">The options.</param>
+        /// <returns>True if command was successful</returns>
+        public override bool OnAddFileOnDfsMessage(object opts)
+        {
+            Guard.Argument(opts).NotNull().Compatible<AddFileOnDfsOptions>();
+
+            var addFileOnDfsOptions = (AddFileOnDfsOptions) opts;
+            var node = GetConnectedNode(addFileOnDfsOptions.Node);
+            var nodeConfig = GetNodeConfig(addFileOnDfsOptions.Node);
+            var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
+                nodeConfig.HostAddress, nodeConfig.Port);
+
+            Guard.Argument(node).NotNull();
+
+            if (!File.Exists(addFileOnDfsOptions.File))
+            {
+                ReturnUserMessage("File does not exist.");
+                return false;
+            }
+
+            AddFileToDfsRequest request = new AddFileToDfsRequest
+            {
+                FileName = Path.GetFileName(addFileOnDfsOptions.File)
+            };
+
+            using (var fileStream = File.Open(addFileOnDfsOptions.File, FileMode.Open))
+            {
+                request.FileSize = (ulong) fileStream.Length;
+            }
+
+            var rpcMessageFactory = new RpcMessageFactory<AddFileToDfsRequest>();
+
+            var requestMessage = rpcMessageFactory.GetMessage(
+                message: request,
+                recipient: nodePeerIdentifier,
+                sender: _peerIdentifier,
+                messageType: DtoMessageType.Ask
+            );
+
+            node.SendMessage(requestMessage);
+
+            bool responseReceived = _cliFileTransfer.Wait();
+
+            if (!responseReceived)
+            {
+                ReturnUserMessage("Timeout - No response received from node");
+                return false;
+            }
+            else
+            {
+                if (_cliFileTransfer.InitialiseSuccess())
+                {
+                    var minLevel = Program.LogLevelSwitch.MinimumLevel;
+                    Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
+                    _cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node, nodePeerIdentifier, _peerIdentifier);
+                    Program.LogLevelSwitch.MinimumLevel = minLevel;
+                    _cliFileTransfer.WaitForDfsHash();
+                }
             }
 
             return true;
@@ -874,7 +953,7 @@ namespace Catalyst.Cli
 
                 Guard.Argument(node).NotNull();
 
-                var rpcMessageFactory = new RpcMessageFactory<GetPeerReputationRequest, RpcMessages>();
+                var rpcMessageFactory = new RpcMessageFactory<GetPeerReputationRequest>();
 
                 var request = new GetPeerReputationRequest
                 {
@@ -882,13 +961,12 @@ namespace Catalyst.Cli
                     Ip = peerIP.ToBytesForRLPEncoding().ToByteString()
                 };
 
-                var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerReputationRequest, RpcMessages>
-                (
-                    type: RpcMessages.GetPeerReputationRequest,
+                var requestMessage = rpcMessageFactory.GetMessage(
+                    messageType: DtoMessageType.Ask,
                     message: request,
                     recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port),
                     sender: _peerIdentifier
-                ));
+                );
 
                 node.SendMessage(requestMessage).Wait();
             }
@@ -900,6 +978,5 @@ namespace Catalyst.Cli
 
             return true;
         }
-
     }
 }

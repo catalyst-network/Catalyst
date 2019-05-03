@@ -24,62 +24,57 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using Catalyst.Cli.Handlers;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
-using Google.Protobuf.Collections;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests 
+namespace Catalyst.Cli.UnitTests
 {
     public sealed class GetMempoolResponseHandlerTest : IDisposable
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         public static readonly List<object[]> QueryContents;
-        
+
         private readonly IUserOutput _output;
         private GetMempoolResponseHandler _handler;
 
         static GetMempoolResponseHandlerTest()
         {
             var memPoolData = CreateMemPoolData();
-            
+
             QueryContents = new List<object[]>()
             {
                 new object[] {memPoolData},
                 new object[] {new List<string>()},
             };
         }
-        
+
         public GetMempoolResponseHandlerTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
-        
+
         private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
         {
             var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
+            var messageStream = new[] { channeledAny }.ToObservable();
             return messageStream;
         }
 
@@ -89,8 +84,8 @@ namespace Catalyst.Cli.UnitTests
             {
                 TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
-            };  
-            
+            };
+
             var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
             
             var mempoolList = new List<string>();
@@ -109,26 +104,25 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
-            
-            var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
-                new MessageDto<GetMempoolResponse, RpcMessages>(
-                    RpcMessages.GetMempoolRequest,
-                    new GetMempoolResponse
-                    {
-                        Mempool = {txList}
-                    },
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
-            );
+
+            var response = new RpcMessageFactory<GetMempoolResponse>().GetMessage(
+                new GetMempoolResponse
+                {
+                    Mempool = {txList}
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                DtoMessageType.Tell,
+                Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
-            
+
             _handler = new GetMempoolResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(txList.Count).WriteLine(Arg.Any<string>());
         }
-        
+
         public void Dispose()
         {
             _handler?.Dispose();

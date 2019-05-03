@@ -168,6 +168,15 @@
                     "type": "Catalyst.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Common"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.FileTransfer.FileTransfer",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IFileTransfer, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
     ],
     "modules": [

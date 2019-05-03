@@ -240,5 +240,12 @@ namespace Catalyst.Common.Shell
         }
 
         public abstract bool OnVerifyMessage(object opts);
+
+        /// <summary>
+        /// Called when [add file on DFS message].
+        /// </summary>
+        /// <param name="opts">The options.</param>
+        /// <returns></returns>
+        public abstract bool OnAddFileOnDfsMessage(object opts);
     }
 }

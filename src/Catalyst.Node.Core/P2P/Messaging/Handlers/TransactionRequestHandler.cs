@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Transaction;
 using Serilog;
