@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;

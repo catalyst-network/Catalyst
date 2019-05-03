@@ -22,18 +22,14 @@
 #endregion
 
 using System;
-using System.Net;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -77,16 +73,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
                     Formatting.Indented);
 
-                var response = new RpcMessageFactory<GetInfoResponse, RpcMessages>().GetMessage(
-                    new MessageDto<GetInfoResponse, RpcMessages>(
-                        RpcMessages.GetInfoResponse,
-                        new GetInfoResponse
-                        {
-                            Query = serializedList
-                        },
-                        new PeerIdentifier(message.Payload.PeerId), 
-                        _peerIdentifier)
-                );
+                var response = new RpcMessageFactory<GetInfoResponse>().GetMessage(
+                    new GetInfoResponse
+                    {
+                        Query = serializedList
+                    },
+                    new PeerIdentifier(message.Payload.PeerId), 
+                    _peerIdentifier,
+                    DtoMessageType.Tell,
+                    message.Payload.CorrelationId.ToGuid());
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }

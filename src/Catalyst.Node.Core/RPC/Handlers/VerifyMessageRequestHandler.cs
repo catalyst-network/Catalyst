@@ -22,14 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
@@ -37,7 +36,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Multiformats.Base;
 using Nethereum.RLP;
-using NSec.Cryptography;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -78,34 +76,35 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData.ToStringFromRLPDecoded();
             var publicKey = deserialised.PublicKey;
             var signature = deserialised.Signature;
+            var correlationGuid = message.Payload.CorrelationId.ToGuid();
 
             try
             {
                 if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out var encodingUsed, out var decodedPublicKey))
                 {
                     Logger.Error($"{PublicKeyEncodingInvalid} {encodingUsed}");
-                    ReturnResponse(false);
+                    ReturnResponse(false, correlationGuid);
                     return;
                 }
 
                 if (decodedPublicKey.Length == 0)
                 {
                     Logger.Error($"{PublicKeyNotProvided}");
-                    ReturnResponse(false);
+                    ReturnResponse(false, correlationGuid);
                     return;
                 }
                 
                 if (!Multibase.TryDecode(signature.ToStringUtf8(), out encodingUsed, out var decodedSignature))
                 {
                     Logger.Error($"{SignatureEncodingInvalid} {encodingUsed}");
-                    ReturnResponse(false);
+                    ReturnResponse(false, correlationGuid);
                     return;
                 }
                 
                 if (decodedSignature.Length == 0)
                 {
                     Logger.Error($"{SignatureNotProvided}");
-                    ReturnResponse(false);
+                    ReturnResponse(false, correlationGuid);
                     return;
                 }
                 
@@ -118,7 +117,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                ReturnResponse(result);
+                ReturnResponse(result, correlationGuid);
             }
             catch (Exception ex)
             {
@@ -126,18 +125,17 @@ namespace Catalyst.Node.Core.RPC.Handlers
             } 
         }
 
-        private void ReturnResponse(bool result)
+        private void ReturnResponse(bool result, Guid correlationGuid)
         {
-            var response = new RpcMessageFactory<VerifyMessageResponse, RpcMessages>().GetMessage(
-                new MessageDto<VerifyMessageResponse, RpcMessages>(
-                    RpcMessages.VerifyMessageResponse,
-                    new VerifyMessageResponse
-                    {
-                        IsSignedByKey = result
-                    },
-                    new PeerIdentifier(_message.Payload.PeerId), 
-                    _peerIdentifier)
-            );
+            var response = new RpcMessageFactory<VerifyMessageResponse>().GetMessage(
+                new VerifyMessageResponse
+                {
+                    IsSignedByKey = result
+                },
+                new PeerIdentifier(_message.Payload.PeerId),
+                _peerIdentifier,
+                DtoMessageType.Tell,
+                correlationGuid);
 
             _message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
         }

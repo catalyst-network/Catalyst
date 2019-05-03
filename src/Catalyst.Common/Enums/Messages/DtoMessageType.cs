@@ -21,28 +21,20 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Protocol.Transaction;
-using Serilog;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Protocol.Common;
-
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Common.Enums.Messages
 {
-    public sealed class TransactionRequestHandler
-        : MessageHandlerBase<Transaction>,
-            IP2PMessageHandler
+    /// <summary>
+    /// The message type
+    /// </summary>
+    public enum DtoMessageType
     {
-        public TransactionRequestHandler(ILogger logger)
-            : base(logger) { }
+        /// <summary>The ask</summary>
+        Ask = 0,
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAnySigned<Transaction>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
-        }
+        /// <summary>The tell</summary>
+        Tell = 1,
+
+        /// <summary>The gossip</summary>
+        Gossip = 2
     }
 }

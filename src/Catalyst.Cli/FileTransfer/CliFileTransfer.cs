@@ -33,9 +33,11 @@ using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Shell;
+using PeerTalk.Routing;
 
 namespace Catalyst.Cli.FileTransfer
 {
@@ -52,7 +54,7 @@ namespace Catalyst.Cli.FileTransfer
         private uint _maxChunk;
 
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<TransferFileBytesRequest, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactory<TransferFileBytesRequest> _rpcMessageFactory;
 
         /// <summary>The user output</summary>
         private readonly IUserOutput _userOutput;
@@ -60,7 +62,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>Gets or sets the wait handle.</summary>
         /// <value>The wait handle.</value>
         private readonly ManualResetEvent _waitHandle;
-        
+
         /// <summary>The initialise file transfer response</summary>
         private AddFileToDfsResponseCode _initialiseFileTransferResponse;
 
@@ -74,7 +76,7 @@ namespace Catalyst.Cli.FileTransfer
             RetryCount = 0;
             _waitHandle = new ManualResetEvent(false);
             _userOutput = new ConsoleUserOutput();
-            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesRequest, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesRequest>();
         }
 
         /// <summary>Waits this instance.</summary>
@@ -136,7 +138,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>Gets or sets the retry count.</summary>
         /// <value>The retry count.</value>
         public int RetryCount { get; set; }
-        
+
         /// <summary>Flag to check for successful initialise.</summary>
         /// <returns></returns>
         public bool InitialiseSuccess()
@@ -182,12 +184,12 @@ namespace Catalyst.Cli.FileTransfer
                 {
                     var transferMessage = GetFileTransferRequestMessage(fileStream, correlationBytes, fileLen, i);
 
-                    var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto<TransferFileBytesRequest, RpcMessages>(
-                        type: RpcMessages.TransferFileBytesRequest,
+                    var requestMessage = _rpcMessageFactory.GetMessage(
                         message: transferMessage,
                         recipient: nodePeerIdentifier,
-                        sender: senderPeerIdentifier
-                    ));
+                        sender: senderPeerIdentifier,
+                        messageType: DtoMessageType.Ask
+                    );
 
                     node.SendMessage(requestMessage);
 
