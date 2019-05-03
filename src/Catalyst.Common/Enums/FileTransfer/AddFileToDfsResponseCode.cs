@@ -21,21 +21,29 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.Cli;
-
-namespace Catalyst.Common.Shell
+namespace Catalyst.Common.Enums.FileTransfer
 {
-    public class ConsoleUserOutput : IUserOutput
+    /// <summary>
+    /// Response code sent by the node when a file is added to DFS
+    /// </summary>
+    public enum AddFileToDfsResponseCode : byte
     {
-        public void WriteLine(string content)
-        {
-            Console.WriteLine(content);
-        }
+        /// <summary>Successful file added to DFS</summary>
+        Successful = 0,
 
-        public void Write(string content)
-        {
-            Console.Write(content);
-        }
+        /// <summary>File already exists</summary>
+        FileAlreadyExists = 1,
+
+        /// <summary>Error adding file</summary>
+        Error = 2,
+
+        /// <summary>Finished adding file to DFS</summary>
+        Finished = 3,
+
+        /// <summary>Expired file transfer</summary>
+        Expired = 4,
+
+        /// <summary>The failed</summary>
+        Failed = 5
     }
 }

@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -36,6 +37,19 @@ namespace Catalyst.Common.UnitTests.TestUtils
         {   
             var channeledAny = new ChanneledAnySigned(fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
+            return messageStream;
+        }
+
+        public static IObservable<IChanneledMessage<AnySigned>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params AnySigned[] responseMessages)
+        {
+            List<ChanneledAnySigned> stream = new List<ChanneledAnySigned>();
+            foreach (var message in responseMessages)
+            {
+                var channeledAny = new ChanneledAnySigned(fakeContext, message);
+                stream.Add(channeledAny);
+            }
+            
+            var messageStream = stream.ToObservable();
             return messageStream;
         }
     }

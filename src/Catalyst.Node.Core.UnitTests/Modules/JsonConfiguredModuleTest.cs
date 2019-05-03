@@ -46,7 +46,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Modules
 {
-    public sealed class JsonConfiguredModuleTest
+    public sealed class JsonConfiguredModuleTest : IDisposable
     {
         private readonly IContainer _container;
 
@@ -76,6 +76,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules
             builder.RegisterInstance(peerSettings).As<IPeerSettings>();
         }
 
+        public void Dispose()
+        {
+            _container?.Dispose();
+        }
+
         [Theory]
         [InlineData(typeof(IConsensus), typeof(Consensus))]
         [InlineData(typeof(IContract), typeof(Contract))]
@@ -93,5 +98,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules
                 ((IDisposable) resolvedType).Dispose();
             }
         }
+
     }
 }

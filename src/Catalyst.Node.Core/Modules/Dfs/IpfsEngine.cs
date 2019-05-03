@@ -46,8 +46,9 @@ namespace Catalyst.Node.Core.Modules.Dfs
     {
         public static readonly string KeyChainDefaultKeyType = "ed25519";
 
-        private readonly Ipfs.Engine.IpfsEngine _ipfsEngine;
-        private readonly SecureString _passphrase;
+        private Ipfs.Engine.IpfsEngine _ipfsEngine;
+        private bool _isStarted;
+        private readonly object startingLock = new object();
 
         static IpfsEngine() { global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
 
@@ -57,8 +58,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
                .Require(p => p.SeedServers != null && p.SeedServers.Count > 0,
                     p => $"{nameof(peerSettings)} needs to specify at least one seed server.");
 
-            _passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
-            _ipfsEngine = new Ipfs.Engine.IpfsEngine("abcd".ToCharArray());
+            var passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
+            _ipfsEngine = new Ipfs.Engine.IpfsEngine(passphrase);
             _ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
             _ipfsEngine.Options.Repository.Folder = Path.Combine(
                 fileSystem.GetCatalystHomeDir().FullName,
@@ -73,46 +74,66 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 Value = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3".ToHexBuffer()
             };
 
-            //TODO: find out why this leaves the build server hanging on the test step
-            //_ipfsEngine.StartAsync().GetAwaiter().GetResult();
-
             logger.Information("IPFS engine started.");
         }
 
-        public IBitswapApi Bitswap => _ipfsEngine.Bitswap;
+        /// <summary>
+        ///   Starts the engine if required.
+        /// </summary>
+        /// <returns>
+        ///   The started IPFS Engine.
+        /// </returns>
+        Ipfs.Engine.IpfsEngine Start()
+        {
+            if (!_isStarted)
+            {
+                lock (startingLock)
+                {
+                    if (!_isStarted)
+                    {
+                        _ipfsEngine.Start();
+                        _isStarted = true;
+                    }
+                }
+            }
 
-        public IBlockApi Block => _ipfsEngine.Block;
+            return _ipfsEngine;
+        }
 
-        public IBootstrapApi Bootstrap => _ipfsEngine.Bootstrap;
+        public IBitswapApi Bitswap => Start().Bitswap;
+
+        public IBlockApi Block => Start().Block;
+
+        public IBootstrapApi Bootstrap => Start().Bootstrap;
 
         public IConfigApi Config => _ipfsEngine.Config;
 
-        public IDagApi Dag => _ipfsEngine.Dag;
+        public IDagApi Dag => Start().Dag;
 
-        public IDhtApi Dht => _ipfsEngine.Dht;
+        public IDhtApi Dht => Start().Dht;
 
-        public IDnsApi Dns => _ipfsEngine.Dns;
+        public IDnsApi Dns => Start().Dns;
 
-        public IFileSystemApi FileSystem => _ipfsEngine.FileSystem;
+        public IFileSystemApi FileSystem => Start().FileSystem;
 
-        public IGenericApi Generic => _ipfsEngine.Generic;
+        public IGenericApi Generic => Start().Generic;
 
         public IKeyApi Key => _ipfsEngine.Key;
 
-        public INameApi Name => _ipfsEngine.Name;
+        public INameApi Name => Start().Name;
 
-        public IObjectApi Object => _ipfsEngine.Object;
+        public IObjectApi Object => Start().Object;
 
-        public IPinApi Pin => _ipfsEngine.Pin;
+        public IPinApi Pin => Start().Pin;
 
-        public IPubSubApi PubSub => _ipfsEngine.PubSub;
+        public IPubSubApi PubSub => Start().PubSub;
 
-        public IStatsApi Stats => _ipfsEngine.Stats;
+        public IStatsApi Stats => Start().Stats;
 
-        public ISwarmApi Swarm => _ipfsEngine.Swarm;
+        public ISwarmApi Swarm => Start().Swarm;
 
-        public async Task StartAsync() { await _ipfsEngine.StartAsync(); }
-        public async Task StopAsync() { await _ipfsEngine.StopAsync(); }
+        public Task StartAsync() { throw new NotSupportedException("Starting is not supported."); }
+        public Task StopAsync() { throw new NotSupportedException("Stopping is not supported."); }
         public IpfsEngineOptions Options => _ipfsEngine.Options;
 
         private void Dispose(bool disposing)
@@ -122,14 +143,13 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 return;
             }
 
-            //TODO: find out why this leaves the build server hanging on the test step
-            //_ipfsEngine?.Dispose();
-            _passphrase?.Dispose();
+            _ipfsEngine?.Dispose();
+            _ipfsEngine = null;
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            //Dispose(true);
         }
     }
 }

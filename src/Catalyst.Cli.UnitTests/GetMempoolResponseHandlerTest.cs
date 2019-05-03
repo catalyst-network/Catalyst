@@ -42,39 +42,39 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests 
+namespace Catalyst.Cli.UnitTests
 {
     public sealed class GetMempoolResponseHandlerTest : IDisposable
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         public static readonly List<object[]> QueryContents;
-        
+
         private readonly IUserOutput _output;
         private GetMempoolResponseHandler _handler;
 
         static GetMempoolResponseHandlerTest()
         {
             var memPoolData = CreateMemPoolData();
-            
+
             QueryContents = new List<object[]>()
             {
                 new object[] {memPoolData},
                 new object[] {new List<string>()},
             };
         }
-        
+
         public GetMempoolResponseHandlerTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
-        
+
         private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
         {
             var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
+            var messageStream = new[] { channeledAny }.ToObservable();
             return messageStream;
         }
 
@@ -84,8 +84,8 @@ namespace Catalyst.Cli.UnitTests
             {
                 TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
-            };  
-            
+            };
+
             var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
             
             var mempoolList = new List<string>();
@@ -115,13 +115,13 @@ namespace Catalyst.Cli.UnitTests
                 DtoMessageType.Tell);
 
             var messageStream = CreateStreamWithMessage(response);
-            
+
             _handler = new GetMempoolResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(txList.Count).WriteLine(Arg.Any<string>());
         }
-        
+
         public void Dispose()
         {
             _handler?.Dispose();
