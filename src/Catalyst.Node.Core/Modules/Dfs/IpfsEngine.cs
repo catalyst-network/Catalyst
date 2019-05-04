@@ -75,10 +75,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 Value = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3".ToHexBuffer()
             };
 
-            // Temp hack
-            _ipfsEngine.Options.Discovery.DisableMdns = true;
-            _ipfsEngine.Options.Discovery.BootstrapPeers = new MultiAddress[0];
-
             logger.Information("IPFS engine started.");
         }
 
