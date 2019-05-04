@@ -30,16 +30,8 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
-using System.Collections.Generic;
-using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Common.Config;
-using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Common.P2P;
-using System.Net;
-using Catalyst.Common.IO.Messaging;
 using Dawn;
 using Nethereum.RLP;
-using Multiformats.Base;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -53,7 +45,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerDiscovery _peerDiscovery;
 
         private IChanneledMessage<AnySigned> _message;
-
+        
         private readonly PeerId _peerId;
 
         public PeerReputationRequestHandler(IPeerIdentifier peerIdentifier,
@@ -78,11 +70,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             var deserialised = message.Payload.FromAnySigned<GetPeerReputationRequest>();
             var publicKey = deserialised.PublicKey.ToStringUtf8(); 
-            var Ip = deserialised.Ip.ToStringUtf8();
+            var ip = deserialised.Ip.ToStringUtf8();
 
-            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == Ip.ToString()
-            && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
-                .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First(), message);
+            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
+                 && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
+               .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First(), message);
 
             Logger.Debug("received message of type PeerReputationRequest");
         }
@@ -90,7 +82,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>
         /// Returns the response.
         /// </summary>
-        /// <param name="peers">The peers list</param>
+        /// <param name="reputation"></param>
+        /// <param name="message"></param>
         private void ReturnResponse(int reputation, IChanneledMessage<AnySigned> message)
         {
             var response = new GetPeerReputationResponse

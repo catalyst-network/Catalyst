@@ -106,10 +106,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
-            if (!disposing)
+            if (disposing)
             {
-                return;
+                base.Dispose(true);
             }
         }
     }

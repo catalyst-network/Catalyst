@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Config;
+using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -33,16 +33,14 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
 using Serilog;
-using System;
 using Catalyst.Common.Enums.FileTransfer;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class TransferFileBytesRequestHandler : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
+    public sealed class TransferFileBytesRequestHandler : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
         IRpcRequestHandler
     {
         /// <summary>The file transfer</summary>

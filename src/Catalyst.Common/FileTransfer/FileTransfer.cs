@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.FileTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +28,9 @@ using System.Threading;
 using Catalyst.Common.Enums.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 
-namespace Catalyst.Node.Core.Modules.FileTransfer
+namespace Catalyst.Common.FileTransfer
 {
+    /// <inheritdoc />
     /// <summary>
     /// The file transfer class
     /// </summary>
@@ -40,8 +40,9 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         private readonly Dictionary<string, IFileTransferInformation> _pendingFileTransfers;
 
         /// <summary>The lock object</summary>
-        private static readonly object _lockObject = new object();
+        private static readonly object LockObject = new object();
 
+        /// <inheritdoc />
         /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
         public string[] Keys => _pendingFileTransfers.Keys.ToArray();
@@ -52,6 +53,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
             _pendingFileTransfers = new Dictionary<string, IFileTransferInformation>();
         }
 
+        /// <inheritdoc />
         /// <summary>Initializes the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns>Response code</returns>
@@ -59,7 +61,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         {
             var fileHash = fileTransferInformation.UniqueFileName;
 
-            lock (_lockObject)
+            lock (LockObject)
             {
                 if (_pendingFileTransfers.ContainsKey(fileHash))
                 {
@@ -84,12 +86,13 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
                         fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
                     }
-                }, TimeSpan.FromSeconds((FileTransferConstants.ExpiryMinutes * 60) / 2), tokenSource.Token).ConfigureAwait(false);
+                }, TimeSpan.FromSeconds((double) FileTransferConstants.ExpiryMinutes * 60 / 2), tokenSource.Token).ConfigureAwait(false);
 
                 return AddFileToDfsResponseCode.Successful;
             }
         }
 
+        /// <inheritdoc />
         /// <summary>Writes the chunk.</summary>
         /// <param name="fileName">Unique name of the file.</param>
         /// <param name="chunkId">The chunk identifier.</param>
@@ -97,7 +100,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <returns>Response code</returns>
         public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk)
         {
-            IFileTransferInformation fileTransferInformation = GetFileTransferInformation(fileName);
+            var fileTransferInformation = GetFileTransferInformation(fileName);
             if (fileTransferInformation == null)
             {
                 return AddFileToDfsResponseCode.Expired;
@@ -119,19 +122,15 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
             return AddFileToDfsResponseCode.Successful;
         }
 
+        /// <inheritdoc />
         /// <summary>Gets the file transfer information.</summary>
         /// <param name="key">The unique file name.</param>
         /// <returns>File transfer information</returns>
         public IFileTransferInformation GetFileTransferInformation(string key)
         {
-            lock (_lockObject)
+            lock (LockObject)
             {
-                if (!_pendingFileTransfers.ContainsKey(key))
-                {
-                    return null;
-                }
-
-                return _pendingFileTransfers[key];
+                return !_pendingFileTransfers.ContainsKey(key) ? null : _pendingFileTransfers[key];
             }
         }
 
@@ -139,7 +138,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <param name="key">The key.</param>
         private void Remove(string key)
         {
-            lock (_lockObject)
+            lock (LockObject)
             {
                 _pendingFileTransfers.Remove(key);
             }

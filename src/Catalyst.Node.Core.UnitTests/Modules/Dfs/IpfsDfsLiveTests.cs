@@ -35,7 +35,6 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Cryptography;
 using Polly;
-using Polly.Retry;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
@@ -43,17 +42,20 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
     {
         private readonly IIpfsEngine _ipfsEngine;
         private readonly ILogger _logger;
-        private readonly IPeerSettings _peerSettings;
-        private readonly IPasswordReader _passwordReader;
 
         public IpfsDfsLiveTests(ITestOutputHelper output) : base(output)
         {
-            _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.SeedServers.Returns(new[] { "seed1.server.va", "island.domain.tv" });
-            _passwordReader = Substitute.For<IPasswordReader>();
-            _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.SeedServers.Returns(new[]
+            {
+                "seed1.server.va",
+                "island.domain.tv"
+            });
+            
+            var passwordReader = Substitute.For<IPasswordReader>();
+            passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
-            _ipfsEngine = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger);
+            _ipfsEngine = new IpfsEngine(passwordReader, peerSettings, FileSystem, _logger);
         }
 
         [Fact]
@@ -86,7 +88,10 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         public async Task DFS_should_add_and_read_binary()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var binary = new byte[] { 1, 2, 3 };
+            var binary = new byte[]
+            {
+                1, 2, 3
+            };
             var ms = new MemoryStream(binary);
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             var id = await dfs.AddAsync(ms, "", cts.Token);

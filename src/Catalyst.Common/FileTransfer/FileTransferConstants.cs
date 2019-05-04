@@ -29,18 +29,18 @@ namespace Catalyst.Common.FileTransfer
     public static class FileTransferConstants
     {
         /// <summary>The expiry minutes of initialization</summary>
-        public static readonly int ExpiryMinutes = 1;
+        public const int ExpiryMinutes = 1;
 
         /// <summary>The chunk size in bytes</summary>
-        public static readonly int ChunkSize = 1000000;
+        public const int ChunkSize = 1000000;
 
         /// <summary>The CLI chunk writing wait time</summary>
-        public static readonly int CliFileTransferWaitTime = 30;
+        public const int CliFileTransferWaitTime = 30;
 
         /// <summary>The maximum chunk retry count</summary>
-        public static readonly int MaxChunkRetryCount = 3;
+        public const int MaxChunkRetryCount = 3;
 
         /// <summary>The maximum chunk read tries</summary>
-        public static readonly int MaxChunkReadTries = 3;
+        public const int MaxChunkReadTries = 3;
     }
 }

@@ -21,25 +21,24 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Rpc.Messaging
 {
+    /// <inheritdoc />
     /// <summary>
     /// The RpcMessageFactory builds AnySigned objects
     /// </summary>
     /// <typeparam name="TMessage">The type of the message.</typeparam>
-    /// <seealso cref="Catalyst.Common.IO.Messaging.MessageFactoryBase{TMessage}" />
+    /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactoryBase`1" />
     public sealed class RpcMessageFactory<TMessage>
         : MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
     {
+        /// <inheritdoc />
         /// <summary>Gets the message dto.</summary>
         /// <param name="message">The message.</param>
         /// <param name="recipient">The recipient.</param>
