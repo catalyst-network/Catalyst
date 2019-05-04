@@ -26,6 +26,7 @@ using System.Text;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
@@ -38,17 +39,21 @@ namespace Catalyst.Cli.Commands
         /// <inheritdoc cref="GetVersionCommand" />
         public bool GetVersionCommand(IGetVersionOptions opts)
         {
-            Guard.Argument(opts).NotNull();
-            Guard.Argument(opts).NotNull().Compatible<IGetVersionOptions>();
+            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IGetVersionOptions>();
 
-            var nodeId = opts.NodeId;
-
-            var node = GetConnectedNode(nodeId);
-            Guard.Argument(node)
-               .NotNull(
-                    "Node cannot be null. The shell must be able to connect to a valid node to be able to send the request.");
-
-            var nodeConfig = GetNodeConfig(nodeId);
+            INodeRpcClient node;
+            try
+            {
+                node = GetConnectedNode(opts.NodeId);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                return false;
+            }
+            
+            var nodeConfig = GetNodeConfig(opts.NodeId);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
             try
             {
@@ -67,7 +72,7 @@ namespace Catalyst.Cli.Commands
             catch (Exception e)
             {
                 _logger.Debug(e.Message);
-                throw;
+                return false;
             }
 
             return true;

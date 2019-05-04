@@ -87,7 +87,7 @@ namespace Catalyst.Cli.UnitTests
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
-                for (int i = 0; i < 10; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     var canConnect = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                     canConnect.Should().BeTrue();

@@ -21,10 +21,12 @@
 
 #endregion
 
+using System;
 using System.Net;
 using System.Text;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -42,25 +44,28 @@ namespace Catalyst.Cli.Commands
         {
             Guard.Argument(opts).NotNull().Compatible<IRemovePeerOptions>();
 
-            var node = GetConnectedNode(opts.Node);
-            var nodeConfig = GetNodeConfig(opts.Node);
-
-            Guard.Argument(node).NotNull();
-
-            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest>();
-
-            var ip = IPAddress.Parse(opts.Ip);
-
-            var request = new RemovePeerRequest
+            INodeRpcClient node;
+            try
             {
-                PeerIp = ByteString.CopyFrom(ip.To16Bytes()),
-                PublicKey = string.IsNullOrEmpty(opts.PublicKey)
-                    ? ByteString.Empty
-                    : ByteString.CopyFrom(opts.PublicKey.ToBytesForRLPEncoding())
-            };
+                node = GetConnectedNode(opts.Node);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                return false;
+            }
+            
+            var nodeConfig = GetNodeConfig(opts.Node);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
-            var requestMessage = rpcMessageFactory.GetMessage(
-                message: request,
+            var requestMessage = new RpcMessageFactory<RemovePeerRequest>().GetMessage(
+                message: new RemovePeerRequest
+                {
+                    PeerIp = ByteString.CopyFrom(IPAddress.Parse(opts.Ip).To16Bytes()),
+                    PublicKey = string.IsNullOrEmpty(opts.PublicKey)
+                        ? ByteString.Empty
+                        : ByteString.CopyFrom(opts.PublicKey.ToBytesForRLPEncoding())
+                },
                 recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                     nodeConfig.Port),
                 sender: _peerIdentifier,

@@ -21,36 +21,45 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Text;
-using Catalyst.Cli.Options;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Serilog.Events;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    public sealed partial class Commands
     {
         /// <inheritdoc cref="DfsAddFile" />
         public bool DfsAddFile(IAddFileOnDfsOptions opts)
         {
-            Guard.Argument(opts).NotNull().Compatible<IAddFileOnDfsOptions>();
+            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IAddFileOnDfsOptions>();
+            
+            INodeRpcClient node;
+            try
+            {
+                node = GetConnectedNode(opts.Node);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                return false;
+            }
+            
+            var nodeConfig = GetNodeConfig(opts.Node);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            var addFileOnDfsOptions = (AddFileOnDfsOptions) opts;
-            var node = GetConnectedNode(addFileOnDfsOptions.Node);
-            var nodeConfig = GetNodeConfig(addFileOnDfsOptions.Node);
             var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                 nodeConfig.HostAddress, nodeConfig.Port);
 
-            Guard.Argument(node).NotNull();
-
-            if (!File.Exists(addFileOnDfsOptions.File))
+            if (!File.Exists(opts.File))
             {
                 _userOutput.WriteLine("File does not exist.");
                 return false;
@@ -58,17 +67,15 @@ namespace Catalyst.Cli.Commands
 
             var request = new AddFileToDfsRequest
             {
-                FileName = Path.GetFileName(addFileOnDfsOptions.File)
+                FileName = Path.GetFileName(opts.File)
             };
 
-            using (var fileStream = File.Open(addFileOnDfsOptions.File, FileMode.Open))
+            using (var fileStream = File.Open(opts.File, FileMode.Open))
             {
                 request.FileSize = (ulong) fileStream.Length;
             }
 
-            var rpcMessageFactory = new RpcMessageFactory<AddFileToDfsRequest>();
-
-            var requestMessage = rpcMessageFactory.GetMessage(
+            var requestMessage = new RpcMessageFactory<AddFileToDfsRequest>().GetMessage(
                 message: request,
                 recipient: nodePeerIdentifier,
                 sender: _peerIdentifier,
@@ -87,14 +94,12 @@ namespace Catalyst.Cli.Commands
 
             if (!_cliFileTransfer.InitialiseSuccess())
             {
-                return true;
+                return false;
             }
-
-            var minLevel = Program.LogLevelSwitch.MinimumLevel;
-            Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
-            _cliFileTransfer.TransferFile(addFileOnDfsOptions.File, requestMessage.CorrelationId.ToGuid(), node,
+            
+            _cliFileTransfer.TransferFile(opts.File, requestMessage.CorrelationId.ToGuid(), node,
                 nodePeerIdentifier, _peerIdentifier);
-            Program.LogLevelSwitch.MinimumLevel = minLevel;
+
             _cliFileTransfer.WaitForDfsHash();
 
             return true;

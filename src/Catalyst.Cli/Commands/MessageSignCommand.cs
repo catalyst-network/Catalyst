@@ -25,36 +25,44 @@ using System;
 using System.Text;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Nethereum.RLP;
+using Google.Protobuf;
 
 namespace Catalyst.Cli.Commands
 {
     public partial class Commands
     {
-        /// <inheritdoc cref="MessageVerifyCommand" />
-        public bool MessageVerifyCommand(IVerifyOptions opts)
+        /// <inheritdoc cref="MessageSignCommand" />
+        public bool MessageSignCommand(ISignOptions opts)
         {
-            Guard.Argument(opts).NotNull().Compatible<IVerifyOptions>();
+            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<ISignOptions>();
 
-            var node = GetConnectedNode(opts.Node);
-            Guard.Argument(node).NotNull("The connected node cannot be null.");
-
+            INodeRpcClient node;
+            try
+            {
+                node = GetConnectedNode(opts.Node);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                return false;
+            }
+            
             var nodeConfig = GetNodeConfig(opts.Node);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
             try
             {
-                var request = new RpcMessageFactory<VerifyMessageRequest>().GetMessage(
-                    new VerifyMessageRequest
+                var request = new RpcMessageFactory<SignMessageRequest>().GetMessage(
+                    new SignMessageRequest
                     {
-                        Message =
-                            RLP.EncodeElement(opts.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
-                        PublicKey = opts.Address.ToBytesForRLPEncoding().ToByteString(),
-                        Signature = opts.Signature.ToBytesForRLPEncoding().ToByteString()
+                        Message = ByteString.CopyFrom(opts.Message.Trim('\"'), Encoding.UTF8)
+                           .ToByteString()
                     },
                     recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
@@ -66,7 +74,7 @@ namespace Catalyst.Cli.Commands
             catch (Exception e)
             {
                 _logger.Debug(e.Message);
-                throw;
+                return false;
             }
 
             return true;

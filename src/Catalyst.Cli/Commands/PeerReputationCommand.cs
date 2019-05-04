@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -43,25 +44,32 @@ namespace Catalyst.Cli.Commands
             {
                 Guard.Argument(opts).NotNull().Compatible<IPeerReputationOptions>();
 
-                var node = GetConnectedNode(opts.Node);
-                var nodeConfig = GetNodeConfig(opts.Node);
+                INodeRpcClient node;
+                try
+                {
+                    node = GetConnectedNode(opts.Node);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e.Message);
+                    return false;
+                }
 
+                var nodeConfig = GetNodeConfig(opts.Node);
+                Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
+                
                 var peerPublicKey = opts.PublicKey;
                 var peerIp = opts.IpAddress;
 
                 Guard.Argument(node).NotNull();
 
-                var rpcMessageFactory = new RpcMessageFactory<GetPeerReputationRequest>();
-
-                var request = new GetPeerReputationRequest
-                {
-                    PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
-                    Ip = peerIp.ToBytesForRLPEncoding().ToByteString()
-                };
-
-                var requestMessage = rpcMessageFactory.GetMessage(
+                var requestMessage = new RpcMessageFactory<GetPeerReputationRequest>().GetMessage(
                     messageType: DtoMessageType.Ask,
-                    message: request,
+                    message: new GetPeerReputationRequest
+                    {
+                        PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
+                        Ip = peerIp.ToBytesForRLPEncoding().ToByteString()
+                    },
                     recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
                     sender: _peerIdentifier
@@ -72,7 +80,7 @@ namespace Catalyst.Cli.Commands
             catch (Exception e)
             {
                 _logger.Debug(e.Message);
-                throw;
+                return false;
             }
 
             return true;

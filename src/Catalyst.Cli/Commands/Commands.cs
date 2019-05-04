@@ -23,16 +23,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using Catalyst.Cli.Options;
 using Catalyst.Cli.Rpc;
-using Catalyst.Common.Enums.Messages;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO;
@@ -42,21 +37,16 @@ using Catalyst.Common.IO;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Shell;
-using Catalyst.Common.Util;
-using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Protocol.Rpc.Node;
 using CommandLine;
 using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
-using Serilog.Events;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Commands
 {
     /// <inheritdoc cref="ShellBase" />
-    public partial class Commands : ShellBase, IAdvancedShell
+    public sealed partial class Commands : ShellBase, IAdvancedShell
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly ICertificateStore _certificateStore;
@@ -85,7 +75,7 @@ namespace Catalyst.Cli.Commands
             _peerIdentifier = BuildCliPeerId(config);
             _userOutput = userOutput;
             
-            Console.WriteLine(@"Koopa Shell Start");
+            _userOutput.WriteLine(@"Koopa Shell Start");
         }
 
         /// <inheritdoc cref="ParseCommand" />
@@ -139,32 +129,29 @@ namespace Catalyst.Cli.Commands
         /// <returns>Returns true unless an unhandled exception occurs.</returns>
         private bool OnConnectNode(string nodeId)
         {
-            Guard.Argument(nodeId).NotEmpty();
-
+            Guard.Argument(nodeId, nameof(nodeId)).NotEmpty();
             var rpcNodeConfigs = GetNodeConfig(nodeId);
-
-            //Check if there is a connection has already been made to the node
-            Guard.Argument(rpcNodeConfigs).NotNull();
+            Guard.Argument(rpcNodeConfigs, nameof(rpcNodeConfigs)).NotNull();
 
             try
             {
                 //Connect to the node and store it in the socket client registry
                 var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
 
-                if (IsSocketChannelActive(nodeRpcClient))
+                if (!IsSocketChannelActive(nodeRpcClient))
                 {
-                    var clientHashCode =
-                        _socketClientRegistry.GenerateClientHashCode(
-                            EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
-                    _socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);   
+                    return false;
                 }
-            }
 
-            //Handle any other exception. This is a generic error message and should not be returned to users but added
-            //as a safe fail
+                var clientHashCode = _socketClientRegistry.GenerateClientHashCode(
+                    EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
+
+                _socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
+            }
             catch (Exception e)
             {
                 _logger.Debug(e.Message, e);
+                return false;
             }
 
             return true;
@@ -173,16 +160,15 @@ namespace Catalyst.Cli.Commands
         /// <inheritdoc cref="DisconnectNode" />
         private bool DisconnectNode(string nodeId)
         {
-            Guard.Argument(nodeId).Contains(typeof(string));
-
+            Guard.Argument(nodeId, nameof(nodeId)).Contains(typeof(string));
             var nodeConfig = GetNodeConfig(nodeId);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            Guard.Argument(nodeConfig).NotNull();
+            var registryId = _socketClientRegistry.GenerateClientHashCode(
+                EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
 
-            var registryId =
-                _socketClientRegistry.GenerateClientHashCode(
-                    EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
             var node = _socketClientRegistry.GetClientFromRegistry(registryId);
+            Guard.Argument(node, nameof(node)).Require(IsSocketChannelActive(node));
 
             node.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
 
@@ -192,31 +178,33 @@ namespace Catalyst.Cli.Commands
         /// <inheritdoc cref="GetConnectedNode" />
         public INodeRpcClient GetConnectedNode(string nodeId)
         {
+            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty().Compatible<string>();
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(node => node.NodeId.Equals(nodeId));
-
-            Guard.Argument(nodeConfig).NotNull();
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
             var registryId = _socketClientRegistry.GenerateClientHashCode(
                 EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+            
             var nodeRpcClient = _socketClientRegistry.GetClientFromRegistry(registryId);
-
             Guard.Argument(nodeRpcClient).Require(IsSocketChannelActive(nodeRpcClient));
+            
             return nodeRpcClient;
         }
         
         /// <inheritdoc cref="GetNodeConfig" />
         private IRpcNodeConfig GetNodeConfig(string nodeId)
         {
-            var config = _rpcNodeConfigs.SingleOrDefault(nodeConfig => nodeConfig.NodeId.Equals(nodeId));
+            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty().Compatible<string>();
+            
+            var nodeConfig = _rpcNodeConfigs.SingleOrDefault(config => config.NodeId.Equals(nodeId));
 
-            switch (config)
+            if (nodeConfig == null)
             {
-                case null:
-                    _userOutput.WriteLine("Node not configured. Add node to config file and try again.");
-                    return null;
-                default:
-                    return config;
+                _userOutput.WriteLine("Node not configured. Add node to config file and try again.");
+                return null;
             }
+            
+            return nodeConfig;            
         }
         
         /// <summary>
@@ -226,13 +214,18 @@ namespace Catalyst.Cli.Commands
         /// <returns>Returns True if the channel is still active and False otherwise.  A "Channel inactive ..." message is returned to the console.</returns>
         private bool IsSocketChannelActive(INodeRpcClient node)
         {
-            if (node.Channel.Active)
+            Guard.Argument(node, nameof(node)).Compatible<INodeRpcClient>();
+            try
             {
+                Guard.Argument(node.Channel.Active, nameof(node.Channel.Active)).True();
                 return true;
             }
-            
-            _logger.Information("Channel inactive ...");
-            return false;
+            catch (Exception e)
+            {
+                _logger.Information("Channel inactive ...");
+                _logger.Debug(e.Message);
+                return false;
+            }
         }
     }
 }

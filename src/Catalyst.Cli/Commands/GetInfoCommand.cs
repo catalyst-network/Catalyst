@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
@@ -32,20 +33,26 @@ using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    public sealed partial class Commands
     {
         /// <inheritdoc cref="GetInfoCommand" />
         public bool GetInfoCommand(IGetInfoOptions opts)
         {
-            Guard.Argument(opts).NotNull().Compatible<IGetInfoOptions>();
+            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IGetInfoOptions>();
 
-            var node = GetConnectedNode(opts.NodeId);
-            Guard.Argument(node)
-               .NotNull(
-                    "Node cannot be null. The shell must be able to connect to a valid node to be able to send the request.");
-
+            INodeRpcClient node;
+            try
+            {
+                node = GetConnectedNode(opts.NodeId);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                return false;
+            }
+            
             var nodeConfig = GetNodeConfig(opts.NodeId);
-            Guard.Argument(nodeConfig).NotNull("The node configuration cannot be null");
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
             try
             {
@@ -64,7 +71,7 @@ namespace Catalyst.Cli.Commands
             catch (Exception e)
             {
                 _logger.Debug(e.Message);
-                throw;
+                return false;
             }
 
             return true;

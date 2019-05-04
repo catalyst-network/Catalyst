@@ -145,6 +145,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                         }
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
+
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                     serverObserver.Received.Should().NotBeNull();

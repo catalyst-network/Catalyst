@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
@@ -37,20 +38,26 @@ namespace Catalyst.Cli.Commands
         /// <inheritdoc cref="PeerListCommand" />
         public bool PeerListCommand(IPeerListOptions opts)
         {
+            Guard.Argument(opts).NotNull().Compatible<IPeerListOptions>();
+
+            INodeRpcClient node;
             try
             {
-                Guard.Argument(opts).NotNull().Compatible<IPeerListOptions>();
-
-                var node = GetConnectedNode(opts.Node);
-                var nodeConfig = GetNodeConfig(opts.Node);
-
-                Guard.Argument(node).NotNull();
-
-                var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest>();
-                var request = new GetPeerListRequest();
-
-                var requestMessage = rpcMessageFactory.GetMessage(
-                    message: request,
+                node = GetConnectedNode(opts.Node);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                return false;
+            }
+            
+            var nodeConfig = GetNodeConfig(opts.Node);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
+            
+            try
+            {
+                var requestMessage = new RpcMessageFactory<GetPeerListRequest>().GetMessage(
+                    message: new GetPeerListRequest(),
                     recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
                     sender: _peerIdentifier,
@@ -62,7 +69,7 @@ namespace Catalyst.Cli.Commands
             catch (Exception e)
             {
                 _logger.Debug(e.Message);
-                throw;
+                return false;
             }
 
             return true;

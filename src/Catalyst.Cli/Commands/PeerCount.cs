@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
@@ -37,18 +38,25 @@ namespace Catalyst.Cli.Commands
         /// <inheritdoc cref="PeerCountCommand" />
         public bool PeerCountCommand(IPeerCountOptions opts)
         {
+            Guard.Argument(opts).NotNull().Compatible<IPeerCountOptions>();
+
+            INodeRpcClient node;
             try
             {
-                Guard.Argument(opts).NotNull().Compatible<IPeerCountOptions>();
-
-                var node = GetConnectedNode(opts.Node);
-                var nodeConfig = GetNodeConfig(opts.Node);
-
-                Guard.Argument(node).NotNull();
-
-                var rpcMessageFactory = new RpcMessageFactory<GetPeerCountRequest>();
-
-                var requestMessage = rpcMessageFactory.GetMessage(
+                node = GetConnectedNode(opts.Node);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                return false;
+            }
+            
+            var nodeConfig = GetNodeConfig(opts.Node);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
+            
+            try
+            {
+                var requestMessage = new RpcMessageFactory<GetPeerCountRequest>().GetMessage(
                     message: new GetPeerCountRequest(),
                     recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
@@ -61,7 +69,7 @@ namespace Catalyst.Cli.Commands
             catch (Exception e)
             {
                 _logger.Debug(e.Message);
-                throw;
+                return false;
             }
 
             return true;
