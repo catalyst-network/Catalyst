@@ -151,7 +151,7 @@ namespace Catalyst.Cli.FileTransfer
         {
             _userOutput.WriteLine("Waiting for node to return DFS Hash");
             _waitHandle.Reset();
-            bool signalReceived = Wait();
+            var signalReceived = Wait();
 
             if (!signalReceived)
             {
@@ -199,19 +199,23 @@ namespace Catalyst.Cli.FileTransfer
                     if (!responseReceived)
                     {
                         var retrySuccess = Retry(ref i);
-                        if (!retrySuccess)
+                        if (retrySuccess)
                         {
-                            PrintTimeoutMessage();
-                            break;
+                            continue;
                         }
-                    }
-                    else
-                    {
-                        var processSuccess = ProcessChunkResponse(ref i);
-                        if (processSuccess) continue;
-                        WriteUserMessage("Error transferring file. Node Response: " + _currentChunkResponse);
+                        
+                        PrintTimeoutMessage();
                         break;
                     }
+
+                    var processSuccess = ProcessChunkResponse(ref i);
+                    if (processSuccess)
+                    {
+                        continue;
+                    }
+                    
+                    WriteUserMessage("Error transferring file. Node Response: " + _currentChunkResponse);
+                    break;
                 }
 
                 Dispose();
@@ -325,13 +329,11 @@ namespace Catalyst.Cli.FileTransfer
             {
                 return false;
             }
-            else
-            {
-                WriteUserMessage($"Retrying Chunk: {index}, Retry Count: {RetryCount}");
-                RetryCount += 1;
-                index--;
-                return true;
-            }
+
+            WriteUserMessage($"Retrying Chunk: {index}, Retry Count: {RetryCount}");
+            RetryCount += 1;
+            index--;
+            return true;
         }
 
         /// <summary>Prints the timeout message.</summary>

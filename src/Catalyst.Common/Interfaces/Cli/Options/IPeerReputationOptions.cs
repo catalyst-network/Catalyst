@@ -21,20 +21,20 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Cli
+namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IShell
+    public interface IPeerReputationOptions
     {
         /// <summary>
+        /// Gets or sets the node.
         /// </summary>
-        /// <returns></returns>
-        bool RunConsole();
+        /// <value>
+        /// The node.
+        /// </value>
+        string Node { get; set; }
+
+        string IpAddress { get; set; }
         
-        /// <summary>
-        /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
-        /// </summary>
-        /// <param name="args">string array including the parameters passed through the command line</param>
-        /// <returns>Returns true if a method to handle the options is found otherwise returns false</returns>
-        bool ParseCommand(params string[] args);
+        string PublicKey { get; set; }
     }
 }

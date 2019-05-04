@@ -113,7 +113,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             //peers we are interested in
             fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer
             {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i), 12345)
+                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i))
             }));
 
             // Let peerRepository return the fake peer list

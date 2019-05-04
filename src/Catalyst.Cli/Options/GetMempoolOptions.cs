@@ -21,20 +21,20 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Cli
+using Catalyst.Common.Interfaces.Cli.Options;
+using CommandLine;
+
+namespace Catalyst.Cli.Options
 {
-    public interface IShell
+    [Verb("getmempool", HelpText = "Gets information from a catalyst node")]
+    internal sealed class GetMempoolOptions : IGetMempoolOptions
     {
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        bool RunConsole();
-        
-        /// <summary>
-        /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
-        /// </summary>
-        /// <param name="args">string array including the parameters passed through the command line</param>
-        /// <returns>Returns true if a method to handle the options is found otherwise returns false</returns>
-        bool ParseCommand(params string[] args);
+        [Option('m', "mempool")]
+        public bool Mempool { get; set; }
+
+        [Value(1, MetaName = "Node ID",
+            HelpText = "Valid and connected node ID.",
+            Required = true)]
+        public string NodeId { get; set; }
     }
 }

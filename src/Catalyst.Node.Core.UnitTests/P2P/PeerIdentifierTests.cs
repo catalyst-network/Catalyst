@@ -125,8 +125,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Theory]
-        [InlineData("Mum")]
-        [InlineData("Daddy")]
         [InlineData("20")]
         [InlineData("I2")]
         [InlineData("M+")]

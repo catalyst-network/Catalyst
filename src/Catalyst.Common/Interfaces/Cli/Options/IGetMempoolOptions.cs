@@ -21,20 +21,11 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Cli
+namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IShell
+    public interface IGetMempoolOptions
     {
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        bool RunConsole();
-        
-        /// <summary>
-        /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
-        /// </summary>
-        /// <param name="args">string array including the parameters passed through the command line</param>
-        /// <returns>Returns true if a method to handle the options is found otherwise returns false</returns>
-        bool ParseCommand(params string[] args);
+        bool Mempool { get; set; }
+        string NodeId { get; set; }
     }
 }

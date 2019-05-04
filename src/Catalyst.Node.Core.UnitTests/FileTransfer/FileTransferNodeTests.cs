@@ -132,8 +132,8 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var fileTransferInformation = _fileTransfer.GetFileTransferInformation(uniqueFileKey);
             _fileTransfer.GetFileTransferInformation(uniqueFileKey)
                .AddExpiredCallback(delegate { expiredDelegateHit = true; });
-            Thread.Sleep((FileTransferConstants.ExpiryMinutes * 60 * 1000) + 1000);
-            bool fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
+            Thread.Sleep(FileTransferConstants.ExpiryMinutes * 60 * 1000 + 1000);
+            var fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
 
             Assert.Equal(true, fileTransferInformation.IsExpired());
             Assert.Equal(true, fileCleanedUp);
@@ -164,9 +164,9 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var uniqueFileKey = Guid.NewGuid();
             string dfsHash = null;
 
-            byte[] b = new byte[byteSize];
+            var b = new byte[byteSize];
             new Random().NextBytes(b);
-            FileStream fs = File.Create(fileToTransfer);
+            var fs = File.Create(fileToTransfer);
             fs.Write(b);
             fs.Close();
             crc32.Update(b);
@@ -193,7 +193,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             Assert.Equal(1, _fileTransfer.Keys.Length);
 
-            IFileTransferInformation fileTransferInformation =
+            var fileTransferInformation =
                 _fileTransfer.GetFileTransferInformation(uniqueFileKey.ToString());
 
             fileTransferInformation.AddSuccessCallback(information =>
@@ -204,7 +204,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
                 dfsHash = information.DfsHash;
             });
 
-            List<AnySigned> chunkMessages = new List<AnySigned>();
+            var chunkMessages = new List<AnySigned>();
             using (fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
