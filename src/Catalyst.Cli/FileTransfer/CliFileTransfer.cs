@@ -347,7 +347,11 @@ namespace Catalyst.Cli.FileTransfer
         /// release only unmanaged resources.</param>
         private void Dispose(bool disposing)
         {
-            if (!disposing) return;
+            if (!disposing)
+            {
+                return;
+            }
+            
             _waitHandle.Reset();
             RetryCount = 0;
             _initialiseFileTransferResponse = default;

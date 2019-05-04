@@ -68,7 +68,7 @@ namespace Catalyst.Common.Network
                .NotEmpty()
                .NotWhiteSpace();
 
-            return await Query(hostname, QueryType.TXT);
+            return await Query(hostname, QueryType.TXT).ConfigureAwait(false);
         }
         
         /// <inheritdoc />
