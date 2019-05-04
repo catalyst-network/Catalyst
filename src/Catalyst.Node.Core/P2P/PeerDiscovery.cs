@@ -25,23 +25,17 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using Dawn;
-using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
-using Nethereum.Hex.HexConvertors.Extensions;
-using Nethereum.RLP;
 using Serilog;
 using SharpRepository.Repository;
 using Peer = Catalyst.Common.P2P.Peer;
@@ -85,9 +79,9 @@ namespace Catalyst.Node.Core.P2P
             var seedDnsUrls = new List<string>();
             try
             {
-                ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList().ForEach(SeedUrl =>
+                ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList().ForEach(seedUrl =>
                 {
-                    seedDnsUrls.Add(SeedUrl); 
+                    seedDnsUrls.Add(seedUrl); 
                 });
             }
             catch (Exception e)
@@ -112,7 +106,7 @@ namespace Catalyst.Node.Core.P2P
                 ).Subscribe(PeerNeighbourSubscriptionHandler);
         }
 
-        public void PingSubscriptionHandler(IChanneledMessage<AnySigned> message)
+        private void PingSubscriptionHandler(IChanneledMessage<AnySigned> message)
         {
             Logger.Information("processing ping message stream");
             var pingResponse = message.Payload.FromAnySigned<PingResponse>();
@@ -152,11 +146,9 @@ namespace Catalyst.Node.Core.P2P
 
         private void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                Logger.Debug($"Disposing {GetType().Name}");
-                PingResponseMessageStream?.Dispose();
-            }
+            if (!disposing) return;
+            Logger.Debug($"Disposing {GetType().Name}");
+            PingResponseMessageStream?.Dispose();
         }
     }
 }

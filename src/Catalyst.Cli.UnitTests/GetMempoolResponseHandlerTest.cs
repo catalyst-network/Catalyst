@@ -27,11 +27,10 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using Catalyst.Cli.Handlers;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
@@ -105,17 +104,16 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
-            
-            var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
-                new MessageDto<GetMempoolResponse, RpcMessages>(
-                    RpcMessages.GetMempoolRequest,
-                    new GetMempoolResponse
-                    {
-                        Mempool = {txList}
-                    },
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
-            );
+
+            var response = new RpcMessageFactory<GetMempoolResponse>().GetMessage(
+                new GetMempoolResponse
+                {
+                    Mempool = {txList}
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                DtoMessageType.Tell,
+                Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
 

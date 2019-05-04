@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -72,6 +71,7 @@ namespace Catalyst.Common.Network
             return await Query(hostname, QueryType.TXT);
         }
         
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>

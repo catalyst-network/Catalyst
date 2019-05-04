@@ -31,11 +31,11 @@ using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public class IpfsDfs : IDfs
+    public sealed class IpfsDfs : IDfs
     {
         public static readonly string HashAlgorithm = "blake2b-256";
 
-        public static readonly AddFileOptions AddFileOptions = new AddFileOptions
+        private static readonly AddFileOptions AddFileOptions = new AddFileOptions
         {
             Hash = HashAlgorithm,
             RawLeaves = true

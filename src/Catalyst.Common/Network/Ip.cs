@@ -127,7 +127,7 @@ namespace Catalyst.Common.Network
         {
             return IPAddress.TryParse(ipOrHost, out var address)
                 ? address
-                : System.Net.Dns.GetHostAddressesAsync(ipOrHost).Result
+                : Dns.GetHostAddressesAsync(ipOrHost).Result
                    .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
         }
 

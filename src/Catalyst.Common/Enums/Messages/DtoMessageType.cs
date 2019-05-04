@@ -21,26 +21,20 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Serilog;
-
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Common.Enums.Messages
 {
-    public sealed class GetNeighbourResponseHandler
-        : ReputableResponseHandlerBase<PeerNeighborsResponse, PeerNeighborsRequest, IReputableCache>,
-            IP2PMessageHandler
+    /// <summary>
+    /// The message type
+    /// </summary>
+    public enum DtoMessageType
     {
-        public GetNeighbourResponseHandler(IReputableCache reputableCache, ILogger logger) : base(reputableCache, logger) { }
-        
-        protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            base.Handler(message);
-            Logger.Debug("received peer NeighbourResponse");
-        }
+        /// <summary>The ask</summary>
+        Ask = 0,
+
+        /// <summary>The tell</summary>
+        Tell = 1,
+
+        /// <summary>The gossip</summary>
+        Gossip = 2
     }
 }

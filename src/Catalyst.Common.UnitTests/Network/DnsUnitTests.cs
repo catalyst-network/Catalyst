@@ -31,8 +31,6 @@ using Catalyst.Common.UnitTests.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
 using FluentAssertions;
-using Nethereum.Hex.HexConvertors.Extensions;
-using Nethereum.RLP;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;

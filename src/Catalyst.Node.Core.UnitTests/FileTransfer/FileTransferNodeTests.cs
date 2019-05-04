@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             {
                 Node = "node1",
                 FileName = "Test.dat",
-                FileSize = (ulong) 10000
+                FileSize = 10000
             }.ToAnySigned(sender, Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
@@ -116,7 +116,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             {
                 Node = "node1",
                 FileName = "Test.dat",
-                FileSize = (ulong) 10000
+                FileSize = 10000
             }.ToAnySigned(sender, Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);

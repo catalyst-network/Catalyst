@@ -29,11 +29,11 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Serilog;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Config;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
@@ -41,7 +41,6 @@ using Catalyst.Node.Core.Modules.FileTransfer;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -55,7 +54,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<AddFileToDfsResponse, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactory<AddFileToDfsResponse> _rpcMessageFactory;
 
         /// <summary>The file transfer</summary>
         private readonly IFileTransfer _fileTransfer;
@@ -78,7 +77,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IMessageCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger)
         {
-            _rpcMessageFactory = new RpcMessageFactory<AddFileToDfsResponse, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactory<AddFileToDfsResponse>();
             _fileTransfer = fileTransfer;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
@@ -126,7 +125,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 try
                 {
-                    string fileHash = null;
+                    string fileHash;
                     using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open))
                     {
                         fileHash = _dfs.AddAsync(fileStream, fileTransferInformation.FileName).Result;
@@ -148,7 +147,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
             ReturnResponse(fileTransferInformation, addFileResponseCode);
         }
 
-        /// <param name="message">The message sent by client</param>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <param name="responseCode">The response code.</param>
         private void ReturnResponse(IFileTransferInformation fileTransferInformation, AddFileToDfsResponseCode responseCode)
@@ -162,19 +160,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var dfsHash = responseCode == AddFileToDfsResponseCode.Finished ? fileTransferInformation.DfsHash : string.Empty;
 
             // Build Response
-            AddFileToDfsResponse response = new AddFileToDfsResponse
+            var response = new AddFileToDfsResponse
             {
                 ResponseCode = ByteString.CopyFrom((byte) responseCode),
                 DfsHash = dfsHash
             };
 
             // Send Response
-            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto<AddFileToDfsResponse, RpcMessages>(
-                type: RpcMessages.AddFileToDfsResponse,
+            var responseMessage = _rpcMessageFactory.GetMessage(
                 message: response,
                 recipient: fileTransferInformation.RecipientIdentifier,
-                sender: _peerIdentifier
-            ));
+                sender: _peerIdentifier,
+                messageType: DtoMessageType.Tell,
+                Guid.NewGuid()
+            );
 
             fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage);
         }

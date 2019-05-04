@@ -24,7 +24,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
@@ -45,11 +44,11 @@ namespace Catalyst.Node.Core.Modules.Dfs
     /// </summary>
     public sealed class IpfsEngine : IIpfsEngine
     {
-        public static readonly string KeyChainDefaultKeyType = "ed25519";
+        private const string KeyChainDefaultKeyType = "ed25519";
 
         private Ipfs.Engine.IpfsEngine _ipfsEngine;
         private bool _isStarted;
-        private readonly object startingLock = new object();
+        private readonly object _startingLock = new object();
 
         static IpfsEngine() { global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
 
@@ -88,7 +87,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         {
             if (!_isStarted)
             {
-                lock (startingLock)
+                lock (_startingLock)
                 {
                     if (!_isStarted)
                     {

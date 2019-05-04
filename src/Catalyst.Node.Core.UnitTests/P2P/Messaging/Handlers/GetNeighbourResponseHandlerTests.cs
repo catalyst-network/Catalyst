@@ -39,7 +39,6 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -49,8 +48,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
     public sealed class GetNeighbourResponseHandlerTests : ConfigFileBasedTest
     {
         private IChannelHandlerContext _fakeContext;
-        private ILogger _logger;
-        private IReputableCache _subbedReputableCache;
+        private readonly ILogger _logger;
+        private readonly IReputableCache _subbedReputableCache;
 
         public GetNeighbourResponseHandlerTests(ITestOutputHelper output) : base(output)
         {

@@ -43,7 +43,6 @@ using Xunit;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using SharpRepository.Repository;
-using SharpRepository.Repository.Specifications;
 using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers

@@ -21,9 +21,6 @@
 
 #endregion
 
-using System;
-using System.Net;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -37,14 +34,13 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 {
     public sealed class MessageDtoTests
     {
-        private readonly P2PMessageDto<IMessage, P2PMessages> _p2PMessageDto;
+        private readonly P2PMessageDto<IMessage> _p2PMessageDto;
 
         public MessageDtoTests()
         {
             var peerIdentifier = Substitute.For<IPeerIdentifier>();
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
-            _p2PMessageDto = new P2PMessageDto<IMessage, P2PMessages>(
-                P2PMessages.PingRequest,
+            _p2PMessageDto = new P2PMessageDto<IMessage>(
                 pingRequest,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
                 peerIdentifier
@@ -55,8 +51,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         public void CanInitMessageDtoCorrectly()
         {
             Assert.NotNull(_p2PMessageDto);
-            _p2PMessageDto.Should().BeOfType(typeof(P2PMessageDto<IMessage, P2PMessages>));
-            _p2PMessageDto.Type.Should().BeEquivalentTo(P2PMessages.PingRequest);
+            _p2PMessageDto.Should().BeOfType(typeof(P2PMessageDto<IMessage>));
             _p2PMessageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
             _p2PMessageDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
             _p2PMessageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));

@@ -21,18 +21,15 @@
 
 #endregion
 
-using System.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
-using Dawn;
 using DnsClient;
-using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
 

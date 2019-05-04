@@ -25,12 +25,11 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,14 +38,14 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests 
+namespace Catalyst.Cli.UnitTests
 {
     public sealed class GetVersionResponseHandlerTest : IDisposable
     {
         private readonly IUserOutput _output;
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
-        
+
         private readonly ILogger _logger;
         private GetVersionResponseHandler _handler;
 
@@ -58,46 +57,45 @@ namespace Catalyst.Cli.UnitTests
                 new object[] {""},
             };
         }
-        
+
         public GetVersionResponseHandlerTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
-        
+
         private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
         {
             var channeledAny = new ChanneledAnySigned(_fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }
-        
+
         [Theory]
-        [MemberData(nameof(QueryContents))]  
+        [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetVersionResponse(string version)
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            
-            var response = new RpcMessageFactory<VersionResponse, RpcMessages>().GetMessage(
-                new P2PMessageDto<VersionResponse, RpcMessages>(
-                    RpcMessages.GetVersionRequest,
-                    new VersionResponse
-                    {
-                        Version = version
-                    }, 
-                    PeerIdentifierHelper.GetPeerIdentifier("recpient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender"))
-            );
+
+            var response = new RpcMessageFactory<VersionResponse>().GetMessage(
+                new VersionResponse
+                {
+                    Version = version
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender"), 
+                DtoMessageType.Tell,
+                Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
 
             _handler = new GetVersionResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
-            
+
             _output.Received(1).WriteLine($"Node Version: {version}");
         }
-        
+
         public void Dispose()
         {
             _handler?.Dispose();

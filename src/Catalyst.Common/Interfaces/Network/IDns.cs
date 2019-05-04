@@ -21,7 +21,7 @@
 
 #endregion
 
-using System.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
@@ -46,7 +46,7 @@ namespace Catalyst.Common.Interfaces.Network
         /// <summary>
         ///     Returns a thread safe list of seed nodes from TXT records
         /// </summary>
-        /// <param name="seedServers"></param>
+        /// <param name="urls"></param>
         /// <returns></returns>
         IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> urls);
     }

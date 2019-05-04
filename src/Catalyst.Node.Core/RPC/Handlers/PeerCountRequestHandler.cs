@@ -22,11 +22,11 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerDiscovery _peerDiscovery;
 
         /// <summary>The RPC message base</summary>
-        private readonly RpcMessageFactory<GetPeerCountResponse, RpcMessages> _rpcMessageBase;
+        private readonly RpcMessageFactory<GetPeerCountResponse> _rpcMessageBase;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             base(correlationCache, logger)
         {
             _peerDiscovery = peerDiscovery;
-            _rpcMessageBase = new RpcMessageFactory<GetPeerCountResponse, RpcMessages>();
+            _rpcMessageBase = new RpcMessageFactory<GetPeerCountResponse>();
             _peerIdentifier = peerIdentifier;
         }
 
@@ -78,12 +78,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 PeerCount = peerCount
             };
 
-            var responseMessage = _rpcMessageBase.GetMessage(new MessageDto<GetPeerCountResponse, RpcMessages>(
-                type: RpcMessages.PeerListCountResponse,
+            var responseMessage = _rpcMessageBase.GetMessage(
                 message: response,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
-                sender: _peerIdentifier
-            ));
+                sender: _peerIdentifier,
+                messageType: DtoMessageType.Tell,
+                message.Payload.CorrelationId.ToGuid()
+            );
 
             message.Context.Channel.WriteAndFlushAsync(responseMessage);
         }

@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Dawn;
@@ -29,27 +28,22 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public sealed class MessageDto<TMessage, TMessageType>
-        : IMessageDto<TMessage, TMessageType>
+    public sealed class MessageDto<TMessage>
+        : IMessageDto<TMessage>
         where TMessage : class, IMessage
-        where TMessageType : class, IEnumerableMessageType
     {
-        public TMessageType Type { get; }
         public TMessage Message { get; }
         public IPeerIdentifier Recipient { get; }
         public IPeerIdentifier Sender { get; }
 
-        public MessageDto(TMessageType type,
-            TMessage message,
+        public MessageDto(TMessage message,
             IPeerIdentifier recipient,
             IPeerIdentifier sender)
         {
-            Guard.Argument(type, nameof(type)).HasValue();
             Guard.Argument(message, nameof(message)).NotNull().Compatible<TMessage>().HasValue();
             Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull().HasValue();
             Guard.Argument(recipient.Port, nameof(recipient.Port)).InRange(0, 65535);
             Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull().HasValue();
-            Type = type;
             Message = message;
             Recipient = recipient;
             Sender = sender;

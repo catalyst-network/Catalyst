@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         [Fact]
         public void Constructor_should_read_a_password()
         {
-            using (var ipfs = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
+            using (new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
             {
                 _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePassword();
             }

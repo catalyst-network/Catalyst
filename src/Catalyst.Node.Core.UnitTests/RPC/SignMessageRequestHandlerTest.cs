@@ -21,16 +21,15 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Autofac;
 using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -84,17 +83,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
         public void RpcServer_Can_Handle_SignMessageRequest(string message)
-        {            
-            var request = new RpcMessageFactory<SignMessageRequest, RpcMessages>().GetMessage(
-                new MessageDto<SignMessageRequest, RpcMessages>(
-                    RpcMessages.SignMessageRequest,
-                    new SignMessageRequest
-                    {
-                        Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
-                    }, 
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
-            );
+        {
+            var request = new RpcMessageFactory<SignMessageRequest>().GetMessage(
+                new SignMessageRequest
+                {
+                    Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                DtoMessageType.Ask);
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

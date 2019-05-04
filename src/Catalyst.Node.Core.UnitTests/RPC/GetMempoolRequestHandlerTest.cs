@@ -24,13 +24,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Catalyst.Common.Config;
+using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -89,13 +87,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 }
             );
 
-            var request = new RpcMessageFactory<GetMempoolRequest, RpcMessages>().GetMessage(
-                new MessageDto<GetMempoolRequest, RpcMessages>(
-                    RpcMessages.GetMempoolRequest,
-                    new GetMempoolRequest(),
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
-            );
+            var request = new RpcMessageFactory<GetMempoolRequest>().GetMessage(
+                new GetMempoolRequest(),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                DtoMessageType.Ask);
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

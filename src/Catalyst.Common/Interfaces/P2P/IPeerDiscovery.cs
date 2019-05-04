@@ -24,8 +24,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Network;

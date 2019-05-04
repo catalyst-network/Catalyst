@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Cli.FileTransfer;
+using System;
 using Catalyst.Common.Enums.FileTransfer;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
