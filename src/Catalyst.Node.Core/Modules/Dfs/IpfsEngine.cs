@@ -149,7 +149,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public void Dispose()
         {
-            //Dispose(true);
+            Dispose(true);
         }
     }
 }
