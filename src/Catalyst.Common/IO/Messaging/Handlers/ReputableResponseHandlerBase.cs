@@ -45,6 +45,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
     {
         public TReputableCache ReputableCache { get; }
 
+        /// <inheritdoc />
         /// <summary>Determines whether this instance [can execute next handler] the specified message.</summary>
         /// <param name="message">The message.</param>
         /// <returns><c>true</c> if this instance [can execute next handler] the specified message; otherwise, <c>false</c>.</returns>

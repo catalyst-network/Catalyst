@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             Guard.Argument(message).NotNull("Received message cannot be null");
 
-            ReturnResponse(this._peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
+            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
 
             Logger.Debug("received message of type PeerListRequest");
         }
@@ -93,6 +93,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Returns the response.
         /// </summary>
         /// <param name="peers">The peers list</param>
+        /// <param name="message"></param>
         private void ReturnResponse(IEnumerable<PeerId> peers, IChanneledMessage<AnySigned> message)
         {
             var response = new GetPeerListResponse();

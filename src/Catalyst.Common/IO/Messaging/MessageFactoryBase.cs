@@ -75,20 +75,17 @@ namespace Catalyst.Common.IO.Messaging
         /// <param name="dto">The dto.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>AnySigned message</returns>
-        protected AnySigned BuildTellMessage(IMessageDto<TMessage> dto, Guid correlationId)
+        private AnySigned BuildTellMessage(IMessageDto<TMessage> dto, Guid correlationId)
         {
-            if (correlationId == default)
-            {
-                throw new ArgumentException("Correlation ID cannot be null for a tell message");
-            }
-
-            return dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
+            return correlationId == default
+                ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
+                : dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
         }
 
         /// <summary>Builds the ask message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>AnySigned message</returns>
-        protected AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
+        private AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }

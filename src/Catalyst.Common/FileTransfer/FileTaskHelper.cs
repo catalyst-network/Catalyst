@@ -25,7 +25,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Catalyst.Node.Core.Modules.FileTransfer
+namespace Catalyst.Common.FileTransfer
 {
     /// <summary>
     /// The file task helper

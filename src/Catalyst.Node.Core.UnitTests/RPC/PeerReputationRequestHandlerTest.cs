@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -38,17 +39,10 @@ using Xunit;
 using SharpRepository.Repository;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
-using System.Collections.Generic;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using System.Net;
 using Nethereum.RLP;
 using Catalyst.Common.Util;
-
-
-
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
@@ -111,10 +105,16 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
 
-            var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer() { Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}") }).ToList();
+            var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
+            {
+                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}")
+            }).ToList();
 
             //peers we are interested in
-            fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer() { Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i), 12345) }));
+            fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer
+            {
+                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i))
+            }));
 
             // Let peerRepository return the fake peer list
             peerRepository.GetAll().Returns(fakePeers.ToArray());
@@ -141,18 +141,16 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 messageType: DtoMessageType.Ask
             );
 
-
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
             var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerDiscovery);
             handler.StartObserving(messageStream);
 
-
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
 
-            var sentResponse = (AnySigned)receivedCalls[0].GetArguments().Single();
+            var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerReputationResponse.Descriptor.ShortenedFullName());
 
             return sentResponse.FromAnySigned<GetPeerReputationResponse>();

@@ -49,25 +49,21 @@ namespace Catalyst.Node.Core.P2P.Messaging
             return GetMessage(message, recipient, sender, messageType, correlationId).ToDatagram(recipient.IpEndPoint);
         }
 
+        /// <inheritdoc />
         /// <summary>Gets the message.</summary>
         /// <param name="message">The message.</param>
         /// <param name="recipient">The recipient.</param>
         /// <param name="sender">The sender.</param>
         /// <param name="messageType">Type of the message.</param>
+        /// <param name="correlationId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException">unknown message type</exception>
+        /// <exception cref="T:System.ArgumentException">unknown message type</exception>
         public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
         {
-            if (messageType == DtoMessageType.Gossip)
-            {
-                return BuildGossipMessage(GetMessageDto(message, recipient, sender));
-            }
-            else
-            {
-                return base.GetMessage(message, recipient, sender, messageType, correlationId);
-            }
+            return messageType == DtoMessageType.Gossip ? BuildGossipMessage(GetMessageDto(message, recipient, sender)) : base.GetMessage(message, recipient, sender, messageType, correlationId);
         }
 
+        /// <inheritdoc />
         /// <summary>Gets the message dto.</summary>
         /// <param name="message">The message.</param>
         /// <param name="recipient">The recipient.</param>

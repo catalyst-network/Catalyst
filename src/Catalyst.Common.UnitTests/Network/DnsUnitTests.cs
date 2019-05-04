@@ -34,7 +34,6 @@ using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
-using Dns = Catalyst.Common.Network.Dns;
 
 namespace Catalyst.Common.UnitTests.Network
 {
@@ -44,7 +43,7 @@ namespace Catalyst.Common.UnitTests.Network
         {
             _lookupClient = Substitute.For<ILookupClient>();
             _ipEndPoint = new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53);
-            _dns = new Dns(_lookupClient);
+            _dns = new Common.Network.DnsClient(_lookupClient);
         }
 
         private readonly IDns _dns;
@@ -120,17 +119,17 @@ namespace Catalyst.Common.UnitTests.Network
             txtRecords.Should().BeNull();
         }
 
-        [Fact(Skip = "DNS WIP")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetTxtRecords_should_return_seeds_for_realz()
         {
             var trueClient = new LookupClient(_ipEndPoint);
-            var dns = new Dns(trueClient);
+            var dns = new Common.Network.DnsClient(trueClient);
             var dnsQueryResponse =
                 await dns.GetTxtRecords("seed1.network.atlascity.io");
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
             var seedIp = answerSection.EscapedText.FirstOrDefault();
-            seedIp.Should().Be("92.207.178.198:42069");
+            seedIp.Should().Be("0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839");
         }
     }
 }

@@ -25,7 +25,6 @@ using System;
 using System.Reflection;
 using System.Text;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Catalyst.Common.Interfaces.Cli;
 
@@ -33,158 +32,20 @@ namespace Catalyst.Common.Shell
 {
     public abstract class ShellBase : IShell
     {
-        protected ShellBase()
-        {
-            AppCulture = new CultureInfo("en-GB", false);
-        }
+        protected ShellBase() { }
 
-        private string Prompt => "Koopa";
-        private string ServiceName => "Catalyst Distributed Shell";
-        public static CultureInfo AppCulture { get; set; }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStart(string[] args);
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStartWork(string[] args);
-
-        /// <summary>
-        /// </summary>
-        public abstract bool OnStop(string[] args);
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStopNode(string[] args);
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool OnStopWork(string[] args);
-
-        /// <summary>
-        ///     Prints a list of available cli commands.
-        /// </summary>
-        /// <returns></returns>
-        protected bool OnHelpCommand(string advancedCmds = "")
-        {
-            var normalCmds =
-                "Normal Commands:\n" +
-                "\tstart work\n" +
-                "\tstop node\n" +
-                "\tstop work\n" +
-                "\tget info\n" +
-                "\tget config\n" +
-                "\tget version\n" +
-                "\thelp\n" +
-                "\tclear\n" +
-                "\texit\n";
-
-            Console.WriteLine(normalCmds);
-
-            if (advancedCmds != "")
-            {
-                Console.WriteLine(advancedCmds);
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        ///     Catalyst.Cli command service router.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public virtual bool OnCommand(params string[] args)
-        {
-            switch (args[0].ToLower(AppCulture))
-            {
-                case "get":
-                    return OnGetCommand(args);
-                case "help":
-                    return OnHelpCommand();
-                case "clear":
-                    Console.Clear();
-                    return true;
-                case "exit":
-                    return false;
-                default:
-                    return CommandNotFound(args);
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private bool OnGetCommand(string[] args)
-        {
-            switch (args[1].ToLower(AppCulture))
-            {
-                case "config":
-                    return OnGetConfig(args[2]);
-                case "version":
-                    return OnGetVersion(args.Skip(2).ToList());
-                case "mempool":
-                    return OnGetMempool(args.Skip(2).ToList());
-                default:
-                    return CommandNotFound(args);
-            }
-        }
-
-        /// <summary>
-        ///     Prints the current loaded settings.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool OnGetConfig(Object args);
-
-        /// <summary>
-        ///     Prints the current node version.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool OnGetVersion(Object args);
-
-        /// <summary>
-        /// Called when [list peer nodes].
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        protected abstract bool OnListPeerNodes(Object args);
-
-        /// <summary>Called when [remove peer].</summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        protected abstract bool OnRemovePeer(object args);
-
-        /// <summary>Called when [get peer count].</summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        protected abstract bool OnGetPeerCount(Object args);
-
-        /// <summary>
-        ///     Prints stats about the mempool implementation.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool OnGetMempool(Object args);
-
-        /// <summary>
-        /// Called when checking node peer reputation.
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        protected abstract bool OnGetPeerNodeReputation(Object args);
-
+        private static string Prompt => "Koopa";
+        private static string ServiceName => "Catalyst Distributed Shell";
+        private static CultureInfo AppCulture => new CultureInfo("en-GB", false);
+        
+        /// <inheritdoc />
         /// <summary>
         ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
         public bool RunConsole()
         {
-            var running = true;
+            const bool running = true;
 
             Console.OutputEncoding = Encoding.Unicode;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -206,7 +67,7 @@ namespace Catalyst.Common.Shell
                 Console.ForegroundColor = ConsoleColor.White;
 
                 //split the command line input by spaces and keeping hyphens and preserve any spaces between quotes
-                string[] args = Regex.Split(line, "(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                var args = Regex.Split(line, "(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
                 if (args.Length == 0)
                 {
@@ -228,24 +89,5 @@ namespace Catalyst.Common.Shell
         }
 
         public abstract bool ParseCommand(params string[] args);
-
-        /// <summary>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        protected static bool CommandNotFound(string[] args)
-        {
-            Console.WriteLine($@"error: command not found ${args}");
-            return true;
-        }
-
-        public abstract bool OnVerifyMessage(object opts);
-
-        /// <summary>
-        /// Called when [add file on DFS message].
-        /// </summary>
-        /// <param name="opts">The options.</param>
-        /// <returns></returns>
-        public abstract bool OnAddFileOnDfsMessage(object opts);
     }
 }

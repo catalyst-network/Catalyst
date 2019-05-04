@@ -21,12 +21,14 @@
 
 #endregion
 
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.P2P;
+using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
@@ -35,12 +37,13 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerDiscovery : IMessageHandler
     {
+        IDisposable PingResponseMessageStream { get; }
+        IDisposable GetNeighbourResponseStream { get; }
         IDns Dns { get; }
         ILogger Logger { get; }
-        IList<string> SeedNodes { get; }
-        IList<IPEndPoint> Peers { get; }
+        IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         IRepository<Peer> PeerRepository { get; }
-        Task GetSeedNodesFromDns(IList<string> seedServers);
-        void ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message);
     }
 }

@@ -26,19 +26,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Network;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 using Dawn;
 using DnsClient;
+using DnsClient.Protocol;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Common.Network
 {
-    public sealed class Dns : IDns
+    public sealed class DnsClient : IDns
     {
         private readonly ILookupClient _client;
 
         /// <summary>
         /// </summary>
         /// <param name="client"></param>
-        public Dns(ILookupClient client)
+        public DnsClient(ILookupClient client)
         {
             Guard.Argument(client, nameof(client)).NotNull();
             _client = client;
@@ -64,7 +68,31 @@ namespace Catalyst.Common.Network
                .NotEmpty()
                .NotWhiteSpace();
 
-            return await Query(hostname, QueryType.TXT);
+            return await Query(hostname, QueryType.TXT).ConfigureAwait(false);
+        }
+        
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="seedServers"></param>
+        public IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+        {
+            var peers = new List<IPeerIdentifier>();
+            seedServers.ToList().ForEach(async seedServer =>
+            {
+                var dnsQueryAnswer = await GetTxtRecords(seedServer).ConfigureAwait(false);
+                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
+        
+                Guard.Argument(answerSection.EscapedText).NotNull().Count(1);        
+                answerSection.EscapedText.ToList().ForEach(hexPid =>
+                {
+                    var peerChunks = hexPid.HexToUTF8String().Split("|");
+                    peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+                });
+        
+                Guard.Argument(peers).MinCount(1);
+            });
+            return peers;
         }
 
         private async Task<IDnsQueryResponse> Query(string hostname, QueryType type)

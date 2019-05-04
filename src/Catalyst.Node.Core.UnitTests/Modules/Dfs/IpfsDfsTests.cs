@@ -126,8 +126,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             new Action(() => dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token)
-                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
         [Fact]
@@ -142,8 +142,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             new Action(() => dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token)
-                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
         [Fact]
@@ -158,8 +158,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             new Action(() => dfs.ReadTextAsync("path", _cancellationTokenSource.Token)
-                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
         [Fact]
@@ -174,8 +174,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             new Action(() => dfs.ReadAsync("path", _cancellationTokenSource.Token)
-                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
         public void Dispose()

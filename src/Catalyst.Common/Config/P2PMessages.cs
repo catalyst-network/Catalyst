@@ -30,40 +30,40 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.Config
 {
-    public class P2PMessages
+    public sealed class P2PMessages
         : Enumeration,
             IEnumerableMessageType
     {
         /// <summary>The message map</summary>
-        private static Dictionary<string, P2PMessages> _messageMap;
+        private static readonly Dictionary<string, P2PMessages> MessageMap;
 
         /// <summary>The message namespace</summary>
-        private static readonly string _messageNamespace = "Catalyst.Protocol.IPPN";
+        private const string MessageNamespace = "Catalyst.Protocol.IPPN";
 
         /// <summary>Initializes the <see cref="P2PMessages"/> class.</summary>
         static P2PMessages()
         {
-            _messageMap = new Dictionary<string, P2PMessages>();
+            MessageMap = new Dictionary<string, P2PMessages>();
             var types = AppDomain.CurrentDomain.GetAssemblies()
                .SelectMany(t => t.GetTypes())
-               .Where(t => t.IsClass && t.Namespace == _messageNamespace
+               .Where(t => t.IsClass && t.Namespace == MessageNamespace
                  && typeof(IMessage).IsAssignableFrom(t));
 
-            int id = 0;
-            foreach (Type type in types)
+            var id = 0;
+            foreach (var type in types)
             {
-                _messageMap.Add(type.Name, new P2PMessages(id, type.Name));
+                MessageMap.Add(type.Name, new P2PMessages(id, type.Name));
                 id += 1;
             }
         }
 
         /// <summary>Gets the messages.</summary>
         /// <value>The messages.</value>
-        public IEnumerable<P2PMessages> Messages => _messageMap.Values.AsEnumerable();
+        public IEnumerable<P2PMessages> Messages => MessageMap.Values.AsEnumerable();
 
         /// <summary>Initializes a new instance of the <see cref="P2PMessages"/> class.</summary>
         /// <param name="id">The identifier.</param>
         /// <param name="name">The name.</param>
-        protected P2PMessages(int id, string name) : base(id, name) { }
+        private P2PMessages(int id, string name) : base(id, name) { }
     }
 }

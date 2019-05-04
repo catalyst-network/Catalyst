@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// </summary>
     /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerCountRequest, CatalystIMessageCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
-    public class PeerCountRequestHandler
+    public sealed class PeerCountRequestHandler
         : CorrelatableMessageHandlerBase<GetPeerCountRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {

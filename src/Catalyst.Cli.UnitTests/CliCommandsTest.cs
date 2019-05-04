@@ -87,7 +87,7 @@ namespace Catalyst.Cli.UnitTests
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
-                for (int i = 0; i < 10; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     var canConnect = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                     canConnect.Should().BeTrue();
@@ -96,7 +96,7 @@ namespace Catalyst.Cli.UnitTests
         }
 
         [Fact]
-        public void Cli_Can_Request_Node_Config()
+        public void Cli_Can_Request_Node_Info()
         {
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
@@ -105,7 +105,7 @@ namespace Catalyst.Cli.UnitTests
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
 
-                var result = shell.AdvancedShell.ParseCommand("get", "-i", "node1");
+                var result = shell.AdvancedShell.ParseCommand("getinfo", "-i", "node1");
                 result.Should().BeTrue();
             }
         }
@@ -120,7 +120,7 @@ namespace Catalyst.Cli.UnitTests
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
 
-                var result = shell.AdvancedShell.ParseCommand("get", "-v", "node1");
+                var result = shell.AdvancedShell.ParseCommand("getversion", "-v", "node1");
                 result.Should().BeTrue();
             }
         }
@@ -140,7 +140,7 @@ namespace Catalyst.Cli.UnitTests
                 var node1 = shell.AdvancedShell.GetConnectedNode("node1");
                 node1.Should().NotBeNull("we've just connected it");
 
-                var result = shell.AdvancedShell.ParseCommand("get", "-m", "node1");
+                var result = shell.AdvancedShell.ParseCommand("getmempool", "-m", "node1");
                 result.Should().BeTrue();
             }
         }

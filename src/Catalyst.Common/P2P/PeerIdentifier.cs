@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -31,6 +33,7 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
+using Google.Protobuf;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 
@@ -45,27 +48,49 @@ namespace Catalyst.Common.P2P
     /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
-        public static readonly string AssemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
-        public static readonly byte[] AssemblyMajorVersion2Bytes = Encoding.UTF8.GetBytes(AssemblyMajorVersion2Digits);
-        public static readonly byte[] AtlasClientId = Encoding.UTF8.GetBytes("AC");
+        private static readonly string AssemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
+        private static readonly byte[] AssemblyMajorVersion2Bytes = Encoding.UTF8.GetBytes(AssemblyMajorVersion2Digits);
+        private static readonly byte[] AtlasClientId = Encoding.UTF8.GetBytes("AC");
 
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
-
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
-
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
-
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
-        
         public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
-
         public PeerId PeerId { get; }
 
         public PeerIdentifier(PeerId peerId)
         {
             Guard.Argument(peerId, nameof(peerId)).Require(ValidatePeerId);
             PeerId = peerId;
+        }
+
+        /// <summary>
+        ///     Parses a hex string containing the chunks that make up a valid PeerIdentifier that are delimited by '|'
+        /// </summary>
+        /// <param name="rawPidChunks"></param>
+        /// <returns></returns>
+        internal static PeerIdentifier ParseHexPeerIdentifier(IReadOnlyList<string> rawPidChunks)
+        {
+            Guard.Argument(rawPidChunks).Count(5);
+            Guard.Argument(rawPidChunks[0]).Length(2);
+            Guard.Argument(rawPidChunks[1]).Length(2);
+            Guard.Argument(rawPidChunks[2]).Length(14);
+            Guard.Argument(rawPidChunks[3]).MinLength(4).MaxLength(5);
+            Guard.Argument(rawPidChunks[4]).Length(20);
+            
+            var peerByteChunks = new List<ByteString>();
+            rawPidChunks.ToList().ForEach(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));
+
+            return new PeerIdentifier(new PeerId
+            {
+                ClientId = peerByteChunks[0],
+                ClientVersion = peerByteChunks[1],
+                Ip = IPAddress.Parse(rawPidChunks[2]).MapToIPv4().To16Bytes().ToByteString(),
+                Port = peerByteChunks[3],
+                PublicKey = peerByteChunks[4]
+            });
         }
 
         public PeerIdentifier(byte[] publicKey, IPAddress ipAddress, int port)

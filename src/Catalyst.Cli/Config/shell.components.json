@@ -42,7 +42,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Shell",
+            "type": "Catalyst.Cli.Commands.Commands",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cli.IAdvancedShell, Catalyst.Common"

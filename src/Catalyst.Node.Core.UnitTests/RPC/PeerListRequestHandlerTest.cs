@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>
         /// Tests the peer list request and response.
         /// </summary>
-        /// <param name="fakePeeers">The fake peers.</param>
+        /// <param name="fakePeers">The fake peers.</param>
         [Theory]
         [InlineData("FakePeer1", "FakePeer2")]
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
