@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _fileTransfer = new Core.Modules.FileTransfer.FileTransfer();
+            _fileTransfer = new Common.FileTransfer.FileTransfer();
 
             var passwordReader = Substitute.For<IPasswordReader>();
             passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));

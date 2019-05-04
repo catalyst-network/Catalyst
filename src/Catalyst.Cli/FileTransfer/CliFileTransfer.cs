@@ -214,7 +214,7 @@ namespace Catalyst.Cli.FileTransfer
                         continue;
                     }
                     
-                    WriteUserMessage("Error transferring file. Node Response: " + _currentChunkResponse);
+                    _userOutput.Write("Error transferring file. Node Response: " + _currentChunkResponse);
                     break;
                 }
 
@@ -236,7 +236,7 @@ namespace Catalyst.Cli.FileTransfer
             var endPos = chunkId * FileTransferConstants.ChunkSize;
             if (endPos > fileLen)
             {
-                endPos = fileLen;
+                endPos = (uint) fileLen;
             }
 
             var bufferSize = (int) (endPos - startPos);
@@ -288,10 +288,10 @@ namespace Catalyst.Cli.FileTransfer
                 {
                     _currentChunk = index + 1;
                     RetryCount = 0;
-                    WriteUserMessage("Transferring file: " + GetPercentage() + " %");
+                    _userOutput.Write("Transferring file: " + GetPercentage() + " %");
                     if (_currentChunk == _maxChunk)
                     {
-                        WriteUserMessage("\nSuccessful transfer\n");
+                        _userOutput.Write("\nSuccessful transfer\n");
                         Dispose();
                     }
 
@@ -330,7 +330,7 @@ namespace Catalyst.Cli.FileTransfer
                 return false;
             }
 
-            WriteUserMessage($"Retrying Chunk: {index}, Retry Count: {RetryCount}");
+            _userOutput.Write($"Retrying Chunk: {index}, Retry Count: {RetryCount}");
             RetryCount += 1;
             index--;
             return true;
@@ -339,14 +339,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>Prints the timeout message.</summary>
         private void PrintTimeoutMessage()
         {
-            WriteUserMessage("Error transferring file. Node Timeout");
-        }
-
-        /// <summary>Writes the user message to console.</summary>
-        /// <param name="message">The message.</param>
-        private void WriteUserMessage(string message)
-        {
-            _userOutput.Write($"\r{message}");
+            _userOutput.Write("{Error transferring file. Node Timeout}");
         }
 
         /// <summary>Releases unmanaged and - optionally - managed resources.</summary>

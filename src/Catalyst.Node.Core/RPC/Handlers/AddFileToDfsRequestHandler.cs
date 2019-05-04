@@ -37,7 +37,6 @@ using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
-using Catalyst.Node.Core.Modules.FileTransfer;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -50,7 +49,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// </summary>
     /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsRequest, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
-    public class AddFileToDfsRequestHandler : CorrelatableMessageHandlerBase<AddFileToDfsRequest, IMessageCorrelationCache>,
+    public sealed class AddFileToDfsRequestHandler : CorrelatableMessageHandlerBase<AddFileToDfsRequest, IMessageCorrelationCache>,
         IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
@@ -91,8 +90,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-            uint chunkSize = (uint) Math.Max(1,
-                (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
+            var chunkSize = (uint) Math.Max(1, (int) Math.Ceiling((double) deserialised.FileSize / FileTransferConstants.ChunkSize));
 
             IFileTransferInformation fileTransferInformation = new FileTransferInformation(
                 new PeerIdentifier(message.Payload.PeerId),
@@ -121,7 +119,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             var addFileResponseCode = Task.Run(() =>
             {
-                AddFileToDfsResponseCode responseCode = AddFileToDfsResponseCode.Finished;
+                var responseCode = AddFileToDfsResponseCode.Finished;
 
                 try
                 {

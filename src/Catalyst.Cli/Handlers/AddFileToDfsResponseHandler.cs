@@ -64,19 +64,12 @@ namespace Catalyst.Cli.Handlers
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-            AddFileToDfsResponseCode responseCode = (AddFileToDfsResponseCode) deserialised.ResponseCode[0];
+            var responseCode = (AddFileToDfsResponseCode) deserialised.ResponseCode[0];
 
-            switch (responseCode)
-            {
-                case AddFileToDfsResponseCode.Failed:
-                case AddFileToDfsResponseCode.Finished:
-                    _cliFileTransfer.ProcessCompletedCallback(responseCode, deserialised.DfsHash);
-                    break;
-
-                default:
-                    _cliFileTransfer.InitialiseFileTransferResponseCallback(responseCode);
-                    break;
-            }
+            if (responseCode == AddFileToDfsResponseCode.Failed || responseCode == AddFileToDfsResponseCode.Finished)
+                _cliFileTransfer.ProcessCompletedCallback(responseCode, deserialised.DfsHash);
+            else
+                _cliFileTransfer.InitialiseFileTransferResponseCallback(responseCode);
         }
     }
 }

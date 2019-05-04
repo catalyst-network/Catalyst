@@ -21,16 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.FileTransfer;
-using DotNetty.Transport.Channels;
 using System;
 using System.IO;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Core.Modules.FileTransfer
+namespace Catalyst.Common.FileTransfer
 {
-    internal class FileTransferInformation : IDisposable, IFileTransferInformation
+    public sealed class FileTransferInformation : IDisposable, IFileTransferInformation
     {
         /// <summary>The time since last chunk</summary>
         private DateTime _timeSinceLastChunk;
@@ -47,7 +46,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <param name="uniqueFileName">Temporary unique file name.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="maxChunk">The maximum chunk.</param>
-        internal FileTransferInformation(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, string uniqueFileName, string fileName, uint maxChunk)
+        public FileTransferInformation(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, string uniqueFileName, string fileName, uint maxChunk)
         {
             TempPath = Path.GetTempPath() + uniqueFileName + ".tmp";
             MaxChunk = maxChunk;
@@ -119,7 +118,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
         /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to
         /// release only unmanaged resources.</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             RandomAccessStream.Close();
             RandomAccessStream.Dispose();

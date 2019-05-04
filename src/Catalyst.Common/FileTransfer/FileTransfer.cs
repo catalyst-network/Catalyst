@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.FileTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +28,7 @@ using System.Threading;
 using Catalyst.Common.Enums.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 
-namespace Catalyst.Node.Core.Modules.FileTransfer
+namespace Catalyst.Common.FileTransfer
 {
     /// <inheritdoc />
     /// <summary>
@@ -87,7 +86,7 @@ namespace Catalyst.Node.Core.Modules.FileTransfer
                         fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
                     }
-                }, TimeSpan.FromSeconds(FileTransferConstants.ExpiryMinutes * 60 / 2), tokenSource.Token).ConfigureAwait(false);
+                }, TimeSpan.FromSeconds((double) FileTransferConstants.ExpiryMinutes * 60 / 2), tokenSource.Token).ConfigureAwait(false);
 
                 return AddFileToDfsResponseCode.Successful;
             }
