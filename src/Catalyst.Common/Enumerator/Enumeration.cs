@@ -45,7 +45,7 @@ namespace Catalyst.Common.Enumerator
         }
 
         public string Name { get; }
-        private int Id { get; }
+        public int Id { get; }
 
         public override string ToString() { return Name; }
 

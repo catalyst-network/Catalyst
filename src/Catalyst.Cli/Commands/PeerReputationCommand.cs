@@ -23,7 +23,7 @@
 
 using System;
 using System.Text;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
                 Guard.Argument(node).NotNull();
 
                 var requestMessage = new RpcMessageFactory<GetPeerReputationRequest>().GetMessage(
-                    messageType: DtoMessageType.Ask,
+                    messageType: MessageTypes.Ask,
                     message: new GetPeerReputationRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),

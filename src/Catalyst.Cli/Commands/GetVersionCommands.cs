@@ -23,7 +23,7 @@
 
 using System;
 using System.Text;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
@@ -65,7 +65,7 @@ namespace Catalyst.Cli.Commands
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
                     _peerIdentifier,
-                    DtoMessageType.Ask);
+                    MessageTypes.Ask);
 
                 node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
