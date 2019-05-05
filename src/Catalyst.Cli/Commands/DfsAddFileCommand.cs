@@ -61,7 +61,7 @@ namespace Catalyst.Cli.Commands
 
             if (!File.Exists(opts.File))
             {
-                _userOutput.WriteLine("File does not exist.");
+                UserOutput.WriteLine("File does not exist.");
                 return false;
             }
 
@@ -88,7 +88,7 @@ namespace Catalyst.Cli.Commands
 
             if (!responseReceived)
             {
-                _userOutput.WriteLine("Timeout - No response received from node");
+                UserOutput.WriteLine("Timeout - No response received from node");
                 return false;
             }
 

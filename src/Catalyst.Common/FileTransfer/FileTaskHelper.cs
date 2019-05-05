@@ -30,14 +30,14 @@ namespace Catalyst.Common.FileTransfer
     /// <summary>
     /// The file task helper
     /// </summary>
-    public static class FileTaskHelper
+    internal static class FileTaskHelper
     {
         /// <summary>Runs the specified action.</summary>
         /// <param name="action">The action.</param>
         /// <param name="period">The period.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        public static async Task Run(Action action, TimeSpan period, CancellationToken cancellationToken)
+        internal static async Task Run(Action action, TimeSpan period, CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {

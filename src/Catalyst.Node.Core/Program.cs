@@ -43,7 +43,7 @@ using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Node.Core
 {
-    public static class Program
+    internal static class Program
     {
         private static ILogger _logger;
         private static readonly string LifetimeTag;

@@ -21,14 +21,17 @@
 
 #endregion
 
+using System.Threading;
+
 namespace Catalyst.Common.Interfaces.Cli
 {
     public interface IShell
     {
         /// <summary>
+        ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
-        bool RunConsole();
+        bool RunConsole(CancellationToken ct);
         
         /// <summary>
         /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult

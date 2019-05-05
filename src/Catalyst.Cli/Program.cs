@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Configuration;
@@ -46,12 +47,14 @@ namespace Catalyst.Cli
         private static ILogger _logger;
         private static readonly string LifetimeTag;
         private static readonly Type DeclaringType;
+        private static CancellationTokenSource _cancellationSource;
         private static readonly string LogFileName = "Catalyst.Cli..log";
 
         static Program()
         {
             DeclaringType = MethodBase.GetCurrentMethod().DeclaringType;
             _logger = ConsoleProgram.GetTempLogger(LogFileName, DeclaringType);
+            _cancellationSource = new CancellationTokenSource();
 
             AppDomain.CurrentDomain.UnhandledException +=
                 (sender, args) => ConsoleProgram.LogUnhandledException(_logger, sender, args);
@@ -124,7 +127,7 @@ namespace Catalyst.Cli
                 {
                     var shell = container.Resolve<ICatalystCli>();
 
-                    shell.AdvancedShell.RunConsole();
+                    shell.AdvancedShell.RunConsole(_cancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;
@@ -139,7 +142,12 @@ namespace Catalyst.Cli
 
             return Environment.ExitCode;
         }
+        
+        static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            _cancellationSource.Cancel();
+        }
 
-        public static LoggingLevelSwitch LogLevelSwitch { get; set; }
+        private static LoggingLevelSwitch LogLevelSwitch { get; set; }
     }
 }
