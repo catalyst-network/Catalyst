@@ -27,7 +27,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using Catalyst.Cli.Handlers;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -112,7 +112,7 @@ namespace Catalyst.Cli.UnitTests
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                DtoMessageType.Tell,
+                MessageTypes.Tell,
                 Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);

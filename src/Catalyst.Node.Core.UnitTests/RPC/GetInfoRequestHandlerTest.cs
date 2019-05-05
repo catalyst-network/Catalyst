@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
-using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
@@ -85,7 +84,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                DtoMessageType.Ask);
+                MessageTypes.Ask);
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

@@ -42,6 +42,21 @@ namespace Catalyst.Common.Config
         public static string ShellConfigFile => "shell.config.json";
         public static string MessageHandlersConfigFile => "messageHandlers.json";
 
+        /// <summary>The expiry minutes of initialization</summary>
+        public const int FileTransferExpiryMinutes = 1;
+
+        /// <summary>The chunk size in bytes</summary>
+        public const int FileTransferChunkSize = 1000000;
+
+        /// <summary>The CLI chunk writing wait time</summary>
+        public const int FileTransferRpcWaitTime = 30;
+
+        /// <summary>The maximum chunk retry count</summary>
+        public const int FileTransferMaxChunkRetryCount = 3;
+
+        /// <summary>The maximum chunk read tries</summary>
+        public const int FileTransferMaxChunkReadTries = 3;
+        
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));

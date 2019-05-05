@@ -24,7 +24,7 @@
 using System;
 using System.IO;
 using System.Text;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
@@ -79,7 +79,7 @@ namespace Catalyst.Cli.Commands
                 message: request,
                 recipient: nodePeerIdentifier,
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Ask
+                messageType: MessageTypes.Ask
             );
 
             node.SendMessage(requestMessage);

@@ -54,8 +54,8 @@ namespace Catalyst.Common.Config
                .Where(t => t.IsClass && t.Namespace == _messageNamespace
                  && typeof(IMessage).IsAssignableFrom(t));
 
-            int id = 0;
-            foreach (Type type in types)
+            var id = 0;
+            foreach (var type in types)
             {
                 _messageMap.Add(type.Name, new RpcMessages(id, type.Name));
                 id += 1;

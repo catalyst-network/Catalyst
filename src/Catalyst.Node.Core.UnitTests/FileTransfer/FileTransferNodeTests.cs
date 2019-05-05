@@ -132,7 +132,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var fileTransferInformation = _fileTransfer.GetFileTransferInformation(uniqueFileKey);
             _fileTransfer.GetFileTransferInformation(uniqueFileKey)
                .AddExpiredCallback(delegate { expiredDelegateHit = true; });
-            Thread.Sleep(FileTransferConstants.ExpiryMinutes * 60 * 1000 + 1000);
+            Thread.Sleep(Constants.FileTransferExpiryMinutes * 60 * 1000 + 1000);
             var fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
 
             Assert.Equal(true, fileTransferInformation.IsExpired());

@@ -23,7 +23,7 @@
 
 using System;
 using System.IO;
-using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,16 +39,16 @@ namespace Catalyst.Common.Interfaces.FileTransfer
 
         /// <summary>Chunk write callback.</summary>
         /// <param name="responseCode">The response code.</param>
-        void FileTransferCallback(AddFileToDfsResponseCode responseCode);
+        void FileTransferCallback(FileTransferResponseCodes responseCode);
 
         /// <summary>The file transfer initialisation response callback.</summary>
         /// <param name="code">The code.</param>
-        void InitialiseFileTransferResponseCallback(AddFileToDfsResponseCode code);
+        void InitialiseFileTransferResponseCallback(FileTransferResponseCodes code);
 
         /// <summary>Processes the completed callback.</summary>
         /// <param name="responseCode">The response code.</param>
         /// <param name="dfsHash">The DFS hash.</param>
-        void ProcessCompletedCallback(AddFileToDfsResponseCode responseCode, string dfsHash);
+        void ProcessCompletedCallback(FileTransferResponseCodes responseCode, string dfsHash);
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         void Dispose();

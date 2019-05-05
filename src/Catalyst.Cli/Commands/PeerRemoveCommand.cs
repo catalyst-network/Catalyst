@@ -24,7 +24,7 @@
 using System;
 using System.Net;
 using System.Text;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Network;
@@ -69,7 +69,7 @@ namespace Catalyst.Cli.Commands
                 recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                     nodeConfig.Port),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Ask
+                messageType: MessageTypes.Ask
             );
 
             node.SendMessage(requestMessage).Wait();

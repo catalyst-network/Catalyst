@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
 using DotNetty.Transport.Channels;
@@ -31,6 +32,50 @@ namespace Catalyst.Common.FileTransfer
 {
     public sealed class FileTransferInformation : IDisposable, IFileTransferInformation
     {
+        /// <inheritdoc />
+        /// <summary>Gets the maximum chunk.</summary>
+        /// <value>The maximum chunk.</value>
+        public uint MaxChunk { get; }
+
+        /// <inheritdoc />
+        /// <summary>Gets the temporary path.</summary>
+        /// <value>The temporary path.</value>
+        public string TempPath { get; }
+
+        /// <inheritdoc />
+        /// <summary>Gets or sets the current chunk.</summary>
+        /// <value>The current chunk.</value>
+        public uint CurrentChunk { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>Gets or sets the DFS hash.</summary>
+        /// <value>The DFS hash.</value>
+        public string DfsHash { get; set; }
+        
+        /// <inheritdoc />
+        /// <summary>Gets or sets the name of the unique file.</summary>
+        /// <value>The name of the unique file.</value>
+        public string UniqueFileName { get; set; }
+
+        /// <summary>Gets or sets the random access stream.</summary>
+        /// <value>The random access stream.</value>
+        private BinaryWriter RandomAccessStream { get; set; }
+        
+        /// <inheritdoc />
+        /// <summary>Gets or sets the name of the file.</summary>
+        /// <value>The name of the file.</value>
+        public string FileName { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>Gets or sets the recipient channel.</summary>
+        /// <value>The recipient channel.</value>
+        public IChannel RecipientChannel { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>Gets or sets the recipient identifier.</summary>
+        /// <value>The recipient identifier.</value>
+        public IPeerIdentifier RecipientIdentifier { get; set; }
+        
         /// <summary>The time since last chunk</summary>
         private DateTime _timeSinceLastChunk;
 
@@ -82,7 +127,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns><c>true</c> if this instance is expired; otherwise, <c>false</c>.</returns>
         public bool IsExpired()
         {
-            return DateTime.Now.Subtract(_timeSinceLastChunk).TotalMinutes > FileTransferConstants.ExpiryMinutes;
+            return DateTime.Now.Subtract(_timeSinceLastChunk).TotalMinutes > Constants.FileTransferExpiryMinutes;
         }
 
         /// <inheritdoc />
@@ -153,50 +198,6 @@ namespace Catalyst.Common.FileTransfer
                 action.DynamicInvoke(this);
             }
         }
-        
-        /// <inheritdoc />
-        /// <summary>Gets the maximum chunk.</summary>
-        /// <value>The maximum chunk.</value>
-        public uint MaxChunk { get; }
-
-        /// <inheritdoc />
-        /// <summary>Gets the temporary path.</summary>
-        /// <value>The temporary path.</value>
-        public string TempPath { get; }
-
-        /// <inheritdoc />
-        /// <summary>Gets or sets the current chunk.</summary>
-        /// <value>The current chunk.</value>
-        public uint CurrentChunk { get; set; }
-
-        /// <inheritdoc />
-        /// <summary>Gets or sets the DFS hash.</summary>
-        /// <value>The DFS hash.</value>
-        public string DfsHash { get; set; }
-        
-        /// <inheritdoc />
-        /// <summary>Gets or sets the name of the unique file.</summary>
-        /// <value>The name of the unique file.</value>
-        public string UniqueFileName { get; set; }
-
-        /// <summary>Gets or sets the random access stream.</summary>
-        /// <value>The random access stream.</value>
-        private BinaryWriter RandomAccessStream { get; set; }
-        
-        /// <inheritdoc />
-        /// <summary>Gets or sets the name of the file.</summary>
-        /// <value>The name of the file.</value>
-        public string FileName { get; set; }
-
-        /// <inheritdoc />
-        /// <summary>Gets or sets the recipient channel.</summary>
-        /// <value>The recipient channel.</value>
-        public IChannel RecipientChannel { get; set; }
-
-        /// <inheritdoc />
-        /// <summary>Gets or sets the recipient identifier.</summary>
-        /// <value>The recipient identifier.</value>
-        public IPeerIdentifier RecipientIdentifier { get; set; }
 
         public void AddExpiredCallback(Action<IFileTransferInformation> callback)
         {

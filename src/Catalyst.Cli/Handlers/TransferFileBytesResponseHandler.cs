@@ -22,7 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -62,7 +63,8 @@ namespace Catalyst.Cli.Handlers
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesResponse>();
 
-            var responseCode = (AddFileToDfsResponseCode) deserialised.ResponseCode[0];
+            //@TODO check
+            var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
             _cliFileTransfer.FileTransferCallback(responseCode);
         }

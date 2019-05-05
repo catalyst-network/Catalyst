@@ -21,20 +21,31 @@
 
 #endregion
 
-namespace Catalyst.Common.Enums.Messages
+using Catalyst.Common.Enumerator;
+
+namespace Catalyst.Common.Config
 {
-    /// <summary>
-    /// The message type
-    /// </summary>
-    public enum DtoMessageType
+    public class MessageTypes : Enumeration
     {
-        /// <summary>The ask</summary>
-        Ask = 0,
+        public static readonly MessageTypes Ask = new AskMessage();
+        public static readonly MessageTypes Tell = new TellMessage();
+        public static readonly MessageTypes Gossip = new GossipMessage();
 
-        /// <summary>The tell</summary>
-        Tell = 1,
-
-        /// <summary>The gossip</summary>
-        Gossip = 2
+        private MessageTypes(int id, string name) : base(id, name) { }
+        
+        private sealed class AskMessage : MessageTypes
+        {
+            public AskMessage() : base(1, "ask") { }
+        }
+        
+        private sealed class TellMessage : MessageTypes
+        {
+            public TellMessage() : base(2, "tell") { }
+        }
+        
+        private sealed class GossipMessage : MessageTypes
+        {
+            public GossipMessage() : base(3, "gossip") { }
+        }
     }
 }

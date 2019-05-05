@@ -23,7 +23,7 @@
 
 using System;
 using System.Linq;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -110,7 +110,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     message: removePeerResponse,
                     recipient: new PeerIdentifier(message.Payload.PeerId),
                     sender: _peerIdentifier,
-                    messageType: DtoMessageType.Tell,
+                    messageType: MessageTypes.Tell,
                     message.Payload.CorrelationId.ToGuid()
                 );
 

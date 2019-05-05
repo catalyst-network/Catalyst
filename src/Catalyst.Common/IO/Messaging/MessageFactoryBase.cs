@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -48,20 +48,22 @@ namespace Catalyst.Common.IO.Messaging
         public virtual AnySigned GetMessage(TMessage message,
             IPeerIdentifier recipient,
             IPeerIdentifier sender,
-            DtoMessageType messageType,
+            MessageTypes messageType,
             Guid correlationId = default)
         {
             var messageDto = GetMessageDto(message, recipient, sender);
 
-            switch (messageType)
+            if (messageType == MessageTypes.Ask)
             {
-                case DtoMessageType.Ask:
-                    return BuildAskMessage(messageDto);
-                case DtoMessageType.Tell:
-                    return BuildTellMessage(messageDto, correlationId);
-                default:
-                    throw new ArgumentException();
+                return BuildAskMessage(messageDto);
             }
+
+            if (messageType == MessageTypes.Tell)
+            {
+                return BuildTellMessage(messageDto, correlationId);   
+            }
+
+            throw new ArgumentException();
         }
 
         /// <summary>Gets the message dto.</summary>

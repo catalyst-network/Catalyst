@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -134,7 +134,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 },
                 new PeerIdentifier(_message.Payload.PeerId),
                 _peerIdentifier,
-                DtoMessageType.Tell,
+                MessageTypes.Tell,
                 correlationGuid);
 
             _message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();

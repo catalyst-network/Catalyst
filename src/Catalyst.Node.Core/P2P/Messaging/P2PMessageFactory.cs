@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <param name="messageType">Type of the message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns></returns>
-        public IByteBufferHolder GetMessageInDatagramEnvelope(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
+        public IByteBufferHolder GetMessageInDatagramEnvelope(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, MessageTypes messageType, Guid correlationId = default)
         {
             return GetMessage(message, recipient, sender, messageType, correlationId).ToDatagram(recipient.IpEndPoint);
         }
@@ -58,9 +58,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <param name="correlationId"></param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentException">unknown message type</exception>
-        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
+        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, MessageTypes messageType, Guid correlationId = default)
         {
-            return messageType == DtoMessageType.Gossip ? BuildGossipMessage(GetMessageDto(message, recipient, sender)) : base.GetMessage(message, recipient, sender, messageType, correlationId);
+            return messageType == MessageTypes.Gossip ? BuildGossipMessage(GetMessageDto(message, recipient, sender)) : base.GetMessage(message, recipient, sender, messageType, correlationId);
         }
 
         /// <inheritdoc />
