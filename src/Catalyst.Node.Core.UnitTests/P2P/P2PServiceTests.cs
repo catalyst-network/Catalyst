@@ -30,7 +30,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
-using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Util;
@@ -133,7 +132,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                             peerSettings.Port),
                         new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
                             peerSettings.Port),
-                        DtoMessageType.Tell,
+                        MessageTypes.Tell,
                         Guid.NewGuid()
                     );
                     
@@ -175,7 +174,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                         new PeerNeighborsResponse(),
                         new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
                         new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
-                        DtoMessageType.Tell,
+                        MessageTypes.Tell,
                         Guid.NewGuid()
                     );
                     

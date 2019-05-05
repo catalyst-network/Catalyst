@@ -22,28 +22,26 @@
 #endregion
 
 using System;
-using Catalyst.Common.FileTransfer;
+using System.IO;
+using System.Threading;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Shell;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
-using System.IO;
-using System.Threading;
-using Catalyst.Common.Enums.FileTransfer;
-using Catalyst.Common.Enums.Messages;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Shell;
 
-namespace Catalyst.Cli.FileTransfer
+namespace Catalyst.Cli.Rpc
 {
-    /// <inheritdoc cref="ICliFileTransfer" />
+    /// <inheritdoc cref="IRpcFileTransfer" />
     /// <summary>
     /// Handles file transfer on the CLI
     /// </summary>
     /// <seealso cref="T:System.IDisposable" />
-    public sealed class CliFileTransfer : IDisposable, ICliFileTransfer
+    public sealed class RpcFileTransfer : IDisposable, IRpcFileTransfer
     {
         /// <summary>The current chunk</summary>
         private uint _currentChunk;
@@ -62,13 +60,13 @@ namespace Catalyst.Cli.FileTransfer
         private readonly ManualResetEvent _waitHandle;
 
         /// <summary>The initialise file transfer response</summary>
-        private AddFileToDfsResponseCode _initialiseFileTransferResponse;
+        private FileTransferResponseCodes _initialiseFileTransferResponse;
 
         /// <summary>The current chunk response</summary>
-        private AddFileToDfsResponseCode _currentChunkResponse;
+        private FileTransferResponseCodes _currentChunkResponse;
 
-        /// <summary>Initializes a new instance of the <see cref="CliFileTransfer"/> class.</summary>
-        public CliFileTransfer()
+        /// <summary>Initializes a new instance of the <see cref="RpcFileTransfer"/> class.</summary>
+        public RpcFileTransfer()
         {
             RetryCount = 0;
             _waitHandle = new ManualResetEvent(false);
@@ -81,13 +79,13 @@ namespace Catalyst.Cli.FileTransfer
         /// <returns>False if no signal was Received, true if signal wait Received</returns>
         public bool Wait()
         {
-            return _waitHandle.WaitOne(TimeSpan.FromSeconds(FileTransferConstants.CliFileTransferWaitTime));
+            return _waitHandle.WaitOne(TimeSpan.FromSeconds(Constants.FileTransferRpcWaitTime));
         }
 
         /// <inheritdoc />
         /// <summary>Chunk write callback.</summary>
         /// <param name="responseCode">The response code.</param>
-        public void FileTransferCallback(AddFileToDfsResponseCode responseCode)
+        public void FileTransferCallback(FileTransferResponseCodes responseCode)
         {
             _currentChunkResponse = responseCode;
             _waitHandle.Set();
@@ -96,7 +94,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <inheritdoc />
         /// <summary>The file transfer initialisation response callback.</summary>
         /// <param name="code">The code.</param>
-        public void InitialiseFileTransferResponseCallback(AddFileToDfsResponseCode code)
+        public void InitialiseFileTransferResponseCallback(FileTransferResponseCodes code)
         {
             _initialiseFileTransferResponse = code;
 
@@ -116,9 +114,9 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>Processes the completed callback.</summary>
         /// <param name="responseCode">The response code.</param>
         /// <param name="dfsHash">The DFS hash.</param>
-        public void ProcessCompletedCallback(AddFileToDfsResponseCode responseCode, string dfsHash)
+        public void ProcessCompletedCallback(FileTransferResponseCodes responseCode, string dfsHash)
         {
-            _userOutput.WriteLine(responseCode == AddFileToDfsResponseCode.Finished
+            _userOutput.WriteLine(responseCode == FileTransferResponseCodes.Finished
                 ? $"Successfully added file to DFS, DFS Hash: {dfsHash}"
                 : "Failed to add file to DFS");
 
@@ -142,7 +140,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <returns></returns>
         public bool InitialiseSuccess()
         {
-            return _initialiseFileTransferResponse == AddFileToDfsResponseCode.Successful;
+            return _initialiseFileTransferResponse == FileTransferResponseCodes.Successful;
         }
 
         /// <inheritdoc />
@@ -179,7 +177,7 @@ namespace Catalyst.Cli.FileTransfer
                 var fileLen = fileStream.Length;
 
                 _currentChunk = 0;
-                _maxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileLen / FileTransferConstants.ChunkSize));
+                _maxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileLen / Constants.FileTransferChunkSize));
 
                 for (uint i = 0; i < _maxChunk; i++)
                 {
@@ -189,7 +187,7 @@ namespace Catalyst.Cli.FileTransfer
                         message: transferMessage,
                         recipient: nodePeerIdentifier,
                         sender: senderPeerIdentifier,
-                        messageType: DtoMessageType.Ask
+                        messageType: MessageTypes.Ask
                     );
 
                     node.SendMessage(requestMessage);
@@ -232,8 +230,9 @@ namespace Catalyst.Cli.FileTransfer
         public TransferFileBytesRequest GetFileTransferRequestMessage(FileStream fileStream, ByteString correlationBytes, long fileLen, uint index)
         {
             var chunkId = index + 1;
-            var startPos = index * FileTransferConstants.ChunkSize;
-            var endPos = chunkId * FileTransferConstants.ChunkSize;
+            var startPos = index * Constants.FileTransferChunkSize;
+            var endPos = chunkId * Constants.FileTransferChunkSize;
+
             if (endPos > fileLen)
             {
                 endPos = (uint) fileLen;
@@ -249,7 +248,7 @@ namespace Catalyst.Cli.FileTransfer
             while ((bytesRead += fileStream.Read(chunk, 0, bufferSize - bytesRead)) < bufferSize)
             {
                 readTries++;
-                if (readTries >= FileTransferConstants.MaxChunkReadTries)
+                if (readTries >= Constants.FileTransferMaxChunkReadTries)
                 {
                     break;
                 }
@@ -280,11 +279,9 @@ namespace Catalyst.Cli.FileTransfer
         /// <returns>True if success, False if failure</returns>
         private bool ProcessChunkResponse(ref uint index)
         {
-            switch (_currentChunkResponse) 
+            if (_currentChunkResponse != FileTransferResponseCodes.Expired)
             {
-                case AddFileToDfsResponseCode.Expired:
-                    return false;
-                case AddFileToDfsResponseCode.Successful:
+                if (_currentChunkResponse == FileTransferResponseCodes.Successful)
                 {
                     _currentChunk = index + 1;
                     RetryCount = 0;
@@ -296,18 +293,19 @@ namespace Catalyst.Cli.FileTransfer
                     }
 
                     _waitHandle.Reset();
-                    break;
                 }
-                case AddFileToDfsResponseCode.FileAlreadyExists:
-                    break;
-                case AddFileToDfsResponseCode.Error:
-                    break;
-                case AddFileToDfsResponseCode.Finished:
-                    break;
-                case AddFileToDfsResponseCode.Failed:
-                    break;
-                default:
+                else if (_currentChunkResponse == FileTransferResponseCodes.FileAlreadyExists) { }
+                else if (_currentChunkResponse == FileTransferResponseCodes.Error) { }
+                else if (_currentChunkResponse == FileTransferResponseCodes.Finished) { }
+                else if (_currentChunkResponse == FileTransferResponseCodes.Failed) { }
+                else
+                {
                     return Retry(ref index);
+                }
+            }
+            else
+            {
+                return false;
             }
 
             return true;
@@ -325,7 +323,7 @@ namespace Catalyst.Cli.FileTransfer
         /// <returns>True if retry success, false if retry failure</returns>
         private bool Retry(ref uint index)
         {
-            if (RetryCount >= FileTransferConstants.MaxChunkRetryCount)
+            if (RetryCount >= Constants.FileTransferMaxChunkRetryCount)
             {
                 return false;
             }

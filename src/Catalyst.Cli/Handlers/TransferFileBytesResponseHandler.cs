@@ -22,11 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,21 +41,22 @@ namespace Catalyst.Cli.Handlers
     /// </summary>
     /// <seealso cref="CorrelatableMessageHandlerBase{TransferFileBytesResponse, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
-    public class TransferFileBytesResponseHandler : CorrelatableMessageHandlerBase<TransferFileBytesResponse, IMessageCorrelationCache>,
-        IRpcResponseHandler
+    public class TransferFileBytesResponseHandler
+        : CorrelatableMessageHandlerBase<TransferFileBytesResponse, IMessageCorrelationCache>,
+            IRpcResponseHandler
     {
         /// <summary>The CLI file transfer</summary>
-        private readonly ICliFileTransfer _cliFileTransfer;
+        private readonly IRpcFileTransfer _rpcFileTransfer;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="cliFileTransfer">The CLI file transfer</param>
+        /// <param name="rpcFileTransfer">The CLI file transfer</param>
         public TransferFileBytesResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            ICliFileTransfer cliFileTransfer) : base(correlationCache, logger)
+            IRpcFileTransfer rpcFileTransfer) : base(correlationCache, logger)
         {
-            _cliFileTransfer = cliFileTransfer;
+            _rpcFileTransfer = rpcFileTransfer;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -62,9 +65,10 @@ namespace Catalyst.Cli.Handlers
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesResponse>();
 
-            var responseCode = (AddFileToDfsResponseCode) deserialised.ResponseCode[0];
+            //@TODO check
+            var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
-            _cliFileTransfer.FileTransferCallback(responseCode);
+            _rpcFileTransfer.FileTransferCallback(responseCode);
         }
     }
 }

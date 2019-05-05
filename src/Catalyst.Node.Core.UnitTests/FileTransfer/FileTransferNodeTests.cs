@@ -36,9 +36,8 @@ using Serilog;
 using Xunit;
 using Catalyst.Common.P2P;
 using System.Threading;
-using Catalyst.Common.FileTransfer;
 using System.IO;
-using Catalyst.Cli.FileTransfer;
+using Catalyst.Cli.Rpc;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
@@ -132,7 +131,9 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var fileTransferInformation = _fileTransfer.GetFileTransferInformation(uniqueFileKey);
             _fileTransfer.GetFileTransferInformation(uniqueFileKey)
                .AddExpiredCallback(delegate { expiredDelegateHit = true; });
-            Thread.Sleep(FileTransferConstants.ExpiryMinutes * 60 * 1000 + 1000);
+
+            Thread.Sleep(Constants.FileTransferExpiryMinutes * 60 * 1000 + 1000);
+
             var fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
 
             Assert.Equal(true, fileTransferInformation.IsExpired());
@@ -160,7 +161,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
             var senderPeerId = new PeerIdentifier(sender);
-            var cliFileTransfer = new CliFileTransfer();
+            var cliFileTransfer = new RpcFileTransfer();
             var uniqueFileKey = Guid.NewGuid();
             string dfsHash = null;
 

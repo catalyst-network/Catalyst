@@ -22,7 +22,7 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 message: response,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell,
+                messageType: MessageTypes.Tell,
                 message.Payload.CorrelationId.ToGuid()
             );
 

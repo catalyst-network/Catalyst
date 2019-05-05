@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
 
 namespace Catalyst.Common.FileTransfer
@@ -57,7 +57,7 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Initializes the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns>Response code</returns>
-        public AddFileToDfsResponseCode InitializeTransfer(IFileTransferInformation fileTransferInformation)
+        public FileTransferResponseCodes InitializeTransfer(IFileTransferInformation fileTransferInformation)
         {
             var fileHash = fileTransferInformation.UniqueFileName;
 
@@ -65,7 +65,7 @@ namespace Catalyst.Common.FileTransfer
             {
                 if (_pendingFileTransfers.ContainsKey(fileHash))
                 {
-                    return AddFileToDfsResponseCode.FileAlreadyExists;
+                    return FileTransferResponseCodes.FileAlreadyExists;
                 }
 
                 fileTransferInformation.Init();
@@ -86,9 +86,9 @@ namespace Catalyst.Common.FileTransfer
                         fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
                     }
-                }, TimeSpan.FromSeconds((double) FileTransferConstants.ExpiryMinutes * 60 / 2), tokenSource.Token).ConfigureAwait(false);
+                }, TimeSpan.FromSeconds((double) Constants.FileTransferExpiryMinutes * 60 / 2), tokenSource.Token).ConfigureAwait(false);
 
-                return AddFileToDfsResponseCode.Successful;
+                return FileTransferResponseCodes.Successful;
             }
         }
 
@@ -98,18 +98,18 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="chunkId">The chunk identifier.</param>
         /// <param name="fileChunk">The file chunk.</param>
         /// <returns>Response code</returns>
-        public AddFileToDfsResponseCode WriteChunk(string fileName, uint chunkId, byte[] fileChunk)
+        public FileTransferResponseCodes WriteChunk(string fileName, uint chunkId, byte[] fileChunk)
         {
             var fileTransferInformation = GetFileTransferInformation(fileName);
             if (fileTransferInformation == null)
             {
-                return AddFileToDfsResponseCode.Expired;
+                return FileTransferResponseCodes.Expired;
             }
 
             // Chunks should be sequential
-            if (fileTransferInformation.CurrentChunk != chunkId - 1 || fileChunk.Length > FileTransferConstants.ChunkSize)
+            if (fileTransferInformation.CurrentChunk != chunkId - 1 || fileChunk.Length > Constants.FileTransferChunkSize)
             {
-                return AddFileToDfsResponseCode.Error;
+                return FileTransferResponseCodes.Error;
             }
 
             fileTransferInformation.WriteToStream(chunkId, fileChunk);
@@ -119,7 +119,7 @@ namespace Catalyst.Common.FileTransfer
                 Remove(fileTransferInformation.UniqueFileName);
             }
 
-            return AddFileToDfsResponseCode.Successful;
+            return FileTransferResponseCodes.Successful;
         }
 
         /// <inheritdoc />

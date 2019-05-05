@@ -21,7 +21,8 @@
 
 #endregion
 
-using Catalyst.Common.Enums.Messages;
+using System;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -57,7 +58,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
                 message: new PingResponse(),
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell,
+                messageType: MessageTypes.Tell,
                 message.Payload.CorrelationId.ToGuid()
             );
 

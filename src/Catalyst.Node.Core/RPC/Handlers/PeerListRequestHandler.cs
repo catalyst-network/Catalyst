@@ -28,13 +28,13 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using ILogger = Serilog.ILogger;
 using System.Collections.Generic;
+using Catalyst.Common.Config;
 using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.P2P;
 using Dawn;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 message: response,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell,
+                messageType: MessageTypes.Tell,
                 message.Payload.CorrelationId.ToGuid()
             );
 
