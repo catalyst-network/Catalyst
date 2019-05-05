@@ -25,13 +25,12 @@ using System;
 using System.IO;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.FileTransfer
+namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface ICliFileTransfer
+    public interface IRpcFileTransfer
     {
         /// <summary>Waits this instance.</summary>
         /// <returns>False if no signal was Received, true if signal wait Received</returns>

@@ -84,7 +84,7 @@ namespace Catalyst.Cli.Commands
 
             node.SendMessage(requestMessage);
 
-            var responseReceived = _cliFileTransfer.Wait();
+            var responseReceived = _rpcFileTransfer.Wait();
 
             if (!responseReceived)
             {
@@ -92,15 +92,15 @@ namespace Catalyst.Cli.Commands
                 return false;
             }
 
-            if (!_cliFileTransfer.InitialiseSuccess())
+            if (!_rpcFileTransfer.InitialiseSuccess())
             {
                 return false;
             }
             
-            _cliFileTransfer.TransferFile(opts.File, requestMessage.CorrelationId.ToGuid(), node,
+            _rpcFileTransfer.TransferFile(opts.File, requestMessage.CorrelationId.ToGuid(), node,
                 nodePeerIdentifier, _peerIdentifier);
 
-            _cliFileTransfer.WaitForDfsHash();
+            _rpcFileTransfer.WaitForDfsHash();
 
             return true;
         }

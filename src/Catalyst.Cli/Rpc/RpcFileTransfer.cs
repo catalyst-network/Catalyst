@@ -22,26 +22,26 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Shell;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Protocol.Rpc.Node;
+using Google.Protobuf;
 
-namespace Catalyst.Cli.FileTransfer
+namespace Catalyst.Cli.Rpc
 {
-    /// <inheritdoc cref="ICliFileTransfer" />
+    /// <inheritdoc cref="IRpcFileTransfer" />
     /// <summary>
     /// Handles file transfer on the CLI
     /// </summary>
     /// <seealso cref="T:System.IDisposable" />
-    public sealed class CliFileTransfer : IDisposable, ICliFileTransfer
+    public sealed class RpcFileTransfer : IDisposable, IRpcFileTransfer
     {
         /// <summary>The current chunk</summary>
         private uint _currentChunk;
@@ -65,8 +65,8 @@ namespace Catalyst.Cli.FileTransfer
         /// <summary>The current chunk response</summary>
         private FileTransferResponseCodes _currentChunkResponse;
 
-        /// <summary>Initializes a new instance of the <see cref="CliFileTransfer"/> class.</summary>
-        public CliFileTransfer()
+        /// <summary>Initializes a new instance of the <see cref="RpcFileTransfer"/> class.</summary>
+        public RpcFileTransfer()
         {
             RetryCount = 0;
             _waitHandle = new ManualResetEvent(false);
@@ -232,6 +232,7 @@ namespace Catalyst.Cli.FileTransfer
             var chunkId = index + 1;
             var startPos = index * Constants.FileTransferChunkSize;
             var endPos = chunkId * Constants.FileTransferChunkSize;
+
             if (endPos > fileLen)
             {
                 endPos = (uint) fileLen;

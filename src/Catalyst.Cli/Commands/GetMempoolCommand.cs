@@ -62,8 +62,8 @@ namespace Catalyst.Cli.Commands
                         nodeConfig.HostAddress,
                         nodeConfig.Port),
                     _peerIdentifier,
-                    MessageTypes.Ask);
-
+                    MessageTypes.Ask
+                );
                 node.SendMessage(request);
             }
             catch (Exception e)
