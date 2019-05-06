@@ -35,46 +35,68 @@ using Ipfs.CoreApi;
 using Ipfs.Engine;
 using Serilog;
 
-namespace Catalyst.Node.Core.Modules.Dfs
+namespace Catalyst.Node.Core.Modules.Ipfs
 {
-    /// <inheritdoc />
     /// <summary>
-    /// Simply a wrapper around the Ipfs.Engine.IpfsEngine to allow us coding
-    /// and testing against an interface.
+    ///   Modifies the IPFS behaviour to meet the Catalyst requirements.
     /// </summary>
-    public sealed class IpfsEngine : IIpfsEngine
+    /// <remarks>
+    ///   The IPFS engine is lazy, it is only started when needed.
+    /// </remarks>
+    public sealed class IpfsAdapter : ICoreApi, IDisposable
     {
         private const string KeyChainDefaultKeyType = "ed25519";
 
-        private Ipfs.Engine.IpfsEngine _ipfsEngine;
+        /// <summary>
+        ///   An IPFS implementation, commonly called an IPFS node/
+        /// </summary>
+        private IpfsEngine _ipfs;
         private bool _isStarted;
         private readonly object _startingLock = new object();
+        private readonly ILogger _logger;
 
-        static IpfsEngine() { global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
+        static IpfsAdapter()
+        {
+            global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger);
+        }
 
-        public IpfsEngine(IPasswordReader passwordReader, IPeerSettings peerSettings, IFileSystem fileSystem, ILogger logger)
+        public IpfsAdapter(
+            IPasswordReader passwordReader, 
+            IPeerSettings peerSettings, 
+            IFileSystem fileSystem, 
+            ILogger logger)
         {
             Guard.Argument(peerSettings, nameof(peerSettings)).NotNull()
                .Require(p => p.SeedServers != null && p.SeedServers.Count > 0,
                     p => $"{nameof(peerSettings)} needs to specify at least one seed server.");
 
+            _logger = logger;
+
+            // The passphrase is used to access the private keys.
             var passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
-            _ipfsEngine = new Ipfs.Engine.IpfsEngine(passphrase);
-            _ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
-            _ipfsEngine.Options.Repository.Folder = Path.Combine(
+            _ipfs = new IpfsEngine(passphrase);
+            _ipfs.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
+
+            // The IPFS repository is inside the catalyst home folder.
+            _ipfs.Options.Repository.Folder = Path.Combine(
                 fileSystem.GetCatalystHomeDir().FullName,
                 Core.Config.Constants.IpfsSubFolder);
-            _ipfsEngine.Options.Discovery.BootstrapPeers = peerSettings
+
+            // The seed nodes for the catalyst network.
+            _ipfs.Options.Discovery.BootstrapPeers = peerSettings
                .SeedServers
                .Select(s => $"/dns/{s}/tcp/4001")
                .Select(ma => new MultiAddress(ma))
                .ToArray();
-            _ipfsEngine.Options.Swarm.PrivateNetworkKey = new PeerTalk.Cryptography.PreSharedKey
+
+            // Do not use the public IPFS network, use a private network
+            // of catalyst only nodes.
+            _ipfs.Options.Swarm.PrivateNetworkKey = new PeerTalk.Cryptography.PreSharedKey
             {
                 Value = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3".ToHexBuffer()
             };
 
-            logger.Information("IPFS engine started.");
+            _logger.Information("IPFS configured.");
         }
 
         /// <summary>
@@ -83,7 +105,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         /// <returns>
         ///   The started IPFS Engine.
         /// </returns>
-        Ipfs.Engine.IpfsEngine Start()
+        private IpfsEngine Start()
         {
             if (!_isStarted)
             {
@@ -91,13 +113,14 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 {
                     if (!_isStarted)
                     {
-                        _ipfsEngine.Start();
+                        _ipfs.Start();
                         _isStarted = true;
+                        _logger.Information("IPFS started.");
                     }
                 }
             }
 
-            return _ipfsEngine;
+            return _ipfs;
         }
 
         public IBitswapApi Bitswap => Start().Bitswap;
@@ -106,7 +129,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public IBootstrapApi Bootstrap => Start().Bootstrap;
 
-        public IConfigApi Config => _ipfsEngine.Config;
+        public IConfigApi Config => _ipfs.Config;
+        public IpfsEngineOptions Options => _ipfs.Options;
 
         public IDagApi Dag => Start().Dag;
 
@@ -118,7 +142,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public IGenericApi Generic => Start().Generic;
 
-        public IKeyApi Key => _ipfsEngine.Key;
+        public IKeyApi Key => _ipfs.Key;
 
         public INameApi Name => Start().Name;
 
@@ -132,10 +156,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public ISwarmApi Swarm => Start().Swarm;
 
-        public Task StartAsync() { throw new NotSupportedException("Starting is not supported."); }
-        public Task StopAsync() { throw new NotSupportedException("Stopping is not supported."); }
-        public IpfsEngineOptions Options => _ipfsEngine.Options;
-
         private void Dispose(bool disposing)
         {
             if (!disposing)
@@ -143,8 +163,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
                 return;
             }
 
-            _ipfsEngine?.Dispose();
-            _ipfsEngine = null;
+            _ipfs?.Dispose();
+            _ipfs = null;
         }
 
         public void Dispose()
