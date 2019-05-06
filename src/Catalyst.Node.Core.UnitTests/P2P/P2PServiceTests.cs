@@ -136,7 +136,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                         Guid.NewGuid()
                     );
                     
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    peerClient.AsyncSendMessage(datagramEnvelope).GetAwaiter().GetResult();
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
@@ -178,7 +178,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                         Guid.NewGuid()
                     );
                     
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    peerClient.AsyncSendMessage(datagramEnvelope).GetAwaiter().GetResult();
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {

@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.P2P
             }
         }
 
-        public IProducerConsumerCollection<IPeerIdentifier> CurrentPeerNeighbours { get; private set; }
+        public ConcurrentQueue<IPeerIdentifier> CurrentPeerNeighbours { get; }
 
         private IPeerIdentifier _previousPeer;
         private readonly object _previousPeerLock = new object();
@@ -101,7 +101,7 @@ namespace Catalyst.Node.Core.P2P
             }
         }
 
-        public IProducerConsumerCollection<IPeerIdentifier> PreviousPeerNeighbours { get; private set; }
+        public ConcurrentQueue<IPeerIdentifier> PreviousPeerNeighbours { get; }
         
         private bool _neighbourRequested;
         private readonly object _neighbourRequestedLock = new object();
@@ -197,7 +197,7 @@ namespace Catalyst.Node.Core.P2P
                 // don't include yourself, current node or the last node the degree proposal
                 if (!peerId.Equals(_ownNode.PeerId) || !peerId.Equals(CurrentPeer.PeerId) || !peerId.Equals(PreviousPeer.PeerId))
                 {
-                    CurrentPeerNeighbours.TryAdd(new PeerIdentifier(peerId));                    
+                    CurrentPeerNeighbours.Enqueue(new PeerIdentifier(peerId));                    
                 }
             });
             NeighbourRequested = false;
@@ -205,36 +205,55 @@ namespace Catalyst.Node.Core.P2P
 
         private async Task PeerCrawler()
         {
-            try
+            do
             {
-                do
+                try
                 {
-                    CurrentPeer = Dns.GetSeedNodesFromDns(_peerSettings.SeedServers).RandomElement();
-
-                    await WaitUntil(() => _currentPeer != null);
-
-                    using (var peerClient = _peerClientFactory.GetClient(_currentPeer.IpEndPoint))
+                    do
                     {
-                        peerClient.SendMessage(BuildPeerNeighbourRequestDatagram()).GetAwaiter().GetResult();
-                        NeighbourRequested = true;
-                    }
+                        CurrentPeer = Dns.GetSeedNodesFromDns(_peerSettings.SeedServers).RandomElement();
 
-                    await WaitUntil(() => CurrentPeerNeighbours.Any() && _neighbourRequested == false);
-                    
-                    CurrentPeerNeighbours.ToList().ForEach(currentPeerNeighbour =>
-                    {
-                        using (var peerClient = _peerClientFactory.GetClient(_currentPeer.IpEndPoint))
+                        using (var peerClient = _peerClientFactory.GetClient(CurrentPeer.IpEndPoint))
                         {
-                            peerClient.SendMessage(BuildPingRequestDatagram()).GetAwaiter().GetResult();
+                            await peerClient.AsyncSendMessage(BuildPeerNeighbourRequestDatagram());
                             NeighbourRequested = true;
                         }
-                    });
-                } while (_currentPeer != null && !_cancellationSource.IsCancellationRequested);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-            }
+
+                        await WaitUntil(() => _neighbourRequested == false);
+
+                        if (CurrentPeerNeighbours.Any())
+                        {
+                            CurrentPeerNeighbours.ToList().ForEach(currentPeerNeighbour =>
+                            {
+                                using (var peerClient = _peerClientFactory.GetClient(CurrentPeer.IpEndPoint))
+                                {
+                                    peerClient.AsyncSendMessage(BuildPingRequestDatagram()).GetAwaiter().GetResult();
+
+                                    // save these in a temporary list so we can match against incoming ping responses
+                                }
+
+                                // propose a new degree to transition to for current peer
+                            });   
+                        }
+                        else
+                        {
+                            // Current peer didn't provide an new degree propositions so transition back to last peer
+                        }
+                    } while (CurrentPeer != null && !_cancellationSource.IsCancellationRequested);
+                }
+                catch (TimeoutException e)
+                {
+                    // timeouts are a fact of life just clean yo self up n runnin homie
+                    _logger.Information(e.Message);
+                    CleanUp();
+                }
+                catch (Exception e)
+                {
+                    // rarr probably summet else going on here, decide weather to break depending on exception.
+                    _logger.Debug(e.Message);
+                    CleanUp();
+                }   
+            } while (!_cancellationSource.IsCancellationRequested);
         }
 
         private IByteBufferHolder BuildPingRequestDatagram()
@@ -259,6 +278,18 @@ namespace Catalyst.Node.Core.P2P
                     _peerSettings.Port),
                 MessageTypes.Ask
             );
+        }
+
+        /// <summary>
+        ///      Reset control flows and peer lists to we can run walk again
+        /// </summary>
+        private void CleanUp()
+        {
+            CurrentPeer = null;
+            PreviousPeer = null;
+            NeighbourRequested = false;
+            CurrentPeerNeighbours.Clear();
+            PreviousPeerNeighbours.Clear();
         }
         
         /// <summary>
