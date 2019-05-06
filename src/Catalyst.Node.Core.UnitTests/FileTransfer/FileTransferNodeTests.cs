@@ -48,15 +48,16 @@ using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using ICSharpCode.SharpZipLib.Checksum;
 using Microsoft.Extensions.Configuration;
+using Catalyst.Node.Core.Modules.Ipfs;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer
 {
-    public sealed class FileTransferNodeTests
+    public sealed class FileTransferNodeTests : IDisposable
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IFileTransfer _fileTransfer;
-        private readonly IIpfsEngine _ipfsEngine;
+        private readonly IpfsAdapter _ipfsEngine;
 
         public FileTransferNodeTests()
         {
@@ -77,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var fileSystem = Substitute.For<IFileSystem>();
             fileSystem.GetCatalystHomeDir().Returns(new DirectoryInfo(Path.GetTempPath()));
 
-            _ipfsEngine = new IpfsEngine(passwordReader, peerSettings, fileSystem, _logger);
+            _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, fileSystem, _logger);
 
             _logger = Substitute.For<ILogger>();
         }
@@ -237,5 +238,22 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var ipfsCrcValue = crc32.Value;
             Assert.Equal(crc32OriginalValue, ipfsCrcValue);
         }
+
+        #region IDisposable Support
+        void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _ipfsEngine?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
+
+
     }
 }
