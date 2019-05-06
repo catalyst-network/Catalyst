@@ -36,12 +36,13 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Polly;
+using Ipfs.CoreApi;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
     public sealed class IpfsDfsLiveTests : FileSystemBasedTest
     {
-        private readonly IIpfsEngine _ipfsEngine;
+        private readonly IpfsAdapter _ipfs;
         private readonly ILogger _logger;
 
         public IpfsDfsLiveTests(ITestOutputHelper output) : base(output)
@@ -56,7 +57,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             var passwordReader = Substitute.For<IPasswordReader>();
             passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
-            _ipfsEngine = new IpfsEngine(passwordReader, peerSettings, FileSystem, _logger);
+            _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
         }
 
         [Fact]
@@ -74,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 });
 
             const string text = "good morning";
-            var dfs = new IpfsDfs(_ipfsEngine, _logger);
+            var dfs = new IpfsDfs(_ipfs, _logger);
             var id = await linearBackOffRetryPolicy.ExecuteAsync(
                 () => dfs.AddTextAsync(text, cts.Token)
             );
@@ -94,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 1, 2, 3
             };
             var ms = new MemoryStream(binary);
-            var dfs = new IpfsDfs(_ipfsEngine, _logger);
+            var dfs = new IpfsDfs(_ipfs, _logger);
             var id = await dfs.AddAsync(ms, "", cts.Token);
             using (var stream = await dfs.ReadAsync(id, cts.Token))
             {
@@ -108,7 +109,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
         {
             if (disposing)
             {
-                _ipfsEngine?.Dispose();
+                _ipfs?.Dispose();
             }
 
             base.Dispose(disposing);

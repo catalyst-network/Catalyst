@@ -61,12 +61,15 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private readonly ILookupClient _lookupClient;
         private readonly List<string> _dnsDomains;
         private readonly string _seedPid;
+        private readonly IPeerClientFactory _subbedPeerClientFactory;
 
         public PeerDiscoveryUnitTest(ITestOutputHelper output) : base(output)
         {
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
             _lookupClient = Substitute.For<ILookupClient>();
+            _subbedPeerClientFactory = Substitute.For<IPeerClientFactory>();
+
             _dns = new Common.Network.DnsClient(_lookupClient);
 
             _config = new ConfigurationBuilder()
@@ -100,8 +103,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 peerDiscovery.Should().BeOfType(typeof(PeerDiscovery));
                 Assert.NotNull(peerDiscovery.Dns);
                 peerDiscovery.Dns.Should().BeOfType(typeof(DevDnsClient));
-                Assert.NotNull(peerDiscovery.Logger);
-                peerDiscovery.Logger.Should().BeOfType(typeof(Logger));
                 Assert.NotNull(peerDiscovery.CurrentPeerNeighbours);
                 peerDiscovery.CurrentPeerNeighbours.Should().BeOfType(typeof(ConcurrentQueue<IPeerIdentifier>));
                 Assert.NotNull(peerDiscovery.PreviousPeerNeighbours);
@@ -112,22 +113,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Fact]
-        public void CanParseDnsNodesFromConfig()
-        {
-            _dnsDomains.ForEach(domain =>
-            {
-                MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
-            });
-            
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
-
-            var seedServers = peerDiscovery.ParseDnsServersFromConfig(_config);
-
-            seedServers.Should().NotBeNullOrEmpty();
-            seedServers.Should().Contain(_dnsDomains);
-        }
-
-        [Fact]
         public void CanGetSeedNodesFromDns()
         {
             _dnsDomains.ForEach(domain =>
@@ -135,10 +120,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
             });
 
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
-
-            peerDiscovery.CurrentPeer.Should().NotBeNull();
-            peerDiscovery.CurrentPeer.Should().BeAssignableTo<IPeerIdentifier>();
+            using (var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, new PeerSettings(_config),
+                _subbedPeerClientFactory, _logger))
+            {
+                peerDiscovery.CurrentPeer.Should().NotBeNull();
+                peerDiscovery.CurrentPeer.Should().BeAssignableTo<IPeerIdentifier>();   
+            }
         }
 
         [Fact]
@@ -148,21 +135,23 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
             });
+
+            using (var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, new PeerSettings(_config),
+                _subbedPeerClientFactory, _logger))
+            {
+                var fakeContext = Substitute.For<IChannelHandlerContext>();
+                var pingRequest = new PingResponse();
+                var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
+                var channeledAny = new ChanneledAnySigned(fakeContext, 
+                    pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
             
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
+                var observableStream = new[] {channeledAny}.ToObservable();
 
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var pingRequest = new PingResponse();
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-            var channeledAny = new ChanneledAnySigned(fakeContext, 
-                pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
-            
-            var observableStream = new[] {channeledAny}.ToObservable();
+                peerDiscovery.StartObserving(observableStream);
 
-            peerDiscovery.StartObserving(observableStream);
-
-            _peerRepository.Received(1)
-               .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));
+                _peerRepository.Received(1)
+                   .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));   
+            }
         }
     }
 }

@@ -88,6 +88,9 @@ namespace Catalyst.Common.Config
         /// <summary> Hashing algorithm type </summary>
         public static string HashAlgorithm => "blake2b-256";
         
+        /// <summary> Dfs Swarm Key </summary>
+        public static string SwarmKey => "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
+            
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));

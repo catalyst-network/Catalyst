@@ -39,7 +39,9 @@ using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using DotNetty.Buffers;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
 using Serilog;
 using SharpRepository.Repository;
 using Peer = Catalyst.Common.P2P.Peer;
@@ -51,7 +53,6 @@ namespace Catalyst.Node.Core.P2P
             IDisposable
     {
         public IDns Dns { get; }
-        public ILogger Logger { get; }
         public IRepository<Peer> PeerRepository { get; }
         public IDisposable PingResponseMessageStream { get; private set; }
         public IDisposable GetNeighbourResponseStream { get; private set; }
@@ -101,9 +102,32 @@ namespace Catalyst.Node.Core.P2P
         }
 
         public IProducerConsumerCollection<IPeerIdentifier> PreviousPeerNeighbours { get; private set; }
+        
+        private bool _neighbourRequested;
+        private readonly object _neighbourRequestedLock = new object();
 
-        private readonly IPeerClientFactory _peerClientFactory;        
+        public bool NeighbourRequested 
+        {
+            get
+            {
+                lock (_neighbourRequestedLock)
+                {
+                    return _neighbourRequested;
+                }
+            }
+            private set
+            {
+                lock (_neighbourRequestedLock)
+                {
+                    _neighbourRequested = value;
+                }
+            }
+        }
+
+        private readonly ILogger _logger;
+        private readonly IPeerIdentifier _ownNode;
         private readonly IPeerSettings _peerSettings;
+        private readonly IPeerClientFactory _peerClientFactory;        
         private readonly CancellationTokenSource _cancellationSource;
 
         /// <summary>
@@ -120,20 +144,18 @@ namespace Catalyst.Node.Core.P2P
             ILogger logger)
         {
             Dns = dns;
-            Logger = logger;
+            _logger = logger;
             _peerClientFactory = peerClientFactory;
             PeerRepository = repository;
             _peerSettings = peerSettings;
             _cancellationSource = new CancellationTokenSource();
             CurrentPeerNeighbours = new ConcurrentQueue<IPeerIdentifier>();
             PreviousPeerNeighbours = new ConcurrentQueue<IPeerIdentifier>();
-
+            _ownNode = new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
+                _peerSettings.Port);
+            
             Task[] longRunningTasks =
             {
-                Task.Factory.StartNew(() =>
-                {
-                    CurrentPeer = Dns.GetSeedNodesFromDns(peerSettings.SeedServers).RandomElement();
-                }),
                 Task.Factory.StartNew(PeerCrawler)
             };
             
@@ -155,7 +177,7 @@ namespace Catalyst.Node.Core.P2P
 
         private void PingSubscriptionHandler(IChanneledMessage<AnySigned> message)
         {
-            Logger.Information("processing ping message stream");
+            _logger.Information("processing ping message stream");
             var pingResponse = message.Payload.FromAnySigned<PingResponse>();
             PeerRepository.Add(new Peer
             {
@@ -164,35 +186,79 @@ namespace Catalyst.Node.Core.P2P
                 Reputation = 0
             });
 
-            Logger.Information(message.Payload.TypeUrl);
+            _logger.Information(message.Payload.TypeUrl);
         }
         
         public void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message)
         {
-            Logger.Information("processing peer neighbour message stream");
-            var peerNeighborsResponse = message.Payload.FromAnySigned<PeerNeighborsResponse>();
+            _logger.Information("processing peer neighbour message stream");
+            message.Payload.FromAnySigned<PeerNeighborsResponse>().Peers.ToList().ForEach(peerId =>
+            {
+                // don't include yourself, current node or the last node the degree proposal
+                if (!peerId.Equals(_ownNode.PeerId) || !peerId.Equals(CurrentPeer.PeerId) || !peerId.Equals(PreviousPeer.PeerId))
+                {
+                    CurrentPeerNeighbours.TryAdd(new PeerIdentifier(peerId));                    
+                }
+            });
+            NeighbourRequested = false;
         }
 
         private async Task PeerCrawler()
         {
-            do
+            try
             {
-                await WaitUntil(() => _currentPeer != null);
-
-                var datagramEnvelope = new P2PMessageFactory<PingResponse>().GetMessageInDatagramEnvelope(
-                    new PingResponse(),
-                    new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), _peerSettings.BindAddress,
-                        _peerSettings.Port),
-                    new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), _peerSettings.BindAddress,
-                        _peerSettings.Port),
-                    MessageTypes.Ask
-                );
-                
-                using (var peerClient = _peerClientFactory.GetClient(_currentPeer.IpEndPoint))
+                do
                 {
-                    peerClient.SendMessage(datagramEnvelope);                    
-                }
-            } while (_currentPeer != null && !_cancellationSource.IsCancellationRequested);
+                    CurrentPeer = Dns.GetSeedNodesFromDns(_peerSettings.SeedServers).RandomElement();
+
+                    await WaitUntil(() => _currentPeer != null);
+
+                    using (var peerClient = _peerClientFactory.GetClient(_currentPeer.IpEndPoint))
+                    {
+                        peerClient.SendMessage(BuildPeerNeighbourRequestDatagram()).GetAwaiter().GetResult();
+                        NeighbourRequested = true;
+                    }
+
+                    await WaitUntil(() => CurrentPeerNeighbours.Any() && _neighbourRequested == false);
+                    
+                    CurrentPeerNeighbours.ToList().ForEach(currentPeerNeighbour =>
+                    {
+                        using (var peerClient = _peerClientFactory.GetClient(_currentPeer.IpEndPoint))
+                        {
+                            peerClient.SendMessage(BuildPingRequestDatagram()).GetAwaiter().GetResult();
+                            NeighbourRequested = true;
+                        }
+                    });
+                } while (_currentPeer != null && !_cancellationSource.IsCancellationRequested);
+            }
+            catch (Exception e)
+            {
+                _logger.Debug(e.Message);
+            }
+        }
+
+        private IByteBufferHolder BuildPingRequestDatagram()
+        {
+            return new P2PMessageFactory<PingRequest>().GetMessageInDatagramEnvelope(
+                new PingRequest(),
+                new PeerIdentifier(CurrentPeer.PublicKey, CurrentPeer.Ip,
+                    CurrentPeer.Port),
+                new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
+                    _peerSettings.Port),
+                MessageTypes.Ask
+            );
+        }
+
+        private IByteBufferHolder BuildPeerNeighbourRequestDatagram()
+        {
+            return new P2PMessageFactory<PeerNeighborsRequest>().GetMessageInDatagramEnvelope(
+                new PeerNeighborsRequest(),
+                new PeerIdentifier(CurrentPeer.PublicKey, CurrentPeer.Ip,
+                    CurrentPeer.Port),
+                new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
+                    _peerSettings.Port),
+                MessageTypes.Ask
+            );
         }
         
         /// <summary>
@@ -230,7 +296,7 @@ namespace Catalyst.Node.Core.P2P
                 return;
             }
 
-            Logger.Debug($"Disposing {GetType().Name}");
+            _logger.Debug($"Disposing {GetType().Name}");
             PingResponseMessageStream?.Dispose();
             GetNeighbourResponseStream?.Dispose();
         }

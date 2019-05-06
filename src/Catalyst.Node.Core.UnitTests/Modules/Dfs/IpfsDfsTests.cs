@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Node.Core.Modules.Dfs;
@@ -42,7 +43,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
     {
         private const int DelayInMs = 50;
         private const int DelayMultiplier = 4;
-        private readonly IIpfsEngine _ipfsEngine;
+        private readonly ICoreApi _ipfsEngine;
         private readonly ILogger _logger;
         private readonly Cid _expectedCid;
         private readonly IFileSystemNode _addedRecord;
@@ -50,7 +51,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
         public IpfsDfsTests()
         {
-            _ipfsEngine = Substitute.For<IIpfsEngine>();
+            _ipfsEngine = Substitute.For<ICoreApi>();
             var fileSystem = Substitute.For<IFileSystemApi>();
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
@@ -59,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _expectedCid = new Cid
             {
                 Encoding = "base64",
-                Hash = new MultiHash(IpfsDfs.HashAlgorithm, hashBits)
+                Hash = new MultiHash(Constants.HashAlgorithm, hashBits)
             };
 
             _addedRecord = Substitute.For<IFileSystemNode>();
@@ -181,7 +182,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
         public void Dispose()
         {
-            _ipfsEngine?.Dispose();
             _cancellationTokenSource?.Dispose();
         }
     }

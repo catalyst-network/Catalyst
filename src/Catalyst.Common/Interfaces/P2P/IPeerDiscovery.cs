@@ -40,7 +40,6 @@ namespace Catalyst.Common.Interfaces.P2P
         IDisposable PingResponseMessageStream { get; }
         IDisposable GetNeighbourResponseStream { get; }
         IDns Dns { get; }
-        ILogger Logger { get; }
         IPeerIdentifier CurrentPeer { get; }
         IProducerConsumerCollection<IPeerIdentifier> CurrentPeerNeighbours { get; }
         IPeerIdentifier PreviousPeer { get; } 
