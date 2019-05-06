@@ -25,8 +25,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Common.Logging.Serilog;
 using Dawn;
@@ -44,8 +46,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
     /// </summary>
     public sealed class IpfsEngine : IIpfsEngine
     {
-        private const string KeyChainDefaultKeyType = "ed25519";
-
         private Ipfs.Engine.IpfsEngine _ipfsEngine;
         private bool _isStarted;
         private readonly object _startingLock = new object();
@@ -60,10 +60,10 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
             var passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfsEngine = new Ipfs.Engine.IpfsEngine(passphrase);
-            _ipfsEngine.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
+            _ipfsEngine.Options.KeyChain.DefaultKeyType = Constants.KeyChainDefaultKeyType;
             _ipfsEngine.Options.Repository.Folder = Path.Combine(
                 fileSystem.GetCatalystHomeDir().FullName,
-                Core.Config.Constants.IpfsSubFolder);
+                Constants.DfsDataSubDir);
             _ipfsEngine.Options.Discovery.BootstrapPeers = peerSettings
                .SeedServers
                .Select(s => $"/dns/{s}/tcp/4001")
@@ -85,15 +85,17 @@ namespace Catalyst.Node.Core.Modules.Dfs
         /// </returns>
         Ipfs.Engine.IpfsEngine Start()
         {
-            if (!_isStarted)
+            if (_isStarted)
             {
-                lock (_startingLock)
+                return _ipfsEngine;
+            }
+            
+            lock (_startingLock)
+            {
+                if (!_isStarted)
                 {
-                    if (!_isStarted)
-                    {
-                        _ipfsEngine.Start();
-                        _isStarted = true;
-                    }
+                    _ipfsEngine.Start();
+                    _isStarted = true;
                 }
             }
 

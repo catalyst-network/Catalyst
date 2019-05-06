@@ -44,10 +44,13 @@ namespace Catalyst.Common.Config
         public static string SerilogJsonConfigFile => "serilog.json";
         
         // <summary> Search pattern for Json files </summary>
-        private static string JsonFilePattern => "{0}.json";
+        public static string JsonFilePattern => "{0}.json";
         
         // <summary> Default Catalyst data directory </summary>
-        internal static string CatalystSubFolder => ".Catalyst";
+        public static string CatalystDataDir => ".Catalyst";
+        
+        // <summary> Default dfs data directory inside the Catalyst data directory </summary>
+        public static string DfsDataSubDir => "dfs";
         
         // <summary> Config file with Catalyst.Cli component registrations for autofac </summary>
         public static string ShellComponentsJsonConfigFile => "shell.components.json";
@@ -75,6 +78,15 @@ namespace Catalyst.Common.Config
 
         /// <summary>The maximum chunk read tries </summary>
         public static int FileTransferMaxChunkReadTries => 3;
+
+        /// <summary> How many peers node discovers before saving for burn in value </summary>
+        public static int PeerDiscoveryBurnIn => 25;
+        
+        /// <summary> EdDSA Curve  type </summary>
+        public static string KeyChainDefaultKeyType => "ed25519";
+
+        /// <summary> Hashing algorithm type </summary>
+        public static string HashAlgorithm => "blake2b-256";
         
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()

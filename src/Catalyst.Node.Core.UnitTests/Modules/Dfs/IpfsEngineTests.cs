@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -84,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             using (var ipfs = new IpfsEngine(_passwordReader, _peerSettings, FileSystem, _logger))
             {
                 ipfs.Options.Repository.Folder.Should()
-                   .Be(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, Core.Config.Constants.IpfsSubFolder));
+                   .Be(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, Constants.DfsDataSubDir));
             }
         }
 

@@ -34,6 +34,7 @@ using Xunit.Abstractions;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Polly;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Dfs

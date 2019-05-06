@@ -26,13 +26,17 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
+using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Microsoft.Extensions.Configuration;
@@ -43,54 +47,97 @@ using Peer = Catalyst.Common.P2P.Peer;
 namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerDiscovery
-        : IPeerDiscovery, IDisposable
+        : IPeerDiscovery,
+            IDisposable
     {
         public IDns Dns { get; }
         public ILogger Logger { get; }
-        public IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
         public IDisposable PingResponseMessageStream { get; private set; }
         public IDisposable GetNeighbourResponseStream { get; private set; }
+
+        private IPeerIdentifier _currentPeer;
+        private readonly object _currentPeerLock = new object();        
+        
+        public IPeerIdentifier CurrentPeer 
+        {
+            get
+            {
+                lock (_currentPeerLock)
+                {
+                    return _currentPeer;
+                }
+            }
+            private set
+            {
+                lock (_currentPeerLock)
+                {
+                    _currentPeer = value;
+                }
+            }
+        }
+
+        public IProducerConsumerCollection<IPeerIdentifier> CurrentPeerNeighbours { get; private set; }
+
+        private IPeerIdentifier _previousPeer;
+        private readonly object _previousPeerLock = new object();
+
+        public IPeerIdentifier PreviousPeer 
+        {
+            get
+            {
+                lock (_previousPeerLock)
+                {
+                    return _previousPeer;
+                }
+            }
+            private set
+            {
+                lock (_previousPeerLock)
+                {
+                    _previousPeer = value;
+                }
+            }
+        }
+
+        public IProducerConsumerCollection<IPeerIdentifier> PreviousPeerNeighbours { get; private set; }
+
+        private readonly IPeerClientFactory _peerClientFactory;        
+        private readonly IPeerSettings _peerSettings;
+        private readonly CancellationTokenSource _cancellationSource;
 
         /// <summary>
         /// </summary>
         /// <param name="dns"></param>
         /// <param name="repository"></param>
-        /// <param name="rootSection"></param>
+        /// <param name="peerSettings"></param>
+        /// <param name="peerClientFactory"></param>
         /// <param name="logger"></param>
         public PeerDiscovery(IDns dns,
             IRepository<Peer> repository,
-            IConfigurationRoot rootSection,
+            IPeerSettings peerSettings,
+            IPeerClientFactory peerClientFactory,
             ILogger logger)
         {
             Dns = dns;
             Logger = logger;
+            _peerClientFactory = peerClientFactory;
             PeerRepository = repository;
-            Peers = new ConcurrentQueue<IPeerIdentifier>();
+            _peerSettings = peerSettings;
+            _cancellationSource = new CancellationTokenSource();
+            CurrentPeerNeighbours = new ConcurrentQueue<IPeerIdentifier>();
+            PreviousPeerNeighbours = new ConcurrentQueue<IPeerIdentifier>();
 
-            Peers.TryAdd(Dns.GetSeedNodesFromDns(ParseDnsServersFromConfig(rootSection)).RandomElement());
-
-            var longRunningTasks = new[] {PeerCrawler()};
-            Task.WaitAll(longRunningTasks);
-        }
-
-        public IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection)
-        {
-            var seedDnsUrls = new List<string>();
-            try
+            Task[] longRunningTasks =
             {
-                ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList().ForEach(seedUrl =>
+                Task.Factory.StartNew(() =>
                 {
-                    seedDnsUrls.Add(seedUrl); 
-                });
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e.Message);
-                throw;
-            }
-
-            return seedDnsUrls;
+                    CurrentPeer = Dns.GetSeedNodesFromDns(peerSettings.SeedServers).RandomElement();
+                }),
+                Task.Factory.StartNew(PeerCrawler)
+            };
+            
+            Task.WaitAll(longRunningTasks);
         }
 
         public void StartObserving(IObservable<IChanneledMessage<AnySigned>> observer)
@@ -128,15 +175,47 @@ namespace Catalyst.Node.Core.P2P
 
         private async Task PeerCrawler()
         {
-            if (Peers.Count != 0) return;
-            try { }
-            catch (Exception e)
+            do
             {
-                Logger.Error(e.Message);
-                throw;
-            }
+                await WaitUntil(() => _currentPeer != null);
 
-            await Task.Delay(5000);
+                var datagramEnvelope = new P2PMessageFactory<PingResponse>().GetMessageInDatagramEnvelope(
+                    new PingResponse(),
+                    new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), _peerSettings.BindAddress,
+                        _peerSettings.Port),
+                    new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), _peerSettings.BindAddress,
+                        _peerSettings.Port),
+                    MessageTypes.Ask
+                );
+                
+                using (var peerClient = _peerClientFactory.GetClient(_currentPeer.IpEndPoint))
+                {
+                    peerClient.SendMessage(datagramEnvelope);                    
+                }
+            } while (_currentPeer != null && !_cancellationSource.IsCancellationRequested);
+        }
+        
+        /// <summary>
+        /// Blocks until condition is true or timeout occurs.
+        /// </summary>
+        /// <param name="condition">The break condition.</param>
+        /// <param name="frequency">The frequency at which the condition will be checked.</param>
+        /// <param name="timeout">The timeout in milliseconds.</param>
+        /// <returns></returns>
+        private static async Task WaitUntil(Func<bool> condition, int frequency = 25, int timeout = -1)
+        {
+            var waitTask = Task.Run(async () =>
+            {
+                while (!condition())
+                {
+                    await Task.Delay(frequency);
+                }
+            });
+
+            if (waitTask != await Task.WhenAny(waitTask, Task.Delay(timeout)))
+            {
+                throw new TimeoutException();
+            }
         }
         
         public void Dispose()
@@ -146,9 +225,14 @@ namespace Catalyst.Node.Core.P2P
 
         private void Dispose(bool disposing)
         {
-            if (!disposing) return;
+            if (!disposing)
+            {
+                return;
+            }
+
             Logger.Debug($"Disposing {GetType().Name}");
             PingResponseMessageStream?.Dispose();
+            GetNeighbourResponseStream?.Dispose();
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Catalyst.Common.Interfaces.Network
         Task<IDnsQueryResponse> GetTxtRecords(string hostname);
 
         /// <summary>
-        ///     Returns a thread safe list of seed nodes from TXT records
+        ///     Returns a list of seed nodes from TXT records
         /// </summary>
         /// <param name="urls"></param>
         /// <returns></returns>

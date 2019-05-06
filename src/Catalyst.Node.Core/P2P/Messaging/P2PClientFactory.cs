@@ -21,27 +21,25 @@
 
 #endregion
 
-using System;
-using System.IO;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.FileSystem;
+using System.Collections.Generic;
+using System.Net;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
 
-namespace Catalyst.Common.FileSystem
+namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public sealed class FileSystem
-        : System.IO.Abstractions.FileSystem,
-            IFileSystem
+    public sealed class PeerClientFactory : IPeerClientFactory
     {
-        public DirectoryInfo GetCatalystHomeDir()
+        private readonly IEnumerable<IP2PMessageHandler> _responseHandlers;
+
+        public PeerClientFactory(IEnumerable<IP2PMessageHandler> responseHandlers)
         {
-            var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
-            return new DirectoryInfo(path);
+            _responseHandlers = responseHandlers;
         }
 
-        private static string GetUserHomeDir()
+        public IPeerClient GetClient(IPEndPoint ipEndPoint)
         {
-            var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return homePath;
+            return new PeerClient(ipEndPoint, _responseHandlers);
         }
     }
 }

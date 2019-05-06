@@ -21,10 +21,12 @@
 
 #endregion
 
-namespace Catalyst.Node.Core.Config
+using System.Net;
+
+namespace Catalyst.Common.Interfaces.P2P
 {
-    public static class Constants
+    public interface IPeerClientFactory
     {
-        public static string IpfsSubFolder => "Ipfs";
+        IPeerClient GetClient(IPEndPoint ipEndPoint);
     }
 }

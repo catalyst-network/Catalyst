@@ -42,6 +42,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.P2P.PeerClientFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClientFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.P2P.PeerSettings",
             "services": [
                 {

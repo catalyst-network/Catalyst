@@ -42,6 +42,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.UnitTest.TestUtils;

@@ -102,8 +102,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 peerDiscovery.Dns.Should().BeOfType(typeof(DevDnsClient));
                 Assert.NotNull(peerDiscovery.Logger);
                 peerDiscovery.Logger.Should().BeOfType(typeof(Logger));
-                Assert.NotNull(peerDiscovery.Peers);
-                peerDiscovery.Peers.Should().BeOfType(typeof(ConcurrentQueue<IPeerIdentifier>));
+                Assert.NotNull(peerDiscovery.CurrentPeerNeighbours);
+                peerDiscovery.CurrentPeerNeighbours.Should().BeOfType(typeof(ConcurrentQueue<IPeerIdentifier>));
+                Assert.NotNull(peerDiscovery.PreviousPeerNeighbours);
+                peerDiscovery.PreviousPeerNeighbours.Should().BeOfType(typeof(ConcurrentQueue<IPeerIdentifier>));
                 Assert.NotNull(peerDiscovery.PeerRepository);
                 peerDiscovery.PeerRepository.Should().BeOfType(typeof(InMemoryRepository<Peer>));
             }
@@ -135,10 +137,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
-            peerDiscovery.Peers.Should().NotBeNullOrEmpty();
-            peerDiscovery.Peers.Should().HaveCount(1);
-            peerDiscovery.Peers.Should().NotContainNulls();
-            peerDiscovery.Peers.Should().ContainItemsAssignableTo<IPeerIdentifier>();
+            peerDiscovery.CurrentPeer.Should().NotBeNull();
+            peerDiscovery.CurrentPeer.Should().BeAssignableTo<IPeerIdentifier>();
         }
 
         [Fact]

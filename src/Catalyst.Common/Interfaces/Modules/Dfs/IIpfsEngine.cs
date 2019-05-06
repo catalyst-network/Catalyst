@@ -22,10 +22,8 @@
 #endregion
 
 using System;
-using Ipfs.CoreApi;
-using Ipfs.Engine;
 
-namespace Catalyst.Node.Core.Modules.Dfs
+namespace Catalyst.Common.Interfaces.Modules.Dfs
 {
     /// <summary>
     /// Simply presenting the functions we use from the Ipfs.Engine.IpfsEngine

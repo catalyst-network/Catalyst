@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using Ipfs;
