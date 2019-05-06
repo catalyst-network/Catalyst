@@ -26,8 +26,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Modules.Dfs;
-using Ipfs.CoreApi;
 using Serilog;
+using Ipfs.CoreApi;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
@@ -41,20 +41,20 @@ namespace Catalyst.Node.Core.Modules.Dfs
             RawLeaves = true
         };
 
-        private readonly IIpfsEngine _ipfsEngine;
+        private readonly ICoreApi _ipfs;
 
         private readonly ILogger _logger;
 
-        public IpfsDfs(IIpfsEngine ipfsEngine, ILogger logger)
+        public IpfsDfs(ICoreApi ipfsEngine, ILogger logger)
         {
-            _ipfsEngine = ipfsEngine;
+            _ipfs = ipfsEngine;
             _logger = logger;
         }
 
         /// <inheritdoc />
         public async Task<string> AddTextAsync(string content, CancellationToken cancellationToken = default)
         {
-            var node = await _ipfsEngine.FileSystem.AddTextAsync(
+            var node = await _ipfs.FileSystem.AddTextAsync(
                 content,
                 options: AddFileOptions,
                 cancel: cancellationToken);
@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             CancellationToken cancellationToken = default)
         {
             _logger.Debug("Reading content at path {0} from IPFS", id);
-            return _ipfsEngine.FileSystem.ReadAllTextAsync(id, cancellationToken);
+            return _ipfs.FileSystem.ReadAllTextAsync(id, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             string name = "",
             CancellationToken cancellationToken = default)
         {
-            var node = await _ipfsEngine.FileSystem
+            var node = await _ipfs.FileSystem
                .AddAsync(content, name, AddFileOptions, cancellationToken);
             var id = node.Id.Encode();
             _logger.Debug("Content {1}added to IPFS with id {0}",
@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             CancellationToken cancellationToken = default)
         {
             _logger.Debug("Reading content at path {0} from Ipfs", id);
-            return _ipfsEngine.FileSystem.ReadFileAsync(id, cancellationToken);
+            return _ipfs.FileSystem.ReadFileAsync(id, cancellationToken);
         }
     }
 }
