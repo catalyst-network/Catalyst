@@ -52,9 +52,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         public VerifyMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -85,7 +87,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("", "", "", false)]
         public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
         {
-            var request = new RpcMessageFactory<VerifyMessageRequest>().GetMessage(
+            var request = new RpcMessageFactory<VerifyMessageRequest>(_subbedCorrelationCache).GetMessage(
                 new VerifyMessageRequest
                 {
                     Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),

@@ -30,6 +30,7 @@ using Catalyst.Cli.Rpc;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO;
@@ -53,6 +54,7 @@ namespace Catalyst.Cli.Commands
         private readonly ICertificateStore _certificateStore;
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
+        private readonly IMessageCorrelationCache _rpcMessageCorrelationCache;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
 
         /// <summary>
@@ -62,8 +64,10 @@ namespace Catalyst.Cli.Commands
             ILogger logger,
             ICertificateStore certificateStore,
             IRpcFileTransfer rpcFileTransfer,
+            IMessageCorrelationCache rpcMessageCorrelationCache,
             IUserOutput userOutput) : base(userOutput)
         {
+            _rpcMessageCorrelationCache = rpcMessageCorrelationCache;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _logger = logger;

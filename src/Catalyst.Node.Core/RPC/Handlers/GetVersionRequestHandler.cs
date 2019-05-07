@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             
             try
             {
-                var response = new RpcMessageFactory<VersionResponse>().GetMessage(
+                var response = new RpcMessageFactory<VersionResponse>(CorrelationCache).GetMessage(
                     new VersionResponse
                     {
                         Version = NodeUtil.GetVersion()

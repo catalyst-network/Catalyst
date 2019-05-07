@@ -55,12 +55,14 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
     public sealed class FileTransferNodeTests : IDisposable
     {
         private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IFileTransfer _fileTransfer;
         private readonly IpfsAdapter _ipfsEngine;
+        private readonly IFileTransfer _fileTransfer;
+        private readonly IChannelHandlerContext _fakeContext;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         public FileTransferNodeTests()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -162,7 +164,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
             var senderPeerId = new PeerIdentifier(sender);
-            var cliFileTransfer = new RpcFileTransfer();
+            var cliFileTransfer = new RpcFileTransfer(_subbedCorrelationCache);
             var uniqueFileKey = Guid.NewGuid();
             string dfsHash = null;
 

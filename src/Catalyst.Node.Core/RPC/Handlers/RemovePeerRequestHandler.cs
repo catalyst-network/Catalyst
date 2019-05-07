@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             _peerIdentifier = peerIdentifier;
             _peerDiscovery = peerDiscovery;
-            _rpcMessageFactory = new RpcMessageFactory<RemovePeerResponse>();
+            _rpcMessageFactory = new RpcMessageFactory<RemovePeerResponse>(CorrelationCache);
         }
 
         /// <summary>Handles the specified message.</summary>

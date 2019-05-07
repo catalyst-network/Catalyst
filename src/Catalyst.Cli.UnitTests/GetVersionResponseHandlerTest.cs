@@ -43,23 +43,32 @@ namespace Catalyst.Cli.UnitTests
     public sealed class GetVersionResponseHandlerTest : IDisposable
     {
         private readonly IUserOutput _output;
-        public static readonly List<object[]> QueryContents;
+        private static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
         private GetVersionResponseHandler _handler;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         static GetVersionResponseHandlerTest()
         {
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
-                new object[] {"0.0.0.0"},
-                new object[] {""},
+                new object[]
+                {
+                    "0.0.0.0"
+                },
+
+                new object[]
+                {
+                    ""
+                }
             };
         }
 
         public GetVersionResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
@@ -78,7 +87,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<VersionResponse>().GetMessage(
+            var response = new RpcMessageFactory<VersionResponse>(_subbedCorrelationCache).GetMessage(
                 new VersionResponse
                 {
                     Version = version

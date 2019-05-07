@@ -26,6 +26,7 @@ using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Shell;
@@ -65,12 +66,12 @@ namespace Catalyst.Cli.Rpc
         private FileTransferResponseCodes _currentChunkResponse;
 
         /// <summary>Initializes a new instance of the <see cref="RpcFileTransfer"/> class.</summary>
-        public RpcFileTransfer()
+        public RpcFileTransfer(IMessageCorrelationCache messageCorrelationCache)
         {
             RetryCount = 0;
             _waitHandle = new ManualResetEvent(false);
             _userOutput = new ConsoleUserOutput();
-            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesRequest>();
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesRequest>(messageCorrelationCache);
         }
 
         /// <inheritdoc />

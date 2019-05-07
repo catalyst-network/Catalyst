@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Commands
 
                 Guard.Argument(node).NotNull();
 
-                var requestMessage = new RpcMessageFactory<GetPeerReputationRequest>().GetMessage(
+                var requestMessage = new RpcMessageFactory<GetPeerReputationRequest>(_rpcMessageCorrelationCache).GetMessage(
                     messageType: MessageTypes.Ask,
                     message: new GetPeerReputationRequest
                     {

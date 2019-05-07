@@ -39,12 +39,15 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         : MessageHandlerBase<PingRequest>,
             IP2PMessageHandler
     {
+        private IReputableCache _reputableCache;
         private readonly IPeerIdentifier _peerIdentifier;
 
         public PingRequestHandler(IPeerIdentifier peerIdentifier,
+            IReputableCache reputableCache,
             ILogger logger)
             : base(logger)
         {
+            _reputableCache = reputableCache;
             _peerIdentifier = peerIdentifier;
         }
 
@@ -54,7 +57,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
             Logger.Debug("message content is {0}", deserialised);
 
-            var datagramEnvelope = new P2PMessageFactory<PingResponse>().GetMessageInDatagramEnvelope(
+            var datagramEnvelope = new P2PMessageFactory<PingResponse>(_reputableCache).GetMessageInDatagramEnvelope(
                 message: new PingResponse(),
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,

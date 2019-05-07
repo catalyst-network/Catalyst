@@ -44,12 +44,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         public GetVersionRequestHandlerTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
@@ -58,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
         {
-            var request = new RpcMessageFactory<VersionRequest>().GetMessage(
+            var request = new RpcMessageFactory<VersionRequest>(_subbedCorrelationCache).GetMessage(
                 new VersionRequest(),
                 PeerIdentifierHelper.GetPeerIdentifier("recepient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),

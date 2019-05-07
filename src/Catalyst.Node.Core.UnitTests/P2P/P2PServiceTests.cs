@@ -55,14 +55,18 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 {
     public sealed class P2PServiceTests : ConfigFileBasedTest
     {
-        private readonly IConfigurationRoot _config;
-        private readonly IPeerIdentifier _pid;
         private readonly Guid _guid;
         private readonly ILogger _logger;
+        private readonly IPeerIdentifier _pid;
+        private readonly IContainer _container;
         private readonly PingRequest _pingRequest;
+        private readonly IConfigurationRoot _config;
+        private readonly IReputableCache _reputableCache;
+        private readonly IReputableCache _subbedReputableCache;
 
         public P2PServiceTests(ITestOutputHelper output) : base(output)
         {
+            _subbedReputableCache = Substitute.For<IReputableCache>();
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -74,15 +78,17 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _pingRequest = new PingRequest();
 
             ConfigureContainerBuilder(_config, true, true);
+
+            _container = ContainerBuilder.Build();
+            _reputableCache = _container.Resolve<IReputableCache>();
         }
 
         [Fact]
         public void DoesResolveIp2PServiceCorrectly()
         {
-            var container = ContainerBuilder.Build();
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (var scope = _container.BeginLifetimeScope(CurrentTestName))
             {
-                var p2PService = container.Resolve<IP2PService>();
+                var p2PService = _container.Resolve<IP2PService>();
                 Assert.NotNull(p2PService);
                 p2PService.Should().BeOfType(typeof(P2PService));
                 p2PService.Dispose();
@@ -93,8 +99,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanReceiveEventsFromSubscribedStream()
         {
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
+            using (_container.BeginLifetimeScope(CurrentTestName))
             {
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var fakeChannel = Substitute.For<IChannel>();
@@ -102,7 +107,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
             
-                var handler = new PingRequestHandler(_pid, _logger);
+                var handler = new PingRequestHandler(_pid, _subbedReputableCache, _logger);
                 handler.StartObserving(observableStream);
             
                 fakeContext.Channel.ReceivedWithAnyArgs(1)
@@ -114,19 +119,18 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
+            using (_container.BeginLifetimeScope(CurrentTestName))
             {
-                var p2PService = container.Resolve<IP2PService>();
+                var p2PService = _container.Resolve<IP2PService>();
                 var serverObserver = new AnySignedMessageObserver(0, _logger);
 
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
+                    var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
 
-                    var datagramEnvelope = new P2PMessageFactory<PingResponse>().GetMessageInDatagramEnvelope(
+                    var datagramEnvelope = new P2PMessageFactory<PingResponse>(_reputableCache).GetMessageInDatagramEnvelope(
                         new PingResponse(),
                         new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
                             peerSettings.Port),
@@ -158,19 +162,18 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceiveNeighbourRequests()
         {
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
+            using (_container.BeginLifetimeScope(CurrentTestName))
             {
-                var p2PService = container.Resolve<IP2PService>();
+                var p2PService = _container.Resolve<IP2PService>();
                 var serverObserver = new AnySignedMessageObserver(0, _logger);
 
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
+                    var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
                     
-                    var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse>().GetMessageInDatagramEnvelope(
+                    var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse>(_reputableCache).GetMessageInDatagramEnvelope(
                         new PeerNeighborsResponse(),
                         new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
                         new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),

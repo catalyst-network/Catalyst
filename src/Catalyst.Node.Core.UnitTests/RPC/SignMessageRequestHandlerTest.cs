@@ -53,9 +53,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         public SignMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -83,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("Hello&?!1253Catalyst")]
         public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var request = new RpcMessageFactory<SignMessageRequest>().GetMessage(
+            var request = new RpcMessageFactory<SignMessageRequest>(_subbedCorrelationCache).GetMessage(
                 new SignMessageRequest
                 {
                     Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)

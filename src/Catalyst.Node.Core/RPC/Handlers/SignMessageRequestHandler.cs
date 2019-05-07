@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 Logger.Debug("message content is {0}", deserialised.Message);
 
-                var response = new RpcMessageFactory<SignMessageResponse>().GetMessage(
+                var response = new RpcMessageFactory<SignMessageResponse>(CorrelationCache).GetMessage(
                     new SignMessageResponse
                     {
                         OriginalMessage = deserialised.Message,

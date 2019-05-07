@@ -32,6 +32,7 @@ using NSubstitute;
 using SharpRepository.Repository;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.Network;
@@ -54,17 +55,19 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 {
     public sealed class PeerDiscoveryUnitTest : ConfigFileBasedTest
     {
-        private readonly IConfigurationRoot _config;
         private readonly IDns _dns;
-        private readonly IRepository<Peer> _peerRepository;
         private readonly ILogger _logger;
-        private readonly ILookupClient _lookupClient;
-        private readonly List<string> _dnsDomains;
         private readonly string _seedPid;
+        private readonly List<string> _dnsDomains;
+        private readonly IConfigurationRoot _config;
+        private readonly ILookupClient _lookupClient;
+        private readonly IRepository<Peer> _peerRepository;
+        private readonly IReputableCache _subbedReputableCache;
         private readonly IPeerClientFactory _subbedPeerClientFactory;
 
         public PeerDiscoveryUnitTest(ITestOutputHelper output) : base(output)
         {
+            _subbedReputableCache = Substitute.For<IReputableCache>();
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
             _lookupClient = Substitute.For<ILookupClient>();
@@ -120,8 +123,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
             });
 
-            using (var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, new PeerSettings(_config),
-                _subbedPeerClientFactory, _logger))
+            using (var peerDiscovery = new PeerDiscovery(_dns,
+                _peerRepository,
+                new PeerSettings(_config),
+                _subbedPeerClientFactory,
+                _subbedReputableCache,
+                _logger))
             {
                 peerDiscovery.CurrentPeer.Should().NotBeNull();
                 peerDiscovery.CurrentPeer.Should().BeAssignableTo<IPeerIdentifier>();   
@@ -136,8 +143,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
             });
 
-            using (var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, new PeerSettings(_config),
-                _subbedPeerClientFactory, _logger))
+            using (var peerDiscovery = new PeerDiscovery(_dns,
+                _peerRepository,
+                new PeerSettings(_config),
+                _subbedPeerClientFactory,
+                _subbedReputableCache,
+                _logger))
             {
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var pingRequest = new PingResponse();

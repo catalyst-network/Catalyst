@@ -56,7 +56,7 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = new RpcMessageFactory<GetInfoRequest>().GetMessage(
+                var request = new RpcMessageFactory<GetInfoRequest>(_rpcMessageCorrelationCache).GetMessage(
                     new GetInfoRequest
                     {
                         Query = true

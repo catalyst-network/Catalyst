@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
 
-                var response = new RpcMessageFactory<GetMempoolResponse>().GetMessage(
+                var response = new RpcMessageFactory<GetMempoolResponse>(CorrelationCache).GetMessage(
                     new GetMempoolResponse
                     {
                         Mempool = {GetMempoolContent()}

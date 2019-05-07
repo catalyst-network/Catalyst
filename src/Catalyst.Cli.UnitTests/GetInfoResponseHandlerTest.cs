@@ -49,9 +49,10 @@ namespace Catalyst.Cli.UnitTests
         private readonly ILogger _logger;
         private GetInfoResponseHandler _requestHandler;
 
-        public static readonly List<object[]> QueryContents;
+        private static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         static GetInfoResponseHandlerTest()
         {
@@ -66,15 +67,22 @@ namespace Catalyst.Cli.UnitTests
             var query = JsonConvert.SerializeObject(configurationRoot.AsEnumerable(),
                 Formatting.Indented);
 
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
-                new object[] {query},
-                new object[] {""},
+                new object[]
+                {
+                    query
+                },
+                new object[]
+                {
+                    ""
+                }
             };
         }
 
         public GetInfoResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
@@ -83,7 +91,10 @@ namespace Catalyst.Cli.UnitTests
         private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
         {
             var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
+            var messageStream = new[]
+            {
+                channeledAny
+            }.ToObservable();
             return messageStream;
         }
 
@@ -93,7 +104,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<GetInfoResponse>().GetMessage(
+            var response = new RpcMessageFactory<GetInfoResponse>(_subbedCorrelationCache).GetMessage(
                 new GetInfoResponse
                 {
                     Query = query
