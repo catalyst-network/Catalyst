@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -38,7 +39,6 @@ namespace Catalyst.Common.IO.Messaging
     public class MessageCorrelationCacheBase
         : IMessageCorrelationCache
     {
-        private static readonly TimeSpan DefaultTtl = TimeSpan.FromSeconds(10);
         protected readonly IMemoryCache PendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
         protected readonly ILogger Logger;
@@ -50,7 +50,7 @@ namespace Catalyst.Common.IO.Messaging
             TimeSpan cacheTtl = default)
         {
             Logger = logger;
-            CacheTtl = cacheTtl == default ? DefaultTtl : cacheTtl;
+            CacheTtl = cacheTtl == default ? Constants.CorrelationTTL : cacheTtl;
             PendingRequests = cache;
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))

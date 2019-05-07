@@ -37,14 +37,44 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerDiscovery : IMessageHandler
     {
+        IDns Dns { get; }
+        IRepository<Peer> PeerRepository { get; }
         IDisposable PingResponseMessageStream { get; }
         IDisposable GetNeighbourResponseStream { get; }
-        IDns Dns { get; }
+        
+        /// <summary>
+        ///     Current degree of walk
+        /// </summary>
         IPeerIdentifier CurrentPeer { get; }
-        ConcurrentQueue<IPeerIdentifier> CurrentPeerNeighbours { get; }
+        
+        /// <summary>
+        ///     A thread safe dict of current peers neighbours, key is a hashcode int of the IPeerIdentifier,
+        ///     with the value a single key => value struct of the IPeerIdentifier and a bool to indicate if it's been pinged
+        /// </summary>
+        ConcurrentDictionary<int, KeyValuePair<IPeerIdentifier, bool>> CurrentPeerNeighbours { get; }
+        
+        /// <summary>
+        ///     The previous degree of walk we was at
+        /// </summary>
         IPeerIdentifier PreviousPeer { get; } 
-        ConcurrentQueue<IPeerIdentifier> PreviousPeerNeighbours { get; }
-        IRepository<Peer> PeerRepository { get; }
+        
+        /// <summary>
+        ///     A thread safe dict of previous peers neighbours, key is a hashcode int of the IPeerIdentifier,
+        ///     with the value a single key => value struct of the IPeerIdentifier and a bool to indicate if it's been pinged
+        /// </summary>
+        ConcurrentDictionary<int, KeyValuePair<IPeerIdentifier, bool>> PreviousPeerNeighbours { get; }
+        
+        /// <summary>
+        ///     Method called to handle the GetNeighbourResponseStream
+        /// </summary>
+        /// <param name="message"></param>
         void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message);
+        
+        /// <summary>
+        ///     Helper function to store a peer in the PeerRepository
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <returns></returns>
+        int StorePeer(PeerId peerId);
     }
 }
