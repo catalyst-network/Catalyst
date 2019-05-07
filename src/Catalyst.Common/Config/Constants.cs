@@ -93,6 +93,7 @@ namespace Catalyst.Common.Config
         public static string SwarmKey => "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
 
         public static int BaseReputationChange => 1;
+        public static int NumberOfRandomPeers => 5;
         
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);

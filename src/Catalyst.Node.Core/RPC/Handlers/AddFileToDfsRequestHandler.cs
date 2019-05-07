@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IMessageCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger)
         {
-            _rpcMessageFactory = new RpcMessageFactory<AddFileToDfsResponse>();
+            _rpcMessageFactory = new RpcMessageFactory<AddFileToDfsResponse>(CorrelationCache);
             _fileTransfer = fileTransfer;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;

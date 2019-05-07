@@ -48,24 +48,32 @@ namespace Catalyst.Cli.UnitTests
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        public static readonly List<object[]> QueryContents;
+        private static readonly List<object[]> QueryContents;
 
         private readonly IUserOutput _output;
         private GetMempoolResponseHandler _handler;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         static GetMempoolResponseHandlerTest()
         {
             var memPoolData = CreateMemPoolData();
 
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
-                new object[] {memPoolData},
-                new object[] {new List<string>()},
+                new object[]
+                {
+                    memPoolData
+                },
+                new object[]
+                {
+                    new List<string>()
+                }
             };
         }
 
         public GetMempoolResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
@@ -78,7 +86,7 @@ namespace Catalyst.Cli.UnitTests
             return messageStream;
         }
 
-        public static IEnumerable<string> CreateMemPoolData()
+        private static IEnumerable<string> CreateMemPoolData()
         {
             var txLst = new List<Transaction>
             {
@@ -105,7 +113,7 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
 
-            var response = new RpcMessageFactory<GetMempoolResponse>().GetMessage(
+            var response = new RpcMessageFactory<GetMempoolResponse>(_subbedCorrelationCache).GetMessage(
                 new GetMempoolResponse
                 {
                     Mempool = {txList}

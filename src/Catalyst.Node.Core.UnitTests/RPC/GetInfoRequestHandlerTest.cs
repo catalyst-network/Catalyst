@@ -48,12 +48,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     public sealed class GetInfoRequestHandlerTest : ConfigFileBasedTest
     {
         private readonly ILogger _logger;
-        private IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
+        private readonly IChannelHandlerContext _fakeContext;
         private readonly IRpcServerSettings _rpcServerSettings;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         public GetInfoRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -77,7 +79,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var request = new RpcMessageFactory<GetInfoRequest>().GetMessage(
+            var request = new RpcMessageFactory<GetInfoRequest>(_subbedCorrelationCache).GetMessage(
                 new GetInfoRequest
                 {
                     Query = true

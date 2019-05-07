@@ -56,7 +56,7 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = new RpcMessageFactory<GetMempoolRequest>().GetMessage(
+                var request = new RpcMessageFactory<GetMempoolRequest>(_rpcMessageCorrelationCache).GetMessage(
                     new GetMempoolRequest(),
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                         nodeConfig.HostAddress,

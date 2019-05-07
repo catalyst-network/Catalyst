@@ -35,13 +35,13 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         where TProto : IMessage
         where TCorrelator : IMessageCorrelationCache
     {
-        private readonly TCorrelator _correlationCache;
+        protected readonly TCorrelator CorrelationCache;
 
         protected CorrelatableMessageHandlerBase(TCorrelator correlationCache,
             ILogger logger)
             : base(logger)
         {
-            _correlationCache = correlationCache;
+            CorrelationCache = correlationCache;
         }
         
         public override void HandleMessage(IChanneledMessage<AnySigned> message)

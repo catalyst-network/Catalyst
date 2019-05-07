@@ -64,7 +64,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             : base(correlationCache, logger)
         {
             _fileTransfer = fileTransfer;
-            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>(CorrelationCache);
             _peerIdentifier = peerIdentifier;
         }
 

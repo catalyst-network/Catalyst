@@ -43,34 +43,42 @@ namespace Catalyst.Cli.UnitTests
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
 
-        public static List<object[]> QueryContents;
+        private static List<object[]> _queryContents;
 
         private VerifyMessageResponseHandler _handler;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         static VerifyMessageResponseHandlerTest()
         {
-            QueryContents = new List<object[]>()
+            _queryContents = new List<object[]>
             {
-                new object[] {true},
-                new object[] {false}
+                new object[]
+                {
+                    true
+                },
+                new object[]
+                {
+                    false
+                }
             };
         }
 
         public VerifyMessageResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
 
         [Theory]
-        [MemberData(nameof(QueryContents))]
-        public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedbyNode)
+        [MemberData(nameof(_queryContents))]
+        public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
         {
-            var response = new RpcMessageFactory<VerifyMessageResponse>().GetMessage(
+            var response = new RpcMessageFactory<VerifyMessageResponse>(_subbedCorrelationCache).GetMessage(
                 new VerifyMessageResponse
                 {
-                    IsSignedByKey = isSignedbyNode
+                    IsSignedByKey = isSignedByNode
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
@@ -83,7 +91,7 @@ namespace Catalyst.Cli.UnitTests
             _handler = new VerifyMessageResponseHandler(_output, cache, _logger);
             _handler.StartObserving(messageStream);
 
-            _output.Received(1).WriteLine(isSignedbyNode.ToString());
+            _output.Received(1).WriteLine(isSignedByNode.ToString());
         }
 
         public void Dispose()

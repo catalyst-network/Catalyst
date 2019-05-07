@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = new RpcMessageFactory<SignMessageRequest>().GetMessage(
+                var request = new RpcMessageFactory<SignMessageRequest>(_rpcMessageCorrelationCache).GetMessage(
                     new SignMessageRequest
                     {
                         Message = ByteString.CopyFrom(opts.Message.Trim('\"'), Encoding.UTF8)

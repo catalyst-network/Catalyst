@@ -45,10 +45,11 @@ namespace Catalyst.Cli.UnitTests
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        public static readonly List<object[]> QueryContents;
+        private static readonly List<object[]> QueryContents;
         
         private readonly IUserOutput _output;
         private SignMessageResponseHandler _handler;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         //@TODO why not mock the actual response object? if we ever change it then the test will pass but fail in real world
         public struct SignedResponse
@@ -60,15 +61,22 @@ namespace Catalyst.Cli.UnitTests
 
         static SignMessageResponseHandlerTest()
         {   
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
-                new object[] {SignMessage("hello", "this is a fake signature", "this is a fake public key")},
-                new object[] {SignMessage("", "", "")},
+                new object[]
+                {
+                    SignMessage("hello", "this is a fake signature", "this is a fake public key")
+                },
+                new object[]
+                {
+                    SignMessage("", "", "")
+                },
             };
         }
         
         public SignMessageResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
@@ -92,7 +100,7 @@ namespace Catalyst.Cli.UnitTests
         {   
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<SignMessageResponse>().GetMessage(
+            var response = new RpcMessageFactory<SignMessageResponse>(_subbedCorrelationCache).GetMessage(
                 new SignMessageResponse
                 {
                     OriginalMessage = signedResponse.OriginalMessage,

@@ -47,6 +47,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         public GetMempoolRequestHandlerTest()
         {
@@ -54,10 +55,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
-        
-        public static IEnumerable<object[]> QueryContents =>
+
+        private static IEnumerable<object[]> QueryContents =>
             new List<object[]>
             {
                 new object[] {CreateTestTransactions(), 2},
@@ -87,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 }
             );
 
-            var request = new RpcMessageFactory<GetMempoolRequest>().GetMessage(
+            var request = new RpcMessageFactory<GetMempoolRequest>(_subbedCorrelationCache).GetMessage(
                 new GetMempoolRequest(),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),

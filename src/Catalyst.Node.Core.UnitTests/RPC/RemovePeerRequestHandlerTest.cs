@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -56,6 +57,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
+        private readonly IMessageCorrelationCache _subbedCorrelationCache;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RemovePeerRequestHandlerTest"/> class.
         /// </summary>
@@ -63,7 +66,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
@@ -89,7 +92,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>Executes the test case.</summary>
         /// <param name="fakePeers">The fake peers.</param>
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
-        private void ExecuteTestCase(string[] fakePeers, bool withPublicKey)
+        private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var peerRepository = new InMemoryRepository<Peer>();
 
@@ -105,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 peerRepository.Add(peer);
             });
 
-            peerRepository.GetAll().Count().Should().Be(fakePeers.Length);
+            peerRepository.GetAll().Count().Should().Be(fakePeers.Count);
 
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
@@ -113,7 +116,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var peerDiscovery = Substitute.For<IPeerDiscovery>();
             peerDiscovery.PeerRepository.Returns(peerRepository);
 
-            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest>();
+            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest>(_subbedCorrelationCache);
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var peerToDelete = peerRepository.Get(1);
             var requestMessage = rpcMessageFactory.GetMessage(
@@ -141,7 +144,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             var responseContent = sentResponse.FromAnySigned<RemovePeerResponse>();
 
-            responseContent.DeletedCount.Should().Be(withPublicKey ? 1 : (UInt32) fakePeers.Length);
+            responseContent.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
         }
     }
 }

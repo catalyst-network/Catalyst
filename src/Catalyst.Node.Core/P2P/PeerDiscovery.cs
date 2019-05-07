@@ -309,7 +309,7 @@ namespace Catalyst.Node.Core.P2P
 
         private IByteBufferHolder BuildPingRequestDatagram()
         {
-            return new P2PMessageFactory<PingRequest>().GetMessageInDatagramEnvelope(
+            return new P2PMessageFactory<PingRequest>(_p2PCorrelationCache).GetMessageInDatagramEnvelope(
                 new PingRequest(),
                 new PeerIdentifier(CurrentPeer.PublicKey, CurrentPeer.Ip,
                     CurrentPeer.Port),
@@ -321,7 +321,7 @@ namespace Catalyst.Node.Core.P2P
 
         private IByteBufferHolder BuildPeerNeighbourRequestDatagram()
         {
-            return new P2PMessageFactory<PeerNeighborsRequest>().GetMessageInDatagramEnvelope(
+            return new P2PMessageFactory<PeerNeighborsRequest>(_p2PCorrelationCache).GetMessageInDatagramEnvelope(
                 new PeerNeighborsRequest(),
                 new PeerIdentifier(CurrentPeer.PublicKey, CurrentPeer.Ip,
                     CurrentPeer.Port),
