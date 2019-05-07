@@ -39,7 +39,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IReputableCache, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Node.Core.P2P.PeerClientFactory",

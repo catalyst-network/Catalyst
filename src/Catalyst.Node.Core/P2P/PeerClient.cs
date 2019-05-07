@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.P2P
         {
             Logger.Debug("P2P client starting");
 
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandlerBase();
+            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
             MessageStream = protoDatagramChannelHandler.MessageStream;
             messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
 

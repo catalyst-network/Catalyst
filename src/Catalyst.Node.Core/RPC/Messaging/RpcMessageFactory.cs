@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -38,6 +39,8 @@ namespace Catalyst.Node.Core.Rpc.Messaging
         : MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
     {
+        public RpcMessageFactory(IMessageCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
+
         /// <inheritdoc />
         /// <summary>Gets the message dto.</summary>
         /// <param name="message">The message.</param>
