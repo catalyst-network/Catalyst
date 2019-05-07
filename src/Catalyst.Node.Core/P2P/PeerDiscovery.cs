@@ -41,6 +41,8 @@ using Nethereum.RLP;
 using Serilog;
 using SharpRepository.Repository;
 using System.Collections.Generic;
+using System.Data;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Peer = Catalyst.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.P2P
@@ -126,10 +128,12 @@ namespace Catalyst.Node.Core.P2P
         }
 
         private readonly ILogger _logger;
+        private IDisposable _messageSubscription;
         private int _discoveredPeerInCurrentWalk;
         private readonly IPeerIdentifier _ownNode;
         private readonly IPeerSettings _peerSettings;
-        private readonly IPeerClientFactory _peerClientFactory;        
+        private readonly IReputableCache _p2PCorrelationCache;
+        private readonly IPeerClientFactory _peerClientFactory;
         private readonly CancellationTokenSource _cancellationSource;
 
         /// <summary>
@@ -138,18 +142,21 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="repository"></param>
         /// <param name="peerSettings"></param>
         /// <param name="peerClientFactory"></param>
+        /// <param name="p2PCorrelationCache"></param>
         /// <param name="logger"></param>
         public PeerDiscovery(IDns dns,
             IRepository<Peer> repository,
             IPeerSettings peerSettings,
             IPeerClientFactory peerClientFactory,
+            IReputableCache p2PCorrelationCache,
             ILogger logger)
         {
             Dns = dns;
             _logger = logger;
-            _peerClientFactory = peerClientFactory;
             PeerRepository = repository;
             _peerSettings = peerSettings;
+            _peerClientFactory = peerClientFactory;
+            _p2PCorrelationCache = p2PCorrelationCache;
             _cancellationSource = new CancellationTokenSource();
             CurrentPeerNeighbours = new ConcurrentDictionary<int, KeyValuePair<IPeerIdentifier, bool>>();
             PreviousPeerNeighbours = new ConcurrentDictionary<int, KeyValuePair<IPeerIdentifier, bool>>();
@@ -274,6 +281,18 @@ namespace Catalyst.Node.Core.P2P
             }
 
             return _discoveredPeerInCurrentWalk++;
+        }
+
+        public void ObserveEvictionEvents(IObservable<IPeerIdentifier> messageStream)
+        {
+            if (_messageSubscription != null)
+            {
+                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
+            }
+            
+            _messageSubscription = messageStream.Where(message => message != null
+                 && message.GetType() == typeof(IPeerIdentifier))
+               .Subscribe(HandleMessage);
         }
 
         /// <summary>

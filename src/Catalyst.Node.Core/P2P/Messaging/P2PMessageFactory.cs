@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -37,6 +38,8 @@ namespace Catalyst.Node.Core.P2P.Messaging
         : MessageFactoryBase<TMessage> 
         where TMessage : class, IMessage<TMessage>
     {
+        public P2PMessageFactory(IReputableCache messageCorrelationCache) : base(messageCorrelationCache) { }
+
         /// <summary>Gets the message in datagram envelope.</summary>
         /// <param name="message">The message.</param>
         /// <param name="recipient">The recipient.</param>

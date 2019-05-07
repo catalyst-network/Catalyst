@@ -39,18 +39,18 @@ namespace Catalyst.Common.IO.Messaging
     public class MessageCorrelationCacheBase
         : IMessageCorrelationCache
     {
+        public TimeSpan CacheTtl { get; }
+        
+        protected readonly ILogger Logger;
         protected readonly IMemoryCache PendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
-        protected readonly ILogger Logger;
-
-        public TimeSpan CacheTtl { get; }
 
         protected MessageCorrelationCacheBase(IMemoryCache cache,
             ILogger logger,
             TimeSpan cacheTtl = default)
         {
             Logger = logger;
-            CacheTtl = cacheTtl == default ? Constants.CorrelationTTL : cacheTtl;
+            CacheTtl = cacheTtl == default ? Constants.CorrelationTtl : cacheTtl;
             PendingRequests = cache;
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))

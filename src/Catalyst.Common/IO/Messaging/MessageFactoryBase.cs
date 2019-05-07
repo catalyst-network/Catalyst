@@ -24,9 +24,12 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
 using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging
@@ -38,6 +41,13 @@ namespace Catalyst.Common.IO.Messaging
     public abstract class MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
     {
+        private IMessageCorrelationCache _messageCorrelationCache;
+
+        protected MessageFactoryBase(IMessageCorrelationCache messageCorrelationCache)
+        {
+            _messageCorrelationCache = messageCorrelationCache;
+        }
+        
         /// <summary>Gets the message.</summary>
         /// <param name="message">The message.</param>
         /// <param name="recipient">The recipient.</param>
@@ -89,7 +99,15 @@ namespace Catalyst.Common.IO.Messaging
         /// <returns>AnySigned message</returns>
         private AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
         {
-            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
+            var messageContent = dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
+            var correlatableRequest = new PendingRequest
+            {
+                Content = messageContent,
+                Recipient = dto.Recipient,
+                SentAt = DateTimeOffset.MinValue
+            };
+            _messageCorrelationCache.AddPendingRequest(correlatableRequest);
+            return messageContent;
         }
 
         /// <summary>Builds the gossip message.</summary>

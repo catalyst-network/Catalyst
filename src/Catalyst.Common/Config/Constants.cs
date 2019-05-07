@@ -95,7 +95,7 @@ namespace Catalyst.Common.Config
         public static int BaseReputationChange => 1;
         
         /// <summary> TTL for correlation cache </summary>
-        public static TimeSpan CorrelationTTL => TimeSpan.FromSeconds(10);
+        public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
             
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()

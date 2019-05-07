@@ -46,17 +46,19 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            bool nextHandler = true;
+            var nextHandler = true;
             if (this is IReputationAskHandler<TCorrelator>)
             {
                 nextHandler = ((IReputationAskHandler<TCorrelator>) this).CanExecuteNextHandler(message);
             }
 
-            if (nextHandler)
+            if (!nextHandler)
             {
-                Logger.Debug("handle message in correlatable handler");
-                Handler(message);
+                return;
             }
+            
+            Logger.Debug("handle message in correlatable handler");
+            Handler(message);
         }
     }
 }
