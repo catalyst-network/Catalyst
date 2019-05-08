@@ -46,7 +46,6 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using ICSharpCode.SharpZipLib.Checksum;
-using Microsoft.Extensions.Configuration;
 using Catalyst.Node.Core.Modules.Ipfs;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Google.Protobuf;
@@ -66,14 +65,8 @@ namespace Catalyst.Cli.UnitTests
 
         public FileTransferTest()
         {
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build();
-
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.SeedServers.Returns(new List<string>()
+            peerSettings.SeedServers.Returns(new List<string>
             {
                 "catalyst.seedserver01.com",
                 "catalyst.seedserver02.com"

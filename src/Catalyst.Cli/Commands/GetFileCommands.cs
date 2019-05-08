@@ -108,7 +108,9 @@ namespace Catalyst.Cli.Commands
             return true;
         }
 
-        private void OnSuccess(IFileTransferInformation obj)
+        /// <summary>Called when [success] of file upload.</summary>
+        /// <param name="obj">The file transfer information object.</param>
+        private static void OnSuccess(IFileTransferInformation obj)
         {
             File.Move(obj.TempPath, obj.FileOutputPath);
         }
