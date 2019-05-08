@@ -120,70 +120,7 @@ namespace Catalyst.Cli.Commands
                     (GetFileOptions opts) => OnGetFileOptions(opts),
                     errs => false);
         }
-
-        private bool OnGetFileOptions(GetFileOptions opts)
-        {
-            INodeRpcClient node;
-            try
-            {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
-
-            var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                nodeConfig.HostAddress, nodeConfig.Port);
-
-            var message = new GetFileFromDfsRequest()
-            {
-                DfsHash = opts.FileHash
-            };
-
-            var messageDto = new RpcMessageFactory<GetFileFromDfsRequest>().GetMessage(message, nodePeerIdentifier,
-                _peerIdentifier, MessageTypes.Ask);
-
-            var fileTransfer = FileTransferInformation.BuildDownload(
-                _peerIdentifier,
-                new PeerIdentifier(messageDto.PeerId),
-                node.Channel,
-                messageDto.CorrelationId.ToGuid(),
-                opts.FileOutput,
-                0
-            );
-
-            fileTransfer.AddSuccessCallback(OnSuccess);
-            _rpcFileTransfer.InitializeTransfer(fileTransfer);
-
-            node.SendMessage(messageDto);
-
-            var originalLogLevel = Program.LogLevelSwitch.MinimumLevel;
-
-            Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
-
-            while (!fileTransfer.IsComplete() && !fileTransfer.IsExpired())
-            {
-                _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%");
-                System.Threading.Thread.Sleep(500);
-            }
-
-            _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%\n");
-
-            Program.LogLevelSwitch.MinimumLevel = originalLogLevel;
-
-            return true;
-        }
-
-        private void OnSuccess(IFileTransferInformation obj)
-        {
-            File.Move(obj.TempPath, obj.FileOutputPath);
-        }
-
+        
         public static IPeerIdentifier BuildCliPeerId(IConfiguration configuration)
         {
             //TODO: Handle different scenarios to get the IPAddress and Port depending

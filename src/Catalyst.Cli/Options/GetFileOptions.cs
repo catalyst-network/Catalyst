@@ -32,7 +32,7 @@ namespace Catalyst.Cli.Options
     /// Get file onto DFS CLI options
     /// </summary>
     [Verb("getfile", HelpText = "gets file from dfs")]
-    public sealed class GetFileOptions
+    public sealed class GetFileOptions : IGetFileOptions
     {
         /// <summary>Gets or sets the node.</summary>
         /// <value>The node.</value>

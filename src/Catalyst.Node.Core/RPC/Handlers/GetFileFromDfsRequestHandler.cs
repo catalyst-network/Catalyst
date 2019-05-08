@@ -31,7 +31,6 @@ using Serilog;
 using Catalyst.Common.Extensions;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
@@ -40,13 +39,14 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.P2P;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     /// <summary>
-    /// The request handler to add a file to the DFS
+    /// The request handler to get a file from the DFS
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsRequest, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetFileFromDfsRequest, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class GetFileFromDfsRequestHandler : CorrelatableMessageHandlerBase<GetFileFromDfsRequest, IMessageCorrelationCache>,
         IRpcRequestHandler
@@ -86,24 +86,27 @@ namespace Catalyst.Node.Core.RPC.Handlers
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             var deserialised = message.Payload.FromAnySigned<GetFileFromDfsRequest>();
-
-            var stream = _dfs.ReadAsync(deserialised.DfsHash).Result;
-            long fileLen = stream?.Length ?? 0;
-
-            Guard.Argument(deserialised).NotNull("Message cannot be null");
-            
-            IFileTransferInformation fileTransferInformation = FileTransferInformation.BuildUpload(
-                stream,
-                _peerIdentifier,
-                new PeerIdentifier(message.Payload.PeerId),
-                message.Context.Channel,
-                message.Payload.CorrelationId.ToGuid(),
-                new RpcMessageFactory<TransferFileBytesRequest>()
-            );
-            
+            var recipientPeerIdentifier = new PeerIdentifier(message.Payload.PeerId);
+            var correlationGuid = message.Payload.CorrelationId.ToGuid();
+            long fileLen = 0;
             FileTransferResponseCodes responseCode;
+            IFileTransferInformation fileTransferInformation = null;
+
             try
             {
+                var stream = _dfs.ReadAsync(deserialised.DfsHash).GetAwaiter().GetResult();
+                fileLen = stream.Length;
+
+                Guard.Argument(deserialised).NotNull("Message cannot be null");
+            
+                fileTransferInformation = FileTransferInformation.BuildUpload(
+                    stream,
+                    _peerIdentifier,
+                    recipientPeerIdentifier,
+                    message.Context.Channel,
+                    correlationGuid,
+                    new RpcMessageFactory<TransferFileBytesRequest>()
+                );
                 responseCode = _fileTransfer.InitializeTransfer(fileTransferInformation);
             }
             catch (Exception e)
@@ -112,21 +115,21 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 responseCode = FileTransferResponseCodes.Error;
             }
 
-            ReturnResponse(fileTransferInformation, responseCode, fileTransferInformation.CorrelationGuid, fileLen);
+            ReturnResponse(recipientPeerIdentifier, message.Context.Channel, responseCode, correlationGuid, fileLen);
 
-            fileTransferInformation.Upload();
+            fileTransferInformation?.Upload();
         }
 
-        /// <param name="fileTransferInformation">The file transfer information.</param>
+        /// <summary>Returns the response.</summary>
+        /// <param name="recipientIdentifier">The recipient identifier.</param>
+        /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="responseCode">The response code.</param>
-        private void ReturnResponse(IFileTransferInformation fileTransferInformation, FileTransferResponseCodes responseCode, Guid correlationGuid, long fileSize)
+        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="fileSize">Size of the file.</param>
+        private void ReturnResponse(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, FileTransferResponseCodes responseCode, Guid correlationGuid, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
-            if (responseCode == FileTransferResponseCodes.Successful)
-            {
-                Logger.Information($"Initialised file upload, FileName: {fileTransferInformation.FileOutputPath}, Chunks: {fileTransferInformation.MaxChunk}");
-            }
-
+            
             // Build Response
             var response = new GetFileFromDfsResponse()
             {
@@ -137,13 +140,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
             // Send Response
             var responseMessage = _rpcMessageFactory.GetMessage(
                 message: response,
-                recipient: fileTransferInformation.RecipientIdentifier,
+                recipient: recipientIdentifier,
                 sender: _peerIdentifier,
                 messageType: MessageTypes.Tell,
                 correlationGuid
             );
 
-            fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
+            recipientChannel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
         }
     }
 }

@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
@@ -114,5 +115,13 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Sets file the length.</summary>
         /// <param name="fileSize">Size of the file.</param>
         void SetLength(ulong fileSize);
+
+        /// <summary>Gets the upload message.</summary>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <returns></returns>
+        TransferFileBytesRequest GetUploadMessage(uint chunkId);
+
+        /// <summary>Expires this instance.</summary>
+        void Expire();
     }
 }

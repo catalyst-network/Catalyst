@@ -22,10 +22,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -110,6 +108,9 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>The upload retry count</summary>
         private int _uploadRetryCount;
 
+        /// <summary>Flag if instance is expired from an error</summary>
+        private bool _expired;
+
         /// <summary>Initializes a new instance of the <see cref="FileTransferInformation"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier</param>
         /// <param name="recipientIdentifier">The recipient identifier.</param>
@@ -140,7 +141,7 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="fileOutputPath">Name of the file.</param>
         /// <param name="fileSize">Size of the file.</param>
         /// <returns></returns>
-        public static FileTransferInformation BuildDownload(IPeerIdentifier peerIdentifier, IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Guid correlationGuid, string fileOutputPath, ulong fileSize)
+        public static IFileTransferInformation BuildDownload(IPeerIdentifier peerIdentifier, IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Guid correlationGuid, string fileOutputPath, ulong fileSize)
         {
             FileTransferInformation info = new FileTransferInformation(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, fileOutputPath, fileSize, true);
@@ -157,7 +158,7 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="uploadMessageFactory">The upload message factory</param>
         /// <returns></returns>
-        public static FileTransferInformation BuildUpload(Stream stream,
+        public static IFileTransferInformation BuildUpload(Stream stream,
             IPeerIdentifier peerIdentifier,
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
@@ -188,6 +189,9 @@ namespace Catalyst.Common.FileTransfer
             }
         }
 
+        /// <summary>Sets file the length.</summary>
+        /// <param name="fileSize">Size of the file.</param>
+        /// <exception cref="NotSupportedException">Cannot set length for upload type file transfer</exception>
         public void SetLength(ulong fileSize)
         {
             if (IsDownload)
@@ -202,6 +206,8 @@ namespace Catalyst.Common.FileTransfer
             }
         }
 
+        /// <summary>Uploads this instance.</summary>
+        /// <returns></returns>
         public async Task Upload()
         {
             for (uint i = 0; i < MaxChunk; i++)
@@ -251,7 +257,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns><c>true</c> if this instance is expired; otherwise, <c>false</c>.</returns>
         public bool IsExpired()
         {
-            return DateTime.Now.Subtract(_timeSinceLastChunk).TotalMinutes > Constants.FileTransferExpiryMinutes;
+            return _expired || DateTime.Now.Subtract(_timeSinceLastChunk).TotalMinutes > Constants.FileTransferExpiryMinutes;
         }
 
         /// <inheritdoc />
@@ -330,11 +336,15 @@ namespace Catalyst.Common.FileTransfer
             }
         }
 
+        /// <summary>Occurs when [on expired].</summary>
+        /// <param name="callback"></param>
         public void AddExpiredCallback(Action<IFileTransferInformation> callback)
         {
             OnExpired += callback;
         }
 
+        /// <summary>Occurs when [on success].</summary>
+        /// <param name="callback"></param>
         public void AddSuccessCallback(Action<IFileTransferInformation> callback)
         {
             OnSuccess += callback;
@@ -357,11 +367,11 @@ namespace Catalyst.Common.FileTransfer
 
             var bufferSize = (int) (endPos - startPos);
             var chunk = new byte[bufferSize];
-            RandomAccessStream.Position = startPos;
+            RandomAccessStream.Seek(startPos, SeekOrigin.Begin);
 
             var readTries = 0;
             var bytesRead = 0;
-
+            
             while ((bytesRead += RandomAccessStream.Read(chunk, 0, bufferSize - bytesRead)) < bufferSize)
             {
                 readTries++;
@@ -391,6 +401,8 @@ namespace Catalyst.Common.FileTransfer
             return transferMessage;
         }
 
+        public void Expire() { _expired = true; }
+
         /// <summary>Retries the specified index.</summary>
         /// <param name="index">The index.</param>
         /// <returns>True if retry success, false if retry failure</returns>
@@ -407,6 +419,8 @@ namespace Catalyst.Common.FileTransfer
             return true;
         }
 
+        /// <summary>Gets the percentage.</summary>
+        /// <returns></returns>
         public int GetPercentage()
         {
             int sentCount = _chunkIndicators.Count(x => x);

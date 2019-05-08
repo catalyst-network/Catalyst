@@ -65,7 +65,7 @@ namespace Catalyst.Common.Config
         public static int FileTransferExpiryMinutes => 1;
 
         /// <summary>The chunk size in bytes </summary>
-        public static int FileTransferChunkSize => 1000000;
+        public static int FileTransferChunkSize => 200000;
         
         /// <summary>The maximum chunk retry count </summary>
         public static int FileTransferMaxChunkRetryCount => 3;

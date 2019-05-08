@@ -55,7 +55,7 @@ namespace Catalyst.Cli.Handlers
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
         /// <param name="fileTransfer">The file transfer.</param>
-        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <param name="config">The configuration.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestHandler(IFileTransfer fileTransfer,
@@ -67,6 +67,22 @@ namespace Catalyst.Cli.Handlers
             _fileTransfer = fileTransfer;
             _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
             _peerIdentifier = Commands.Commands.BuildCliPeerId(config);
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
+        /// <param name="fileTransfer">The file transfer.</param>
+        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <param name="correlationCache">The correlation cache.</param>
+        /// <param name="logger">The logger.</param>
+        public TransferFileBytesRequestHandler(IFileTransfer fileTransfer,
+            IPeerIdentifier peerIdentifier,
+            IMessageCorrelationCache correlationCache,
+            ILogger logger)
+            : base(correlationCache, logger)
+        {
+            _fileTransfer = fileTransfer;
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
+            _peerIdentifier = peerIdentifier;
         }
 
         /// <summary>Handles the specified message.</summary>
