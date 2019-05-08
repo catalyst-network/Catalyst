@@ -21,11 +21,14 @@
       "Announce": true,
       "AnnounceServer": "127.0.0.1:21420",
       "SeedServers": [
-        "seed1.network.devdns.local",
-        "seed2.network.devdns.local",
-        "seed3.network.devdns.local",
-        "seed4.network.devdns.local",
-        "seed5.network.devdns.local"
+        "mainnet.network.catalystnetwork.co",
+        "mainnet.network.catalystnetwork.io",
+        "mainnet.network.catalystnetwork.info",
+        "mainnet.network.catalystnet.org",
+        "mainnet.network.catalystnet.dev",
+        "mainnet.network.catalystnetwork.ac",
+        "mainnet.network.catalystnet.io",
+        "mainnet.network.catalystnet.co.uk"
       ]
     },
     "Rpc": {
