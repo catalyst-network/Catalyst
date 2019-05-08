@@ -37,15 +37,7 @@ namespace Catalyst.Common.Shell
         private static string Prompt => "Koopa";
         private static string ServiceName => "Catalyst Distributed Shell";
         private static CultureInfo AppCulture => new CultureInfo("en-GB", false);
-
-        ///// <inheritdoc />
-        ///// <summary>
-        ///// Called when checking node peer reputation.
-        ///// </summary>
-        ///// <param name="args">The arguments.</param>
-        ///// <returns></returns>
-        //protected abstract bool OnGetPeerNodeReputation(Object args);
-
+        
         /// <inheritdoc />
         /// <summary>
         ///     Runs the main cli ui.
