@@ -37,9 +37,6 @@ using Xunit;
 using Catalyst.Common.P2P;
 using System.Threading;
 using System.IO;
-using Catalyst.Cli.Commands;
-using Catalyst.Cli.Handlers;
-using Catalyst.Cli.Rpc;
 using Catalyst.Common.Config;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -47,8 +44,6 @@ using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.Rpc;
-using Catalyst.Common.Shell;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
@@ -56,7 +51,6 @@ using ICSharpCode.SharpZipLib.Checksum;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Node.Core.Modules.Ipfs;
 using Catalyst.Node.Core.Rpc.Messaging;
-using Google.Protobuf;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer
