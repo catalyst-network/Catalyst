@@ -56,6 +56,7 @@ namespace Catalyst.Node.Core.P2P
         public IRepository<Peer> PeerRepository { get; }
         public IDisposable PingResponseMessageStream { get; private set; }
         public IDisposable GetNeighbourResponseStream { get; private set; }
+        public IDisposable P2PCorrelationCacheEvictionStream { get; set; }
 
         private IPeerIdentifier _currentPeer;
         private readonly object _currentPeerLock = new object();        
@@ -129,7 +130,6 @@ namespace Catalyst.Node.Core.P2P
         }
 
         private readonly ILogger _logger;
-        private IDisposable _messageSubscription;
         private int _discoveredPeerInCurrentWalk;
         private readonly IPeerIdentifier _ownNode;
         private readonly IPeerSettings _peerSettings;
@@ -284,14 +284,11 @@ namespace Catalyst.Node.Core.P2P
             NeighbourRequested = false;
         }
 
-        public void StartObservingEvictionEvents(IObservable<KeyValuePair<IPeerIdentifier, ByteString>> messageStream)
+        public void StartObservingEvictionEvents(IObservable<KeyValuePair<IPeerIdentifier, ByteString>> observer)
         {
-            if (_messageSubscription != null)
-            {
-                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
-            }
-            
-            _messageSubscription = messageStream.Where(message => QueriedPeer(message, CurrentPeerNeighbours)).Subscribe(RemovePeerFromCurrentPeerNeighbourList);
+            P2PCorrelationCacheEvictionStream = observer
+               .Where(message => message.Value != null && QueriedPeer(message, CurrentPeerNeighbours))
+               .Subscribe(PingedPeerMessageEvictionHandler);
         }
 
         /// <summary>
@@ -345,9 +342,9 @@ namespace Catalyst.Node.Core.P2P
             return CurrentPeerNeighbours.ContainsKey(peer.GetHashCode());
         }
 
-        private bool RemovePeerFromCurrentPeerNeighbourList(IObservable<KeyValuePair<IPeerIdentifier, ByteString>> messageStreamr)
+        public void PingedPeerMessageEvictionHandler(KeyValuePair<IPeerIdentifier, ByteString> currentPeerNeighbour)
         {
-            return CurrentPeerNeighbours.TryRemove(currentPeerNeighbour.GetHashCode(), out _);
+            CurrentPeerNeighbours.TryRemove(currentPeerNeighbour.GetHashCode(), out _);
         }
 
         private void WalkBack()
@@ -357,6 +354,7 @@ namespace Catalyst.Node.Core.P2P
                 CurrentPeer = PreviousPeer;
                 PreviousPeer = null;
             }
+            
             ResetWalk();
         }
 
@@ -413,6 +411,7 @@ namespace Catalyst.Node.Core.P2P
             _logger.Debug($"Disposing {GetType().Name}");
             PingResponseMessageStream?.Dispose();
             GetNeighbourResponseStream?.Dispose();
+            P2PCorrelationCacheEvictionStream?.Dispose();
         }
         
         #endregion

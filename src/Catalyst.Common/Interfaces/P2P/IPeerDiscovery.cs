@@ -42,7 +42,8 @@ namespace Catalyst.Common.Interfaces.P2P
         IRepository<Peer> PeerRepository { get; }
         IDisposable PingResponseMessageStream { get; }
         IDisposable GetNeighbourResponseStream { get; }
-        
+        IDisposable P2PCorrelationCacheEvictionStream { get; }
+
         /// <summary>
         ///     Current degree of walk
         /// </summary>
@@ -70,6 +71,8 @@ namespace Catalyst.Common.Interfaces.P2P
         /// </summary>
         /// <param name="message"></param>
         void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message);
+
+        void PingedPeerMessageEvictionHandler(KeyValuePair<IPeerIdentifier, ByteString> currentPeerNeighbour);
         
         /// <summary>
         ///     Helper function to store a peer in the PeerRepository
