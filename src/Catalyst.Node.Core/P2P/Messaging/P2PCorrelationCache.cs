@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Config;
@@ -30,7 +31,9 @@ using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
@@ -40,7 +43,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
         : MessageCorrelationCacheBase,
             IReputableCache
     {
+        private readonly BehaviorSubject<KeyValuePair<ByteString, IPeerIdentifier>> _evictionSubject;
         private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
+
         public IObservable<IPeerReputationChange> PeerRatingChanges => _ratingChangeSubject.AsObservable();
 
         public P2PCorrelationCache(IMemoryCache cache,
@@ -50,6 +55,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             logger.Debug("P2PCorrelationCache resolved once");
             _ratingChangeSubject = new ReplaySubject<IPeerReputationChange>(0);
+            _evictionSubject = new BehaviorSubject<KeyValuePair<ByteString, IPeerIdentifier>>(NullObjects.EvictedMessage);
         }
 
         /// <summary>
@@ -63,9 +69,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             //TODO: find a way to trigger the actual remove with correct reason
             //when the cache is not under pressure, eviction happens by token expiry :(
-            //if (reason == EvictionReason.Removed) {return;}
             var pendingRequest = (PendingRequest) value;
             _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.Recipient, -Constants.BaseReputationChange));
+            _evictionSubject.OnNext(new KeyValuePair<ByteString, IPeerIdentifier>(pendingRequest.Content.CorrelationId, pendingRequest.Recipient));
         }
 
         public override TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)

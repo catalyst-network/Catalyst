@@ -21,8 +21,11 @@
 
 #endregion
 
+using System.Collections.Generic;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Util
 {
@@ -30,5 +33,8 @@ namespace Catalyst.Common.Util
     {
         public static readonly AnySigned AnySigned = new AnySigned();
         public static readonly ChanneledAnySigned ChanneledAnySigned = new ChanneledAnySigned(null, new AnySigned());
+        
+        public static readonly KeyValuePair<ByteString, IPeerIdentifier> EvictedMessage =
+            new KeyValuePair<ByteString, IPeerIdentifier>();
     }
 }
