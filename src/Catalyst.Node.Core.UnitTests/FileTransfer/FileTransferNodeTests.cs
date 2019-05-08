@@ -36,9 +36,8 @@ using Serilog;
 using Xunit;
 using Catalyst.Common.P2P;
 using System.Threading;
-using Catalyst.Common.FileTransfer;
 using System.IO;
-using Catalyst.Cli.FileTransfer;
+using Catalyst.Cli.Rpc;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
@@ -49,15 +48,16 @@ using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using ICSharpCode.SharpZipLib.Checksum;
 using Microsoft.Extensions.Configuration;
+using Catalyst.Node.Core.Modules.Ipfs;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer
 {
-    public sealed class FileTransferNodeTests
+    public sealed class FileTransferNodeTests : IDisposable
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IFileTransfer _fileTransfer;
-        private readonly IIpfsEngine _ipfsEngine;
+        private readonly IpfsAdapter _ipfsEngine;
 
         public FileTransferNodeTests()
         {
@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _fileTransfer = new Core.Modules.FileTransfer.FileTransfer();
+            _fileTransfer = new Common.FileTransfer.FileTransfer();
 
             var passwordReader = Substitute.For<IPasswordReader>();
             passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var fileSystem = Substitute.For<IFileSystem>();
             fileSystem.GetCatalystHomeDir().Returns(new DirectoryInfo(Path.GetTempPath()));
 
-            _ipfsEngine = new IpfsEngine(passwordReader, peerSettings, fileSystem, _logger);
+            _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, fileSystem, _logger);
 
             _logger = Substitute.For<ILogger>();
         }
@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             {
                 Node = "node1",
                 FileName = "Test.dat",
-                FileSize = (ulong) 10000
+                FileSize = 10000
             }.ToAnySigned(sender, Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
@@ -116,7 +116,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             {
                 Node = "node1",
                 FileName = "Test.dat",
-                FileSize = (ulong) 10000
+                FileSize = 10000
             }.ToAnySigned(sender, Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
@@ -132,8 +132,10 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var fileTransferInformation = _fileTransfer.GetFileTransferInformation(uniqueFileKey);
             _fileTransfer.GetFileTransferInformation(uniqueFileKey)
                .AddExpiredCallback(delegate { expiredDelegateHit = true; });
-            Thread.Sleep((FileTransferConstants.ExpiryMinutes * 60 * 1000) + 1000);
-            bool fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
+
+            Thread.Sleep(Constants.FileTransferExpiryMinutes * 60 * 1000 + 1000);
+
+            var fileCleanedUp = !File.Exists(Path.GetTempPath() + uniqueFileKey);
 
             Assert.Equal(true, fileTransferInformation.IsExpired());
             Assert.Equal(true, fileCleanedUp);
@@ -160,13 +162,13 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
             var senderPeerId = new PeerIdentifier(sender);
-            var cliFileTransfer = new CliFileTransfer();
+            var cliFileTransfer = new RpcFileTransfer();
             var uniqueFileKey = Guid.NewGuid();
             string dfsHash = null;
 
-            byte[] b = new byte[byteSize];
+            var b = new byte[byteSize];
             new Random().NextBytes(b);
-            FileStream fs = File.Create(fileToTransfer);
+            var fs = File.Create(fileToTransfer);
             fs.Write(b);
             fs.Close();
             crc32.Update(b);
@@ -193,7 +195,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             Assert.Equal(1, _fileTransfer.Keys.Length);
 
-            IFileTransferInformation fileTransferInformation =
+            var fileTransferInformation =
                 _fileTransfer.GetFileTransferInformation(uniqueFileKey.ToString());
 
             fileTransferInformation.AddSuccessCallback(information =>
@@ -204,7 +206,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
                 dfsHash = information.DfsHash;
             });
 
-            List<AnySigned> chunkMessages = new List<AnySigned>();
+            var chunkMessages = new List<AnySigned>();
             using (fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
@@ -236,5 +238,22 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var ipfsCrcValue = crc32.Value;
             Assert.Equal(crc32OriginalValue, ipfsCrcValue);
         }
+
+        #region IDisposable Support
+        void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _ipfsEngine?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
+
+
     }
 }

@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
@@ -42,7 +42,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 new PingRequest(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                DtoMessageType.Ask
+                MessageTypes.Ask
             );
 
             pingRequestDatagram.Should().BeAssignableTo(typeof(IByteBufferHolder));
@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 new PingResponse(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                DtoMessageType.Tell,
+                MessageTypes.Tell,
                 Guid.NewGuid()
             );
 
@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 new Transaction(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                DtoMessageType.Ask
+                MessageTypes.Ask
             );
 
             transactionDatagram.Should().BeAssignableTo(typeof(IByteBufferHolder));

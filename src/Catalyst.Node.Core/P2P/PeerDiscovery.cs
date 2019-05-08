@@ -22,21 +22,19 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
@@ -49,10 +47,10 @@ namespace Catalyst.Node.Core.P2P
     {
         public IDns Dns { get; }
         public ILogger Logger { get; }
-        public IList<string> SeedNodes { get; }
-        public IList<IPEndPoint> Peers { get; }
+        public IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         public IRepository<Peer> PeerRepository { get; }
-        private IDisposable _streamSubscription;
+        public IDisposable PingResponseMessageStream { get; private set; }
+        public IDisposable GetNeighbourResponseStream { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -68,66 +66,49 @@ namespace Catalyst.Node.Core.P2P
             Dns = dns;
             Logger = logger;
             PeerRepository = repository;
-            SeedNodes = new List<string>();
-            Peers = new List<IPEndPoint>();
+            Peers = new ConcurrentQueue<IPeerIdentifier>();
 
-            ParseDnsServersFromConfig(rootSection);
+            Peers.TryAdd(Dns.GetSeedNodesFromDns(ParseDnsServersFromConfig(rootSection)).RandomElement());
 
             var longRunningTasks = new[] {PeerCrawler()};
             Task.WaitAll(longRunningTasks);
         }
 
-        public void ParseDnsServersFromConfig(IConfigurationRoot rootSection)
+        public IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection)
         {
+            var seedDnsUrls = new List<string>();
             try
             {
-                foreach (var seedNode in ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList())
+                ConfigValueParser.GetStringArrValues(rootSection, "SeedServers").ToList().ForEach(seedUrl =>
                 {
-                    SeedNodes.Add(seedNode);
-                }
+                    seedDnsUrls.Add(seedUrl); 
+                });
             }
             catch (Exception e)
             {
                 Logger.Error(e.Message);
                 throw;
             }
-        }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="seedServers"></param>
-        public async Task GetSeedNodesFromDns(IList<string> seedServers)
-        {
-            foreach (var seedServer in seedServers)
-            {
-                var dnsQueryAnswer = await Dns.GetTxtRecords(seedServer).ConfigureAwait(false);
-
-                var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-                if (answerSection != null)
-                {
-                    foreach (var seedNode in answerSection.EscapedText)
-                    {
-                        var pingResponse = true;
-                        if (pingResponse == true) // pointless but place holder until we have a ping system
-                        {
-                            Peers.Add(EndpointBuilder.BuildNewEndPoint(seedNode));
-                        }
-                    }
-                }
-            }
+            return seedDnsUrls;
         }
 
         public void StartObserving(IObservable<IChanneledMessage<AnySigned>> observer)
         {
-            _streamSubscription = observer
+            PingResponseMessageStream = observer
                .Where(m => m != null && m.Payload.TypeUrl == typeof(PingResponse)
                    .ShortenedProtoFullName()
-                ).Subscribe(PrintIt);
+                ).Subscribe(PingSubscriptionHandler);
+            
+            GetNeighbourResponseStream = observer
+               .Where(m => m != null && m.Payload.TypeUrl == typeof(PeerNeighborsResponse)
+                   .ShortenedProtoFullName()
+                ).Subscribe(PeerNeighbourSubscriptionHandler);
         }
 
-        private void PrintIt(IChanneledMessage<AnySigned> message)
+        private void PingSubscriptionHandler(IChanneledMessage<AnySigned> message)
         {
-            Logger.Information("peer discovery stream");
+            Logger.Information("processing ping message stream");
             var pingResponse = message.Payload.FromAnySigned<PingResponse>();
             PeerRepository.Add(new Peer
             {
@@ -138,21 +119,24 @@ namespace Catalyst.Node.Core.P2P
 
             Logger.Information(message.Payload.TypeUrl);
         }
+        
+        public void PeerNeighbourSubscriptionHandler(IChanneledMessage<AnySigned> message)
+        {
+            Logger.Information("processing peer neighbour message stream");
+            var peerNeighborsResponse = message.Payload.FromAnySigned<PeerNeighborsResponse>();
+        }
 
         private async Task PeerCrawler()
         {
-            if (Peers.Count == 0)
+            if (Peers.Count != 0) return;
+            try { }
+            catch (Exception e)
             {
-                try
-                {
-                    await GetSeedNodesFromDns(SeedNodes).ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e.Message);
-                    throw;
-                }
+                Logger.Error(e.Message);
+                throw;
             }
+
+            await Task.Delay(5000);
         }
         
         public void Dispose()
@@ -162,11 +146,9 @@ namespace Catalyst.Node.Core.P2P
 
         private void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                Logger.Debug($"Disposing {GetType().Name}");
-                _streamSubscription?.Dispose();
-            }
+            if (!disposing) return;
+            Logger.Debug($"Disposing {GetType().Name}");
+            PingResponseMessageStream?.Dispose();
         }
     }
 }

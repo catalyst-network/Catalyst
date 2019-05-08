@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -33,17 +34,14 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
 using Serilog;
-using System;
-using Catalyst.Common.Enums.FileTransfer;
-using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class TransferFileBytesRequestHandler : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
-        IRpcRequestHandler
+    public sealed class TransferFileBytesRequestHandler
+        : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
+            IRpcRequestHandler
     {
         /// <summary>The file transfer</summary>
         private readonly IFileTransfer _fileTransfer;
@@ -59,7 +57,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesRequestHandler(IFileTransfer fileTransfer, IPeerIdentifier peerIdentifier, IMessageCorrelationCache correlationCache, ILogger logger) : base(correlationCache, logger)
+        public TransferFileBytesRequestHandler(IFileTransfer fileTransfer,
+            IPeerIdentifier peerIdentifier,
+            IMessageCorrelationCache correlationCache,
+            ILogger logger)
+            : base(correlationCache, logger)
         {
             _fileTransfer = fileTransfer;
             _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
@@ -72,7 +74,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesRequest>();
             IFileTransferInformation fileTransferInformation = null;
-            AddFileToDfsResponseCode responseCode;
+            FileTransferResponseCodes responseCode;
 
             try
             {
@@ -85,30 +87,32 @@ namespace Catalyst.Node.Core.RPC.Handlers
             catch (Exception e)
             {
                 Logger.Error(e.ToString());
-                responseCode = AddFileToDfsResponseCode.Error;
+                responseCode = FileTransferResponseCodes.Error;
             }
 
-            TransferFileBytesResponse responseMessage = new TransferFileBytesResponse
+            var responseMessage = new TransferFileBytesResponse
             {
-                ResponseCode = ByteString.CopyFrom((byte) responseCode)
+                ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
             };
 
             var responseDto = _rpcMessageFactory.GetMessage(
                 message: responseMessage,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell,
+                messageType: MessageTypes.Tell,
                 message.Payload.CorrelationId.ToGuid()
             );
 
             message.Context.Channel.WriteAndFlushAsync(responseDto);
 
-            if (fileTransferInformation != null && fileTransferInformation.IsComplete())
+            if (fileTransferInformation == null || !fileTransferInformation.IsComplete())
             {
-                fileTransferInformation.Dispose();
-                fileTransferInformation.ExecuteOnSuccess();
-                fileTransferInformation.Delete();
+                return;
             }
+            
+            fileTransferInformation.Dispose();
+            fileTransferInformation.ExecuteOnSuccess();
+            fileTransferInformation.Delete();
         }
     }
 }

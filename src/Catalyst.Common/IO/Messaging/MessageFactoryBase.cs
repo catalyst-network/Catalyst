@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -48,20 +48,22 @@ namespace Catalyst.Common.IO.Messaging
         public virtual AnySigned GetMessage(TMessage message,
             IPeerIdentifier recipient,
             IPeerIdentifier sender,
-            DtoMessageType messageType,
+            MessageTypes messageType,
             Guid correlationId = default)
         {
             var messageDto = GetMessageDto(message, recipient, sender);
 
-            switch (messageType)
+            if (messageType == MessageTypes.Ask)
             {
-                case DtoMessageType.Ask:
-                    return BuildAskMessage(messageDto);
-                case DtoMessageType.Tell:
-                    return BuildTellMessage(messageDto, correlationId);
-                default:
-                    throw new ArgumentException();
+                return BuildAskMessage(messageDto);
             }
+
+            if (messageType == MessageTypes.Tell)
+            {
+                return BuildTellMessage(messageDto, correlationId);   
+            }
+
+            throw new ArgumentException();
         }
 
         /// <summary>Gets the message dto.</summary>
@@ -75,20 +77,17 @@ namespace Catalyst.Common.IO.Messaging
         /// <param name="dto">The dto.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>AnySigned message</returns>
-        protected AnySigned BuildTellMessage(IMessageDto<TMessage> dto, Guid correlationId)
+        private AnySigned BuildTellMessage(IMessageDto<TMessage> dto, Guid correlationId)
         {
-            if (correlationId == default)
-            {
-                throw new ArgumentException("Correlation ID cannot be null for a tell message");
-            }
-
-            return dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
+            return correlationId == default
+                ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
+                : dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
         }
 
         /// <summary>Builds the ask message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>AnySigned message</returns>
-        protected AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
+        private AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }

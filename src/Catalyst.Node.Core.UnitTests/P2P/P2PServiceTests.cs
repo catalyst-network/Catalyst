@@ -30,7 +30,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
-using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Util;
@@ -133,7 +132,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                             peerSettings.Port),
                         new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
                             peerSettings.Port),
-                        DtoMessageType.Tell,
+                        MessageTypes.Tell,
                         Guid.NewGuid()
                     );
                     
@@ -145,10 +144,53 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                         }
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
+
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
+                    p2PService.Dispose();
+                }
+            }
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void CanReceiveNeighbourRequests()
+        {
+            var container = ContainerBuilder.Build();
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var p2PService = container.Resolve<IP2PService>();
+                var serverObserver = new AnySignedMessageObserver(0, _logger);
+
+                using (p2PService.MessageStream.Subscribe(serverObserver))
+                {
+                    var peerSettings = new PeerSettings(_config);
+                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+                    var peerClient = new PeerClient(targetHost, container.Resolve<IEnumerable<IP2PMessageHandler>>());
+                    
+                    var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse>().GetMessageInDatagramEnvelope(
+                        new PeerNeighborsResponse(),
+                        new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
+                        new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
+                        MessageTypes.Tell,
+                        Guid.NewGuid()
+                    );
+                    
+                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    
+                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                        {
+                            p2PService, peerClient
+                        }
+                       .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                       .ToArray();
+
+                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
+
+                    serverObserver.Received.Should().NotBeNull();
+                    serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
                 }
             }

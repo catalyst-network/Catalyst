@@ -28,13 +28,13 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using ILogger = Serilog.ILogger;
 using System.Collections.Generic;
+using Catalyst.Common.Config;
 using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Common.Enums.Messages;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.P2P;
 using Dawn;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             Guard.Argument(message).NotNull("Received message cannot be null");
 
-            ReturnResponse(this._peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
+            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
 
             Logger.Debug("received message of type PeerListRequest");
         }
@@ -93,6 +93,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Returns the response.
         /// </summary>
         /// <param name="peers">The peers list</param>
+        /// <param name="message"></param>
         private void ReturnResponse(IEnumerable<PeerId> peers, IChanneledMessage<AnySigned> message)
         {
             var response = new GetPeerListResponse();
@@ -102,7 +103,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 message: response,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
                 sender: _peerIdentifier,
-                messageType: DtoMessageType.Tell,
+                messageType: MessageTypes.Tell,
                 message.Payload.CorrelationId.ToGuid()
             );
 

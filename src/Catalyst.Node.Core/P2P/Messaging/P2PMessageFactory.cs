@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -44,30 +44,26 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <param name="messageType">Type of the message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns></returns>
-        public IByteBufferHolder GetMessageInDatagramEnvelope(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
+        public IByteBufferHolder GetMessageInDatagramEnvelope(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, MessageTypes messageType, Guid correlationId = default)
         {
             return GetMessage(message, recipient, sender, messageType, correlationId).ToDatagram(recipient.IpEndPoint);
         }
 
+        /// <inheritdoc />
         /// <summary>Gets the message.</summary>
         /// <param name="message">The message.</param>
         /// <param name="recipient">The recipient.</param>
         /// <param name="sender">The sender.</param>
         /// <param name="messageType">Type of the message.</param>
+        /// <param name="correlationId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException">unknown message type</exception>
-        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, DtoMessageType messageType, Guid correlationId = default)
+        /// <exception cref="T:System.ArgumentException">unknown message type</exception>
+        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, MessageTypes messageType, Guid correlationId = default)
         {
-            if (messageType == DtoMessageType.Gossip)
-            {
-                return BuildGossipMessage(GetMessageDto(message, recipient, sender));
-            }
-            else
-            {
-                return base.GetMessage(message, recipient, sender, messageType, correlationId);
-            }
+            return messageType == MessageTypes.Gossip ? BuildGossipMessage(GetMessageDto(message, recipient, sender)) : base.GetMessage(message, recipient, sender, messageType, correlationId);
         }
 
+        /// <inheritdoc />
         /// <summary>Gets the message dto.</summary>
         /// <param name="message">The message.</param>
         /// <param name="recipient">The recipient.</param>

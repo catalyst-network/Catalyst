@@ -36,7 +36,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
-    public class PeerIdentifierTests
+    public sealed class PeerIdentifierTests
     {
         private readonly ITestOutputHelper _output;
         private readonly PeerId _validPeerId;
@@ -47,7 +47,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _validPeerId = PeerIdHelper.GetPeerId();
         }
 
-        [Fact] public void Valid_Peer_should_have_fields_with_correct_sizes()
+        [Fact]
+        public void Valid_Peer_should_have_fields_with_correct_sizes()
         {
             _validPeerId.ClientId.ToByteArray().Length.Should().Be(2);
             _validPeerId.ClientVersion.ToByteArray().Length.Should().Be(2);
@@ -124,8 +125,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Theory]
-        [InlineData("Mum")]
-        [InlineData("Daddy")]
         [InlineData("20")]
         [InlineData("I2")]
         [InlineData("M+")]

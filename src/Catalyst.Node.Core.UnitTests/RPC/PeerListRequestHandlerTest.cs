@@ -38,7 +38,7 @@ using SharpRepository.Repository;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
 using System.Collections.Generic;
-using Catalyst.Common.Enums.Messages;
+using Catalyst.Common.Config;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 
@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>
         /// Tests the peer list request and response.
         /// </summary>
-        /// <param name="fakePeeers">The fake peers.</param>
+        /// <param name="fakePeers">The fake peers.</param>
         [Theory]
         [InlineData("FakePeer1", "FakePeer2")]
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
@@ -105,7 +105,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 message: new GetPeerListRequest(),
                 recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 sender: sendPeerIdentifier,
-                messageType: DtoMessageType.Ask
+                messageType: MessageTypes.Ask
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);

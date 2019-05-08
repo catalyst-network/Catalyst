@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
     {
         private const int DelayInMs = 50;
         private const int DelayMultiplier = 4;
-        private readonly IIpfsEngine _ipfsEngine;
+        private readonly ICoreApi _ipfsEngine;
         private readonly ILogger _logger;
         private readonly Cid _expectedCid;
         private readonly IFileSystemNode _addedRecord;
@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
         public IpfsDfsTests()
         {
-            _ipfsEngine = Substitute.For<IIpfsEngine>();
+            _ipfsEngine = Substitute.For<ICoreApi>();
             var fileSystem = Substitute.For<IFileSystemApi>();
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(DelayInMs));
         }
 
-        [Fact(Skip = "async v. mocking")]
+        [Fact]
         public async Task AddTextAsync_should_rely_on_ipfsEngine_and_return_record_id()
         {
             _ipfsEngine.FileSystem.AddTextAsync("good morning", Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             Cid.Decode(record).Should().Be(_expectedCid);
         }
 
-        [Fact(Skip = "async v. mocking")]
+        [Fact]
         public async Task AddAsync_should_rely_on_ipfsEngine_and_return_record_id()
         {
             _ipfsEngine.FileSystem.AddAsync(Stream.Null, Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             Cid.Decode(record).Should().Be(_expectedCid);
         }
 
-        [Fact(Skip = "async v. mocking")]
+        [Fact]
         public async Task ReadAsync_should_rely_on_ipfsEngine_and_return_streamed_content()
         {
             _ipfsEngine.FileSystem
@@ -102,7 +102,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             }
         }
 
-        [Fact(Skip = "async v. mocking")]
+        [Fact]
         public async Task ReadTextAsync_should_rely_on_ipfsEngine_and_return_text_content()
         {
             _ipfsEngine.FileSystem
@@ -114,7 +114,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             text.Should().Be("the other content");
         }
 
-        [Fact(Skip = "async v. mocking")]
+        [Fact]
         public void AddTextAsync_should_be_cancellable()
         {
             _ipfsEngine.FileSystem.AddTextAsync(Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
@@ -126,11 +126,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             new Action(() => dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token)
-                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
-        [Fact(Skip = "async v. mocking")]
+        [Fact]
         public void AddAsync_should_be_cancellable()
         {
             _ipfsEngine.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
@@ -142,11 +142,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             new Action(() => dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token)
-                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
-        [Fact(Skip = "async v. mocking")]
+        [Fact]
         public void ReadTextAsync_should_be_cancellable()
         {
             _ipfsEngine.FileSystem.ReadAllTextAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
@@ -158,11 +158,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             new Action(() => dfs.ReadTextAsync("path", _cancellationTokenSource.Token)
-                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
-        [Fact(Skip = "async v. mocking")]
+        [Fact]
         public void ReadAsync_should_be_cancellable()
         {
             _ipfsEngine.FileSystem.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
@@ -174,13 +174,12 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
             new Action(() => dfs.ReadAsync("path", _cancellationTokenSource.Token)
-                    .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
         public void Dispose()
         {
-            _ipfsEngine?.Dispose();
             _cancellationTokenSource?.Dispose();
         }
     }
