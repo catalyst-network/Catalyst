@@ -32,12 +32,12 @@ namespace Catalyst.Common.FileTransfer
 {
     /// <inheritdoc />
     /// <summary>
-    /// The file transfer class
+    /// The file transfer class handles uploads and downloads
     /// </summary>
     public sealed class FileTransfer : IFileTransfer
     {
         /// <summary>The pending file transfers</summary>
-        private readonly Dictionary<string, IFileTransferInformation> _pendingFileTransfers;
+        private readonly Dictionary<Guid, IFileTransferInformation> _pendingFileTransfers;
 
         /// <summary>The lock object</summary>
         private static readonly object LockObject = new object();
@@ -45,12 +45,12 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
-        public string[] Keys => _pendingFileTransfers.Keys.ToArray();
+        public Guid[] Keys => _pendingFileTransfers.Keys.ToArray();
 
         /// <summary>Initializes a new instance of the <see cref="FileTransfer"/> class.</summary>
         public FileTransfer()
         {
-            _pendingFileTransfers = new Dictionary<string, IFileTransferInformation>();
+            _pendingFileTransfers = new Dictionary<Guid, IFileTransferInformation>();
         }
 
         /// <inheritdoc />
@@ -59,7 +59,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns>Response code</returns>
         public FileTransferResponseCodes InitializeTransfer(IFileTransferInformation fileTransferInformation)
         {
-            var fileHash = fileTransferInformation.UniqueFileName;
+            var fileHash = fileTransferInformation.CorrelationGuid;
 
             lock (LockObject)
             {
@@ -77,11 +77,16 @@ namespace Catalyst.Common.FileTransfer
                 {
                     if (fileTransferInformation.IsComplete())
                     {
+                        if (!fileTransferInformation.IsDownload)
+                        {
+                            Remove(fileTransferInformation.CorrelationGuid);
+                        }
+
                         tokenSource.Cancel();
                     }
                     else if (fileTransferInformation.IsExpired())
                     {
-                        Remove(fileTransferInformation.UniqueFileName);
+                        Remove(fileTransferInformation.CorrelationGuid);
                         fileTransferInformation.ExecuteOnExpired();
                         fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
@@ -98,7 +103,7 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="chunkId">The chunk identifier.</param>
         /// <param name="fileChunk">The file chunk.</param>
         /// <returns>Response code</returns>
-        public FileTransferResponseCodes WriteChunk(string fileName, uint chunkId, byte[] fileChunk)
+        public FileTransferResponseCodes WriteChunk(Guid fileName, uint chunkId, byte[] fileChunk)
         {
             var fileTransferInformation = GetFileTransferInformation(fileName);
             if (fileTransferInformation == null)
@@ -106,8 +111,7 @@ namespace Catalyst.Common.FileTransfer
                 return FileTransferResponseCodes.Expired;
             }
 
-            // Chunks should be sequential
-            if (fileTransferInformation.CurrentChunk != chunkId - 1 || fileChunk.Length > Constants.FileTransferChunkSize)
+            if (fileChunk.Length > Constants.FileTransferChunkSize)
             {
                 return FileTransferResponseCodes.Error;
             }
@@ -116,7 +120,10 @@ namespace Catalyst.Common.FileTransfer
 
             if (fileTransferInformation.IsComplete())
             {
-                Remove(fileTransferInformation.UniqueFileName);
+                Remove(fileTransferInformation.CorrelationGuid);
+                fileTransferInformation.Dispose();
+                fileTransferInformation.ExecuteOnSuccess();
+                fileTransferInformation.Delete();
             }
 
             return FileTransferResponseCodes.Successful;
@@ -126,17 +133,17 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Gets the file transfer information.</summary>
         /// <param name="key">The unique file name.</param>
         /// <returns>File transfer information</returns>
-        public IFileTransferInformation GetFileTransferInformation(string key)
+        public IFileTransferInformation GetFileTransferInformation(Guid key)
         {
             lock (LockObject)
             {
                 return !_pendingFileTransfers.ContainsKey(key) ? null : _pendingFileTransfers[key];
             }
         }
-
+        
         /// <summary>Removes the specified key.</summary>
         /// <param name="key">The key.</param>
-        private void Remove(string key)
+        private void Remove(Guid key)
         {
             lock (LockObject)
             {

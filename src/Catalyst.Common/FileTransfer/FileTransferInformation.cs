@@ -22,49 +22,54 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Shell;
+using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 
 namespace Catalyst.Common.FileTransfer
 {
     public sealed class FileTransferInformation : IDisposable, IFileTransferInformation
     {
         /// <inheritdoc />
-        /// <summary>Gets the maximum chunk.</summary>
-        /// <value>The maximum chunk.</value>
-        public uint MaxChunk { get; }
-
-        /// <inheritdoc />
         /// <summary>Gets the temporary path.</summary>
         /// <value>The temporary path.</value>
         public string TempPath { get; }
 
         /// <inheritdoc />
-        /// <summary>Gets or sets the current chunk.</summary>
-        /// <value>The current chunk.</value>
-        public uint CurrentChunk { get; set; }
-
-        /// <inheritdoc />
         /// <summary>Gets or sets the DFS hash.</summary>
         /// <value>The DFS hash.</value>
         public string DfsHash { get; set; }
-        
+
         /// <inheritdoc />
         /// <summary>Gets or sets the name of the unique file.</summary>
         /// <value>The name of the unique file.</value>
-        public string UniqueFileName { get; set; }
+        public Guid CorrelationGuid { get; set; }
 
         /// <summary>Gets or sets the random access stream.</summary>
         /// <value>The random access stream.</value>
-        private BinaryWriter RandomAccessStream { get; set; }
-        
+        private Stream RandomAccessStream { get; set; }
+
         /// <inheritdoc />
-        /// <summary>Gets or sets the name of the file.</summary>
-        /// <value>The name of the file.</value>
-        public string FileName { get; set; }
+        /// <summary>Gets or sets the file output path.</summary>
+        /// <value>The file output path.</value>
+        public string FileOutputPath { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>Gets the maximum chunk.</summary>
+        /// <value>The maximum chunk.</value>
+        public uint MaxChunk { get; set; }
 
         /// <inheritdoc />
         /// <summary>Gets or sets the recipient channel.</summary>
@@ -75,9 +80,20 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Gets or sets the recipient identifier.</summary>
         /// <value>The recipient identifier.</value>
         public IPeerIdentifier RecipientIdentifier { get; set; }
-        
+
+        /// <summary>Gets or sets the peer identifier.</summary>
+        /// <value>The peer identifier.</value>
+        public IPeerIdentifier PeerIdentifier { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether this instance is download.</summary>
+        /// <value><c>true</c> if this instance is download; otherwise, <c>false</c>.</value>
+        public bool IsDownload { get; set; }
+
         /// <summary>The time since last chunk</summary>
         private DateTime _timeSinceLastChunk;
+
+        /// <summary>The chunk indicators</summary>
+        private bool[] _chunkIndicators;
 
         /// <summary>Occurs when [on expired].</summary>
         private event Action<IFileTransferInformation> OnExpired;
@@ -85,21 +101,75 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Occurs when [on success].</summary>
         private event Action<IFileTransferInformation> OnSuccess;
 
+        /// <summary>The user output</summary>
+        private IUserOutput _userOutput;
+
+        /// <summary>The upload message factory</summary>
+        private MessageFactoryBase<TransferFileBytesRequest> _uploadMessageFactory;
+
+        /// <summary>The upload retry count</summary>
+        private int _uploadRetryCount;
+
         /// <summary>Initializes a new instance of the <see cref="FileTransferInformation"/> class.</summary>
-        /// <param name="recipientIdentifier"></param>
+        /// <param name="peerIdentifier">The peer identifier</param>
+        /// <param name="recipientIdentifier">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
-        /// <param name="uniqueFileName">Temporary unique file name.</param>
+        /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="fileName">Name of the file.</param>
-        /// <param name="maxChunk">The maximum chunk.</param>
-        public FileTransferInformation(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, string uniqueFileName, string fileName, uint maxChunk)
+        /// <param name="fileSize">Size of the file.</param>
+        /// <param name="isDownload">if set to <c>true</c> [is download].</param>
+        FileTransferInformation(IPeerIdentifier peerIdentifier, IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Guid correlationGuid, string fileName, ulong fileSize, bool isDownload)
         {
-            TempPath = Path.GetTempPath() + uniqueFileName + ".tmp";
-            MaxChunk = maxChunk;
-            CurrentChunk = 0;
+            TempPath = Path.GetTempPath() + correlationGuid + ".tmp";
+            MaxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileSize / Constants.FileTransferChunkSize));
             RecipientChannel = recipientChannel;
             RecipientIdentifier = recipientIdentifier;
-            UniqueFileName = uniqueFileName;
-            FileName = fileName;
+            PeerIdentifier = peerIdentifier;
+            CorrelationGuid = correlationGuid;
+            FileOutputPath = fileName;
+            IsDownload = isDownload;
+            _chunkIndicators = new bool[MaxChunk];
+            _userOutput = new ConsoleUserOutput();
+        }
+
+        /// <summary>Builds the download.</summary>
+        /// <param name="peerIdentifier">The peer identifier</param>
+        /// <param name="recipientIdentifier">The recipient identifier.</param>
+        /// <param name="recipientChannel">The recipient channel.</param>
+        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="fileOutputPath">Name of the file.</param>
+        /// <param name="fileSize">Size of the file.</param>
+        /// <returns></returns>
+        public static FileTransferInformation BuildDownload(IPeerIdentifier peerIdentifier, IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Guid correlationGuid, string fileOutputPath, ulong fileSize)
+        {
+            FileTransferInformation info = new FileTransferInformation(peerIdentifier, recipientIdentifier, recipientChannel,
+                correlationGuid, fileOutputPath, fileSize, true);
+            info.RandomAccessStream = File.Open(info.TempPath, FileMode.CreateNew);
+            info.RandomAccessStream.SetLength((long) fileSize);
+            return info;
+        }
+
+        /// <summary>Builds the upload.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="peerIdentifier">The peer identifier</param>
+        /// <param name="recipientIdentifier">The recipient identifier.</param>
+        /// <param name="recipientChannel">The recipient channel.</param>
+        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="uploadMessageFactory">The upload message factory</param>
+        /// <returns></returns>
+        public static FileTransferInformation BuildUpload(Stream stream,
+            IPeerIdentifier peerIdentifier,
+            IPeerIdentifier recipientIdentifier,
+            IChannel recipientChannel,
+            Guid correlationGuid,
+            MessageFactoryBase<TransferFileBytesRequest> uploadMessageFactory)
+        {
+            FileTransferInformation info = new FileTransferInformation(peerIdentifier, recipientIdentifier, recipientChannel,
+                correlationGuid, string.Empty, (ulong) stream.Length, false);
+            info.RandomAccessStream = stream;
+            info._uploadMessageFactory = uploadMessageFactory;
+            info._uploadRetryCount = 0;
+            return info;
         }
 
         /// <inheritdoc />
@@ -108,17 +178,71 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="fileBytes">The file bytes.</param>
         public void WriteToStream(uint chunk, byte[] fileBytes)
         {
-            RandomAccessStream.Seek(0, SeekOrigin.End);
-            RandomAccessStream.Write(fileBytes);
-            CurrentChunk = chunk;
-            _timeSinceLastChunk = DateTime.Now;
+            lock (this)
+            {
+                var idx = chunk - 1;
+                RandomAccessStream.Seek(idx * Constants.FileTransferChunkSize, SeekOrigin.Begin);
+                RandomAccessStream.Write(fileBytes);
+                _chunkIndicators[idx] = true;
+                _timeSinceLastChunk = DateTime.Now;
+            }
+        }
+
+        public void SetLength(ulong fileSize)
+        {
+            if (IsDownload)
+            {
+                MaxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileSize / Constants.FileTransferChunkSize));
+                RandomAccessStream.SetLength((long) fileSize);
+                _chunkIndicators = new bool[MaxChunk];
+            }
+            else
+            {
+                throw new NotSupportedException("Cannot set length for upload type file transfer");
+            }
+        }
+
+        public async Task Upload()
+        {
+            for (uint i = 0; i < MaxChunk; i++)
+            {
+                var transferMessage = GetUploadMessage(i);
+
+                var requestMessage = _uploadMessageFactory.GetMessage(
+                    message: transferMessage,
+                    recipient: RecipientIdentifier,
+                    sender: PeerIdentifier,
+                    messageType: MessageTypes.Ask
+                );
+                try
+                {
+                    await RecipientChannel.WriteAndFlushAsync(requestMessage);
+                    _chunkIndicators[i] = true;
+                    _timeSinceLastChunk = DateTime.Now;
+                }
+                catch (Exception e)
+                {
+                    bool retrySuccess = RetryUpload(ref i);
+                    if (!retrySuccess)
+                    {
+                        _userOutput.WriteLine("File upload failed. Exception: " + e);
+                        break;
+                    }
+                }
+            }
+
+            if (IsComplete())
+            {
+                this.Dispose();
+                this.ExecuteOnSuccess();
+                this.Delete();
+            }
         }
 
         /// <inheritdoc />
         /// <summary>Initializes this instance.</summary>
         public void Init()
         {
-            RandomAccessStream = new BinaryWriter(File.Open(TempPath, FileMode.CreateNew));
             _timeSinceLastChunk = DateTime.Now;
         }
 
@@ -135,7 +259,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns><c>true</c> if this instance is complete; otherwise, <c>false</c>.</returns>
         public bool IsComplete()
         {
-            return CurrentChunk == MaxChunk;
+            return _chunkIndicators.All(indicator => indicator);
         }
 
         /// <inheritdoc />
@@ -150,7 +274,14 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Deletes the file.</summary>
         public void Delete()
         {
-            File.Delete(TempPath);
+            try
+            {
+                File.Delete(TempPath);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         /// <inheritdoc cref="IDisposable" />
@@ -207,6 +338,79 @@ namespace Catalyst.Common.FileTransfer
         public void AddSuccessCallback(Action<IFileTransferInformation> callback)
         {
             OnSuccess += callback;
+        }
+
+        /// <summary>Gets the upload message.</summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
+        public TransferFileBytesRequest GetUploadMessage(uint index)
+        {
+            var chunkId = index + 1;
+            var startPos = index * Constants.FileTransferChunkSize;
+            var endPos = chunkId * Constants.FileTransferChunkSize;
+            var fileLen = RandomAccessStream.Length;
+
+            if (endPos > fileLen)
+            {
+                endPos = (uint) fileLen;
+            }
+
+            var bufferSize = (int) (endPos - startPos);
+            var chunk = new byte[bufferSize];
+            RandomAccessStream.Position = startPos;
+
+            var readTries = 0;
+            var bytesRead = 0;
+
+            while ((bytesRead += RandomAccessStream.Read(chunk, 0, bufferSize - bytesRead)) < bufferSize)
+            {
+                readTries++;
+                if (readTries >= Constants.FileTransferMaxChunkReadTries)
+                {
+                    break;
+                }
+            }
+
+            var readSuccess = bytesRead == bufferSize;
+            TransferFileBytesRequest transferMessage = null;
+
+            if (readSuccess)
+            {
+                transferMessage = new TransferFileBytesRequest
+                {
+                    ChunkBytes = ByteString.CopyFrom(chunk),
+                    ChunkId = chunkId,
+                    CorrelationFileName = CorrelationGuid.ToByteString()
+                };
+            }
+            else
+            {
+                _userOutput.WriteLine("Error transferring chunk: " + chunkId);
+            }
+
+            return transferMessage;
+        }
+
+        /// <summary>Retries the specified index.</summary>
+        /// <param name="index">The index.</param>
+        /// <returns>True if retry success, false if retry failure</returns>
+        private bool RetryUpload(ref uint index)
+        {
+            if (_uploadRetryCount >= Constants.FileTransferMaxChunkRetryCount)
+            {
+                return false;
+            }
+
+            _userOutput.Write($"Retrying Chunk: {index}, Retry Count: {_uploadRetryCount}");
+            _uploadRetryCount += 1;
+            index--;
+            return true;
+        }
+
+        public int GetPercentage()
+        {
+            int sentCount = _chunkIndicators.Count(x => x);
+            return (int) Math.Ceiling((double) sentCount / _chunkIndicators.Length * 100D);
         }
     }
 }

@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
@@ -46,7 +47,7 @@ namespace Catalyst.Cli.Handlers
             IRpcResponseHandler
     {
         /// <summary>The CLI file transfer</summary>
-        private readonly IRpcFileTransfer _rpcFileTransfer;
+        private readonly IFileTransfer _rpcFileTransfer;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
@@ -54,7 +55,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="rpcFileTransfer">The CLI file transfer</param>
         public TransferFileBytesResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            IRpcFileTransfer rpcFileTransfer) : base(correlationCache, logger)
+            IFileTransfer rpcFileTransfer) : base(correlationCache, logger)
         {
             _rpcFileTransfer = rpcFileTransfer;
         }
@@ -64,11 +65,10 @@ namespace Catalyst.Cli.Handlers
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesResponse>();
+            var responseCode = Enumeration.GetAll<FileTransferResponseCodes>().First(respCode => respCode.Id == deserialised.ResponseCode[0]);
 
-            //@TODO check
-            var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
-
-            _rpcFileTransfer.FileTransferCallback(responseCode);
+            //TODO: Some sort of callback on which chunk failed?
+            //_rpcFileTransfer.FileTransferCallback(responseCode);
         }
     }
 }

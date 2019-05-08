@@ -26,12 +26,14 @@ using System.IO;
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Serilog.Events;
 
 namespace Catalyst.Cli.Commands
 {
@@ -41,7 +43,7 @@ namespace Catalyst.Cli.Commands
         public bool DfsAddFile(IAddFileOnDfsOptions opts)
         {
             Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IAddFileOnDfsOptions>();
-            
+
             INodeRpcClient node;
             try
             {
@@ -52,7 +54,7 @@ namespace Catalyst.Cli.Commands
                 _logger.Error(e.Message);
                 return false;
             }
-            
+
             var nodeConfig = GetNodeConfig(opts.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
@@ -82,26 +84,31 @@ namespace Catalyst.Cli.Commands
                 messageType: MessageTypes.Ask
             );
 
+            var fileTransfer = FileTransferInformation.BuildUpload(
+                File.Open(opts.File, FileMode.Open),
+                _peerIdentifier,
+                nodePeerIdentifier,
+                node.Channel,
+                requestMessage.CorrelationId.ToGuid(),
+                new RpcMessageFactory<TransferFileBytesRequest>());
+
+            _rpcFileTransfer.InitializeTransfer(fileTransfer);
+
             node.SendMessage(requestMessage);
 
-            var responseReceived = _rpcFileTransfer.Wait();
-
-            if (!responseReceived)
-            {
-                _userOutput.WriteLine("Timeout - No response received from node");
-                return false;
-            }
-
-            if (!_rpcFileTransfer.InitialiseSuccess())
-            {
-                return false;
-            }
+            var originalLogLevel = Program.LogLevelSwitch.MinimumLevel;
             
-            _rpcFileTransfer.TransferFile(opts.File, requestMessage.CorrelationId.ToGuid(), node,
-                nodePeerIdentifier, _peerIdentifier);
+            Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
 
-            _rpcFileTransfer.WaitForDfsHash();
+            while (!fileTransfer.IsComplete() && !fileTransfer.IsExpired())
+            {
+                _userOutput.Write("\rUploaded: " + fileTransfer.GetPercentage() + "%");
+                System.Threading.Thread.Sleep(500);
+            }
 
+            _userOutput.Write("\rUploaded: " + fileTransfer.GetPercentage() + "%\n");
+
+            Program.LogLevelSwitch.MinimumLevel = originalLogLevel;
             return true;
         }
     }

@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -55,7 +56,15 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             if (nextHandler)
             {
                 Logger.Debug("handle message in correlatable handler");
-                Handler(message);
+                try
+                {
+                    Handler(message);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e.ToString());
+                    message.Context.Channel.CloseAsync();
+                }
             }
         }
     }

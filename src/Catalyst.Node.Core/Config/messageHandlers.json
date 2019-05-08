@@ -59,6 +59,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.RPC.Handlers.GetFileFromDfsRequestHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler",
             "services": [
                 {

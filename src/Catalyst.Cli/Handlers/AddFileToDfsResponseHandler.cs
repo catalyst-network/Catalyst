@@ -21,9 +21,12 @@
 
 #endregion
 
+using System;
+using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -45,7 +48,9 @@ namespace Catalyst.Cli.Handlers
         IRpcResponseHandler
     {
         /// <summary>The cli file transfer</summary>
-        private readonly IRpcFileTransfer _rpcFileTransfer;
+        private readonly IFileTransfer _rpcFileTransfer;
+
+        private readonly IUserOutput _userOutput;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
@@ -53,8 +58,10 @@ namespace Catalyst.Cli.Handlers
         /// <param name="rpcFileTransfer">The CLI file transfer</param>
         public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            IRpcFileTransfer rpcFileTransfer) : base(correlationCache, logger)
+            IFileTransfer rpcFileTransfer, 
+            IUserOutput userOutput) : base(correlationCache, logger)
         {
+            _userOutput = userOutput;
             _rpcFileTransfer = rpcFileTransfer;
         }
 
@@ -66,13 +73,19 @@ namespace Catalyst.Cli.Handlers
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-            //@TODO check
-            var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
+            var responseCode = Enumeration.GetAll<FileTransferResponseCodes>().First(respCode => respCode.Id == deserialised.ResponseCode[0]);
 
             if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
-                _rpcFileTransfer.ProcessCompletedCallback(responseCode, deserialised.DfsHash);
+            {
+                _userOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + deserialised.DfsHash);
+            }
             else
-                _rpcFileTransfer.InitialiseFileTransferResponseCallback(responseCode);
+            {
+                if (responseCode == FileTransferResponseCodes.Successful)
+                {
+                    _rpcFileTransfer.GetFileTransferInformation(message.Payload.CorrelationId.ToGuid()).Upload().ConfigureAwait(false);
+                }
+            }
         }
     }
 }

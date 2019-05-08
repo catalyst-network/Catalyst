@@ -36,12 +36,13 @@ using Google.Protobuf;
 using Serilog;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.P2P;
+using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Core.RPC.Handlers
+namespace Catalyst.Cli.Handlers
 {
     public sealed class TransferFileBytesRequestHandler
         : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
-            IRpcRequestHandler
+            IRpcResponseHandler
     {
         /// <summary>The file transfer</summary>
         private readonly IFileTransfer _fileTransfer;
@@ -58,14 +59,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestHandler(IFileTransfer fileTransfer,
-            IPeerIdentifier peerIdentifier,
+            IConfigurationRoot config,
             IMessageCorrelationCache correlationCache,
             ILogger logger)
             : base(correlationCache, logger)
         {
             _fileTransfer = fileTransfer;
             _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
-            _peerIdentifier = peerIdentifier;
+            _peerIdentifier = Commands.Commands.BuildCliPeerId(config);
         }
 
         /// <summary>Handles the specified message.</summary>

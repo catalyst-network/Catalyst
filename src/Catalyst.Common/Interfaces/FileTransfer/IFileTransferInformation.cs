@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
 using DotNetty.Transport.Channels;
 
@@ -37,6 +38,11 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <param name="fileBytes">The file bytes.</param>
         void WriteToStream(uint chunk, byte[] fileBytes);
 
+        Task Upload();
+
+        /// <summary>Gets the percentage.</summary>
+        int GetPercentage();
+        
         /// <summary>Initializes this instance.</summary>
         void Init();
 
@@ -62,10 +68,6 @@ namespace Catalyst.Common.Interfaces.FileTransfer
 
         /// <summary>Executes the on success.</summary>
         void ExecuteOnSuccess();
-        
-        /// <summary>Gets or sets the current chunk.</summary>
-        /// <value>The current chunk.</value>
-        uint CurrentChunk { get; set; }
 
         /// <summary>Gets or sets the DFS hash.</summary>
         /// <value>The DFS hash.</value>
@@ -77,15 +79,15 @@ namespace Catalyst.Common.Interfaces.FileTransfer
 
         /// <summary>Gets or sets the name of the unique file.</summary>
         /// <value>The name of the unique file.</value>
-        string UniqueFileName { get; set; }
+        Guid CorrelationGuid { get; set; }
 
         /// <summary>Gets the temporary path.</summary>
         /// <value>The temporary path.</value>
         string TempPath { get; }
 
-        /// <summary>Gets or sets the name of the file.</summary>
-        /// <value>The name of the file.</value>
-        string FileName { get; set; }
+        /// <summary>Gets or sets the file output path.</summary>
+        /// <value>The file output path.</value>
+        string FileOutputPath { get; set; }
 
         /// <summary>Gets or sets the recipient channel.</summary>
         /// <value>The recipient channel.</value>
@@ -94,11 +96,23 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Gets or sets the recipient identifier.</summary>
         /// <value>The recipient identifier.</value>
         IPeerIdentifier RecipientIdentifier { get; set; }
+        
+        /// <summary>Gets or sets the peer identifier.</summary>
+        /// <value>The peer identifier.</value>
+        IPeerIdentifier PeerIdentifier { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether this instance is download.</summary>
+        /// <value><c>true</c> if this instance is download; otherwise, <c>false</c>.</value>
+        bool IsDownload { get; set; }
 
         /// <summary>Occurs when [on expired].</summary>
         void AddExpiredCallback(Action<IFileTransferInformation> callback);
 
         /// <summary>Occurs when [on success].</summary>
         void AddSuccessCallback(Action<IFileTransferInformation> callback);
+       
+        /// <summary>Sets file the length.</summary>
+        /// <param name="fileSize">Size of the file.</param>
+        void SetLength(ulong fileSize);
     }
 }

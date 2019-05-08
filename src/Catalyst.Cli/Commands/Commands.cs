@@ -23,10 +23,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Catalyst.Cli.Options;
 using Catalyst.Cli.Rpc;
+using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
@@ -37,10 +42,13 @@ using Catalyst.Common.IO;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Shell;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Protocol.Rpc.Node;
 using CommandLine;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
+using Serilog.Events;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Commands
@@ -53,7 +61,7 @@ namespace Catalyst.Cli.Commands
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
-        private readonly IRpcFileTransfer _rpcFileTransfer;
+        private readonly IFileTransfer _rpcFileTransfer;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
 
@@ -63,7 +71,7 @@ namespace Catalyst.Cli.Commands
             IConfigurationRoot config,
             ILogger logger,
             ICertificateStore certificateStore,
-            IRpcFileTransfer rpcFileTransfer,
+            IFileTransfer rpcFileTransfer,
             IUserOutput userOutput)
         {
             _certificateStore = certificateStore;
@@ -74,7 +82,7 @@ namespace Catalyst.Cli.Commands
             _rpcFileTransfer = rpcFileTransfer;
             _peerIdentifier = BuildCliPeerId(config);
             _userOutput = userOutput;
-            
+
             _userOutput.WriteLine(@"Koopa Shell Start");
         }
 
@@ -94,7 +102,8 @@ namespace Catalyst.Cli.Commands
                     PeerCountOptions,
                     RemovePeerOptions,
                     PeerReputationOptions,
-                    AddFileOnDfsOptions>(args)
+                    AddFileOnDfsOptions,
+                    GetFileOptions>(args)
                .MapResult(
                     (GetInfoOptions opts) => GetInfoCommand(opts),
                     (GetVersionOptions opts) => GetVersionCommand(opts),
@@ -108,10 +117,74 @@ namespace Catalyst.Cli.Commands
                     (AddFileOnDfsOptions opts) => DfsAddFile(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (ConnectOptions opts) => DisconnectNode(opts.NodeId),
+                    (GetFileOptions opts) => OnGetFileOptions(opts),
                     errs => false);
         }
-        
-        private static IPeerIdentifier BuildCliPeerId(IConfiguration configuration)
+
+        private bool OnGetFileOptions(GetFileOptions opts)
+        {
+            INodeRpcClient node;
+            try
+            {
+                node = GetConnectedNode(opts.Node);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                return false;
+            }
+
+            var nodeConfig = GetNodeConfig(opts.Node);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
+
+            var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
+                nodeConfig.HostAddress, nodeConfig.Port);
+
+            var message = new GetFileFromDfsRequest()
+            {
+                DfsHash = opts.FileHash
+            };
+
+            var messageDto = new RpcMessageFactory<GetFileFromDfsRequest>().GetMessage(message, nodePeerIdentifier,
+                _peerIdentifier, MessageTypes.Ask);
+
+            var fileTransfer = FileTransferInformation.BuildDownload(
+                _peerIdentifier,
+                new PeerIdentifier(messageDto.PeerId),
+                node.Channel,
+                messageDto.CorrelationId.ToGuid(),
+                opts.FileOutput,
+                0
+            );
+
+            fileTransfer.AddSuccessCallback(OnSuccess);
+            _rpcFileTransfer.InitializeTransfer(fileTransfer);
+
+            node.SendMessage(messageDto);
+
+            var originalLogLevel = Program.LogLevelSwitch.MinimumLevel;
+
+            Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
+
+            while (!fileTransfer.IsComplete() && !fileTransfer.IsExpired())
+            {
+                _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%");
+                System.Threading.Thread.Sleep(500);
+            }
+
+            _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%\n");
+
+            Program.LogLevelSwitch.MinimumLevel = originalLogLevel;
+
+            return true;
+        }
+
+        private void OnSuccess(IFileTransferInformation obj)
+        {
+            File.Move(obj.TempPath, obj.FileOutputPath);
+        }
+
+        public static IPeerIdentifier BuildCliPeerId(IConfiguration configuration)
         {
             //TODO: Handle different scenarios to get the IPAddress and Port depending
             //on you whether you are connecting to a local node, or a remote one.
@@ -156,7 +229,7 @@ namespace Catalyst.Cli.Commands
 
             return true;
         }
-        
+
         /// <inheritdoc cref="DisconnectNode" />
         private bool DisconnectNode(string nodeId)
         {
@@ -174,7 +247,7 @@ namespace Catalyst.Cli.Commands
 
             return true;
         }
-        
+
         /// <inheritdoc cref="GetConnectedNode" />
         public INodeRpcClient GetConnectedNode(string nodeId)
         {
@@ -184,18 +257,18 @@ namespace Catalyst.Cli.Commands
 
             var registryId = _socketClientRegistry.GenerateClientHashCode(
                 EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
-            
+
             var nodeRpcClient = _socketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(nodeRpcClient).Require(IsSocketChannelActive(nodeRpcClient));
-            
+
             return nodeRpcClient;
         }
-        
+
         /// <inheritdoc cref="GetNodeConfig" />
         private IRpcNodeConfig GetNodeConfig(string nodeId)
         {
             Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty().Compatible<string>();
-            
+
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(config => config.NodeId.Equals(nodeId));
 
             if (nodeConfig == null)
@@ -203,10 +276,10 @@ namespace Catalyst.Cli.Commands
                 _userOutput.WriteLine("Node not configured. Add node to config file and try again.");
                 return null;
             }
-            
-            return nodeConfig;            
+
+            return nodeConfig;
         }
-        
+
         /// <summary>
         /// Checks if the socket channel opened with the RPC server in the node is still active.
         /// </summary>

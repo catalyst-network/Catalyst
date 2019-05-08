@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
@@ -37,19 +39,19 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         FileTransferResponseCodes InitializeTransfer(IFileTransferInformation fileTransferInformation);
 
         /// <summary>Writes the chunk.</summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <param name="fileChunk">The file chunk.</param>
-        /// <returns>Writing chunk response code</returns>
-        FileTransferResponseCodes WriteChunk(string fileName, uint chunkId, byte[] fileChunk);
-
+        /// <returns></returns>
+        FileTransferResponseCodes WriteChunk(Guid correlationGuid, uint chunkId, byte[] fileChunk);
+        
         /// <summary>Gets the file transfer information.</summary>
-        /// <param name="key">The unique file name.</param>
-        /// <returns>File transfer information</returns>
-        IFileTransferInformation GetFileTransferInformation(string key);
+        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <returns></returns>
+        IFileTransferInformation GetFileTransferInformation(Guid correlationGuid);
 
         /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
-        string[] Keys { get; }
+        Guid[] Keys { get; }
     }
 }

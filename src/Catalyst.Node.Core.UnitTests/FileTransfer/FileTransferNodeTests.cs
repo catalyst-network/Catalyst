@@ -39,6 +39,7 @@ using System.Threading;
 using System.IO;
 using Catalyst.Cli.Rpc;
 using Catalyst.Common.Config;
+using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.FileTransfer;
@@ -49,6 +50,7 @@ using Catalyst.Protocol.Common;
 using ICSharpCode.SharpZipLib.Checksum;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Node.Core.Modules.Ipfs;
+using Catalyst.Node.Core.Rpc.Messaging;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer
 {
@@ -56,7 +58,8 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IFileTransfer _fileTransfer;
+        private readonly IFileTransfer _nodeFileTransfer;
+        private readonly IFileTransfer _rpcFileTransfer;
         private readonly IpfsAdapter _ipfsEngine;
 
         public FileTransferNodeTests()
@@ -70,7 +73,8 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _fileTransfer = new Common.FileTransfer.FileTransfer();
+            _nodeFileTransfer = new Common.FileTransfer.FileTransfer();
+            _rpcFileTransfer = new Common.FileTransfer.FileTransfer();
 
             var passwordReader = Substitute.For<IPasswordReader>();
             passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
@@ -99,10 +103,10 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var cache = Substitute.For<IMessageCorrelationCache>();
             var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
-                _fileTransfer, cache, _logger);
+                _nodeFileTransfer, cache, _logger);
             handler.StartObserving(messageStream);
 
-            Assert.Equal(1, _fileTransfer.Keys.Length);
+            Assert.Equal(1, _nodeFileTransfer.Keys.Length);
         }
 
         [Fact]
@@ -122,15 +126,15 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var cache = Substitute.For<IMessageCorrelationCache>();
             var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
-                _fileTransfer, cache, _logger);
+                _nodeFileTransfer, cache, _logger);
             handler.StartObserving(messageStream);
 
-            Assert.Equal(1, _fileTransfer.Keys.Length);
+            Assert.Equal(1, _nodeFileTransfer.Keys.Length);
 
-            var uniqueFileKey = _fileTransfer.Keys.ToList().Single();
+            var uniqueFileKey = _nodeFileTransfer.Keys.ToList().Single();
 
-            var fileTransferInformation = _fileTransfer.GetFileTransferInformation(uniqueFileKey);
-            _fileTransfer.GetFileTransferInformation(uniqueFileKey)
+            var fileTransferInformation = _nodeFileTransfer.GetFileTransferInformation(uniqueFileKey);
+            _nodeFileTransfer.GetFileTransferInformation(uniqueFileKey)
                .AddExpiredCallback(delegate { expiredDelegateHit = true; });
 
             Thread.Sleep(Constants.FileTransferExpiryMinutes * 60 * 1000 + 1000);
@@ -140,7 +144,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             Assert.Equal(true, fileTransferInformation.IsExpired());
             Assert.Equal(true, fileCleanedUp);
             Assert.Equal(true, expiredDelegateHit);
-            Assert.Equal(0, _fileTransfer.Keys.Length);
+            Assert.Equal(0, _nodeFileTransfer.Keys.Length);
         }
 
         [Theory]
@@ -162,16 +166,17 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
             var senderPeerId = new PeerIdentifier(sender);
-            var cliFileTransfer = new RpcFileTransfer();
+            var recipientPeerId = new PeerIdentifier(recipient);
             var uniqueFileKey = Guid.NewGuid();
+
             string dfsHash = null;
 
-            var b = new byte[byteSize];
-            new Random().NextBytes(b);
+            var fileBytes = new byte[byteSize];
+            new Random().NextBytes(fileBytes);
             var fs = File.Create(fileToTransfer);
-            fs.Write(b);
+            fs.Write(fileBytes);
             fs.Close();
-            crc32.Update(b);
+            crc32.Update(fileBytes);
 
             var crc32OriginalValue = crc32.Value;
             long storedCrc32Value = -1;
@@ -181,7 +186,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             {
                 Node = "node1",
                 FileName = fileToTransfer,
-                FileSize = (ulong) b.Length
+                FileSize = (ulong) fileBytes.Length
             }.ToAnySigned(sender, uniqueFileKey);
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
@@ -189,14 +194,14 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var cache = Substitute.For<IMessageCorrelationCache>();
             var dfs = new IpfsDfs(_ipfsEngine, _logger);
 
-            var handler = new AddFileToDfsRequestHandler(dfs, senderPeerId, _fileTransfer,
+            var handler = new AddFileToDfsRequestHandler(dfs, senderPeerId, _nodeFileTransfer,
                 cache, _logger);
             handler.StartObserving(messageStream);
 
-            Assert.Equal(1, _fileTransfer.Keys.Length);
+            Assert.Equal(1, _nodeFileTransfer.Keys.Length);
 
             var fileTransferInformation =
-                _fileTransfer.GetFileTransferInformation(uniqueFileKey.ToString());
+                _nodeFileTransfer.GetFileTransferInformation(uniqueFileKey);
 
             fileTransferInformation.AddSuccessCallback(information =>
             {
@@ -209,10 +214,12 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var chunkMessages = new List<AnySigned>();
             using (fs = File.Open(fileToTransfer, FileMode.Open))
             {
+                var fileUploadInformation = FileTransferInformation.BuildUpload(fs, senderPeerId, recipientPeerId,
+                    fakeNode.Channel, uniqueFileKey, new RpcMessageFactory<TransferFileBytesRequest>());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
-                    var transferMessage = cliFileTransfer
-                       .GetFileTransferRequestMessage(fs, uniqueFileKey.ToByteString(), b.Length, i)
+                    var transferMessage = fileUploadInformation
+                       .GetUploadMessage(i)
                        .ToAnySigned(recipient, Guid.NewGuid());
                     chunkMessages.Add(transferMessage);
                 }
@@ -222,24 +229,26 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, chunkMessages.ToArray());
             var transferFileBytesHandler =
-                new TransferFileBytesRequestHandler(_fileTransfer, senderPeerId, cache, _logger);
+                new TransferFileBytesRequestHandler(_nodeFileTransfer, senderPeerId, cache, _logger);
             transferFileBytesHandler.StartObserving(messageStream);
 
             Assert.NotNull(dfsHash);
             Assert.Equal(crc32OriginalValue, storedCrc32Value);
             File.Delete(fileToTransfer);
+            Assert.True(fileTransferInformation.IsComplete());
 
             var ipfsStream = dfs.ReadAsync(dfsHash).Result;
-            b = new byte[byteSize];
-            ipfsStream.Read(b, 0, (int) ipfsStream.Length);
+            fileBytes = new byte[byteSize];
+            ipfsStream.Read(fileBytes, 0, (int) ipfsStream.Length);
 
             crc32.Reset();
-            crc32.Update(b);
+            crc32.Update(fileBytes);
             var ipfsCrcValue = crc32.Value;
             Assert.Equal(crc32OriginalValue, ipfsCrcValue);
         }
-
+        
         #region IDisposable Support
+
         void Dispose(bool disposing)
         {
             if (disposing)
@@ -253,7 +262,5 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             Dispose(true);
         }
         #endregion
-
-
     }
 }

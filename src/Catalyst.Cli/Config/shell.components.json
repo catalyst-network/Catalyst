@@ -163,10 +163,26 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Rpc.RpcFileTransfer, Catalyst.Cli",
+            "type": "Catalyst.Cli.Handlers.GetFileFromDfsResponseHandler, Catalyst.Cli",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcFileTransfer, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Handlers.TransferFileBytesRequestHandler, Catalyst.Cli",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.FileTransfer.FileTransfer, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IFileTransfer, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"
