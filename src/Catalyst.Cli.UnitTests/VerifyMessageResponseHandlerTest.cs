@@ -89,7 +89,7 @@ namespace Catalyst.Cli.UnitTests
             var cache = Substitute.For<IMessageCorrelationCache>();
 
             _handler = new VerifyMessageResponseHandler(_output, cache, _logger);
-            _handler.StartObserving(messageStream);
+            _handler.StartObservingMessageStreams(messageStream);
 
             _output.Received(1).WriteLine(isSignedByNode.ToString());
         }

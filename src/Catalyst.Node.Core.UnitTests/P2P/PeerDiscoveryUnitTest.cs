@@ -158,7 +158,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             
                 var observableStream = new[] {channeledAny}.ToObservable();
 
-                peerDiscovery.StartObserving(observableStream);
+                peerDiscovery.StartObservingMessageStreams(observableStream);
 
                 _peerRepository.Received(1)
                    .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));   

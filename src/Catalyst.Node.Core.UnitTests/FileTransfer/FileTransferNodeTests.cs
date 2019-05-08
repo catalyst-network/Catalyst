@@ -102,7 +102,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var cache = Substitute.For<IMessageCorrelationCache>();
             var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _fileTransfer, cache, _logger);
-            handler.StartObserving(messageStream);
+            handler.StartObservingMessageStreams(messageStream);
 
             Assert.Equal(1, _fileTransfer.Keys.Length);
         }
@@ -125,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var cache = Substitute.For<IMessageCorrelationCache>();
             var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _fileTransfer, cache, _logger);
-            handler.StartObserving(messageStream);
+            handler.StartObservingMessageStreams(messageStream);
 
             Assert.Equal(1, _fileTransfer.Keys.Length);
 
@@ -193,7 +193,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             var handler = new AddFileToDfsRequestHandler(dfs, senderPeerId, _fileTransfer,
                 cache, _logger);
-            handler.StartObserving(messageStream);
+            handler.StartObservingMessageStreams(messageStream);
 
             Assert.Equal(1, _fileTransfer.Keys.Length);
 
@@ -225,7 +225,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, chunkMessages.ToArray());
             var transferFileBytesHandler =
                 new TransferFileBytesRequestHandler(_fileTransfer, senderPeerId, cache, _logger);
-            transferFileBytesHandler.StartObserving(messageStream);
+            transferFileBytesHandler.StartObservingMessageStreams(messageStream);
 
             Assert.NotNull(dfsHash);
             Assert.Equal(crc32OriginalValue, storedCrc32Value);

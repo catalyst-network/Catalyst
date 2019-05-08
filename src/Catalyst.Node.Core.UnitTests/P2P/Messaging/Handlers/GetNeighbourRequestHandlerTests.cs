@@ -133,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourRequestMessage.ToAnySigned(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             
-            neighbourRequestHandler.StartObserving(observableStream);
+            neighbourRequestHandler.StartObservingMessageStreams(observableStream);
             
             var peerNeighborsResponseMessage = new PeerNeighborsResponse();
             

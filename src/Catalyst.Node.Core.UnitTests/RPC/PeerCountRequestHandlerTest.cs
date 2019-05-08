@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
             var handler = new PeerCountRequestHandler(sendPeerIdentifier, subbedCache, peerDiscovery, _logger);
-            handler.StartObserving(messageStream);
+            handler.StartObservingMessageStreams(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);

@@ -34,7 +34,7 @@ namespace Catalyst.Common.Util
         public static readonly AnySigned AnySigned = new AnySigned();
         public static readonly ChanneledAnySigned ChanneledAnySigned = new ChanneledAnySigned(null, new AnySigned());
         
-        public static readonly KeyValuePair<ByteString, IPeerIdentifier> EvictedMessage =
-            new KeyValuePair<ByteString, IPeerIdentifier>();
+        public static readonly KeyValuePair<IPeerIdentifier, ByteString> EvictedMessage =
+            new KeyValuePair<IPeerIdentifier, ByteString>();
     }
 }

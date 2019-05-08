@@ -126,7 +126,7 @@ namespace Catalyst.Cli.UnitTests
             var messageStream = CreateStreamWithMessage(response);
 
             _handler = new GetMempoolResponseHandler(_output, correlationCache, _logger);
-            _handler.StartObserving(messageStream);
+            _handler.StartObservingMessageStreams(messageStream);
             
             _output.Received(txList.Count).WriteLine(Arg.Any<string>());
         }

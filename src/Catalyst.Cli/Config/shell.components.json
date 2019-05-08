@@ -39,7 +39,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Cli.Commands.Commands",

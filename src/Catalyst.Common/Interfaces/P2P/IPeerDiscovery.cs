@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
@@ -51,7 +52,7 @@ namespace Catalyst.Common.Interfaces.P2P
         ///     A thread safe dict of current peers neighbours, key is a hashcode int of the IPeerIdentifier,
         ///     with the value a single key => value struct of the IPeerIdentifier and a bool to indicate if it's been pinged
         /// </summary>
-        ConcurrentDictionary<int, KeyValuePair<IPeerIdentifier, bool>> CurrentPeerNeighbours { get; }
+        ConcurrentDictionary<int, KeyValuePair<IPeerIdentifier, ByteString>> CurrentPeerNeighbours { get; }
         
         /// <summary>
         ///     The previous degree of walk we was at
@@ -62,7 +63,7 @@ namespace Catalyst.Common.Interfaces.P2P
         ///     A thread safe dict of previous peers neighbours, key is a hashcode int of the IPeerIdentifier,
         ///     with the value a single key => value struct of the IPeerIdentifier and a bool to indicate if it's been pinged
         /// </summary>
-        ConcurrentDictionary<int, KeyValuePair<IPeerIdentifier, bool>> PreviousPeerNeighbours { get; }
+        ConcurrentDictionary<int, KeyValuePair<IPeerIdentifier, ByteString>> PreviousPeerNeighbours { get; }
         
         /// <summary>
         ///     Method called to handle the GetNeighbourResponseStream

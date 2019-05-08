@@ -115,7 +115,7 @@ namespace Catalyst.Cli.UnitTests
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
             
             _handler = new SignMessageResponseHandler(_output, correlationCache, _logger);
-            _handler.StartObserving(messageStream);
+            _handler.StartObservingMessageStreams(messageStream);
             
             _output.Received(1).WriteLine(Arg.Any<string>());
         }

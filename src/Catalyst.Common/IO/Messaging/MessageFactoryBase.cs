@@ -41,7 +41,7 @@ namespace Catalyst.Common.IO.Messaging
     public abstract class MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
     {
-        private IMessageCorrelationCache _messageCorrelationCache;
+        private readonly IMessageCorrelationCache _messageCorrelationCache;
 
         protected MessageFactoryBase(IMessageCorrelationCache messageCorrelationCache)
         {

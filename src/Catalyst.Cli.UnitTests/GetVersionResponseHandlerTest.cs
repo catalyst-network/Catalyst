@@ -100,7 +100,7 @@ namespace Catalyst.Cli.UnitTests
             var messageStream = CreateStreamWithMessage(response);
 
             _handler = new GetVersionResponseHandler(_output, correlationCache, _logger);
-            _handler.StartObserving(messageStream);
+            _handler.StartObservingMessageStreams(messageStream);
 
             _output.Received(1).WriteLine($"Node Version: {version}");
         }

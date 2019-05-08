@@ -65,7 +65,7 @@ namespace Catalyst.Cli.Rpc
             MessageStream = anySignedTypeClientHandler.MessageStream;
 
             responseHandlers.ToList()
-               .ForEach(h => h.StartObserving(MessageStream));
+               .ForEach(h => h.StartObservingMessageStreams(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {

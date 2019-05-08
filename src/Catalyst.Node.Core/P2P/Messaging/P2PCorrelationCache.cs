@@ -43,11 +43,12 @@ namespace Catalyst.Node.Core.P2P.Messaging
         : MessageCorrelationCacheBase,
             IReputableCache
     {
-        private readonly BehaviorSubject<KeyValuePair<ByteString, IPeerIdentifier>> _evictionSubject;
         private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
-
+        private readonly BehaviorSubject<KeyValuePair<IPeerIdentifier, ByteString>> _peerEvictionSubject;
+        
         public IObservable<IPeerReputationChange> PeerRatingChanges => _ratingChangeSubject.AsObservable();
-
+        public IObservable<KeyValuePair<IPeerIdentifier, ByteString>> PeerEviction => _peerEvictionSubject.AsObservable();
+        
         public P2PCorrelationCache(IMemoryCache cache,
             ILogger logger,
             TimeSpan cacheTtl = default) 
@@ -55,7 +56,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         {
             logger.Debug("P2PCorrelationCache resolved once");
             _ratingChangeSubject = new ReplaySubject<IPeerReputationChange>(0);
-            _evictionSubject = new BehaviorSubject<KeyValuePair<ByteString, IPeerIdentifier>>(NullObjects.EvictedMessage);
+            _peerEvictionSubject = new BehaviorSubject<KeyValuePair<IPeerIdentifier, ByteString>>(NullObjects.EvictedMessage);
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             //when the cache is not under pressure, eviction happens by token expiry :(
             var pendingRequest = (PendingRequest) value;
             _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.Recipient, -Constants.BaseReputationChange));
-            _evictionSubject.OnNext(new KeyValuePair<ByteString, IPeerIdentifier>(pendingRequest.Content.CorrelationId, pendingRequest.Recipient));
+            _peerEvictionSubject.OnNext(new KeyValuePair<IPeerIdentifier, ByteString>(pendingRequest.Recipient, pendingRequest.Content.CorrelationId));
         }
 
         public override TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)

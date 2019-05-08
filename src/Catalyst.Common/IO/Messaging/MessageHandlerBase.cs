@@ -44,7 +44,7 @@ namespace Catalyst.Common.IO.Messaging
             Logger = logger;
         }
 
-        public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream)
+        public void StartObservingMessageStreams(IObservable<IChanneledMessage<AnySigned>> messageStream)
         {
             if (_messageSubscription != null)
             {

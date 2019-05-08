@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.RPC
 
             var anyTypeServerHandler = new AnyTypeSignedServerHandlerBase();
             MessageStream = anyTypeServerHandler.MessageStream;
-            requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
+            requestHandlers.ToList().ForEach(h => h.StartObservingMessageStreams(MessageStream));
            
             Bootstrap(
                 new InboundChannelInitializerBase<ISocketChannel>(channel => { },

@@ -15,7 +15,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
