@@ -62,7 +62,7 @@ namespace Catalyst.Cli.Commands
             var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                 nodeConfig.HostAddress, nodeConfig.Port);
 
-            var message = new GetFileFromDfsRequest()
+            var message = new GetFileFromDfsRequest
             {
                 DfsHash = opts.FileHash
             };

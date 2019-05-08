@@ -136,7 +136,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             Logger.Information("File upload response code: " + responseCode);
             
             // Build Response
-            var response = new GetFileFromDfsResponse()
+            var response = new GetFileFromDfsResponse
             {
                 ResponseCode = ByteString.CopyFrom((byte) responseCode.Id),
                 FileSize = (ulong) fileSize

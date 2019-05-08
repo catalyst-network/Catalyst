@@ -98,10 +98,7 @@ namespace Catalyst.Common.FileTransfer
 
         /// <summary>Occurs when [on success].</summary>
         private event Action<IFileTransferInformation> OnSuccess;
-
-        /// <summary>The user output</summary>
-        private IUserOutput _userOutput;
-
+        
         /// <summary>The upload message factory</summary>
         private MessageFactoryBase<TransferFileBytesRequest> _uploadMessageFactory;
 
@@ -110,6 +107,12 @@ namespace Catalyst.Common.FileTransfer
 
         /// <summary>Flag if instance is expired from an error</summary>
         private bool _expired;
+
+        /// <summary>The user output</summary>
+        private readonly IUserOutput _userOutput;
+
+        /// <summary>The file lock</summary>
+        private readonly object _fileLock;
 
         /// <summary>Initializes a new instance of the <see cref="FileTransferInformation"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier</param>
@@ -131,6 +134,7 @@ namespace Catalyst.Common.FileTransfer
             IsDownload = isDownload;
             _chunkIndicators = new bool[MaxChunk];
             _userOutput = new ConsoleUserOutput();
+            _fileLock = new object();
         }
 
         /// <summary>Builds the download.</summary>
@@ -141,7 +145,12 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="fileOutputPath">Name of the file.</param>
         /// <param name="fileSize">Size of the file.</param>
         /// <returns></returns>
-        public static IFileTransferInformation BuildDownload(IPeerIdentifier peerIdentifier, IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Guid correlationGuid, string fileOutputPath, ulong fileSize)
+        public static IFileTransferInformation BuildDownload(IPeerIdentifier peerIdentifier,
+            IPeerIdentifier recipientIdentifier, 
+            IChannel recipientChannel,
+            Guid correlationGuid, 
+            string fileOutputPath, 
+            ulong fileSize)
         {
             FileTransferInformation info = new FileTransferInformation(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, fileOutputPath, fileSize, true);
@@ -179,7 +188,7 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="fileBytes">The file bytes.</param>
         public void WriteToStream(uint chunk, byte[] fileBytes)
         {
-            lock (this)
+            lock (_fileLock)
             {
                 var idx = chunk - 1;
                 RandomAccessStream.Seek(idx * Constants.FileTransferChunkSize, SeekOrigin.Begin);
