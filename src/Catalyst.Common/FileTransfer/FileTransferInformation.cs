@@ -24,6 +24,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -82,6 +84,10 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Gets or sets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
         public IPeerIdentifier PeerIdentifier { get; set; }
+
+        /// <summary>Gets or sets the delay cancellation token.</summary>
+        /// <value>The delay cancellation token.</value>
+        public CancellationTokenSource DelayCancellationToken { get; set; }
 
         /// <summary>Gets or sets a value indicating whether this instance is download.</summary>
         /// <value><c>true</c> if this instance is download; otherwise, <c>false</c>.</value>
@@ -266,7 +272,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns><c>true</c> if this instance is expired; otherwise, <c>false</c>.</returns>
         public bool IsExpired()
         {
-            return _expired || DateTime.Now.Subtract(_timeSinceLastChunk).TotalMinutes > Constants.FileTransferExpiryMinutes;
+            return _expired || DateTime.Now.Subtract(_timeSinceLastChunk).TotalSeconds > Constants.FileTransferExpirySeconds;
         }
 
         /// <inheritdoc />
@@ -410,7 +416,11 @@ namespace Catalyst.Common.FileTransfer
             return transferMessage;
         }
 
-        public void Expire() { _expired = true; }
+        public void Expire()
+        {
+            _expired = true;
+            DelayCancellationToken?.Cancel();
+        }
 
         /// <summary>Retries the specified index.</summary>
         /// <param name="index">The index.</param>

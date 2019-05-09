@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
@@ -101,6 +102,10 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Gets or sets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
         IPeerIdentifier PeerIdentifier { get; set; }
+
+        /// <summary>Gets or sets the delay cancellation token.</summary>
+        /// <value>The delay cancellation token.</value>
+        CancellationTokenSource DelayCancellationToken { get; set; }
 
         /// <summary>Gets or sets a value indicating whether this instance is download.</summary>
         /// <value><c>true</c> if this instance is download; otherwise, <c>false</c>.</value>

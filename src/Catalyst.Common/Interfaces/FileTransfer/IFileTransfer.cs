@@ -22,8 +22,6 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 
 namespace Catalyst.Common.Interfaces.FileTransfer

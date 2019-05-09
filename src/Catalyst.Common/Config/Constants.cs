@@ -62,7 +62,7 @@ namespace Catalyst.Common.Config
         public static string MessageHandlersConfigFile => "messageHandlers.json";
 
         /// <summary>The expiry minutes of initialization </summary>
-        public static int FileTransferExpiryMinutes => 1;
+        public static int FileTransferExpirySeconds => 60;
 
         /// <summary>The chunk size in bytes </summary>
         public static int FileTransferChunkSize => 200000;

@@ -68,11 +68,12 @@ namespace Catalyst.Common.FileTransfer
                     return FileTransferResponseCodes.FileAlreadyExists;
                 }
 
+                var tokenSource = new CancellationTokenSource();
+                var delayTokenSource = new CancellationTokenSource();
+                fileTransferInformation.DelayCancellationToken = delayTokenSource;
                 fileTransferInformation.Init();
                 _pendingFileTransfers.Add(fileHash, fileTransferInformation);
-
-                var tokenSource = new CancellationTokenSource();
-
+                
                 FileTaskHelper.Run(() =>
                 {
                     if (fileTransferInformation.IsComplete())
@@ -91,7 +92,7 @@ namespace Catalyst.Common.FileTransfer
                         fileTransferInformation.CleanUp();
                         tokenSource.Cancel();
                     }
-                }, TimeSpan.FromSeconds((double) Constants.FileTransferExpiryMinutes * 60 / 2), tokenSource.Token).ConfigureAwait(false);
+                }, TimeSpan.FromSeconds(Constants.FileTransferExpirySeconds / 2D), tokenSource.Token, delayTokenSource.Token).ConfigureAwait(false);
 
                 return FileTransferResponseCodes.Successful;
             }

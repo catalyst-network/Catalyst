@@ -37,11 +37,11 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="period">The period.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        public static async Task Run(Action action, TimeSpan period, CancellationToken cancellationToken)
+        public static async Task Run(Action action, TimeSpan period, CancellationToken cancellationToken, CancellationToken delayCancellationToken = default)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(period, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(period, delayCancellationToken == default ? cancellationToken : delayCancellationToken).ConfigureAwait(false);
 
                 if (!cancellationToken.IsCancellationRequested)
                 {
