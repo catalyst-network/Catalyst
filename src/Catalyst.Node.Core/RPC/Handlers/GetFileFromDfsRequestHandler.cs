@@ -94,25 +94,24 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             try
             {
-                var stream = _dfs.ReadAsync(deserialised.DfsHash).GetAwaiter().GetResult();
+                using (var stream = _dfs.ReadAsync(deserialised.DfsHash).GetAwaiter().GetResult())
+                {
+                    MemoryStream ms = new MemoryStream();
+                    stream.CopyTo(ms);
+                    fileLen = stream.Length;
 
-                MemoryStream ms = new MemoryStream();
-                stream.CopyTo(ms);
-                fileLen = stream.Length;
+                    Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-                Guard.Argument(deserialised).NotNull("Message cannot be null");
-            
-                fileTransferInformation = FileTransferInformation.BuildUpload(
-                    ms,
-                    _peerIdentifier,
-                    recipientPeerIdentifier,
-                    message.Context.Channel,
-                    correlationGuid,
-                    new RpcMessageFactory<TransferFileBytesRequest>()
-                );
-                responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
-
-                stream.Close();
+                    fileTransferInformation = FileTransferInformation.BuildUpload(
+                        ms,
+                        _peerIdentifier,
+                        recipientPeerIdentifier,
+                        message.Context.Channel,
+                        correlationGuid,
+                        new RpcMessageFactory<TransferFileBytesRequest>()
+                    );
+                    responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
+                }
             }
             catch (Exception e)
             {
