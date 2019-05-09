@@ -21,17 +21,10 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus;
+using System.Collections.Generic;
+using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
-    public class Consensus : IConsensus
-    {
-        public ITransactionComparer TransactionComparer { get; }
-
-        public Consensus(ITransactionComparer transactionComparer)
-        {
-            TransactionComparer = transactionComparer;
-        }
-    }
+    public interface ITransactionComparer : IComparer<Transaction> { }
 }
