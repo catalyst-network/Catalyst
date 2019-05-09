@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.P2P
         public IRepository<Peer> PeerRepository { get; }
         public IDisposable PingResponseMessageStream { get; private set; }
         public IDisposable GetNeighbourResponseStream { get; private set; }
-        public IDisposable P2PCorrelationCacheEvictionStream { get; set; }
+        public IDisposable P2PCorrelationCacheEvictionStream { get; private set; }
 
         private IPeerIdentifier _currentPeer;
         private readonly object _currentPeerLock = new object();        
@@ -316,11 +316,12 @@ namespace Catalyst.Node.Core.P2P
             );
         }
 
-        private bool UpdateCurrentPeerNeighbourPingStatus(AnySigned currentPeerNeighbourPingAnySigned)
+        private void UpdateCurrentPeerNeighbourPingStatus(AnySigned currentPeerNeighbourPingAnySigned)
         {
             var currentPeerNeighbourPid =
                 new PeerIdentifier(currentPeerNeighbourPingAnySigned.PeerId);
-            return CurrentPeerNeighbours.TryUpdate(currentPeerNeighbourPid.GetHashCode(),
+            
+            CurrentPeerNeighbours.TryUpdate(currentPeerNeighbourPid.GetHashCode(),
                 new KeyValuePair<IPeerIdentifier, ByteString>(currentPeerNeighbourPid, null), 
                 new KeyValuePair<IPeerIdentifier, ByteString>(currentPeerNeighbourPid, currentPeerNeighbourPingAnySigned.CorrelationId));
         }
