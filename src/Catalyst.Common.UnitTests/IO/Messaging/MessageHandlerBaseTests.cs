@@ -63,15 +63,13 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
     public class MessageHandlerBaseTests 
 
     {
-        private readonly ILogger _logger;
         private readonly VanillaMessageHandler _handler;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly AnySigned[] _responseMessages;
 
         public MessageHandlerBaseTests()
         {
-            _logger = Substitute.For<ILogger>();
-            _handler = new VanillaMessageHandler(_logger);
+            _handler = new VanillaMessageHandler(Substitute.For<ILogger>());
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _responseMessages = Enumerable.Range(0, 10).Select(i =>
             {
@@ -99,23 +97,21 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         public void MessageHandler_should_subscribe_to_next_and_error()
         {
             var erroringStream = new Subject<IChanneledMessage<AnySigned>>();
-
-            var simpleStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
-
+            
             _handler.StartObserving(erroringStream);
 
             foreach (var payload in _responseMessages)
             {
                 if (payload.FromAnySigned<GetInfoResponse>().Query == 5.ToString())
                 {
-                    erroringStream.OnError(new ApplicationException("5 erred"));
+                    erroringStream.OnError(new DataMisalignedException("5 erred"));
                 }
 
                 erroringStream.OnNext(new ChanneledAnySigned(_fakeContext, payload));
             }
 
             _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<AnySigned>());
-            _handler.SubstituteObserver.Received(1).OnError(Arg.Is<Exception>(e => e is ApplicationException));
+            _handler.SubstituteObserver.Received(1).OnError(Arg.Is<Exception>(e => e is DataMisalignedException));
             _handler.SubstituteObserver.Received(0).OnCompleted();
         }
 
