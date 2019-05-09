@@ -80,7 +80,7 @@ namespace Catalyst.Cli.Commands
             );
 
             fileTransfer.AddSuccessCallback(OnSuccess);
-            _rpcFileTransfer.InitializeTransfer(fileTransfer);
+            _rpcFileTransferFactory.RegisterTransfer(fileTransfer);
 
             node.SendMessage(messageDto);
 

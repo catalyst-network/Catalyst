@@ -48,21 +48,22 @@ namespace Catalyst.Cli.Handlers
         IRpcResponseHandler
     {
         /// <summary>The cli file transfer</summary>
-        private readonly IFileTransfer _rpcFileTransfer;
+        private readonly IFileTransferFactory _rpcFileTransferFactory;
 
         private readonly IUserOutput _userOutput;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="rpcFileTransfer">The CLI file transfer</param>
+        /// <param name="rpcFileTransferFactory">The CLI file transfer</param>
+        /// <param name="userOutput"></param>
         public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            IFileTransfer rpcFileTransfer, 
+            IFileTransferFactory rpcFileTransferFactory, 
             IUserOutput userOutput) : base(correlationCache, logger)
         {
             _userOutput = userOutput;
-            _rpcFileTransfer = rpcFileTransfer;
+            _rpcFileTransferFactory = rpcFileTransferFactory;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -83,7 +84,8 @@ namespace Catalyst.Cli.Handlers
             {
                 if (responseCode == FileTransferResponseCodes.Successful)
                 {
-                    _rpcFileTransfer.GetFileTransferInformation(message.Payload.CorrelationId.ToGuid()).Upload().ConfigureAwait(false);
+                    _rpcFileTransferFactory.InitialiseFileTransferAsync(message.Payload.CorrelationId.ToGuid())
+                       .ConfigureAwait(false);
                 }
             }
         }

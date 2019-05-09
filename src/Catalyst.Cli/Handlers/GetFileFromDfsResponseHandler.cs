@@ -45,17 +45,17 @@ namespace Catalyst.Cli.Handlers
         IRpcResponseHandler
     {
         /// <summary>The file transfer</summary>
-        private readonly IFileTransfer _fileTransfer;
+        private readonly IFileTransferFactory _fileTransferFactory;
 
         /// <summary>Initializes a new instance of the <see cref="GetFileFromDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="fileTransfer">The file transfer.</param>
+        /// <param name="fileTransferFactory">The file transfer.</param>
         public GetFileFromDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            IFileTransfer fileTransfer) : base(correlationCache, logger)
+            IFileTransferFactory fileTransferFactory) : base(correlationCache, logger)
         {
-            _fileTransfer = fileTransfer;
+            _fileTransferFactory = fileTransferFactory;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -68,7 +68,7 @@ namespace Catalyst.Cli.Handlers
 
             var responseCode = Enumeration.GetAll<FileTransferResponseCodes>().First(respCode => respCode.Id == deserialised.ResponseCode[0]);
 
-            var fileTransferInformation = _fileTransfer.GetFileTransferInformation(message.Payload.CorrelationId.ToGuid());
+            var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(message.Payload.CorrelationId.ToGuid());
 
             if (responseCode == FileTransferResponseCodes.Successful)
             {

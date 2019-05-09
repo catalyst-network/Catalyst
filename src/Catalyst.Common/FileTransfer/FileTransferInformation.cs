@@ -34,9 +34,11 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Shell;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace Catalyst.Common.FileTransfer
 {
@@ -51,7 +53,7 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Gets or sets the DFS hash.</summary>
         /// <value>The DFS hash.</value>
         public string DfsHash { get; set; }
-
+        
         /// <inheritdoc />
         /// <summary>Gets or sets the name of the unique file.</summary>
         /// <value>The name of the unique file.</value>
@@ -84,20 +86,21 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Gets or sets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
         public IPeerIdentifier PeerIdentifier { get; set; }
-
-        /// <summary>Gets or sets the delay cancellation token.</summary>
-        /// <value>The delay cancellation token.</value>
-        public CancellationTokenSource DelayCancellationToken { get; set; }
-
+        
         /// <summary>Gets or sets a value indicating whether this instance is download.</summary>
         /// <value><c>true</c> if this instance is download; otherwise, <c>false</c>.</value>
         public bool IsDownload { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether this <see cref="T:Catalyst.Common.Interfaces.FileTransfer.IFileTransferInformation" /> is initialised.</summary>
+        /// <value><c>true</c> if initialised; otherwise, <c>false</c>.</value>
+        public bool Initialised { get; set; }
+
+        /// <summary>Gets or sets the task context.</summary>
+        /// <value>The task context.</value>
+        public Task TaskContext { get; set; }
+
         /// <summary>The time since last chunk</summary>
         private DateTime _timeSinceLastChunk;
-
-        /// <summary>The chunk indicators</summary>
-        private bool[] _chunkIndicators;
 
         /// <summary>Occurs when [on expired].</summary>
         private event Action<IFileTransferInformation> OnExpired;
@@ -113,6 +116,9 @@ namespace Catalyst.Common.FileTransfer
 
         /// <summary>Flag if instance is expired from an error</summary>
         private bool _expired;
+
+        /// <summary>The chunk indicators</summary>
+        private bool[] _chunkIndicators;
 
         /// <summary>The user output</summary>
         private readonly IUserOutput _userOutput;
@@ -140,6 +146,7 @@ namespace Catalyst.Common.FileTransfer
             IsDownload = isDownload;
             _chunkIndicators = new bool[MaxChunk];
             _userOutput = new ConsoleUserOutput();
+            _timeSinceLastChunk = DateTime.Now;
             _fileLock = new object();
         }
 
@@ -199,7 +206,6 @@ namespace Catalyst.Common.FileTransfer
                 var idx = chunk - 1;
                 RandomAccessStream.Seek(idx * Constants.FileTransferChunkSize, SeekOrigin.Begin);
                 RandomAccessStream.Write(fileBytes);
-                _chunkIndicators[idx] = true;
                 _timeSinceLastChunk = DateTime.Now;
             }
         }
@@ -220,53 +226,7 @@ namespace Catalyst.Common.FileTransfer
                 throw new NotSupportedException("Cannot set length for upload type file transfer");
             }
         }
-
-        /// <summary>Uploads this instance.</summary>
-        /// <returns></returns>
-        public async Task Upload()
-        {
-            for (uint i = 0; i < MaxChunk; i++)
-            {
-                var transferMessage = GetUploadMessage(i);
-
-                var requestMessage = _uploadMessageFactory.GetMessage(
-                    message: transferMessage,
-                    recipient: RecipientIdentifier,
-                    sender: PeerIdentifier,
-                    messageType: MessageTypes.Ask
-                );
-                try
-                {
-                    await RecipientChannel.WriteAndFlushAsync(requestMessage);
-                    _chunkIndicators[i] = true;
-                    _timeSinceLastChunk = DateTime.Now;
-                }
-                catch (Exception e)
-                {
-                    bool retrySuccess = RetryUpload(ref i);
-                    if (!retrySuccess)
-                    {
-                        _userOutput.WriteLine("File upload failed. Exception: " + e);
-                        break;
-                    }
-                }
-            }
-
-            if (IsComplete())
-            {
-                this.Dispose();
-                this.ExecuteOnSuccess();
-                this.Delete();
-            }
-        }
-
-        /// <inheritdoc />
-        /// <summary>Initializes this instance.</summary>
-        public void Init()
-        {
-            _timeSinceLastChunk = DateTime.Now;
-        }
-
+        
         /// <inheritdoc />
         /// <summary>Determines whether this instance is expired.</summary>
         /// <returns><c>true</c> if this instance is expired; otherwise, <c>false</c>.</returns>
@@ -368,7 +328,7 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Gets the upload message.</summary>
         /// <param name="index">The index.</param>
         /// <returns></returns>
-        public TransferFileBytesRequest GetUploadMessage(uint index)
+        public AnySigned GetUploadMessageDto(uint index)
         {
             var chunkId = index + 1;
             var startPos = index * Constants.FileTransferChunkSize;
@@ -413,19 +373,36 @@ namespace Catalyst.Common.FileTransfer
                 _userOutput.WriteLine("Error transferring chunk: " + chunkId);
             }
 
-            return transferMessage;
+            return _uploadMessageFactory.GetMessage(
+                transferMessage, 
+                PeerIdentifier, 
+                RecipientIdentifier, 
+                MessageTypes.Ask
+            );
         }
 
+        /// <summary>Expires this instance.</summary>
         public void Expire()
         {
             _expired = true;
-            DelayCancellationToken?.Cancel();
+        }
+
+        /// <summary>Updates the chunk indicator.</summary>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <param name="state">if set to <c>true</c> [state].</param>
+        public void UpdateChunkIndicator(uint chunkId, bool state)
+        {
+            _chunkIndicators[chunkId] = state;
+            if (!state)
+            {
+                _timeSinceLastChunk = DateTime.Now;
+            }
         }
 
         /// <summary>Retries the specified index.</summary>
         /// <param name="index">The index.</param>
         /// <returns>True if retry success, false if retry failure</returns>
-        private bool RetryUpload(ref uint index)
+        public bool RetryUpload(ref uint index)
         {
             if (_uploadRetryCount >= Constants.FileTransferMaxChunkRetryCount)
             {

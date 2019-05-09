@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly RpcMessageFactory<GetFileFromDfsResponse> _rpcMessageFactory;
 
         /// <summary>The file transfer</summary>
-        private readonly IFileTransfer _fileTransfer;
+        private readonly IFileTransferFactory _fileTransferFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -66,17 +66,17 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestHandler"/> class.</summary>
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="fileTransfer">The file transfer.</param>
+        /// <param name="fileTransferFactory">The file transfer.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
-            IFileTransfer fileTransfer,
+            IFileTransferFactory fileTransferFactory,
             IMessageCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger)
         {
             _rpcMessageFactory = new RpcMessageFactory<GetFileFromDfsResponse>();
-            _fileTransfer = fileTransfer;
+            _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
         }
@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var correlationGuid = message.Payload.CorrelationId.ToGuid();
             long fileLen = 0;
             FileTransferResponseCodes responseCode;
-            IFileTransferInformation fileTransferInformation = null;
+            IFileTransferInformation fileTransferInformation;
 
             try
             {
@@ -110,7 +110,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     correlationGuid,
                     new RpcMessageFactory<TransferFileBytesRequest>()
                 );
-                responseCode = _fileTransfer.InitializeTransfer(fileTransferInformation);
+                responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
 
                 stream.Close();
             }
@@ -122,7 +122,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             ReturnResponse(recipientPeerIdentifier, message.Context.Channel, responseCode, correlationGuid, fileLen);
 
-            fileTransferInformation?.Upload();
+            if (responseCode == FileTransferResponseCodes.Successful)
+            {
+                _fileTransferFactory.InitialiseFileTransferAsync(correlationGuid);
+            }
         }
 
         /// <summary>Returns the response.</summary>

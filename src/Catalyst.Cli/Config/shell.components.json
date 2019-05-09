@@ -179,10 +179,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.FileTransfer.FileTransfer, Catalyst.Common",
+            "type": "Catalyst.Common.FileTransfer.FileTransferFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.FileTransfer.IFileTransfer, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IFileTransferFactory, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

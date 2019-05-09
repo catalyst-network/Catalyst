@@ -92,7 +92,7 @@ namespace Catalyst.Cli.Commands
                 requestMessage.CorrelationId.ToGuid(),
                 new RpcMessageFactory<TransferFileBytesRequest>());
 
-            _rpcFileTransfer.InitializeTransfer(fileTransfer);
+            _rpcFileTransferFactory.RegisterTransfer(fileTransfer);
 
             node.SendMessage(requestMessage);
 

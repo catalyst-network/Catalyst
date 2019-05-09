@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 
@@ -39,15 +40,10 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <param name="chunk">The chunk.</param>
         /// <param name="fileBytes">The file bytes.</param>
         void WriteToStream(uint chunk, byte[] fileBytes);
-
-        Task Upload();
-
+        
         /// <summary>Gets the percentage.</summary>
         int GetPercentage();
         
-        /// <summary>Initializes this instance.</summary>
-        void Init();
-
         /// <summary>Determines whether this instance is expired.</summary>
         /// <returns><c>true</c> if this instance is expired; otherwise, <c>false</c>.</returns>
         bool IsExpired();
@@ -78,7 +74,7 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Gets the maximum chunk.</summary>
         /// <value>The maximum chunk.</value>
         uint MaxChunk { get; }
-
+        
         /// <summary>Gets or sets the name of the unique file.</summary>
         /// <value>The name of the unique file.</value>
         Guid CorrelationGuid { get; set; }
@@ -103,13 +99,17 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <value>The peer identifier.</value>
         IPeerIdentifier PeerIdentifier { get; set; }
 
-        /// <summary>Gets or sets the delay cancellation token.</summary>
-        /// <value>The delay cancellation token.</value>
-        CancellationTokenSource DelayCancellationToken { get; set; }
-
         /// <summary>Gets or sets a value indicating whether this instance is download.</summary>
         /// <value><c>true</c> if this instance is download; otherwise, <c>false</c>.</value>
         bool IsDownload { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether this <see cref="IFileTransferInformation"/> is initialised.</summary>
+        /// <value><c>true</c> if initialised; otherwise, <c>false</c>.</value>
+        bool Initialised { get; set; }
+
+        /// <summary>Gets or sets the task context.</summary>
+        /// <value>The task context.</value>
+        Task TaskContext { get; set; }
 
         /// <summary>Occurs when [on expired].</summary>
         void AddExpiredCallback(Action<IFileTransferInformation> callback);
@@ -124,9 +124,19 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Gets the upload message.</summary>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <returns></returns>
-        TransferFileBytesRequest GetUploadMessage(uint chunkId);
+        AnySigned GetUploadMessageDto(uint chunkId);
 
         /// <summary>Expires this instance.</summary>
         void Expire();
+
+        /// <summary>Updates the chunk indicator.</summary>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <param name="state">if set to <c>true</c> [state].</param>
+        void UpdateChunkIndicator(uint chunkId, bool state);
+
+        /// <summary>Retries the upload.</summary>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <returns></returns>
+        bool RetryUpload(ref uint chunkId);
     }
 }

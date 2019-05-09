@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         /// <summary>The file transfer</summary>
-        private readonly IFileTransfer _fileTransfer;
+        private readonly IFileTransferFactory _fileTransferFactory;
 
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactory<TransferFileBytesResponse> _rpcMessageFactory;
@@ -53,17 +53,17 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
-        /// <param name="fileTransfer">The file transfer.</param>
+        /// <param name="fileTransferFactory">The file transfer.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesRequestHandler(IFileTransfer fileTransfer,
+        public TransferFileBytesRequestHandler(IFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
             IMessageCorrelationCache correlationCache,
             ILogger logger)
             : base(correlationCache, logger)
         {
-            _fileTransfer = fileTransfer;
+            _fileTransferFactory = fileTransferFactory;
             _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
             _peerIdentifier = peerIdentifier;
         }
@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Guard.Argument(deserialised).NotNull("Message cannot be null");
 
                 var correlationId = new Guid(deserialised.CorrelationFileName.ToByteArray());
-                responseCode = _fileTransfer.WriteChunk(correlationId, deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
+                responseCode = _fileTransferFactory.DownloadChunk(correlationId, deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
             }
             catch (Exception e)
             {

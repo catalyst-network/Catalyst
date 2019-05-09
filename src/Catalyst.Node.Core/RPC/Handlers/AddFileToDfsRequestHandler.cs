@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly RpcMessageFactory<AddFileToDfsResponse> _rpcMessageFactory;
 
         /// <summary>The file transfer</summary>
-        private readonly IFileTransfer _fileTransfer;
+        private readonly IFileTransferFactory _fileTransferFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -66,17 +66,17 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestHandler"/> class.</summary>
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="fileTransfer">The file transfer.</param>
+        /// <param name="fileTransferFactory">The file transfer.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
-            IFileTransfer fileTransfer,
+            IFileTransferFactory fileTransferFactory,
             IMessageCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger)
         {
             _rpcMessageFactory = new RpcMessageFactory<AddFileToDfsResponse>();
-            _fileTransfer = fileTransfer;
+            _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
         }
@@ -102,7 +102,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
             FileTransferResponseCodes responseCode;
             try
             {
-                responseCode = _fileTransfer.InitializeTransfer(fileTransferInformation);
+                responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
+                if (responseCode == FileTransferResponseCodes.Successful)
+                {
+                    _fileTransferFactory.InitialiseFileTransferAsync(fileTransferInformation.CorrelationGuid);
+                }
             }
             catch (Exception e)
             {
