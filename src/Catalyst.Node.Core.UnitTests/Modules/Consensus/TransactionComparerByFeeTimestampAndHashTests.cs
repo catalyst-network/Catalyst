@@ -22,20 +22,27 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus;
+using Catalyst.Protocol.Transaction;
 using FluentAssertions;
+using Google.Protobuf;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
 {
     public class TransactionComparerByFeeTimestampAndHashTests
     {
+        private readonly ITestOutputHelper _output;
         private readonly Random _random;
 
-        public TransactionComparerByFeeTimestampAndHashTests()
+        public TransactionComparerByFeeTimestampAndHashTests(ITestOutputHelper output)
         {
+            _output = output;
             _random = new Random();
         }
 
@@ -50,10 +57,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
                 ).ToList();
 
             var ordered = transactions
-               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default);
+               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
+               .ToArray();
 
             ordered.Should().BeInDescendingOrder(t => t.TransactionFees);
-            ordered.Select(t => t.TimeStamp).Should().NotBeDescendingInOrder();
+            ordered.Select(t => t.TimeStamp).Should().NotBeAscendingInOrder();
             ordered.Should().NotBeInDescendingOrder(t => t.Signature, SignatureComparer.Default);
         }
 
@@ -68,15 +76,16 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
                 ).ToList();
 
             var ordered = transactions
-               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default);
+               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
+               .ToArray();
 
             ordered.Should().BeInDescendingOrder(t => t.TransactionFees);
             ordered.Select(t => t.TimeStamp).Should().NotBeDescendingInOrder();
 
             Enumerable.Range(0, 3).ToList().ForEach(i =>
-                ordered.Where(t => t.TransactionFees == (ulong) i).Select(t => t.TimeStamp).Should().BeInDescendingOrder());
+                ordered.Where(t => t.TransactionFees == (ulong) i).Select(t => t.TimeStamp).Should().BeInAscendingOrder());
             
-            ordered.Should().NotBeInDescendingOrder(t => t.Signature, SignatureComparer.Default);
+            ordered.Should().NotBeInAscendingOrder(t => t.Signature, SignatureComparer.Default);
         }
 
         [Fact]
@@ -84,21 +93,74 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
         {
             var transactions = Enumerable.Range(0, 100)
                .Select(i => TransactionHelper.GetTransaction(
-                    transactionFees: 1,
+                    transactionFees: (ulong) i % 2,
                     timeStamp: (ulong) i % 3,
                     signature: _random.Next(int.MaxValue).ToString())
                 ).ToList();
 
             var ordered = transactions
-               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default);
+               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
+               .ToArray();
 
-            ordered.Select(t => t.TimeStamp).Should().BeInDescendingOrder();
+            ordered.Select(s =>
+                    s.TransactionFees.ToString() + "|" + s.TimeStamp.ToString() + "|" +
+                    s.Signature.SchnorrSignature.ToBase64() + s.Signature.SchnorrComponent.ToBase64())
+               .ToList().ForEach(x => _output.WriteLine(x));
+
+            ordered.Should().BeInDescendingOrder(t => t.TransactionFees);
+
+            Enumerable.Range(0, 2).ToList().ForEach(i =>
+            {
+                ordered
+                   .Select(t => t.TransactionFees == (ulong) i ? t.TimeStamp : int.MaxValue)
+                   .ToArray()
+                   .Where(z => z != int.MaxValue)
+                   .Should().BeInAscendingOrder();
+
+                Enumerable.Range(0, 3).ToList().ForEach(j =>
+                    ordered.Where(t => t.TransactionFees == (ulong) i
+                         && t.TimeStamp == (ulong) j).ToArray()
+                       .Should().BeInAscendingOrder(t => t.Signature, SignatureComparer.Default));
+            });
+            
+            ordered.Select(s => 
+                    s.TransactionFees.ToString() + "|" + s.TimeStamp.ToString() + "|" +
+                    s.Signature.SchnorrSignature.ToBase64() + s.Signature.SchnorrComponent.ToBase64())
+               .ToList().ForEach(x => _output.WriteLine(x));
+
+            ordered.Should()
+               .NotBeInAscendingOrder(t => t.Signature, SignatureComparer.Default);
+        }
+
+        [Fact]
+        public void SignatureComparer_should_compare_on_SchnorrSignature_and_SchnorrComponent()
+        {
+            var signatures = Enumerable.Range(0, 30).Select(x =>
+            {
+                var signature = TransactionHelper.GetTransactionSignature((x % 3).ToString(), x.ToString());
+                return signature;
+            }).ToArray();
+
+            var ordered = signatures.OrderBy(s => s, SignatureComparer.Default).ToArray();
+
+            ordered.Should().BeInAscendingOrder(s => s.SchnorrSignature, ByteStringComparer.Default);
+            ordered.Should().NotBeInAscendingOrder(s => s.SchnorrComponent, ByteStringComparer.Default);
 
             Enumerable.Range(0, 3).ToList().ForEach(i =>
-                ordered.Where(t => t.TimeStamp == (ulong) i).ToArray()
-                   .Should().BeInDescendingOrder(t => t.Signature, SignatureComparer.Default));
-
-            ordered.Should().NotBeInDescendingOrder(t => t.Signature, SignatureComparer.Default);
+            {
+                ordered.Where(s => s.SchnorrSignature == i.ToString().ToUtf8ByteString()).ToArray()
+                   .Should().BeInAscendingOrder(s => s.SchnorrComponent, ByteStringComparer.Default);
+            }); 
         }
+    }
+
+    public class ByteStringComparer : IComparer<ByteString>
+    {
+        public int Compare(ByteString x, ByteString y)
+        {
+            return ByteListComparer.Default.Compare(x.ToByteArray(), y.ToByteArray());
+        }
+
+        public static ByteStringComparer Default { get; } = new ByteStringComparer();
     }
 }
