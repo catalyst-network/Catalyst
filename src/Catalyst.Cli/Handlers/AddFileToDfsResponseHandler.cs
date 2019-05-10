@@ -88,6 +88,10 @@ namespace Catalyst.Cli.Handlers
                     _rpcFileTransferFactory.FileTransferAsync(message.Payload.CorrelationId.ToGuid(), CancellationToken.None)
                        .ConfigureAwait(false);
                 }
+                else
+                {
+                    _rpcFileTransferFactory.GetFileTransferInformation(message.Payload.CorrelationId.ToGuid()).Expire();
+                }
             }
         }
     }
