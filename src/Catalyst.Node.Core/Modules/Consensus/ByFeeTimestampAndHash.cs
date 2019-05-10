@@ -64,7 +64,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             return SignatureComparer.Default.Compare(y.Signature, x.Signature);
         }
 
-        public static IComparer<Transaction> Default { get; } = new TransactionComparerByFeeTimestampAndHash();
+        public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();
     }
 
     public class SignatureComparer : IComparer<TransactionSignature>

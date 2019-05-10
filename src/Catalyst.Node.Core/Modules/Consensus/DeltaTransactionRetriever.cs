@@ -24,13 +24,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
+using Dawn;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Node.Core.Modules.Consensus
 {
-    public interface IConsensus
+    public class DeltaTransactionRetriever : IDeltaTransactionRetriever
     {
-        IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
+        private readonly IMempool _mempool;
+        public ITransactionComparer TransactionComparer { get; }
+
+        public DeltaTransactionRetriever(IMempool mempool,
+            ITransactionComparer transactionComparer)
+        {
+            _mempool = mempool;
+            TransactionComparer = transactionComparer;
+        }
+
+        public async Task<IList<Transaction>> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue)
+        {
+            Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
+
+            var allTransactions = await Task.FromResult(_mempool.GetMemPoolContent());
+            var mempoolPrioritised = allTransactions.OrderByDescending(t => t, TransactionComparer)
+               .Take(maxCount).ToList();
+
+            return mempoolPrioritised;
+        }
     }
 }
