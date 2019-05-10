@@ -34,19 +34,16 @@ namespace Catalyst.Cli.Options
     [Verb("getfile", HelpText = "gets file from dfs")]
     public sealed class GetFileOptions : IGetFileOptions
     {
-        /// <summary>Gets or sets the node.</summary>
-        /// <value>The node.</value>
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        /// <inheritdoc/>
+        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.", Required = true)]
         public string Node { get; set; }
 
-        /// <summary>Gets or sets the file hash.</summary>
-        /// <value>The file hash.</value>
-        [Option('f', "file", HelpText = "The file hash")]
+        /// <inheritdoc/>
+        [Option('f', "file", HelpText = "The file hash", Required = true)]
         public string FileHash { get; set; }
 
-        /// <summary>Gets or sets the file output.</summary>
-        /// <value>The file output.</value>
-        [Option('o', "output", HelpText = "File output path")]
+        /// <inheritdoc/>
+        [Option('o', "output", HelpText = "File output path", Required = true)]
         public string FileOutput { get; set; }
 
         /// <summary>
