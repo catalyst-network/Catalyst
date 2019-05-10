@@ -39,7 +39,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         protected override async Task DoTransfer(IUploadFileInformation fileTransferInformation)
         {
-            await Upload(fileTransferInformation);
+            await Upload(fileTransferInformation).ConfigureAwait(false);
         }
 
         /// <summary>Uploads the specified file transfer information.</summary>

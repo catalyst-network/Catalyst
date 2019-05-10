@@ -106,7 +106,7 @@ namespace Catalyst.Common.FileTransfer
             try
             {
                 fileTransferInformation.CancellationToken = cancellationToken;
-                await DoTransfer(fileTransferInformation);
+                await DoTransfer(fileTransferInformation).ConfigureAwait(false);
                 Remove(fileTransferInformation, fileTransferInformation.IsExpired());
             }
             catch (Exception)

@@ -39,7 +39,7 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         protected override async Task DoTransfer(IDownloadFileInformation fileTransferInformation)
         {
-            await Download(fileTransferInformation);
+            await Download(fileTransferInformation).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
