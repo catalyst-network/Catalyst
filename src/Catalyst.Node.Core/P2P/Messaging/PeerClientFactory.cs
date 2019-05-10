@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {

@@ -10,7 +10,7 @@
         ]
     },
     {
-        "type": "Catalyst.Node.Core.Modules.Ipfs.IpfsAdapter",
+        "type": "Catalyst.Node.Core.Modules.Dfs.IpfsAdapter",
         "services": [
             {
                 "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"

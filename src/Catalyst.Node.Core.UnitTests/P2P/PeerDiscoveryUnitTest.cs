@@ -37,6 +37,7 @@ using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
@@ -108,9 +109,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 Assert.NotNull(peerDiscovery.Dns);
                 peerDiscovery.Dns.Should().BeOfType(typeof(DevDnsClient));
                 Assert.NotNull(peerDiscovery.CurrentPeerNeighbours);
-                peerDiscovery.CurrentPeerNeighbours.Should().BeOfType(typeof(ConcurrentQueue<IPeerIdentifier>));
+                peerDiscovery.CurrentPeerNeighbours.Should().BeOfType(typeof(Dictionary<int, KeyValuePair<IPeerIdentifier, ByteString>>));
                 Assert.NotNull(peerDiscovery.PreviousPeerNeighbours);
-                peerDiscovery.PreviousPeerNeighbours.Should().BeOfType(typeof(ConcurrentQueue<IPeerIdentifier>));
+                peerDiscovery.PreviousPeerNeighbours.Should().BeOfType(typeof(Dictionary<int, KeyValuePair<IPeerIdentifier, ByteString>>));
                 Assert.NotNull(peerDiscovery.PeerRepository);
                 peerDiscovery.PeerRepository.Should().BeOfType(typeof(InMemoryRepository<Peer>));
             }

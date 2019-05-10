@@ -42,6 +42,7 @@ using SharpRepository.Repository;
 using System.Collections.Generic;
 using System.Reactive;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P.Messaging;
 using Google.Protobuf;
 using Peer = Catalyst.Common.P2P.Peer;
 
@@ -113,12 +114,12 @@ namespace Catalyst.Node.Core.P2P
             _ownNode = new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
                 _peerSettings.Port);
             
-            Task[] longRunningTasks =
-            {
-                Task.Factory.StartNew(PeerCrawler)
-            };
-            
-            Task.WaitAll(longRunningTasks);
+            // Task[] longRunningTasks =
+            // {
+            //     Task.Run(PeerCrawler)
+            // };
+            //
+            // Task.WaitAll(longRunningTasks);
         }
 
         /// <inheritdoc />

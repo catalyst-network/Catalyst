@@ -44,10 +44,10 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.Core.P2P.PeerClientFactory",
+            "type": "Catalyst.Node.Core.P2P.Messaging.PeerClientFactory",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClientFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.Messaging.IPeerClientFactory, Catalyst.Common"
                 }
             ]
         },
@@ -127,7 +127,7 @@
             "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IHastingWalkDiscovery, Catalyst.Common"
                 }
             ]
         },

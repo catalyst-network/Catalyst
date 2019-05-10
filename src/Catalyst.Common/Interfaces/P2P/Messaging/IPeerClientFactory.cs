@@ -23,7 +23,7 @@
 
 using System.Net;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.Interfaces.P2P.Messaging
 {
     public interface IPeerClientFactory
     {
