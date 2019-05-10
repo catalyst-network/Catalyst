@@ -6,7 +6,21 @@ namespace Catalyst.Common.Interfaces.Modules.Ledger
 {
     public interface IAccount
     {
-        int AccountType { get; set; }
+        /// <summary>
+        /// Gets or sets the type of the coin.
+        /// </summary>
+        /// <value>
+        /// The type of the coin.
+        /// </value>
+        uint CoinType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the account.
+        /// </summary>
+        /// <value>
+        /// The type of the account.
+        /// </value>
+        uint AccountType { get; set; }
 
         /// <summary>
         /// The balance of confirmed transactions.
