@@ -54,8 +54,9 @@ namespace Catalyst.Node.Core.P2P
         public IDns Dns { get; }
         private bool NeighbourRequested { get; set; }
         public IRepository<Peer> PeerRepository { get; }
-        private int TotalPotentialCandidates { get; set; }
-        
+        public int TotalPotentialCandidates { get; set; }
+        public int DiscoveredPeerInCurrentWalk { get; set; }
+
         /// <inheritdoc />
         public IPeerIdentifier PreviousPeer { get; private set; }
         
@@ -64,20 +65,19 @@ namespace Catalyst.Node.Core.P2P
         /// <inheritdoc />
         public IPeerIdentifier CurrentPeer { get; private set; }
 
-        private IDisposable PingResponseMessageStream { get; set; }
-        private IDisposable GetNeighbourResponseStream { get; set; }
-        private IDisposable P2PCorrelationCacheEvictionSubscription { get; set; }
-        private IObservable<IList<Unit>> PeerDiscoveryMessagesEventStream { get; set; }
+        public IDisposable PingResponseMessageStream { get; set; }
+        public IDisposable GetNeighbourResponseStream { get; set; }
+        public IDisposable P2PCorrelationCacheEvictionSubscription { get; set; }
+        public IObservable<IList<Unit>> PeerDiscoveryMessagesEventStream { get; set; }
         private IObservable<KeyValuePair<IPeerIdentifier, ByteString>> _p2PCorrelationCacheEvictionStream;
 
         /// <inheritdoc />
         public IDictionary<int, KeyValuePair<IPeerIdentifier, ByteString>> PreviousPeerNeighbours { get; private set; }
 
         /// <inheritdoc />
-        public IDictionary<int, KeyValuePair<IPeerIdentifier, ByteString>> CurrentPeerNeighbours { get; private set; }
+        public IDictionary<int, KeyValuePair<IPeerIdentifier, ByteString>> CurrentPeerNeighbours { get; set; }
         
         private readonly ILogger _logger;
-        private int _discoveredPeerInCurrentWalk;
         private readonly IPeerIdentifier _ownNode;
         private readonly IPeerSettings _peerSettings;
         private readonly IReputableCache _p2PCorrelationCache;
@@ -237,10 +237,10 @@ namespace Catalyst.Node.Core.P2P
         ///     Called when a pingResponse event is see, we can store the peer at this point.
         /// </summary>
         /// <param name="message"></param>
-        private void PingResponseSubscriptionHandler(IChanneledMessage<AnySigned> message)
+        public void PingResponseSubscriptionHandler(IChanneledMessage<AnySigned> message)
         {
             _logger.Information("processing ping message stream");
-            _discoveredPeerInCurrentWalk = StorePeer(message.Payload.PeerId);
+            DiscoveredPeerInCurrentWalk = StorePeer(message.Payload.PeerId);
             _logger.Information(message.Payload.TypeUrl);
         }
 
@@ -340,7 +340,7 @@ namespace Catalyst.Node.Core.P2P
             NextCandidate = null;
             NeighbourRequested = false;
             CurrentPeer = PreviousPeer;
-            _discoveredPeerInCurrentWalk = 0;
+            DiscoveredPeerInCurrentWalk = 0;
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace Catalyst.Node.Core.P2P
             PreviousPeer = null;
             NextCandidate = null;
             NeighbourRequested = false;
-            _discoveredPeerInCurrentWalk = 0;
+            DiscoveredPeerInCurrentWalk = 0;
             CurrentPeerNeighbours.Clear();
             PreviousPeerNeighbours.Clear();
             return this;
@@ -418,7 +418,7 @@ namespace Catalyst.Node.Core.P2P
         /// <returns></returns>
         public int StorePeer(PeerId peerId)
         {
-            if (_discoveredPeerInCurrentWalk >= Constants.PeerDiscoveryBurnIn)
+            if (DiscoveredPeerInCurrentWalk >= Constants.PeerDiscoveryBurnIn)
             {
                 PeerRepository.Add(new Peer
                 {
@@ -428,7 +428,7 @@ namespace Catalyst.Node.Core.P2P
                 });
             }
 
-            return _discoveredPeerInCurrentWalk++;
+            return DiscoveredPeerInCurrentWalk++;
         }
 
         /// <summary>

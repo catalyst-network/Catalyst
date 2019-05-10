@@ -42,6 +42,7 @@ using Catalyst.Protocol.IPPN;
 using DnsClient;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
@@ -158,6 +159,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             
                 var observableStream = new[] {channeledAny}.ToObservable();
 
+                peerDiscovery.TotalPotentialCandidates = 10;
+                peerDiscovery.DiscoveredPeerInCurrentWalk = 26;
+                peerDiscovery.CurrentPeerNeighbours.TryAdd(pid.GetHashCode(), new KeyValuePair<IPeerIdentifier, ByteString>(pid, channeledAny.Payload.CorrelationId));
                 peerDiscovery.StartObservingMessageStreams(observableStream);
 
                 _peerRepository.Received(1)

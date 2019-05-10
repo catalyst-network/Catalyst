@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -33,6 +34,9 @@ namespace Catalyst.Common.Interfaces.P2P
     {
         IDns Dns { get; }
 
+        int TotalPotentialCandidates { get; set; }
+        int DiscoveredPeerInCurrentWalk { get; set; }
+        
         /// <summary>
         ///     The previous degree of walk
         /// </summary>
@@ -57,6 +61,11 @@ namespace Catalyst.Common.Interfaces.P2P
         /// </summary>
         IDictionary<int, KeyValuePair<IPeerIdentifier, ByteString>> CurrentPeerNeighbours { get; }
 
+        IDisposable PingResponseMessageStream { get; set; }
+        IDisposable GetNeighbourResponseStream { get; set; }
+        IDisposable P2PCorrelationCacheEvictionSubscription { get; set; }
+        IObservable<IList<Unit>> PeerDiscoveryMessagesEventStream { get; set; }
+        
         /// <summary>
         ///     Crawls nodes in network according to the protocol blueprint spec
         /// </summary>

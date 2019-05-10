@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
         [Fact]
         public void PeerDiscoveryCanHandlePeerNeighbourMessageSubscriptions()
         {
-            var subbedPeerDiscovery = Substitute.For<IPeerDiscovery>();
+            var subbedPeerDiscovery = Substitute.For<IHastingWalkDiscovery>();
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
