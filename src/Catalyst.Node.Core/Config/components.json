@@ -170,10 +170,19 @@
             ]
         },
         {
-            "type": "Catalyst.Common.FileTransfer.FileTransferFactory, Catalyst.Common",
+            "type": "Catalyst.Common.FileTransfer.UploadFileTransferFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.FileTransfer.IFileTransferFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IUploadFileTransferFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.FileTransfer.DownloadFileTransferFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IDownloadFileTransferFactory, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

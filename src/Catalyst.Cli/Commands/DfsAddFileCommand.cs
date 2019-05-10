@@ -28,6 +28,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
@@ -84,7 +85,7 @@ namespace Catalyst.Cli.Commands
                 messageType: MessageTypes.Ask
             );
 
-            var fileTransfer = FileTransferInformation.BuildUpload(
+            IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
                 File.Open(opts.File, FileMode.Open),
                 _peerIdentifier,
                 nodePeerIdentifier,
@@ -92,7 +93,7 @@ namespace Catalyst.Cli.Commands
                 requestMessage.CorrelationId.ToGuid(),
                 new RpcMessageFactory<TransferFileBytesRequest>());
 
-            _rpcFileTransferFactory.RegisterTransfer(fileTransfer);
+            _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 
             node.SendMessage(requestMessage);
 
@@ -100,13 +101,13 @@ namespace Catalyst.Cli.Commands
             
             Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
 
-            while (!fileTransfer.IsComplete() && !fileTransfer.IsExpired())
+            while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
                 _userOutput.Write("\rUploaded: " + fileTransfer.GetPercentage() + "%");
                 System.Threading.Thread.Sleep(500);
             }
 
-            if (fileTransfer.IsComplete())
+            if (fileTransfer.ChunkIndicatorsTrue())
             {
                 _userOutput.Write("\rUploaded: " + fileTransfer.GetPercentage() + "%\n");
             }

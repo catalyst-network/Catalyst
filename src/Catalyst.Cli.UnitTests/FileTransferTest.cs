@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.Modules.Dfs;
-using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using NSubstitute;
@@ -35,15 +33,12 @@ using Serilog;
 using Xunit;
 using Catalyst.Common.P2P;
 using System.IO;
-using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Google.Protobuf;
 using Xunit.Abstractions;
@@ -55,7 +50,7 @@ namespace Catalyst.Cli.UnitTests
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IFileTransferFactory _rpcFileTransferFactory;
+        private readonly IDownloadFileTransferFactory _fileDownloadFactory;
         private readonly IDfs _dfs;
         private readonly IMessageCorrelationCache _cache;
 
@@ -71,7 +66,7 @@ namespace Catalyst.Cli.UnitTests
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _cache = Substitute.For<IMessageCorrelationCache>();
-            _rpcFileTransferFactory = new FileTransferFactory();
+            _fileDownloadFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
             _dfs = Substitute.For<IDfs>();
         }
@@ -88,30 +83,27 @@ namespace Catalyst.Cli.UnitTests
             var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
             var nodePeer = new PeerIdentifier(nodePeerId);
             var rpcPeer = new PeerIdentifier(rpcPeerId);
-
-            Guid correlationGuid = Guid.NewGuid();
-            var fileDownloadInformation = FileTransferInformation.BuildDownload(rpcPeer, nodePeer,
-                _fakeContext.Channel, correlationGuid, "", 0);
-
-            long successCrc = -1;
-
-            fileDownloadInformation.AddSuccessCallback((fileDownload) =>
-            {
-                successCrc = FileHelper.GetCrcValue(fileDownloadInformation.TempPath);
-            });
-            _rpcFileTransferFactory.RegisterTransfer(fileDownloadInformation);
+            var correlationGuid = Guid.NewGuid();
+            var fakeFileOutputPath = Path.GetTempFileName();
+            IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer, nodePeer,
+                _fakeContext.Channel, correlationGuid, fakeFileOutputPath, 0);
+            var getFileFromDfsResponseHandler =
+                new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
+            var transferBytesHandler =
+                new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _cache, _logger);
+            
+            _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 
             var getFileResponse = new GetFileFromDfsResponse
             {
                 FileSize = (ulong) byteSize,
                 ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful.Id)
             }.ToAnySigned(nodePeer.PeerId, correlationGuid);
-
-            var getFileHandler =
-                new GetFileFromDfsResponseHandler(_cache, _logger, _rpcFileTransferFactory);
-
+            
+            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+            
             var fileStream = _dfs.ReadAsync(addedIpfsHash).GetAwaiter().GetResult();
-            var fileUploadInformation = FileTransferInformation.BuildUpload(
+            IUploadFileInformation fileUploadInformation = new UploadFileTransferInformation(
                 fileStream,
                 rpcPeer,
                 nodePeer,
@@ -119,26 +111,19 @@ namespace Catalyst.Cli.UnitTests
                 correlationGuid,
                 new RpcMessageFactory<TransferFileBytesRequest>());
 
-            List<AnySigned> chunkMessages = new List<AnySigned>();
             for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
             {
                 var transferMessage = fileUploadInformation
                    .GetUploadMessageDto(i);
-                chunkMessages.Add(transferMessage);
+                transferMessage.SendToHandler(_fakeContext, transferBytesHandler);
             }
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, getFileResponse);
-            getFileHandler.StartObserving(messageStream);
-
-            Task fileTransferTask = _rpcFileTransferFactory.InitialiseFileTransferAsync(correlationGuid);
-
-            var transferBytesHandler =
-                new TransferFileBytesRequestHandler(_rpcFileTransferFactory, rpcPeer, _cache, _logger);
-            messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, chunkMessages.ToArray());
-            transferBytesHandler.StartObserving(messageStream);
-            fileTransferTask.GetAwaiter().GetResult();
-
-            Assert.Equal(crcValue, successCrc);
+            while (!fileDownloadInformation.IsCompleted)
+            {
+                // Wait for transfer to complete
+            }
+            
+            Assert.Equal(crcValue, FileHelper.GetCrcValue(fileDownloadInformation.TempPath));
         }
 
         private string AddFileToDfs(long byteSize, out long crcValue)

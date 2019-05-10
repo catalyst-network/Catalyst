@@ -61,7 +61,8 @@ namespace Catalyst.Cli.Commands
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
-        private readonly IFileTransferFactory _rpcFileTransferFactory;
+        private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
+        private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
 
@@ -71,7 +72,8 @@ namespace Catalyst.Cli.Commands
             IConfigurationRoot config,
             ILogger logger,
             ICertificateStore certificateStore,
-            IFileTransferFactory rpcFileTransferFactory,
+            IDownloadFileTransferFactory downloadFileTransferFactory,
+            IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput)
         {
             _certificateStore = certificateStore;
@@ -79,7 +81,8 @@ namespace Catalyst.Cli.Commands
             _logger = logger;
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
-            _rpcFileTransferFactory = rpcFileTransferFactory;
+            _downloadFileTransferFactory = downloadFileTransferFactory;
+            _uploadFileTransferFactory = uploadFileTransferFactory;
             _peerIdentifier = BuildCliPeerId(config);
             _userOutput = userOutput;
 

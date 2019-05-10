@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
@@ -47,19 +48,19 @@ namespace Catalyst.Cli.Handlers
     public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IMessageCorrelationCache>,
         IRpcResponseHandler
     {
-        /// <summary>The cli file transfer</summary>
-        private readonly IFileTransferFactory _rpcFileTransferFactory;
+        /// <summary>The upload file transfer factory</summary>
+        private readonly IUploadFileTransferFactory _rpcFileTransferFactory;
 
         private readonly IUserOutput _userOutput;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="rpcFileTransferFactory">The CLI file transfer</param>
+        /// <param name="rpcFileTransferFactory">The upload file transfer factory</param>
         /// <param name="userOutput"></param>
         public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            IFileTransferFactory rpcFileTransferFactory, 
+            IUploadFileTransferFactory rpcFileTransferFactory, 
             IUserOutput userOutput) : base(correlationCache, logger)
         {
             _userOutput = userOutput;
@@ -84,7 +85,7 @@ namespace Catalyst.Cli.Handlers
             {
                 if (responseCode == FileTransferResponseCodes.Successful)
                 {
-                    _rpcFileTransferFactory.InitialiseFileTransferAsync(message.Payload.CorrelationId.ToGuid())
+                    _rpcFileTransferFactory.FileTransferAsync(message.Payload.CorrelationId.ToGuid(), CancellationToken.None)
                        .ConfigureAwait(false);
                 }
             }

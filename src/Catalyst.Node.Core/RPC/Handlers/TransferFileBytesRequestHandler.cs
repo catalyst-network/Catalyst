@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -43,8 +44,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
         : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
-        /// <summary>The file transfer</summary>
-        private readonly IFileTransferFactory _fileTransferFactory;
+        /// <summary>The download file transfer factory</summary>
+        private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactory<TransferFileBytesResponse> _rpcMessageFactory;
@@ -53,11 +54,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
-        /// <param name="fileTransferFactory">The file transfer.</param>
+        /// <param name="fileTransferFactory">The download transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesRequestHandler(IFileTransferFactory fileTransferFactory,
+        public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
             IMessageCorrelationCache correlationCache,
             ILogger logger)
@@ -74,13 +75,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
+            var downloadFactory = (DownloadFileTransferFactory) _fileTransferFactory;
 
             try
             {
                 Guard.Argument(deserialised).NotNull("Message cannot be null");
 
                 var correlationId = new Guid(deserialised.CorrelationFileName.ToByteArray());
-                responseCode = _fileTransferFactory.DownloadChunk(correlationId, deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
+                responseCode = downloadFactory.DownloadChunk(correlationId, deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
             }
             catch (Exception e)
             {

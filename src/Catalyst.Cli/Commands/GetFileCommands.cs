@@ -70,7 +70,7 @@ namespace Catalyst.Cli.Commands
             var messageDto = new RpcMessageFactory<GetFileFromDfsRequest>().GetMessage(message, nodePeerIdentifier,
                 _peerIdentifier, MessageTypes.Ask);
 
-            var fileTransfer = FileTransferInformation.BuildDownload(
+            IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,
                 new PeerIdentifier(messageDto.PeerId),
                 node.Channel,
@@ -79,8 +79,7 @@ namespace Catalyst.Cli.Commands
                 0
             );
 
-            fileTransfer.AddSuccessCallback(OnSuccess);
-            _rpcFileTransferFactory.RegisterTransfer(fileTransfer);
+            _downloadFileTransferFactory.RegisterTransfer(fileTransfer);
 
             node.SendMessage(messageDto);
 
@@ -88,13 +87,13 @@ namespace Catalyst.Cli.Commands
 
             Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
 
-            while (!fileTransfer.IsComplete() && !fileTransfer.IsExpired())
+            while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
                 _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%");
                 System.Threading.Thread.Sleep(500);
             }
 
-            if (fileTransfer.IsComplete())
+            if (fileTransfer.ChunkIndicatorsTrue())
             {
                 _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%\n");
             }
@@ -106,13 +105,6 @@ namespace Catalyst.Cli.Commands
             Program.LogLevelSwitch.MinimumLevel = originalLogLevel;
 
             return true;
-        }
-
-        /// <summary>Called when [success] of file upload.</summary>
-        /// <param name="obj">The file transfer information object.</param>
-        private static void OnSuccess(IFileTransferInformation obj)
-        {
-            File.Move(obj.TempPath, obj.FileOutputPath);
         }
     }
 }

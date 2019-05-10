@@ -21,7 +21,10 @@
 
 #endregion
 
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
@@ -44,8 +47,8 @@ namespace Catalyst.Cli.Handlers
     public class GetFileFromDfsResponseHandler : CorrelatableMessageHandlerBase<GetFileFromDfsResponse, IMessageCorrelationCache>,
         IRpcResponseHandler
     {
-        /// <summary>The file transfer</summary>
-        private readonly IFileTransferFactory _fileTransferFactory;
+        /// <summary>The file transfer factory</summary>
+        private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>Initializes a new instance of the <see cref="GetFileFromDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
@@ -53,7 +56,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="fileTransferFactory">The file transfer.</param>
         public GetFileFromDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            IFileTransferFactory fileTransferFactory) : base(correlationCache, logger)
+            IDownloadFileTransferFactory fileTransferFactory) : base(correlationCache, logger)
         {
             _fileTransferFactory = fileTransferFactory;
         }
@@ -70,9 +73,19 @@ namespace Catalyst.Cli.Handlers
 
             var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(message.Payload.CorrelationId.ToGuid());
 
+            if (fileTransferInformation == null)
+            {
+                return;
+            }
+
             if (responseCode == FileTransferResponseCodes.Successful)
             {
-                fileTransferInformation?.SetLength(deserialised.FileSize);
+                fileTransferInformation.SetLength(deserialised.FileSize);
+
+                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                {
+                    File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
+                });
             }
             else
             {

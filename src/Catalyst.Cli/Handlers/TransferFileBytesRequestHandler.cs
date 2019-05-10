@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -44,8 +45,8 @@ namespace Catalyst.Cli.Handlers
         : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
             IRpcResponseHandler
     {
-        /// <summary>The file transfer</summary>
-        private readonly IFileTransferFactory _fileTransferFactory;
+        /// <summary>The download file transfer factory</summary>
+        private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactory<TransferFileBytesResponse> _rpcMessageFactory;
@@ -54,11 +55,11 @@ namespace Catalyst.Cli.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
-        /// <param name="fileTransferFactory">The file transfer.</param>
+        /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="config">The configuration.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesRequestHandler(IFileTransferFactory fileTransferFactory,
+        public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IConfigurationRoot config,
             IMessageCorrelationCache correlationCache,
             ILogger logger)
@@ -70,11 +71,11 @@ namespace Catalyst.Cli.Handlers
         }
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
-        /// <param name="fileTransferFactory">The file transfer.</param>
+        /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesRequestHandler(IFileTransferFactory fileTransferFactory,
+        public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
             IMessageCorrelationCache correlationCache,
             ILogger logger)

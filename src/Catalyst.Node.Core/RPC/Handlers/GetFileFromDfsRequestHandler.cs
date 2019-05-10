@@ -31,6 +31,7 @@ using Serilog;
 using Catalyst.Common.Extensions;
 using System;
 using System.IO;
+using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
@@ -54,8 +55,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactory<GetFileFromDfsResponse> _rpcMessageFactory;
 
-        /// <summary>The file transfer</summary>
-        private readonly IFileTransferFactory _fileTransferFactory;
+        /// <summary>The upload file transfer factory</summary>
+        private readonly IUploadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -66,12 +67,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestHandler"/> class.</summary>
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="fileTransferFactory">The file transfer.</param>
+        /// <param name="fileTransferFactory">The upload file transfer factory.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
-            IFileTransferFactory fileTransferFactory,
+            IUploadFileTransferFactory fileTransferFactory,
             IMessageCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger)
         {
@@ -90,7 +91,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var correlationGuid = message.Payload.CorrelationId.ToGuid();
             long fileLen = 0;
             FileTransferResponseCodes responseCode;
-            IFileTransferInformation fileTransferInformation;
 
             try
             {
@@ -102,7 +102,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                     Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-                    fileTransferInformation = FileTransferInformation.BuildUpload(
+                    IUploadFileInformation fileTransferInformation = new UploadFileTransferInformation(
                         ms,
                         _peerIdentifier,
                         recipientPeerIdentifier,
@@ -123,7 +123,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             if (responseCode == FileTransferResponseCodes.Successful)
             {
-                _fileTransferFactory.InitialiseFileTransferAsync(correlationGuid);
+                _fileTransferFactory.FileTransferAsync(correlationGuid, CancellationToken.None);
             }
         }
 

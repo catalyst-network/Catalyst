@@ -22,11 +22,11 @@
 #endregion
 
 using System;
+using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
@@ -36,11 +36,6 @@ namespace Catalyst.Common.Interfaces.FileTransfer
     /// </summary>
     public interface IFileTransferInformation
     {
-        /// <summary>Writes to stream.</summary>
-        /// <param name="chunk">The chunk.</param>
-        /// <param name="fileBytes">The file bytes.</param>
-        void WriteToStream(uint chunk, byte[] fileBytes);
-        
         /// <summary>Gets the percentage.</summary>
         int GetPercentage();
         
@@ -48,9 +43,9 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <returns><c>true</c> if this instance is expired; otherwise, <c>false</c>.</returns>
         bool IsExpired();
 
-        /// <summary>Determines whether this instance is complete.</summary>
-        /// <returns><c>true</c> if this instance is complete; otherwise, <c>false</c>.</returns>
-        bool IsComplete();
+        /// <summary>Chunks the indicators true.</summary>
+        /// <returns></returns>
+        bool ChunkIndicatorsTrue();
 
         /// <summary>Cleans up.</summary>
         void CleanUp();
@@ -61,12 +56,10 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         void Dispose();
 
-        /// <summary>Executes the on expired.</summary>
-        void ExecuteOnExpired();
-
-        /// <summary>Executes the on success.</summary>
-        void ExecuteOnSuccess();
-
+        /// <summary>Gets or sets a value indicating whether this instance is completed.</summary>
+        /// <value><c>true</c> if this instance is completed; otherwise, <c>false</c>.</value>
+        bool IsCompleted { get; set; }
+        
         /// <summary>Gets or sets the DFS hash.</summary>
         /// <value>The DFS hash.</value>
         string DfsHash { get; set; }
@@ -99,44 +92,44 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <value>The peer identifier.</value>
         IPeerIdentifier PeerIdentifier { get; set; }
 
-        /// <summary>Gets or sets a value indicating whether this instance is download.</summary>
-        /// <value><c>true</c> if this instance is download; otherwise, <c>false</c>.</value>
-        bool IsDownload { get; set; }
-
+        /// <summary>The cancellation token</summary>
+        CancellationToken CancellationToken { get; set; }
+        
         /// <summary>Gets or sets a value indicating whether this <see cref="IFileTransferInformation"/> is initialised.</summary>
         /// <value><c>true</c> if initialised; otherwise, <c>false</c>.</value>
         bool Initialised { get; set; }
-
-        /// <summary>Gets or sets the task context.</summary>
-        /// <value>The task context.</value>
-        Task TaskContext { get; set; }
-
-        /// <summary>Occurs when [on expired].</summary>
-        void AddExpiredCallback(Action<IFileTransferInformation> callback);
-
-        /// <summary>Occurs when [on success].</summary>
-        void AddSuccessCallback(Action<IFileTransferInformation> callback);
-       
-        /// <summary>Sets file the length.</summary>
-        /// <param name="fileSize">Size of the file.</param>
-        void SetLength(ulong fileSize);
-
-        /// <summary>Gets the upload message.</summary>
-        /// <param name="chunkId">The chunk identifier.</param>
-        /// <returns></returns>
-        AnySigned GetUploadMessageDto(uint chunkId);
-
-        /// <summary>Expires this instance.</summary>
-        void Expire();
-
+        
         /// <summary>Updates the chunk indicator.</summary>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <param name="state">if set to <c>true</c> [state].</param>
         void UpdateChunkIndicator(uint chunkId, bool state);
+        
+        /// <summary>Expires this instance.</summary>
+        void Expire();
+    }
 
+    public interface IUploadFileInformation : IFileTransferInformation
+    {
         /// <summary>Retries the upload.</summary>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <returns></returns>
         bool RetryUpload(ref uint chunkId);
+        
+        /// <summary>Gets the upload message.</summary>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <returns></returns>
+        AnySigned GetUploadMessageDto(uint chunkId);
+    }
+
+    public interface IDownloadFileInformation : IFileTransferInformation
+    {
+        /// <summary>Writes to stream.</summary>
+        /// <param name="chunk">The chunk.</param>
+        /// <param name="fileBytes">The file bytes.</param>
+        void WriteToStream(uint chunk, byte[] fileBytes);
+
+        /// <summary>Sets file the length.</summary>
+        /// <param name="fileSize">Size of the file.</param>
+        void SetLength(ulong fileSize);
     }
 }
