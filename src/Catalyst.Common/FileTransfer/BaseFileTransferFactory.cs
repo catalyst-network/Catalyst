@@ -41,10 +41,19 @@ namespace Catalyst.Common.FileTransfer
         private readonly Dictionary<Guid, T> _pendingFileTransfers;
 
         /// <summary>The lock object</summary>
-        private static readonly object LockObject = new object();
+        private readonly object _lockObject = new object();
 
         /// <inheritdoc />
-        public Guid[] Keys => _pendingFileTransfers.Keys.ToArray();
+        public Guid[] Keys
+        {
+            get
+            {
+                lock (_lockObject)
+                {
+                    return _pendingFileTransfers.Keys.ToArray();
+                }
+            }
+        }
 
         /// <summary>Initializes a new instance of the <see cref="BaseFileTransferFactory{T}"/> class.</summary>
         protected BaseFileTransferFactory()
@@ -61,7 +70,7 @@ namespace Catalyst.Common.FileTransfer
         {
             var fileHash = fileTransferInformation.CorrelationGuid;
 
-            lock (LockObject)
+            lock (_lockObject)
             {
                 if (_pendingFileTransfers.ContainsKey(fileHash))
                 {
@@ -110,7 +119,7 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         public T GetFileTransferInformation(Guid key)
         {
-            lock (LockObject)
+            lock (_lockObject)
             {
                 return !_pendingFileTransfers.ContainsKey(key) ? default : _pendingFileTransfers[key];
             }
@@ -119,7 +128,7 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         public void Remove(Guid key)
         {
-            lock (LockObject)
+            lock (_lockObject)
             {
                 if (_pendingFileTransfers.ContainsKey(key))
                 {
