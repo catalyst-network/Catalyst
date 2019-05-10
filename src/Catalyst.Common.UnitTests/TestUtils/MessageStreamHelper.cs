@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -54,13 +55,9 @@ namespace Catalyst.Common.UnitTests.TestUtils
 
         public static IObservable<IChanneledMessage<AnySigned>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params AnySigned[] responseMessages)
         {
-            List<ChanneledAnySigned> stream = new List<ChanneledAnySigned>();
-            foreach (var message in responseMessages)
-            {
-                var channeledAny = new ChanneledAnySigned(fakeContext, message);
-                stream.Add(channeledAny);
-            }
-            
+            var stream = responseMessages
+               .Select(message => new ChanneledAnySigned(fakeContext, message));
+
             var messageStream = stream.ToObservable();
             return messageStream;
         }
