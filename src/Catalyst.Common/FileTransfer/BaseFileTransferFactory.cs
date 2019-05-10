@@ -92,10 +92,6 @@ namespace Catalyst.Common.FileTransfer
         public async Task FileTransferAsync(Guid correlationGuid, CancellationToken cancellationToken)
         {
             var fileTransferInformation = GetFileTransferInformation(correlationGuid);
-            if (fileTransferInformation == null)
-            {
-                throw new NullReferenceException("File transfer has not been registered to factory");
-            }
 
             if (fileTransferInformation.Initialised)
             {
