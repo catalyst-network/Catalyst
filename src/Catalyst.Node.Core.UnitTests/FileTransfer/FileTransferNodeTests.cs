@@ -48,16 +48,15 @@ using Catalyst.Node.Core.UnitTest.TestUtils;
 using Catalyst.Protocol.Common;
 using ICSharpCode.SharpZipLib.Checksum;
 using Microsoft.Extensions.Configuration;
-using Catalyst.Node.Core.Modules.Ipfs;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer
 {
     public sealed class FileTransferNodeTests : IDisposable
     {
         private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IFileTransfer _fileTransfer;
         private readonly IpfsAdapter _ipfsEngine;
+        private readonly IFileTransfer _fileTransfer;
+        private readonly IChannelHandlerContext _fakeContext;
 
         public FileTransferNodeTests()
         {
@@ -98,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var cache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _fileTransfer, cache, _logger);
             handler.StartObserving(messageStream);
 
@@ -121,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var cache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _fileTransfer, cache, _logger);
             handler.StartObserving(messageStream);
 
@@ -187,7 +186,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             fakeNode.MessageStream.Returns(messageStream);
             var cache = Substitute.For<IMessageCorrelationCache>();
-            var dfs = new IpfsDfs(_ipfsEngine, _logger);
+            var dfs = new Dfs(_ipfsEngine, _logger);
 
             var handler = new AddFileToDfsRequestHandler(dfs, senderPeerId, _fileTransfer,
                 cache, _logger);
@@ -240,7 +239,8 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         }
 
         #region IDisposable Support
-        void Dispose(bool disposing)
+
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
@@ -252,8 +252,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         {
             Dispose(true);
         }
+
         #endregion
-
-
     }
 }

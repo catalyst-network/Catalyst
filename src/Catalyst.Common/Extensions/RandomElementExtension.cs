@@ -28,7 +28,7 @@ using Dawn;
 
 namespace Catalyst.Common.Extensions
 {
-    public static class EnumerableExtension
+    public static class RandomElementExtension
     {
         private static readonly Random Rng = new Random();
 

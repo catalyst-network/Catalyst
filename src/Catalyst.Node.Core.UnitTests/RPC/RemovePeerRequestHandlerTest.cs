@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -89,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>Executes the test case.</summary>
         /// <param name="fakePeers">The fake peers.</param>
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
-        private void ExecuteTestCase(string[] fakePeers, bool withPublicKey)
+        private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var peerRepository = new InMemoryRepository<Peer>();
 
@@ -105,7 +106,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 peerRepository.Add(peer);
             });
 
-            peerRepository.GetAll().Count().Should().Be(fakePeers.Length);
+            peerRepository.GetAll().Count().Should().Be(fakePeers.Count);
 
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
@@ -141,7 +142,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             var responseContent = sentResponse.FromAnySigned<RemovePeerResponse>();
 
-            responseContent.DeletedCount.Should().Be(withPublicKey ? 1 : (UInt32) fakePeers.Length);
+            responseContent.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
         }
     }
 }
