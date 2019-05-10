@@ -23,5 +23,12 @@
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
-    public interface IConsensus { }
+    public interface IConsensus
+    {
+        /// <summary>
+        /// A comparer used to order transactions, notably in the mempool, by descending order
+        /// of priority. In Catalyst network, all delta producers need to 
+        /// </summary>
+        ITransactionComparer TransactionComparer { get; }
+    }
 }
