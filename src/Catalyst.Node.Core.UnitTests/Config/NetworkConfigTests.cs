@@ -36,7 +36,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Config
 {
-    public class NetworkConfigTests
+    public sealed class NetworkConfigTests
     {
         public static readonly List<object[]> NetworkFiles;
 

@@ -8,13 +8,12 @@
                 "type": "Catalyst.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Common"
             }
         ],
-        "instanceScope": "singleinstance"
     },
     {
-        "type": "Catalyst.Node.Core.Modules.Dfs.IpfsEngine",
+        "type": "Catalyst.Node.Core.Modules.Ipfs.IpfsAdapter",
         "services": [
             {
-                "type": "Catalyst.Node.Core.Modules.Dfs.IIpfsEngine"
+                "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"
             }
         ],
         "instanceScope": "singleinstance"

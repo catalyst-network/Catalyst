@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -39,10 +38,9 @@ using SharpRepository.Repository;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
 using System.Collections.Generic;
-using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Common.Config;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
@@ -72,7 +70,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>
         /// Tests the peer list request and response.
         /// </summary>
-        /// <param name="fakePeeers">The fake peers.</param>
+        /// <param name="fakePeers">The fake peers.</param>
         [Theory]
         [InlineData("FakePeer1", "FakePeer2")]
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
@@ -100,16 +98,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var peerDiscovery = Substitute.For<IPeerDiscovery>();
             peerDiscovery.PeerRepository.Returns(peerRepository);
             
-            var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest, RpcMessages>();
+            var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest>();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto<GetPeerListRequest, RpcMessages>
-            (
-                type: RpcMessages.GetPeerListRequest,
+            var requestMessage = rpcMessageFactory.GetMessage(
                 message: new GetPeerListRequest(),
                 recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sender: sendPeerIdentifier
-            ));
+                sender: sendPeerIdentifier,
+                messageType: MessageTypes.Ask
+            );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

@@ -56,7 +56,6 @@ namespace Catalyst.Node.Core.P2P
             Announce = bool.Parse(section.GetSection("Announce").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
             AddressVersion = byte.Parse(section.GetSection("AddressVersion").Value);
-            MaxConnections = ushort.Parse(section.GetSection("MaxConnections").Value);
             KnownNodes = Enumerable.ToList(section.GetSection("KnownNodes").GetChildren().Select(p => p.Value));
             SeedServers = Enumerable.ToList(section.GetSection("SeedServers").GetChildren().Select(p => p.Value));
             AnnounceServer =

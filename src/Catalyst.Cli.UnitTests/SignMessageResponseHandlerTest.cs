@@ -23,18 +23,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -95,19 +91,18 @@ namespace Catalyst.Cli.UnitTests
         public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
         {   
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
-            
-            var response = new RpcMessageFactory<SignMessageResponse, RpcMessages>().GetMessage(
-                new MessageDto<SignMessageResponse, RpcMessages>(
-                    RpcMessages.SignMessageResponse,
-                    new SignMessageResponse
-                    {
-                        OriginalMessage = signedResponse.OriginalMessage,
-                        PublicKey = signedResponse.PublicKey,
-                        Signature = signedResponse.Signature
-                    },
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
-            );
+
+            var response = new RpcMessageFactory<SignMessageResponse>().GetMessage(
+                new SignMessageResponse
+                {
+                    OriginalMessage = signedResponse.OriginalMessage,
+                    PublicKey = signedResponse.PublicKey,
+                    Signature = signedResponse.Signature
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                MessageTypes.Tell,
+                Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
             

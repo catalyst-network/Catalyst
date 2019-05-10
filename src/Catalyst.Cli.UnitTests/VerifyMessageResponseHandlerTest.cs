@@ -23,19 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using NSubstitute;
@@ -49,9 +42,9 @@ namespace Catalyst.Cli.UnitTests
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
-        
+
         public static List<object[]> QueryContents;
-        
+
         private VerifyMessageResponseHandler _handler;
 
         static VerifyMessageResponseHandlerTest()
@@ -74,23 +67,22 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedbyNode)
         {
-            var response = new RpcMessageFactory<VerifyMessageResponse, RpcMessages>().GetMessage(
-                new MessageDto<VerifyMessageResponse, RpcMessages>(
-                    RpcMessages.VerifyMessageResponse,
-                    new VerifyMessageResponse
-                    {
-                        IsSignedByKey = isSignedbyNode
-                    },
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"), 
-                    PeerIdentifierHelper.GetPeerIdentifier("sender"))
-            );
+            var response = new RpcMessageFactory<VerifyMessageResponse>().GetMessage(
+                new VerifyMessageResponse
+                {
+                    IsSignedByKey = isSignedbyNode
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                MessageTypes.Tell,
+                Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
             var cache = Substitute.For<IMessageCorrelationCache>();
 
             _handler = new VerifyMessageResponseHandler(_output, cache, _logger);
             _handler.StartObserving(messageStream);
-            
+
             _output.Received(1).WriteLine(isSignedbyNode.ToString());
         }
 

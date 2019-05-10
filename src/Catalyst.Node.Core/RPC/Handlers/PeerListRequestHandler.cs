@@ -22,20 +22,19 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using ILogger = Serilog.ILogger;
 using System.Collections.Generic;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Config;
+using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.P2P;
-using Catalyst.Common.IO.Messaging;
 using Dawn;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -57,7 +56,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<GetPeerListResponse, RpcMessages> _rpcMessageFactory;
+        private readonly RpcMessageFactory<GetPeerListResponse> _rpcMessageFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
@@ -74,7 +73,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             _peerIdentifier = peerIdentifier;
             _peerDiscovery = peerDiscovery;
-            _rpcMessageFactory = new RpcMessageFactory<GetPeerListResponse, RpcMessages>();
+            _rpcMessageFactory = new RpcMessageFactory<GetPeerListResponse>();
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             Guard.Argument(message).NotNull("Received message cannot be null");
 
-            ReturnResponse(this._peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
+            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
 
             Logger.Debug("received message of type PeerListRequest");
         }
@@ -94,18 +93,19 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Returns the response.
         /// </summary>
         /// <param name="peers">The peers list</param>
+        /// <param name="message"></param>
         private void ReturnResponse(IEnumerable<PeerId> peers, IChanneledMessage<AnySigned> message)
         {
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);
             
-            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto<GetPeerListResponse, RpcMessages>
-            (
-                type: RpcMessages.GetPeerListResponse,
+            var responseMessage = _rpcMessageFactory.GetMessage(
                 message: response,
                 recipient: new PeerIdentifier(message.Payload.PeerId),
-                sender: _peerIdentifier
-            ));
+                sender: _peerIdentifier,
+                messageType: MessageTypes.Tell,
+                message.Payload.CorrelationId.ToGuid()
+            );
 
             message.Context.Channel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
         }

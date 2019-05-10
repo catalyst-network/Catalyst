@@ -70,14 +70,13 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             {
                 peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
             }
-            
-            var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse, P2PMessages>().GetMessageInDatagramEnvelope(
-                new MessageDto<PeerNeighborsResponse, P2PMessages>(
-                    type: P2PMessages.GetNeighbourResponse,
-                    message: peerNeighborsResponseMessage,
-                    recipient: new PeerIdentifier(message.Payload.PeerId),
-                    sender: _peerIdentifier
-                )
+
+            var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse>().GetMessageInDatagramEnvelope(
+                message: peerNeighborsResponseMessage,
+                recipient: new PeerIdentifier(message.Payload.PeerId),
+                sender: _peerIdentifier,
+                messageType: MessageTypes.Tell,
+                message.Payload.CorrelationId.ToGuid()
             );
 
             message.Context.Channel.WriteAndFlushAsync(datagramEnvelope);

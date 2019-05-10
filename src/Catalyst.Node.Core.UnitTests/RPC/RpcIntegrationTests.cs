@@ -73,13 +73,13 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
-                    List<Transaction> txLst = new List<Transaction>
+                    var txLst = new List<Transaction>
                     {
                         TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
                         TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
                     };
 
-                    List<byte[]> txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+                    var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
                     return txEncodedLst;
                 }
             );
@@ -142,6 +142,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                             }
                            .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                            .ToArray();
+
                         Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                         serverObserver.Received.Should().NotBeNull();
@@ -157,7 +158,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             }
         }
 
-        //[Fact(Skip = "test hanger")]
         [Fact(Skip = "test hanger")]
         public void RpcServer_Can_Handle_GetVersionRequest()
         {
@@ -191,6 +191,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                             }
                            .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                            .ToArray();
+
                         Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                         serverObserver.Received.Should().NotBeNull();
@@ -237,6 +238,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                         }
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
+
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                     serverObserver.Received.Should().NotBeNull();
@@ -270,7 +272,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 using (rpcServer.MessageStream.Subscribe(serverObserver))
                 using (nodeRpcClient.MessageStream.Subscribe(clientObserver))
                 {
-                    var message = "lol";
+                    const string message = "test";
                     var request = new SignMessageRequest();
                     var bytesForRlpEncoding = message.Trim('\"').ToBytesForRLPEncoding();
                     var encodedMessage = RLP.EncodeElement(bytesForRlpEncoding);
@@ -287,6 +289,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                         }
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
+
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(MaxWaitInMs));
 
                     serverObserver.Received.Should().NotBeNull();

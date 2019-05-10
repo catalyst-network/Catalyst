@@ -21,46 +21,49 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Config
 {
-    public class P2PMessages
+    public sealed class P2PMessages
         : Enumeration,
             IEnumerableMessageType
     {
-        public static readonly P2PMessages PingRequest = new PingRequestMessage();
-        public static readonly P2PMessages PingResponse = new PingResponseMessage();
-        public static readonly P2PMessages GetNeighbourRequest = new GetNeighbourRequestMessage();
-        public static readonly P2PMessages GetNeighbourResponse = new GetNeighbourResponseMessage();
-        public static readonly P2PMessages BroadcastTransaction = new BroadcastTransactionMessage();
+        /// <summary>The message map</summary>
+        private static readonly Dictionary<string, P2PMessages> MessageMap;
 
+        /// <summary>The message namespace</summary>
+        private const string MessageNamespace = "Catalyst.Protocol.IPPN";
+
+        /// <summary>Initializes the <see cref="P2PMessages"/> class.</summary>
+        static P2PMessages()
+        {
+            MessageMap = new Dictionary<string, P2PMessages>();
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+               .SelectMany(t => t.GetTypes())
+               .Where(t => t.IsClass && t.Namespace == MessageNamespace
+                 && typeof(IMessage).IsAssignableFrom(t));
+
+            var id = 0;
+            foreach (var type in types)
+            {
+                MessageMap.Add(type.Name, new P2PMessages(id, type.Name));
+                id += 1;
+            }
+        }
+
+        /// <summary>Gets the messages.</summary>
+        /// <value>The messages.</value>
+        public IEnumerable<P2PMessages> Messages => MessageMap.Values.AsEnumerable();
+
+        /// <summary>Initializes a new instance of the <see cref="P2PMessages"/> class.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="name">The name.</param>
         private P2PMessages(int id, string name) : base(id, name) { }
-
-        private sealed class PingRequestMessage : P2PMessages
-        {
-            public PingRequestMessage() : base(1, "PingRequest") { }
-        }
-
-        private sealed class PingResponseMessage : P2PMessages
-        {
-            public PingResponseMessage() : base(2, "PingResponse") { }
-        }
-        
-        private sealed class GetNeighbourRequestMessage : P2PMessages
-        {
-            public GetNeighbourRequestMessage() : base(3, "GetNeighbourRequest") { }
-        }
-
-        private sealed class GetNeighbourResponseMessage : P2PMessages
-        {
-            public GetNeighbourResponseMessage() : base(4, "GetNeighbourResponse") { }
-        }
-        
-        private sealed class BroadcastTransactionMessage : P2PMessages
-        {
-            public BroadcastTransactionMessage() : base(5, "BroadcastTransaction") { }
-        }
     }
 }

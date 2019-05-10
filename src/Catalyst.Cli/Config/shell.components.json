@@ -42,7 +42,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Shell",
+            "type": "Catalyst.Cli.Commands.Commands",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cli.IAdvancedShell, Catalyst.Common"
@@ -163,10 +163,10 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.FileTransfer.CliFileTransfer, Catalyst.Cli",
+            "type": "Catalyst.Cli.Rpc.RpcFileTransfer, Catalyst.Cli",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.FileTransfer.ICliFileTransfer, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcFileTransfer, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

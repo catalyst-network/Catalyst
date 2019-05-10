@@ -21,17 +21,14 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -40,7 +37,6 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 using NSubstitute;
@@ -88,19 +84,17 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("hello", "any signature", "any public key", false)]
         [InlineData("", "", "", false)]
         public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
-        {   
-            var request = new RpcMessageFactory<VerifyMessageRequest, RpcMessages>().GetMessage(
-                new MessageDto<VerifyMessageRequest, RpcMessages>(
-                    RpcMessages.VerifyMessageRequest,
-                    new VerifyMessageRequest
-                    {
-                        Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
-                        PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
-                        Signature = signature.ToBytesForRLPEncoding().ToByteString()
-                    }, 
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key"))
-            );
+        {
+            var request = new RpcMessageFactory<VerifyMessageRequest>().GetMessage(
+                new VerifyMessageRequest
+                {
+                    Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
+                    PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
+                    Signature = signature.ToBytesForRLPEncoding().ToByteString()
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                MessageTypes.Ask);
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

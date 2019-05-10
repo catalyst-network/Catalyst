@@ -31,17 +31,51 @@ namespace Catalyst.Common.Config
 {
     public static class Constants
     {
+        // <summary> Folder with config files </summary>
         public static string ConfigSubFolder => "Config";
+        
+        // <summary> Folder with modules for Catalyst.Node </summary>
         public static string ModulesSubFolder => "Modules";
+        
+        // <summary> Config file with Catalyst.Node component registrations for autofac </summary>
         public static string ComponentsJsonConfigFile => "components.json";
+        
+        // <summary> Serilog configuration file </summary>
         public static string SerilogJsonConfigFile => "serilog.json";
+        
+        // <summary> Search pattern for Json files </summary>
         private static string JsonFilePattern => "{0}.json";
+        
+        // <summary> Default Catalyst data directory </summary>
         internal static string CatalystSubFolder => ".Catalyst";
+        
+        // <summary> Config file with Catalyst.Cli component registrations for autofac </summary>
         public static string ShellComponentsJsonConfigFile => "shell.components.json";
+        
+        // <summary> Config file with nodes for use in rpc client </summary>
         public static string ShellNodesConfigFile => "nodes.json";
+        
+        // <summary> Shell configuration file </summary>
         public static string ShellConfigFile => "shell.config.json";
+        
+        // <summary> Registration of message handlers for autofac </summary>
         public static string MessageHandlersConfigFile => "messageHandlers.json";
 
+        /// <summary>The expiry minutes of initialization </summary>
+        public static int FileTransferExpiryMinutes => 1;
+
+        /// <summary>The chunk size in bytes </summary>
+        public static int FileTransferChunkSize => 1000000;
+
+        /// <summary>The CLI chunk writing wait time </summary>
+        public static int FileTransferRpcWaitTime => 30;
+
+        /// <summary>The maximum chunk retry count </summary>
+        public static int FileTransferMaxChunkRetryCount => 3;
+
+        /// <summary>The maximum chunk read tries </summary>
+        public static int FileTransferMaxChunkReadTries => 3;
+        
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));

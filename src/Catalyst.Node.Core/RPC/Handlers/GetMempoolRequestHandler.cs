@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -33,10 +32,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -74,17 +70,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Guard.Argument(deserialised).NotNull("The shell GetMempoolRequest cannot be null.");
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
-                
-                var response = new RpcMessageFactory<GetMempoolResponse, RpcMessages>().GetMessage(
-                    new MessageDto<GetMempoolResponse, RpcMessages>(
-                        RpcMessages.GetMempoolRequest,
-                        new GetMempoolResponse
-                        {
-                            Mempool = {GetMempoolContent()}
-                        },
-                        new PeerIdentifier(message.Payload.PeerId), 
-                        _peerIdentifier)
-                );
+
+                var response = new RpcMessageFactory<GetMempoolResponse>().GetMessage(
+                    new GetMempoolResponse
+                    {
+                        Mempool = {GetMempoolContent()}
+                    },
+                    new PeerIdentifier(message.Payload.PeerId),
+                    _peerIdentifier,
+                    MessageTypes.Tell,
+                    message.Payload.CorrelationId.ToGuid());
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
             }

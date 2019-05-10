@@ -21,11 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Enums.FileTransfer;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -43,17 +45,17 @@ namespace Catalyst.Cli.Handlers
         IRpcResponseHandler
     {
         /// <summary>The cli file transfer</summary>
-        private readonly ICliFileTransfer _cliFileTransfer;
+        private readonly IRpcFileTransfer _rpcFileTransfer;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="cliFileTransfer">The CLI file transfer</param>
+        /// <param name="rpcFileTransfer">The CLI file transfer</param>
         public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            ICliFileTransfer cliFileTransfer) : base(correlationCache, logger)
+            IRpcFileTransfer rpcFileTransfer) : base(correlationCache, logger)
         {
-            _cliFileTransfer = cliFileTransfer;
+            _rpcFileTransfer = rpcFileTransfer;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -64,19 +66,13 @@ namespace Catalyst.Cli.Handlers
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-            AddFileToDfsResponseCode responseCode = (AddFileToDfsResponseCode) deserialised.ResponseCode[0];
+            //@TODO check
+            var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
-            switch (responseCode)
-            {
-                case AddFileToDfsResponseCode.Failed:
-                case AddFileToDfsResponseCode.Finished:
-                    _cliFileTransfer.ProcessCompletedCallback(responseCode, deserialised.DfsHash);
-                    break;
-
-                default:
-                    _cliFileTransfer.InitialiseFileTransferResponseCallback(responseCode);
-                    break;
-            }
+            if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
+                _rpcFileTransfer.ProcessCompletedCallback(responseCode, deserialised.DfsHash);
+            else
+                _rpcFileTransfer.InitialiseFileTransferResponseCallback(responseCode);
         }
     }
 }

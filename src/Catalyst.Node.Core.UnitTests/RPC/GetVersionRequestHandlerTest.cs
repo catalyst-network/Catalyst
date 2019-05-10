@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
@@ -29,7 +28,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -40,7 +38,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC 
+namespace Catalyst.Node.Core.UnitTest.RPC
 {
     public sealed class GetVersionRequestHandlerTest
     {
@@ -51,31 +49,29 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            
+
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
-        
+
         [Fact]
         public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
-        { 
-            var request = new RpcMessageFactory<VersionRequest, RpcMessages>().GetMessage(
-                new P2PMessageDto<VersionRequest, RpcMessages>(
-                    RpcMessages.GetVersionRequest,
-                    new VersionRequest(),
-                    PeerIdentifierHelper.GetPeerIdentifier("recepient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender"))
-            );
-            
+        {
+            var request = new RpcMessageFactory<VersionRequest>().GetMessage(
+                new VersionRequest(),
+                PeerIdentifierHelper.GetPeerIdentifier("recepient"),
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                MessageTypes.Ask);
+
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
             var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, subbedCache);
             handler.StartObserving(messageStream);
-            
+
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);
-            
+
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
 

@@ -22,8 +22,8 @@
 #endregion
 
 using System;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
@@ -31,29 +31,71 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public abstract class MessageFactoryBase<TMessage, TMessageType>
+    /// <summary>
+    /// The base class to handle building of AnySigned messages
+    /// </summary>
+    /// <typeparam name="TMessage">The type of the message.</typeparam>
+    public abstract class MessageFactoryBase<TMessage>
         where TMessage : class, IMessage<TMessage>
-        where TMessageType : class, IEnumerableMessageType
     {
-        /// <summary>
-        ///     Switch returns message or throws an exception for unknown message type
-        /// </summary>
-        /// <param name="dto"></param>
+        /// <summary>Gets the message.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="messageType">Type of the message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        public virtual AnySigned GetMessage(TMessage message,
+            IPeerIdentifier recipient,
+            IPeerIdentifier sender,
+            MessageTypes messageType,
+            Guid correlationId = default)
+        {
+            var messageDto = GetMessageDto(message, recipient, sender);
+
+            if (messageType == MessageTypes.Ask)
+            {
+                return BuildAskMessage(messageDto);
+            }
+
+            if (messageType == MessageTypes.Tell)
+            {
+                return BuildTellMessage(messageDto, correlationId);   
+            }
+
+            throw new ArgumentException();
+        }
+
+        /// <summary>Gets the message dto.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="sender">The sender.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public abstract AnySigned GetMessage(IMessageDto<TMessage, TMessageType> dto);
-        
-        protected AnySigned BuildTellMessage(IMessageDto<TMessage, TMessageType> dto)
+        protected abstract IMessageDto<TMessage> GetMessageDto(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender);
+
+        /// <summary>Builds the tell message.</summary>
+        /// <param name="dto">The dto.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        private AnySigned BuildTellMessage(IMessageDto<TMessage> dto, Guid correlationId)
+        {
+            return correlationId == default
+                ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
+                : dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
+        }
+
+        /// <summary>Builds the ask message.</summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns>AnySigned message</returns>
+        private AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
 
-        protected AnySigned BuildAskMessage(IMessageDto<TMessage, TMessageType> dto)
-        {
-            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
-        }
-
-        protected AnySigned BuildGossipMessage(IMessageDto<TMessage, TMessageType> dto)
+        /// <summary>Builds the gossip message.</summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns>AnySigned message</returns>
+        protected AnySigned BuildGossipMessage(IMessageDto<TMessage> dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
