@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         }
 
         [Theory]
-        [InlineData(typeof(IConsensus), typeof(Consensus))]
+        [InlineData(typeof(IConsensus), typeof(Core.Modules.Consensus.Consensus))]
         [InlineData(typeof(IContract), typeof(Contract))]
         [InlineData(typeof(IDfs), typeof(Core.Modules.Dfs.Dfs))]
         [InlineData(typeof(ILedger), typeof(Ledger))]
