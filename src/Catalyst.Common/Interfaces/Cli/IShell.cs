@@ -28,6 +28,7 @@ namespace Catalyst.Common.Interfaces.Cli
     public interface IShell
     {
         /// <summary>
+        ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
         bool RunConsole(CancellationToken ct);
