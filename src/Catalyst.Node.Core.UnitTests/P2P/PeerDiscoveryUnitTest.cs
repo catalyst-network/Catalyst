@@ -101,7 +101,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
             {
-                var peerDiscovery = container.Resolve<IPeerDiscovery>();
+                var peerDiscovery = container.Resolve<IHastingWalkDiscovery>();
                 Assert.NotNull(peerDiscovery);
                 peerDiscovery.Should().BeOfType(typeof(PeerDiscovery));
                 Assert.NotNull(peerDiscovery.Dns);

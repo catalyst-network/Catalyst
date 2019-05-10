@@ -7,6 +7,7 @@
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
     <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.3866-beta" />
+    <PackageReference Include="Gstc.Collections.Observable" Version="0.1.1-alpha" />
     <PackageReference Include="Ipfs.Api" Version="0.23.6" />
     <PackageReference Include="Ipfs.Engine" Version="0.7.2" />
     <PackageReference Include="Polly" Version="7.1.0" />

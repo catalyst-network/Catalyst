@@ -66,9 +66,6 @@ namespace Catalyst.Common.P2P
         public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
         /// <inheritdoc />
-        public void Dispose() { Dispose(true); }
-
-        /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
         /// <inheritdoc />
@@ -83,6 +80,12 @@ namespace Catalyst.Common.P2P
             Reputation += mer;
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        
         /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         private void Dispose(bool disposing)
