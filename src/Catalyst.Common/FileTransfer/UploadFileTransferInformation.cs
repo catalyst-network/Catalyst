@@ -39,10 +39,7 @@ namespace Catalyst.Common.FileTransfer
     {
         /// <summary>The upload message factory</summary>
         private readonly MessageFactoryBase<TransferFileBytesRequest> _uploadMessageFactory;
-
-        /// <summary>The upload retry count</summary>
-        private int _uploadRetryCount;
-
+        
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
@@ -61,7 +58,7 @@ namespace Catalyst.Common.FileTransfer
         {
             RandomAccessStream = stream;
             _uploadMessageFactory = uploadMessageFactory;
-            _uploadRetryCount = 0;
+            RetryCount = 0;
         }
 
         /// <inheritdoc />
@@ -108,16 +105,16 @@ namespace Catalyst.Common.FileTransfer
             );
         }
 
+        public int RetryCount { get; set; }
+
         /// <inheritdoc />
-        public bool RetryUpload(ref uint index)
+        public bool CanRetry()
         {
-            if (_uploadRetryCount >= Constants.FileTransferMaxChunkRetryCount)
+            if (RetryCount >= Constants.FileTransferMaxChunkRetryCount)
             {
                 return false;
             }
 
-            _uploadRetryCount += 1;
-            index--;
             return true;
         }
     }

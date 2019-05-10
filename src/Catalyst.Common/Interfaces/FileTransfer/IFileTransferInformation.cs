@@ -110,10 +110,13 @@ namespace Catalyst.Common.Interfaces.FileTransfer
 
     public interface IUploadFileInformation : IFileTransferInformation
     {
+        /// <summary>Gets or sets the retry count.</summary>
+        /// <value>The retry count.</value>
+        int RetryCount { get; set; }
+
         /// <summary>Retries the upload.</summary>
-        /// <param name="chunkId">The chunk identifier.</param>
         /// <returns></returns>
-        bool RetryUpload(ref uint chunkId);
+        bool CanRetry();
         
         /// <summary>Gets the upload message.</summary>
         /// <param name="chunkId">The chunk identifier.</param>

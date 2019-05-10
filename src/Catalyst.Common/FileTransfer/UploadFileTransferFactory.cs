@@ -67,8 +67,14 @@ namespace Catalyst.Common.FileTransfer
                 }
                 catch (Exception)
                 {
-                    bool retrySuccess = fileTransferInformation.RetryUpload(ref i);
-                    if (!retrySuccess)
+                    var canRetry = fileTransferInformation.CanRetry();
+                    
+                    if (canRetry)
+                    {
+                        fileTransferInformation.RetryCount += 1;
+                        i--;
+                    }
+                    else
                     {
                         return;
                     }
