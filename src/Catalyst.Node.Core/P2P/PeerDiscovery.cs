@@ -114,12 +114,8 @@ namespace Catalyst.Node.Core.P2P
             _ownNode = new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
                 _peerSettings.Port);
             
-            // Task[] longRunningTasks =
-            // {
-            //     Task.Run(PeerCrawler)
-            // };
-            //
-            // Task.WaitAll(longRunningTasks);
+            var longRunningTasks = new[] {PeerCrawler()};
+            Task.WaitAll(longRunningTasks);
         }
 
         /// <inheritdoc />
