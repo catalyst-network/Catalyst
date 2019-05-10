@@ -34,7 +34,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public sealed class ProtoDatagramChannelHandlerBase : ObservableHandlerBase<DatagramPacket>
+    public sealed class ProtoDatagramChannelHandler : ObservableHandlerBase<DatagramPacket>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 

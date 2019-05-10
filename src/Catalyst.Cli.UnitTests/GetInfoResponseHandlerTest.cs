@@ -66,10 +66,10 @@ namespace Catalyst.Cli.UnitTests
             var query = JsonConvert.SerializeObject(configurationRoot.AsEnumerable(),
                 Formatting.Indented);
 
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
                 new object[] {query},
-                new object[] {""},
+                new object[] {""}
             };
         }
 
@@ -83,7 +83,10 @@ namespace Catalyst.Cli.UnitTests
         private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
         {
             var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
+            var messageStream = new[]
+            {
+                channeledAny
+            }.ToObservable();
             return messageStream;
         }
 

@@ -37,7 +37,7 @@ namespace Catalyst.Common.UnitTests.Extensions
         {
             var randomList = new List<string>();
             randomList.Add(Guid.NewGuid().ToString());
-            string returnedElement = EnumerableExtension.RandomElement(randomList);
+            string returnedElement = RandomElementExtension.RandomElement(randomList);
 
             returnedElement.Should().BeOfType<string>();
         }
@@ -47,7 +47,7 @@ namespace Catalyst.Common.UnitTests.Extensions
         {
             var randomList = new List<bool>();
             randomList.Add(false);
-            bool returnedElement = EnumerableExtension.RandomElement(randomList);
+            bool returnedElement = RandomElementExtension.RandomElement(randomList);
 
             returnedElement.Should().BeFalse();
         }

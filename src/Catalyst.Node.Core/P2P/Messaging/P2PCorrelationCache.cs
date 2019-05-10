@@ -24,6 +24,7 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Catalyst.Common.Config;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -39,7 +40,6 @@ namespace Catalyst.Node.Core.P2P.Messaging
         : MessageCorrelationCacheBase,
             IReputableCache
     {
-        private static readonly int BaseReputationChange = 1;
         private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
         public IObservable<IPeerReputationChange> PeerRatingChanges => _ratingChangeSubject.AsObservable();
 
@@ -65,7 +65,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
             //when the cache is not under pressure, eviction happens by token expiry :(
             //if (reason == EvictionReason.Removed) {return;}
             var pendingRequest = (PendingRequest) value;
-            _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.Recipient, -BaseReputationChange));
+            _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.Recipient, -Constants.BaseReputationChange));
         }
 
         public override TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
@@ -75,12 +75,12 @@ namespace Catalyst.Node.Core.P2P.Messaging
             if (matched == null)
             {
                 _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId),
-                    -BaseReputationChange * 10));
+                    -Constants.BaseReputationChange * 10));
                 return null;
             }
 
             _ratingChangeSubject.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId),
-                BaseReputationChange * 2));
+                Constants.BaseReputationChange * 2));
             PendingRequests.Remove(response.CorrelationId);
 
             return matched;
