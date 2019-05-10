@@ -97,7 +97,7 @@ namespace Catalyst.Common.FileTransfer
             try
             {
                 fileTransferInformation.CancellationToken = cancellationToken;
-                await DoTransfer(fileTransferInformation, cancellationToken);
+                await DoTransfer(fileTransferInformation);
                 Remove(fileTransferInformation, fileTransferInformation.IsExpired());
             }
             catch (Exception)
@@ -149,7 +149,6 @@ namespace Catalyst.Common.FileTransfer
 
         /// <summary>Does the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        /// <param name="cancellationToken">The cancellation token source.</param>
-        protected abstract Task DoTransfer(T fileTransferInformation, CancellationToken cancellationToken);
+        protected abstract Task DoTransfer(T fileTransferInformation);
     }
 }

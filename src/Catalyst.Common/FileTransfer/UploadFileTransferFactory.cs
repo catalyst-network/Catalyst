@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.FileTransfer;
 
@@ -37,19 +36,16 @@ namespace Catalyst.Common.FileTransfer
     {
         /// <summary>Does the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        /// <param name="cancellationToken">The cancellation token source.</param>
         /// <returns></returns>
-        protected override async Task DoTransfer(IUploadFileInformation fileTransferInformation,
-            CancellationToken cancellationToken)
+        protected override async Task DoTransfer(IUploadFileInformation fileTransferInformation)
         {
-            await Upload(fileTransferInformation, cancellationToken);
+            await Upload(fileTransferInformation);
         }
 
         /// <summary>Uploads the specified file transfer information.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        private async Task Upload(IUploadFileInformation fileTransferInformation, CancellationToken cancellationToken)
+        private async Task Upload(IUploadFileInformation fileTransferInformation)
         {
             var cancellationRequested =
                 fileTransferInformation.IsExpired();

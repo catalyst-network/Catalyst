@@ -37,9 +37,9 @@ namespace Catalyst.Common.FileTransfer
     public sealed class DownloadFileTransferFactory : BaseFileTransferFactory<IDownloadFileInformation>, IDownloadFileTransferFactory
     {
         /// <inheritdoc />
-        protected override async Task DoTransfer(IDownloadFileInformation fileTransferInformation, CancellationToken cancellationToken)
+        protected override async Task DoTransfer(IDownloadFileInformation fileTransferInformation)
         {
-            await Download(fileTransferInformation, cancellationToken);
+            await Download(fileTransferInformation);
         }
 
         /// <inheritdoc />
@@ -64,9 +64,8 @@ namespace Catalyst.Common.FileTransfer
 
         /// <summary>Downloads the specified file transfer information.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        /// <param name="cancellationTokenSource">The cancellation token source.</param>
         /// <returns></returns>
-        private async Task Download(IDownloadFileInformation fileTransferInformation, CancellationToken cancellationTokenSource)
+        private async Task Download(IDownloadFileInformation fileTransferInformation)
         {
             while (!fileTransferInformation.ChunkIndicatorsTrue() && !fileTransferInformation.IsExpired())
             {
