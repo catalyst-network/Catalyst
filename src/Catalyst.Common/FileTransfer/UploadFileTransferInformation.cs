@@ -89,27 +89,17 @@ namespace Catalyst.Common.FileTransfer
                 readTries++;
                 if (readTries >= Constants.FileTransferMaxChunkReadTries)
                 {
-                    break;
+                    return null;
                 }
             }
 
-            var readSuccess = bytesRead == bufferSize;
-            TransferFileBytesRequest transferMessage;
-
-            if (readSuccess)
+            var transferMessage = new TransferFileBytesRequest
             {
-                transferMessage = new TransferFileBytesRequest
-                {
-                    ChunkBytes = ByteString.CopyFrom(chunk),
-                    ChunkId = chunkId,
-                    CorrelationFileName = CorrelationGuid.ToByteString()
-                };
-            }
-            else
-            {
-                return null;
-            }
-
+                ChunkBytes = ByteString.CopyFrom(chunk),
+                ChunkId = chunkId,
+                CorrelationFileName = CorrelationGuid.ToByteString()
+            };
+            
             return _uploadMessageFactory.GetMessage(
                 transferMessage,
                 PeerIdentifier,

@@ -54,7 +54,7 @@ namespace Catalyst.Common.FileTransfer
             {
                 if (cancellationRequested)
                 {
-                    break;
+                    return;
                 }
 
                 cancellationRequested = fileTransferInformation.IsExpired();
@@ -70,7 +70,7 @@ namespace Catalyst.Common.FileTransfer
                     bool retrySuccess = fileTransferInformation.RetryUpload(ref i);
                     if (!retrySuccess)
                     {
-                        break;
+                        return;
                     }
                 }
             }
