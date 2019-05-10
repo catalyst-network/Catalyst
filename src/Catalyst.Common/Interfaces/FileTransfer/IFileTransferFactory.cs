@@ -49,6 +49,10 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <returns></returns>
         T GetFileTransferInformation(Guid correlationGuid);
 
+        /// <summary>Removes the specified unique identifier.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        void Remove(Guid guid);
+
         /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
         Guid[] Keys { get; }

@@ -44,8 +44,6 @@ namespace Catalyst.Common.FileTransfer
         private static readonly object LockObject = new object();
 
         /// <inheritdoc />
-        /// <summary>Gets the keys.</summary>
-        /// <value>The keys.</value>
         public Guid[] Keys => _pendingFileTransfers.Keys.ToArray();
 
         /// <summary>Initializes a new instance of the <see cref="BaseFileTransferFactory{T}"/> class.</summary>
@@ -110,9 +108,6 @@ namespace Catalyst.Common.FileTransfer
         }
         
         /// <inheritdoc />
-        /// <summary>Gets the file transfer information.</summary>
-        /// <param name="key">The unique file name.</param>
-        /// <returns>File transfer information</returns>
         public T GetFileTransferInformation(Guid key)
         {
             lock (LockObject)
@@ -121,13 +116,15 @@ namespace Catalyst.Common.FileTransfer
             }
         }
 
-        /// <summary>Removes the specified key.</summary>
-        /// <param name="key">The key.</param>
-        protected void Remove(Guid key)
+        /// <inheritdoc />
+        public void Remove(Guid key)
         {
             lock (LockObject)
             {
-                _pendingFileTransfers.Remove(key);
+                if (_pendingFileTransfers.ContainsKey(key))
+                {
+                    _pendingFileTransfers.Remove(key);
+                }
             }
         }
 

@@ -90,7 +90,7 @@ namespace Catalyst.Cli.Handlers
                 }
                 else
                 {
-                    _rpcFileTransferFactory.GetFileTransferInformation(message.Payload.CorrelationId.ToGuid()).Expire();
+                    _rpcFileTransferFactory.Remove(message.Payload.CorrelationId.ToGuid());
                 }
             }
         }
