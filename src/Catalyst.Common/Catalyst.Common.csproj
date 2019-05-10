@@ -172,22 +172,19 @@
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\LetterCasing.cs" Link="Multiformats.Base\LetterCasing.cs" />
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Multibase.cs" Link="Multiformats.Base\Multibase.cs" />
     <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\MultibaseEncoding.cs" Link="Multiformats.Base\MultibaseEncoding.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\CryptoWrapper.cs" Link="Helpers\Cryptography.IWrapper\CryptoWrapper.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\FFI.cs" Link="Helpers\Cryptography.IWrapper\FFI.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\IWrapper.cs" Link="Helpers\Cryptography.IWrapper\IWrapper.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\MockCrypto.cs" Link="Helpers\Cryptography.IWrapper\MockCrypto.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\Byte32.cs" Link="Helpers\Cryptography.IWrapper\Types\Byte32.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\Byte64.cs" Link="Helpers\Cryptography.IWrapper\Types\Byte64.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\FixedSizedBytes.cs" Link="Helpers\Cryptography.IWrapper\Types\FixedSizedBytes.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\PrivateKey.cs" Link="Helpers\Cryptography.IWrapper\Types\PrivateKey.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\PublicKey.cs" Link="Helpers\Cryptography.IWrapper\Types\PublicKey.cs" />
-      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Types\Signature.cs" Link="Helpers\Cryptography.IWrapper\Types\Signature.cs" />
-      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Interfaces\IPrivateKey.cs" Link="Helpers\Cryptography.IWrapper\Interfaces\IPrivateKey.cs" />
-    <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Interfaces\IPublicKey.cs" Link="Helpers\Cryptography.IWrapper\Interfaces\IPublicKey.cs" />
-      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Cryptography.IWrapper\Interfaces\ISignature.cs" Link="Helpers\Cryptography.IWrapper\Interfaces\ISignature.cs" />
-      <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\CryptoWrapper.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\CryptoWrapper.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\FFI.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\FFI.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\IWrapper.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\IWrapper.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Types\Byte32.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Types\Byte32.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Types\Byte64.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Types\Byte64.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Types\FixedSizedBytes.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Types\FixedSizedBytes.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Types\PrivateKey.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Types\PrivateKey.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Types\PublicKey.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Types\PublicKey.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Types\Signature.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Types\Signature.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Interfaces\IPrivateKey.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Interfaces\IPrivateKey.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Interfaces\IPublicKey.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Interfaces\IPublicKey.cs" />
+      <Compile Include="..\..\submodules\Rust.Cryptography.FFI.Wrapper\src\Catalyst.Cryptography.BulletProofs.Wrapper\Interfaces\ISignature.cs" Link="Helpers\Catalyst.Cryptography.BulletProofs.Wrapper\Interfaces\ISignature.cs" />
+      <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Transaction.cs" Link="Protocol\Transaction.cs" />
   </ItemGroup>

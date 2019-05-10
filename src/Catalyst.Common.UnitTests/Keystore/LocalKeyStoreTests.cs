@@ -30,7 +30,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.KeyStore;
 using Catalyst.Common.UnitTests.TestUtils;
-using Cryptography.IWrapper.Interfaces;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

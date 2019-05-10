@@ -23,9 +23,9 @@
 
 using System;
 using Catalyst.Common.Interfaces.Cryptography;
-using Cryptography.IWrapper.Interfaces;
-using Cryptography.IWrapper;
-using Cryptography.IWrapper.Types;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Multiformats.Base;
 
 namespace Catalyst.Common.Cryptography

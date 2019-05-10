@@ -25,8 +25,7 @@ using System;
 using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
-using Cryptography.IWrapper.Interfaces;
-using Cryptography.IWrapper.Types;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using FluentAssertions;
 using Xunit;
 

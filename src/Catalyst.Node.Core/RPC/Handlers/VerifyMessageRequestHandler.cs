@@ -33,7 +33,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Cryptography.IWrapper.Types;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Dawn;
 using Multiformats.Base;
 using Nethereum.RLP;
