@@ -125,7 +125,10 @@ namespace Catalyst.Node.Core.Modules.Consensus
             for (var index = 0; index < Math.Min(x.Count, y.Count); index++)
             {
                 var result = x[index].CompareTo(y[index]);
-                if (result != 0) return Math.Sign(result);
+                if (result != 0)
+                {
+                    return Math.Sign(result);
+                }
             }
 
             return x.Count.CompareTo(y.Count);
