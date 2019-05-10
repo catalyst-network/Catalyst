@@ -60,10 +60,16 @@ namespace Catalyst.Cli.UnitTests
 
         static SignMessageResponseHandlerTest()
         {   
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
-                new object[] {SignMessage("hello", "this is a fake signature", "this is a fake public key")},
-                new object[] {SignMessage("", "", "")},
+                new object[]
+                {
+                    SignMessage("hello", "this is a fake signature", "this is a fake public key")
+                },
+                new object[]
+                {
+                    SignMessage("", "", "")
+                },
             };
         }
         

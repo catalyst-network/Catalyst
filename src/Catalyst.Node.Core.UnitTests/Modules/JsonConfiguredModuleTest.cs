@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         [Theory]
         [InlineData(typeof(IConsensus), typeof(Consensus))]
         [InlineData(typeof(IContract), typeof(Contract))]
-        [InlineData(typeof(IDfs), typeof(IpfsDfs))]
+        [InlineData(typeof(IDfs), typeof(Core.Modules.Dfs.Dfs))]
         [InlineData(typeof(ILedger), typeof(Ledger))]
         [InlineData(typeof(IMempool), typeof(Core.Modules.Mempool.Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]

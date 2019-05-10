@@ -55,7 +55,6 @@ namespace Catalyst.Node.Core
         private bool _disposed;
 
         public CatalystNode(IP2PService p2P,
-            ICertificateStore certificateStore,
             IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
@@ -98,12 +97,14 @@ namespace Catalyst.Node.Core
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing && !_disposed)
+            if (!disposing || _disposed)
             {
-                _logger.Verbose("Disposing of CatalystNode");
-                _disposed = true;
-                _logger.Verbose("CatalystNode disposed");
+                return;
             }
+
+            _logger.Verbose("Disposing of CatalystNode");
+            _disposed = true;
+            _logger.Verbose("CatalystNode disposed");
         }
     }
 }
