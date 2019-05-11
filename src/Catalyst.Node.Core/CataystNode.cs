@@ -38,8 +38,7 @@ using Serilog;
 namespace Catalyst.Node.Core
 {
     public class CatalystNode
-        : IDisposable,
-            ICatalystNode
+        : ICatalystNode
     {
         private readonly IConsensus _consensus;
         private readonly IContract _contract;
@@ -87,23 +86,6 @@ namespace Catalyst.Node.Core
             } while (!ct.IsCancellationRequested && !exit);
 
             _logger.Information("Stopping the Catalyst Node");
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing || _disposed)
-            {
-                return;
-            }
-            
-            _logger.Verbose("Disposing of CatalystNode");
-            _disposed = true;
-            _logger.Verbose("CatalystNode disposed");
         }
     }
 }

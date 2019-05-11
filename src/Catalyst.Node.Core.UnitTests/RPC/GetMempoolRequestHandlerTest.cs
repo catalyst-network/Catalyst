@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
 
-        private static IEnumerable<object[]> QueryContents =>
+        public static IEnumerable<object[]> QueryContents =>
             new List<object[]>
             {
                 new object[] {CreateTestTransactions(), 2},

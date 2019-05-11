@@ -64,7 +64,8 @@ namespace Catalyst.Common.Interfaces.P2P
         IDisposable PingResponseMessageStream { get; set; }
         IDisposable GetNeighbourResponseStream { get; set; }
         IDisposable P2PCorrelationCacheEvictionSubscription { get; set; }
-        IObservable<IList<Unit>> PeerDiscoveryMessagesEventStream { get; set; }
+        IObservable<Unit> PeerDiscoveryMergedStreams { get; set; }
+        IObservable<IList<Unit>> CandidateProposalCounter { get; set; }
         
         /// <summary>
         ///     Crawls nodes in network according to the protocol blueprint spec

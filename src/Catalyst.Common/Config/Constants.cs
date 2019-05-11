@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Modules;
+using NSec.Cryptography;
 
 namespace Catalyst.Common.Config
 {
@@ -94,6 +95,8 @@ namespace Catalyst.Common.Config
 
         public static int BaseReputationChange => 1;
         public static int NumberOfRandomPeers => 5;
+        public static byte NetworkMagic => 0x012;
+        public static byte AddressVersion => 0x1;
         
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);

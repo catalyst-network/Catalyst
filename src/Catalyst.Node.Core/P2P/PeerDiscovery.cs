@@ -53,7 +53,6 @@ namespace Catalyst.Node.Core.P2P
             IDisposable
     {
         public IDns Dns { get; }
-        private bool NeighbourRequested { get; set; }
         public IRepository<Peer> PeerRepository { get; }
         public int TotalPotentialCandidates { get; set; }
         public int DiscoveredPeerInCurrentWalk { get; set; }
@@ -65,11 +64,12 @@ namespace Catalyst.Node.Core.P2P
         
         /// <inheritdoc />
         public IPeerIdentifier CurrentPeer { get; private set; }
-
+        
         public IDisposable PingResponseMessageStream { get; set; }
         public IDisposable GetNeighbourResponseStream { get; set; }
+        public IObservable<Unit> PeerDiscoveryMergedStreams { get; set; }
+        public IObservable<IList<Unit>> CandidateProposalCounter { get; set; }
         public IDisposable P2PCorrelationCacheEvictionSubscription { get; set; }
-        public IObservable<IList<Unit>> PeerDiscoveryMessagesEventStream { get; set; }
         private IObservable<KeyValuePair<IPeerIdentifier, ByteString>> _p2PCorrelationCacheEvictionStream;
 
         /// <inheritdoc />
@@ -113,17 +113,16 @@ namespace Catalyst.Node.Core.P2P
             PreviousPeerNeighbours = new Dictionary<int, KeyValuePair<IPeerIdentifier, ByteString>>();
             _ownNode = new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
                 _peerSettings.Port);
+
+            // Start observing for when messages are evicted.
+            StartObservingEvictionEvents(_p2PCorrelationCache.PeerEviction);
             
-            var longRunningTasks = new[] {PeerCrawler()};
-            Task.WaitAll(longRunningTasks);
+            // Task.Run(async () => { await PeerCrawler(); });
         }
 
         /// <inheritdoc />
         public async Task PeerCrawler()
-        {
-            // Start observing for when messages are evicted.
-            StartObservingEvictionEvents(_p2PCorrelationCache.PeerEviction);
-            
+        {            
             // Outer-loop that only stops on cancellation, discovery must always run! 
             do
             {
@@ -140,49 +139,43 @@ namespace Catalyst.Node.Core.P2P
                         using (var peerClient = _peerClientFactory.GetClient(CurrentPeer.IpEndPoint))
                         {
                             await peerClient.AsyncSendMessage(BuildPeerNeighbourRequestDatagram());
-                            
-                            // Flow condition set while we wait for a response.
-                            NeighbourRequested = true;
                         }
 
                         // Flow control is set when receiving a neighbour response message.
-                        await WaitUntil(() => NeighbourRequested == false);
+                        await WaitUntil(() => CurrentPeerNeighbours.Any());
 
-                        // When current peer provides a list of neighbours.
-                        if (CurrentPeerNeighbours.Any())
+                        // @see StartObservingMessageStreams
+                        // When we merge our PingResponse and _p2pEviction streams we cant set tge buffer size as we don't know the potential candidates
+                        // So now we know CurrentPeerNeighbours has something we can set the buffer nd subscribe to something.
+                        CandidateProposalCounter = PeerDiscoveryMergedStreams.Buffer(CurrentPeerNeighbours.Count);
+                        CandidateProposalCounter.Subscribe(ProposeNextStep);
+                        
+                        // Count potential proposals and iterate.
+                        TotalPotentialCandidates = CurrentPeerNeighbours.Count;
+                        CurrentPeerNeighbours.ToList().ForEach(async currentPeerNeighbour =>
                         {
-                            // Count potential proposals and iterate.
-                            TotalPotentialCandidates = CurrentPeerNeighbours.Count;
-                            CurrentPeerNeighbours.ToList().ForEach(async currentPeerNeighbour =>
-                            {
-                                // De-construct the <Key => value<key => value>>
-                                var (_, (key, _)) = currentPeerNeighbour;
+                            // De-construct the <Key => value<key => value>>
+                            var (_, (key, _)) = currentPeerNeighbour;
                                 
-                                // Ping each candidate.
-                                using (var peerClient = _peerClientFactory.GetClient(key.IpEndPoint))
-                                {
-                                    var pingDatagram = BuildPingRequestDatagram(key);
-                                    await peerClient.AsyncSendMessage(pingDatagram.ToDatagram(key.IpEndPoint));
-                                    UpdateCurrentPeerNeighbourPingStatus(pingDatagram);
-                                }
+                            // Ping each candidate.
+                            using (var peerClient = _peerClientFactory.GetClient(key.IpEndPoint))
+                            {
+                                var pingDatagram = BuildPingRequestDatagram(key);
+                                await peerClient.AsyncSendMessage(pingDatagram.ToDatagram(key.IpEndPoint));
+                                UpdateCurrentPeerNeighbourPingStatus(pingDatagram);
+                            }
 
-                                // Wait until next step is proposed.
-                                await WaitUntil(() => NextCandidate != null);
-                                WalkForward();
-                            });   
-                        }
-                        else
-                        {
-                            // Current peer didn't provide an new degree propositions so transition back to last peer.
-                            WalkBack();
-                        }
+                            // Wait until next step is proposed.
+                            await WaitUntil(() => NextCandidate != null);
+                            WalkForward();
+                        }); 
                     } while (CurrentPeer != null && !_cancellationSource.IsCancellationRequested);
                 }
                 catch (TimeoutException e)
                 {
                     // A time-out in the current degree processing means we should go back to the previousPeer and try continue.
                     _logger.Information(e.Message);
-                    ResetWalk();
+                    WalkBack();
                 }
                 catch (Exception e)
                 {
@@ -212,14 +205,12 @@ namespace Catalyst.Node.Core.P2P
                 );
                
             GetNeighbourResponseStream = getNeighbourResponseObserver.Subscribe(PeerNeighbourSubscriptionHandler);
-
+            
             // Here we just want to count the number of events over our pingResponse and getNeighbourResponse until it matches the number of getNeighbourRequest messages sent out.
             // We want to make sure all requests sent out have an associated event so we can propose the next peer in walk.
-            PeerDiscoveryMessagesEventStream = pingResponseObserver.Select(_ => Unit.Default)
-               .Merge(_p2PCorrelationCacheEvictionStream.Select(_ => Unit.Default))
-               .Buffer(TotalPotentialCandidates);
-                
-            PeerDiscoveryMessagesEventStream.Subscribe(ProposeNextStep);
+            // But we don't know our buffer size until the PeerCrawler() has sent a PeerNeighbourRequest() and PeerNeighbourSubscriptionHandler() has populated our CurrentPeerNeighbours Dictionary 
+            PeerDiscoveryMergedStreams = pingResponseObserver.Select(_ => Unit.Default)
+               .Merge(_p2PCorrelationCacheEvictionStream.Select(_ => Unit.Default));                            
         }
         
         public void StartObservingEvictionEvents(IObservable<KeyValuePair<IPeerIdentifier, ByteString>> observer)
@@ -266,8 +257,6 @@ namespace Catalyst.Node.Core.P2P
             {
                 WalkBack();
             }
-                        
-            NeighbourRequested = false;
         }
 
         /// <summary>
@@ -323,6 +312,7 @@ namespace Catalyst.Node.Core.P2P
             });
 
             CurrentPeerNeighbours.Clear();
+            CandidateProposalCounter = null;
         }
         
         /// <inheritdoc />
@@ -335,24 +325,23 @@ namespace Catalyst.Node.Core.P2P
 
             PreviousPeer = null;
             NextCandidate = null;
-            NeighbourRequested = false;
             CurrentPeer = PreviousPeer;
+            CandidateProposalCounter = null;
             DiscoveredPeerInCurrentWalk = 0;
         }
 
         /// <summary>
         ///      Reset control flows and peer lists to we can run walk again.
         /// </summary>
-        private IPeerDiscovery ResetWalk()
+        private void ResetWalk()
         {
             CurrentPeer = null;
             PreviousPeer = null;
             NextCandidate = null;
-            NeighbourRequested = false;
+            CandidateProposalCounter = null;
             DiscoveredPeerInCurrentWalk = 0;
             CurrentPeerNeighbours.Clear();
             PreviousPeerNeighbours.Clear();
-            return this;
         }
         
         /// <summary>

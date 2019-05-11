@@ -45,7 +45,7 @@ namespace Catalyst.Cli.UnitTests
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private static readonly List<object[]> QueryContents;
+        public static readonly List<object[]> QueryContents;
         
         private readonly IUserOutput _output;
         private SignMessageResponseHandler _handler;

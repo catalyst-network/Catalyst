@@ -25,5 +25,13 @@ using Catalyst.Common.Interfaces.Modules.Consensus;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
-    public class Consensus : IConsensus { }
+    public class Consensus : IConsensus
+    {
+        public ITransactionComparer TransactionComparer { get; }
+
+        public Consensus(ITransactionComparer transactionComparer)
+        {
+            TransactionComparer = transactionComparer;
+        }
+    }
 }

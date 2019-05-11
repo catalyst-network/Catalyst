@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
                .Build(), CurrentTestName);
             _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             _guid = Guid.NewGuid();
@@ -84,7 +84,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Fact]
-        public void DoesResolveIp2PServiceCorrectly()
+        public void 
+            DoesResolveIp2PServiceCorrectly()
         {
             using (var scope = _container.BeginLifetimeScope(CurrentTestName))
             {

@@ -32,7 +32,7 @@ namespace Catalyst.Common.Interfaces.P2P
         /// <summary>
         ///     The discovery mechanism for the peer network.
         /// </summary>
-        IPeerDiscovery Discovery { get; }
+        IHastingWalkDiscovery Discovery { get; }
                 
         // /// <summary>
         // ///     Request the node at <see cref="targetNode" /> for a list of peers.

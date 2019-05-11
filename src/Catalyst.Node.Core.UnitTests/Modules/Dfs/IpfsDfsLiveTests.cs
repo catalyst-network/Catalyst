@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 });
 
             const string text = "good morning";
-            var dfs = new IpfsDfs(_ipfs, _logger);
+            var dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
             var id = await linearBackOffRetryPolicy.ExecuteAsync(
                 () => dfs.AddTextAsync(text, cts.Token)
             );
@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
                 1, 2, 3
             };
             var ms = new MemoryStream(binary);
-            var dfs = new IpfsDfs(_ipfs, _logger);
+            var dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
             var id = await dfs.AddAsync(ms, "", cts.Token);
             using (var stream = await dfs.ReadAsync(id, cts.Token))
             {

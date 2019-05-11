@@ -22,19 +22,9 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Net;
+using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
-    public interface IPeerSettings
-    {
-        Config.Network Network { get; }
-        string PayoutAddress { get; }
-        string PublicKey { get; }
-        bool Announce { get; }
-        IPEndPoint AnnounceServer { get; }
-        int Port { get; }
-        IPAddress BindAddress { get; }
-        IList<string> SeedServers { get; }
-    }
+    public interface ITransactionComparer : IComparer<Transaction> { }
 }

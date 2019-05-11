@@ -49,7 +49,7 @@ namespace Catalyst.Cli.UnitTests
         private readonly ILogger _logger;
         private GetInfoResponseHandler _requestHandler;
 
-        private static readonly List<object[]> QueryContents;
+        public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
         private readonly IMessageCorrelationCache _subbedCorrelationCache;
@@ -69,14 +69,8 @@ namespace Catalyst.Cli.UnitTests
 
             QueryContents = new List<object[]>
             {
-                new object[]
-                {
-                    query
-                },
-                new object[]
-                {
-                    ""
-                }
+                new object[] {query},
+                new object[] {""}
             };
         }
 

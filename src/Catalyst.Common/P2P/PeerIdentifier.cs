@@ -92,14 +92,14 @@ namespace Catalyst.Common.P2P
                 PublicKey = peerByteChunks[4]
             });
         }
-
-        public PeerIdentifier(byte[] publicKey, IPAddress ipAddress, int port)
-            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
-
-        public PeerIdentifier(IPeerSettings settings)
-            : this(settings.PublicKey.ToBytesForRLPEncoding(), settings.EndPoint) { }
         
-        private PeerIdentifier(byte[] publicKey, IPEndPoint endPoint)
+        public PeerIdentifier(IPeerSettings settings)
+            : this(settings.PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port)) { }
+        
+        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
+            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
+        
+        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint)
         {
             PeerId = new PeerId
             {

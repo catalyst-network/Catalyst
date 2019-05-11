@@ -40,11 +40,11 @@ namespace Catalyst.Node.Core.P2P
         : UdpServer,
             IP2PService
     {
-        public IPeerDiscovery Discovery { get; }
+        public IHastingWalkDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
         public P2PService(IPeerSettings settings,
-            IPeerDiscovery peerDiscovery,
+            IHastingWalkDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
