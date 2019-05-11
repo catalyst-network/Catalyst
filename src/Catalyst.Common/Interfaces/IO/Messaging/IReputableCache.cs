@@ -35,7 +35,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         ///     Stream of reputation changes events raised by requests being answered or expired.
         /// </summary>
         IObservable<IPeerReputationChange> PeerRatingChanges { get; }
-
+    
         /// <summary>
         ///     Stream of evictions events.
         /// </summary>

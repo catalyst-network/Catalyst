@@ -118,26 +118,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         }
 
         [Fact]
-        public void CanGetSeedNodesFromDns()
-        {
-            _dnsDomains.ForEach(domain =>
-            {
-                MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
-            });
-
-            using (var peerDiscovery = new PeerDiscovery(_dns,
-                _peerRepository,
-                new PeerSettings(_config),
-                _subbedPeerClientFactory,
-                _subbedReputableCache,
-                _logger))
-            {
-                peerDiscovery.CurrentPeer.Should().NotBeNull();
-                peerDiscovery.CurrentPeer.Should().BeAssignableTo<IPeerIdentifier>();   
-            }
-        }
-
-        [Fact]
         public void CanReceivePingEventsFromSubscribedStream()
         {
             _dnsDomains.ForEach(domain =>

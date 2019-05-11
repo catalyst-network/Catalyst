@@ -43,14 +43,14 @@ namespace Catalyst.Cli.UnitTests
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
 
-        private static List<object[]> _queryContents;
+        public static List<object[]> QueryContents;
 
         private VerifyMessageResponseHandler _handler;
         private readonly IMessageCorrelationCache _subbedCorrelationCache;
 
         static VerifyMessageResponseHandlerTest()
         {
-            _queryContents = new List<object[]>
+            QueryContents = new List<object[]>
             {
                 new object[]
                 {
@@ -72,7 +72,7 @@ namespace Catalyst.Cli.UnitTests
         }
 
         [Theory]
-        [MemberData(nameof(_queryContents))]
+        [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
         {
             var response = new RpcMessageFactory<VerifyMessageResponse>(_subbedCorrelationCache).GetMessage(

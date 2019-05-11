@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Security;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -44,24 +43,6 @@ namespace Catalyst.Common.Cryptography
 
             pwd.MakeReadOnly();
             return pwd;
-        }
-
-        public char[] ReadSecurePasswordAsChars(string passwordContext = "Please enter your password")
-        {
-            var buffer = new char[maxLength];
-            var length = ReadCharsFromConsole(_userOutput,
-                passwordContext,
-                (c, i) => buffer[i] = c,
-                i => { buffer[i] = default; },
-                maxLength);
-            var password = buffer.Take(length).ToArray();
-
-            for (var i = 0; i < buffer.Length; i++)
-            {
-                buffer[i] = default;
-            }
-
-            return password;
         }
 
         private static int ReadCharsFromConsole(IUserOutput userOutput,

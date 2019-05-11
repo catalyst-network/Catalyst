@@ -40,65 +40,99 @@ using Xunit;
 
 namespace Catalyst.Cli.UnitTests
 {
-    public sealed class GetVersionResponseHandlerTest : IDisposable
+    /// <summary>
+    /// Tests the CLI for peer reputation response
+    /// </summary>
+    public sealed class GetPeerReputationResponseHandlerTest : IDisposable
     {
         private readonly IUserOutput _output;
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
-        private GetVersionResponseHandler _handler;
-        private readonly IMessageCorrelationCache _subbedCorrelationCache;
+        private PeerReputationResponseHandler _handler;
+        private IMessageCorrelationCache _subbedCorrelationCache;
 
-        static GetVersionResponseHandlerTest()
+        /// <summary>
+        /// Initializes the <see cref="GetPeerReputationResponseHandlerTest"/> class.
+        /// </summary>
+        static GetPeerReputationResponseHandlerTest()
         {
             QueryContents = new List<object[]>
             {
-                new object[]
-                {
-                    "0.0.0.0"
-                },
-                new object[] {""}
+                new object[] {78},
+                new object[] {1572},
+                new object[] {22}
             };
         }
 
-        public GetVersionResponseHandlerTest()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GetPeerReputationResponseHandlerTest"/> class.
+        /// </summary>
+        public GetPeerReputationResponseHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
         }
 
+        /// <summary>
+        /// Creates the stream with message.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <returns></returns>
         private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
         {
             var channeledAny = new ChanneledAnySigned(_fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }
-
+        
+        /// <summary>
+        /// RPCs the client can handle get reputation response.
+        /// </summary>
+        /// <param name="rep">The rep.</param>
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void RpcClient_Can_Handle_GetVersionResponse(string version)
+        public void RpcClient_Can_Handle_GetReputationResponse(int rep)
+        {
+            TestGetReputationResponse(rep);
+
+            _output.Received(1).WriteLine($"Peer Reputation: {rep}");
+        }
+
+        /// <summary>
+        /// RPCs the client can handle get reputation response non existant peers.
+        /// </summary>
+        /// <param name="rep">The rep.</param>
+        [Theory]
+        [InlineData(int.MinValue)]
+        public void RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
+        {
+            TestGetReputationResponse(rep);
+
+            _output.Received(1).WriteLine($"Peer Reputation: Peer not found");
+        }
+
+        private void TestGetReputationResponse(int rep)
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<VersionResponse>(_subbedCorrelationCache).GetMessage(
-                new VersionResponse
+            var response = new RpcMessageFactory<GetPeerReputationResponse>(_subbedCorrelationCache).GetMessage(
+                new GetPeerReputationResponse
                 {
-                    Version = version
+                    Reputation = rep
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("recpient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"), 
-                MessageTypes.Tell,
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                MessageTypes.Ask,
                 Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new GetVersionResponseHandler(_output, correlationCache, _logger);
+            _handler = new PeerReputationResponseHandler(_output, correlationCache, _logger);
             _handler.StartObservingMessageStreams(messageStream);
-
-            _output.Received(1).WriteLine($"Node Version: {version}");
         }
 
         public void Dispose()

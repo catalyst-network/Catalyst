@@ -100,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var cache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _fileTransfer, cache, _logger);
             handler.StartObservingMessageStreams(messageStream);
 
@@ -123,7 +123,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var cache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _fileTransfer, cache, _logger);
             handler.StartObservingMessageStreams(messageStream);
 
@@ -189,7 +189,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             fakeNode.MessageStream.Returns(messageStream);
             var cache = Substitute.For<IMessageCorrelationCache>();
-            var dfs = new IpfsDfs(_ipfsEngine, _logger);
+            var dfs = new Dfs(_ipfsEngine, _logger);
 
             var handler = new AddFileToDfsRequestHandler(dfs, senderPeerId, _fileTransfer,
                 cache, _logger);

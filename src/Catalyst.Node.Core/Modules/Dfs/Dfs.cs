@@ -32,7 +32,7 @@ using Ipfs.CoreApi;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public sealed class IpfsDfs : IDfs
+    public sealed class Dfs : IDfs
     {
         private static readonly AddFileOptions AddFileOptions = new AddFileOptions
         {
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         private readonly ILogger _logger;
 
-        public IpfsDfs(ICoreApi ipfsAdapter, ILogger logger)
+        public Dfs(ICoreApi ipfsAdapter, ILogger logger)
         {
             _ipfs = ipfsAdapter;
             _logger = logger;
