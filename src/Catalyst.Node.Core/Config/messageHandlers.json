@@ -70,7 +70,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.PeerCountRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
                 }
             ]
         },
@@ -78,7 +78,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.RemovePeerRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
                 }
             ]
         },
@@ -86,7 +86,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.PeerReputationRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
                 }
             ]
         },
@@ -94,7 +94,7 @@
             "type": "Catalyst.Node.Core.RPC.Handlers.PeerReputationRequestHandler",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
                 }
             ]
         },
