@@ -54,15 +54,25 @@ namespace Catalyst.Common.IO.Messaging
             var filterMessageType = typeof(TProto).ShortenedProtoFullName();
             _messageSubscription = messageStream
                .Where(m => m != null
-                 && m.Payload.TypeUrl == filterMessageType
+                 && m.Payload?.TypeUrl == filterMessageType
                  && !m.Equals(NullObjects.ChanneledAnySigned))
-               .Subscribe(HandleMessage);
+               .Subscribe(HandleMessage, HandleError, HandleCompleted);
         }
 
         public virtual void HandleMessage(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("Pre Handle Message Called");
             Handler(message);
+        }
+
+        public virtual void HandleCompleted()
+        {
+            Logger.Debug("Message stream ended.");
+        }
+
+        public virtual void HandleError(Exception exception)
+        {
+            Logger.Error(exception, "Failed to process message.");
         }
 
         protected abstract void Handler(IChanneledMessage<AnySigned> message);

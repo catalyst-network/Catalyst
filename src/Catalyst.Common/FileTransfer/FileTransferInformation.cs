@@ -78,6 +78,11 @@ namespace Catalyst.Common.FileTransfer
         
         /// <summary>The time since last chunk</summary>
         private DateTime _timeSinceLastChunk;
+        
+        /// <summary>
+        ///  bool control to access dispose
+        /// </summary>
+        private bool _disposed;
 
         /// <summary>Occurs when [on expired].</summary>
         private event Action<IFileTransferInformation> OnExpired;
@@ -153,22 +158,6 @@ namespace Catalyst.Common.FileTransfer
             File.Delete(TempPath);
         }
 
-        /// <inheritdoc cref="IDisposable" />
-        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to
-        /// release only unmanaged resources.</param>
-        private void Dispose(bool disposing)
-        {
-            RandomAccessStream.Close();
-            RandomAccessStream.Dispose();
-        }
-
         /// <inheritdoc />
         /// <summary>Executes the on expired.</summary>
         public void ExecuteOnExpired()
@@ -207,6 +196,28 @@ namespace Catalyst.Common.FileTransfer
         public void AddSuccessCallback(Action<IFileTransferInformation> callback)
         {
             OnSuccess += callback;
+        }
+        
+        /// <inheritdoc cref="IDisposable" />
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to
+        /// release only unmanaged resources.</param>
+        private void Dispose(bool disposing)
+        {
+            if (!disposing || _disposed)
+            {
+                return;
+            }
+            
+            RandomAccessStream.Close();
+            RandomAccessStream.Dispose();
+            _disposed = true;
         }
     }
 }

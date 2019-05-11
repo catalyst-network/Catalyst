@@ -26,7 +26,6 @@ using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Shell;

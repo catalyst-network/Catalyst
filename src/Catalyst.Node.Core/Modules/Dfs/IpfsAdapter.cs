@@ -24,7 +24,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.P2P;
@@ -35,8 +35,9 @@ using Ipfs.CoreApi;
 using Ipfs.Engine;
 using Serilog;
 
-namespace Catalyst.Node.Core.Modules.Ipfs
+namespace Catalyst.Node.Core.Modules.Dfs
 {
+    /// <inheritdoc />
     /// <summary>
     ///   Modifies the IPFS behaviour to meet the Catalyst requirements.
     /// </summary>
@@ -45,12 +46,11 @@ namespace Catalyst.Node.Core.Modules.Ipfs
     /// </remarks>
     public sealed class IpfsAdapter : ICoreApi, IDisposable
     {
-        private const string KeyChainDefaultKeyType = "ed25519";
-
         /// <summary>
         ///   An IPFS implementation, commonly called an IPFS node/
         /// </summary>
         private IpfsEngine _ipfs;
+
         private bool _isStarted;
         private readonly object _startingLock = new object();
         private readonly ILogger _logger;
@@ -60,8 +60,7 @@ namespace Catalyst.Node.Core.Modules.Ipfs
             global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger);
         }
 
-        public IpfsAdapter(
-            IPasswordReader passwordReader, 
+        public IpfsAdapter(IPasswordReader passwordReader, 
             IPeerSettings peerSettings, 
             IFileSystem fileSystem, 
             ILogger logger)
@@ -75,12 +74,12 @@ namespace Catalyst.Node.Core.Modules.Ipfs
             // The passphrase is used to access the private keys.
             var passphrase = passwordReader.ReadSecurePassword("Please provide your IPFS password");
             _ipfs = new IpfsEngine(passphrase);
-            _ipfs.Options.KeyChain.DefaultKeyType = KeyChainDefaultKeyType;
+            _ipfs.Options.KeyChain.DefaultKeyType = Constants.KeyChainDefaultKeyType;
 
             // The IPFS repository is inside the catalyst home folder.
             _ipfs.Options.Repository.Folder = Path.Combine(
                 fileSystem.GetCatalystHomeDir().FullName,
-                Core.Config.Constants.IpfsSubFolder);
+                Constants.DfsDataSubDir);
 
             // The seed nodes for the catalyst network.
             _ipfs.Options.Discovery.BootstrapPeers = peerSettings
@@ -93,7 +92,7 @@ namespace Catalyst.Node.Core.Modules.Ipfs
             // of catalyst only nodes.
             _ipfs.Options.Swarm.PrivateNetworkKey = new PeerTalk.Cryptography.PreSharedKey
             {
-                Value = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3".ToHexBuffer()
+                Value = Constants.SwarmKey.ToHexBuffer()
             };
 
             _logger.Information("IPFS configured.");
