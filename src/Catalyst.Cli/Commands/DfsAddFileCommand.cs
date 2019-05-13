@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
 
             if (!File.Exists(opts.File))
             {
-                _userOutput.WriteLine("File does not exist.");
+                UserOutput.WriteLine("File does not exist.");
                 return false;
             }
 

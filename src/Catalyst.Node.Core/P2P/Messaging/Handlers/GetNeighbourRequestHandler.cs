@@ -41,10 +41,8 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         : MessageHandlerBase<PeerNeighborsRequest>,
             IP2PMessageHandler
     {
-        private const int NumberOfRandomPeers = 5;
-
-        private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRepository<Peer> _repository;
+        private readonly IPeerIdentifier _peerIdentifier;
 
         public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier,
             IRepository<Peer> repository,
@@ -66,7 +64,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 
             var peerNeighborsResponseMessage = new PeerNeighborsResponse();
             
-            for (var i = 0; i < NumberOfRandomPeers; i++)
+            for (var i = 0; i < Constants.NumberOfRandomPeers; i++)
             {
                 peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
             }

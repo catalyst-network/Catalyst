@@ -29,7 +29,6 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Serilog;
-using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
 
@@ -38,11 +37,12 @@ namespace Catalyst.Common.Cryptography
     public sealed class CertificateStore
         : ICertificateStore
     {
-        private const int PasswordReTries = 1;
+        private static int MaxTries => 5;
+        private static int PasswordReTries => 1;
         private const string LocalHost = "localhost";
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IPasswordReader _passwordReader;
         private readonly DirectoryInfo _storageFolder;
+        private readonly IPasswordReader _passwordReader;
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private int PasswordTries { get; set; }
 
         public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader)
@@ -76,7 +76,7 @@ namespace Catalyst.Common.Cryptography
 
         private X509Certificate2 CreateAndSaveSelfSignedCertificate(string filePath, string commonName = LocalHost)
         {
-            var promptMessage = "Catalyst Node needs to create an SSL certificate." +
+            const string promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
             using (var password = _passwordReader.ReadSecurePassword(promptMessage))
             {
@@ -86,7 +86,7 @@ namespace Catalyst.Common.Cryptography
             }
         }
 
-        private void Save(X509Certificate2 certificate, string fileName, SecureString password)
+        private void Save(X509Certificate certificate, string fileName, SecureString password)
         {
             var targetDirInfo = _storageFolder;
             if (!targetDirInfo.Exists)
@@ -120,9 +120,8 @@ namespace Catalyst.Common.Cryptography
                 var fileInBytes = File.ReadAllBytes(fullPath);
                 var passwordPromptMessage =
                     $"Please type in the password for the certificate at {fullPath} (optional):";
-                var maxTries = 5;
                 var tryCount = 0;
-                while (tryCount <= maxTries)
+                while (tryCount <= MaxTries)
                 {
                     try
                     {
@@ -134,8 +133,6 @@ namespace Catalyst.Common.Cryptography
                     }
                     catch (CryptographicException ex)
                     {
-                        StringUtil.StringComparatorException(ex.Message.ToLowerInvariant(), "password");
-
                         PasswordAttemptCounter(ex.Message, fullPath);
                     }
 

@@ -34,13 +34,11 @@ using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Serilog;
-using ICertificateStore = Catalyst.Common.Interfaces.Cryptography.ICertificateStore;
 
 namespace Catalyst.Node.Core
 {
     public class CatalystNode
-        : IDisposable,
-            ICatalystNode
+        : ICatalystNode
     {
         private readonly IConsensus _consensus;
         private readonly IContract _contract;
@@ -55,7 +53,6 @@ namespace Catalyst.Node.Core
         private bool _disposed;
 
         public CatalystNode(IP2PService p2P,
-            ICertificateStore certificateStore,
             IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
@@ -89,21 +86,6 @@ namespace Catalyst.Node.Core
             } while (!ct.IsCancellationRequested && !exit);
 
             _logger.Information("Stopping the Catalyst Node");
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                _logger.Verbose("Disposing of CatalystNode");
-                _disposed = true;
-                _logger.Verbose("CatalystNode disposed");
-            }
         }
     }
 }

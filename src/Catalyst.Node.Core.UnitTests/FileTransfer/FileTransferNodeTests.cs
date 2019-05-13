@@ -60,6 +60,8 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         private readonly IDfs _dfs;
         private readonly IMessageCorrelationCache _cache;
         private readonly IpfsAdapter _ipfsEngine;
+        private readonly IFileTransfer _fileTransfer;
+        private readonly IChannelHandlerContext _fakeContext;
 
         public FileTransferNodeTests(ITestOutputHelper testOutput) : base(testOutput)
         {

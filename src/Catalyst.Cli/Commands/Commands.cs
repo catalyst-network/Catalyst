@@ -34,7 +34,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
@@ -211,13 +210,14 @@ namespace Catalyst.Cli.Commands
 
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(config => config.NodeId.Equals(nodeId));
 
-            if (nodeConfig == null)
+            if (nodeConfig != null)
             {
-                _userOutput.WriteLine("Node not configured. Add node to config file and try again.");
-                return null;
+                return nodeConfig;
             }
 
-            return nodeConfig;
+            UserOutput.WriteLine("Node not configured. Add node to config file and try again.");
+
+            return null;
         }
 
         /// <summary>

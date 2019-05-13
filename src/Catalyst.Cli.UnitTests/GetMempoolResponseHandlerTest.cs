@@ -57,10 +57,16 @@ namespace Catalyst.Cli.UnitTests
         {
             var memPoolData = CreateMemPoolData();
 
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
-                new object[] {memPoolData},
-                new object[] {new List<string>()},
+                new object[]
+                {
+                    memPoolData
+                },
+                new object[]
+                {
+                    new List<string>()
+                }
             };
         }
 
@@ -78,7 +84,7 @@ namespace Catalyst.Cli.UnitTests
             return messageStream;
         }
 
-        public static IEnumerable<string> CreateMemPoolData()
+        private static IEnumerable<string> CreateMemPoolData()
         {
             var txLst = new List<Transaction>
             {
