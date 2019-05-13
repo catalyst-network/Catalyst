@@ -152,7 +152,7 @@ namespace Catalyst.Common.FileTransfer
         public void UpdateChunkIndicator(uint chunkId, bool state)
         {
             ChunkIndicators[chunkId] = state;
-            if (!state)
+            if (state)
             {
                 TimeSinceLastChunk = DateTime.Now;
             }

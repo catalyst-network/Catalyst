@@ -87,21 +87,23 @@ namespace Catalyst.Node.Core.RPC.Handlers
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             var deserialised = message.Payload.FromAnySigned<GetFileFromDfsRequest>();
+
+            Guard.Argument(deserialised).NotNull("Message cannot be null");
+
             var recipientPeerIdentifier = new PeerIdentifier(message.Payload.PeerId);
             var correlationGuid = message.Payload.CorrelationId.ToGuid();
             long fileLen = 0;
             FileTransferResponseCodes responseCode;
+            MemoryStream ms = null;
 
             try
             {
                 using (var stream = _dfs.ReadAsync(deserialised.DfsHash).GetAwaiter().GetResult())
                 {
-                    MemoryStream ms = new MemoryStream();
+                    ms = new MemoryStream();
                     stream.CopyTo(ms);
                     fileLen = stream.Length;
-
-                    Guard.Argument(deserialised).NotNull("Message cannot be null");
-
+                    
                     IUploadFileInformation fileTransferInformation = new UploadFileTransferInformation(
                         ms,
                         _peerIdentifier,
@@ -124,6 +126,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
             if (responseCode == FileTransferResponseCodes.Successful)
             {
                 _fileTransferFactory.FileTransferAsync(correlationGuid, CancellationToken.None);
+            }
+            else
+            {
+                ms?.Dispose();
             }
         }
 

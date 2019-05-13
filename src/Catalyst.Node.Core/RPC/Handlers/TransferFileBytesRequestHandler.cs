@@ -75,14 +75,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
-            var downloadFactory = (DownloadFileTransferFactory) _fileTransferFactory;
-
             try
             {
                 Guard.Argument(deserialised).NotNull("Message cannot be null");
 
                 var correlationId = new Guid(deserialised.CorrelationFileName.ToByteArray());
-                responseCode = downloadFactory.DownloadChunk(correlationId, deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
+                responseCode = _fileTransferFactory.DownloadChunk(correlationId, deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
             }
             catch (Exception e)
             {

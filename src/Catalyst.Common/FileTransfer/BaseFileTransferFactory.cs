@@ -74,7 +74,7 @@ namespace Catalyst.Common.FileTransfer
             {
                 if (_pendingFileTransfers.ContainsKey(fileHash))
                 {
-                    return FileTransferResponseCodes.FileAlreadyExists;
+                    return FileTransferResponseCodes.TransferPending;
                 }
 
                 _pendingFileTransfers.Add(fileHash, fileTransferInformation);

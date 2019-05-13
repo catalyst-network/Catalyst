@@ -33,6 +33,8 @@ using Serilog;
 using Xunit;
 using Catalyst.Common.P2P;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.FileTransfer;
@@ -41,6 +43,7 @@ using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Google.Protobuf;
+using Polly;
 using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 
@@ -77,61 +80,84 @@ namespace Catalyst.Cli.UnitTests
         [InlineData(100000L)]
         public void Get_File_Rpc(long byteSize)
         {
-            string addedIpfsHash = AddFileToDfs(byteSize, out var crcValue);
+            string addedIpfsHash = AddFileToDfs(byteSize, out var crcValue, out var stream);
+            Stream fileStream = null;
 
-            var nodePeerId = PeerIdHelper.GetPeerId("sender");
-            var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
-            var nodePeer = new PeerIdentifier(nodePeerId);
-            var rpcPeer = new PeerIdentifier(rpcPeerId);
-            var correlationGuid = Guid.NewGuid();
-            var fakeFileOutputPath = Path.GetTempFileName();
-            IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer, nodePeer,
-                _fakeContext.Channel, correlationGuid, fakeFileOutputPath, 0);
-            var getFileFromDfsResponseHandler =
-                new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
-            var transferBytesHandler =
-                new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _cache, _logger);
-            
-            _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
-
-            var getFileResponse = new GetFileFromDfsResponse
+            try
             {
-                FileSize = (ulong) byteSize,
-                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful.Id)
-            }.ToAnySigned(nodePeer.PeerId, correlationGuid);
-            
-            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
-            
-            var fileStream = _dfs.ReadAsync(addedIpfsHash).GetAwaiter().GetResult();
-            IUploadFileInformation fileUploadInformation = new UploadFileTransferInformation(
-                fileStream,
-                rpcPeer,
-                nodePeer,
-                _fakeContext.Channel,
-                correlationGuid,
-                new RpcMessageFactory<TransferFileBytesRequest>());
+                var nodePeerId = PeerIdHelper.GetPeerId("sender");
+                var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
+                var nodePeer = new PeerIdentifier(nodePeerId);
+                var rpcPeer = new PeerIdentifier(rpcPeerId);
+                var correlationGuid = Guid.NewGuid();
+                var fakeFileOutputPath = Path.GetTempFileName();
+                IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer,
+                    nodePeer,
+                    _fakeContext.Channel, correlationGuid, fakeFileOutputPath, 0);
+                var getFileFromDfsResponseHandler =
+                    new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
+                var transferBytesHandler =
+                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _cache, _logger);
 
-            for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
-            {
-                var transferMessage = fileUploadInformation
-                   .GetUploadMessageDto(i);
-                transferMessage.SendToHandler(_fakeContext, transferBytesHandler);
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
+                   .WaitAndRetryAsync(5, retryAttempt =>
+                    {
+                        var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
+                        cts = new CancellationTokenSource(timeSpan);
+                        return timeSpan;
+                    });
+
+                _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
+
+                var getFileResponse = new GetFileFromDfsResponse
+                {
+                    FileSize = (ulong) byteSize,
+                    ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful.Id)
+                }.ToAnySigned(nodePeer.PeerId, correlationGuid);
+
+                getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+
+                fileStream = _dfs.ReadAsync(addedIpfsHash).GetAwaiter().GetResult();
+                IUploadFileInformation fileUploadInformation = new UploadFileTransferInformation(
+                    fileStream,
+                    rpcPeer,
+                    nodePeer,
+                    _fakeContext.Channel,
+                    correlationGuid,
+                    new RpcMessageFactory<TransferFileBytesRequest>());
+
+                for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
+                {
+                    var transferMessage = fileUploadInformation
+                       .GetUploadMessageDto(i);
+                    transferMessage.SendToHandler(_fakeContext, transferBytesHandler);
+                }
+
+                linearBackOffRetryPolicy.ExecuteAsync(() =>
+                {
+                    return Task.Run(() =>
+                    {
+                        while (!fileDownloadInformation.IsCompleted && !cts.IsCancellationRequested) { }
+                    }, cts.Token);
+                }).GetAwaiter().GetResult();
+
+                Assert.Equal(crcValue, FileHelper.GetCrcValue(fileDownloadInformation.TempPath));
             }
-
-            while (!fileDownloadInformation.IsCompleted)
+            finally
             {
-                // Wait for transfer to complete
+                stream.Close();
+                fileStream?.Close();
             }
-            
-            Assert.Equal(crcValue, FileHelper.GetCrcValue(fileDownloadInformation.TempPath));
         }
 
-        private string AddFileToDfs(long byteSize, out long crcValue)
+        private string AddFileToDfs(long byteSize, out long crcValue, out Stream stream)
         {
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
             var fakeId = Guid.NewGuid().ToString();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
-            _dfs.ReadAsync(fakeId).Returns(new MemoryStream(File.ReadAllBytes(fileToTransfer)));
+            stream = new MemoryStream(File.ReadAllBytes(fileToTransfer));
+            _dfs.ReadAsync(fakeId).Returns(stream);
             return fakeId;
         }
     }
