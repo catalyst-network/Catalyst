@@ -26,6 +26,8 @@ using System.IO;
 using System.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Modules;
+using Ipfs;
+using Nethereum.RLP;
 
 namespace Catalyst.Common.Config
 {
@@ -75,7 +77,12 @@ namespace Catalyst.Common.Config
 
         /// <summary>The maximum chunk read tries </summary>
         public static int FileTransferMaxChunkReadTries => 3;
-        
+
+        /// <summary>
+        /// The empty trie hash
+        /// </summary>
+        public static byte[] EmptyTrieHash => (new MultiHash("blake2b-256", RLP.EncodeElement(new byte[0])).Digest);
+       
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));

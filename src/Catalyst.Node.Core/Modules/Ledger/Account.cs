@@ -25,45 +25,34 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Catalyst.Common.Interfaces.Modules.Ledger;
+using SharpRepository.Repository;
+using Catalyst.Common.Config;
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {
-    /// <summary>
-    /// This class represent a user account of which there can be the following types:
-    /// confidential account, non-confidential account and smart contract account
-    /// </summary>
+    /// <inheritdoc />
     public class Account : IAccount
     {
-        /// <summary>
-        /// Gets or sets the type of the coin.
-        /// </summary>
-        /// <value>
-        /// The type of the coin.
-        /// </value>
+        /// <inheritdoc />
+        [RepositoryPrimaryKey(Order = 1)]
+        public int PkId { get; set; }
+
+        /// <inheritdoc />
+        public string PublicAddress { get; set; }
+
+        /// <inheritdoc />
         public uint CoinType { get; set; }
 
-        /// <summary>
-        /// Gets or sets the type of the account.
-        /// </summary>
-        /// <value>
-        /// The type of the account.
-        /// </value>
+        /// <inheritdoc />
         public uint AccountType { get; set; }
 
-        /// <summary>
-        /// The balance of confirmed transactions.
-        /// </summary>
-        public double AmountConfirmed { get; set; }
+        /// <inheritdoc />
+        public decimal Balanace { get; set; }
 
-        /// <summary>
-        /// The balance of unconfirmed transactions.
-        /// </summary>
-        public double AmountUnconfirmed { get; set; }
-
-        /// <summary>
-        /// The amount that has enough confirmations to be already spendable.
-        /// </summary>
-        public double SpendableAmount { get; set; }
+        /// <inheritdoc />
+        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
 
     }
+
+          
 }

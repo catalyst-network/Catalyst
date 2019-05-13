@@ -21,36 +21,33 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.Transaction;
-using FluentAssertions;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Serilog;
 using SharpRepository.Repository;
 using Xunit;
-using Catalyst.Node.Core.Modules.Ledger;
 using SharpRepository.InMemoryRepository;
+using MainLedger = Catalyst.Node.Core.Modules.Ledger.Ledger;
+using Account = Catalyst.Node.Core.Modules.Ledger.Account;
+//using Catalyst.Node.Core.Modules.Ledger;
+//using Account = Catalyst.Node.Core.Modules.Ledger.Account;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
+
+namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
 {
     public sealed class LedgerTests
     {
         private IRepository<Account> _accounts;
-        private readonly Ledger _ledger;
+        private readonly MainLedger _ledger;
 
         public LedgerTests()
         {
-            _accounts = Substitute.For<IRepository<Account>>();
+            _accounts = new InMemoryRepository<Account>();
 
             var logger = Substitute.For<ILogger>();
 
-            _ledger = new Ledger(_accounts, logger);
+            _ledger = new Catalyst.Node.Core.Modules.Ledger.Ledger(_accounts, logger);
         }
 
         [Fact]
@@ -59,11 +56,12 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount(AmountConfirmed: (uint) i * 5);
+                var account = AccountHelper.GetAccount(Balanace: (uint) i * 5);
                 _ledger.SaveAccountState(account);
             }
 
-            _ledger.Accounts.ReceivedCalls().Count().Should().Be(11);
+            Enumerable.Range(0, 10).ToList().ForEach(i => _ledger.Accounts
+            .Received(1).Add(Arg.Is<Account>(bb => bb.Balanace == (uint)5 * i)));
         }
     }
 }

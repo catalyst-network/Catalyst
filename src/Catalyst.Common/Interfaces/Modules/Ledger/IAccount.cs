@@ -1,11 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SharpRepository.Repository;
+using Catalyst.Common;
 
 namespace Catalyst.Common.Interfaces.Modules.Ledger
 {
+    /// <summary>
+    /// This class represent a user account of which there can be the following types:
+    /// confidential account, non-confidential account and smart contract account
+    /// </summary>
     public interface IAccount
     {
+        /// <summary>Gets or sets the primary key identifier.</summary>
+        /// <value>The primary key identifier.</value>
+        [RepositoryPrimaryKey(Order = 1)]
+        int PkId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the public address.
+        /// </summary>
+        /// <value>
+        /// The public address.
+        /// </value>
+        string PublicAddress { get; set; }
+
         /// <summary>
         /// Gets or sets the type of the coin.
         /// </summary>
@@ -23,18 +42,21 @@ namespace Catalyst.Common.Interfaces.Modules.Ledger
         uint AccountType { get; set; }
 
         /// <summary>
-        /// The balance of confirmed transactions.
+        /// Gets or sets the amount.
         /// </summary>
-        double AmountConfirmed { get; set; }
+        /// <value>
+        /// The amount.
+        /// </value>
+        decimal Balanace { get; set; }
 
         /// <summary>
-        /// The balance of unconfirmed transactions.
+        /// Gets or sets the state root.
+        /// Encodes the storage contents of the account.
         /// </summary>
-        double AmountUnconfirmed { get; set; }
+        /// <value>
+        /// The state root.
+        /// </value>
+        byte[] StateRoot { get; set; }
 
-        /// <summary>
-        /// The amount that has enough confirmations to be already spendable.
-        /// </summary>
-        double SpendableAmount { get; set; }
     }
 }

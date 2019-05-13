@@ -44,13 +44,13 @@ namespace Catalyst.Node.Core.Modules.Ledger
             _logger = logger;
         }
 
-        public bool SaveAccountState(Account account)
+        public bool SaveAccountState(IAccount account)
         {
             Guard.Argument(account, nameof(account)).NotNull();
 
             try
             {
-                Accounts.Add(account);
+                Accounts.Add((Account)account);
                 return true;
             }
             catch (Exception e)
