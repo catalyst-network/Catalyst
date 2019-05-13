@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -29,8 +29,12 @@ namespace Catalyst.Common.IO.Outbound
 {
     public sealed class PendingRequest
     {
+        public PendingRequest() { GossipCount = 0; }
+
         public AnySigned Content { get; set; }
         public IPeerIdentifier Recipient { get; set; }
         public DateTimeOffset SentAt { get; set; }
+        public int GossipCount { get; set; }
+        public int RecievedCount { get; set; }
     }
 }

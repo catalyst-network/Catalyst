@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -58,5 +59,9 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 Handler(message);
             }
         }
+
+        /// <summary>Gets a value indicating whether this instance can gossip.</summary>
+        /// <value><c>true</c> if this instance can gossip; otherwise, <c>false</c>.</value>
+        public virtual bool CanGossip { get; }
     }
 }

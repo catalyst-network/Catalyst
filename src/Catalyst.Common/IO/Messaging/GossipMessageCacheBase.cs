@@ -22,78 +22,74 @@
 #endregion
 
 using System;
-using System.Threading;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class MessageCorrelationCacheBase
-        : IMessageCorrelationCache
+    public class GossipMessageCacheBase
+        : MessageCorrelationCacheBase, IGossipCacheBase
     {
-        public TimeSpan CacheTtl { get; }
-        
-        protected readonly ILogger Logger;
-        protected readonly IMemoryCache PendingRequests;
-        private readonly MemoryCacheEntryOptions _entryOptions;
+        /// <summary>The maximum gossip count</summary>
+        private const int MaxGossipCount = 10;
 
-        protected MessageCorrelationCacheBase(IMemoryCache cache,
-            ILogger logger,
-            TimeSpan cacheTtl = default)
+        private const int MaxPeersToGossip = 5;
+
+        private IPeerDiscovery _peerDiscovery;
+
+        protected GossipMessageCacheBase(IPeerDiscovery peerDiscovery,
+            IMemoryCache cache,
+            ILogger logger) : base(cache, logger, TimeSpan.FromMinutes(10))
         {
-            Logger = logger;
-            CacheTtl = cacheTtl == default ? Constants.CorrelationTtl : cacheTtl;
-            PendingRequests = cache;
-            _entryOptions = new MemoryCacheEntryOptions()
-               .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))
-               .RegisterPostEvictionCallback(GetInheritorDelegate());
+            this._peerDiscovery = peerDiscovery;
         }
 
-        protected virtual PostEvictionDelegate GetInheritorDelegate()
+        protected override PostEvictionDelegate GetInheritorDelegate()
         {
             Logger.Fatal("MessageCorrelationCache.GetInheritorDelegate() called without inheritor.");
             throw new NotImplementedException("Inheritors that uses the default constructor must implement the GetInheritorDelegate() method."); 
         }
 
-        public void AddPendingRequest(PendingRequest pendingRequest)
+        public bool CanGossip(AnySigned message)
         {
-            PendingRequests.Set(pendingRequest.Content.CorrelationId, pendingRequest, _entryOptions);
+            var found = PendingRequests.TryGetValue(message.CorrelationId.ToGuid() + "-gossip", out PendingRequest request);
+
+            // Request does not exist, we can gossip this message
+            if (!found)
+            {
+                return true;
+            }
+            else
+            {
+                if (request.GossipCount < MaxGossipCount)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        public virtual TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
-            where TRequest : class, IMessage<TRequest>
-            where TResponse : class, IMessage<TResponse>
+        public void Gossip(AnySigned message)
+        {
+            
+        }
+
+        public override TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
         {
             Guard.Argument(response, nameof(response)).NotNull()
                .Require(r => typeof(TResponse).ShortenedProtoFullName().Equals(response.TypeUrl))
                .Require(r => typeof(TRequest).ShortenedProtoFullName().Equals(r.TypeUrl.GetRequestType()));
 
             var found = PendingRequests.TryGetValue(response.CorrelationId, out PendingRequest matched);
-
+            matched.RecievedCount += 1;
             return !found ? null : matched.Content.FromAnySigned<TRequest>();
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing)
-            {
-                return;
-            }
-
-            PendingRequests?.Dispose();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }
