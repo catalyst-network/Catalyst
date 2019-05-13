@@ -62,7 +62,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
         /// <summary>Creates the temporary file.</summary>
         /// <param name="bytes">The bytes.</param>
         /// <returns></returns>
-        public static string CreateTempFile(byte[] bytes = null)
+        public static string CreateTempFile(byte[] bytes)
         {
             string filePath = Path.GetTempFileName();
 
@@ -76,6 +76,10 @@ namespace Catalyst.Common.UnitTests.TestUtils
 
             return filePath;
         }
+
+        /// <summary>Creates the temporary file.</summary>
+        /// <returns></returns>
+        public static string CreateTempFile() { return CreateTempFile(null); }
 
         /// <summary>Gets the random bytes.</summary>
         /// <param name="size">The size.</param>
