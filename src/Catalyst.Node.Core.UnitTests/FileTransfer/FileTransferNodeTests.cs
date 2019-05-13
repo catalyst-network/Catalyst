@@ -133,7 +133,10 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             {
                 return Task.Run(() =>
                 {
-                    while (!fileTransferInformation.IsCompleted && !cts.IsCancellationRequested) { }
+                    while (!fileTransferInformation.IsCompleted)
+                    {
+                        Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
+                    }
                 }, cts.Token);
             }).GetAwaiter().GetResult();
 
@@ -206,7 +209,10 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             {
                 return Task.Run(() =>
                 {
-                    while (fileTransferInformation.DfsHash == null && !cts.IsCancellationRequested) { }
+                    while (fileTransferInformation.DfsHash == null)
+                    {
+                        Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
+                    }
                 }, cts.Token);
             }).GetAwaiter().GetResult();
 

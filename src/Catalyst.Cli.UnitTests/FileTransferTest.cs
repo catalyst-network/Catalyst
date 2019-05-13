@@ -138,7 +138,10 @@ namespace Catalyst.Cli.UnitTests
                 {
                     return Task.Run(() =>
                     {
-                        while (!fileDownloadInformation.IsCompleted && !cts.IsCancellationRequested) { }
+                        while (!fileDownloadInformation.IsCompleted)
+                        {
+                            Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
+                        }
                     }, cts.Token);
                 }).GetAwaiter().GetResult();
 

@@ -69,7 +69,7 @@ namespace Catalyst.Common.FileTransfer
         {
             while (!fileTransferInformation.ChunkIndicatorsTrue() && !fileTransferInformation.IsExpired())
             {
-                await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromSeconds(1), fileTransferInformation.CancellationToken).ConfigureAwait(false);
             }
         }
     }
