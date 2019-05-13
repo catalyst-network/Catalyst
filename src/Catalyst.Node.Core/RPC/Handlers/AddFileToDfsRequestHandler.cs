@@ -105,7 +105,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
             }
             catch (Exception e)
             {
-                Logger.Error(e.ToString());
+                Logger.Error(e,
+                    "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", message);
                 responseCode = FileTransferResponseCodes.Error;
             }
 
@@ -147,7 +148,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e.ToString());
+                    Logger.Error(e,
+                        "Failed to handle file download OnSuccess {0}", fileTransferInformation.CorrelationGuid);
                     responseCode = FileTransferResponseCodes.Failed;
                 }
                 finally

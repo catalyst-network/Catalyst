@@ -117,7 +117,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
             }
             catch (Exception e)
             {
-                Logger.Error(e.ToString());
+                Logger.Error(e,
+                    "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", message);
                 responseCode = FileTransferResponseCodes.Error;
             }
 

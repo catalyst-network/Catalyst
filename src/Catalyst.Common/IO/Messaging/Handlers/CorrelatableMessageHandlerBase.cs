@@ -62,7 +62,8 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e.ToString());
+                    Logger.Error(e,
+                        "Failed to handle CorrelatableMessageHandlerBase after receiving message {0}", message);
                     message.Context.Channel.CloseAsync();
                 }
             }
