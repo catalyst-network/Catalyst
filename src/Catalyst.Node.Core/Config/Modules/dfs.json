@@ -1,22 +1,22 @@
 {
-  "defaultAssembly": "Catalyst.Node.Core",
-  "components": [
-    {
-        "type": "Catalyst.Node.Core.Modules.Dfs.IpfsDfs",
-        "services": [
-            {
-                "type": "Catalyst.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Common"
-            }
-        ],
-    },
-    {
-        "type": "Catalyst.Node.Core.Modules.Ipfs.IpfsAdapter",
-        "services": [
-            {
-                "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"
-            }
-        ],
-        "instanceScope": "singleinstance"
-    }
-  ]
+    "defaultAssembly": "Catalyst.Node.Core",
+    "components": [
+        {
+            "type": "Catalyst.Node.Core.Modules.Dfs.Dfs",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Dfs.IpfsAdapter",
+            "services": [
+                {
+                    "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        }
+    ]
 }

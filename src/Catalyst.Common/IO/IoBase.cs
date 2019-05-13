@@ -66,11 +66,13 @@ namespace Catalyst.Common.IO
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposing)
             {
-                Logger.Information($"Disposing {GetType().Name}");
-                Task.WaitAll(Shutdown());
+                return;
             }
+            
+            Logger.Information($"Disposing {GetType().Name}");
+            Task.WaitAll(Shutdown());
         }
     }
 }

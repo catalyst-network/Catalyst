@@ -26,7 +26,7 @@ using Catalyst.Common.Interfaces.Cli;
 
 namespace Catalyst.Common.Shell
 {
-    public class ConsoleUserOutput : IUserOutput
+    public sealed class ConsoleUserOutput : IUserOutput
     {
         public void WriteLine(string content)
         {

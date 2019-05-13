@@ -34,7 +34,7 @@ namespace Catalyst.Common.FileSystem
     {
         public DirectoryInfo GetCatalystHomeDir()
         {
-            var path = Path.Combine(GetUserHomeDir(), Constants.CatalystSubFolder);
+            var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
             return new DirectoryInfo(path);
         }
 

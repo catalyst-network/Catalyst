@@ -22,8 +22,8 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Security;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 
 namespace Catalyst.Common.Cryptography
@@ -31,34 +31,22 @@ namespace Catalyst.Common.Cryptography
     public class ConsolePasswordReader
         : IPasswordReader
     {
+        private static readonly int maxLength = 255;
+
+        private readonly IUserOutput _userOutput;
+        public ConsolePasswordReader(IUserOutput userOutput) { _userOutput = userOutput; }
+        
         public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
         {
             var pwd = new SecureString();
-            ReadCharsFromConsole(passwordContext, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
+            ReadCharsFromConsole(_userOutput, passwordContext, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
 
             pwd.MakeReadOnly();
             return pwd;
         }
 
-        public char[] ReadSecurePasswordAsChars(string passwordContext = "Please enter your password")
-        {
-            var maxLength = 255;
-            var buffer = new char[maxLength];
-            var length = ReadCharsFromConsole(passwordContext,
-                (c, i) => buffer[i] = c,
-                i => { buffer[i] = default; },
-                maxLength);
-            var password = buffer.Take(length).ToArray();
-
-            for (var i = 0; i < buffer.Length; i++)
-            {
-                buffer[i] = default;
-            }
-
-            return password;
-        }
-
-        private static int ReadCharsFromConsole(string passwordContext,
+        private static int ReadCharsFromConsole(IUserOutput userOutput,
+            string passwordContext,
             Action<char, int> appendChar,
             Action<int> removeChar,
             int maxLength = int.MaxValue)
@@ -69,14 +57,10 @@ namespace Catalyst.Common.Cryptography
             while (waitForInput)
             {
                 var keyInfo = Console.ReadKey(true);
-                switch (keyInfo.Key)
+                if (keyInfo.Key != ConsoleKey.Enter)
                 {
-                    case ConsoleKey.Enter:
-                        Console.WriteLine(string.Empty);
-                        waitForInput = false;
-                        break;
-
-                    case ConsoleKey.Backspace:
+                    if (keyInfo.Key == ConsoleKey.Backspace)
+                    {
                         if (inputLength == 0)
                         {
                             continue;
@@ -84,20 +68,26 @@ namespace Catalyst.Common.Cryptography
 
                         removeChar(inputLength - 1);
                         inputLength--;
-                        Console.Write(@" ");
-                        break;
-
-                    default:
+                        userOutput.Write(@" ");
+                    }
+                    else
+                    {
                         appendChar(keyInfo.KeyChar, inputLength);
                         inputLength++;
-                        Console.Write(@"*");
-                        if (inputLength == maxLength)
+                        userOutput.Write(@"*");
+                        if (inputLength != maxLength)
                         {
-                            Console.WriteLine(@"Max password length reached ({0})", maxLength);
-                            waitForInput = false;
+                            continue;
                         }
 
-                        break;
+                        userOutput.WriteLine($"Max password length reached ({maxLength})");
+                        waitForInput = false;
+                    }
+                }
+                else
+                {
+                    userOutput.WriteLine(string.Empty);
+                    waitForInput = false;
                 }
             }
 

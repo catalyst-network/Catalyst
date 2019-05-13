@@ -25,19 +25,18 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Serilog;
 using Ipfs.CoreApi;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public sealed class IpfsDfs : IDfs
+    public sealed class Dfs : IDfs
     {
-        public static readonly string HashAlgorithm = "blake2b-256";
-
         private static readonly AddFileOptions AddFileOptions = new AddFileOptions
         {
-            Hash = HashAlgorithm,
+            Hash = Constants.HashAlgorithm,
             RawLeaves = true
         };
 
@@ -45,9 +44,9 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         private readonly ILogger _logger;
 
-        public IpfsDfs(ICoreApi ipfsEngine, ILogger logger)
+        public Dfs(ICoreApi ipfsAdapter, ILogger logger)
         {
-            _ipfs = ipfsEngine;
+            _ipfs = ipfsAdapter;
             _logger = logger;
         }
 

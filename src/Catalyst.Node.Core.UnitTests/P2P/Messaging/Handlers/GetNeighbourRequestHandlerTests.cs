@@ -49,15 +49,15 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
 {
     public sealed class GetNeighbourRequestHandlerTests : ConfigFileBasedTest
     {
+        private readonly ILogger _subbedLogger;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRepository<Peer> _subbedPeerRepository;
-        private readonly ILogger _subbedLogger;
 
         public GetNeighbourRequestHandlerTests(ITestOutputHelper output) : base(output)
         {
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
-            _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
             _subbedLogger = Substitute.For<ILogger>();
+            _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
+            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
         }
         
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
