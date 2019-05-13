@@ -42,7 +42,6 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Microsoft.Extensions.Configuration;
-using Catalyst.Node.Core.Modules.Ipfs;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
@@ -60,8 +59,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         private readonly IDfs _dfs;
         private readonly IMessageCorrelationCache _cache;
         private readonly IpfsAdapter _ipfsEngine;
-        private readonly IFileTransfer _fileTransfer;
-        private readonly IChannelHandlerContext _fakeContext;
 
         public FileTransferNodeTests(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -81,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
             _logger = Substitute.For<ILogger>();
-            _dfs = new IpfsDfs(_ipfsEngine, _logger);
+            _dfs = new Dfs(_ipfsEngine, _logger);
         }
 
         [Fact]
@@ -89,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         {
             var sender = PeerIdHelper.GetPeerId("sender");
             var cache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new AddFileToDfsRequestHandler(new IpfsDfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _nodeFileTransferFactory, cache, _logger);
 
             //Create a response object and set its return value

@@ -23,17 +23,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using Catalyst.Cli.Options;
 using Catalyst.Cli.Rpc;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
@@ -41,13 +37,10 @@ using Catalyst.Common.IO;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Shell;
-using Catalyst.Node.Core.Rpc.Messaging;
-using Catalyst.Protocol.Rpc.Node;
 using CommandLine;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
-using Serilog.Events;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Commands
@@ -73,7 +66,7 @@ namespace Catalyst.Cli.Commands
             ICertificateStore certificateStore,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
-            IUserOutput userOutput)
+            IUserOutput userOutput) : base(userOutput)
         {
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
