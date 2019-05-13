@@ -81,7 +81,7 @@ namespace Catalyst.Common.Config
         /// <summary>
         /// The empty trie hash
         /// </summary>
-        public static byte[] EmptyTrieHash => (new MultiHash("blake2b-256", RLP.EncodeElement(new byte[0])).Digest);
+        public static byte[] EmptyTrieHash => (new MultiHash("blake2b-256", RLP.EncodeElement(new byte[31])).Digest);
        
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()

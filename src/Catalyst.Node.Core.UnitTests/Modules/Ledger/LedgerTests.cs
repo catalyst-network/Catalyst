@@ -28,6 +28,7 @@ using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 using SharpRepository.InMemoryRepository;
+using FluentAssertions;
 using MainLedger = Catalyst.Node.Core.Modules.Ledger.Ledger;
 using Account = Catalyst.Node.Core.Modules.Ledger.Account;
 //using Catalyst.Node.Core.Modules.Ledger;
@@ -56,12 +57,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount(Balanace: (uint) i * 5);
+                var account = AccountHelper.GetAccount(Balance: (uint) i * 5);
                 _ledger.SaveAccountState(account);
             }
-
-            Enumerable.Range(0, 10).ToList().ForEach(i => _ledger.Accounts
-            .Received(1).Add(Arg.Is<Account>(bb => bb.Balanace == (uint)5 * i)));
+            _ledger.Accounts.GetAll().Should().HaveCount(10);
+            _ledger.Accounts.GetAll().Should().NotContainNulls();
         }
     }
 }

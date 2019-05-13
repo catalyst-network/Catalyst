@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.Modules.Ledger
         public uint AccountType { get; set; }
 
         /// <inheritdoc />
-        public decimal Balanace { get; set; }
+        public decimal Balance { get; set; }
 
         /// <inheritdoc />
         public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;

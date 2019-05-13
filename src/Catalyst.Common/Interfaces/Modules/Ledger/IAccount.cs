@@ -47,7 +47,7 @@ namespace Catalyst.Common.Interfaces.Modules.Ledger
         /// <value>
         /// The amount.
         /// </value>
-        decimal Balanace { get; set; }
+        decimal Balance { get; set; }
 
         /// <summary>
         /// Gets or sets the state root.

@@ -32,14 +32,14 @@ namespace Catalyst.Common.UnitTests.TestUtils
         public static Account GetAccount(uint CoinType = 0,
             uint AccountType = 0,
             string PublicAddress = "0x32Be343B94f860124dC4fEe278FDCBD38C102D88",
-            decimal Balanace = 20.3m)
+            decimal Balance = 20.3m)
         {
             var account = new Account()
             {
                 CoinType = CoinType,
                 AccountType = AccountType,
                 PublicAddress = PublicAddress,
-                Balanace = Balanace
+                Balance = Balance
             };
             return account;
         }
