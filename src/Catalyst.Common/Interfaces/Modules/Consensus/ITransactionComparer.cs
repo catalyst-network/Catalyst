@@ -21,31 +21,10 @@
 
 #endregion
 
-using System;
-using Dawn;
+using System.Collections.Generic;
+using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
-    public static class StringUtil
-    {
-        public static bool StringComparatorException(string stringA, string stringB)
-        {
-            Guard.Argument(stringA)
-               .NotNull()
-               .NotEmpty()
-               .NotWhiteSpace();
-
-            Guard.Argument(stringB)
-               .NotNull()
-               .NotEmpty()
-               .NotWhiteSpace();
-
-            if (!stringA.Equals(stringB))
-            {
-                throw new Exception();
-            }
-
-            return false;
-        }
-    }
+    public interface ITransactionComparer : IComparer<Transaction> { }
 }

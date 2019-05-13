@@ -29,10 +29,8 @@ using SharpRepository.Repository;
 using Xunit;
 using SharpRepository.InMemoryRepository;
 using FluentAssertions;
-using MainLedger = Catalyst.Node.Core.Modules.Ledger.Ledger;
+using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
 using Account = Catalyst.Node.Core.Modules.Ledger.Account;
-//using Catalyst.Node.Core.Modules.Ledger;
-//using Account = Catalyst.Node.Core.Modules.Ledger.Account;
 
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
@@ -40,7 +38,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
     public sealed class LedgerTests
     {
         private IRepository<Account> _accounts;
-        private readonly MainLedger _ledger;
+        private readonly LedgerService _ledger;
 
         public LedgerTests()
         {

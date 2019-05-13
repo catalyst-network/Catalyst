@@ -33,7 +33,6 @@ namespace Catalyst.Common.Interfaces.P2P
         string PublicKey { get; }
         bool Announce { get; }
         IPEndPoint AnnounceServer { get; }
-        ushort MaxConnections { get; }
         int Port { get; }
         IPAddress BindAddress { get; }
         IPEndPoint EndPoint { get; }

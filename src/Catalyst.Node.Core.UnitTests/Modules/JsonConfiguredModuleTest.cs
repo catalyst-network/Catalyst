@@ -42,7 +42,7 @@ using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using MainLedger = Catalyst.Node.Core.Modules.Ledger.Ledger;
+using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
 
 namespace Catalyst.Node.Core.UnitTest.Modules
 {
@@ -82,10 +82,10 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         }
 
         [Theory]
-        [InlineData(typeof(IConsensus), typeof(Consensus))]
+        [InlineData(typeof(IConsensus), typeof(Core.Modules.Consensus.Consensus))]
         [InlineData(typeof(IContract), typeof(Contract))]
-        [InlineData(typeof(IDfs), typeof(IpfsDfs))]
-        [InlineData(typeof(ILedger), typeof(MainLedger))]
+        [InlineData(typeof(IDfs), typeof(Core.Modules.Dfs.Dfs))]
+        [InlineData(typeof(ILedger), typeof(LedgerService))]
         [InlineData(typeof(IMempool), typeof(Core.Modules.Mempool.Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)

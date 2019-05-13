@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,10 +47,13 @@ namespace Catalyst.Common.Config
         public static string SerilogJsonConfigFile => "serilog.json";
         
         // <summary> Search pattern for Json files </summary>
-        private static string JsonFilePattern => "{0}.json";
+        public static string JsonFilePattern => "{0}.json";
         
         // <summary> Default Catalyst data directory </summary>
-        internal static string CatalystSubFolder => ".Catalyst";
+        public static string CatalystDataDir => ".Catalyst";
+        
+        // <summary> Default dfs data directory inside the Catalyst data directory </summary>
+        public static string DfsDataSubDir => "dfs";
         
         // <summary> Config file with Catalyst.Cli component registrations for autofac </summary>
         public static string ShellComponentsJsonConfigFile => "shell.components.json";
@@ -78,11 +82,29 @@ namespace Catalyst.Common.Config
         /// <summary>The maximum chunk read tries </summary>
         public static int FileTransferMaxChunkReadTries => 3;
 
+        /// <summary> How many peers node discovers before saving for burn in value </summary>
+        public static int PeerDiscoveryBurnIn => 25;
+        
+        /// <summary> EdDSA Curve  type </summary>
+        public static string KeyChainDefaultKeyType => "ed25519";
+
+        /// <summary> Hashing algorithm type </summary>
+        public static string HashAlgorithm => "blake2b-256";
+        
+        /// <summary> Dfs Swarm Key </summary>
+        public static string SwarmKey => "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
+
+        public static int BaseReputationChange => 1;
+        public static int NumberOfRandomPeers => 5;
+        
+        /// <summary> TTL for correlation cache </summary>
+        public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
+
         /// <summary>
         /// The empty trie hash
         /// </summary>
-        public static byte[] EmptyTrieHash => (new MultiHash("blake2b-256", RLP.EncodeElement(new byte[31])).Digest);
-       
+        public static byte[] EmptyTrieHash => (new MultiHash(HashAlgorithm, RLP.EncodeElement(new byte[31])).Digest);
+
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));

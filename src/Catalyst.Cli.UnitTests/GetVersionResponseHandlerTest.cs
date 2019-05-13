@@ -51,10 +51,13 @@ namespace Catalyst.Cli.UnitTests
 
         static GetVersionResponseHandlerTest()
         {
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
-                new object[] {"0.0.0.0"},
-                new object[] {""},
+                new object[]
+                {
+                    "0.0.0.0"
+                },
+                new object[] {""}
             };
         }
 

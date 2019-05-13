@@ -49,10 +49,16 @@ namespace Catalyst.Cli.UnitTests
 
         static VerifyMessageResponseHandlerTest()
         {
-            QueryContents = new List<object[]>()
+            QueryContents = new List<object[]>
             {
-                new object[] {true},
-                new object[] {false}
+                new object[]
+                {
+                    true
+                },
+                new object[]
+                {
+                    false
+                }
             };
         }
 
@@ -65,12 +71,12 @@ namespace Catalyst.Cli.UnitTests
 
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedbyNode)
+        public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
         {
             var response = new RpcMessageFactory<VerifyMessageResponse>().GetMessage(
                 new VerifyMessageResponse
                 {
-                    IsSignedByKey = isSignedbyNode
+                    IsSignedByKey = isSignedByNode
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
@@ -83,7 +89,7 @@ namespace Catalyst.Cli.UnitTests
             _handler = new VerifyMessageResponseHandler(_output, cache, _logger);
             _handler.StartObserving(messageStream);
 
-            _output.Received(1).WriteLine(isSignedbyNode.ToString());
+            _output.Received(1).WriteLine(isSignedByNode.ToString());
         }
 
         public void Dispose()

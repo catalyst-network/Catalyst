@@ -26,36 +26,38 @@ using System.Reflection;
 using System.Text;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Catalyst.Common.Interfaces.Cli;
 
 namespace Catalyst.Common.Shell
 {
     public abstract class ShellBase : IShell
     {
-        protected ShellBase() { }
+        protected readonly IUserOutput UserOutput;
+
+        protected ShellBase(IUserOutput userOutput)
+        {
+            UserOutput = userOutput;
+        }
 
         private static string Prompt => "Koopa";
         private static string ServiceName => "Catalyst Distributed Shell";
         private static CultureInfo AppCulture => new CultureInfo("en-GB", false);
         
         /// <inheritdoc />
-        /// <summary>
-        ///     Runs the main cli ui.
-        /// </summary>
-        /// <returns></returns>
-        public bool RunConsole()
+        public bool RunConsole(CancellationToken ct)
         {
             const bool running = true;
 
             Console.OutputEncoding = Encoding.Unicode;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             var ver = Assembly.GetEntryAssembly().GetName().Version;
-            Console.WriteLine($@"{ServiceName} Version: {ver}");
+            UserOutput.WriteLine($@"{ServiceName} Version: {ver}");
 
-            while (running)
+            while (!ct.IsCancellationRequested)
             {
                 Console.ForegroundColor = ConsoleColor.DarkBlue;
-                Console.WriteLine($@"{Prompt}> ");
+                UserOutput.WriteLine($@"{Prompt}> ");
 
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 var line = Console.ReadLine()?.Trim();
@@ -80,7 +82,7 @@ namespace Catalyst.Common.Shell
                 }
                 catch (SystemException ex)
                 {
-                    Console.WriteLine($@"Exception raised in Shell ${ex.Message}");
+                    UserOutput.WriteLine($@"Exception raised in Shell ${ex.Message}");
                 }
             }
 
@@ -88,6 +90,7 @@ namespace Catalyst.Common.Shell
             return running;
         }
 
+        /// <inheritdoc />
         public abstract bool ParseCommand(params string[] args);
     }
 }
