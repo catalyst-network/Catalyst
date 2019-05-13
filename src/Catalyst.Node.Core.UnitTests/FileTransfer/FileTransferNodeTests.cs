@@ -173,11 +173,12 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
                 FileSize = (ulong) byteSize
             }.ToAnySigned(sender, uniqueFileKey);
             request.SendToHandler(_fakeContext, addFileToDfsRequestHandler);
-
+            
             Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
 
             var fileTransferInformation =
                 _nodeFileTransferFactory.GetFileTransferInformation(uniqueFileKey);
+            Assert.True(fileTransferInformation.Initialised, "File transfer not initialised");
 
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
