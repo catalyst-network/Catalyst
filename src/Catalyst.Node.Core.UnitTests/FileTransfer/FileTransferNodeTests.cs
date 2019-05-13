@@ -47,6 +47,8 @@ using Catalyst.Node.Core.Rpc.Messaging;
 using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 using System.Threading;
+using System.Threading.Tasks;
+using Polly;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer
 {
@@ -118,10 +120,23 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, cancellationTokenSource.Token);
             Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
             cancellationTokenSource.Cancel();
-            while (!fileTransferInformation.IsCompleted)
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
+               .WaitAndRetryAsync(5, retryAttempt =>
+                {
+                    var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
+                    cts = new CancellationTokenSource(timeSpan);
+                    return timeSpan;
+                });
+
+            linearBackOffRetryPolicy.ExecuteAsync(() =>
             {
-                // Wait for complete task
-            }
+                return Task.Run(() =>
+                {
+                    while (!fileTransferInformation.IsCompleted && !cts.IsCancellationRequested) { }
+                }, cts.Token);
+            }).GetAwaiter().GetResult();
 
             var fileCleanedUp = !File.Exists(fileTransferInformation.TempPath);
 
@@ -177,11 +192,23 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             }
 
             Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
+            
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
+               .WaitAndRetryAsync(5, retryAttempt =>
+                {
+                    var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
+                    cts = new CancellationTokenSource(timeSpan);
+                    return timeSpan;
+                });
 
-            while (fileTransferInformation.DfsHash == null)
+            linearBackOffRetryPolicy.ExecuteAsync(() =>
             {
-                // Wait for DFS hash to set
-            }
+                return Task.Run(() =>
+                {
+                    while (fileTransferInformation.DfsHash == null && !cts.IsCancellationRequested) { }
+                }, cts.Token);
+            }).GetAwaiter().GetResult();
 
             Assert.NotNull(fileTransferInformation.DfsHash);
             
