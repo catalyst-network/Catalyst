@@ -43,14 +43,14 @@ namespace Catalyst.Cli.Handlers
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesResponseHandler(IMessageCorrelationCache correlationCache,
-            ILogger logger) : base(correlationCache, logger)
-        {
-            // Response for a chunk.
-            // Future logic if an error occurs via chunk transfer then we want to stop file transfer
-        }
+            ILogger logger) : base(correlationCache, logger) { }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message) { }
+        protected override void Handler(IChanneledMessage<AnySigned> message)
+        {
+            // Response for a node writing a chunk via bytes transfer.
+            // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer
+        }
     }
 }
