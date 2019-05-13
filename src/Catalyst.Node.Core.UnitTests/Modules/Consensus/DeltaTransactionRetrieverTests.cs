@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -63,28 +62,28 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
         }
 
         [Fact]
-        public async Task GetMempoolTransactionsByPriority_should_at_most_return_MaxCount()
+        public void GetMempoolTransactionsByPriority_should_at_most_return_MaxCount()
         {
             var maxCountBelowTotal = _transactions.Count - 1;
-            var retrieved = await _transactionRetriever.GetMempoolTransactionsByPriority(maxCountBelowTotal);
+            var retrieved = _transactionRetriever.GetMempoolTransactionsByPriority(maxCountBelowTotal);
 
             retrieved.Count().Should().BeLessOrEqualTo(maxCountBelowTotal);
 
             var maxCountAboveTotal = _transactions.Count + 1;
-            retrieved = await _transactionRetriever.GetMempoolTransactionsByPriority(maxCountAboveTotal);
+            retrieved = _transactionRetriever.GetMempoolTransactionsByPriority(maxCountAboveTotal);
             retrieved.Count.Should().Be(_transactions.Count);
 
-            retrieved = await _transactionRetriever.GetMempoolTransactionsByPriority();
+            retrieved = _transactionRetriever.GetMempoolTransactionsByPriority();
             retrieved.Count.Should().Be(_transactions.Count);
         }
 
         [Fact]
         public void GetMempoolTransactionsByPriority_should_not_accept_zero_or_negative_maxCount()
         {
-            new Func<Task>(async () => await _transactionRetriever.GetMempoolTransactionsByPriority(-1))
+            new Action(() => _transactionRetriever.GetMempoolTransactionsByPriority(-1))
                .Should().Throw<ArgumentException>();
 
-            new Func<Task>(async () => await _transactionRetriever.GetMempoolTransactionsByPriority(0))
+            new Action(() => _transactionRetriever.GetMempoolTransactionsByPriority(0))
                .Should().Throw<ArgumentException>();
         }
 
@@ -96,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
                .OrderByDescending(t => t, _transactionRetriever.TransactionComparer)
                .Take(maxCount).ToList();
 
-            var retrievedTransactions = await _transactionRetriever
+            var retrievedTransactions = _transactionRetriever
                .GetMempoolTransactionsByPriority(maxCount);
 
             var excludedTransactionCount = _transactions.Count - maxCount;

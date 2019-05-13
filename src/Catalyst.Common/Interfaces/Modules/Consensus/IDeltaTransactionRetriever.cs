@@ -49,6 +49,6 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// </summary>
         /// <param name="maxCount">The maximum number of transactions to be returned by the method.</param>
         /// <returns>The top <see cref="maxCount"/> transactions in order of </returns>
-        Task<IList<Transaction>> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
+        IList<Transaction> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
     }
 }

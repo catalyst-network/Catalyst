@@ -31,9 +31,12 @@ using Dawn;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
+    /// <inheritdoc />
     public class DeltaTransactionRetriever : IDeltaTransactionRetriever
     {
         private readonly IMempool _mempool;
+        
+        /// <inheritdoc />
         public ITransactionComparer TransactionComparer { get; }
 
         public DeltaTransactionRetriever(IMempool mempool,
@@ -43,11 +46,12 @@ namespace Catalyst.Node.Core.Modules.Consensus
             TransactionComparer = transactionComparer;
         }
 
-        public async Task<IList<Transaction>> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue)
+        /// <inheritdoc />
+        public IList<Transaction> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
         {
             Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
 
-            var allTransactions = await Task.FromResult(_mempool.GetMemPoolContent());
+            var allTransactions = _mempool.GetMemPoolContent();
             var mempoolPrioritised = allTransactions.OrderByDescending(t => t, TransactionComparer)
                .Take(maxCount).ToList();
 
