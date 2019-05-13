@@ -22,7 +22,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
@@ -30,10 +32,10 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
     public interface IReputableCache : IMessageCorrelationCache
     {
         /// <summary>
-        /// Stream of reputation changes events raised by requests being answered or expired.
+        ///     Stream of reputation changes events raised by requests being answered or expired.
         /// </summary>
         IObservable<IPeerReputationChange> PeerRatingChanges { get; }
-
+    
         /// <summary>
         ///     Manipulate a peers reputation on eviction from a cache
         /// </summary>

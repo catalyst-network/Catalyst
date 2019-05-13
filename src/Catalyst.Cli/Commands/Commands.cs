@@ -29,7 +29,6 @@ using Catalyst.Cli.Options;
 using Catalyst.Cli.Rpc;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
@@ -48,14 +47,13 @@ namespace Catalyst.Cli.Commands
     /// <inheritdoc cref="ShellBase" />
     public sealed partial class Commands : ShellBase, IAdvancedShell
     {
+        private readonly ILogger _logger;
         private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IRpcFileTransfer _rpcFileTransfer;
         private readonly ICertificateStore _certificateStore;
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
-        private readonly IRpcFileTransfer _rpcFileTransfer;
-        private readonly ILogger _logger;
-        private readonly IUserOutput _userOutput;
 
         /// <summary>
         /// </summary>
@@ -64,7 +62,7 @@ namespace Catalyst.Cli.Commands
             ILogger logger,
             ICertificateStore certificateStore,
             IRpcFileTransfer rpcFileTransfer,
-            IUserOutput userOutput)
+            IUserOutput userOutput) : base(userOutput)
         {
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
@@ -72,10 +70,8 @@ namespace Catalyst.Cli.Commands
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _rpcFileTransfer = rpcFileTransfer;
-            _peerIdentifier = BuildCliPeerId(config);
-            _userOutput = userOutput;
-            
-            _userOutput.WriteLine(@"Koopa Shell Start");
+            _peerIdentifier = BuildCliPeerId(config);            
+            UserOutput.WriteLine(@"Koopa Shell Start");
         }
 
         /// <inheritdoc cref="ParseCommand" />
@@ -198,13 +194,14 @@ namespace Catalyst.Cli.Commands
             
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(config => config.NodeId.Equals(nodeId));
 
-            if (nodeConfig == null)
+            if (nodeConfig != null)
             {
-                _userOutput.WriteLine("Node not configured. Add node to config file and try again.");
-                return null;
+                return nodeConfig;
             }
-            
-            return nodeConfig;            
+
+            UserOutput.WriteLine("Node not configured. Add node to config file and try again.");
+
+            return null;
         }
         
         /// <summary>

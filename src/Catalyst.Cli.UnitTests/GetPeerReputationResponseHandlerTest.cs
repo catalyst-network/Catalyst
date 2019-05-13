@@ -64,6 +64,7 @@ namespace Catalyst.Cli.UnitTests
                 new object[] {22}
             };
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GetPeerReputationResponseHandlerTest"/> class.
         /// </summary>
@@ -85,6 +86,7 @@ namespace Catalyst.Cli.UnitTests
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }
+        
         /// <summary>
         /// RPCs the client can handle get reputation response.
         /// </summary>
@@ -129,7 +131,6 @@ namespace Catalyst.Cli.UnitTests
 
             _handler = new PeerReputationResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);
-
         }
 
         public void Dispose()
