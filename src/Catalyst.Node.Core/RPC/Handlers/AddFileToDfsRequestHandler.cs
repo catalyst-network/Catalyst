@@ -158,7 +158,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 }
 
                 return responseCode;
-            }).GetAwaiter().GetResult();
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
 
             ReturnResponse(fileTransferInformation, addFileResponseCode, fileTransferInformation.CorrelationGuid);
         }
