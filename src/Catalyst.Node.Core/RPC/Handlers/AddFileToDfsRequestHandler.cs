@@ -138,7 +138,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open,
                         FileAccess.Read, FileShare.ReadWrite))
                     {
-                        fileHash = _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).Result;
+                        fileHash = _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false).GetAwaiter().GetResult();
                     }
 
                     fileTransferInformation.DfsHash = fileHash;

@@ -212,7 +212,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             Assert.NotNull(fileTransferInformation.DfsHash);
             
-            long ipfsCrcValue = -1;
+            long ipfsCrcValue;
             using (var ipfsStream = _dfs.ReadAsync(fileTransferInformation.DfsHash).GetAwaiter().GetResult())
             {
                 ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
@@ -220,23 +220,5 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
 
             Assert.Equal(crcValue, ipfsCrcValue);
         }
-
-        #region IDisposable Support
-
-        new void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _ipfsEngine?.Dispose();
-            }
-        }
-
-        public new void Dispose()
-        {
-            base.Dispose(true);
-            base.Dispose();
-        }
-
-        #endregion
     }
 }
