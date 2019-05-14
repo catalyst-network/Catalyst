@@ -29,7 +29,11 @@ namespace Catalyst.Common.IO.Outbound
 {
     public sealed class PendingRequest
     {
-        public PendingRequest() { GossipCount = 0; }
+        public PendingRequest()
+        {
+            GossipCount = 0;
+            RecievedCount = 1;
+        }
 
         public AnySigned Content { get; set; }
         public IPeerIdentifier Recipient { get; set; }

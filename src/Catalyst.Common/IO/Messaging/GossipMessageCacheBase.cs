@@ -23,16 +23,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
-using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
@@ -45,10 +40,7 @@ namespace Catalyst.Common.IO.Messaging
     {
         /// <summary>The maximum gossip count</summary>
         private const int MaxGossipCount = 10;
-
-        /// <summary>The maximum gossip peers</summary>
-        private const int MaxGossipPeers = 5;
-
+        
         /// <summary>The peer discovery</summary>
         private readonly IPeerDiscovery _peerDiscovery;
 
@@ -95,64 +87,12 @@ namespace Catalyst.Common.IO.Messaging
             return false;
         }
         
-        public void Gossip(IChannel channel, IP2PMessageFactory<TMessage> messageFactoryBase, IChanneledMessage<AnySigned> message, Guid correlationId)
-        {
-            int myPosition = GetCurrentPosition();
-            var gossipPeers = _peerDiscovery.Peers.ToList();
-
-            if (gossipPeers.Count < 2)
-            {
-                return;
-            }
-
-            gossipPeers.Sort();
-            gossipPeers.RemoveRange(0, myPosition);
-
-            var pendingRequest = GetPendingRequestValue(correlationId);
-            var deserialised = message.Payload.FromAnySigned<TMessage>();
-            var amountToGossip = Math.Min(MaxGossipPeers, MaxGossipPeers - pendingRequest.GossipCount);
-            IEnumerable<IPeerIdentifier> peerIdentifiers =
-                gossipPeers.Skip(pendingRequest.GossipCount * amountToGossip).Take(amountToGossip).ToList();
-
-            foreach (var peerIdentifier in peerIdentifiers)
-            {
-                var datagramEnvelope = messageFactoryBase.GetMessageInDatagramEnvelope(deserialised, peerIdentifier, _peerIdentifier,
-                    MessageTypes.Gossip, correlationId);
-                channel.WriteAndFlushAsync(datagramEnvelope);
-            }
-
-            var updateCount = peerIdentifiers.Count();
-            if (updateCount > 0)
-            {
-                pendingRequest.GossipCount += updateCount;
-                UpdateGossip(correlationId, pendingRequest);
-            }
-        }
-
         public override TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
         {
-            Guard.Argument(response, nameof(response)).NotNull()
-               .Require(r => typeof(TResponse).ShortenedProtoFullName().Equals(response.TypeUrl))
-               .Require(r => typeof(TRequest).ShortenedProtoFullName().Equals(r.TypeUrl.GetRequestType()));
-
-            var id = response.CorrelationId.ToGuid();
-            var found = GetPendingRequestValue(id);
-
-            if (found != null)
-            {
-                found.RecievedCount += 1;
-                UpdateGossip(id, found);
-            }
-
-            return found?.Content.FromAnySigned<TRequest>();
+            throw new NotSupportedException();
         }
-
-        private void UpdateGossip(Guid guid, PendingRequest request)
-        {
-            PendingRequests.Set(guid + "gossip", request);
-        }
-
-        private int GetCurrentPosition()
+        
+        public int GetCurrentPosition()
         {
             List<IPeerIdentifier> fullPeerList = new List<IPeerIdentifier>();
             fullPeerList.AddRange(_peerDiscovery.Peers.ToArray());
@@ -160,6 +100,36 @@ namespace Catalyst.Common.IO.Messaging
             fullPeerList.Sort();
             int peerIdx = fullPeerList.IndexOf(_peerIdentifier);
             return peerIdx;
+        }
+
+        public int GetGossipCount(Guid correlationId)
+        {
+            return GetPendingRequestValue(correlationId)?.GossipCount ?? -1;
+        }
+
+        public void IncrementGossipCount(Guid correlationId, int updateCount)
+        {
+            PendingRequest request = GetPendingRequestValue(correlationId);
+            request.GossipCount += updateCount;
+            AddPendingRequest(request);
+        }
+
+        public void IncrementReceivedCount(Guid correlationId, int updateCount)
+        {
+            PendingRequest request = GetPendingRequestValue(correlationId);
+            if (request == null)
+            {
+                request = new PendingRequest()
+                {
+                    RecievedCount = updateCount
+                };
+            }
+            else
+            {
+                request.RecievedCount += updateCount;
+            }
+
+            AddPendingRequest(request);
         }
 
         private PendingRequest GetPendingRequestValue(Guid guid)

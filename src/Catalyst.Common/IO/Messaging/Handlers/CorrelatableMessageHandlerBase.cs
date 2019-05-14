@@ -52,7 +52,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             {
                 nextHandler = ((IReputationAskHandler<TCorrelator>) this).CanExecuteNextHandler(message);
             }
-
+            
             if (nextHandler)
             {
                 Logger.Debug("handle message in correlatable handler");
