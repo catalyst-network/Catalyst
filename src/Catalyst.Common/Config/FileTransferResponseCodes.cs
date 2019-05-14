@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Linq;
 using Catalyst.Common.Enumerator;
 
 namespace Catalyst.Common.Config
@@ -28,7 +29,7 @@ namespace Catalyst.Common.Config
     public class FileTransferResponseCodes : Enumeration
     {
         public static readonly FileTransferResponseCodes Successful = new SuccessfulCodeStatus();
-        public static readonly FileTransferResponseCodes FileAlreadyExists = new FileAlreadyExistsStatus();
+        public static readonly FileTransferResponseCodes TransferPending = new TransferPendingStatus();
         public static readonly FileTransferResponseCodes Error = new ErrorStatus();
         public static readonly FileTransferResponseCodes Finished = new FinishedStatus();
         public static readonly FileTransferResponseCodes Expired = new ExpiredStatus();
@@ -41,9 +42,9 @@ namespace Catalyst.Common.Config
             public SuccessfulCodeStatus() : base(1, "successful") { }
         }
         
-        private sealed class FileAlreadyExistsStatus : FileTransferResponseCodes
+        private sealed class TransferPendingStatus : FileTransferResponseCodes
         {
-            public FileAlreadyExistsStatus() : base(2, "fileAlreadyExists") { }
+            public TransferPendingStatus() : base(2, "transferPending") { }
         }
         
         private sealed class ErrorStatus : FileTransferResponseCodes
@@ -64,6 +65,11 @@ namespace Catalyst.Common.Config
         private sealed class FailedStatus : FileTransferResponseCodes
         {
             public FailedStatus() : base(6, "failed") { }
+        }
+
+        public static explicit operator FileTransferResponseCodes(byte id)
+        {
+            return GetAll<FileTransferResponseCodes>().Single(f => f.Id == id);
         }
     }
 }
