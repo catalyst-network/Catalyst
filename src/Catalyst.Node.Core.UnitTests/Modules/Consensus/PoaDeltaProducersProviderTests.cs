@@ -25,18 +25,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Protocol.Delta;
 using FluentAssertions;
 using Google.Protobuf;
+using Ipfs;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
+using Peer = Catalyst.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
 {
@@ -80,15 +80,16 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
         {
             var expectedProducers = _peers.Select(p =>
                 {
-                    var ranking = _poaDeltaProducerProvider.TEMP_HASH_FUNCTION(
-                        p.PeerIdentifier.PeerId.ToByteArray(), _delta.MerkleRoot.ToByteArray());
+                    var bytesToHash = p.PeerIdentifier.PeerId.ToByteArray()
+                       .Concat(_delta.MerkleRoot.ToByteArray()).ToArray();
+                    var ranking = MultiHash.ComputeHash(bytesToHash);
                     return new
                     {
-                        PeerIdentifier = p.PeerIdentifier,
-                        Ranking = ranking.ToArray()
+                        p.PeerIdentifier,
+                        ranking.Digest
                     };
                 })
-               .OrderBy(h => h.Ranking, ByteListComparer.Default)
+               .OrderBy(h => h.Digest, ByteListComparer.Default)
                .Select(h => h.PeerIdentifier)
                .ToList();
 
@@ -96,6 +97,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
 
             producers.Count.Should().Be(expectedProducers.Count);
             producers.Should().OnlyHaveUniqueItems();
+
             for (var i = 0; i < expectedProducers.Count; i++)
             {
                 producers[i].PeerId.ToByteArray()

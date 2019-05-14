@@ -26,9 +26,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
+using Ipfs;
 using Catalyst.Protocol.Delta;
 using Google.Protobuf;
+using NSubstitute;
 using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus
@@ -54,20 +55,19 @@ namespace Catalyst.Node.Core.Modules.Consensus
 
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
-                    var ranking = TEMP_HASH_FUNCTION(p.PeerIdentifier.PeerId.ToByteArray(), previousDeltaHash);
-                    return new {PeerIdenitifier = p.PeerIdentifier, Ranking = ranking.ToArray()};
+                    var array = p.PeerIdentifier.PeerId.ToByteArray().Concat(previousDeltaHash).ToArray();
+                    var ranking = MultiHash.ComputeHash(array);
+                    return new
+                    {
+                        p.PeerIdentifier,
+                        ranking.Digest
+                    };
                 })
-               .OrderBy(h => h.Ranking, ByteListComparer.Default)
-               .Select(h => h.PeerIdenitifier)
+               .OrderBy(h => h.Digest, ByteListComparer.Default)
+               .Select(h => h.PeerIdentifier)
                .ToList();
 
             return peerIdsInPriorityOrder;
-        }
-
-        //Todo replace with the true one from Crypto package when available
-        public byte[] TEMP_HASH_FUNCTION(params byte[][] bytes)
-        {
-            return bytes.SelectMany(t => t).ToArray();
         }
     }
 }
