@@ -26,7 +26,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.DeltaProducersProvider",
+            "type": "Catalyst.Node.Core.Modules.Consensus.PoaDeltaProducersProvider",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.IDeltaProducersProvider, Catalyst.Common"

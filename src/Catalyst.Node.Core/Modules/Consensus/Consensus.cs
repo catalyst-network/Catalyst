@@ -21,16 +21,15 @@
 
 #endregion
 
-using System;
-using System.Collections;
 using Catalyst.Common.Interfaces.Modules.Consensus;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
     public class Consensus : IConsensus
     {
         private readonly ILogger _logger;
+
         public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
 
         public IDeltaProducersProvider DeltaProducersProvider { get; }
@@ -42,7 +41,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             _logger = logger;
             DeltaTransactionRetriever = deltaTransactionRetriever;
             DeltaProducersProvider = deltaProducersProvider;
-            _logger.LogInformation("Consensus service initialised.");
+            _logger.Information("Consensus service initialised.");
         }
     }
 }
