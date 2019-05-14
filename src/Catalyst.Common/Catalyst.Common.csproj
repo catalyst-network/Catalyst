@@ -136,7 +136,6 @@
     <Folder Include="Hex\HexConverters\Extensions\" />
     <Folder Include="Hex\HexTypes\" />
     <Folder Include="RLP\" />
-    <Folder Include="Interfaces\Modules\Consensus" />
     <Folder Include="Interfaces\Modules\Contract" />
     <Folder Include="Interfaces\Modules\KeySigner" />
     <Folder Include="Interfaces\Modules\Ledger" />
