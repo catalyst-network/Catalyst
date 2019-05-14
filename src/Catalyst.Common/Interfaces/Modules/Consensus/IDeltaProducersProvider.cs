@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Delta;
+using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
@@ -42,9 +43,8 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(Delta previousDelta);
 
         /// <summary>
-        /// The PeerDiscovery service used to collect information about the different participants on the network. This is important,
-        /// for instance, when trying to find which peers should produce the next ledger state update.
+        /// A peer repository containing peers eligible for the production of the next delta.
         /// </summary>
-        IPeerDiscovery PeerDiscovery { get; }
+        IRepository<Peer> PeerRepository { get; }
     }
 }

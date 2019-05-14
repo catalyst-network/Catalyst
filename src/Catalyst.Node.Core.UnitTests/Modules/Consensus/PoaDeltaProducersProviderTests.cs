@@ -34,6 +34,7 @@ using Google.Protobuf;
 using Ipfs;
 using NSubstitute;
 using Serilog;
+using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 using Peer = Catalyst.Common.P2P.Peer;
@@ -43,7 +44,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
     public class PoaDeltaProducersProviderTests
     {
         private readonly ITestOutputHelper _output;
-        private readonly IPeerDiscovery _peerDiscovery;
+        private readonly IRepository<Peer> _peerRepository;
         private readonly List<Peer> _peers;
         private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
         private readonly Delta _delta;
@@ -65,14 +66,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
 
             var logger = Substitute.For<ILogger>();
 
-            _peerDiscovery = Substitute.For<IPeerDiscovery>();
-            _peerDiscovery.PeerRepository.GetAll().Returns(_ => _peers);
+            _peerRepository = Substitute.For<IRepository<Peer>>();
+            _peerRepository.GetAll().Returns(_ => _peers);
 
             var merkleRoot = new byte[32];
             rand.NextBytes(merkleRoot);
             _delta = new Delta() {MerkleRoot = merkleRoot.ToByteString()};
 
-            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(_peerDiscovery, logger);
+            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(_peerRepository, logger);
         }
 
         [Fact]

@@ -34,10 +34,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.InMemoryRepository",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Common"
+                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.Repository"
                 }
             ]
         }

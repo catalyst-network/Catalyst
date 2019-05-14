@@ -31,6 +31,8 @@ using Catalyst.Protocol.Delta;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
+using SharpRepository.Repository;
+using Peer = Catalyst.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
@@ -39,17 +41,17 @@ namespace Catalyst.Node.Core.Modules.Consensus
         private readonly ILogger _logger;
 
         /// <inheritdoc />
-        public IPeerDiscovery PeerDiscovery { get; }
+        public IRepository<Peer> PeerRepository { get; }
 
-        public PoaDeltaProducersProvider(IPeerDiscovery peerDiscovery, ILogger logger)
+        public PoaDeltaProducersProvider(IRepository<Peer> peerRepository, ILogger logger)
         {
             _logger = logger;
-            PeerDiscovery = peerDiscovery;
+            PeerRepository = peerRepository;
         }
 
         public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(Delta previousDelta)
         {
-            var allPeers = PeerDiscovery.PeerRepository.GetAll();
+            var allPeers = PeerRepository.GetAll();
 
             var previousDeltaHash = previousDelta.MerkleRoot.ToByteArray();
 
