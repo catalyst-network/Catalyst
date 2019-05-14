@@ -148,6 +148,6 @@ namespace Catalyst.Cli
             _cancellationSource.Cancel();
         }
 
-        private static LoggingLevelSwitch LogLevelSwitch { get; set; }
+        public static LoggingLevelSwitch LogLevelSwitch { get; set; }
     }
 }

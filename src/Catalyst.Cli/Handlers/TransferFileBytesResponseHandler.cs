@@ -21,13 +21,8 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -44,30 +39,18 @@ namespace Catalyst.Cli.Handlers
         : CorrelatableMessageHandlerBase<TransferFileBytesResponse, IMessageCorrelationCache>,
             IRpcResponseHandler
     {
-        /// <summary>The CLI file transfer</summary>
-        private readonly IRpcFileTransfer _rpcFileTransfer;
-
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="rpcFileTransfer">The CLI file transfer</param>
         public TransferFileBytesResponseHandler(IMessageCorrelationCache correlationCache,
-            ILogger logger,
-            IRpcFileTransfer rpcFileTransfer) : base(correlationCache, logger)
-        {
-            _rpcFileTransfer = rpcFileTransfer;
-        }
+            ILogger logger) : base(correlationCache, logger) { }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            var deserialised = message.Payload.FromAnySigned<TransferFileBytesResponse>();
-
-            //@TODO check
-            var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
-
-            _rpcFileTransfer.FileTransferCallback(responseCode);
+            // Response for a node writing a chunk via bytes transfer.
+            // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer
         }
     }
 }
