@@ -21,10 +21,9 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Ledger;
+using Catalyst.Common.Util;
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {
@@ -32,38 +31,17 @@ namespace Catalyst.Node.Core.Modules.Ledger
     /// This class represent a user account of which there can be the following types:
     /// confidential account, non-confidential account and smart contract account
     /// </summary>
-    public class Account : IAccount
+    public sealed class Account : IAccount
     {
-        /// <summary>
-        /// Gets or sets the type of the coin.
-        /// </summary>
-        /// <value>
-        /// The type of the coin.
-        /// </value>
+        /// <inheritdoc />
         public uint CoinType { get; set; }
 
-        /// <summary>
-        /// Gets or sets the type of the account.
-        /// </summary>
-        /// <value>
-        /// The type of the account.
-        /// </value>
+        /// <inheritdoc />
         public uint AccountType { get; set; }
 
-        /// <summary>
-        /// The balance of confirmed transactions.
-        /// </summary>
-        public double AmountConfirmed { get; set; }
-
-        /// <summary>
-        /// The balance of unconfirmed transactions.
-        /// </summary>
-        public double AmountUnconfirmed { get; set; }
-
-        /// <summary>
-        /// The amount that has enough confirmations to be already spendable.
-        /// </summary>
-        public double SpendableAmount { get; set; }
-
+        /// <inheritdoc />
+        public BigDecimal Balance { get; set; }
+        
+        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
     }
 }

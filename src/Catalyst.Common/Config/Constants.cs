@@ -27,6 +27,10 @@ using System.IO;
 using System.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Modules;
+using Catalyst.Common.Util;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
+using Nethereum.RLP;
 
 namespace Catalyst.Common.Config
 {
@@ -87,13 +91,19 @@ namespace Catalyst.Common.Config
         public static string KeyChainDefaultKeyType => "ed25519";
 
         /// <summary> Hashing algorithm type </summary>
-        public static string HashAlgorithm => "blake2b-256";
+        public static HashType HashAlgorithm => HashType.BLAKE2B_8;
         
         /// <summary> Dfs Swarm Key </summary>
         public static string SwarmKey => "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
 
         public static int BaseReputationChange => 1;
         public static int NumberOfRandomPeers => 5;
+        
+        public static readonly byte[] EmptyDataHash = Multihash.Encode<BLAKE2B_8>(ByteUtil.EmptyByteArray);
+        public static readonly byte[] EmptyTrieHash = Multihash.Encode<BLAKE2B_8>(RLP.EncodeElement(ByteUtil.EmptyByteArray));
+
+        /// <summary> Sets the maximum precision of division operations. </summary>
+        public const int Precision = 50;
         
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);

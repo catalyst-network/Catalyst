@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -9,6 +9,7 @@
     <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.3866-beta" />
     <PackageReference Include="Ipfs.Api" Version="0.23.6" />
     <PackageReference Include="Ipfs.Engine" Version="0.7.2" />
+    <PackageReference Include="Multiformats.Hash" Version="1.4.0" />
     <PackageReference Include="Polly" Version="7.1.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
     <PackageReference Include="Dawn.Guard" Version="1.8.0" />
