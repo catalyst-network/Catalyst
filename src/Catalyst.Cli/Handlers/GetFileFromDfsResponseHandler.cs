@@ -21,17 +21,16 @@
 
 #endregion
 
-using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,57 +40,56 @@ using Serilog;
 namespace Catalyst.Cli.Handlers
 {
     /// <summary>
-    /// Add File to DFS Response handler
+    /// Handles Get file from DFS response
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetFileFromDfsResponse, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
-    public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IMessageCorrelationCache>,
+    public class GetFileFromDfsResponseHandler : CorrelatableMessageHandlerBase<GetFileFromDfsResponse, IMessageCorrelationCache>,
         IRpcResponseHandler
     {
-        /// <summary>The upload file transfer factory</summary>
-        private readonly IUploadFileTransferFactory _rpcFileTransferFactory;
+        /// <summary>The file transfer factory</summary>
+        private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
-        private readonly IUserOutput _userOutput;
-
-        /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="GetFileFromDfsResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="rpcFileTransferFactory">The upload file transfer factory</param>
-        /// <param name="userOutput"></param>
-        public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
+        /// <param name="fileTransferFactory">The file transfer.</param>
+        public GetFileFromDfsResponseHandler(IMessageCorrelationCache correlationCache,
             ILogger logger,
-            IUploadFileTransferFactory rpcFileTransferFactory, 
-            IUserOutput userOutput) : base(correlationCache, logger)
+            IDownloadFileTransferFactory fileTransferFactory) : base(correlationCache, logger)
         {
-            _userOutput = userOutput;
-            _rpcFileTransferFactory = rpcFileTransferFactory;
+            _fileTransferFactory = fileTransferFactory;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            var deserialised = message.Payload.FromAnySigned<AddFileToDfsResponse>();
+            var deserialised = message.Payload.FromAnySigned<GetFileFromDfsResponse>();
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
 
             var responseCode = (FileTransferResponseCodes) deserialised.ResponseCode[0];
 
-            if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
+            var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(message.Payload.CorrelationId.ToGuid());
+
+            if (fileTransferInformation == null)
             {
-                _userOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + deserialised.DfsHash);
+                return;
+            }
+
+            if (responseCode == FileTransferResponseCodes.Successful)
+            {
+                fileTransferInformation.SetLength(deserialised.FileSize);
+
+                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                {
+                    File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
+                });
             }
             else
             {
-                if (responseCode == FileTransferResponseCodes.Successful)
-                {
-                    _rpcFileTransferFactory.FileTransferAsync(message.Payload.CorrelationId.ToGuid(), CancellationToken.None)
-                       .ConfigureAwait(false);
-                }
-                else
-                {
-                    _rpcFileTransferFactory.Remove(message.Payload.CorrelationId.ToGuid());
-                }
+                fileTransferInformation.Expire();
             }
         }
     }
