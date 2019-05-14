@@ -22,8 +22,12 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Polly;
+using Polly.Retry;
 
 namespace Catalyst.Common.FileTransfer
 {
@@ -34,6 +38,19 @@ namespace Catalyst.Common.FileTransfer
     /// <seealso cref="IUploadFileTransferFactory" />
     public sealed class UploadFileTransferFactory : BaseFileTransferFactory<IUploadFileInformation>, IUploadFileTransferFactory
     {
+        /// <summary>The start chunk retry key</summary>
+        private static readonly string StartChunkRetryKey = "StartChunk";
+
+        /// <summary>The retry policy</summary>
+        private readonly AsyncRetryPolicy _retryPolicy;
+        
+        public UploadFileTransferFactory()
+        {
+            _retryPolicy = Policy
+               .Handle<Exception>()
+               .RetryAsync(Constants.FileTransferMaxChunkRetryCount);
+        }
+
         /// <summary>Does the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns></returns>
@@ -49,38 +66,39 @@ namespace Catalyst.Common.FileTransfer
         private async Task Upload(IUploadFileInformation fileTransferInformation)
         {
             EnsureKeyExists(fileTransferInformation.CorrelationGuid);
-            var cancellationRequested =
-                fileTransferInformation.IsExpired();
 
-            for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
+            Context context =
+                new Context(fileTransferInformation.CorrelationGuid.ToString(), new Dictionary<string, object>())
+                {
+                    {StartChunkRetryKey, (uint) 0}
+                };
+
+            await _retryPolicy.ExecuteAsync(ctx => SendChunks(fileTransferInformation, ctx), context);
+        }
+
+        /// <summary>Sends the chunks.</summary>
+        /// <param name="fileTransferInformation">The file transfer information.</param>
+        /// <param name="retryContext">The retry context.</param>
+        /// <returns></returns>
+        private async Task SendChunks(IUploadFileInformation fileTransferInformation, Context retryContext)
+        {
+            var cancellationRequested = fileTransferInformation.IsExpired();
+            retryContext.TryGetValue(StartChunkRetryKey, out var value);
+            uint startChunk = (uint?) value ?? 0;
+            for (uint chunkId = startChunk; chunkId < fileTransferInformation.MaxChunk; chunkId++)
             {
                 if (cancellationRequested)
                 {
                     return;
                 }
 
+                retryContext[StartChunkRetryKey] = chunkId;
                 cancellationRequested = fileTransferInformation.IsExpired();
 
-                var transferMessage = fileTransferInformation.GetUploadMessageDto(i);
-                try
-                {
-                    await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(transferMessage);
-                    fileTransferInformation.UpdateChunkIndicator(i, true);
-                }
-                catch (Exception)
-                {
-                    var canRetry = fileTransferInformation.CanRetry();
-                    
-                    if (canRetry)
-                    {
-                        fileTransferInformation.RetryCount += 1;
-                        i--;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
+                var transferMessage = fileTransferInformation.GetUploadMessageDto(chunkId);
+
+                await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(transferMessage);
+                fileTransferInformation.UpdateChunkIndicator(chunkId, true);
             }
         }
     }
