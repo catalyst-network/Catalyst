@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
@@ -39,12 +38,14 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         protected override async Task DoTransfer(IDownloadFileInformation fileTransferInformation)
         {
+            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
             await Download(fileTransferInformation).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public FileTransferResponseCodes DownloadChunk(Guid fileName, uint chunkId, byte[] fileChunk)
         {
+            EnsureKeyExists(fileName);
             var fileTransferInformation = GetFileTransferInformation(fileName);
 
             if (fileTransferInformation == null)
@@ -67,6 +68,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         private async Task Download(IDownloadFileInformation fileTransferInformation)
         {
+            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
             while (!fileTransferInformation.ChunkIndicatorsTrue() && !fileTransferInformation.IsExpired())
             {
                 await Task.Delay(TimeSpan.FromSeconds(1), fileTransferInformation.CancellationToken).ConfigureAwait(false);

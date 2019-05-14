@@ -45,7 +45,13 @@ namespace Catalyst.Common.UnitTests.TestUtils
         public static long GetCrcValue(Stream stream)
         {
             byte[] streamBytes = new byte[stream.Length];
-            stream.Read(streamBytes, 0, streamBytes.Length);
+            var read = stream.Read(streamBytes, 0, streamBytes.Length);
+
+            if (read != streamBytes.Length)
+            {
+                return -1;
+            }
+
             return streamBytes.GetCrcValue();
         }
 

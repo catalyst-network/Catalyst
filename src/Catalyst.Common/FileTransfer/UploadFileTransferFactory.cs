@@ -39,6 +39,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         protected override async Task DoTransfer(IUploadFileInformation fileTransferInformation)
         {
+            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
             await Upload(fileTransferInformation).ConfigureAwait(false);
         }
 
@@ -47,6 +48,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         private async Task Upload(IUploadFileInformation fileTransferInformation)
         {
+            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
             var cancellationRequested =
                 fileTransferInformation.IsExpired();
 

@@ -91,6 +91,7 @@ namespace Catalyst.Common.FileTransfer
         /// <exception cref="InvalidOperationException">File transfer has already been initialised</exception>
         public async Task FileTransferAsync(Guid correlationGuid, CancellationToken cancellationToken)
         {
+            EnsureKeyExists(correlationGuid);
             var fileTransferInformation = GetFileTransferInformation(correlationGuid);
 
             if (fileTransferInformation.Initialised)
@@ -138,6 +139,7 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="expiredOrCancelled">if set to <c>true</c> [expired or cancelled].</param>
         protected void Remove(T fileTransferInformation, bool expiredOrCancelled)
         {
+            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
             if (expiredOrCancelled)
             {
                 Remove(fileTransferInformation.CorrelationGuid);
@@ -150,6 +152,20 @@ namespace Catalyst.Common.FileTransfer
             }
 
             fileTransferInformation.IsCompleted = true;
+        }
+
+        /// <summary>Ensures the key exists.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">The specified key does not exist inside the factory.</exception>
+        protected bool EnsureKeyExists(Guid guid)
+        {
+            if (GetFileTransferInformation(guid) == null)
+            {
+                throw new InvalidOperationException("The specified key does not exist inside the factory.");
+            }
+
+            return true;
         }
 
         /// <summary>Does the transfer.</summary>
