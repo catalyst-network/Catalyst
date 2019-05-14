@@ -24,6 +24,22 @@
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.IDeltaTransactionRetriever, Catalyst.Common"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.DeltaProducersProvider",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.IDeltaProducersProvider, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Common"
+                }
+            ]
         }
     ]
 }
