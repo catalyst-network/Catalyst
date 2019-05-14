@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -212,7 +212,6 @@
     <Folder Include="Interfaces\Modules\Consensus" />
     <Folder Include="Interfaces\Modules\Contract" />
     <Folder Include="Interfaces\Modules\KeySigner" />
-    <Folder Include="Interfaces\Modules\Ledger" />
     <Folder Include="Interfaces\Network" />
     <Folder Include="Protocol" />
     <Folder Include="Protocol\Protobuffs" />

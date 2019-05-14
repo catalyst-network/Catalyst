@@ -27,6 +27,8 @@ using System.IO;
 using System.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Modules;
+using Ipfs;
+using Nethereum.RLP;
 
 namespace Catalyst.Common.Config
 {
@@ -97,7 +99,12 @@ namespace Catalyst.Common.Config
         
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
-            
+
+        /// <summary>
+        /// The empty trie hash
+        /// </summary>
+        public static byte[] EmptyTrieHash => (new MultiHash(HashAlgorithm, RLP.EncodeElement(new byte[31])).Digest);
+
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
