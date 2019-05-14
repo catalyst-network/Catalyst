@@ -37,12 +37,13 @@ using Google.Protobuf;
 using Serilog;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.P2P;
+using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Core.RPC.Handlers
+namespace Catalyst.Cli.Handlers
 {
     public sealed class TransferFileBytesRequestHandler
         : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
-            IRpcRequestHandler
+            IRpcResponseHandler
     {
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
@@ -54,7 +55,23 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
-        /// <param name="fileTransferFactory">The download transfer factory.</param>
+        /// <param name="fileTransferFactory">The download file transfer factory.</param>
+        /// <param name="config">The configuration.</param>
+        /// <param name="correlationCache">The correlation cache.</param>
+        /// <param name="logger">The logger.</param>
+        public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
+            IConfigurationRoot config,
+            IMessageCorrelationCache correlationCache,
+            ILogger logger)
+            : base(correlationCache, logger)
+        {
+            _fileTransferFactory = fileTransferFactory;
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
+            _peerIdentifier = Commands.Commands.BuildCliPeerId(config);
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
+        /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
@@ -75,6 +92,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
+
             try
             {
                 Guard.Argument(deserialised).NotNull("Message cannot be null");

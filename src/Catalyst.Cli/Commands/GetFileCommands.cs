@@ -40,11 +40,11 @@ namespace Catalyst.Cli.Commands
 {
     public sealed partial class Commands
     {
-        /// <inheritdoc cref="DfsAddFile" />
-        public bool DfsAddFile(IAddFileOnDfsOptions opts)
+        /// <summary>Called when [get file options].</summary>
+        /// <param name="opts">The opts.</param>
+        /// <returns></returns>
+        private bool OnGetFileOptions(IGetFileOptions opts)
         {
-            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IAddFileOnDfsOptions>();
-
             INodeRpcClient node;
             try
             {
@@ -62,54 +62,40 @@ namespace Catalyst.Cli.Commands
             var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                 nodeConfig.HostAddress, nodeConfig.Port);
 
-            if (!File.Exists(opts.File))
+            var message = new GetFileFromDfsRequest
             {
-                UserOutput.WriteLine("File does not exist.");
-                return false;
-            }
-
-            var request = new AddFileToDfsRequest
-            {
-                FileName = Path.GetFileName(opts.File)
+                DfsHash = opts.FileHash
             };
 
-            using (var fileStream = File.Open(opts.File, FileMode.Open))
-            {
-                request.FileSize = (ulong) fileStream.Length;
-            }
+            var messageDto = new RpcMessageFactory<GetFileFromDfsRequest>().GetMessage(message, nodePeerIdentifier,
+                _peerIdentifier, MessageTypes.Ask);
 
-            var requestMessage = new RpcMessageFactory<AddFileToDfsRequest>().GetMessage(
-                message: request,
-                recipient: nodePeerIdentifier,
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Ask
+            IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
+                _peerIdentifier,
+                new PeerIdentifier(messageDto.PeerId),
+                node.Channel,
+                messageDto.CorrelationId.ToGuid(),
+                opts.FileOutput,
+                0
             );
 
-            IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
-                File.Open(opts.File, FileMode.Open),
-                _peerIdentifier,
-                nodePeerIdentifier,
-                node.Channel,
-                requestMessage.CorrelationId.ToGuid(),
-                new RpcMessageFactory<TransferFileBytesRequest>());
+            _downloadFileTransferFactory.RegisterTransfer(fileTransfer);
 
-            _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
-
-            node.SendMessage(requestMessage);
+            node.SendMessage(messageDto);
 
             var originalLogLevel = Program.LogLevelSwitch.MinimumLevel;
-            
+
             Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
-                _userOutput.Write("\rUploaded: " + fileTransfer.GetPercentage() + "%");
+                _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%");
                 System.Threading.Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
             {
-                _userOutput.Write("\rUploaded: " + fileTransfer.GetPercentage() + "%\n");
+                _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%\n");
             }
             else
             {
@@ -117,6 +103,7 @@ namespace Catalyst.Cli.Commands
             }
 
             Program.LogLevelSwitch.MinimumLevel = originalLogLevel;
+
             return true;
         }
     }
