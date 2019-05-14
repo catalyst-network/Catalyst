@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
@@ -64,7 +63,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             return SignatureComparer.Default.Compare(y.Signature, x.Signature);
         }
 
-        public static IComparer<Transaction> Default { get; } = new TransactionComparerByFeeTimestampAndHash();
+        public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();
     }
 
     public class SignatureComparer : IComparer<TransactionSignature>
@@ -88,7 +87,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
 
             var xSignature = x.SchnorrSignature.ToByteArray();
             var ySignature = y.SchnorrSignature.ToByteArray();
-            
+
             var signatureComparison = ByteListComparer.Default.Compare(xSignature, ySignature);
             if (signatureComparison != 0)
             {
@@ -103,6 +102,9 @@ namespace Catalyst.Node.Core.Modules.Consensus
         public static IComparer<TransactionSignature> Default { get; } = new SignatureComparer();
     }
 
+    /// <remarks>
+    /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
+    /// </remarks>
     public class ByteListComparer : IComparer<IList<byte>>
     {
         public int Compare(IList<byte> x, IList<byte> y)
@@ -131,7 +133,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
                 }
             }
 
-            return x.Count.CompareTo(y.Count);
+            return 0;
         }
 
         public static IComparer<IList<byte>> Default { get; } = new ByteListComparer();

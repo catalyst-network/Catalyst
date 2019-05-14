@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Dawn;
 
 namespace Catalyst.Common.Enumerator
@@ -43,7 +44,7 @@ namespace Catalyst.Common.Enumerator
             Id = id;
             Name = name;
         }
-
+        
         public string Name { get; }
         public int Id { get; }
 
@@ -77,6 +78,11 @@ namespace Catalyst.Common.Enumerator
             }
 
             return result;
+        }
+
+        public static explicit operator int(Enumeration enumeration)
+        {
+            return enumeration.Id;
         }
 
         public static IEnumerable<T> GetAll<T>() where T : Enumeration

@@ -210,7 +210,6 @@
     <Folder Include="NSec\Cryptography\Formatting\" />
     <Folder Include="NSec\Interop\" />
     <Folder Include="RLP\" />
-    <Folder Include="Interfaces\Modules\Consensus" />
     <Folder Include="Interfaces\Modules\Contract" />
     <Folder Include="Interfaces\Modules\KeySigner" />
     <Folder Include="Interfaces\Modules\Ledger" />

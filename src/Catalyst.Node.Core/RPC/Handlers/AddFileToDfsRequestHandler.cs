@@ -31,6 +31,7 @@ using Serilog;
 using Catalyst.Common.Extensions;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Dfs;
@@ -54,8 +55,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>The RPC message factory</summary>
         private readonly RpcMessageFactory<AddFileToDfsResponse> _rpcMessageFactory;
 
-        /// <summary>The file transfer</summary>
-        private readonly IFileTransfer _fileTransfer;
+        /// <summary>The download file transfer factory</summary>
+        private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -66,17 +67,17 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestHandler"/> class.</summary>
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="fileTransfer">The file transfer.</param>
+        /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
-            IFileTransfer fileTransfer,
+            IDownloadFileTransferFactory fileTransferFactory,
             IMessageCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger)
         {
             _rpcMessageFactory = new RpcMessageFactory<AddFileToDfsResponse>(CorrelationCache);
-            _fileTransfer = fileTransfer;
+            _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
         }
@@ -88,28 +89,39 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var deserialised = message.Payload.FromAnySigned<AddFileToDfsRequest>();
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
-
-            var chunkSize = (uint) Math.Max(1, (int) Math.Ceiling((double) deserialised.FileSize / Constants.FileTransferChunkSize));
-
-            IFileTransferInformation fileTransferInformation = new FileTransferInformation(
+            
+            IDownloadFileInformation fileTransferInformation = new DownloadFileTransferInformation(
+                _peerIdentifier,
                 new PeerIdentifier(message.Payload.PeerId),
                 message.Context.Channel,
-                message.Payload.CorrelationId.ToGuid().ToString(),
-                deserialised.FileName, chunkSize);
-            fileTransferInformation.AddSuccessCallback(OnSuccess);
-
+                message.Payload.CorrelationId.ToGuid(),
+                deserialised.FileName,
+                deserialised.FileSize);
+            
             FileTransferResponseCodes responseCode;
             try
             {
-                responseCode = _fileTransfer.InitializeTransfer(fileTransferInformation);
+                responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
             }
             catch (Exception e)
             {
-                Logger.Error(e.ToString());
+                Logger.Error(e,
+                    "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", message);
                 responseCode = FileTransferResponseCodes.Error;
             }
 
-            ReturnResponse(fileTransferInformation, responseCode);
+            ReturnResponse(fileTransferInformation, responseCode, fileTransferInformation.CorrelationGuid);
+
+            if (responseCode == FileTransferResponseCodes.Successful)
+            {
+                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                {
+                    if (fileTransferInformation.ChunkIndicatorsTrue())
+                    {
+                        OnSuccess(fileTransferInformation);
+                    }
+                });
+            }
         }
 
         /// <summary>Called when [success] on file transfer.</summary>
@@ -123,35 +135,42 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 try
                 {
                     string fileHash;
-                    using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open))
+                    using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open,
+                        FileAccess.Read, FileShare.ReadWrite))
                     {
-                        fileHash = _dfs.AddAsync(fileStream, fileTransferInformation.FileName).Result;
+                        fileHash = _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false).GetAwaiter().GetResult();
                     }
 
                     fileTransferInformation.DfsHash = fileHash;
 
-                    Logger.Information($"Added File Name {fileTransferInformation.FileName} to DFS, Hash: {fileHash}");
+                    Logger.Information(
+                        $"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileHash}");
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e.ToString());
+                    Logger.Error(e,
+                        "Failed to handle file download OnSuccess {0}", fileTransferInformation.CorrelationGuid);
                     responseCode = FileTransferResponseCodes.Failed;
+                }
+                finally
+                {
+                    fileTransferInformation.Delete();
                 }
 
                 return responseCode;
-            }).GetAwaiter().GetResult();
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            ReturnResponse(fileTransferInformation, addFileResponseCode);
+            ReturnResponse(fileTransferInformation, addFileResponseCode, fileTransferInformation.CorrelationGuid);
         }
 
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <param name="responseCode">The response code.</param>
-        private void ReturnResponse(IFileTransferInformation fileTransferInformation, FileTransferResponseCodes responseCode)
+        private void ReturnResponse(IFileTransferInformation fileTransferInformation, FileTransferResponseCodes responseCode, Guid correlationGuid)
         {
             Logger.Information("File transfer response code: " + responseCode);
             if (responseCode == FileTransferResponseCodes.Successful)
             {
-                Logger.Information($"Initialised file transfer, FileName: {fileTransferInformation.FileName}, Chunks: {fileTransferInformation.MaxChunk}");
+                Logger.Information($"Initialised file transfer, FileName: {fileTransferInformation.FileOutputPath}, Chunks: {fileTransferInformation.MaxChunk}");
             }
 
             var dfsHash = responseCode == FileTransferResponseCodes.Finished ? fileTransferInformation.DfsHash : string.Empty;
@@ -169,7 +188,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 recipient: fileTransferInformation.RecipientIdentifier,
                 sender: _peerIdentifier,
                 messageType: MessageTypes.Tell,
-                Guid.NewGuid()
+                correlationGuid
             );
 
             fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage);
