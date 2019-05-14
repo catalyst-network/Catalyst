@@ -21,11 +21,10 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 using SharpRepository.Repository;
-using Catalyst.Common;
+using System.Numerics;
+
 
 namespace Catalyst.Common.Interfaces.Modules.Ledger
 {
@@ -70,7 +69,7 @@ namespace Catalyst.Common.Interfaces.Modules.Ledger
         /// <value>
         /// The amount.
         /// </value>
-        decimal Balance { get; set; }
+        BigInteger Balance { get; set; }
 
         /// <summary>
         /// Gets or sets the state root.

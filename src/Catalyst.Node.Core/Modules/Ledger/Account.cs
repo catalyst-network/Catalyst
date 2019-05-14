@@ -27,6 +27,7 @@ using System.Text;
 using Catalyst.Common.Interfaces.Modules.Ledger;
 using SharpRepository.Repository;
 using Catalyst.Common.Config;
+using System.Numerics;
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {
@@ -47,7 +48,7 @@ namespace Catalyst.Node.Core.Modules.Ledger
         public uint AccountType { get; set; }
 
         /// <inheritdoc />
-        public decimal Balance { get; set; }
+        public BigInteger Balance { get; set; }
 
         /// <inheritdoc />
         public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
