@@ -36,7 +36,7 @@ namespace Catalyst.Common.Config
     {
         /// <summary>The message map</summary>
         private static readonly Dictionary<string, P2PMessages> MessageMap;
-
+        
         /// <summary>The message namespace</summary>
         private const string MessageNamespace = "Catalyst.Protocol.IPPN";
 
@@ -60,7 +60,7 @@ namespace Catalyst.Common.Config
         /// <summary>Gets the messages.</summary>
         /// <value>The messages.</value>
         public IEnumerable<P2PMessages> Messages => MessageMap.Values.AsEnumerable();
-
+        
         /// <summary>Initializes a new instance of the <see cref="P2PMessages"/> class.</summary>
         /// <param name="id">The identifier.</param>
         /// <param name="name">The name.</param>

@@ -34,6 +34,10 @@ using Catalyst.Common.FileSystem;
 using Catalyst.Common.Config;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
@@ -112,9 +116,12 @@ namespace Catalyst.Cli
 
                 containerBuilder.RegisterLogger(_logger);
                 containerBuilder.RegisterInstance(config);
+                containerBuilder.RegisterGeneric(typeof(P2PMessageFactory<>)).As(typeof(IP2PMessageFactory<>));
+                containerBuilder.RegisterGeneric(typeof(RpcMessageFactory<>)).As(typeof(IRpcMessageFactory<>));
+                containerBuilder.RegisterGeneric(typeof(GossipCacheBase<>)).As(typeof(IGossipCacheBase<>));
 
                 var container = containerBuilder.Build();
-
+                
                 Console.SetIn(
                     new StreamReader(
                         Console.OpenStandardInput(bufferSize),
@@ -126,7 +133,6 @@ namespace Catalyst.Cli
                 using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
-
                     shell.AdvancedShell.RunConsole(_cancellationSource.Token);
                 }
 

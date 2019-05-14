@@ -33,7 +33,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 {
     public abstract class CorrelatableMessageHandlerBase<TProto, TCorrelator>
         : MessageHandlerBase<TProto>
-        where TProto : IMessage
+        where TProto : class, IMessage<TProto>
         where TCorrelator : IMessageCorrelationCache
     {
         private readonly TCorrelator _correlationCache;
@@ -59,9 +59,5 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 Handler(message);
             }
         }
-
-        /// <summary>Gets a value indicating whether this instance can gossip.</summary>
-        /// <value><c>true</c> if this instance can gossip; otherwise, <c>false</c>.</value>
-        public virtual bool CanGossip { get; }
     }
 }

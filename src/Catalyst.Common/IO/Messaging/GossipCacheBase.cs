@@ -34,7 +34,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class GossipMessageCacheBase<TMessage> 
+    public class GossipCacheBase<TMessage> 
         : MessageCorrelationCacheBase, IGossipCacheBase<TMessage>
         where TMessage : class, IMessage<TMessage>
     {
@@ -47,7 +47,12 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
-        protected GossipMessageCacheBase(IPeerIdentifier peerIdentifier,
+        /// <summary>Initializes a new instance of the <see cref="GossipCacheBase{TMessage}"/> class.</summary>
+        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <param name="peerDiscovery">The peer discovery.</param>
+        /// <param name="cache">The cache.</param>
+        /// <param name="logger">The logger.</param>
+        protected GossipCacheBase(IPeerIdentifier peerIdentifier,
             IPeerDiscovery peerDiscovery,
             IMemoryCache cache,
             ILogger logger) : base(cache, logger, TimeSpan.FromMinutes(10))
@@ -56,17 +61,20 @@ namespace Catalyst.Common.IO.Messaging
             this._peerIdentifier = peerIdentifier;
         }
 
+        /// <inheritdoc/>
         public override void AddPendingRequest(PendingRequest pendingRequest)
         {
             PendingRequests.Set(pendingRequest.Content.CorrelationId.ToGuid() + "gossip", pendingRequest, EntryOptions);
         }
 
+        /// <inheritdoc/>
         protected override PostEvictionDelegate GetInheritorDelegate()
         {
             Logger.Fatal("MessageCorrelationCache.GetInheritorDelegate() called without inheritor.");
             throw new NotImplementedException("Inheritors that uses the default constructor must implement the GetInheritorDelegate() method.");
         }
 
+        /// <inheritdoc/>
         public bool CanGossip(Guid correlationId)
         {
             var found = PendingRequests.TryGetValue(correlationId + "gossip", out PendingRequest request);
@@ -86,12 +94,14 @@ namespace Catalyst.Common.IO.Messaging
 
             return false;
         }
-        
+
+        /// <inheritdoc/>
         public override TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
         {
             throw new NotSupportedException();
         }
-        
+
+        /// <inheritdoc/>
         public int GetCurrentPosition()
         {
             List<IPeerIdentifier> fullPeerList = new List<IPeerIdentifier>();
@@ -102,11 +112,13 @@ namespace Catalyst.Common.IO.Messaging
             return peerIdx;
         }
 
+        /// <inheritdoc/>
         public int GetGossipCount(Guid correlationId)
         {
             return GetPendingRequestValue(correlationId)?.GossipCount ?? -1;
         }
 
+        /// <inheritdoc/>
         public void IncrementGossipCount(Guid correlationId, int updateCount)
         {
             PendingRequest request = GetPendingRequestValue(correlationId);
@@ -114,6 +126,7 @@ namespace Catalyst.Common.IO.Messaging
             AddPendingRequest(request);
         }
 
+        /// <inheritdoc/>
         public void IncrementReceivedCount(Guid correlationId, int updateCount)
         {
             PendingRequest request = GetPendingRequestValue(correlationId);
@@ -132,6 +145,9 @@ namespace Catalyst.Common.IO.Messaging
             AddPendingRequest(request);
         }
 
+        /// <summary>Gets the pending request value.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns></returns>
         private PendingRequest GetPendingRequestValue(Guid guid)
         {
             PendingRequests.TryGetValue(guid + "gossip", out PendingRequest request);

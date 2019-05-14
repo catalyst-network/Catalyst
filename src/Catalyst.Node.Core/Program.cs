@@ -34,6 +34,10 @@ using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Node.Core.P2P.Messaging;
+using Catalyst.Node.Core.Rpc.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -113,6 +117,9 @@ namespace Catalyst.Node.Core
 
                 containerBuilder.RegisterLogger(_logger);
                 containerBuilder.RegisterInstance(config);
+                containerBuilder.RegisterGeneric(typeof(P2PMessageFactory<>)).As(typeof(IP2PMessageFactory<>));
+                containerBuilder.RegisterGeneric(typeof(RpcMessageFactory<>)).As(typeof(IRpcMessageFactory<>));
+                containerBuilder.RegisterGeneric(typeof(GossipCacheBase<>)).As(typeof(IGossipCacheBase<>));
 
                 var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);

@@ -21,29 +21,31 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
+using System;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.Rpc.Messaging
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
     /// <summary>
-    /// Handles generation of messages for RPC
+    /// The RPC message factory
     /// </summary>
     /// <typeparam name="TMessage">The type of the message.</typeparam>
-    /// <seealso cref="MessageFactoryBase{TMessage}" />
-    /// <seealso cref="IRpcMessageFactory{TMessage}" />
-    public sealed class RpcMessageFactory<TMessage>
-        : MessageFactoryBase<TMessage>, IRpcMessageFactory<TMessage> where TMessage : class, IMessage<TMessage>
+    public interface IRpcMessageFactory<TMessage> where TMessage : class, IMessage
     {
-        /// <inheritdoc />
-        protected override IMessageDto<TMessage> GetMessageDto(TMessage message,
+        /// <summary>Gets the message.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="messageType">Type of the message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        AnySigned GetMessage(TMessage message,
             IPeerIdentifier recipient,
-            IPeerIdentifier sender)
-        {
-            return new MessageDto<TMessage>(message, recipient, sender);
-        }
+            IPeerIdentifier sender,
+            MessageTypes messageType,
+            Guid correlationId = default);
     }
 }
