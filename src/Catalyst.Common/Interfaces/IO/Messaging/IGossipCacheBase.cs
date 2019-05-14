@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Outbound;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IGossipCacheBase<T> : IMessageCorrelationCache where T : class, IMessage<T>
+    public interface IGossipCacheBase
     {
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
@@ -28,5 +31,13 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <param name="correlationId">The correlation identifier.</param>
         /// <param name="increment">The increment.</param>
         void IncrementReceivedCount(Guid correlationId, int increment);
+
+        /// <summary>Adds the pending request.</summary>
+        /// <param name="request">The request.</param>
+        void AddPendingRequest(PendingRequest request);
+
+        /// <summary>Gets the sorted peers.</summary>
+        /// <returns></returns>
+        List<IPeerIdentifier> GetSortedPeers();
     }
 }

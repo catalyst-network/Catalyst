@@ -91,7 +91,13 @@ namespace Catalyst.Common.Config
 
         public static int BaseReputationChange => 1;
         public static int NumberOfRandomPeers => 5;
-        
+
+        /// <summary>The maximum gossip peers</summary>
+        public static int MaxGossipPeers => 5;
+
+        /// <summary>The maximum gossip count</summary>
+        public static int MaxGossipCount => 10;
+
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
             

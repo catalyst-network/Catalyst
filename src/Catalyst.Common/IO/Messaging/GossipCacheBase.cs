@@ -23,24 +23,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class GossipCacheBase<TMessage> 
-        : MessageCorrelationCacheBase, IGossipCacheBase<TMessage>
-        where TMessage : class, IMessage<TMessage>
+    public class GossipCacheBase 
+        : MessageCorrelationCacheBase, IGossipCacheBase
     {
-        /// <summary>The maximum gossip count</summary>
-        private const int MaxGossipCount = 10;
-        
         /// <summary>The peer discovery</summary>
         private readonly IPeerDiscovery _peerDiscovery;
 
@@ -52,7 +49,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <param name="peerDiscovery">The peer discovery.</param>
         /// <param name="cache">The cache.</param>
         /// <param name="logger">The logger.</param>
-        protected GossipCacheBase(IPeerIdentifier peerIdentifier,
+        public GossipCacheBase(IPeerIdentifier peerIdentifier,
             IPeerDiscovery peerDiscovery,
             IMemoryCache cache,
             ILogger logger) : base(cache, logger, TimeSpan.FromMinutes(10))
@@ -67,11 +64,24 @@ namespace Catalyst.Common.IO.Messaging
             PendingRequests.Set(pendingRequest.Content.CorrelationId.ToGuid() + "gossip", pendingRequest, EntryOptions);
         }
 
-        /// <inheritdoc/>
+        public List<IPeerIdentifier> GetSortedPeers()
+        {
+            List<IPeerIdentifier> fullPeerList = new List<IPeerIdentifier>();
+            fullPeerList.AddRange(_peerDiscovery.Peers.ToList());
+            fullPeerList.Add(_peerIdentifier);
+            var orderedList = fullPeerList.OrderBy(t => t.ToString()).ToList();
+            return orderedList;
+        }
+
         protected override PostEvictionDelegate GetInheritorDelegate()
         {
-            Logger.Fatal("MessageCorrelationCache.GetInheritorDelegate() called without inheritor.");
-            throw new NotImplementedException("Inheritors that uses the default constructor must implement the GetInheritorDelegate() method.");
+            return ChangeReputationOnEviction;
+        }
+        
+        private void ChangeReputationOnEviction(object key, object value, EvictionReason reason, object state)
+        {
+            // we don't having anything to really do here for rcp clients, yet.
+            Logger.Debug("RpcCorrelationCache.ChangeReputationOnEviction() called");
         }
 
         /// <inheritdoc/>
@@ -86,7 +96,7 @@ namespace Catalyst.Common.IO.Messaging
             }
             else
             {
-                if (request.GossipCount < MaxGossipCount)
+                if (request.GossipCount < Constants.MaxGossipCount)
                 {
                     return true;
                 }
@@ -104,11 +114,8 @@ namespace Catalyst.Common.IO.Messaging
         /// <inheritdoc/>
         public int GetCurrentPosition()
         {
-            List<IPeerIdentifier> fullPeerList = new List<IPeerIdentifier>();
-            fullPeerList.AddRange(_peerDiscovery.Peers.ToArray());
-            fullPeerList.Add(_peerIdentifier);
-            fullPeerList.Sort();
-            int peerIdx = fullPeerList.IndexOf(_peerIdentifier);
+            var sortedPeers = GetSortedPeers();
+            int peerIdx = sortedPeers.IndexOf(_peerIdentifier);
             return peerIdx;
         }
 

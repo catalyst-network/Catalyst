@@ -16,11 +16,8 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 {
     public class GossipMessageHandler<TProto> : IGossipMessageHandler where TProto : class, IMessage<TProto>
     {
-        /// <summary>The maximum gossip peers</summary>
-        private const int MaxGossipPeers = 5;
-
         /// <summary>The gossip cache</summary>
-        private readonly IGossipCacheBase<TProto> _gossipCache;
+        private readonly IGossipCacheBase _gossipCache;
 
         /// <summary>The peer 2 peer message factory</summary>
         private readonly IP2PMessageFactory<TProto> _messageFactory;
@@ -32,15 +29,13 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>Initializes a new instance of the <see cref="GossipMessageHandler{T}"/> class.</summary>
-        /// <param name="logger">The logger.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerDiscovery">The peer discovery.</param>
         /// <param name="gossipCache">The gossip cache.</param>
         /// <param name="messageFactory">The message factory.</param>
-        public GossipMessageHandler(ILogger logger,
-            IPeerIdentifier peerIdentifier,
+        public GossipMessageHandler(IPeerIdentifier peerIdentifier,
             IPeerDiscovery peerDiscovery,
-            IGossipCacheBase<TProto> gossipCache,
+            IGossipCacheBase gossipCache,
             IP2PMessageFactory<TProto> messageFactory)
         {
             this._peerDiscovery = peerDiscovery;
@@ -78,7 +73,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         private void Gossip(IChanneledMessage<AnySigned> message)
         {
             int myPosition = _gossipCache.GetCurrentPosition();
-            var gossipPeers = _peerDiscovery.Peers.ToList();
+            var gossipPeers = _gossipCache.GetSortedPeers();
             var correlationId = message.Payload.CorrelationId.ToGuid();
             var channel = message.Context.Channel;
 
@@ -87,14 +82,20 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 return;
             }
 
-            gossipPeers.Sort();
+            gossipPeers.Remove(_peerIdentifier);
+
             gossipPeers.RemoveRange(0, myPosition);
 
             var gossipCount = _gossipCache.GetGossipCount(correlationId);
             var deserialised = message.Payload.FromAnySigned<TProto>();
-            var amountToGossip = Math.Min(MaxGossipPeers, MaxGossipPeers - gossipCount);
-            IEnumerable<IPeerIdentifier> peerIdentifiers =
-                gossipPeers.Skip(gossipCount + amountToGossip).Take(amountToGossip).ToList();
+            var amountToGossip = Math.Min(Constants.MaxGossipPeers, Constants.MaxGossipPeers - gossipCount);
+            List<IPeerIdentifier> peerIdentifiers =
+                gossipPeers.Skip(gossipCount * amountToGossip).Take(amountToGossip).ToList();
+
+            if (peerIdentifiers.Count < amountToGossip)
+            {
+
+            }
 
             foreach (var peerIdentifier in peerIdentifiers)
             {
