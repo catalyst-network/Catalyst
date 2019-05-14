@@ -60,7 +60,7 @@ namespace Catalyst.Common.IO.Messaging
 
             if (messageType == MessageTypes.Tell)
             {
-                return BuildTellMessage(messageDto, correlationId);   
+                return BuildTellMessage(messageDto, correlationId);
             }
 
             throw new ArgumentException();
@@ -95,9 +95,12 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>Builds the gossip message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>AnySigned message</returns>
-        protected AnySigned BuildGossipMessage(IMessageDto<TMessage> dto)
+        /// <param name="correlationId">The correlation id</param>
+        protected AnySigned BuildGossipMessage(IMessageDto<TMessage> dto, Guid correlationId)
         {
-            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
+            return correlationId == default
+                ? throw new ArgumentException("Correlation ID cannot be null for a tell message") 
+                : dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
         }
     }
 }

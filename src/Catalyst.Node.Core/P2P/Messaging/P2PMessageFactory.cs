@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -34,8 +35,7 @@ using Google.Protobuf;
 namespace Catalyst.Node.Core.P2P.Messaging
 {
     public sealed class P2PMessageFactory<TMessage>
-        : MessageFactoryBase<TMessage> 
-        where TMessage : class, IMessage<TMessage>
+        : MessageFactoryBase<TMessage>, IP2PMessageFactory<TMessage> where TMessage : class, IMessage<TMessage>
     {
         /// <summary>Gets the message in datagram envelope.</summary>
         /// <param name="message">The message.</param>
@@ -60,7 +60,14 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <exception cref="T:System.ArgumentException">unknown message type</exception>
         public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, MessageTypes messageType, Guid correlationId = default)
         {
-            return messageType == MessageTypes.Gossip ? BuildGossipMessage(GetMessageDto(message, recipient, sender)) : base.GetMessage(message, recipient, sender, messageType, correlationId);
+            if (messageType == MessageTypes.Gossip)
+            {
+                return BuildGossipMessage(GetMessageDto(message, recipient, sender), correlationId);
+            }
+            else
+            {
+                return base.GetMessage(message, recipient, sender, messageType, correlationId);
+            }
         }
 
         /// <inheritdoc />

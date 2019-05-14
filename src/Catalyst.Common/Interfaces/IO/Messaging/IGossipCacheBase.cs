@@ -1,14 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    interface IGossipCacheBase
+    public interface IGossipCacheBase<T> where T : class, IMessage<T>
     {
-        bool CanGossip(AnySigned message);
+        bool CanGossip(Guid correlationId);
 
-        void Gossip(AnySigned message);
+        void Gossip(IChannel channel, IP2PMessageFactory<T> messageFactoryBase, IChanneledMessage<AnySigned> message, Guid correlationId);
     }
 }

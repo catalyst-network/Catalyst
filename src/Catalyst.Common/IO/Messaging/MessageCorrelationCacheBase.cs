@@ -43,7 +43,8 @@ namespace Catalyst.Common.IO.Messaging
         
         protected readonly ILogger Logger;
         protected readonly IMemoryCache PendingRequests;
-        private readonly MemoryCacheEntryOptions _entryOptions;
+
+        protected MemoryCacheEntryOptions EntryOptions { get; }
 
         protected MessageCorrelationCacheBase(IMemoryCache cache,
             ILogger logger,
@@ -52,7 +53,7 @@ namespace Catalyst.Common.IO.Messaging
             Logger = logger;
             CacheTtl = cacheTtl == default ? Constants.CorrelationTtl : cacheTtl;
             PendingRequests = cache;
-            _entryOptions = new MemoryCacheEntryOptions()
+            EntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))
                .RegisterPostEvictionCallback(GetInheritorDelegate());
         }
@@ -63,9 +64,9 @@ namespace Catalyst.Common.IO.Messaging
             throw new NotImplementedException("Inheritors that uses the default constructor must implement the GetInheritorDelegate() method."); 
         }
 
-        public void AddPendingRequest(PendingRequest pendingRequest)
+        public virtual void AddPendingRequest(PendingRequest pendingRequest)
         {
-            PendingRequests.Set(pendingRequest.Content.CorrelationId, pendingRequest, _entryOptions);
+            PendingRequests.Set(pendingRequest.Content.CorrelationId, pendingRequest, EntryOptions);
         }
 
         public virtual TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
