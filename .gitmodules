@@ -1,15 +1,9 @@
 [submodule "submodules/Nethereum"]
 	path = submodules/Nethereum
 	url = https://github.com/atlascity/Nethereum.git
-[submodule "submodules/nsec"]
-	path = submodules/nsec
-	url = https://github.com/atlascity/nsec.git
 [submodule "submodules/cs-multibase"]
 	path = submodules/cs-multibase
 	url = https://github.com/atlascity/cs-multibase.git
 [submodule "submodules/protocol-protobuffs"]
 	path = submodules/protocol-protobuffs
 	url = https://github.com/catalyst-network/protocol-protobuffs.git
-[submodule "submodules/Rust.Cryptography.FFI.Wrapper"]
-	path = submodules/Rust.Cryptography.FFI.Wrapper
-	url = git@github.com:catalyst-network/Rust.Cryptography.FFI.Wrapper.git
