@@ -1,21 +1,29 @@
 {
   "defaultAssembly": "Catalyst.Node.Core",
-  "components": [
-    {
-        "type": "Catalyst.Node.Core.Modules.Consensus.Consensus",
-        "services": [
-            {
-                "type": "Catalyst.Common.Interfaces.Modules.Consensus.IConsensus, Catalyst.Common"
-            }
-        ]
-    },
-    {
-        "type": "Catalyst.Node.Core.Modules.Consensus.TransactionComparerByFeeTimestampAndHash",
-        "services": [
-            {
-                "type": "Catalyst.Common.Interfaces.Modules.Consensus.ITransactionComparer, Catalyst.Common"
-            }
-        ]
-    }
-  ]
+    "components": [
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Consensus",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.IConsensus, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.TransactionComparerByFeeTimestampAndHash",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.ITransactionComparer, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.DeltaTransactionRetriever",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.IDeltaTransactionRetriever, Catalyst.Common"
+                }
+            ]
+        }
+    ]
 }
