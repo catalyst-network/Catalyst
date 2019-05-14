@@ -6,7 +6,7 @@
   </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
-    <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.3866-beta" />
+    <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.4115-beta" />
     <PackageReference Include="Ipfs.Api" Version="0.23.6" />
     <PackageReference Include="Ipfs.Engine" Version="0.7.2" />
     <PackageReference Include="Polly" Version="7.1.0" />
@@ -114,11 +114,6 @@
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Transaction.cs" Link="Protocol\Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\submodules\nsec\src\Cryptography\Error.resx" Link="NSec\Cryptography\Error.resx">
-      <LogicalName>NSec.Cryptography.Error.resources</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Build\libs\advapi32.dll">
       <Link>advapi32.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -140,9 +135,6 @@
     <Folder Include="Enumerator" />
     <Folder Include="Hex\HexConverters\Extensions\" />
     <Folder Include="Hex\HexTypes\" />
-    <Folder Include="NSec\Cryptography\Buffer\" />
-    <Folder Include="NSec\Cryptography\Formatting\" />
-    <Folder Include="NSec\Interop\" />
     <Folder Include="RLP\" />
     <Folder Include="Interfaces\Modules\Consensus" />
     <Folder Include="Interfaces\Modules\Contract" />
