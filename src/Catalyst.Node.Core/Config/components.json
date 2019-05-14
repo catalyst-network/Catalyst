@@ -162,6 +162,14 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.IUserOutput, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.FileSystem.FileSystem, Catalyst.Common",
             "services": [
                 {
@@ -170,10 +178,19 @@
             ]
         },
         {
-            "type": "Catalyst.Common.FileTransfer.FileTransfer, Catalyst.Common",
+            "type": "Catalyst.Common.FileTransfer.UploadFileTransferFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.FileTransfer.IFileTransfer, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IUploadFileTransferFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.FileTransfer.DownloadFileTransferFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IDownloadFileTransferFactory, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"
