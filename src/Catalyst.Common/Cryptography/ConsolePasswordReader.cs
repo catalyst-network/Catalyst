@@ -31,8 +31,6 @@ namespace Catalyst.Common.Cryptography
     public class ConsolePasswordReader
         : IPasswordReader
     {
-        private static readonly int maxLength = 255;
-
         private readonly IUserOutput _userOutput;
         public ConsolePasswordReader(IUserOutput userOutput) { _userOutput = userOutput; }
         

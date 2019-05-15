@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
                         ranking.Digest
                     };
                 })
-               .OrderBy(h => h.Digest, ByteListComparer.Default)
+               .OrderBy(h => h.Digest, ByteUtil.ByteListComparer.Default)
                .Select(h => h.PeerIdentifier)
                .ToList();
 

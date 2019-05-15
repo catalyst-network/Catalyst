@@ -21,15 +21,14 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Util;
 using Ipfs;
 using Catalyst.Protocol.Delta;
 using Google.Protobuf;
-using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
 using Peer = Catalyst.Common.P2P.Peer;
@@ -65,7 +64,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
                         ranking.Digest
                     };
                 })
-               .OrderBy(h => h.Digest, ByteListComparer.Default)
+               .OrderBy(h => h.Digest, ByteUtil.ByteListComparer.Default)
                .Select(h => h.PeerIdentifier)
                .ToList();
 
