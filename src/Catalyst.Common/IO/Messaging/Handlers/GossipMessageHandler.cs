@@ -68,33 +68,35 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         public void StartGossip(IChanneledMessage<AnySigned> message)
         {
             var correlationId = message.Payload.CorrelationId.ToGuid();
-            if (_gossipCache.CanGossip(correlationId))
+            if (!_gossipCache.CanGossip(correlationId))
             {
-                if (_gossipCache.GetGossipCount(correlationId) == -1)
-                {
-                    var request = new PendingRequest
-                    {
-                        SentAt = DateTime.Now,
-                        Recipient = new PeerIdentifier(message.Payload.PeerId),
-                        Content = message.Payload,
-                        ReceivedCount = 0
-                    };
-                    _gossipCache.AddPendingRequest(request);
-                }
-                else
-                {
-                    _gossipCache.IncrementReceivedCount(correlationId, 1);
-                }
-
-                Gossip(message);
+                return;
             }
+            
+            if (_gossipCache.GetGossipCount(correlationId) == -1)
+            {
+                var request = new PendingRequest
+                {
+                    SentAt = DateTime.Now,
+                    Recipient = new PeerIdentifier(message.Payload.PeerId),
+                    Content = message.Payload,
+                    ReceivedCount = 0
+                };
+                _gossipCache.AddPendingRequest(request);
+            }
+            else
+            {
+                _gossipCache.IncrementReceivedCount(correlationId, 1);
+            }
+
+            Gossip(message);
         }
 
         /// <summary>Gossips the specified message.</summary>
         /// <param name="message">The message.</param>
         private void Gossip(IChanneledMessage<AnySigned> message)
         {
-            int myPosition = _gossipCache.GetCurrentPosition();
+            var myPosition = _gossipCache.GetCurrentPosition();
             var gossipPeers = _gossipCache.GetSortedPeers();
             var correlationId = message.Payload.CorrelationId.ToGuid();
             var channel = message.Context.Channel;
@@ -114,7 +116,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
             var circularList = new CircularList<IPeerIdentifier>(gossipPeers);
 
-            IPeerIdentifier[] peerIdentifiers =
+            var peerIdentifiers =
                 circularList.Skip(gossipCount * amountToGossip).Take(amountToGossip);
             foreach (var peerIdentifier in peerIdentifiers)
             {

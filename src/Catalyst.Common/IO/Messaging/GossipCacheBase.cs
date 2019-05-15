@@ -95,15 +95,8 @@ namespace Catalyst.Common.IO.Messaging
             {
                 return true;
             }
-            else
-            {
-                if (request.GossipCount < Constants.MaxGossipCount)
-                {
-                    return true;
-                }
-            }
 
-            return false;
+            return request.GossipCount < Constants.MaxGossipCount;
         }
 
         /// <inheritdoc/>
@@ -116,7 +109,7 @@ namespace Catalyst.Common.IO.Messaging
         public int GetCurrentPosition()
         {
             var sortedPeers = GetSortedPeers();
-            int peerIdx = sortedPeers.IndexOf(_peerIdentifier);
+            var peerIdx = sortedPeers.IndexOf(_peerIdentifier);
             return peerIdx;
         }
 
@@ -129,7 +122,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <inheritdoc/>
         public void IncrementGossipCount(Guid correlationId, int updateCount)
         {
-            PendingRequest request = GetPendingRequestValue(correlationId);
+            var request = GetPendingRequestValue(correlationId);
             request.GossipCount += updateCount;
             AddPendingRequest(request);
         }
@@ -137,7 +130,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <inheritdoc/>
         public void IncrementReceivedCount(Guid correlationId, int updateCount)
         {
-            PendingRequest request = GetPendingRequestValue(correlationId);
+            var request = GetPendingRequestValue(correlationId);
             if (request == null)
             {
                 request = new PendingRequest
