@@ -26,9 +26,9 @@ using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
-using Ipfs;
 using Catalyst.Protocol.Delta;
 using Google.Protobuf;
+using Multiformats.Hash.Algorithms;
 using Serilog;
 using SharpRepository.Repository;
 using Peer = Catalyst.Common.P2P.Peer;
@@ -38,14 +38,18 @@ namespace Catalyst.Node.Core.Modules.Consensus
     public class PoaDeltaProducersProvider : IDeltaProducersProvider
     {
         private readonly ILogger _logger;
+        public IMultihashAlgorithm HashAlgorithm { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc />w
         public IRepository<Peer> PeerRepository { get; }
 
-        public PoaDeltaProducersProvider(IRepository<Peer> peerRepository, ILogger logger)
+        public PoaDeltaProducersProvider(IRepository<Peer> peerRepository, 
+            IMultihashAlgorithm hashAlgorithm, 
+            ILogger logger)
         {
             _logger = logger;
             PeerRepository = peerRepository;
+            HashAlgorithm = hashAlgorithm;
         }
 
         public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(Delta previousDelta)
@@ -57,14 +61,14 @@ namespace Catalyst.Node.Core.Modules.Consensus
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
                     var array = p.PeerIdentifier.PeerId.ToByteArray().Concat(previousDeltaHash).ToArray();
-                    var ranking = MultiHash.ComputeHash(array);
+                    var ranking = HashAlgorithm.ComputeHash(array);
                     return new
                     {
                         p.PeerIdentifier,
-                        ranking.Digest
+                        ranking
                     };
                 })
-               .OrderBy(h => h.Digest, ByteUtil.ByteListComparer.Default)
+               .OrderBy(h => h.ranking, ByteUtil.ByteListComparer.Default)
                .Select(h => h.PeerIdentifier)
                .ToList();
 

@@ -21,20 +21,21 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Protocol.Delta;
 using FluentAssertions;
 using Google.Protobuf;
-using Ipfs;
+using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Common.Interfaces.P2P;
+using NSubstitute.Core;
 using Xunit;
 using Xunit.Abstractions;
 using Peer = Catalyst.Common.P2P.Peer;
@@ -48,6 +49,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
         private readonly List<Peer> _peers;
         private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
         private readonly Delta _delta;
+        private readonly IMultihashAlgorithm _hashAlgorithm;
+        private readonly byte[] _merkleRoot;
 
         public PoaDeltaProducersProviderTests(ITestOutputHelper output)
         {
@@ -69,11 +72,15 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _peerRepository.GetAll().Returns(_ => _peers);
 
-            var merkleRoot = new byte[32];
-            rand.NextBytes(merkleRoot);
-            _delta = new Delta() {MerkleRoot = merkleRoot.ToByteString()};
+            _merkleRoot = new byte[32];
+            rand.NextBytes(_merkleRoot);
+            _delta = new Delta() {MerkleRoot = _merkleRoot.ToByteString()};
 
-            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(_peerRepository, logger);
+            _hashAlgorithm = Substitute.For<IMultihashAlgorithm>();
+            _hashAlgorithm.ComputeHash(Arg.Any<byte[]>(), Arg.Any<int>())
+               .Returns(ci => ci[0]);
+
+            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(_peerRepository, _hashAlgorithm, logger);
         }
 
         [Fact]
@@ -82,15 +89,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var expectedProducers = _peers.Select(p =>
                 {
                     var bytesToHash = p.PeerIdentifier.PeerId.ToByteArray()
-                       .Concat(_delta.MerkleRoot.ToByteArray()).ToArray();
-                    var ranking = MultiHash.ComputeHash(bytesToHash);
+                       .Concat(_merkleRoot).ToArray();
                     return new
                     {
                         p.PeerIdentifier,
-                        ranking.Digest
+                        bytesToHash
                     };
                 })
-               .OrderBy(h => h.Digest, ByteUtil.ByteListComparer.Default)
+               .OrderBy(h => h.bytesToHash, ByteUtil.ByteListComparer.Default)
                .Select(h => h.PeerIdentifier)
                .ToList();
 
@@ -99,11 +105,30 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             producers.Count.Should().Be(expectedProducers.Count);
             producers.Should().OnlyHaveUniqueItems();
 
+            var hashingCalls = _hashAlgorithm.ReceivedCalls().ToList();
+
             for (var i = 0; i < expectedProducers.Count; i++)
             {
-                producers[i].PeerId.ToByteArray()
-                   .Should().BeEquivalentTo(expectedProducers[i].PeerId.ToByteArray());
+                ProducerIsAtExpectedPosition(producers, i, expectedProducers);
+
+                HashingFunctionWasCalledOnceForExpectedProducer(expectedProducers[i], hashingCalls);
             }
+        }
+
+        private void HashingFunctionWasCalledOnceForExpectedProducer(IPeerIdentifier peerIdentifier,
+            List<ICall> hashingCalls)
+        {
+            var hashingCallArgument = peerIdentifier.PeerId.ToByteArray().Concat(_merkleRoot).ToArray();
+            hashingCalls
+               .Count(c => c.GetMethodInfo().Name == nameof(IMultihashAlgorithm.ComputeHash)
+                 && ((byte[]) c.GetArguments()[0]).ToByteString().Equals(hashingCallArgument.ToByteString()))
+               .Should().Be(1);
+        }
+
+        private static void ProducerIsAtExpectedPosition(IList<IPeerIdentifier> producers, int i, IList<IPeerIdentifier> expectedProducers)
+        {
+            producers[i].PeerId.ToByteArray()
+               .Should().BeEquivalentTo(expectedProducers[i].PeerId.ToByteArray());
         }
     }
 }
