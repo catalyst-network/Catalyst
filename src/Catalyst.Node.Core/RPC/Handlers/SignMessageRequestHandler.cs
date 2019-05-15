@@ -36,7 +36,6 @@ using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using NSec.Cryptography;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -83,14 +82,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Guard.Argument(publicKey).NotNull("Failed to get the public key.  Public key cannot be null.");
 
                 Logger.Debug("message content is {0}", deserialised.Message);
-
+                
                 var response = new RpcMessageFactory<SignMessageResponse>().GetMessage(
                     new SignMessageResponse
                     {
-                        OriginalMessage = deserialised.Message,
-                        PublicKey = publicKey.GetNSecFormatPublicKey().Export(KeyBlobFormat.PkixPublicKey)
-                           .ToByteString(),
-                        Signature = signature.ToByteString()
+                         OriginalMessage = deserialised.Message,
+                            PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
+                            Signature = signature.Bytes.RawBytes.ToByteString()
                     },
                     new PeerIdentifier(message.Payload.PeerId),
                     _peerIdentifier,
