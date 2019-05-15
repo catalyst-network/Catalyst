@@ -40,14 +40,6 @@
                     "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.Repository"
                 }
             ]
-        },
-        {
-            "type": "Multiformats.Hash.Algorithms.BLAKE2B_256, Multiformats.Hash",
-            "services": [
-                {
-                    "type": "Multiformats.Hash.Algorithms.IMultihashAlgorithm, Multiformats.Hash"
-                }
-            ]
         }
     ]
 }

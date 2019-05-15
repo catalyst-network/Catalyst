@@ -43,13 +43,12 @@ namespace Catalyst.Node.Core.Modules.Consensus
         /// <inheritdoc />w
         public IRepository<Peer> PeerRepository { get; }
 
-        public PoaDeltaProducersProvider(IRepository<Peer> peerRepository, 
-            IMultihashAlgorithm hashAlgorithm, 
+        public PoaDeltaProducersProvider(IRepository<Peer> peerRepository,
             ILogger logger)
         {
             _logger = logger;
             PeerRepository = peerRepository;
-            HashAlgorithm = hashAlgorithm;
+            HashAlgorithm = Common.Config.Constants.HashAlgorithm;
         }
 
         public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(Delta previousDelta)

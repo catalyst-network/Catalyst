@@ -31,6 +31,8 @@ namespace Catalyst.Common.Cryptography
     public class ConsolePasswordReader
         : IPasswordReader
     {
+        private const int MaxLength = 255;
+
         private readonly IUserOutput _userOutput;
         public ConsolePasswordReader(IUserOutput userOutput) { _userOutput = userOutput; }
         
@@ -47,7 +49,7 @@ namespace Catalyst.Common.Cryptography
             string passwordContext,
             Action<char, int> appendChar,
             Action<int> removeChar,
-            int maxLength = int.MaxValue)
+            int maxLength = MaxLength)
         {
             Console.WriteLine(passwordContext);
             var waitForInput = true;
