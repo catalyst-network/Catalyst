@@ -33,6 +33,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Dawn;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
@@ -113,7 +114,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Guard.Argument(pubKey).HasValue();
 
                 var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
-                    decodedSignature);
+                    new Signature(decodedSignature));
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
