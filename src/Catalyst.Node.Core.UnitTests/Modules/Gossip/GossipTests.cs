@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
         }
 
         [Fact]
-        public void Not_Enough_Peers_To_Gossip()
+        public void Not_Enough_Peers_To_Gossip_Circular_List_Goes_Round()
         {
             PopulatePeers(3);
             MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             string correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
 
             cache.TryGetValue(correlationId, out PendingRequest value);
-            value.GossipCount.Should().Be(3);
+            value.GossipCount.Should().Be(Constants.MaxGossipPeers);
             value.RecievedCount.Should().Be(1);
         }
 

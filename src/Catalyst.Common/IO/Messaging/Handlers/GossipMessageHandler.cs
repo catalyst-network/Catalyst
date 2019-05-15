@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -8,9 +6,9 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
-using Serilog;
 
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
@@ -21,24 +19,18 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
         /// <summary>The peer 2 peer message factory</summary>
         private readonly IP2PMessageFactory<TProto> _messageFactory;
-
-        /// <summary>The peer discovery</summary>
-        private readonly IPeerDiscovery _peerDiscovery;
-
+        
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>Initializes a new instance of the <see cref="GossipMessageHandler{T}"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="peerDiscovery">The peer discovery.</param>
         /// <param name="gossipCache">The gossip cache.</param>
         /// <param name="messageFactory">The message factory.</param>
         public GossipMessageHandler(IPeerIdentifier peerIdentifier,
-            IPeerDiscovery peerDiscovery,
             IGossipCacheBase gossipCache,
             IP2PMessageFactory<TProto> messageFactory)
         {
-            this._peerDiscovery = peerDiscovery;
             this._gossipCache = gossipCache;
             this._messageFactory = messageFactory;
             this._peerIdentifier = peerIdentifier;
@@ -89,14 +81,11 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             var gossipCount = _gossipCache.GetGossipCount(correlationId);
             var deserialised = message.Payload.FromAnySigned<TProto>();
             var amountToGossip = Math.Min(Constants.MaxGossipPeers, Constants.MaxGossipPeers - gossipCount);
-            List<IPeerIdentifier> peerIdentifiers =
-                gossipPeers.Skip(gossipCount * amountToGossip).Take(amountToGossip).ToList();
 
-            if (peerIdentifiers.Count < amountToGossip)
-            {
+            var circularList = new CircularList<IPeerIdentifier>(gossipPeers);
 
-            }
-
+            IPeerIdentifier[] peerIdentifiers =
+                circularList.Skip(gossipCount * amountToGossip).Take(amountToGossip);
             foreach (var peerIdentifier in peerIdentifiers)
             {
                 var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(deserialised, peerIdentifier, _peerIdentifier,
@@ -104,7 +93,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 channel.WriteAndFlushAsync(datagramEnvelope);
             }
 
-            var updateCount = peerIdentifiers.Count();
+            var updateCount = peerIdentifiers.Length;
             if (updateCount > 0)
             {
                 _gossipCache.IncrementGossipCount(correlationId, updateCount);

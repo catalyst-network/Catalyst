@@ -37,11 +37,13 @@ namespace Catalyst.Common.IO.Messaging
     public abstract class MessageHandlerBase<TProto> : IMessageHandler, IDisposable where TProto : IMessage
     {
         private IDisposable _messageSubscription;
+        private readonly string _filterMessageType;
         protected readonly ILogger Logger;
 
         protected MessageHandlerBase(ILogger logger)
         {
             Logger = logger;
+            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
 
         public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream)
@@ -51,12 +53,7 @@ namespace Catalyst.Common.IO.Messaging
                 throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
             }
 
-            var filterMessageType = typeof(TProto).ShortenedProtoFullName();
-            _messageSubscription = messageStream
-               .Where(m => m != null
-                 && m.Payload?.TypeUrl == filterMessageType
-                 && !m.Equals(NullObjects.ChanneledAnySigned))
-               .Subscribe(HandleMessage, HandleError, HandleCompleted);
+            _messageSubscription = GetMessageSubscription(messageStream);
         }
 
         public virtual void HandleMessage(IChanneledMessage<AnySigned> message)
@@ -88,6 +85,18 @@ namespace Catalyst.Common.IO.Messaging
         public void Dispose()
         {
             Dispose(true);
+        }
+
+        /// <summary>Gets the message subscription.</summary>
+        /// <param name="messageStream">The message stream.</param>
+        /// <returns></returns>
+        private IDisposable GetMessageSubscription(IObservable<IChanneledMessage<AnySigned>> messageStream)
+        {
+            return messageStream
+               .Where(m => m != null
+                 && m.Payload?.TypeUrl == _filterMessageType
+                 && !m.Equals(NullObjects.ChanneledAnySigned))
+               .Subscribe(HandleMessage, HandleError, HandleCompleted);
         }
     }
 }
