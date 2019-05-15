@@ -108,7 +108,9 @@ namespace Catalyst.Common.Config
 
         /// <summary> Sets the maximum precision of division operations. </summary>
         public const int Precision = 50;
-        
+
+        public static double Version { get { return 1.0; } }
+
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
 
