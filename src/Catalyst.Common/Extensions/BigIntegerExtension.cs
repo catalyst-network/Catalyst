@@ -21,33 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Util;
-using SharpRepository.Repository;
-using Catalyst.Common.Interfaces.Modules.Ledger;
+using System.Numerics;
 
-namespace Catalyst.Node.Core.Modules.Ledger
+namespace Catalyst.Common.Extensions
 {
-    /// <inheritdoc />
-    public sealed class Account : IAccount
+    public static class BigIntegerExtensions
     {
-        /// <inheritdoc />
-        [RepositoryPrimaryKey(Order = 1)]
-        public int PkId { get; set; }
-
-        /// <inheritdoc />
-        public string PublicAddress { get; set; }
-
-        /// <inheritdoc />
-        public uint CoinType { get; set; }
-
-        /// <inheritdoc />
-        public AccountTypes AccountType { get; set; }
-
-        /// <inheritdoc />
-        public BigDecimal Balance { get; set; }
-
-        /// <inheritdoc />
-        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
+        public static int NumberOfDigits(this BigInteger value)
+        {
+            return (value * value.Sign).ToString().Length;
+        }
     }
 }

@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -9,6 +9,7 @@
     <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.3866-beta" />
     <PackageReference Include="Ipfs.Api" Version="0.23.6" />
     <PackageReference Include="Ipfs.Engine" Version="0.7.2" />
+    <PackageReference Include="Multiformats.Hash" Version="1.4.0" />
     <PackageReference Include="Polly" Version="7.1.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
     <PackageReference Include="Dawn.Guard" Version="1.8.0" />
@@ -144,34 +145,6 @@
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CryptoInfoScryptDTO.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CipherParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CipherParamsDTO.cs" />
     <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\ScryptParamsDTO.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base10.cs" Link="Multiformats.Base\Base10.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.cs" Link="Multiformats.Base\Base16.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.Lower.cs" Link="Multiformats.Base\Base16.Lower.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base16.Upper.cs" Link="Multiformats.Base\Base16.Upper.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base2.cs" Link="Multiformats.Base\Base2.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.cs" Link="Multiformats.Base\Base32.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexLower.cs" Link="Multiformats.Base\Base32.HexLower.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexPaddedLower.cs" Link="Multiformats.Base\Base32.HexPaddedLower.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexPaddedUpper.cs" Link="Multiformats.Base\Base32.HexPaddedUpper.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.HexUpper.cs" Link="Multiformats.Base\Base32.HexUpper.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Lower.cs" Link="Multiformats.Base\Base32.Lower.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.PaddedLower.cs" Link="Multiformats.Base\Base32.PaddedLower.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.PaddedUpper.cs" Link="Multiformats.Base\Base32.PaddedUpper.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Upper.cs" Link="Multiformats.Base\Base32.Upper.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base32.Z.cs" Link="Multiformats.Base\Base32.Z.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.Btc.cs" Link="Multiformats.Base\Base58.Btc.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.cs" Link="Multiformats.Base\Base58.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base58.Flickr.cs" Link="Multiformats.Base\Base58.Flickr.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.cs" Link="Multiformats.Base\Base64.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Normal.cs" Link="Multiformats.Base\Base64.Normal.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Padded.cs" Link="Multiformats.Base\Base64.Padded.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.Url.cs" Link="Multiformats.Base\Base64.Url.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base64.UrlPadded.cs" Link="Multiformats.Base\Base64.UrlPadded.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Base8.cs" Link="Multiformats.Base\Base8.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Identity.cs" Link="Multiformats.Base\Identity.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\LetterCasing.cs" Link="Multiformats.Base\LetterCasing.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\Multibase.cs" Link="Multiformats.Base\Multibase.cs" />
-    <Compile Include="..\..\submodules\cs-multibase\src\Multiformats.Base\MultibaseEncoding.cs" Link="Multiformats.Base\MultibaseEncoding.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
     <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />

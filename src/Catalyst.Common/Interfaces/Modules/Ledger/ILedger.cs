@@ -21,11 +21,10 @@
 
 #endregion
 
-
 namespace Catalyst.Common.Interfaces.Modules.Ledger
 {
     public interface ILedger
     {
-         bool SaveAccountState(IAccount account);
+        bool SaveAccountState(IAccount account);
     }
 }
