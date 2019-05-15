@@ -74,7 +74,15 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Cryptography.NSecCryptoContext, Catalyst.Common",
+            "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.IUserOutput, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Cryptography.RustCryptoContext, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Common"

@@ -33,10 +33,11 @@ using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Dawn;
-using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
+using Multiformats.Base;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -80,9 +81,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             try
             {
-                if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out var encodingUsed, out var decodedPublicKey))
+                if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out _, out var decodedPublicKey))
                 {
-                    Logger.Error($"{PublicKeyEncodingInvalid} {encodingUsed}");
+                    Logger.Error($"{PublicKeyEncodingInvalid}");
                     ReturnResponse(false, correlationGuid);
                     return;
                 }
@@ -94,9 +95,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     return;
                 }
                 
-                if (!Multibase.TryDecode(signature.ToStringUtf8(), out encodingUsed, out var decodedSignature))
+                if (!Multibase.TryDecode(signature.ToStringUtf8(), out _, out var decodedSignature))
                 {
-                    Logger.Error($"{SignatureEncodingInvalid} {encodingUsed}");
+                    Logger.Error($"{SignatureEncodingInvalid}");
                     ReturnResponse(false, correlationGuid);
                     return;
                 }
@@ -113,7 +114,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Guard.Argument(pubKey).HasValue();
 
                 var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
-                    decodedSignature);
+                    new Signature(decodedSignature));
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
