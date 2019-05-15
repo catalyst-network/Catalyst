@@ -21,10 +21,33 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Modules.Ledger
+using Catalyst.Common.Config;
+using Catalyst.Common.Util;
+using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.Modules.Ledger;
+
+namespace Catalyst.Node.Core.Modules.Ledger
 {
-    public interface ILedger
+    /// <inheritdoc />
+    public sealed class Account : IAccount
     {
-        bool SaveAccountState(IAccount account);
+        /// <inheritdoc />
+        [RepositoryPrimaryKey(Order = 1)]
+        public int PkId { get; set; }
+
+        /// <inheritdoc />
+        public string PublicAddress { get; set; }
+
+        /// <inheritdoc />
+        public uint CoinType { get; set; }
+
+        /// <inheritdoc />
+        public AccountTypes AccountType { get; set; }
+
+        /// <inheritdoc />
+        public BigDecimal Balance { get; set; }
+
+        /// <inheritdoc />
+        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
     }
 }
