@@ -21,10 +21,15 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Modules.Ledger
+using System.Numerics;
+
+namespace Catalyst.Common.Extensions
 {
-    public interface ILedger
+    public static class BigIntegerExtensions
     {
-        bool SaveAccountState(IAccount account);
+        public static int NumberOfDigits(this BigInteger value)
+        {
+            return (value * value.Sign).ToString().Length;
+        }
     }
 }

@@ -27,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Dfs;
+using Ipfs;
 using Serilog;
 using Ipfs.CoreApi;
 
@@ -36,7 +37,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
     {
         private static readonly AddFileOptions AddFileOptions = new AddFileOptions
         {
-            Hash = Constants.HashAlgorithm,
+            Hash = MultiHash.GetHashAlgorithmName(Constants.HashAlgorithm.GetHashCode()),
             RawLeaves = true
         };
 
