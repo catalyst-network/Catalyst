@@ -100,16 +100,15 @@ namespace Catalyst.Common.Config
         
         /// <summary> Number of random peers to provide when processing a GetNeighbourRequest</summary>
         public static int NumberOfRandomPeers => 5;
-        
+
+        /// <summary> The empty data hash </summary>
         public static readonly byte[] EmptyDataHash = Multihash.Encode<BLAKE2B_8>(ByteUtil.EmptyByteArray);
         
         /// <summary> The empty trie hash </summary>
         public static readonly byte[] EmptyTrieHash = Multihash.Encode<BLAKE2B_8>(RLP.EncodeElement(ByteUtil.EmptyByteArray));
 
         /// <summary> Sets the maximum precision of division operations. </summary>
-        public const int Precision = 50;
-
-        public static double Version { get { return 1.0; } }
+        public static int Precision { get { return 50; } }
 
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
