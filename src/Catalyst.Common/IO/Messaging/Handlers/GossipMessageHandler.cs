@@ -12,6 +12,11 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
+    /// <summary>
+    /// Handles gossiping of a message
+    /// </summary>
+    /// <typeparam name="TProto">The type of the proto.</typeparam>
+    /// <seealso cref="IGossipMessageHandler" />
     public class GossipMessageHandler<TProto> : IGossipMessageHandler where TProto : class, IMessage<TProto>
     {
         /// <summary>The gossip cache</summary>
@@ -31,11 +36,12 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             IGossipCacheBase gossipCache,
             IP2PMessageFactory<TProto> messageFactory)
         {
-            this._gossipCache = gossipCache;
-            this._messageFactory = messageFactory;
-            this._peerIdentifier = peerIdentifier;
+            _gossipCache = gossipCache;
+            _messageFactory = messageFactory;
+            _peerIdentifier = peerIdentifier;
         }
 
+        /// <inheritdoc/>
         public void StartGossip(IChanneledMessage<AnySigned> message)
         {
             var correlationId = message.Payload.CorrelationId.ToGuid();
@@ -47,7 +53,8 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                     {
                         SentAt = DateTime.Now,
                         Recipient = new PeerIdentifier(message.Payload.PeerId),
-                        Content = message.Payload
+                        Content = message.Payload,
+                        ReceivedCount = 0
                     };
                     _gossipCache.AddPendingRequest(request);
                 }
@@ -69,7 +76,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             var correlationId = message.Payload.CorrelationId.ToGuid();
             var channel = message.Context.Channel;
 
-            if (gossipPeers.Count < 2)
+            if (gossipPeers.Count < 1)
             {
                 return;
             }

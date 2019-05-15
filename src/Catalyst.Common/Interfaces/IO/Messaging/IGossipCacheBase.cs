@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Outbound;
-using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {

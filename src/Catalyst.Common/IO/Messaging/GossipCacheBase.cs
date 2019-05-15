@@ -35,7 +35,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class GossipCacheBase 
+    public class GossipCacheBase
         : MessageCorrelationCacheBase, IGossipCacheBase
     {
         /// <summary>The peer discovery</summary>
@@ -44,7 +44,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
-        /// <summary>Initializes a new instance of the <see cref="GossipCacheBase{TMessage}"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="GossipCacheBase"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerDiscovery">The peer discovery.</param>
         /// <param name="cache">The cache.</param>
@@ -54,16 +54,17 @@ namespace Catalyst.Common.IO.Messaging
             IMemoryCache cache,
             ILogger logger) : base(cache, logger, TimeSpan.FromMinutes(10))
         {
-            this._peerDiscovery = peerDiscovery;
-            this._peerIdentifier = peerIdentifier;
+            _peerDiscovery = peerDiscovery;
+            _peerIdentifier = peerIdentifier;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IGossipCacheBase" />
         public override void AddPendingRequest(PendingRequest pendingRequest)
         {
             PendingRequests.Set(pendingRequest.Content.CorrelationId.ToGuid() + "gossip", pendingRequest, EntryOptions);
         }
 
+        /// <inheritdoc/>
         public List<IPeerIdentifier> GetSortedPeers()
         {
             List<IPeerIdentifier> fullPeerList = new List<IPeerIdentifier>();
@@ -73,15 +74,15 @@ namespace Catalyst.Common.IO.Messaging
             return orderedList;
         }
 
+        /// <inheritdoc/>
         protected override PostEvictionDelegate GetInheritorDelegate()
         {
             return ChangeReputationOnEviction;
         }
-        
+
         private void ChangeReputationOnEviction(object key, object value, EvictionReason reason, object state)
         {
-            // we don't having anything to really do here for rcp clients, yet.
-            Logger.Debug("RpcCorrelationCache.ChangeReputationOnEviction() called");
+            // we don't having anything to really do here for gossip.
         }
 
         /// <inheritdoc/>
@@ -139,14 +140,14 @@ namespace Catalyst.Common.IO.Messaging
             PendingRequest request = GetPendingRequestValue(correlationId);
             if (request == null)
             {
-                request = new PendingRequest()
+                request = new PendingRequest
                 {
-                    RecievedCount = updateCount
+                    ReceivedCount = updateCount
                 };
             }
             else
             {
-                request.RecievedCount += updateCount;
+                request.ReceivedCount += updateCount;
             }
 
             AddPendingRequest(request);

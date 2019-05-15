@@ -32,13 +32,13 @@ namespace Catalyst.Common.IO.Outbound
         public PendingRequest()
         {
             GossipCount = 0;
-            RecievedCount = 1;
+            ReceivedCount = 0;
         }
 
         public AnySigned Content { get; set; }
         public IPeerIdentifier Recipient { get; set; }
         public DateTimeOffset SentAt { get; set; }
         public int GossipCount { get; set; }
-        public int RecievedCount { get; set; }
+        public int ReceivedCount { get; set; }
     }
 }
