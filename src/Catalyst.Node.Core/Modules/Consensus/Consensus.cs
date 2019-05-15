@@ -21,17 +21,18 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
     public class Consensus : IConsensus
     {
-        public ITransactionComparer TransactionComparer { get; }
+        public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
 
-        public Consensus(ITransactionComparer transactionComparer)
+        public Consensus(IDeltaTransactionRetriever deltaTransactionRetriever)
         {
-            TransactionComparer = transactionComparer;
+            DeltaTransactionRetriever = deltaTransactionRetriever;
         }
     }
 }

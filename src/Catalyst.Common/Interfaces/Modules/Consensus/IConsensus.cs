@@ -21,14 +21,16 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Protocol.Transaction;
+
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
     public interface IConsensus
     {
-        /// <summary>
-        /// A comparer used to order transactions, notably in the mempool, by descending order
-        /// of priority. In Catalyst network, all delta producers need to 
-        /// </summary>
-        ITransactionComparer TransactionComparer { get; }
+        IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
     }
 }
