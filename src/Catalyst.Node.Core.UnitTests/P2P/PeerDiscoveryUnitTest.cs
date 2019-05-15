@@ -139,7 +139,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
             
                 var observableStream = new[] {channeledAny}.ToObservable();
-
+//some messages pid dont match and the start observing stream get neoghbour
+// StringSplitOptions that function out so its not doing two things
                 peerDiscovery.TotalPotentialCandidates = 10;
                 peerDiscovery.DiscoveredPeerInCurrentWalk = 26;
                 peerDiscovery.CurrentPeerNeighbours.TryAdd(pid.GetHashCode(), new KeyValuePair<IPeerIdentifier, ByteString>(pid, channeledAny.Payload.CorrelationId));
