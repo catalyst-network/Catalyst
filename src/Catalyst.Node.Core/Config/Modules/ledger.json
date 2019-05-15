@@ -16,6 +16,14 @@
                     "type": "Catalyst.Common.Interfaces.Modules.Ledger.ILedger, Catalyst.Common"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Ledger.Account",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Ledger.IAccount, Catalyst.Common"
+                }
+            ]
         }
     ]
 }

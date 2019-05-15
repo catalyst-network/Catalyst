@@ -32,6 +32,7 @@ using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using Ipfs;
 using Ipfs.CoreApi;
+using Multiformats.Base;
 using Serilog;
 using NSubstitute;
 using Xunit;
@@ -40,7 +41,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
 {
     public sealed class IpfsDfsTests : IDisposable
     {
-        private const int DelayInMs = 50;
+        private const int DelayInMs = 300;
         private const int DelayMultiplier = 4;
         private readonly ICoreApi _ipfsEngine;
         private readonly ILogger _logger;
@@ -58,8 +59,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             var hashBits = Guid.NewGuid().ToByteArray().Concat(new byte[16]).ToArray();
             _expectedCid = new Cid
             {
-                Encoding = "base64",
-                Hash = new MultiHash(Constants.HashAlgorithm, hashBits)
+                Encoding = Constants.EncodingAlgorithm.ToString().ToLowerInvariant(),
+                Hash = new MultiHash(MultiHash.GetHashAlgorithmName(Constants.HashAlgorithm.GetHashCode()), hashBits)
             };
 
             _addedRecord = Substitute.For<IFileSystemNode>();

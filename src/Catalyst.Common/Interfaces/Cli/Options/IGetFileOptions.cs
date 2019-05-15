@@ -21,33 +21,20 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Util;
-using SharpRepository.Repository;
-using Catalyst.Common.Interfaces.Modules.Ledger;
-
-namespace Catalyst.Node.Core.Modules.Ledger
+namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    /// <inheritdoc />
-    public sealed class Account : IAccount
+    public interface IGetFileOptions
     {
-        /// <inheritdoc />
-        [RepositoryPrimaryKey(Order = 1)]
-        public int PkId { get; set; }
+        /// <summary>Gets or sets the node.</summary>
+        /// <value>The node.</value>
+        string Node { get; set; }
 
-        /// <inheritdoc />
-        public string PublicAddress { get; set; }
+        /// <summary>Gets or sets the file hash.</summary>
+        /// <value>The file hash.</value>
+        string FileHash { get; set; }
 
-        /// <inheritdoc />
-        public uint CoinType { get; set; }
-
-        /// <inheritdoc />
-        public AccountTypes AccountType { get; set; }
-
-        /// <inheritdoc />
-        public BigDecimal Balance { get; set; }
-
-        /// <inheritdoc />
-        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
+        /// <summary>Gets or sets the file output.</summary>
+        /// <value>The file output.</value>
+        string FileOutput { get; set; }
     }
 }

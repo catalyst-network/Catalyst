@@ -28,6 +28,7 @@ using System.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Modules;
 using Catalyst.Common.Util;
+using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethereum.RLP;
@@ -70,19 +71,16 @@ namespace Catalyst.Common.Config
         public static string MessageHandlersConfigFile => "messageHandlers.json";
 
         /// <summary>The expiry minutes of initialization </summary>
-        public static int FileTransferExpiryMinutes => 1;
+        public static int FileTransferExpirySeconds => 60;
 
         /// <summary>The chunk size in bytes </summary>
-        public static int FileTransferChunkSize => 1000000;
-
-        /// <summary>The CLI chunk writing wait time </summary>
-        public static int FileTransferRpcWaitTime => 30;
-
+        public static int FileTransferChunkSize => 200000;
+        
         /// <summary>The maximum chunk retry count </summary>
         public static int FileTransferMaxChunkRetryCount => 3;
 
         /// <summary>The maximum chunk read tries </summary>
-        public static int FileTransferMaxChunkReadTries => 3;
+        public static int FileTransferMaxChunkReadTries => 30;
 
         /// <summary> How many peers node discovers before saving for burn in value </summary>
         public static int PeerDiscoveryBurnIn => 25;
@@ -91,15 +89,21 @@ namespace Catalyst.Common.Config
         public static string KeyChainDefaultKeyType => "ed25519";
 
         /// <summary> Hashing algorithm type </summary>
-        public static HashType HashAlgorithm => HashType.BLAKE2B_8;
+        public static HashType HashAlgorithm => HashType.BLAKE2B_256;
+
+        public static MultibaseEncoding EncodingAlgorithm => MultibaseEncoding.Base58Btc;
         
         /// <summary> Dfs Swarm Key </summary>
         public static string SwarmKey => "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
 
         public static int BaseReputationChange => 1;
+        
+        /// <summary> Number of random peers to provide when processing a GetNeighbourRequest</summary>
         public static int NumberOfRandomPeers => 5;
         
         public static readonly byte[] EmptyDataHash = Multihash.Encode<BLAKE2B_8>(ByteUtil.EmptyByteArray);
+        
+        /// <summary> The empty trie hash </summary>
         public static readonly byte[] EmptyTrieHash = Multihash.Encode<BLAKE2B_8>(RLP.EncodeElement(ByteUtil.EmptyByteArray));
 
         /// <summary> Sets the maximum precision of division operations. </summary>
@@ -107,7 +111,7 @@ namespace Catalyst.Common.Config
         
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
-            
+
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));

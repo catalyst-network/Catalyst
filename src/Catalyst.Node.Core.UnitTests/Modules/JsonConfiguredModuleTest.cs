@@ -37,12 +37,12 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Contract;
 using Catalyst.Node.Core.Modules.Dfs;
-using Catalyst.Node.Core.Modules.Ledger;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
 
 namespace Catalyst.Node.Core.UnitTest.Modules
 {
@@ -85,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         [InlineData(typeof(IConsensus), typeof(Core.Modules.Consensus.Consensus))]
         [InlineData(typeof(IContract), typeof(Contract))]
         [InlineData(typeof(IDfs), typeof(Core.Modules.Dfs.Dfs))]
-        [InlineData(typeof(ILedger), typeof(Ledger))]
+        [InlineData(typeof(ILedger), typeof(LedgerService))]
         [InlineData(typeof(IMempool), typeof(Core.Modules.Mempool.Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)

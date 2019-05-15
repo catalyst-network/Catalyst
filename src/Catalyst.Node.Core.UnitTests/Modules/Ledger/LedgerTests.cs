@@ -21,36 +21,32 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.Transaction;
-using FluentAssertions;
+using Catalyst.Node.Core.UnitTest.TestUtils;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Serilog;
 using SharpRepository.Repository;
 using Xunit;
-using Catalyst.Node.Core.Modules.Ledger;
 using SharpRepository.InMemoryRepository;
+using FluentAssertions;
+using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
+using Account = Catalyst.Node.Core.Modules.Ledger.Account;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
+namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
 {
     public sealed class LedgerTests
     {
         private IRepository<Account> _accounts;
-        private readonly Ledger _ledger;
+        private readonly LedgerService _ledger;
 
         public LedgerTests()
         {
-            _accounts = Substitute.For<IRepository<Account>>();
+            _accounts = new InMemoryRepository<Account>();
 
             var logger = Substitute.For<ILogger>();
 
-            _ledger = new Ledger(_accounts, logger);
+            _ledger = new Catalyst.Node.Core.Modules.Ledger.Ledger(_accounts, logger);
         }
 
         [Fact]
@@ -59,11 +55,12 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount(AmountConfirmed: (uint) i * 5);
+                var account = AccountHelper.GetAccount(balance: i * 5);
                 _ledger.SaveAccountState(account);
             }
 
-            _ledger.Accounts.ReceivedCalls().Count().Should().Be(11);
+            _ledger.Accounts.GetAll().Should().HaveCount(10);
+            _ledger.Accounts.GetAll().Should().NotContainNulls();
         }
     }
 }

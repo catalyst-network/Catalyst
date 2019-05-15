@@ -21,26 +21,26 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Ledger;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
-    public static class AccountHelper
+    internal static class AccountHelper
     {
-        public static Account GetAccount(uint CoinType = 0,
-            uint AccountType = 0,
-            double AmountConfirmed = 20.3,
-            double AmountUnconfirmed = 145.8,
-            double SpendableAmount = 20.3)
+        internal static Account GetAccount(BigDecimal balance,
+            uint coinType = 0,
+            string accountType = "NonConfidentialAccount",
+            string publicAddress = "0x32Be343B94f860124dC4fEe278FDCBD38C102D88")
         {
-            var account = new Account()
+            var account = new Account
             {
-                AccountType = AccountType,
-                AmountConfirmed = AmountConfirmed,
-                AmountUnconfirmed = AmountUnconfirmed,
-                SpendableAmount = SpendableAmount
+                CoinType = coinType,
+                AccountType = Enumeration.Parse<AccountTypes>(accountType),
+                PublicAddress = publicAddress,
+                Balance = balance
             };
             return account;
         }
