@@ -24,7 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Cryptography;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 
@@ -47,8 +47,7 @@ namespace Catalyst.Common.Modules.KeySigner
         public Task Sign(ReadOnlySpan<byte> data, string address, string password)
         {
             IPrivateKey key = _keyStore.GetKey(address, password);
-            byte[] bytes = _cryptoContext.Sign(key, data);
-            return Task.FromResult(new Signature(bytes));
+            return Task.FromResult(_cryptoContext.Sign(key, data));
         }
 
         public void Verify()
