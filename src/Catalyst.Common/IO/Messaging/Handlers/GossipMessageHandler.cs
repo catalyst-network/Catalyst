@@ -113,11 +113,12 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             var gossipCount = _gossipCache.GetGossipCount(correlationId);
             var deserialised = message.Payload.FromAnySigned<TProto>();
             var amountToGossip = Math.Min(Constants.MaxGossipPeers, Constants.MaxGossipPeers - gossipCount);
+            var positionOffset = myPosition * gossipCount;
 
             var circularList = new CircularList<IPeerIdentifier>(gossipPeers);
 
             var peerIdentifiers =
-                circularList.Skip(gossipCount * amountToGossip).Take(amountToGossip);
+                circularList.Skip(positionOffset + (gossipCount * amountToGossip)).Take(amountToGossip);
             foreach (var peerIdentifier in peerIdentifiers)
             {
                 var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(deserialised, peerIdentifier, _peerIdentifier,
