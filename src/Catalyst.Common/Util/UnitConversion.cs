@@ -1,38 +1,12 @@
 using System;
 using System.Numerics;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 
 namespace Catalyst.Common.Util
 {
     public sealed class UnitConversion
     {
-        public enum KatUnit
-        {
-            Fulhame,
-            KitKat,
-            GrumpyFace,
-            GarryLazerEyes,
-            SteveFrench,
-            YoctoKat,
-            ZeptoKat,
-            AtooKat,
-            FemtoKat,
-            PicoKat,
-            NanoKat,
-            MicroKat,
-            MiliKat,
-            CentiKat,
-            Korin,
-            DekaKat,
-            HectoKat,
-            Kat,
-            MegaKat,
-            GigaKat,
-            Schrodinger,
-            TerraKat,
-            PetaKat,
-            FatKat
-        }
-
         private static UnitConversion _convert;
 
         public static UnitConversion Convert => _convert ?? (_convert = new UnitConversion());
@@ -50,9 +24,9 @@ namespace Catalyst.Common.Util
         ///     Converts from wei to a unit, NOTE: When the total number of digits is bigger than 29 they will be rounded the less
         ///     significant digits
         /// </summary>
-        public decimal FromFulhame(BigInteger value, KatUnit toUnit = KatUnit.Kat)
+        public decimal FromFulhame(BigInteger value, string unitName = "Kat")
         {
-            return FromFulhame(value, GetKatUnitValue(toUnit));
+            return FromFulhame(value, Enumeration.Parse<UnitTypes>(unitName).UnitAsBigInt);
         }
 
         /// <summary>
@@ -69,9 +43,9 @@ namespace Catalyst.Common.Util
             return new BigDecimal(value, decimalPlacesToUnit * -1);
         }
 
-        public BigDecimal FromFulhameToBigDecimal(BigInteger value, KatUnit toUnit = KatUnit.Kat)
+        public BigDecimal FromFulhameToBigDecimal(BigInteger value, string unitName = "Kat")
         {
-            return FromFulhameToBigDecimal(value, GetKatUnitValue(toUnit));
+            return FromFulhameToBigDecimal(value, Enumeration.Parse<UnitTypes>(unitName).UnitAsBigInt);
         }
 
         public BigDecimal FromFulhameToBigDecimal(BigInteger value, BigInteger toUnit)
@@ -82,63 +56,6 @@ namespace Catalyst.Common.Util
         private int GetKatUnitValueLength(BigInteger unitValue)
         {
             return unitValue.ToString().Length - 1;
-        }
-
-        public BigInteger GetKatUnitValue(KatUnit katUnit)
-        {
-            switch (katUnit)
-            {
-                case KatUnit.Fulhame:
-                    return BigInteger.Parse("1");
-                case KatUnit.KitKat:
-                    return BigInteger.Parse("1000");
-                case KatUnit.GrumpyFace:
-                    return BigInteger.Parse("1000");
-                case KatUnit.YoctoKat:
-                    return BigInteger.Parse("1000");
-                case KatUnit.GarryLazerEyes:
-                    return BigInteger.Parse("1000");
-                case KatUnit.SteveFrench:
-                    return BigInteger.Parse("1000000");
-                case KatUnit.ZeptoKat:
-                    return BigInteger.Parse("1000000");
-                case KatUnit.AtooKat:
-                    return BigInteger.Parse("1000000000");
-                case KatUnit.FemtoKat:
-                    return BigInteger.Parse("1000000000");
-                case KatUnit.PicoKat:
-                    return BigInteger.Parse("1000000000");
-                case KatUnit.NanoKat:
-                    return BigInteger.Parse("1000000000");
-                case KatUnit.MicroKat:
-                    return BigInteger.Parse("1000000000000");
-                case KatUnit.MiliKat:
-                    return BigInteger.Parse("1000000000000");
-                case KatUnit.CentiKat:
-                    return BigInteger.Parse("1000000000000");
-                case KatUnit.Korin:
-                    return BigInteger.Parse("1000000000000000");
-                case KatUnit.DekaKat:
-                    return BigInteger.Parse("1000000000000000");
-                case KatUnit.HectoKat:
-                    return BigInteger.Parse("1000000000000000");
-                case KatUnit.Kat:
-                    return BigInteger.Parse("1000000000000000000");
-                case KatUnit.MegaKat:
-                    return BigInteger.Parse("1000000000000000000000");
-                case KatUnit.GigaKat:
-                    return BigInteger.Parse("1000000000000000000000");
-                case KatUnit.Schrodinger:
-                    return BigInteger.Parse("1000000000000000000000");
-                case KatUnit.TerraKat:
-                    return BigInteger.Parse("1000000000000000000000000");
-                case KatUnit.PetaKat:
-                    return BigInteger.Parse("1000000000000000000000000000");
-                case KatUnit.FatKat:
-                    return BigInteger.Parse("1000000000000000000000000000000");
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(katUnit), katUnit, "I haz no units for you");
-            }
         }
 
         public bool TryValidateUnitValue(BigInteger katUnit)
@@ -164,9 +81,9 @@ namespace Catalyst.Common.Util
             return conversion.Floor().Mantissa;
         }
 
-        public BigInteger ToFulhame(BigDecimal amount, KatUnit fromUnit = KatUnit.Kat)
+        public BigInteger ToFulhame(BigDecimal amount, string unitName = "Kat")
         {
-            return ToFulhameFromUnit(amount, GetKatUnitValue(fromUnit));
+            return ToFulhameFromUnit(amount, Enumeration.Parse<UnitTypes>(unitName).UnitAsBigInt);
         }
 
         public BigInteger ToFulhame(BigDecimal amount, int decimalPlacesFromUnit)
@@ -189,39 +106,39 @@ namespace Catalyst.Common.Util
             return ToFulhameFromUnit(amount, BigInteger.Pow(10, decimalPlacesFromUnit));
         }
 
-        public BigInteger ToFulhame(decimal amount, KatUnit fromUnit = KatUnit.Kat)
+        public BigInteger ToFulhame(decimal amount, string unitName = "Kat")
         {
-            return ToFulhameFromUnit(amount, GetKatUnitValue(fromUnit));
+            return ToFulhameFromUnit(amount, Enumeration.Parse<UnitTypes>(unitName).UnitAsBigInt);
         }
 
-        public BigInteger ToFulhame(BigInteger value, KatUnit fromUnit = KatUnit.Kat)
+        public BigInteger ToFulhame(BigInteger value, string unitName = "Kat")
         {
-            return value * GetKatUnitValue(fromUnit);
+            return value * Enumeration.Parse<UnitTypes>(unitName).UnitAsBigInt;
         }
 
-        public BigInteger ToFulhame(int value, KatUnit fromUnit = KatUnit.Kat)
+        public BigInteger ToFulhame(int value, string unitName = "Kat")
         {
-            return ToFulhame(new BigInteger(value), fromUnit);
+            return ToFulhame(new BigInteger(value), Enumeration.Parse<UnitTypes>(unitName).UnitString);
         }
 
-        public BigInteger ToFulhame(double value, KatUnit fromUnit = KatUnit.Kat)
+        public BigInteger ToFulhame(double value, string unitName = "Kat")
         {
-            return ToFulhame(System.Convert.ToDecimal(value), fromUnit);
+            return ToFulhame(System.Convert.ToDecimal(value), Enumeration.Parse<UnitTypes>(unitName).UnitString);
         }
 
-        public BigInteger ToFulhame(float value, KatUnit fromUnit = KatUnit.Kat)
+        public BigInteger ToFulhame(float value, string unitName = "Kat")
         {
-            return ToFulhame(System.Convert.ToDecimal(value), fromUnit);
+            return ToFulhame(System.Convert.ToDecimal(value), Enumeration.Parse<UnitTypes>(unitName).UnitString);
         }
 
-        public BigInteger ToFulhame(long value, KatUnit fromUnit = KatUnit.Kat)
+        public BigInteger ToFulhame(long value, string unitName = "Kat")
         {
-            return ToFulhame(new BigInteger(value), fromUnit);
+            return ToFulhame(new BigInteger(value), Enumeration.Parse<UnitTypes>(unitName).UnitString);
         }
 
-        public BigInteger ToFulhame(string value, KatUnit fromUnit = KatUnit.Kat)
+        public BigInteger ToFulhame(string value, string unitName = "Kat")
         {
-            return ToFulhame(decimal.Parse(value), fromUnit);
+            return ToFulhame(decimal.Parse(value), Enumeration.Parse<UnitTypes>(unitName).UnitString);
         }
 
         private BigInteger CalculateNumberOfDecimalPlaces(double value,
