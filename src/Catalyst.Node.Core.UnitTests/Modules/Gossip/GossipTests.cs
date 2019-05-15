@@ -146,8 +146,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 
             cache.TryGetValue(correlationId + "gossip", out value);
             value.ReceivedCount.Should().Be(receivedCount);
-            value.GossipCount.Should().Be(Math.Min(Constants.MaxGossipPeers, 
-                value.ReceivedCount * Constants.MaxGossipPeers));
+            value.GossipCount.Should().Be(Math.Min(Constants.MaxGossipCount, 
+                value.ReceivedCount * Constants.MaxGossipCount));
         }
 
         private string Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier, IMemoryCache cache)

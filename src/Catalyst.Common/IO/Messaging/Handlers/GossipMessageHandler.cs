@@ -70,6 +70,11 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             var correlationId = message.Payload.CorrelationId.ToGuid();
             if (!_gossipCache.CanGossip(correlationId))
             {
+                if (_gossipCache.GetGossipCount(correlationId) != -1)
+                {
+                    _gossipCache.IncrementReceivedCount(correlationId, 1);
+                }
+
                 return;
             }
             
