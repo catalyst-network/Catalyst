@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 namespace Catalyst.Common.Interfaces.Cryptography
 {
     public interface ICryptoContext
@@ -67,9 +67,9 @@ namespace Catalyst.Common.Interfaces.Cryptography
         /// <param name="privateKey"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        byte[] Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data);
+        ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data);
 
-        bool Verify(IPublicKey key, ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature);
+        bool Verify(IPublicKey key, ReadOnlySpan<byte> data, ISignature signature);
 
         /// <summary>
         ///     Given a private key returns corresponding public key.

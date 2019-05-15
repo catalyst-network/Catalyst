@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.KeyStore;
 using Serilog;
