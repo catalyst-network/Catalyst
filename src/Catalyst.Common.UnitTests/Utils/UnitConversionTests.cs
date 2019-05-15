@@ -1,3 +1,26 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using System;
 using System.Numerics;
 using Catalyst.Common.Config;
@@ -7,6 +30,9 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.Utils
 {
+    /// <summary>
+    ///     Original inspired from https://github.com/Nethereum/Nethereum
+    /// </summary>
     public sealed class ConversionTests
     {
         [Theory]
@@ -19,7 +45,7 @@ namespace Catalyst.Common.UnitTests.Utils
         public void ShouldConvertFromFulhameToDecimal(int units, string expected, string fulhameAmount)
         {
             var unitConversion = new UnitConversion();
-            var result = unitConversion.FromFulhame(BigInteger.Parse(fulhameAmount), units);
+            var result = UnitConversion.FromFulhame(BigInteger.Parse(fulhameAmount), units);
             Assert.Equal(expected, result.ToString());
         }
 
@@ -33,7 +59,7 @@ namespace Catalyst.Common.UnitTests.Utils
         public void ShouldConvertFromFulhameToBigDecimal(int units, string expected, string fulhameAmount)
         {
             var unitConversion = new UnitConversion();
-            var result = unitConversion.FromFulhameToBigDecimal(BigInteger.Parse(fulhameAmount), units);
+            var result = UnitConversion.FromFulhameToBigDecimal(BigInteger.Parse(fulhameAmount), units);
             Assert.Equal(expected, result.ToString());
         }
 
@@ -46,7 +72,7 @@ namespace Catalyst.Common.UnitTests.Utils
         {
             var unitConversion = new UnitConversion();
             var val = BigInteger.Parse("1000000000000000000000000001");
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             Assert.Throws<Exception>(() => UnitConversion.Convert.ToFulhameFromUnit(result, new BigInteger(value)));
         }
 
@@ -56,7 +82,7 @@ namespace Catalyst.Common.UnitTests.Utils
             var unitConversion = new UnitConversion();
             var val = BigInteger.Parse("1000000000000000000000000001");
 
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             var result2 = unitConversion.FromFulhame(val);
             Assert.Equal(result, result2);
             result2 = unitConversion.FromFulhame(val, BigInteger.Parse("1000000000000000000"));
@@ -71,7 +97,7 @@ namespace Catalyst.Common.UnitTests.Utils
             const decimal kat = 0.0010m;
             var fulhame = UnitConversion.Convert.ToFulhame(kat, Enumeration.Parse<UnitTypes>("Kat").Name);
             var val = BigInteger.Parse("1".PadRight(16, '0'));
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             Assert.Equal(UnitConversion.Convert.ToFulhame(result), fulhame);
         }
 
@@ -80,7 +106,7 @@ namespace Catalyst.Common.UnitTests.Utils
         {
             var unitConversion = new UnitConversion();
             var val = BigInteger.Parse("1000000000000000000000000001");
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             var result2 = unitConversion.FromFulhame(val);
             Assert.Equal(result, result2);
             result2 = unitConversion.FromFulhame(val, BigInteger.Parse("1000000000000000000"));
@@ -95,7 +121,7 @@ namespace Catalyst.Common.UnitTests.Utils
             const decimal kat = 1.243842387924387924897423897423m;
             var fulhame = UnitConversion.Convert.ToFulhame(kat, Enumeration.Parse<UnitTypes>("Kat").Name);
             var val = BigInteger.Parse("1243842387924387924");
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             Assert.Equal(UnitConversion.Convert.ToFulhame(result), fulhame);
         }
 
@@ -106,7 +132,7 @@ namespace Catalyst.Common.UnitTests.Utils
             const decimal kat = 1m;
             var fuhame = UnitConversion.Convert.ToFulhame(kat, Enumeration.Parse<UnitTypes>("Kat").Name);
             var val = BigInteger.Parse("1".PadRight(19, '0'));
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             Assert.Equal(UnitConversion.Convert.ToFulhame(result), fuhame);
         }
 
@@ -117,7 +143,7 @@ namespace Catalyst.Common.UnitTests.Utils
             const decimal kat = 10m;
             var fulhame = UnitConversion.Convert.ToFulhame(kat, Enumeration.Parse<UnitTypes>("Kat").Name);
             var val = BigInteger.Parse("1".PadRight(20, '0'));
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             Assert.Equal(UnitConversion.Convert.ToFulhame(result), fulhame);
         }
 
@@ -128,7 +154,7 @@ namespace Catalyst.Common.UnitTests.Utils
             const decimal kat = (decimal) 1 / 3;
             var fulhame = UnitConversion.Convert.ToFulhame(kat, Enumeration.Parse<UnitTypes>("Kat").Name);
             var val = BigInteger.Parse("333333333333333333");
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             Assert.Equal(UnitConversion.Convert.ToFulhame(result), fulhame);
         }
 
@@ -161,7 +187,7 @@ namespace Catalyst.Common.UnitTests.Utils
             const decimal kat = 1.24384m;
             var fulhame = UnitConversion.Convert.ToFulhame(kat, Enumeration.Parse<UnitTypes>("Kat").Name);
             var val = BigInteger.Parse("124384".PadRight(19, '0'));
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             Assert.Equal(UnitConversion.Convert.ToFulhame(result), fulhame);
         }
 
@@ -170,7 +196,7 @@ namespace Catalyst.Common.UnitTests.Utils
         {
             var unitConversion = new UnitConversion();
             var val = BigInteger.Parse("1000000000000000000000000001");
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             var result2 = unitConversion.FromFulhame(val);
             Assert.Equal(result, result2);
             result2 = unitConversion.FromFulhame(val, BigInteger.Parse("1000000000000000000"));
@@ -183,7 +209,7 @@ namespace Catalyst.Common.UnitTests.Utils
         {
             var unitConversion = new UnitConversion();
             var val = BigInteger.Parse("1000000000000000000000000001");
-            var result = unitConversion.FromFulhame(val, 18);
+            var result = UnitConversion.FromFulhame(val, 18);
             Assert.Equal(1000000000, UnitConversion.Convert.ToFulhame(result, 0));
         }
 
