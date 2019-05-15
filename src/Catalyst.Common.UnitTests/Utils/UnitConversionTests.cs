@@ -139,8 +139,8 @@ namespace Catalyst.Common.UnitTests.Utils
             const decimal kat = (decimal) 1 / 3;
             var fulhame = UnitConversion.Convert.ToFulhame(kat, Enumeration.Parse<UnitTypes>("PetaKat").Name);
             var val = BigInteger.Parse("3".PadLeft(27, '3'));
-            var result = unitConversion.FromFulhame(val, Enumeration.Parse<UnitTypes>("PetaKat").UnitString);
-            Assert.Equal(UnitConversion.Convert.ToFulhame(result, Enumeration.Parse<UnitTypes>("PetaKat").UnitString), fulhame);
+            var result = unitConversion.FromFulhame(val, Enumeration.Parse<UnitTypes>("PetaKat").Name);
+            Assert.Equal(UnitConversion.Convert.ToFulhame(result, Enumeration.Parse<UnitTypes>("PetaKat").Name), fulhame);
         }
 
         [Fact]
@@ -150,8 +150,8 @@ namespace Catalyst.Common.UnitTests.Utils
             var kat = new BigDecimal(1) / new BigDecimal(3);
             var fulhame = UnitConversion.Convert.ToFulhame(kat, Enumeration.Parse<UnitTypes>("FatKat").Name);
             var val = BigInteger.Parse("3".PadLeft(30, '3'));
-            var result = unitConversion.FromFulhameToBigDecimal(val, Enumeration.Parse<UnitTypes>("FatKat").UnitString);
-            Assert.Equal(UnitConversion.Convert.ToFulhame(result, Enumeration.Parse<UnitTypes>("FatKat").UnitString), fulhame);
+            var result = unitConversion.FromFulhameToBigDecimal(val, Enumeration.Parse<UnitTypes>("FatKat").Name);
+            Assert.Equal(UnitConversion.Convert.ToFulhame(result, Enumeration.Parse<UnitTypes>("FatKat").Name), fulhame);
         }
 
         [Fact]
