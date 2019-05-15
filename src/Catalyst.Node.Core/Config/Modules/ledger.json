@@ -1,19 +1,19 @@
-{
+﻿{
   "defaultAssembly": "Catalyst.Node.Core",
     "components": [
-        {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Core.Modules.Ledger.Account, Catalyst.Node.Core]], SharpRepository.InMemoryRepository",
-            "services": [
-                {
-                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.Modules.Ledger.Account, Catalyst.Node.Core]], SharpRepository.Repository"
-                }
-            ]
-        },
         {
             "type": "Catalyst.Node.Core.Modules.Ledger.Ledger",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Ledger.ILedger, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Node.Core.Modules.Ledger.Account, Catalyst.Node.Core]], SharpRepository.InMemoryRepository",
+            "services": [
+                {
+                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.Modules.Ledger.Account, Catalyst.Node.Core]], SharpRepository.Repository"
                 }
             ]
         },

@@ -175,16 +175,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Enumerator" />
     <Folder Include="Hex\HexConverters\Extensions\" />
     <Folder Include="Hex\HexTypes\" />
     <Folder Include="NSec\Cryptography\Buffer\" />
     <Folder Include="NSec\Cryptography\Formatting\" />
     <Folder Include="NSec\Interop\" />
     <Folder Include="RLP\" />
-    <Folder Include="Interfaces\Modules\Contract" />
-    <Folder Include="Interfaces\Modules\KeySigner" />
-    <Folder Include="Interfaces\Network" />
     <Folder Include="Protocol" />
     <Folder Include="Protocol\Protobuffs" />
   </ItemGroup>

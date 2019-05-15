@@ -37,7 +37,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
 {
     public sealed class LedgerTests
     {
-        private IRepository<Account> _accounts;
+        private IRepository<Account> _accounts;    
         private readonly LedgerService _ledger;
 
         public LedgerTests()
@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
             }
 
             _ledger.Accounts.GetAll().Should().HaveCount(10);
-            _ledger.Accounts.GetAll().Should().NotContainNulls();
+            _ledger.Accounts.GetAll().Should().NotContainNulls();            
         }
     }
 }
