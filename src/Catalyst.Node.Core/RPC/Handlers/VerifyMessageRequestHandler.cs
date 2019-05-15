@@ -34,9 +34,9 @@ using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
+using Multiformats.Base;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -80,9 +80,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             try
             {
-                if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out var encodingUsed, out var decodedPublicKey))
+                if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out _, out var decodedPublicKey))
                 {
-                    Logger.Error($"{PublicKeyEncodingInvalid} {encodingUsed}");
+                    Logger.Error($"{PublicKeyEncodingInvalid}");
                     ReturnResponse(false, correlationGuid);
                     return;
                 }
@@ -94,9 +94,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     return;
                 }
                 
-                if (!Multibase.TryDecode(signature.ToStringUtf8(), out encodingUsed, out var decodedSignature))
+                if (!Multibase.TryDecode(signature.ToStringUtf8(), out _, out var decodedSignature))
                 {
-                    Logger.Error($"{SignatureEncodingInvalid} {encodingUsed}");
+                    Logger.Error($"{SignatureEncodingInvalid}");
                     ReturnResponse(false, correlationGuid);
                     return;
                 }
