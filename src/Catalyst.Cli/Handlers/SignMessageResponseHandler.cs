@@ -72,6 +72,12 @@ namespace Catalyst.Cli.Handlers
                 var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray())[0].RLPData;
 
                 Guard.Argument(decodeResult).NotNull("The sign message response cannot be null.");
+
+                var originalMessage = decodeResult.ToStringFromRLPDecoded();
+
+                _output.WriteLine(
+                    $"Signature: {Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray())}\n" +
+                    $"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray())}\nOriginal Message: {originalMessage}");
             }
             catch (Exception ex)
             {
