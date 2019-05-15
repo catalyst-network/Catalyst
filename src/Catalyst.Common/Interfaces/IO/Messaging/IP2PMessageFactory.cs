@@ -33,7 +33,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
     /// The P2P message factory
     /// </summary>
     /// <typeparam name="TMessage">The type of the message.</typeparam>
-    public interface IP2PMessageFactory<TMessage> where TMessage : class, IMessage<TMessage>
+    public interface IP2PMessageFactory<in TMessage> where TMessage : class, IMessage<TMessage>
     {
         /// <summary>Gets the message in datagram envelope.</summary>
         /// <param name="message">The message.</param>

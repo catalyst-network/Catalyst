@@ -33,7 +33,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
     /// The RPC message factory
     /// </summary>
     /// <typeparam name="TMessage">The type of the message.</typeparam>
-    public interface IRpcMessageFactory<TMessage> where TMessage : class, IMessage
+    public interface IRpcMessageFactory<in TMessage> where TMessage : class, IMessage
     {
         /// <summary>Gets the message.</summary>
         /// <param name="message">The message.</param>
