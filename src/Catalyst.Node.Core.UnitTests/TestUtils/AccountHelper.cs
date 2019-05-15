@@ -21,10 +21,28 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Modules.Ledger
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
+using Catalyst.Common.Util;
+using Catalyst.Node.Core.Modules.Ledger;
+
+namespace Catalyst.Node.Core.UnitTest.TestUtils
 {
-    public interface ILedger
+    internal static class AccountHelper
     {
-        bool SaveAccountState(IAccount account);
+        internal static Account GetAccount(BigDecimal balance,
+            uint coinType = 0,
+            string accountType = "NonConfidentialAccount",
+            string publicAddress = "0x32Be343B94f860124dC4fEe278FDCBD38C102D88")
+        {
+            var account = new Account
+            {
+                CoinType = coinType,
+                AccountType = Enumeration.Parse<AccountTypes>(accountType),
+                PublicAddress = publicAddress,
+                Balance = balance
+            };
+            return account;
+        }
     }
 }

@@ -22,8 +22,42 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.Ledger;
+using SharpRepository.Repository;
+using Dawn;
+using Serilog;
+using System;
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {
-    public class Ledger : ILedger { }
+    /// <summary>
+    ///  This class represents a ledger and is a collection of accounts and data store.
+    /// </summary>
+    /// <seealso cref="Catalyst.Common.Interfaces.Modules.Ledger.ILedger" />
+    public sealed class Ledger : ILedger
+    {
+        public IRepository<Account> Accounts { get; }
+        private readonly ILogger _logger;
+
+        public Ledger(IRepository<Account> accounts, ILogger logger)
+        {
+            Accounts = accounts;
+            _logger = logger;
+        }
+
+        public bool SaveAccountState(IAccount account)
+        {
+            Guard.Argument(account, nameof(account)).NotNull();
+
+            try
+            {
+                Accounts.Add((Account) account);
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Failed to add account state to the Ledger");
+                return false;
+            }
+        }
+    }
 }
