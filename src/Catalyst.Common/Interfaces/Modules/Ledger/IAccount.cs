@@ -21,10 +21,9 @@
 
 #endregion
 
-
+using Catalyst.Common.Config;
 using SharpRepository.Repository;
-using System.Numerics;
-
+using Catalyst.Common.Util;
 
 namespace Catalyst.Common.Interfaces.Modules.Ledger
 {
@@ -61,16 +60,13 @@ namespace Catalyst.Common.Interfaces.Modules.Ledger
         /// <value>
         /// The type of the account.
         /// </value>
-        uint AccountType { get; set; }
+        AccountTypes AccountType { get; set; }
 
         /// <summary>
-        /// Gets or sets the amount.
+        /// The balance of an account
         /// </summary>
-        /// <value>
-        /// The amount.
-        /// </value>
-        BigInteger Balance { get; set; }
-
+        BigDecimal Balance { get; set; }
+        
         /// <summary>
         /// Gets or sets the state root.
         /// Encodes the storage contents of the account.
@@ -79,6 +75,5 @@ namespace Catalyst.Common.Interfaces.Modules.Ledger
         /// The state root.
         /// </value>
         byte[] StateRoot { get; set; }
-
     }
 }

@@ -23,6 +23,7 @@
 
 using System.Linq;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.UnitTest.TestUtils;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
@@ -32,12 +33,11 @@ using FluentAssertions;
 using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
 using Account = Catalyst.Node.Core.Modules.Ledger.Account;
 
-
 namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
 {
     public sealed class LedgerTests
     {
-        private IRepository<Account> _accounts;
+        private IRepository<Account> _accounts;    
         private readonly LedgerService _ledger;
 
         public LedgerTests()
@@ -55,11 +55,12 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount(Balance: (uint) i * 5);
+                var account = AccountHelper.GetAccount(balance: i * 5);
                 _ledger.SaveAccountState(account);
             }
+
             _ledger.Accounts.GetAll().Should().HaveCount(10);
-            _ledger.Accounts.GetAll().Should().NotContainNulls();
+            _ledger.Accounts.GetAll().Should().NotContainNulls();            
         }
     }
 }
