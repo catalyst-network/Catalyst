@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
         }
 
         [Fact]
-        public async Task GetMempoolTransactionsByPriority_should_return_transactions_in_decreasing_priority_order()
+        public void GetMempoolTransactionsByPriority_should_return_transactions_in_decreasing_priority_order()
         {
             var maxCount = _transactions.Count / 2;
             var expectedTransactions = _transactions
