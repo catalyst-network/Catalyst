@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
-        private IMessageCorrelationCache _rpcMessageCorrelationCache;
+        private readonly IMessageCorrelationCache _rpcMessageCorrelationCache;
 
         /// <summary>
         /// </summary>

@@ -29,12 +29,12 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {

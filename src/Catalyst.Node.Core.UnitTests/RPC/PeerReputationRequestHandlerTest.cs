@@ -39,8 +39,8 @@ using Xunit;
 using SharpRepository.Repository;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Rpc;
 using Nethereum.RLP;
 using Catalyst.Common.Util;
 

@@ -30,9 +30,9 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Dawn;
 using ILogger = Serilog.ILogger;
 

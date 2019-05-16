@@ -29,7 +29,7 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;

@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -37,6 +36,7 @@ using Google.Protobuf;
 using Serilog;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Cli.Handlers

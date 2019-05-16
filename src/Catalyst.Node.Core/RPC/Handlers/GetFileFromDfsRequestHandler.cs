@@ -38,8 +38,8 @@ using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Core.RPC.Handlers

@@ -63,9 +63,9 @@ namespace Catalyst.Common.Extensions
             return ShortenedFullName(descriptor);
         }
 
-        public static AnySigned ToAnySigned<T>(this T protobufObject,
+        public static AnySigned ToAnySigned(this IMessage protobufObject,
             PeerId senderId,
-            Guid correlationId = default) where T : IMessage<T>
+            Guid correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();

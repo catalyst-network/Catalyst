@@ -39,8 +39,8 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {

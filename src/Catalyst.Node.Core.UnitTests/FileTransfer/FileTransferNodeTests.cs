@@ -42,11 +42,11 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.UnitTest.TestUtils;
 using Microsoft.Extensions.Configuration;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Rpc;
 using Polly;
 
 namespace Catalyst.Node.Core.UnitTest.FileTransfer

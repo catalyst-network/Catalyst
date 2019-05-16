@@ -41,7 +41,7 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Google.Protobuf;
 using Polly;
 using Xunit.Abstractions;

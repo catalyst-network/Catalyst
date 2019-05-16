@@ -21,37 +21,18 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.Rpc.Messaging
+namespace Catalyst.Common.Rpc
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// The RpcMessageFactory builds AnySigned objects
-    /// </summary>
-    /// <typeparam name="TMessage">The type of the message.</typeparam>
+    /// <inheritdoc cref="IRpcMessageFactory" />
     /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactoryBase`1" />
-    public sealed class RpcMessageFactory<TMessage>
-        : MessageFactoryBase<TMessage>
-        where TMessage : class, IMessage<TMessage>
+    public sealed class RpcMessageFactory : MessageFactoryBase, IRpcMessageFactory
     {
         public RpcMessageFactory(IMessageCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
-        
-        /// <inheritdoc />
-        /// <summary>Gets the message dto.</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="recipient">The recipient.</param>
-        /// <param name="sender">The sender.</param>
-        /// <returns></returns>
-        protected override IMessageDto<TMessage> GetMessageDto(TMessage message,
-            IPeerIdentifier recipient,
-            IPeerIdentifier sender)
-        {
-            return new MessageDto<TMessage>(message, recipient, sender);
-        }
     }
 }

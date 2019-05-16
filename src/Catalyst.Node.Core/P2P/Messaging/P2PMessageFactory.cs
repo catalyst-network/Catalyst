@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <param name="recipient">The recipient.</param>
         /// <param name="sender">The sender.</param>
         /// <returns></returns>
-        protected override IMessageDto<TMessage> GetMessageDto(TMessage message,
+        public override IMessageDto<TMessage> GetMessageDto(TMessage message,
             IPeerIdentifier recipient,
             IPeerIdentifier sender)
         {

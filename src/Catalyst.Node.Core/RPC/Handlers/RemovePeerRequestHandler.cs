@@ -31,7 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;

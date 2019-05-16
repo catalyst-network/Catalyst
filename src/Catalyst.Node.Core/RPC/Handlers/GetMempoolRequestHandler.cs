@@ -33,7 +33,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
