@@ -21,11 +21,7 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus
@@ -38,7 +34,9 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
     {
         /// <summary>
         /// A comparer used to order transactions, notably in the mempool, by descending order
-        /// of priority. In Catalyst network, all delta producers need to 
+        /// of priority. In Catalyst network, all delta producers need to agree on the set of
+        /// transactions that should be included in the next ledger update. This interface should
+        /// be used to order transactions and decide whether they should be included or not.
         /// </summary>
         ITransactionComparer TransactionComparer { get; }
 

@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
             _expectedCid = new Cid
             {
                 Encoding = Constants.EncodingAlgorithm.ToString().ToLowerInvariant(),
-                Hash = new MultiHash(MultiHash.GetHashAlgorithmName(Constants.HashAlgorithm.GetHashCode()), hashBits)
+                Hash = new MultiHash(MultiHash.GetHashAlgorithmName(Constants.HashAlgorithmType.GetHashCode()), hashBits)
             };
 
             _addedRecord = Substitute.For<IFileSystemNode>();
