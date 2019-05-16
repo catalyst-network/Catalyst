@@ -186,7 +186,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-                    fakeNode.Channel, uniqueFileKey, new RpcMessageFactory<TransferFileBytesRequest>());
+                    fakeNode.Channel, uniqueFileKey, new RpcMessageFactory<TransferFileBytesRequest>(_cache));
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
                     fileUploadInformation.GetUploadMessageDto(i)

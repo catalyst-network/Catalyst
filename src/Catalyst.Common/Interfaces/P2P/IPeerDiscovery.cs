@@ -22,14 +22,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
-using Gstc.Collections.Observable.Interface;
 using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.P2P

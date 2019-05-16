@@ -21,24 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cryptography;
-using NSec.Cryptography;
+using System.Numerics;
 
-namespace Catalyst.Common.Cryptography
+namespace Catalyst.Common.Extensions
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     NSec specific private key wrapper
-    /// </summary>
-    public sealed class NSecPrivateKeyWrapper
-        : IPrivateKey
+    public static class BigIntegerExtensions
     {
-        private readonly Key _key;
-
-        public NSecPrivateKeyWrapper(Key key) { _key = key; }
-
-        public Key GetNSecFormatPrivateKey() { return _key; }
-
-        public PublicKey GetNSecFormatPublicKey() { return _key.PublicKey; }
+        public static int NumberOfDigits(this BigInteger value)
+        {
+            return (value * value.Sign).ToString().Length;
+        }
     }
 }

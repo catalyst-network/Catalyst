@@ -21,15 +21,33 @@
 
 #endregion
 
-using NSec.Cryptography;
+using Catalyst.Common.Config;
+using Catalyst.Common.Util;
+using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.Modules.Ledger;
 
-namespace Catalyst.Common.Interfaces.Cryptography
+namespace Catalyst.Node.Core.Modules.Ledger
 {
-    /// <summary>
-    ///     Wrapper for private key.
-    /// </summary>
-    public interface IPrivateKey : IPublicKey
+    /// <inheritdoc />
+    public sealed class Account : IAccount
     {
-        Key GetNSecFormatPrivateKey();
+        /// <inheritdoc />
+        [RepositoryPrimaryKey(Order = 1)]
+        public int PkId { get; set; }
+
+        /// <inheritdoc />
+        public string PublicAddress { get; set; }
+
+        /// <inheritdoc />
+        public uint CoinType { get; set; }
+
+        /// <inheritdoc />
+        public AccountTypes AccountType { get; set; }
+
+        /// <inheritdoc />
+        public BigDecimal Balance { get; set; }
+
+        /// <inheritdoc />
+        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
     }
 }
