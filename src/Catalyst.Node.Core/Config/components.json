@@ -13,12 +13,12 @@
             "type": "Catalyst.Common.Rpc.RpcCorrelationCache, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcCorrelationCache, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcCorrelationCache, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Common.Rpc.RpcMessageFactory",
+            "type": "Catalyst.Common.Rpc.RpcMessageFactory, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.IRpcMessageFactory, Catalyst.Common"

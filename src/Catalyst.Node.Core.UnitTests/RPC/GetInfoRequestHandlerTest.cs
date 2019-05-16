@@ -53,7 +53,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly IConfigurationRoot _config;
         private readonly IRpcServerSettings _rpcServerSettings;
         private IRpcCorrelationCache _subbedCorrelationCache;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         public GetInfoRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
@@ -69,7 +68,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -82,7 +80,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var request = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var rpcMessagefactory = new RpcMessageFactory(_subbedCorrelationCache);
+            var request = rpcMessagefactory.GetMessage(new MessageDto(
                 new GetInfoRequest
                 {
                     Query = true
@@ -94,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, subbedCache, _rpcMessageFactory, _logger);
+            var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, subbedCache, rpcMessagefactory, _logger);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

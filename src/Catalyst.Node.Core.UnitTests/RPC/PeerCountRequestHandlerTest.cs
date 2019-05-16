@@ -58,7 +58,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private readonly IChannelHandlerContext _fakeContext;
 
         private IRpcCorrelationCache _subbedCorrelationCache;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
@@ -68,7 +67,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
@@ -115,7 +113,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
-            var handler = new PeerCountRequestHandler(sendPeerIdentifier, subbedCache, peerDiscovery, _rpcMessageFactory, _logger);
+            var handler = new PeerCountRequestHandler(sendPeerIdentifier, subbedCache, peerDiscovery, rpcMessageFactory, _logger);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
