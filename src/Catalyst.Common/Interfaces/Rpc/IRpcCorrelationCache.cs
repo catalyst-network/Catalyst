@@ -21,16 +21,21 @@
 
 #endregion
 
-using Catalyst.Common.Config;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Outbound;
+using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging
+namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface IMessageDto
+    public interface IRpcCorrelationCache : IMessageCorrelationCache
     {
-        MessageTypes MessageType { get; }
-        IMessage Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
+        TimeSpan CacheTtl { get; }
+        void AddPendingRequest(PendingRequest pendingRequest);
+
+        TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
+            where TRequest : class, IMessage<TRequest>
+            where TResponse : class, IMessage<TResponse>;
     }
 }

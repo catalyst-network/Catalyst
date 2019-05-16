@@ -30,8 +30,9 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Serilog.Events;
@@ -59,16 +60,16 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = GetNodeConfig(opts.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            var nodePeerIdentifier = new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                nodeConfig.HostAddress, nodeConfig.Port);
-
             var message = new GetFileFromDfsRequest
             {
                 DfsHash = opts.FileHash
             };
 
-            var messageDto = new RpcMessageFactory<GetFileFromDfsRequest>(_rpcMessageCorrelationCache).GetMessage(message, nodePeerIdentifier,
-                _peerIdentifier, MessageTypes.Ask);
+            var dto = new MessageDto(message, MessageTypes.Ask, new PeerIdentifier(
+                Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
+                nodeConfig.HostAddress, nodeConfig.Port), _peerIdentifier);
+
+            var messageDto = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(dto);
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,

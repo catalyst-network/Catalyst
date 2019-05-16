@@ -29,14 +29,16 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
 using Serilog;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -48,7 +50,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<TransferFileBytesResponse> _rpcMessageFactory;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -58,13 +60,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="rpcMessageFactory"></param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
             IMessageCorrelationCache correlationCache,
-            ILogger logger)
+            ILogger logger,
+            IRpcMessageFactory rpcMessageFactory)
             : base(correlationCache, logger)
         {
-            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>(CorrelationCache);
+            _rpcMessageFactory = rpcMessageFactory;
             _fileTransferFactory = fileTransferFactory;
             _peerIdentifier = peerIdentifier;
         }
@@ -94,11 +98,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
             };
 
-            var responseDto = _rpcMessageFactory.GetMessage(
-                message: responseMessage,
-                recipient: new PeerIdentifier(message.Payload.PeerId),
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Tell,
+            var responseDto = _rpcMessageFactory.GetMessage(new MessageDto(
+                    responseMessage,
+                    MessageTypes.Tell,
+                    new PeerIdentifier(message.Payload.PeerId),
+                    _peerIdentifier),
                 message.Payload.CorrelationId.ToGuid()
             );
 

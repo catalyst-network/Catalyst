@@ -30,16 +30,19 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Dawn;
+using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     /// <summary>
-    /// Handles the PeerListRequest message
+    ///     Handles the PeerListRequest message
     /// </summary>
     /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListRequest, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
@@ -48,32 +51,38 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         /// <summary>
-        /// The peer list
+        ///     repository interface to storage
         /// </summary>
-        private readonly IPeerDiscovery _peerDiscovery;
+        private readonly IRepository<Peer> _peerRepository;
         
-        /// <summary>The peer identifier</summary>
+        /// <summary>
+        ///     The peer identifier
+        /// </summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
-        /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<GetPeerListResponse> _rpcMessageFactory;
+        /// <summary>
+        ///     The RPC message factory
+        /// </summary>
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
+        ///     Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
         /// </summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="messageCorrelationCache">The message correlation cache.</param>
-        /// <param name="peerDiscovery">The peer list</param>
+        /// <param name="peerRepository"></param>
+        /// <param name="rpcMessageFactory"></param>
         public PeerListRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IMessageCorrelationCache messageCorrelationCache,
-            IPeerDiscovery peerDiscovery)
+            IRepository<Peer> peerRepository,
+            IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)
         {
             _peerIdentifier = peerIdentifier;
-            _peerDiscovery = peerDiscovery;
-            _rpcMessageFactory = new RpcMessageFactory<GetPeerListResponse>(CorrelationCache);
+            _peerRepository = peerRepository;
+            _rpcMessageFactory = rpcMessageFactory;
         }
 
         /// <summary>
@@ -84,7 +93,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             Guard.Argument(message).NotNull("Received message cannot be null");
 
-            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
+            ReturnResponse(_peerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
 
             Logger.Debug("received message of type PeerListRequest");
         }
@@ -99,11 +108,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);
             
-            var responseMessage = _rpcMessageFactory.GetMessage(
-                message: response,
-                recipient: new PeerIdentifier(message.Payload.PeerId),
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Tell,
+            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+                    response,
+                    MessageTypes.Tell,
+                    new PeerIdentifier(message.Payload.PeerId),
+                    _peerIdentifier
+                ),
                 message.Payload.CorrelationId.ToGuid()
             );
 

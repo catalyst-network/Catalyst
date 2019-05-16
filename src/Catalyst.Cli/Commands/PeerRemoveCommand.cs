@@ -27,9 +27,10 @@ using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
@@ -58,19 +59,19 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = GetNodeConfig(opts.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
-            var requestMessage = new RpcMessageFactory<RemovePeerRequest>(_rpcMessageCorrelationCache).GetMessage(
-                message: new RemovePeerRequest
+            var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                new RemovePeerRequest
                 {
                     PeerIp = ByteString.CopyFrom(IPAddress.Parse(opts.Ip).To16Bytes()),
                     PublicKey = string.IsNullOrEmpty(opts.PublicKey)
                         ? ByteString.Empty
                         : ByteString.CopyFrom(opts.PublicKey.ToBytesForRLPEncoding())
                 },
-                recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
+                MessageTypes.Ask,
+                new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                     nodeConfig.Port),
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Ask
-            );
+                _peerIdentifier
+            ));
 
             node.SendMessage(requestMessage).Wait();
 

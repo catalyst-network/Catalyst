@@ -29,14 +29,16 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
 using Serilog;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Cli.Handlers
@@ -49,7 +51,7 @@ namespace Catalyst.Cli.Handlers
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<TransferFileBytesResponse> _rpcMessageFactory;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -62,11 +64,12 @@ namespace Catalyst.Cli.Handlers
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IConfigurationRoot config,
             IMessageCorrelationCache correlationCache,
-            ILogger logger)
+            ILogger logger,
+            IRpcMessageFactory rpcMessageFactory)
             : base(correlationCache, logger)
         {
             _fileTransferFactory = fileTransferFactory;
-            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>(correlationCache);
+            _rpcMessageFactory = rpcMessageFactory;
             _peerIdentifier = Commands.Commands.BuildCliPeerId(config);
         }
 
@@ -78,11 +81,12 @@ namespace Catalyst.Cli.Handlers
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
             IMessageCorrelationCache correlationCache,
-            ILogger logger)
+            ILogger logger,
+            IRpcMessageFactory rpcMessageFactory)
             : base(correlationCache, logger)
         {
             _fileTransferFactory = fileTransferFactory;
-            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>(correlationCache);
+            _rpcMessageFactory = rpcMessageFactory;
             _peerIdentifier = peerIdentifier;
         }
 
@@ -112,11 +116,12 @@ namespace Catalyst.Cli.Handlers
                 ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
             };
 
-            var responseDto = _rpcMessageFactory.GetMessage(
-                message: responseMessage,
-                recipient: new PeerIdentifier(message.Payload.PeerId),
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Tell,
+            var responseDto = _rpcMessageFactory.GetMessage(new MessageDto(
+                    responseMessage,
+                    MessageTypes.Tell,
+                    new PeerIdentifier(message.Payload.PeerId),
+                    _peerIdentifier
+                ),
                 message.Payload.CorrelationId.ToGuid()
             );
 

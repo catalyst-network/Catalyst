@@ -21,16 +21,9 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Google.Protobuf;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging
+namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface IMessageDto
-    {
-        MessageTypes MessageType { get; }
-        IMessage Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
-    }
+    public interface IRpcMessageFactory : IMessageFactoryBase { }
 }

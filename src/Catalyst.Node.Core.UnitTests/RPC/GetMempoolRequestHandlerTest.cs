@@ -28,8 +28,10 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -47,15 +49,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMessageCorrelationCache _subbedCorrelationCache;
+        private IRpcCorrelationCache _subbedCorrelationCacche;
 
         public GetMempoolRequestHandlerTest()
         {
+            _subbedCorrelationCacche = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
 
@@ -89,15 +91,17 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 }
             );
 
-            var request = new RpcMessageFactory<GetMempoolRequest>(_subbedCorrelationCache).GetMessage(
+            var rpcFactory = new RpcMessageFactory(_subbedCorrelationCacche);
+            var request = rpcFactory.GetMessage(new MessageDto(
                 new GetMempoolRequest(),
+                MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                MessageTypes.Ask);
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key")
+            ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new GetMempoolRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, subbedCache, _logger);
+            var handler = new GetMempoolRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, subbedCache, rpcFactory, _logger);
             handler.StartObservingMessageStreams(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

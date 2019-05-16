@@ -56,6 +56,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
 
         public GetNeighbourRequestHandlerTests(ITestOutputHelper output) : base(output)
         {
+            _subbedReputableCache = Substitute.For<IReputableCache>();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedReputableCache = Substitute.For<IReputableCache>();
             _subbedPeerRepository = Substitute.For<IRepository<Peer>>();

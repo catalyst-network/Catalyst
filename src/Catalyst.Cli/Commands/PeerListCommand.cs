@@ -26,8 +26,9 @@ using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 
@@ -56,13 +57,13 @@ namespace Catalyst.Cli.Commands
             
             try
             {
-                var requestMessage = new RpcMessageFactory<GetPeerListRequest>(_rpcMessageCorrelationCache).GetMessage(
-                    message: new GetPeerListRequest(),
-                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
+                var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                    new GetPeerListRequest(),
+                    MessageTypes.Ask,
+                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
-                    sender: _peerIdentifier,
-                    messageType: MessageTypes.Ask
-                );
+                    _peerIdentifier
+                ));
 
                 node.SendMessage(requestMessage).Wait();
             }

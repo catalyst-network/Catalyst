@@ -31,8 +31,10 @@ using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -52,10 +54,11 @@ namespace Catalyst.Cli.UnitTests
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
-        private readonly IMessageCorrelationCache _subbedCorrelationCache;
+        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static GetInfoResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -76,7 +79,7 @@ namespace Catalyst.Cli.UnitTests
 
         public GetInfoResponseHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
@@ -96,21 +99,20 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
-            var correlationCache = Substitute.For<IMessageCorrelationCache>();
-
-            var response = new RpcMessageFactory<GetInfoResponse>(_subbedCorrelationCache).GetMessage(
-                new GetInfoResponse
-                {
-                    Query = query
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                MessageTypes.Tell,
+            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+                    new GetInfoResponse
+                    {
+                        Query = query
+                    },
+                    MessageTypes.Tell,
+                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender")
+                ),
                 Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _requestHandler = new GetInfoResponseHandler(_output, correlationCache, _logger);
+            _requestHandler = new GetInfoResponseHandler(_output, _subbedCorrelationCache, _logger);
             _requestHandler.StartObservingMessageStreams(messageStream);
 
             _output.Received(1).WriteLine(query);

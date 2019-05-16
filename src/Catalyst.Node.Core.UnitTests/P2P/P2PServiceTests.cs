@@ -35,6 +35,7 @@ using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
@@ -78,7 +79,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _pingRequest = new PingRequest();
 
             ConfigureContainerBuilder(_config, true, true);
-
+            
             _container = ContainerBuilder.Build();
             _reputableCache = _container.Resolve<IReputableCache>();
         }
@@ -131,13 +132,14 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
 
-                    var datagramEnvelope = new P2PMessageFactory<PingResponse>(_reputableCache).GetMessageInDatagramEnvelope(
-                        new PingResponse(),
-                        new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
-                            peerSettings.Port),
-                        new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
-                            peerSettings.Port),
-                        MessageTypes.Tell,
+                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
+                            new PingResponse(),
+                            MessageTypes.Tell,
+                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
+                                peerSettings.Port),
+                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
+                                peerSettings.Port)
+                        ),
                         Guid.NewGuid()
                     );
                     
@@ -174,11 +176,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
                     
-                    var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse>(_reputableCache).GetMessageInDatagramEnvelope(
-                        new PeerNeighborsResponse(),
-                        new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
-                        new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
-                        MessageTypes.Tell,
+                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
+                            new PeerNeighborsResponse(),
+                            MessageTypes.Tell,
+                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
+                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
+                        ),
                         Guid.NewGuid()
                     );
                     

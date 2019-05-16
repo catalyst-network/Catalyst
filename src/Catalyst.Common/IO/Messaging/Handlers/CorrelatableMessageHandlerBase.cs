@@ -55,21 +55,20 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
             if (!nextHandler)
             {
-                Logger.Debug("handle message in correlatable handler");
-                try
-                {
-                    Handler(message);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e,
-                        "Failed to handle CorrelatableMessageHandlerBase after receiving message {0}", message);
-                    message.Context.Channel.CloseAsync();
-                }
+                return;
             }
             
             Logger.Debug("handle message in correlatable handler");
-            Handler(message);
+            try
+            {
+                Handler(message);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e,
+                    "Failed to handle CorrelatableMessageHandlerBase after receiving message {0}", message);
+                message.Context.Channel.CloseAsync();
+            }
         }
     }
 }

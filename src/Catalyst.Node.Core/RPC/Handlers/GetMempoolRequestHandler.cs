@@ -32,8 +32,10 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
@@ -46,13 +48,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IMempool _mempool;
         private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         public GetMempoolRequestHandler(IPeerIdentifier peerIdentifier,
             IMempool mempool,
             IMessageCorrelationCache messageCorrelationCache,
+            IRpcMessageFactory rpcMessageFactory,
             ILogger logger)
             : base(messageCorrelationCache, logger)
         {
+            _rpcMessageFactory = rpcMessageFactory;
             _mempool = mempool;
             _peerIdentifier = peerIdentifier;
         }
@@ -71,14 +76,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
 
-                var response = new RpcMessageFactory<GetMempoolResponse>(CorrelationCache).GetMessage(
-                    new GetMempoolResponse
-                    {
-                        Mempool = {GetMempoolContent()}
-                    },
-                    new PeerIdentifier(message.Payload.PeerId),
-                    _peerIdentifier,
-                    MessageTypes.Tell,
+                var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                        new GetMempoolResponse
+                        {
+                            Mempool = {GetMempoolContent()}
+                        },
+                        MessageTypes.Tell,
+                        new PeerIdentifier(message.Payload.PeerId),
+                        _peerIdentifier),
                     message.Payload.CorrelationId.ToGuid());
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();

@@ -43,6 +43,7 @@ using System.Collections.Generic;
 using System.Reactive;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Common.IO.Messaging;
 using Google.Protobuf;
 using Peer = Catalyst.Common.P2P.Peer;
 
@@ -370,13 +371,14 @@ namespace Catalyst.Node.Core.P2P
         /// <returns></returns>
         private AnySigned BuildPingRequestDatagram(IPeerIdentifier currentPeerNeighbour)
         {
-            return new P2PMessageFactory<PingRequest>(_p2PCorrelationCache).GetMessage(
-                new PingRequest(),
-                new PeerIdentifier(currentPeerNeighbour.PublicKey, currentPeerNeighbour.Ip,
-                    currentPeerNeighbour.Port),
-                new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
-                    _peerSettings.Port),
-                MessageTypes.Ask
+            return new P2PMessageFactory(_p2PCorrelationCache).GetMessage(new MessageDto(
+                    new PingRequest(),
+                    MessageTypes.Ask,
+                    new PeerIdentifier(currentPeerNeighbour.PublicKey, currentPeerNeighbour.Ip,
+                        currentPeerNeighbour.Port),
+                    new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
+                        _peerSettings.Port)
+                )
             );
         }
         
@@ -386,14 +388,14 @@ namespace Catalyst.Node.Core.P2P
         /// <returns></returns>
         private IByteBufferHolder BuildPeerNeighbourRequestDatagram()
         {
-            return new P2PMessageFactory<PeerNeighborsRequest>(_p2PCorrelationCache).GetMessageInDatagramEnvelope(
+            return new P2PMessageFactory(_p2PCorrelationCache).GetMessageInDatagramEnvelope(new MessageDto(
                 new PeerNeighborsRequest(),
+                MessageTypes.Ask,
                 new PeerIdentifier(CurrentPeer.PublicKey, CurrentPeer.Ip,
                     CurrentPeer.Port),
                 new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(), _peerSettings.BindAddress,
-                    _peerSettings.Port),
-                MessageTypes.Ask
-            );
+                    _peerSettings.Port)
+            ));
         }
 
         /// <inheritdoc />

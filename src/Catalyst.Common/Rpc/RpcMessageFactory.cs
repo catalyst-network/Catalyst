@@ -21,16 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.Config;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging
+namespace Catalyst.Common.Rpc
 {
-    public interface IMessageDto
+    /// <inheritdoc cref="IRpcMessageFactory" />
+    /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactoryBase`1" />
+    public sealed class RpcMessageFactory : MessageFactoryBase, IRpcMessageFactory
     {
-        MessageTypes MessageType { get; }
-        IMessage Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
+        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
     }
 }

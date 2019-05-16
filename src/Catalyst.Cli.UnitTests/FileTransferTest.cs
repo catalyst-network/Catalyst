@@ -41,7 +41,8 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Rpc;
 using Google.Protobuf;
 using Polly;
 using Xunit.Abstractions;
@@ -55,7 +56,8 @@ namespace Catalyst.Cli.UnitTests
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _fileDownloadFactory;
         private readonly IDfs _dfs;
-        private readonly IMessageCorrelationCache _cache;
+        private readonly IRpcCorrelationCache _cache;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         public FileTransferTest(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -68,7 +70,8 @@ namespace Catalyst.Cli.UnitTests
 
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _cache = Substitute.For<IMessageCorrelationCache>();
+            _cache = Substitute.For<IRpcCorrelationCache>();
+            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
             _fileDownloadFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
             _dfs = Substitute.For<IDfs>();
@@ -97,7 +100,7 @@ namespace Catalyst.Cli.UnitTests
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _cache, _logger);
+                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _cache, _logger, _rpcMessageFactory);
 
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
@@ -125,7 +128,7 @@ namespace Catalyst.Cli.UnitTests
                     nodePeer,
                     _fakeContext.Channel,
                     correlationGuid,
-                    new RpcMessageFactory<TransferFileBytesRequest>(_cache));
+                    new RpcMessageFactory(_cache));
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {

@@ -53,12 +53,12 @@ namespace Catalyst.Cli.Commands
         private readonly ICertificateStore _certificateStore;
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
-        private readonly IMessageCorrelationCache _rpcMessageCorrelationCache;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
+        private readonly IRpcCorrelationCache _rpcMessageCorrelationCache;
 
         /// <summary>
         /// </summary>
@@ -66,7 +66,7 @@ namespace Catalyst.Cli.Commands
             IConfigurationRoot config,
             ILogger logger,
             ICertificateStore certificateStore,
-            IMessageCorrelationCache rpcMessageCorrelationCache,
+            IRpcCorrelationCache rpcMessageCorrelationCache,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)
@@ -81,7 +81,6 @@ namespace Catalyst.Cli.Commands
             _uploadFileTransferFactory = uploadFileTransferFactory;
             _peerIdentifier = BuildCliPeerId(config);
             _userOutput = userOutput;
-
             _userOutput.WriteLine(@"Koopa Shell Start");
         }
 

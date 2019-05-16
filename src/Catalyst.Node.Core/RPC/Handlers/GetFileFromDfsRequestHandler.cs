@@ -38,8 +38,10 @@ using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -53,7 +55,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<GetFileFromDfsResponse> _rpcMessageFactory;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
@@ -76,10 +78,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IPeerIdentifier peerIdentifier,
             IUploadFileTransferFactory fileTransferFactory,
             IMessageCorrelationCache correlationCache,
+            IRpcMessageFactory rpcMessageFactory,
             ILogger logger) : base(correlationCache, logger)
         {
-            _correlationCache = correlationCache;
-            _rpcMessageFactory = new RpcMessageFactory<GetFileFromDfsResponse>(_correlationCache);
+            _rpcMessageFactory = rpcMessageFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
@@ -113,7 +115,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                         recipientPeerIdentifier,
                         message.Context.Channel,
                         correlationGuid,
-                        new RpcMessageFactory<TransferFileBytesRequest>(_correlationCache)
+                        _rpcMessageFactory
                     );
                     responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
                 }
@@ -155,11 +157,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
             };
 
             // Send Response
-            var responseMessage = _rpcMessageFactory.GetMessage(
-                message: response,
-                recipient: recipientIdentifier,
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Tell,
+            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+                    response,
+                    MessageTypes.Tell,
+                    recipientIdentifier,
+                    _peerIdentifier
+                ),
                 correlationGuid
             );
 
