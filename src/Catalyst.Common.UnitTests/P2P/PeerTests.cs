@@ -38,8 +38,9 @@ namespace Catalyst.Common.UnitTests.P2P
             var peer = new Peer();
             repo.Add(peer);
             var retrievedPeer = repo.Get(peer.PkId);
-            DateTime now = DateTime.UtcNow;
-            retrievedPeer.Created.Should().BeSameDateAs(now);
+            DateTime now = DateTime.UtcNow.Date;
+            var datecomparer = retrievedPeer.Created.Date.ToString("MM/dd/yyyy");
+            datecomparer.Should().Equals(now.ToString("MM/dd/yyyy"));
             retrievedPeer.Modified.Should().BeNull();
         }
         
@@ -53,8 +54,9 @@ namespace Catalyst.Common.UnitTests.P2P
             retrievedPeer.Touch();
             repo.Update(retrievedPeer);
             var retrievedmodified = repo.Get(peer.PkId);
-            DateTime now = DateTime.UtcNow;
-            retrievedmodified.Modified.Should().BeSameDateAs(now);
+            DateTime now = DateTime.UtcNow.Date;
+            var dateComparer = retrievedmodified.Modified?.Date.ToString("MM/dd/yyyy");
+            dateComparer.Should().Equals(now.ToString("MM/dd/yyyy"));
         }
     }
 }
