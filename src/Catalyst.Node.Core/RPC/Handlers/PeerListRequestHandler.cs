@@ -36,12 +36,13 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Rpc;
 using Dawn;
+using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     /// <summary>
-    /// Handles the PeerListRequest message
+    ///     Handles the PeerListRequest message
     /// </summary>
     /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListRequest, IMessageCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
@@ -50,33 +51,37 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         /// <summary>
-        /// The peer list
-        /// @TODO THIS NEEDS TO GO RESOLVE IREPOSITORU
+        ///     repository interface to storage
         /// </summary>
-        private readonly IPeerDiscovery _peerDiscovery;
+        private readonly IRepository<Peer> _peerRepository;
         
-        /// <summary>The peer identifier</summary>
+        /// <summary>
+        ///     The peer identifier
+        /// </summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
-        /// <summary>The RPC message factory</summary>
+        /// <summary>
+        ///     The RPC message factory
+        /// </summary>
         private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
+        ///     Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
         /// </summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="messageCorrelationCache">The message correlation cache.</param>
-        /// <param name="peerDiscovery">The peer list</param>
+        /// <param name="peerRepository"></param>
+        /// <param name="rpcMessageFactory"></param>
         public PeerListRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IMessageCorrelationCache messageCorrelationCache,
-            IPeerDiscovery peerDiscovery,
+            IRepository<Peer> peerRepository,
             IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)
         {
             _peerIdentifier = peerIdentifier;
-            _peerDiscovery = peerDiscovery;
+            _peerRepository = peerRepository;
             _rpcMessageFactory = rpcMessageFactory;
         }
 
@@ -88,7 +93,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             Guard.Argument(message).NotNull("Received message cannot be null");
 
-            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
+            ReturnResponse(_peerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId), message);
 
             Logger.Debug("received message of type PeerListRequest");
         }

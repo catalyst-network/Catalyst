@@ -43,7 +43,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
     {
         private readonly IRepository<Peer> _repository;
         private readonly IPeerIdentifier _peerIdentifier;
-        private IReputableCache _reputableCache;
+        private readonly IReputableCache _reputableCache;
 
         public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier,
             IRepository<Peer> repository,
