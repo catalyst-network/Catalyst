@@ -65,7 +65,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         }
 
         /// <inheritdoc/>
-        public void StartGossip(IChanneledMessage<AnySigned> message)
+        public void Handle(IChanneledMessage<AnySigned> message)
         {
             var correlationId = message.Payload.CorrelationId.ToGuid();
             var gossipCount = _gossipCache.GetGossipCount(correlationId);

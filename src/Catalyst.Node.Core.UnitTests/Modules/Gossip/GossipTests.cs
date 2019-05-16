@@ -107,7 +107,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             var pingRequest = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
             var message = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, pingRequest);
             pingRequestHandler.StartObserving(message);
-            gossipMessageHandler.ReceivedWithAnyArgs(1).StartGossip(default);
+            gossipMessageHandler.ReceivedWithAnyArgs(1).Handle(default);
         }
 
         [Theory]
@@ -134,14 +134,14 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             );
 
             var channeledMessage = new ChanneledAnySigned(_fakeContext, messageDto);
-            gossipMessageHandler.StartGossip(channeledMessage);
+            gossipMessageHandler.Handle(channeledMessage);
             cache.TryGetValue(correlationId, out PendingRequest value);
             value.GossipCount.Should().Be(Constants.MaxGossipPeers);
             value.ReceivedCount.Should().Be(0);
 
             for (int i = 0; i < receivedCount; i++)
             {
-                gossipMessageHandler.StartGossip(channeledMessage);
+                gossipMessageHandler.Handle(channeledMessage);
             }
 
             cache.TryGetValue(correlationId, out value);
@@ -164,7 +164,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             );
             var channeledMessage = new ChanneledAnySigned(_fakeContext, messageDto);
 
-            gossipMessageHandler.StartGossip(channeledMessage);
+            gossipMessageHandler.Handle(channeledMessage);
             return messageDto.CorrelationId.ToGuid();
         }
 

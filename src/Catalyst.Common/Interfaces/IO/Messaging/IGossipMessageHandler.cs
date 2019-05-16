@@ -33,6 +33,6 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
     {
         /// <summary>Starts the gossip.</summary>
         /// <param name="message">The message.</param>
-        void StartGossip(IChanneledMessage<AnySigned> message);
+        void Handle(IChanneledMessage<AnySigned> message);
     }
 }

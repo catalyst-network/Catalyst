@@ -60,7 +60,7 @@ namespace Catalyst.Common.IO.Messaging
         {
             Logger.Debug("Pre Handle Message Called");
             Handler(message);
-            GossipHandler?.StartGossip(message);
+            GossipHandler?.Handle(message);
         }
 
         public virtual void HandleCompleted()
