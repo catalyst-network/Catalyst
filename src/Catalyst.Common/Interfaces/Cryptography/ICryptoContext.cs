@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+
 namespace Catalyst.Common.Interfaces.Cryptography
 {
     public interface ICryptoContext
