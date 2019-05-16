@@ -68,17 +68,20 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         public void StartGossip(IChanneledMessage<AnySigned> message)
         {
             var correlationId = message.Payload.CorrelationId.ToGuid();
-            if (!_gossipCache.CanGossip(correlationId))
-            {
-                if (_gossipCache.GetGossipCount(correlationId) != -1)
-                {
-                    _gossipCache.IncrementReceivedCount(correlationId, 1);
-                }
+            var gossipCount = _gossipCache.GetGossipCount(correlationId);
+            var canGossip = _gossipCache.CanGossip(correlationId);
 
+            if (gossipCount != -1)
+            {
+                _gossipCache.IncrementReceivedCount(correlationId, 1);
+            }
+
+            if (!canGossip)
+            {
                 return;
             }
-            
-            if (_gossipCache.GetGossipCount(correlationId) == -1)
+
+            if (gossipCount == -1)
             {
                 var request = new PendingRequest
                 {
@@ -88,10 +91,6 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                     ReceivedCount = 0
                 };
                 _gossipCache.AddPendingRequest(request);
-            }
-            else
-            {
-                _gossipCache.IncrementReceivedCount(correlationId, 1);
             }
 
             Gossip(message);
