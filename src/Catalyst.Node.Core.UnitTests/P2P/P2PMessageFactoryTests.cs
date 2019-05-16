@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
@@ -43,12 +44,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidPingRequestMessage()
         {
-            var pingRequestDatagram = new P2PMessageFactory<PingRequest>(_subbedReputationCache).GetMessageInDatagramEnvelope(
+            var pingRequestDatagram = new P2PMessageFactory(_subbedReputationCache).GetMessageInDatagramEnvelope(new MessageDto( 
                 new PingRequest(),
+                MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                MessageTypes.Ask
-            );
+                PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
+            ));
 
             pingRequestDatagram.Should().BeAssignableTo(typeof(IByteBufferHolder));
             pingRequestDatagram.Content.Should().BeAssignableTo(typeof(IByteBuffer));
@@ -57,11 +58,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidPingResponseMessage()
         {
-            var pingResponseDatagram = new P2PMessageFactory<PingResponse>(_subbedReputationCache).GetMessageInDatagramEnvelope(
-                new PingResponse(),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                MessageTypes.Tell,
+            var pingResponseDatagram = new P2PMessageFactory(_subbedReputationCache).GetMessageInDatagramEnvelope(new MessageDto(
+                    new PingResponse(),
+                    MessageTypes.Tell,
+                    PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
+                    PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
+                ),
                 Guid.NewGuid()
             );
 
@@ -72,12 +74,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidTransactionMessage()
         {
-            var transactionDatagram = new P2PMessageFactory<Transaction>(_subbedReputationCache).GetMessageInDatagramEnvelope(
+            var transactionDatagram = new P2PMessageFactory(_subbedReputationCache).GetMessageInDatagramEnvelope(new MessageDto(
                 new Transaction(),
+                MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                MessageTypes.Ask
-            );
+                PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
+            ));
 
             transactionDatagram.Should().BeAssignableTo(typeof(IByteBufferHolder));
             transactionDatagram.Content.Should().BeAssignableTo(typeof(IByteBuffer));

@@ -57,8 +57,9 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly IDfs _dfs;
-        private readonly IMessageCorrelationCache _cache;
+        private readonly IRpcCorrelationCache _cache;
         private readonly IpfsAdapter _ipfsEngine;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         public FileTransferNodeTests(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -71,7 +72,8 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _cache = Substitute.For<IMessageCorrelationCache>();
+            _cache = Substitute.For<IRpcCorrelationCache>();
+            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
 
             var passwordReader = new TestPasswordReader("abcd");
@@ -87,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var sender = PeerIdHelper.GetPeerId("sender");
             var cache = Substitute.For<IMessageCorrelationCache>();
             var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
-                _nodeFileTransferFactory, cache, _logger);
+                _nodeFileTransferFactory, cache, _rpcMessageFactory, _logger);
 
             //Create a response object and set its return value
             var request = new AddFileToDfsRequest
@@ -162,9 +164,9 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             var recipientPeerId = new PeerIdentifier(recipient);
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
             var addFileToDfsRequestHandler = new AddFileToDfsRequestHandler(_dfs, senderPeerId, _nodeFileTransferFactory,
-                _cache, _logger);
+                _cache, _rpcMessageFactory, _logger);
             var transferBytesRequestHandler =
-                new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _cache, _logger);
+                new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _cache, _logger, _rpcMessageFactory);
             var uniqueFileKey = Guid.NewGuid();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             
@@ -186,7 +188,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-                    fakeNode.Channel, uniqueFileKey, new RpcMessageFactory<TransferFileBytesRequest>(_cache));
+                    fakeNode.Channel, uniqueFileKey, new RpcMessageFactory(_cache));
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
                     fileUploadInformation.GetUploadMessageDto(i)

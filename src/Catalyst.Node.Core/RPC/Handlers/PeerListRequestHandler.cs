@@ -31,6 +31,8 @@ using Catalyst.Protocol.Rpc.Node;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Rpc;
 using Dawn;
@@ -49,6 +51,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         /// <summary>
         /// The peer list
+        /// @TODO THIS NEEDS TO GO RESOLVE IREPOSITORU
         /// </summary>
         private readonly IPeerDiscovery _peerDiscovery;
         
@@ -56,7 +59,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<GetPeerListResponse> _rpcMessageFactory;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
@@ -68,12 +71,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public PeerListRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IMessageCorrelationCache messageCorrelationCache,
-            IPeerDiscovery peerDiscovery)
+            IPeerDiscovery peerDiscovery,
+            IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)
         {
             _peerIdentifier = peerIdentifier;
             _peerDiscovery = peerDiscovery;
-            _rpcMessageFactory = new RpcMessageFactory<GetPeerListResponse>(_correlationCache);
+            _rpcMessageFactory = rpcMessageFactory;
         }
 
         /// <summary>
@@ -99,11 +103,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);
             
-            var responseMessage = _rpcMessageFactory.GetMessage(
-                message: response,
-                recipient: new PeerIdentifier(message.Payload.PeerId),
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Tell,
+            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+                    response,
+                    MessageTypes.Tell,
+                    new PeerIdentifier(message.Payload.PeerId),
+                    _peerIdentifier
+                ),
                 message.Payload.CorrelationId.ToGuid()
             );
 

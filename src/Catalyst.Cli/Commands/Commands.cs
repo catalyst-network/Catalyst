@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
-        private readonly IMessageCorrelationCache _rpcMessageCorrelationCache;
+        private readonly IRpcCorrelationCache _rpcMessageCorrelationCache;
 
         /// <summary>
         /// </summary>
@@ -66,7 +66,7 @@ namespace Catalyst.Cli.Commands
             IConfigurationRoot config,
             ILogger logger,
             ICertificateStore certificateStore,
-            IMessageCorrelationCache rpcMessageCorrelationCache,
+            IRpcCorrelationCache rpcMessageCorrelationCache,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)

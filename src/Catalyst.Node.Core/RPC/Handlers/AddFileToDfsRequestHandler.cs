@@ -39,6 +39,8 @@ using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Rpc;
 
@@ -53,7 +55,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
-        private readonly RpcMessageFactory<AddFileToDfsResponse> _rpcMessageFactory;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
@@ -69,14 +71,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="correlationCache">The correlation cache.</param>
+        /// <param name="rpcMessageFactory"></param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IDownloadFileTransferFactory fileTransferFactory,
             IMessageCorrelationCache correlationCache,
+            IRpcMessageFactory rpcMessageFactory,
             ILogger logger) : base(correlationCache, logger)
         {
-            _rpcMessageFactory = new RpcMessageFactory<AddFileToDfsResponse>(correlationCache);
+            _rpcMessageFactory = rpcMessageFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
@@ -183,11 +187,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
             };
 
             // Send Response
-            var responseMessage = _rpcMessageFactory.GetMessage(
-                message: response,
-                recipient: fileTransferInformation.RecipientIdentifier,
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Tell,
+            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+                    response,
+                    MessageTypes.Tell,
+                    fileTransferInformation.RecipientIdentifier,
+                    _peerIdentifier
+                ),
                 correlationGuid
             );
 

@@ -57,11 +57,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
             Logger.Debug("message content is {0}", deserialised);
 
-            var datagramEnvelope = new P2PMessageFactory<PingResponse>(_reputableCache).GetMessageInDatagramEnvelope(
-                message: new PingResponse(),
-                recipient: new PeerIdentifier(message.Payload.PeerId),
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Tell,
+            var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
+                    new PingResponse(),
+                    MessageTypes.Tell,
+                    new PeerIdentifier(message.Payload.PeerId),
+                    _peerIdentifier),
                 message.Payload.CorrelationId.ToGuid()
             );
 

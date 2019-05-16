@@ -26,6 +26,7 @@ using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.Util;
@@ -63,17 +64,17 @@ namespace Catalyst.Cli.Commands
 
                 Guard.Argument(node).NotNull();
 
-                var requestMessage = new RpcMessageFactory<GetPeerReputationRequest>(_rpcMessageCorrelationCache).GetMessage(
-                    messageType: MessageTypes.Ask,
-                    message: new GetPeerReputationRequest
+                var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                    new GetPeerReputationRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
                         Ip = peerIp.ToBytesForRLPEncoding().ToByteString()
                     },
-                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
+                    MessageTypes.Ask,
+                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
-                    sender: _peerIdentifier
-                );
+                    _peerIdentifier
+                ));
 
                 node.SendMessage(requestMessage).Wait();
             }

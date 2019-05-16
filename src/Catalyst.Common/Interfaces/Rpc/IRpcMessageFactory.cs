@@ -21,7 +21,9 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Messaging;
+
 namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface IRpcMessageFactory { }
+    public interface IRpcMessageFactory : IMessageFactoryBase { }
 }

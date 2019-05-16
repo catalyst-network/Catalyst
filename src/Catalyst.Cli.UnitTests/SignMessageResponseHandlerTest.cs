@@ -29,6 +29,8 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
@@ -49,7 +51,7 @@ namespace Catalyst.Cli.UnitTests
         
         private readonly IUserOutput _output;
         private SignMessageResponseHandler _handler;
-        private static IMessageCorrelationCache _subbedCorrelationCache;
+        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         //@TODO why not mock the actual response object? if we ever change it then the test will pass but fail in real world
         public struct SignedResponse
@@ -61,7 +63,7 @@ namespace Catalyst.Cli.UnitTests
 
         static SignMessageResponseHandlerTest()
         {   
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[]
@@ -100,16 +102,16 @@ namespace Catalyst.Cli.UnitTests
         {   
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<SignMessageResponse>(_subbedCorrelationCache).GetMessage(
-                new SignMessageResponse
-                {
-                    OriginalMessage = signedResponse.OriginalMessage,
-                    PublicKey = signedResponse.PublicKey,
-                    Signature = signedResponse.Signature
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                MessageTypes.Tell,
+            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+                    new SignMessageResponse
+                    {
+                        OriginalMessage = signedResponse.OriginalMessage,
+                        PublicKey = signedResponse.PublicKey,
+                        Signature = signedResponse.Signature
+                    },
+                    MessageTypes.Tell,
+                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender_key")),                
                 Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);

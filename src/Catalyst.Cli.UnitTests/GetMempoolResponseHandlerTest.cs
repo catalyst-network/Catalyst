@@ -31,6 +31,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
@@ -52,11 +54,11 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly IUserOutput _output;
         private GetMempoolResponseHandler _handler;
-        private static IMessageCorrelationCache _subbedCorrelationCache;
+        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static GetMempoolResponseHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             var memPoolData = CreateMemPoolData();
 
             QueryContents = new List<object[]>
@@ -113,14 +115,15 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
 
-            var response = new RpcMessageFactory<GetMempoolResponse>(_subbedCorrelationCache).GetMessage(
-                new GetMempoolResponse
-                {
-                    Mempool = {txList}
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                MessageTypes.Tell,
+            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+                    new GetMempoolResponse
+                    {
+                        Mempool = {txList}
+                    },
+                    MessageTypes.Tell,
+                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender_key")
+                ),
                 Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);

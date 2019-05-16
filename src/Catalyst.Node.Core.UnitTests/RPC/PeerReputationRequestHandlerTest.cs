@@ -40,6 +40,8 @@ using SharpRepository.Repository;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Nethereum.RLP;
 using Catalyst.Common.Util;
@@ -57,14 +59,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
-        private IMessageCorrelationCache _subbedCorrelationCache;
+        private IRpcCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
         /// </summary>
         public PeerReputationRequestHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
@@ -130,19 +132,19 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var rpcMessageFactory = new RpcMessageFactory<GetPeerReputationRequest>(_subbedCorrelationCache);
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
             var request = new GetPeerReputationRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = ipAddress.ToBytesForRLPEncoding().ToByteString()
             };
 
-            var requestMessage = rpcMessageFactory.GetMessage(
-                message: request,
-                recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sender: sendPeerIdentifier,
-                messageType: MessageTypes.Ask
-            );
+            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto(
+                request,
+                MessageTypes.Ask,
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                sendPeerIdentifier
+            ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();

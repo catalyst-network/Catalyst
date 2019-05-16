@@ -28,6 +28,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -51,11 +52,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
         private readonly IRpcServerSettings _rpcServerSettings;
-        private IMessageCorrelationCache _subbedCorrelationCache;
+        private IRpcCorrelationCache _subbedCorrelationCache;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         public GetInfoRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -67,6 +69,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -79,18 +82,19 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var request = new RpcMessageFactory<GetInfoRequest>(_subbedCorrelationCache).GetMessage(
+            var request = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                 new GetInfoRequest
                 {
                     Query = true
                 },
+                MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                MessageTypes.Ask);
+                PeerIdentifierHelper.GetPeerIdentifier("sender")
+            ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, subbedCache, _logger);
+            var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, subbedCache, _rpcMessageFactory, _logger);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

@@ -26,6 +26,8 @@ using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
@@ -44,13 +46,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private IMessageCorrelationCache _subbedCorrelationCache;
+        private IRpcCorrelationCache _subbedCorrelationCache;
+        private IRpcMessageFactory _rpcMessageFactory;
 
         public GetVersionRequestHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -60,15 +64,15 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
         {
-            var request = new RpcMessageFactory<VersionRequest>(_subbedCorrelationCache).GetMessage(
+            var request = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                 new VersionRequest(),
+                MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("recepient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                MessageTypes.Ask);
+                PeerIdentifierHelper.GetPeerIdentifier("sender")));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, subbedCache);
+            var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, subbedCache, _rpcMessageFactory);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

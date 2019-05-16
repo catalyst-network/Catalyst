@@ -37,8 +37,7 @@ namespace Catalyst.Common.IO.Messaging
     /// <summary>
     /// The base class to handle building of AnySigned messages
     /// </summary>
-    /// <typeparam name="TMessage">The type of the message.</typeparam>
-    public abstract class MessageFactoryBase
+    public abstract class MessageFactoryBase : IMessageFactoryBase
     {
         private readonly IMessageCorrelationCache _messageCorrelationCache;
 

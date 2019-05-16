@@ -29,6 +29,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
@@ -48,11 +50,11 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private GetVersionResponseHandler _handler;
-        private static IMessageCorrelationCache _subbedCorrelationCache;
+        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static GetVersionResponseHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[]
@@ -83,14 +85,15 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<VersionResponse>(_subbedCorrelationCache).GetMessage(
-                new VersionResponse
-                {
-                    Version = version
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("recpient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"), 
-                MessageTypes.Tell,
+            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+                    new VersionResponse
+                    {
+                        Version = version
+                    },
+                    MessageTypes.Tell,
+                    PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                    PeerIdentifierHelper.GetPeerIdentifier("sender")
+                ),
                 Guid.NewGuid());
 
             var messageStream = CreateStreamWithMessage(response);
