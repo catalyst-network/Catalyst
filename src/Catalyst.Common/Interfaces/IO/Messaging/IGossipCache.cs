@@ -28,7 +28,7 @@ using Catalyst.Common.IO.Outbound;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IGossipCacheBase
+    public interface IGossipCache
     {
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
         /// <param name="correlationId">The correlation identifier.</param>

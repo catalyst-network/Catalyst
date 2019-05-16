@@ -35,8 +35,8 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class GossipCacheBase
-        : MessageCorrelationCacheBase, IGossipCacheBase
+    public class GossipCache
+        : MessageCorrelationCacheBase, IGossipCache
     {
         /// <summary>The peer discovery</summary>
         private readonly IPeerDiscovery _peerDiscovery;
@@ -44,24 +44,18 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
-        /// <summary>Initializes a new instance of the <see cref="GossipCacheBase"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="GossipCache"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerDiscovery">The peer discovery.</param>
         /// <param name="cache">The cache.</param>
         /// <param name="logger">The logger.</param>
-        public GossipCacheBase(IPeerIdentifier peerIdentifier,
+        public GossipCache(IPeerIdentifier peerIdentifier,
             IPeerDiscovery peerDiscovery,
             IMemoryCache cache,
             ILogger logger) : base(cache, logger, TimeSpan.FromMinutes(10))
         {
             _peerDiscovery = peerDiscovery;
             _peerIdentifier = peerIdentifier;
-        }
-
-        /// <inheritdoc cref="IGossipCacheBase" />
-        public override void AddPendingRequest(PendingRequest pendingRequest)
-        {
-            PendingRequests.Set(pendingRequest.Content.CorrelationId.ToGuid() + "gossip", pendingRequest, EntryOptions);
         }
 
         /// <inheritdoc/>
@@ -88,7 +82,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <inheritdoc/>
         public bool CanGossip(Guid correlationId)
         {
-            var found = PendingRequests.TryGetValue(correlationId + "gossip", out PendingRequest request);
+            var found = PendingRequests.TryGetValue(correlationId, out PendingRequest request);
 
             // Request does not exist, we can gossip this message
             if (!found)
@@ -128,6 +122,12 @@ namespace Catalyst.Common.IO.Messaging
         }
 
         /// <inheritdoc/>
+        public override void AddPendingRequest(PendingRequest pendingRequest)
+        {
+            PendingRequests.Set(pendingRequest.Content.CorrelationId.ToGuid(), pendingRequest, EntryOptions);
+        }
+
+        /// <inheritdoc/>
         public void IncrementReceivedCount(Guid correlationId, int updateCount)
         {
             var request = GetPendingRequestValue(correlationId);
@@ -151,7 +151,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <returns></returns>
         private PendingRequest GetPendingRequestValue(Guid guid)
         {
-            PendingRequests.TryGetValue(guid + "gossip", out PendingRequest request);
+            PendingRequests.TryGetValue(guid, out PendingRequest request);
             return request;
         }
     }

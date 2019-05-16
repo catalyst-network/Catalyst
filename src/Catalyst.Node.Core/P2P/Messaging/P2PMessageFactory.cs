@@ -60,14 +60,9 @@ namespace Catalyst.Node.Core.P2P.Messaging
         /// <exception cref="T:System.ArgumentException">unknown message type</exception>
         public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, MessageTypes messageType, Guid correlationId = default)
         {
-            if (messageType == MessageTypes.Gossip)
-            {
-                return BuildGossipMessage(GetMessageDto(message, recipient, sender), correlationId);
-            }
-            else
-            {
-                return base.GetMessage(message, recipient, sender, messageType, correlationId);
-            }
+            return messageType == MessageTypes.Gossip
+                ? BuildGossipMessage(GetMessageDto(message, recipient, sender), correlationId)
+                : base.GetMessage(message, recipient, sender, messageType, correlationId);
         }
 
         /// <inheritdoc />

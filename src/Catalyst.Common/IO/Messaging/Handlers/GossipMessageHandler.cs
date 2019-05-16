@@ -43,7 +43,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
     public class GossipMessageHandler<TProto> : IGossipMessageHandler where TProto : class, IMessage<TProto>
     {
         /// <summary>The gossip cache</summary>
-        private readonly IGossipCacheBase _gossipCache;
+        private readonly IGossipCache _gossipCache;
 
         /// <summary>The peer 2 peer message factory</summary>
         private readonly IP2PMessageFactory<TProto> _messageFactory;
@@ -56,7 +56,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// <param name="gossipCache">The gossip cache.</param>
         /// <param name="messageFactory">The message factory.</param>
         public GossipMessageHandler(IPeerIdentifier peerIdentifier,
-            IGossipCacheBase gossipCache,
+            IGossipCache gossipCache,
             IP2PMessageFactory<TProto> messageFactory)
         {
             _gossipCache = gossipCache;

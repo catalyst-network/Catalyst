@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core
 
                 containerBuilder.RegisterGeneric(typeof(P2PMessageFactory<>)).As(typeof(IP2PMessageFactory<>));
                 containerBuilder.RegisterGeneric(typeof(RpcMessageFactory<>)).As(typeof(IRpcMessageFactory<>));
-                containerBuilder.RegisterType(typeof(GossipCacheBase)).As(typeof(IGossipCacheBase));
+                containerBuilder.RegisterType(typeof(GossipCache)).As(typeof(IGossipCache));
 
                 var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);

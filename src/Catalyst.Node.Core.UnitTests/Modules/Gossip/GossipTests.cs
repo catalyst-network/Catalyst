@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
 
             var peerIdentifier = new PeerIdentifier(PeerIdHelper.GetPeerId(peerdId));
-            string correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
+            var correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
 
             cache.TryGetValue(correlationId, out PendingRequest value);
             value.GossipCount.Should().Be(Constants.MaxGossipPeers);
@@ -82,11 +82,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
         [Fact]
         public void Not_Enough_Peers_To_Gossip_Circular_List_Goes_Round()
         {
-            PopulatePeers(3);
+            PopulatePeers(Constants.MaxGossipPeers - 1);
             MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
 
             var peerIdentifier = new PeerIdentifier(PeerIdHelper.GetPeerId("1"));
-            string correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
+            var correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
 
             cache.TryGetValue(correlationId, out PendingRequest value);
             value.GossipCount.Should().Be(Constants.MaxGossipPeers);
@@ -121,21 +121,21 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 
             var peerIdentifier = new PeerIdentifier(PeerIdHelper.GetPeerId("1"));
             var messageFactory = new P2PMessageFactory<PingRequest>();
-            var gossipCache = new GossipCacheBase(peerIdentifier, _peerDiscovery, cache, _logger);
+            var gossipCache = new GossipCache(peerIdentifier, _peerDiscovery, cache, _logger);
             var gossipMessageHandler = new GossipMessageHandler<PingRequest>(peerIdentifier, gossipCache, messageFactory);
-            var correlationId = Guid.NewGuid().ToString();
+            var correlationId = Guid.NewGuid();
 
             var messageDto = messageFactory.GetMessage(
                 new PingRequest(),
                 peerIdentifier,
                 new PeerIdentifier(PeerIdHelper.GetPeerId("sender")),
                 MessageTypes.Tell,
-                Guid.Parse(correlationId)
+                correlationId
             );
 
             var channeledMessage = new ChanneledAnySigned(_fakeContext, messageDto);
             gossipMessageHandler.StartGossip(channeledMessage);
-            cache.TryGetValue(correlationId + "gossip", out PendingRequest value);
+            cache.TryGetValue(correlationId, out PendingRequest value);
             value.GossipCount.Should().Be(Constants.MaxGossipPeers);
             value.ReceivedCount.Should().Be(0);
 
@@ -144,15 +144,15 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
                 gossipMessageHandler.StartGossip(channeledMessage);
             }
 
-            cache.TryGetValue(correlationId + "gossip", out value);
+            cache.TryGetValue(correlationId, out value);
             value.ReceivedCount.Should().Be(receivedCount);
             value.GossipCount.Should().Be(Math.Min(Constants.MaxGossipCount, 
                 value.ReceivedCount * Constants.MaxGossipCount));
         }
 
-        private string Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier, IMemoryCache cache)
+        private Guid Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier, IMemoryCache cache)
         {
-            var gossipCache = new GossipCacheBase(peerIdentifier, _peerDiscovery, cache, _logger);
+            var gossipCache = new GossipCache(peerIdentifier, _peerDiscovery, cache, _logger);
             var messageFactory = new P2PMessageFactory<PingRequest>();
             var gossipMessageHandler = new GossipMessageHandler<PingRequest>(peerIdentifier, gossipCache, messageFactory);
 
@@ -165,7 +165,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             var channeledMessage = new ChanneledAnySigned(_fakeContext, messageDto);
 
             gossipMessageHandler.StartGossip(channeledMessage);
-            return messageDto.CorrelationId.ToGuid() + "gossip";
+            return messageDto.CorrelationId.ToGuid();
         }
 
         private void PopulatePeers(int count)
