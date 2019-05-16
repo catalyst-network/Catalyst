@@ -67,19 +67,16 @@ namespace Catalyst.Common.Config
         public static string MessageHandlersConfigFile => "messageHandlers.json";
 
         /// <summary>The expiry minutes of initialization </summary>
-        public static int FileTransferExpiryMinutes => 1;
+        public static int FileTransferExpirySeconds => 60;
 
         /// <summary>The chunk size in bytes </summary>
-        public static int FileTransferChunkSize => 1000000;
-
-        /// <summary>The CLI chunk writing wait time </summary>
-        public static int FileTransferRpcWaitTime => 30;
-
+        public static int FileTransferChunkSize => 200000;
+        
         /// <summary>The maximum chunk retry count </summary>
         public static int FileTransferMaxChunkRetryCount => 3;
 
         /// <summary>The maximum chunk read tries </summary>
-        public static int FileTransferMaxChunkReadTries => 3;
+        public static int FileTransferMaxChunkReadTries => 30;
 
         /// <summary> How many peers node discovers before saving for burn in value </summary>
         public static int PeerDiscoveryBurnIn => 25;

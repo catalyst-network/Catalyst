@@ -116,8 +116,8 @@ namespace Catalyst.Node.Core.P2P
 
             // Start observing for when messages are evicted.
             StartObservingEvictionEvents(_p2PCorrelationCache.PeerEviction);
-            
-            // Task.Run(async () => { await PeerCrawler(); });
+
+            Task.Run(async () => { await PeerCrawler(); });
         }
 
         /// <inheritdoc />

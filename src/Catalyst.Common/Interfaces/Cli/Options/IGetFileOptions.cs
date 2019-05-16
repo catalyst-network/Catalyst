@@ -21,18 +21,20 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.Modules.Consensus;
-
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public class Consensus : IConsensus
+    public interface IGetFileOptions
     {
-        public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
+        /// <summary>Gets or sets the node.</summary>
+        /// <value>The node.</value>
+        string Node { get; set; }
 
-        public Consensus(IDeltaTransactionRetriever deltaTransactionRetriever)
-        {
-            DeltaTransactionRetriever = deltaTransactionRetriever;
-        }
+        /// <summary>Gets or sets the file hash.</summary>
+        /// <value>The file hash.</value>
+        string FileHash { get; set; }
+
+        /// <summary>Gets or sets the file output.</summary>
+        /// <value>The file output.</value>
+        string FileOutput { get; set; }
     }
 }
