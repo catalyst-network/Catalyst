@@ -21,27 +21,16 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Serilog;
-
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Cryptography
 {
-    public class Consensus : IConsensus
+    public interface IDeterministicRandom
     {
-        private readonly ILogger _logger;
+        /// <summary>Gets the next random 32 bit value.</summary>
+        /// <returns></returns>
+        uint NextInt();
 
-        public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
-
-        public IDeltaProducersProvider DeltaProducersProvider { get; }
-
-        public Consensus(IDeltaTransactionRetriever deltaTransactionRetriever,
-            IDeltaProducersProvider deltaProducersProvider,
-            ILogger logger)
-        {
-            _logger = logger;
-            DeltaTransactionRetriever = deltaTransactionRetriever;
-            DeltaProducersProvider = deltaProducersProvider;
-            _logger.Information("Consensus service initialised.");
-        }
+        /// <summary>Gets random char byte.</summary>
+        /// <returns>ASCII byte</returns>
+        byte NextByte();
     }
 }

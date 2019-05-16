@@ -50,8 +50,6 @@ namespace Catalyst.Node.Core
         private readonly IP2PService _p2P;
         private readonly INodeRpcServer _nodeRpcServer;
 
-        private bool _disposed;
-
         public CatalystNode(IP2PService p2P,
             IConsensus consensus,
             IDfs dfs,
