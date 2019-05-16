@@ -21,12 +21,15 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Cryptography;
+
 namespace Catalyst.Common.Cryptography
 {
     /// <summary>
     /// The Isaac Random
+    /// See www.rosettacode.org/wiki/The_ISAAC_Cipher
     /// </summary>
-    public class IsaacRandom
+    public class IsaacRandom : IDeterministicRandom
     {
         // external results 
         readonly uint[] _randRsl = new uint[256];
@@ -34,7 +37,9 @@ namespace Catalyst.Common.Cryptography
 
         // internal state 
         readonly uint[] _mm = new uint[256];
-        uint _aa, _bb, _cc;
+        private uint _aa;
+        private uint _bb;
+        private uint _cc;
 
         void Isaac()
         {
@@ -108,17 +113,17 @@ namespace Catalyst.Common.Cryptography
             _aa = 0;
             _bb = 0;
             _cc = 0;
-            var a = 0x9e3779b9;
-            var b = a;
-            var c = a;
-            var d = a;
-            var e = a;
-            var f = a;
-            var g = a;
-            var h = a;
+            var goldenRatio = 0x9e3779b9;
+            var b = goldenRatio;
+            var c = goldenRatio;
+            var d = goldenRatio;
+            var e = goldenRatio;
+            var f = goldenRatio;
+            var g = goldenRatio;
+            var h = goldenRatio;
 
             for (i = 0; i <= 3; i++) // scramble it 
-                Mix(ref a, ref b, ref c, ref d, ref e, ref f, ref g, ref h);
+                Mix(ref goldenRatio, ref b, ref c, ref d, ref e, ref f, ref g, ref h);
 
             i = 0;
             do
@@ -127,7 +132,7 @@ namespace Catalyst.Common.Cryptography
                 if (flag)
                 { 
                     // use all the information in the seed 
-                    a += _randRsl[i];
+                    goldenRatio += _randRsl[i];
                     b += _randRsl[i + 1];
                     c += _randRsl[i + 2];
                     d += _randRsl[i + 3];
@@ -137,8 +142,8 @@ namespace Catalyst.Common.Cryptography
                     h += _randRsl[i + 7];
                 } // if flag
 
-                Mix(ref a, ref b, ref c, ref d, ref e, ref f, ref g, ref h);
-                _mm[i] = a;
+                Mix(ref goldenRatio, ref b, ref c, ref d, ref e, ref f, ref g, ref h);
+                _mm[i] = goldenRatio;
                 _mm[i + 1] = b;
                 _mm[i + 2] = c;
                 _mm[i + 3] = d;
@@ -155,7 +160,7 @@ namespace Catalyst.Common.Cryptography
                 i = 0;
                 do
                 {
-                    a += _mm[i];
+                    goldenRatio += _mm[i];
                     b += _mm[i + 1];
                     c += _mm[i + 2];
                     d += _mm[i + 3];
@@ -163,8 +168,8 @@ namespace Catalyst.Common.Cryptography
                     f += _mm[i + 5];
                     g += _mm[i + 6];
                     h += _mm[i + 7];
-                    Mix(ref a, ref b, ref c, ref d, ref e, ref f, ref g, ref h);
-                    _mm[i] = a;
+                    Mix(ref goldenRatio, ref b, ref c, ref d, ref e, ref f, ref g, ref h);
+                    _mm[i] = goldenRatio;
                     _mm[i + 1] = b;
                     _mm[i + 2] = c;
                     _mm[i + 3] = d;
@@ -184,8 +189,6 @@ namespace Catalyst.Common.Cryptography
         /// <param name="seed">The seed.</param>
         public IsaacRandom(string seed)
         {
-            for (int i = 0; i < 256; i++) _mm[i] = 0;
-            for (int i = 0; i < 256; i++) _randRsl[i] = 0;
             int m = seed.Length;
             for (int i = 0; i < m; i++)
             {
@@ -196,8 +199,7 @@ namespace Catalyst.Common.Cryptography
             Init(true);
         }
 
-        /// <summary>Gets the next random 32 bit value.</summary>
-        /// <returns></returns>
+        /// <inhertdoc/>
         public uint NextInt()
         {
             uint result = _randRsl[_randCnt];
@@ -211,8 +213,7 @@ namespace Catalyst.Common.Cryptography
             return result;
         }
 
-        /// <summary>Gets random char byte.</summary>
-        /// <returns>ASCII byte</returns>
+        /// <inheritdoc />
         public byte NextByte()
         {
             return (byte) (NextInt() % 95 + 32);

@@ -24,6 +24,7 @@
 using System;
 using System.Linq;
 using Catalyst.Common.Cryptography;
+using Catalyst.Common.Interfaces.Cryptography;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Cryptography
@@ -46,7 +47,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
                 sequence[i] = cipher.NextInt();
             }
 
-            IsaacRandom cipherClone = new IsaacRandom(seed);
+            IDeterministicRandom cipherClone = new IsaacRandom(seed);
             for (int i = 0; i < sequenceSize; i++)
             {
                 duplicateSequence[i] = cipherClone.NextInt();
