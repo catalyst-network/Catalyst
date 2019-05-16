@@ -22,19 +22,31 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.Attributes;
+using SharpRepository.Repository.Aspects;
 
-namespace Catalyst.Common.Interfaces.Modals
+namespace Catalyst.Common.Attributes
 {
-    public interface IAuditable
+    public sealed class AuditAttribute : RepositoryActionBaseAttribute
     {
-        /// <summary>
-        ///     Auto set field when Auditable entity is created
-        /// </summary>
-        DateTime Created { get; set; }
-        
-        /// <summary>
-        ///     Auto set field when Auditable entity is modified
-        /// </summary>
-        DateTime? Modified { get; set; }
+        public override bool OnAddExecuting<T, TKey>(T entity, RepositoryActionContext<T, TKey> context)
+        {
+            if (entity is IAuditable tmp)
+            {
+                tmp.Created = DateTime.UtcNow;
+            }
+
+            return true;
+        }
+
+        public override bool OnUpdateExecuting<T, TKey>(T entity, RepositoryActionContext<T, TKey> context)
+        {
+            if (entity is IAuditable tmp)
+            {
+                tmp.Modified = DateTime.UtcNow;
+            }
+
+            return true;
+        }
     }
 }

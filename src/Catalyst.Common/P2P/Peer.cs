@@ -23,10 +23,10 @@
 
 using System;
 using System.Reflection;
-using Catalyst.Common.Interfaces.Modals;
+using Catalyst.Common.Attributes;
+using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Models;
 using Serilog;
 using SharpRepository.Repository;
 
