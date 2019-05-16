@@ -57,11 +57,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
+        private IMessageCorrelationCache _subbedCorrelationCache;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RemovePeerRequestHandlerTest"/> class.
         /// </summary>
         public RemovePeerRequestHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
 
@@ -114,7 +117,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var peerDiscovery = Substitute.For<IPeerDiscovery>();
             peerDiscovery.PeerRepository.Returns(peerRepository);
 
-            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest>();
+            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest>(_subbedCorrelationCache);
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var peerToDelete = peerRepository.Get(1);
             var requestMessage = rpcMessageFactory.GetMessage(

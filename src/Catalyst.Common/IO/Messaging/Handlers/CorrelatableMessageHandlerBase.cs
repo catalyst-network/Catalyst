@@ -36,7 +36,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         where TProto : IMessage
         where TCorrelator : IMessageCorrelationCache
     {
-        private readonly TCorrelator _correlationCache;
+        protected TCorrelator _correlationCache;
 
         protected CorrelatableMessageHandlerBase(TCorrelator correlationCache,
             ILogger logger)

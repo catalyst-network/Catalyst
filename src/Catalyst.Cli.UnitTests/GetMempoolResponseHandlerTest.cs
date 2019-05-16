@@ -52,9 +52,11 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly IUserOutput _output;
         private GetMempoolResponseHandler _handler;
+        private static IMessageCorrelationCache _subbedCorrelationCache;
 
         static GetMempoolResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             var memPoolData = CreateMemPoolData();
 
             QueryContents = new List<object[]>
@@ -111,7 +113,7 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
             var txList = mempoolContent.ToList();
 
-            var response = new RpcMessageFactory<GetMempoolResponse>().GetMessage(
+            var response = new RpcMessageFactory<GetMempoolResponse>(_subbedCorrelationCache).GetMessage(
                 new GetMempoolResponse
                 {
                     Mempool = {txList}

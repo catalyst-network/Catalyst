@@ -67,7 +67,7 @@ namespace Catalyst.Cli.Commands
                 DfsHash = opts.FileHash
             };
 
-            var messageDto = new RpcMessageFactory<GetFileFromDfsRequest>().GetMessage(message, nodePeerIdentifier,
+            var messageDto = new RpcMessageFactory<GetFileFromDfsRequest>(_rpcMessageCorrelationCache).GetMessage(message, nodePeerIdentifier,
                 _peerIdentifier, MessageTypes.Ask);
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(

@@ -78,7 +78,7 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
 
-            var requestMessage = new RpcMessageFactory<AddFileToDfsRequest>().GetMessage(
+            var requestMessage = new RpcMessageFactory<AddFileToDfsRequest>(_rpcMessageCorrelationCache).GetMessage(
                 message: request,
                 recipient: nodePeerIdentifier,
                 sender: _peerIdentifier,
@@ -91,7 +91,7 @@ namespace Catalyst.Cli.Commands
                 nodePeerIdentifier,
                 node.Channel,
                 requestMessage.CorrelationId.ToGuid(),
-                new RpcMessageFactory<TransferFileBytesRequest>());
+                new RpcMessageFactory<TransferFileBytesRequest>(_rpcMessageCorrelationCache));
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 

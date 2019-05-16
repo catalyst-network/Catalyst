@@ -128,7 +128,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         private void ReturnResponse(bool result, Guid correlationGuid)
         {
-            var response = new RpcMessageFactory<VerifyMessageResponse>().GetMessage(
+            var response = new RpcMessageFactory<VerifyMessageResponse>(_correlationCache).GetMessage(
                 new VerifyMessageResponse
                 {
                     IsSignedByKey = result

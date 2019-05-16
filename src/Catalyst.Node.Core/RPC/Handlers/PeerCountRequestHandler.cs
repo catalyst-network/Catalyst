@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             base(correlationCache, logger)
         {
             _peerDiscovery = peerDiscovery;
-            _rpcMessageBase = new RpcMessageFactory<GetPeerCountResponse>();
+            _rpcMessageBase = new RpcMessageFactory<GetPeerCountResponse>(_correlationCache);
             _peerIdentifier = peerIdentifier;
         }
 

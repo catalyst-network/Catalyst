@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = GetNodeConfig(opts.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
-            var requestMessage = new RpcMessageFactory<RemovePeerRequest>().GetMessage(
+            var requestMessage = new RpcMessageFactory<RemovePeerRequest>(_rpcMessageCorrelationCache).GetMessage(
                 message: new RemovePeerRequest
                 {
                     PeerIp = ByteString.CopyFrom(IPAddress.Parse(opts.Ip).To16Bytes()),

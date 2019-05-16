@@ -49,6 +49,7 @@ namespace Catalyst.Cli.UnitTests
         
         private readonly IUserOutput _output;
         private SignMessageResponseHandler _handler;
+        private static IMessageCorrelationCache _subbedCorrelationCache;
 
         //@TODO why not mock the actual response object? if we ever change it then the test will pass but fail in real world
         public struct SignedResponse
@@ -60,6 +61,7 @@ namespace Catalyst.Cli.UnitTests
 
         static SignMessageResponseHandlerTest()
         {   
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[]
@@ -98,7 +100,7 @@ namespace Catalyst.Cli.UnitTests
         {   
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<SignMessageResponse>().GetMessage(
+            var response = new RpcMessageFactory<SignMessageResponse>(_subbedCorrelationCache).GetMessage(
                 new SignMessageResponse
                 {
                     OriginalMessage = signedResponse.OriginalMessage,

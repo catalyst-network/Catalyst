@@ -125,7 +125,7 @@ namespace Catalyst.Cli.UnitTests
                     nodePeer,
                     _fakeContext.Channel,
                     correlationGuid,
-                    new RpcMessageFactory<TransferFileBytesRequest>());
+                    new RpcMessageFactory<TransferFileBytesRequest>(_cache));
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {

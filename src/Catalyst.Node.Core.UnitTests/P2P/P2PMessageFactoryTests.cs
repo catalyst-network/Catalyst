@@ -23,22 +23,27 @@
 
 using System;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Buffers;
 using FluentAssertions;
+using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.P2P
 {
     public sealed class P2PMessageFactoryTests
     {
+        private readonly IReputableCache _subbedReputationCache;
+        public P2PMessageFactoryTests() { _subbedReputationCache = Substitute.For<IReputableCache>(); }
+        
         [Fact]
         public void CanProduceAValidPingRequestMessage()
         {
-            var pingRequestDatagram = new P2PMessageFactory<PingRequest>().GetMessageInDatagramEnvelope(
+            var pingRequestDatagram = new P2PMessageFactory<PingRequest>(_subbedReputationCache).GetMessageInDatagramEnvelope(
                 new PingRequest(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
@@ -52,7 +57,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidPingResponseMessage()
         {
-            var pingResponseDatagram = new P2PMessageFactory<PingResponse>().GetMessageInDatagramEnvelope(
+            var pingResponseDatagram = new P2PMessageFactory<PingResponse>(_subbedReputationCache).GetMessageInDatagramEnvelope(
                 new PingResponse(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
@@ -67,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidTransactionMessage()
         {
-            var transactionDatagram = new P2PMessageFactory<Transaction>().GetMessageInDatagramEnvelope(
+            var transactionDatagram = new P2PMessageFactory<Transaction>(_subbedReputationCache).GetMessageInDatagramEnvelope(
                 new Transaction(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),

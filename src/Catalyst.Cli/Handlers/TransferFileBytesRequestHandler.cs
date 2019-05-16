@@ -66,7 +66,7 @@ namespace Catalyst.Cli.Handlers
             : base(correlationCache, logger)
         {
             _fileTransferFactory = fileTransferFactory;
-            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>(correlationCache);
             _peerIdentifier = Commands.Commands.BuildCliPeerId(config);
         }
 
@@ -82,7 +82,7 @@ namespace Catalyst.Cli.Handlers
             : base(correlationCache, logger)
         {
             _fileTransferFactory = fileTransferFactory;
-            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>();
+            _rpcMessageFactory = new RpcMessageFactory<TransferFileBytesResponse>(_correlationCache);
             _peerIdentifier = peerIdentifier;
         }
 

@@ -44,9 +44,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
+        private IMessageCorrelationCache _subbedCorrelationCache;
 
         public GetVersionRequestHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
 
@@ -58,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
         {
-            var request = new RpcMessageFactory<VersionRequest>().GetMessage(
+            var request = new RpcMessageFactory<VersionRequest>(_subbedCorrelationCache).GetMessage(
                 new VersionRequest(),
                 PeerIdentifierHelper.GetPeerIdentifier("recepient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),

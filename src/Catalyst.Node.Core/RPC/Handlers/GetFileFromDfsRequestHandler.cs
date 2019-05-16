@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IMessageCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger)
         {
-            _rpcMessageFactory = new RpcMessageFactory<GetFileFromDfsResponse>();
+            _rpcMessageFactory = new RpcMessageFactory<GetFileFromDfsResponse>(correlationCache);
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
@@ -110,7 +110,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                         recipientPeerIdentifier,
                         message.Context.Channel,
                         correlationGuid,
-                        new RpcMessageFactory<TransferFileBytesRequest>()
+                        new RpcMessageFactory<TransferFileBytesRequest>(_correlationCache)
                     );
                     responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
                 }

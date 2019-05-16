@@ -83,12 +83,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                var response = new RpcMessageFactory<SignMessageResponse>().GetMessage(
+                var response = new RpcMessageFactory<SignMessageResponse>(_correlationCache).GetMessage(
                     new SignMessageResponse
                     {
-                         OriginalMessage = deserialised.Message,
-                            PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
-                            Signature = signature.Bytes.RawBytes.ToByteString()
+                        OriginalMessage = deserialised.Message,
+                        PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
+                        Signature = signature.Bytes.RawBytes.ToByteString()
                     },
                     new PeerIdentifier(message.Payload.PeerId),
                     _peerIdentifier,

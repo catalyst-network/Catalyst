@@ -52,9 +52,11 @@ namespace Catalyst.Cli.UnitTests
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
+        private static IMessageCorrelationCache _subbedCorrelationCache;
 
         static GetInfoResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -96,7 +98,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<GetInfoResponse>().GetMessage(
+            var response = new RpcMessageFactory<GetInfoResponse>(_subbedCorrelationCache).GetMessage(
                 new GetInfoResponse
                 {
                     Query = query

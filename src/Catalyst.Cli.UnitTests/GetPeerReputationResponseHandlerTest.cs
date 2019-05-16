@@ -51,13 +51,15 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private PeerReputationResponseHandler _handler;
+        private static IMessageCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
         /// Initializes the <see cref="GetPeerReputationResponseHandlerTest"/> class.
         /// </summary>
         static GetPeerReputationResponseHandlerTest()
-        {
-            QueryContents = new List<object[]>()
+        {             
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
+            QueryContents = new List<object[]>
             {
                 new object[] {78},
                 new object[] {1572},
@@ -110,14 +112,14 @@ namespace Catalyst.Cli.UnitTests
         {
             TestGetReputationResponse(rep);
 
-            _output.Received(1).WriteLine($"Peer Reputation: Peer not found");
+            _output.Received(1).WriteLine("Peer Reputation: Peer not found");
         }
 
         private void TestGetReputationResponse(int rep)
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<GetPeerReputationResponse>().GetMessage(
+            var response = new RpcMessageFactory<GetPeerReputationResponse>(_subbedCorrelationCache).GetMessage(
                 new GetPeerReputationResponse
                 {
                     Reputation = rep

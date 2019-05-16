@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
                     Formatting.Indented);
 
-                var response = new RpcMessageFactory<GetInfoResponse>().GetMessage(
+                var response = new RpcMessageFactory<GetInfoResponse>(_correlationCache).GetMessage(
                     new GetInfoResponse
                     {
                         Query = serializedList

@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO;
@@ -57,6 +58,7 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
+        private IMessageCorrelationCache _rpcMessageCorrelationCache;
 
         /// <summary>
         /// </summary>
@@ -64,10 +66,12 @@ namespace Catalyst.Cli.Commands
             IConfigurationRoot config,
             ILogger logger,
             ICertificateStore certificateStore,
+            IMessageCorrelationCache rpcMessageCorrelationCache,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)
         {
+            _rpcMessageCorrelationCache = rpcMessageCorrelationCache;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _logger = logger;
@@ -77,7 +81,6 @@ namespace Catalyst.Cli.Commands
             _uploadFileTransferFactory = uploadFileTransferFactory;
             _peerIdentifier = BuildCliPeerId(config);
             _userOutput = userOutput;
-
             _userOutput.WriteLine(@"Koopa Shell Start");
         }
 

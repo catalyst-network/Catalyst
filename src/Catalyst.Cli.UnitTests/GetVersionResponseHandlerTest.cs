@@ -48,9 +48,11 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private GetVersionResponseHandler _handler;
+        private static IMessageCorrelationCache _subbedCorrelationCache;
 
         static GetVersionResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IMessageCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[]
@@ -81,7 +83,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IMessageCorrelationCache>();
 
-            var response = new RpcMessageFactory<VersionResponse>().GetMessage(
+            var response = new RpcMessageFactory<VersionResponse>(_subbedCorrelationCache).GetMessage(
                 new VersionResponse
                 {
                     Version = version
