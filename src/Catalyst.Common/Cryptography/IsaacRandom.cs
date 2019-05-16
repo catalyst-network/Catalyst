@@ -122,15 +122,18 @@ namespace Catalyst.Common.Cryptography
             var g = goldenRatio;
             var h = goldenRatio;
 
-            for (i = 0; i <= 3; i++) // scramble it 
+            for (i = 0; i <= 3; i++)
+            { 
+                // scramble it 
                 Mix(ref goldenRatio, ref b, ref c, ref d, ref e, ref f, ref g, ref h);
+            }
 
             i = 0;
             do
             {
                 // fill in _mm[] with messy stuff  
                 if (flag)
-                { 
+                {
                     // use all the information in the seed 
                     goldenRatio += _randRsl[i];
                     b += _randRsl[i + 1];
