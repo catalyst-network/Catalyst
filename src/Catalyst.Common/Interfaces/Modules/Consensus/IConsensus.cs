@@ -31,6 +31,10 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
     public interface IConsensus
     {
+        /// <see cref="IDeltaTransactionRetriever"/>
         IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
+
+        /// <see cref="IDeltaProducersProvider"/>
+        IDeltaProducersProvider DeltaProducersProvider { get; }
     }
 }

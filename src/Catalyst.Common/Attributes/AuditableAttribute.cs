@@ -21,27 +21,32 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Serilog;
+using System;
+using Catalyst.Common.Interfaces.Attributes;
+using SharpRepository.Repository.Aspects;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Common.Attributes
 {
-    public class Consensus : IConsensus
+    public sealed class AuditAttribute : RepositoryActionBaseAttribute
     {
-        private readonly ILogger _logger;
-
-        public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
-
-        public IDeltaProducersProvider DeltaProducersProvider { get; }
-
-        public Consensus(IDeltaTransactionRetriever deltaTransactionRetriever,
-            IDeltaProducersProvider deltaProducersProvider,
-            ILogger logger)
+        public override bool OnAddExecuting<T, TKey>(T entity, RepositoryActionContext<T, TKey> context)
         {
-            _logger = logger;
-            DeltaTransactionRetriever = deltaTransactionRetriever;
-            DeltaProducersProvider = deltaProducersProvider;
-            _logger.Information("Consensus service initialised.");
+            if (entity is IAuditable tmp)
+            {
+                tmp.Created = DateTime.UtcNow;
+            }
+
+            return true;
+        }
+
+        public override bool OnUpdateExecuting<T, TKey>(T entity, RepositoryActionContext<T, TKey> context)
+        {
+            if (entity is IAuditable tmp)
+            {
+                tmp.Modified = DateTime.UtcNow;
+            }
+
+            return true;
         }
     }
 }
