@@ -16,10 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.UnitTests", "C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C509045-8F0C-4864-9FC2-4ABD4AABCB08}"
 ProjectSection(SolutionItems) = preProject
-	..\Alpine.Dockerfile = ..\Alpine.Dockerfile
 	..\Dockerfile = ..\Dockerfile
 	..\entrypoint.sh = ..\entrypoint.sh
-	..\osx-Dockerfile = ..\osx-Dockerfile
 	..\README.md = ..\README.md
 	..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
 	..\.gitignore = ..\.gitignore

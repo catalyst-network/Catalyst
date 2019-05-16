@@ -39,7 +39,6 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -57,7 +56,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
-        private IRpcCorrelationCache _subbedCorrelationCache;
+        private readonly IRpcCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.

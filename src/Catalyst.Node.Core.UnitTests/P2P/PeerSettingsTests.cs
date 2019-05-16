@@ -26,7 +26,6 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Xunit;
