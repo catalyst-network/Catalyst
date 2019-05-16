@@ -23,66 +23,69 @@
 
 using System;
 using System.Reflection;
+using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Attributes;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Common.P2P
 {
-    public sealed class Peer : IDisposable, IPeer
+    [Audit]
+    public sealed class Peer : IDisposable, IPeer, IAuditable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>Gets or sets the primary key identifier.</summary>
-        /// <value>The primary key identifier.</value>
+        /// <inheritdoc />
         [RepositoryPrimaryKey(Order = 1)]
         public int PkId { get; set; }
 
-        /// <summary>Gets the reputation.</summary>
-        /// <value>The reputation.</value>
+        /// <inheritdoc />
         public int Reputation { get; set; }
-
-        /// <summary>Gets the last seen.</summary>
-        /// <value>The last seen.</value>
-        public DateTime LastSeen { get; set; }
-
-        /// <summary>Gets the peer identifier.</summary>
-        /// <value>The peer identifier.</value>
-        public IPeerIdentifier PeerIdentifier { get; set; }
-
-        /// <summary>Gets a value indicating whether this instance is awol peer.</summary>
-        /// <value><c>true</c> if this instance is awol peer; otherwise, <c>false</c>.</value>
-        public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
-
-        /// <summary>Gets the inactive for.</summary>
-        /// <value>The inactive for.</value>
-        public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
-
-        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-        public void Dispose() { Dispose(true); }
 
         /// <inheritdoc />
         /// <summary>
+        ///     When peer was first seen by the peer.
         /// </summary>
+        public DateTime Created { get; set; }
+
+        /// <inheritdoc />
+        public DateTime? Modified { get; set; }
+
+        /// <inheritdoc />
+        public DateTime LastSeen { get; set; }
+
+        /// <inheritdoc />
+        public IPeerIdentifier PeerIdentifier { get; set; }
+
+        /// <inheritdoc />
+        public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
+
+        /// <inheritdoc />
+        public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
+
+        /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
         /// <inheritdoc />
-        /// <summary>
-        /// </summary>
         public void IncreaseReputation(int mer = 1)
         {
             Reputation += mer;
         }
 
         /// <inheritdoc />
-        /// <summary>
-        /// </summary>
         public void DecreaseReputation(int mer = 1)
         {
             Reputation += mer;
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        
         /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         private void Dispose(bool disposing)
