@@ -21,20 +21,16 @@
 
 #endregion
 
-using System;
-
-namespace Catalyst.Common.Interfaces.Attributes
+namespace Catalyst.Common.Interfaces.Cryptography
 {
-    public interface IAuditable
+    public interface IDeterministicRandom
     {
-        /// <summary>
-        ///     Auto set field when Auditable entity is created
-        /// </summary>
-        DateTime Created { get; set; }
+        /// <summary>Gets the next random 32 bit value.</summary>
+        /// <returns></returns>
+        uint NextInt();
 
-        /// <summary>
-        ///     Auto set field when Auditable entity is modified
-        /// </summary>
-        DateTime? Modified { get; set; }
+        /// <summary>Gets random char byte.</summary>
+        /// <returns>ASCII byte</returns>
+        byte NextByte();
     }
 }

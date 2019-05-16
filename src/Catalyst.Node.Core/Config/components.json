@@ -172,6 +172,14 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Cryptography.IsaacRandom, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cryptography.IDeterministicRandom, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Cryptography.ConsolePasswordReader, Catalyst.Common",
             "services": [
                 {

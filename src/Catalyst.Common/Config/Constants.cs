@@ -88,8 +88,11 @@ namespace Catalyst.Common.Config
         /// <summary> EdDSA Curve  type </summary>
         public static string KeyChainDefaultKeyType => "ed25519";
 
+        /// <summary> Hashing algorithm </summary>
+        public static IMultihashAlgorithm HashAlgorithm { get; } = new BLAKE2B_256();
+
         /// <summary> Hashing algorithm type </summary>
-        public static HashType HashAlgorithm => HashType.BLAKE2B_256;
+        public static HashType HashAlgorithmType => HashAlgorithm.Code;
 
         public static MultibaseEncoding EncodingAlgorithm => MultibaseEncoding.Base58Btc;
         

@@ -37,7 +37,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
     {
         private static readonly AddFileOptions AddFileOptions = new AddFileOptions
         {
-            Hash = MultiHash.GetHashAlgorithmName(Constants.HashAlgorithm.GetHashCode()),
+            Hash = MultiHash.GetHashAlgorithmName(Constants.HashAlgorithmType.GetHashCode()),
             RawLeaves = true
         };
 
