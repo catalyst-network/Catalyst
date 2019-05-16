@@ -21,9 +21,9 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.Modules.Consensus;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Node.Core.Modules.Consensus
@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             var xSignature = x.SchnorrSignature.ToByteArray();
             var ySignature = y.SchnorrSignature.ToByteArray();
 
-            var signatureComparison = ByteListComparer.Default.Compare(xSignature, ySignature);
+            var signatureComparison = ByteUtil.ByteListComparer.Default.Compare(xSignature, ySignature);
             if (signatureComparison != 0)
             {
                 return signatureComparison;
@@ -96,46 +96,9 @@ namespace Catalyst.Node.Core.Modules.Consensus
 
             var xComponent = x.SchnorrComponent.ToByteArray();
             var yComponent = y.SchnorrComponent.ToByteArray();
-            return ByteListComparer.Default.Compare(xComponent, yComponent);
+            return ByteUtil.ByteListComparer.Default.Compare(xComponent, yComponent);
         }
 
         public static IComparer<TransactionSignature> Default { get; } = new SignatureComparer();
-    }
-
-    /// <remarks>
-    /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
-    /// </remarks>
-    public class ByteListComparer : IComparer<IList<byte>>
-    {
-        public int Compare(IList<byte> x, IList<byte> y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return 0;
-            }
-
-            if (ReferenceEquals(null, y))
-            {
-                return 1;
-            }
-
-            if (ReferenceEquals(null, x))
-            {
-                return -1;
-            }
-
-            for (var index = 0; index < Math.Min(x.Count, y.Count); index++)
-            {
-                var result = x[index].CompareTo(y[index]);
-                if (result != 0)
-                {
-                    return Math.Sign(result);
-                }
-            }
-
-            return 0;
-        }
-
-        public static IComparer<IList<byte>> Default { get; } = new ByteListComparer();
     }
 }
