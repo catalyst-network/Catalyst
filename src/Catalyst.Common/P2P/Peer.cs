@@ -33,7 +33,7 @@ using SharpRepository.Repository;
 namespace Catalyst.Common.P2P
 {
     [Audit]
-    public sealed class Peer : IDisposable, IPeer, IAuditable
+    public sealed class Peer : IPeer, IAuditable
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -78,23 +78,6 @@ namespace Catalyst.Common.P2P
         public void DecreaseReputation(int mer = 1)
         {
             Reputation += mer;
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-        
-        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Logger.Verbose("Connection to peer {0} Disposed.",
-                    PeerIdentifier?.ToString() ?? "unknown");
-            }
         }
     }
 }
