@@ -39,7 +39,7 @@ namespace Catalyst.Common.FileTransfer
     public sealed class UploadFileTransferInformation : BaseFileTransferInformation, IUploadFileInformation
     {
         /// <summary>The upload message factory</summary>
-        private readonly IMessageFactoryBase _uploadMessageFactory;
+        private readonly IMessageFactory _uploadMessageFactory;
         
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
@@ -53,7 +53,7 @@ namespace Catalyst.Common.FileTransfer
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
             Guid correlationGuid,
-            IMessageFactoryBase uploadMessageFactory) :
+            IMessageFactory uploadMessageFactory) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {

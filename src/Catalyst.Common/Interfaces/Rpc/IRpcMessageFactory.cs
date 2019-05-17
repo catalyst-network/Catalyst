@@ -25,5 +25,5 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface IRpcMessageFactory : IMessageFactoryBase { }
+    public interface IRpcMessageFactory : IMessageFactory { }
 }

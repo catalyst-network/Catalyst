@@ -37,11 +37,11 @@ namespace Catalyst.Common.IO.Messaging
     /// <summary>
     /// The base class to handle building of AnySigned messages
     /// </summary>
-    public class MessageFactoryBase : IMessageFactoryBase
+    public class MessageFactory : IMessageFactory
     {
         private readonly IMessageCorrelationCache _messageCorrelationCache;
 
-        protected MessageFactoryBase(IMessageCorrelationCache messageCorrelationCache)
+        protected MessageFactory(IMessageCorrelationCache messageCorrelationCache)
         {
             _messageCorrelationCache = messageCorrelationCache;
         }

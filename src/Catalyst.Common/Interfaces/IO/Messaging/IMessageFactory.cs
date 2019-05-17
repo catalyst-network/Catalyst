@@ -27,7 +27,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IMessageFactoryBase
+    public interface IMessageFactory
     {
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>

@@ -35,7 +35,7 @@ using Google.Protobuf;
 namespace Catalyst.Node.Core.P2P.Messaging
 {
     public sealed class P2PMessageFactory
-        : MessageFactoryBase
+        : MessageFactory
     {
         public P2PMessageFactory(IReputableCache messageCorrelationCache) : base(messageCorrelationCache) { }
         

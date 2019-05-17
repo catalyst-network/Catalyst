@@ -30,8 +30,8 @@ using Google.Protobuf;
 namespace Catalyst.Common.Rpc
 {
     /// <inheritdoc cref="IRpcMessageFactory" />
-    /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactoryBase`1" />
-    public sealed class RpcMessageFactory : MessageFactoryBase, IRpcMessageFactory
+    /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactory`1" />
+    public sealed class RpcMessageFactory : MessageFactory, IRpcMessageFactory
     {
         public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
     }
