@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -42,7 +43,7 @@ namespace Catalyst.Cli.Handlers
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseHandler"/> class.</summary>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesResponseHandler(IMessageCorrelationCache correlationCache,
+        public TransferFileBytesResponseHandler(IRpcCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger) { }
 
         /// <summary>Handles the specified message.</summary>

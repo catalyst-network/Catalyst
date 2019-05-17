@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IConfigurationRoot config,
-            IMessageCorrelationCache correlationCache,
+            IRpcCorrelationCache correlationCache,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory)
             : base(correlationCache, logger)

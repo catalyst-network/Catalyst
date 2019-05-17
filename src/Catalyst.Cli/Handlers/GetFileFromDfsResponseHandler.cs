@@ -31,6 +31,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -54,7 +55,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="fileTransferFactory">The file transfer.</param>
-        public GetFileFromDfsResponseHandler(IMessageCorrelationCache correlationCache,
+        public GetFileFromDfsResponseHandler(IRpcCorrelationCache correlationCache,
             ILogger logger,
             IDownloadFileTransferFactory fileTransferFactory) : base(correlationCache, logger)
         {

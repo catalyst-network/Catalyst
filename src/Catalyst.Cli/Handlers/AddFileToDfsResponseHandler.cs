@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="logger">The logger.</param>
         /// <param name="rpcFileTransferFactory">The upload file transfer factory</param>
         /// <param name="userOutput"></param>
-        public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
+        public AddFileToDfsResponseHandler(IRpcCorrelationCache correlationCache,
             ILogger logger,
             IUploadFileTransferFactory rpcFileTransferFactory, 
             IUserOutput userOutput) : base(correlationCache, logger)

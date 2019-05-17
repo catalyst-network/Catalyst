@@ -27,6 +27,7 @@ using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -52,7 +53,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
         public SignMessageResponseHandler(IUserOutput output,
-            IMessageCorrelationCache messageCorrelationCache,
+            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
             : base(messageCorrelationCache, logger)
         {
