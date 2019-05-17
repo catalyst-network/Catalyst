@@ -154,5 +154,42 @@ namespace Catalyst.Common.Util
             Guard.Argument(array, nameof(array)).NotNull().NotEmpty();
             return Encoding.UTF8.GetString(array);
         }
+
+        /// <remarks>
+        /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
+        /// </remarks>
+        public class ByteListComparer : IComparer<IList<byte>>
+        {
+            public int Compare(IList<byte> x, IList<byte> y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return 0;
+                }
+
+                if (ReferenceEquals(null, y))
+                {
+                    return 1;
+                }
+
+                if (ReferenceEquals(null, x))
+                {
+                    return -1;
+                }
+
+                for (var index = 0; index < Math.Min(x.Count, y.Count); index++)
+                {
+                    var result = x[index].CompareTo(y[index]);
+                    if (result != 0)
+                    {
+                        return Math.Sign(result);
+                    }
+                }
+
+                return 0;
+            }
+
+            public static IComparer<IList<byte>> Default { get; } = new ByteListComparer();
+        }
     }
 }

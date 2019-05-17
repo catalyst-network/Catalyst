@@ -21,27 +21,20 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Serilog;
+using System;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Attributes
 {
-    public class Consensus : IConsensus
+    public interface IAuditable
     {
-        private readonly ILogger _logger;
+        /// <summary>
+        ///     Auto set field when Auditable entity is created
+        /// </summary>
+        DateTime Created { get; set; }
 
-        public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
-
-        public IDeltaProducersProvider DeltaProducersProvider { get; }
-
-        public Consensus(IDeltaTransactionRetriever deltaTransactionRetriever,
-            IDeltaProducersProvider deltaProducersProvider,
-            ILogger logger)
-        {
-            _logger = logger;
-            DeltaTransactionRetriever = deltaTransactionRetriever;
-            DeltaProducersProvider = deltaProducersProvider;
-            _logger.Information("Consensus service initialised.");
-        }
+        /// <summary>
+        ///     Auto set field when Auditable entity is modified
+        /// </summary>
+        DateTime? Modified { get; set; }
     }
 }
