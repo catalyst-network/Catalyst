@@ -27,7 +27,7 @@ using Dawn;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using Nethereum.RLP;
+using Catalyst.Protocol.Transaction;
 
 
 namespace Catalyst.Node.Core.Modules.Ledger
@@ -70,13 +70,13 @@ namespace Catalyst.Node.Core.Modules.Ledger
             //iterate through accounts and update
         }
 
-        private Dictionary<string, string> BuildDelta()
+        private Dictionary<string, string> BuildDelta(Transaction sTTransactionEntry)
         {
 
             return new Dictionary<string, string>();
         }
 
-        private bool UpdateLederState(byte[] ledgerStateUpdate)
+        private bool UpdateLedgerState(byte[] ledgerStateUpdate)
         {
             return false;
         }
