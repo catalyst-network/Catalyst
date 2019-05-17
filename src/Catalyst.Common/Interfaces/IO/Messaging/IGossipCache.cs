@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Outbound;
-using Org.BouncyCastle.Pkcs;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {

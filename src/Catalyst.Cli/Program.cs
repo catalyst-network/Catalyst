@@ -116,7 +116,6 @@ namespace Catalyst.Cli
 
                 containerBuilder.RegisterLogger(_logger);
                 containerBuilder.RegisterInstance(config);
-                containerBuilder.RegisterGeneric(typeof(RpcMessageFactory<>)).As(typeof(IRpcMessageFactory<>));
 
                 var container = containerBuilder.Build();
                 
