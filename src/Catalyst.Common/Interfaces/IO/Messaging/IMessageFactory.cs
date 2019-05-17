@@ -22,17 +22,18 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Google.Protobuf;
+using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Rpc
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    /// <inheritdoc cref="IRpcMessageFactory" />
-    /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactory`1" />
-    public sealed class RpcMessageFactory : MessageFactory, IRpcMessageFactory
+    public interface IMessageFactory
     {
-        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
+        /// <summary>Gets the message.</summary>
+        /// <param name="messageDto">The message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        AnySigned GetMessage(IMessageDto messageDto,
+            Guid correlationId = default);
     }
 }

@@ -48,10 +48,10 @@ namespace Catalyst.Common.IO.Messaging
             IPeerIdentifier recipient,
             IPeerIdentifier sender)
         {
-            Guard.Argument(message, nameof(message)).NotNull().Compatible<IMessage>().HasValue();
-            Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull().HasValue();
+            Guard.Argument(message, nameof(message)).NotNull();
+            Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();
             Guard.Argument(recipient.Port, nameof(recipient.Port)).InRange(0, 65535);
-            Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull().HasValue();
+            Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull();
             Message = message;
             MessageType = messageTypes;
             Recipient = recipient;

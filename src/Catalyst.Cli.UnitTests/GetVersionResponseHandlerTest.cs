@@ -50,7 +50,7 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private GetVersionResponseHandler _handler;
-        private static readonly IRpcCorrelationCache _subbedCorrelationCache;
+        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static GetVersionResponseHandlerTest()
         {

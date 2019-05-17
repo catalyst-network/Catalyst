@@ -48,10 +48,11 @@ namespace Catalyst.Cli.UnitTests
         public static List<object[]> QueryContents;
 
         private VerifyMessageResponseHandler _handler;
-        private readonly IRpcCorrelationCache _subbedCorrelationCache;
+        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static VerifyMessageResponseHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[]

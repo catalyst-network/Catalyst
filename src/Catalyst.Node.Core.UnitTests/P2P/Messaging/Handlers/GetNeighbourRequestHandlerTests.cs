@@ -53,6 +53,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IReputableCache _subbedReputableCache;
         private readonly IRepository<Peer> _subbedPeerRepository;
+        private IReputableCache _subbedReputableCache;
 
         public GetNeighbourRequestHandlerTests(ITestOutputHelper output) : base(output)
         {

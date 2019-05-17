@@ -54,7 +54,7 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly IUserOutput _output;
         private GetMempoolResponseHandler _handler;
-        private static readonly IRpcCorrelationCache _subbedCorrelationCache;
+        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static GetMempoolResponseHandlerTest()
         {
