@@ -35,11 +35,7 @@ namespace Catalyst.Common.Interfaces.P2P
         IPEndPoint AnnounceServer { get; }
         int Port { get; }
         IPAddress BindAddress { get; }
-        IPEndPoint EndPoint { get; }
-        int Magic { get; }
-        string PfxFileName { get; }
-        IList<string> KnownNodes { get; }
         IList<string> SeedServers { get; }
-        byte AddressVersion { get; }
     }
 }
+
