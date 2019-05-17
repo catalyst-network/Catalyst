@@ -218,6 +218,23 @@
                 }
             ],
             "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.P2PMessageFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.IO.Messaging.GossipCache, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IGossipCache, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
     ],
     "modules": [

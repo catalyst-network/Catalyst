@@ -36,8 +36,6 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;

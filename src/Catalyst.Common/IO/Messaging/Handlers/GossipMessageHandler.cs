@@ -45,7 +45,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         private readonly IGossipCache _gossipCache;
 
         /// <summary>The peer 2 peer message factory</summary>
-        private readonly IP2PMessageFactory<TProto> _messageFactory;
+        private readonly IP2PMessageFactory _messageFactory;
         
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -53,14 +53,14 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// <summary>Initializes a new instance of the <see cref="GossipMessageHandler{T}"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="gossipCache">The gossip cache.</param>
-        /// <param name="messageFactory">The message factory.</param>
+        /// <param name="messageFactory">The message factory</param>
         public GossipMessageHandler(IPeerIdentifier peerIdentifier,
-            IGossipCache gossipCache,
-            IP2PMessageFactory<TProto> messageFactory)
+            IGossipCache gossipCache, 
+            IP2PMessageFactory messageFactory)
         {
             _gossipCache = gossipCache;
-            _messageFactory = messageFactory;
             _peerIdentifier = peerIdentifier;
+            _messageFactory = messageFactory;
         }
 
         /// <inheritdoc/>
@@ -106,8 +106,8 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
             foreach (var peerIdentifier in peersToGossip)
             {
-                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(deserialised, peerIdentifier, _peerIdentifier,
-                    MessageTypes.Gossip, correlationId);
+                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(deserialised, 
+                    MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
                 channel.WriteAndFlushAsync(datagramEnvelope);
             }
 

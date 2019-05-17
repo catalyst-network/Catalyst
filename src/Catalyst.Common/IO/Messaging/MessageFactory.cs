@@ -97,7 +97,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <param name="dto">The dto.</param>
         /// <returns>AnySigned message</returns>
         /// <param name="correlationId">The correlation id</param>
-        protected AnySigned BuildGossipMessage(IMessageDto<TMessage> dto, Guid correlationId)
+        protected AnySigned BuildGossipMessage(IMessageDto dto, Guid correlationId)
         {
             return correlationId == default
                 ? throw new ArgumentException("Correlation ID cannot be null for a tell message") 

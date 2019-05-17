@@ -35,28 +35,20 @@ using Google.Protobuf;
 namespace Catalyst.Node.Core.P2P.Messaging
 {
     public sealed class P2PMessageFactory
-        : MessageFactory
+        : MessageFactory, IP2PMessageFactory
     {
         public P2PMessageFactory(IReputableCache messageCorrelationCache) : base(messageCorrelationCache) { }
-        
-        /// <summary>Gets the message in datagram envelope.</summary>
-        /// <param name="messageDto">Message Dto wrapper with all params required to send message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns></returns>
+
+        /// <inheritdoc />
         public IByteBufferHolder GetMessageInDatagramEnvelope(IMessageDto messageDto, Guid correlationId = default)
         {
             return GetMessage(messageDto, correlationId).ToDatagram(messageDto.Recipient.IpEndPoint);
         }
 
-        /// <inheritdoc />
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">IMessageDto containing all params</param>
-        /// <param name="correlationId"></param>
-        /// <returns></returns>
-        /// <exception cref="T:System.ArgumentException">unknown message type</exception>
+        /// <inheritdoc cref="MessageFactory" />
         public override AnySigned GetMessage(IMessageDto messageDto, Guid correlationId = default)
         {
-            return messageDto.MessageType == MessageTypes.Gossip ? BuildGossipMessage(messageDto) : base.GetMessage(messageDto, correlationId);
+            return messageDto.MessageType == MessageTypes.Gossip ? BuildGossipMessage(messageDto, correlationId) : base.GetMessage(messageDto, correlationId);
         }
     }
 }
