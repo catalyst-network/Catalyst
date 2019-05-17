@@ -26,9 +26,10 @@ using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
@@ -58,17 +59,17 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = new RpcMessageFactory<SignMessageRequest>().GetMessage(
+                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
                     new SignMessageRequest
                     {
                         Message = ByteString.CopyFrom(opts.Message.Trim('\"'), Encoding.UTF8)
                            .ToByteString()
                     },
-                    recipient: new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
+                    MessageTypes.Ask,
+                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
-                    _peerIdentifier,
-                    MessageTypes.Ask
-                );
+                    _peerIdentifier
+                ));
                 node.SendMessage(request).Wait();
             }
             catch (Exception e)

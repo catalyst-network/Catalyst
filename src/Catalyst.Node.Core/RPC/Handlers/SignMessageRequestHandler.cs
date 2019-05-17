@@ -31,8 +31,10 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -46,13 +48,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         public SignMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner,
-            IMessageCorrelationCache messageCorrelationCache)
+            IMessageCorrelationCache messageCorrelationCache,
+            IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)
         {
+            _rpcMessageFactory = rpcMessageFactory;
             _keySigner = keySigner;
             _peerIdentifier = peerIdentifier;
         }
@@ -83,16 +88,16 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                var response = new RpcMessageFactory<SignMessageResponse>().GetMessage(
-                    new SignMessageResponse
-                    {
-                        OriginalMessage = deserialised.Message,
-                        PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
-                        Signature = signature.Bytes.RawBytes.ToByteString()
-                    },
-                    new PeerIdentifier(message.Payload.PeerId),
-                    _peerIdentifier,
-                    MessageTypes.Tell,
+                var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                        new SignMessageResponse
+                        {
+                            OriginalMessage = deserialised.Message,
+                            PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
+                            Signature = signature.Bytes.RawBytes.ToByteString()
+                        },
+                        MessageTypes.Tell,
+                        new PeerIdentifier(message.Payload.PeerId),
+                        _peerIdentifier),
                     message.Payload.CorrelationId.ToGuid());
 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();

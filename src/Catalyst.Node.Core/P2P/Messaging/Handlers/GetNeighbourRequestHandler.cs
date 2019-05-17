@@ -43,12 +43,15 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
     {
         private readonly IRepository<Peer> _repository;
         private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IReputableCache _reputableCache;
 
         public GetNeighbourRequestHandler(IPeerIdentifier peerIdentifier,
             IRepository<Peer> repository,
+            IReputableCache reputableCache,
             ILogger logger)
             : base(logger)
         {
+            _reputableCache = reputableCache;
             _peerIdentifier = peerIdentifier;
             _repository = repository;
         }
@@ -69,11 +72,12 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
                 peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
             }
 
-            var datagramEnvelope = new P2PMessageFactory<PeerNeighborsResponse>().GetMessageInDatagramEnvelope(
-                message: peerNeighborsResponseMessage,
-                recipient: new PeerIdentifier(message.Payload.PeerId),
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Tell,
+            var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
+                    peerNeighborsResponseMessage,
+                    MessageTypes.Tell,
+                    new PeerIdentifier(message.Payload.PeerId),
+                    _peerIdentifier
+                ),
                 message.Payload.CorrelationId.ToGuid()
             );
 

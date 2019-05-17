@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -33,47 +34,29 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.Messaging
 {
-    public sealed class P2PMessageFactory<TMessage>
-        : MessageFactoryBase<TMessage> 
-        where TMessage : class, IMessage<TMessage>
+    public sealed class P2PMessageFactory
+        : MessageFactory
     {
+        public P2PMessageFactory(IReputableCache messageCorrelationCache) : base(messageCorrelationCache) { }
+        
         /// <summary>Gets the message in datagram envelope.</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="recipient">The recipient.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="messageType">Type of the message.</param>
+        /// <param name="messageDto">Message Dto wrapper with all params required to send message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns></returns>
-        public IByteBufferHolder GetMessageInDatagramEnvelope(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, MessageTypes messageType, Guid correlationId = default)
+        public IByteBufferHolder GetMessageInDatagramEnvelope(IMessageDto messageDto, Guid correlationId = default)
         {
-            return GetMessage(message, recipient, sender, messageType, correlationId).ToDatagram(recipient.IpEndPoint);
+            return GetMessage(messageDto, correlationId).ToDatagram(messageDto.Recipient.IpEndPoint);
         }
 
         /// <inheritdoc />
         /// <summary>Gets the message.</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="recipient">The recipient.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="messageType">Type of the message.</param>
+        /// <param name="messageDto">IMessageDto containing all params</param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentException">unknown message type</exception>
-        public override AnySigned GetMessage(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender, MessageTypes messageType, Guid correlationId = default)
+        public override AnySigned GetMessage(IMessageDto messageDto, Guid correlationId = default)
         {
-            return messageType == MessageTypes.Gossip ? BuildGossipMessage(GetMessageDto(message, recipient, sender)) : base.GetMessage(message, recipient, sender, messageType, correlationId);
-        }
-
-        /// <inheritdoc />
-        /// <summary>Gets the message dto.</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="recipient">The recipient.</param>
-        /// <param name="sender">The sender.</param>
-        /// <returns></returns>
-        protected override IMessageDto<TMessage> GetMessageDto(TMessage message,
-            IPeerIdentifier recipient,
-            IPeerIdentifier sender)
-        {
-            return new P2PMessageDto<TMessage>(message, recipient, sender);
+            return messageDto.MessageType == MessageTypes.Gossip ? BuildGossipMessage(messageDto) : base.GetMessage(messageDto, correlationId);
         }
     }
 }
