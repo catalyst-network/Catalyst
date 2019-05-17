@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="rpcMessageFactory"></param>
         public RemovePeerRequestHandler(IPeerIdentifier peerIdentifier,
             IPeerDiscovery peerDiscovery,
-            IMessageCorrelationCache messageCorrelationCache,
+            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory) : base(messageCorrelationCache, logger)
         {

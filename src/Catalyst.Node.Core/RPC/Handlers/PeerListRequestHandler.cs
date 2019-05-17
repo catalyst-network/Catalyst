@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="rpcMessageFactory"></param>
         public PeerListRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IMessageCorrelationCache messageCorrelationCache,
+            IRpcCorrelationCache messageCorrelationCache,
             IRepository<Peer> peerRepository,
             IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)

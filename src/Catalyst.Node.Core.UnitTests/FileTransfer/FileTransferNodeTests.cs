@@ -87,7 +87,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         public void Node_Initialize_File_Transfer()
         {
             var sender = PeerIdHelper.GetPeerId("sender");
-            var cache = Substitute.For<IMessageCorrelationCache>();
+            var cache = Substitute.For<IRpcCorrelationCache>();
             var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _nodeFileTransferFactory, cache, _rpcMessageFactory, _logger);
 

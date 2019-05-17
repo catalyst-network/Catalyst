@@ -61,7 +61,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public VerifyMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner,
-            IMessageCorrelationCache messageCorrelationCache,
+            IRpcCorrelationCache messageCorrelationCache,
             IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)
         {

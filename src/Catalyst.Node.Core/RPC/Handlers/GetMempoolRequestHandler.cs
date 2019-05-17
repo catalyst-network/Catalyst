@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public GetMempoolRequestHandler(IPeerIdentifier peerIdentifier,
             IMempool mempool,
-            IMessageCorrelationCache messageCorrelationCache,
+            IRpcCorrelationCache messageCorrelationCache,
             IRpcMessageFactory rpcMessageFactory,
             ILogger logger)
             : base(messageCorrelationCache, logger)

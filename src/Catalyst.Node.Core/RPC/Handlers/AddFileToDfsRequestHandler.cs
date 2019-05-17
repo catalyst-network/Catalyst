@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public AddFileToDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IDownloadFileTransferFactory fileTransferFactory,
-            IMessageCorrelationCache correlationCache,
+            IRpcCorrelationCache correlationCache,
             IRpcMessageFactory rpcMessageFactory,
             ILogger logger) : base(correlationCache, logger)
         {

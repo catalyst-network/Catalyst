@@ -34,6 +34,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -116,6 +118,7 @@ namespace Catalyst.Node.Core
                 
                 var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);
+                containerBuilder.RegisterType(typeof(GossipMessageHandler<>)).As(typeof(IGossipMessageHandler));
 
                 var container = containerBuilder.Build();
                 using (container.BeginLifetimeScope(LifetimeTag,

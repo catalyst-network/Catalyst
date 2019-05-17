@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public GetInfoRequestHandler(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
-            IMessageCorrelationCache messageCorrelationCache,
+            IRpcCorrelationCache messageCorrelationCache,
             IRpcMessageFactory rpcMessageFactory,
             ILogger logger) : base(messageCorrelationCache, logger)
         {

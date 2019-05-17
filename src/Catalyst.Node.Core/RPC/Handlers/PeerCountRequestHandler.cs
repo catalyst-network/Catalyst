@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="rpcMessageFactory"></param>
         /// <param name="logger">The logger.</param>
         public PeerCountRequestHandler(IPeerIdentifier peerIdentifier,
-            IMessageCorrelationCache correlationCache,
+            IRpcCorrelationCache correlationCache,
             IPeerDiscovery peerDiscovery,
             IRpcMessageFactory rpcMessageFactory,
             ILogger logger) :
