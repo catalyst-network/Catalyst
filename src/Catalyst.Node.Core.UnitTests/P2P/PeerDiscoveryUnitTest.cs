@@ -134,7 +134,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             {
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var pingRequest = new PingResponse();
-                var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
+                var pid = PeerIdentifierHelper.GetPeerIdentifier("im_the_sender");
                 var channeledAny = new ChanneledAnySigned(fakeContext, 
                     pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
             
@@ -149,6 +149,45 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
                 _peerRepository.Received(1)
                    .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));   
+            }
+        }
+        
+        [Fact]
+        public void CanReceiveGetNeighbourEventsFromSubscribedStream()
+        {
+            _dnsDomains.ForEach(domain =>
+            {
+                MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
+            });
+
+            using (var peerDiscovery = new PeerDiscovery(_dns,
+                _peerRepository,
+                new PeerSettings(_config),
+                _subbedPeerClientFactory,
+                _subbedReputableCache,
+                _logger))
+            {
+                var fakeContext = Substitute.For<IChannelHandlerContext>();
+                var peerNeighborsResponse = new PeerNeighborsResponse();
+                
+                peerNeighborsResponse.Peers.Add(PeerIdentifierHelper.GetPeerIdentifier("Key1").PeerId);
+                peerNeighborsResponse.Peers.Add(PeerIdentifierHelper.GetPeerIdentifier("Key2").PeerId);
+                peerNeighborsResponse.Peers.Add(PeerIdentifierHelper.GetPeerIdentifier("Key3").PeerId);
+                peerNeighborsResponse.Peers.Add(PeerIdentifierHelper.GetPeerIdentifier("Key4").PeerId);
+                peerNeighborsResponse.Peers.Add(PeerIdentifierHelper.GetPeerIdentifier("Key5").PeerId);
+
+                var pid = PeerIdentifierHelper.GetPeerIdentifier("im_the_sender");
+                var channeledAny = new ChanneledAnySigned(fakeContext, 
+                    peerNeighborsResponse.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+            
+                var observableStream = new[] {channeledAny}.ToObservable();
+
+                peerDiscovery.TotalPotentialCandidates = 10;
+                peerDiscovery.DiscoveredPeerInCurrentWalk = 26;
+                peerDiscovery.CurrentPeerNeighbours.TryAdd(pid.GetHashCode(), new KeyValuePair<IPeerIdentifier, ByteString>(pid, channeledAny.Payload.CorrelationId));
+                peerDiscovery.StartObserving(observableStream);
+
+                peerDiscovery.CurrentPeerNeighbours.Count.Should().Equals(5);
             }
         }
     }
