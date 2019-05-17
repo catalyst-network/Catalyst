@@ -39,8 +39,10 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.UnitTest.RPC
 {
@@ -55,14 +57,16 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
+        private IRpcCorrelationCache _subbedCorrelationCache;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
         /// </summary>
         public PeerListRequestHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
@@ -94,24 +98,21 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
-
-            var peerDiscovery = Substitute.For<IPeerDiscovery>();
-            peerDiscovery.PeerRepository.Returns(peerRepository);
             
-            var rpcMessageFactory = new RpcMessageFactory<GetPeerListRequest>();
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var requestMessage = rpcMessageFactory.GetMessage(
-                message: new GetPeerListRequest(),
-                recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sender: sendPeerIdentifier,
-                messageType: MessageTypes.Ask
-            );
+            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto(
+                new GetPeerListRequest(),
+                MessageTypes.Ask,
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                sendPeerIdentifier
+            ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
-            var handler = new PeerListRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerDiscovery);
+            var handler = new PeerListRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerRepository, rpcMessageFactory);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

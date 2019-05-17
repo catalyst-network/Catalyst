@@ -38,8 +38,10 @@ using Serilog;
 using Xunit;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
-using Catalyst.Node.Core.Rpc.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.Util;
 using Google.Protobuf;
 using SharpRepository.InMemoryRepository;
@@ -57,14 +59,16 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
+        private IRpcCorrelationCache _subbedCorrelationCache;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RemovePeerRequestHandlerTest"/> class.
         /// </summary>
         public RemovePeerRequestHandlerTest()
         {
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
@@ -114,24 +118,24 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var peerDiscovery = Substitute.For<IPeerDiscovery>();
             peerDiscovery.PeerRepository.Returns(peerRepository);
 
-            var rpcMessageFactory = new RpcMessageFactory<RemovePeerRequest>();
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var peerToDelete = peerRepository.Get(1);
-            var requestMessage = rpcMessageFactory.GetMessage(
-                message: new RemovePeerRequest
+            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto(
+                new RemovePeerRequest
                 {
                     PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
                     PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
                 },
-                recipient: PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sender: sendPeerIdentifier,
-                messageType: MessageTypes.Ask
-            );
+                MessageTypes.Ask,
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                sendPeerIdentifier
+            ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
-            var handler = new RemovePeerRequestHandler(sendPeerIdentifier, peerDiscovery, subbedCache, _logger);
+            var handler = new RemovePeerRequestHandler(sendPeerIdentifier, peerDiscovery, subbedCache, _logger, rpcMessageFactory);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

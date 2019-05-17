@@ -21,16 +21,19 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Google.Protobuf;
+using System;
+using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IMessageDto
+    public interface IMessageFactory
     {
-        MessageTypes MessageType { get; }
-        IMessage Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
+        /// <summary>Gets the message.</summary>
+        /// <param name="messageDto">The message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        AnySigned GetMessage(IMessageDto messageDto,
+            Guid correlationId = default);
     }
 }

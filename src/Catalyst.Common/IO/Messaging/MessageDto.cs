@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Dawn;
@@ -28,23 +29,31 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public sealed class MessageDto<TMessage>
-        : IMessageDto<TMessage>
-        where TMessage : class, IMessage
+    public sealed class MessageDto : IMessageDto
     {
-        public TMessage Message { get; }
+        public IMessage Message { get; }
+        public MessageTypes MessageType { get; }
         public IPeerIdentifier Recipient { get; }
         public IPeerIdentifier Sender { get; }
 
-        public MessageDto(TMessage message,
+        /// <summary>
+        ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="messageTypes"></param>
+        /// <param name="recipient"></param>
+        /// <param name="sender"></param>
+        public MessageDto(IMessage message,
+            MessageTypes messageTypes,
             IPeerIdentifier recipient,
             IPeerIdentifier sender)
         {
-            Guard.Argument(message, nameof(message)).NotNull().Compatible<TMessage>().HasValue();
-            Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull().HasValue();
+            Guard.Argument(message, nameof(message)).NotNull();
+            Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();
             Guard.Argument(recipient.Port, nameof(recipient.Port)).InRange(0, 65535);
-            Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull().HasValue();
+            Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull();
             Message = message;
+            MessageType = messageTypes;
             Recipient = recipient;
             Sender = sender;
         }

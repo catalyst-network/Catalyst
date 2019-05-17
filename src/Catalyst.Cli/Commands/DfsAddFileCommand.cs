@@ -30,8 +30,9 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Serilog.Events;
@@ -77,13 +78,13 @@ namespace Catalyst.Cli.Commands
             {
                 request.FileSize = (ulong) fileStream.Length;
             }
-
-            var requestMessage = new RpcMessageFactory<AddFileToDfsRequest>().GetMessage(
+            
+            var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
                 message: request,
+                messageTypes: MessageTypes.Ask,
                 recipient: nodePeerIdentifier,
-                sender: _peerIdentifier,
-                messageType: MessageTypes.Ask
-            );
+                sender: _peerIdentifier
+            ));
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
                 File.Open(opts.File, FileMode.Open),
@@ -91,7 +92,7 @@ namespace Catalyst.Cli.Commands
                 nodePeerIdentifier,
                 node.Channel,
                 requestMessage.CorrelationId.ToGuid(),
-                new RpcMessageFactory<TransferFileBytesRequest>());
+                new RpcMessageFactory(_rpcMessageCorrelationCache));
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 
