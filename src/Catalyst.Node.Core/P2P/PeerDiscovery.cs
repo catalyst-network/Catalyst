@@ -226,7 +226,7 @@ namespace Catalyst.Node.Core.P2P
         ///     Called when a pingResponse event is see, we can store the peer at this point.
         /// </summary>
         /// <param name="message"></param>
-        public void PingResponseSubscriptionHandler(IChanneledMessage<AnySigned> message)
+        private void PingResponseSubscriptionHandler(IChanneledMessage<AnySigned> message)
         {
             _logger.Information("processing ping message stream");
             DiscoveredPeerInCurrentWalk = StorePeer(message.Payload.PeerId);
