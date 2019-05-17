@@ -34,7 +34,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns><c>true</c> if this instance can gossip the specified correlation identifier; otherwise, <c>false</c>.</returns>
         bool CanGossip(Guid correlationId);
-        
+
         /// <summary>Gets the gossip count.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns></returns>
@@ -43,12 +43,12 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <summary>Increments the gossip count.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <param name="updateCount">The update count.</param>
-        void IncrementGossipCount(Guid correlationId, int updateCount);
+        void IncrementGossipCount(Guid correlationId, uint updateCount);
         
         /// <summary>Increments the received count.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <param name="increment">The increment.</param>
-        void IncrementReceivedCount(Guid correlationId, int increment);
+        void IncrementReceivedCount(Guid correlationId, uint increment);
 
         /// <summary>Adds the pending request.</summary>
         /// <param name="request">The request.</param>
@@ -58,5 +58,9 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <param name="count">The count.</param>
         /// <returns></returns>
         List<IPeerIdentifier> GetRandomPeers(int count);
+
+        /// <summary>Gets the maximum gossip cycles.</summary>
+        /// <returns></returns>
+        uint GetMaxGossipCycles();
     }
 }

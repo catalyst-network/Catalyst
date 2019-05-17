@@ -74,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             var correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
 
             cache.TryGetValue(correlationId, out PendingRequest value);
-            value.GossipCount.Should().Be(Constants.MaxGossipPeers);
+            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeers);
             value.ReceivedCount.Should().Be(0);
         }
 
@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             var correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
 
             cache.TryGetValue(correlationId, out PendingRequest value);
-            value.GossipCount.Should().Be(Constants.MaxGossipPeers - 1);
+            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeers - 1);
             value.ReceivedCount.Should().Be(0);
         }
 
@@ -135,7 +135,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             var channeledMessage = new ChanneledAnySigned(_fakeContext, messageDto);
             gossipMessageHandler.Handle(channeledMessage);
             cache.TryGetValue(correlationId, out PendingRequest value);
-            value.GossipCount.Should().Be(Constants.MaxGossipPeers);
+            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeers);
             value.ReceivedCount.Should().Be(0);
 
             for (int i = 0; i < receivedCount; i++)
@@ -144,8 +144,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             }
 
             cache.TryGetValue(correlationId, out value);
-            value.ReceivedCount.Should().Be(receivedCount);
-            value.GossipCount.Should().Be(Math.Min(Constants.MaxGossipCount,
+            value.ReceivedCount.Should().Be((uint) receivedCount);
+            value.GossipCount.Should().Be((uint) Math.Min(gossipCache.GetMaxGossipCycles(),
                 (value.ReceivedCount + 1) * Constants.MaxGossipPeers));
         }
 

@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
@@ -88,7 +87,8 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                     SentAt = DateTime.Now,
                     Recipient = new PeerIdentifier(message.Payload.PeerId),
                     Content = message.Payload,
-                    ReceivedCount = 0
+                    ReceivedCount = 0,
+                    MaxGossipCycles = _gossipCache.GetMaxGossipCycles()
                 };
                 _gossipCache.AddPendingRequest(request);
             }
@@ -112,7 +112,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 channel.WriteAndFlushAsync(datagramEnvelope);
             }
 
-            var updateCount = peersToGossip.Count;
+            var updateCount = (uint) peersToGossip.Count;
             if (updateCount > 0)
             {
                 _gossipCache.IncrementGossipCount(correlationId, updateCount);
