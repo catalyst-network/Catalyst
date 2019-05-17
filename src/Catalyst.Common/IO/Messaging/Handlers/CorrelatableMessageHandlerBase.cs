@@ -36,7 +36,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         where TProto : class, IMessage<TProto>
         where TCorrelator : IMessageCorrelationCache
     {
-        private readonly TCorrelator _correlationCache;
+        protected TCorrelator _correlationCache;
 
         protected CorrelatableMessageHandlerBase(TCorrelator correlationCache,
             ILogger logger)
@@ -47,12 +47,12 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            bool nextHandler = true;
+            var nextHandler = true;
             if (this is IReputationAskHandler<TCorrelator>)
             {
                 nextHandler = ((IReputationAskHandler<TCorrelator>) this).CanExecuteNextHandler(message);
             }
-            
+
             if (nextHandler)
             {
                 Logger.Debug("handle message in correlatable handler");

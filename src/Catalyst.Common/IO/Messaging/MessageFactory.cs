@@ -24,9 +24,12 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
 using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging
@@ -34,31 +37,28 @@ namespace Catalyst.Common.IO.Messaging
     /// <summary>
     /// The base class to handle building of AnySigned messages
     /// </summary>
-    /// <typeparam name="TMessage">The type of the message.</typeparam>
-    public abstract class MessageFactoryBase<TMessage>
-        where TMessage : class, IMessage<TMessage>
+    public class MessageFactory : IMessageFactory
     {
+        private readonly IMessageCorrelationCache _messageCorrelationCache;
+
+        protected MessageFactory(IMessageCorrelationCache messageCorrelationCache)
+        {
+            _messageCorrelationCache = messageCorrelationCache;
+        }
+        
         /// <summary>Gets the message.</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="recipient">The recipient.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="messageType">Type of the message.</param>
+        /// <param name="messageDto">The message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>AnySigned message</returns>
-        public virtual AnySigned GetMessage(TMessage message,
-            IPeerIdentifier recipient,
-            IPeerIdentifier sender,
-            MessageTypes messageType,
+        public virtual AnySigned GetMessage(IMessageDto messageDto,
             Guid correlationId = default)
         {
-            var messageDto = GetMessageDto(message, recipient, sender);
-
-            if (messageType == MessageTypes.Ask)
+            if (messageDto.MessageType == MessageTypes.Ask)
             {
                 return BuildAskMessage(messageDto);
             }
 
-            if (messageType == MessageTypes.Tell)
+            if (messageDto.MessageType == MessageTypes.Tell)
             {
                 return BuildTellMessage(messageDto, correlationId);
             }
@@ -66,18 +66,11 @@ namespace Catalyst.Common.IO.Messaging
             throw new ArgumentException();
         }
 
-        /// <summary>Gets the message dto.</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="recipient">The recipient.</param>
-        /// <param name="sender">The sender.</param>
-        /// <returns></returns>
-        protected abstract IMessageDto<TMessage> GetMessageDto(TMessage message, IPeerIdentifier recipient, IPeerIdentifier sender);
-
         /// <summary>Builds the tell message.</summary>
         /// <param name="dto">The dto.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>AnySigned message</returns>
-        private AnySigned BuildTellMessage(IMessageDto<TMessage> dto, Guid correlationId)
+        private AnySigned BuildTellMessage(IMessageDto dto, Guid correlationId)
         {
             return correlationId == default
                 ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
@@ -87,9 +80,17 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>Builds the ask message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>AnySigned message</returns>
-        private AnySigned BuildAskMessage(IMessageDto<TMessage> dto)
+        private AnySigned BuildAskMessage(IMessageDto dto)
         {
-            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
+            var messageContent = dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
+            var correlatableRequest = new PendingRequest
+            {
+                Content = messageContent,
+                Recipient = dto.Recipient,
+                SentAt = DateTimeOffset.MinValue
+            };
+            _messageCorrelationCache.AddPendingRequest(correlatableRequest);
+            return messageContent;
         }
 
         /// <summary>Builds the gossip message.</summary>

@@ -21,21 +21,19 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Net;
+using System;
+using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IPeerSettings
+    public interface IMessageFactory
     {
-        Config.Network Network { get; }
-        string PayoutAddress { get; }
-        string PublicKey { get; }
-        bool Announce { get; }
-        IPEndPoint AnnounceServer { get; }
-        int Port { get; }
-        IPAddress BindAddress { get; }
-        IList<string> SeedServers { get; }
+        /// <summary>Gets the message.</summary>
+        /// <param name="messageDto">The message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        AnySigned GetMessage(IMessageDto messageDto,
+            Guid correlationId = default);
     }
 }
-

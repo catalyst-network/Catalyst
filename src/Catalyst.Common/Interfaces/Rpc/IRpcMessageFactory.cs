@@ -21,21 +21,9 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Net;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface IPeerSettings
-    {
-        Config.Network Network { get; }
-        string PayoutAddress { get; }
-        string PublicKey { get; }
-        bool Announce { get; }
-        IPEndPoint AnnounceServer { get; }
-        int Port { get; }
-        IPAddress BindAddress { get; }
-        IList<string> SeedServers { get; }
-    }
+    public interface IRpcMessageFactory : IMessageFactory { }
 }
-

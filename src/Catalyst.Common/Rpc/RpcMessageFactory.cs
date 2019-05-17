@@ -21,29 +21,18 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging;
 using Google.Protobuf;
 
-namespace Catalyst.Node.Core.Rpc.Messaging
+namespace Catalyst.Common.Rpc
 {
-    /// <summary>
-    /// Handles generation of messages for RPC
-    /// </summary>
-    /// <typeparam name="TMessage">The type of the message.</typeparam>
-    /// <seealso cref="MessageFactoryBase{TMessage}" />
-    /// <seealso cref="IRpcMessageFactory{TMessage}" />
-    public sealed class RpcMessageFactory<TMessage>
-        : MessageFactoryBase<TMessage>, IRpcMessageFactory<TMessage> where TMessage : class, IMessage<TMessage>
+    /// <inheritdoc cref="IRpcMessageFactory" />
+    /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactory`1" />
+    public sealed class RpcMessageFactory : MessageFactory, IRpcMessageFactory
     {
-        /// <inheritdoc />
-        protected override IMessageDto<TMessage> GetMessageDto(TMessage message,
-            IPeerIdentifier recipient,
-            IPeerIdentifier sender)
-        {
-            return new MessageDto<TMessage>(message, recipient, sender);
-        }
+        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
     }
 }

@@ -52,9 +52,11 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
         private readonly ILogger _subbedLogger;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRepository<Peer> _subbedPeerRepository;
+        private IReputableCache _subbedReputableCache;
 
         public GetNeighbourRequestHandlerTests(ITestOutputHelper output) : base(output)
         {
+            _subbedReputableCache = Substitute.For<IReputableCache>();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
@@ -75,6 +77,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
         {   
             var neighbourRequestHandler = new GetNeighbourRequestHandler(_peerIdentifier,
                 _subbedPeerRepository,
+                _subbedReputableCache,
                 _subbedLogger
             );
 
@@ -120,6 +123,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
 
             var neighbourRequestHandler = new GetNeighbourRequestHandler(_peerIdentifier,
                 _subbedPeerRepository,
+                _subbedReputableCache,
                 _subbedLogger
             );
             

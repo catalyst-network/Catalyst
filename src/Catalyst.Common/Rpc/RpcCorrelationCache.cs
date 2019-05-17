@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
@@ -29,7 +30,7 @@ using Serilog;
 namespace Catalyst.Common.Rpc
 {
     public sealed class RpcCorrelationCache
-        : MessageCorrelationCacheBase
+        : MessageCorrelationCacheBase, IRpcCorrelationCache
     {
         public RpcCorrelationCache(IMemoryCache cache,
             ILogger logger,

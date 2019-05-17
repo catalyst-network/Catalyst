@@ -29,8 +29,9 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -46,12 +47,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRpcServerSettings _config;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         public GetInfoRequestHandler(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
             IMessageCorrelationCache messageCorrelationCache,
+            IRpcMessageFactory rpcMessageFactory,
             ILogger logger) : base(messageCorrelationCache, logger)
         {
+            _rpcMessageFactory = rpcMessageFactory;
             _peerIdentifier = peerIdentifier;
             _config = config;
         }
@@ -73,14 +77,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
                     Formatting.Indented);
 
-                var response = new RpcMessageFactory<GetInfoResponse>().GetMessage(
-                    new GetInfoResponse
-                    {
-                        Query = serializedList
-                    },
-                    new PeerIdentifier(message.Payload.PeerId), 
-                    _peerIdentifier,
-                    MessageTypes.Tell,
+                var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                        new GetInfoResponse
+                        {
+                            Query = serializedList
+                        },
+                        MessageTypes.Tell,
+                        new PeerIdentifier(message.Payload.PeerId), 
+                        _peerIdentifier
+                    ),
                     message.Payload.CorrelationId.ToGuid());
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();

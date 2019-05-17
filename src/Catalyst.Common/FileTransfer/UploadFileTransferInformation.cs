@@ -26,6 +26,7 @@ using System.IO;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
@@ -38,7 +39,7 @@ namespace Catalyst.Common.FileTransfer
     public sealed class UploadFileTransferInformation : BaseFileTransferInformation, IUploadFileInformation
     {
         /// <summary>The upload message factory</summary>
-        private readonly MessageFactoryBase<TransferFileBytesRequest> _uploadMessageFactory;
+        private readonly IMessageFactory _uploadMessageFactory;
         
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
@@ -52,7 +53,7 @@ namespace Catalyst.Common.FileTransfer
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
             Guid correlationGuid,
-            MessageFactoryBase<TransferFileBytesRequest> uploadMessageFactory) :
+            IMessageFactory uploadMessageFactory) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {
@@ -97,12 +98,12 @@ namespace Catalyst.Common.FileTransfer
                 CorrelationFileName = CorrelationGuid.ToByteString()
             };
             
-            return _uploadMessageFactory.GetMessage(
+            return _uploadMessageFactory.GetMessage(new MessageDto(
                 transferMessage,
+                MessageTypes.Ask,
                 PeerIdentifier,
-                RecipientIdentifier,
-                MessageTypes.Ask
-            );
+                RecipientIdentifier
+            ));
         }
 
         public int RetryCount { get; set; }
