@@ -26,8 +26,9 @@ using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 
@@ -56,14 +57,14 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = new RpcMessageFactory<GetMempoolRequest>().GetMessage(
-                    new GetMempoolRequest(),
+                var dto = new MessageDto(new GetMempoolRequest(),
+                    MessageTypes.Ask,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                         nodeConfig.HostAddress,
                         nodeConfig.Port),
-                    _peerIdentifier,
-                    MessageTypes.Ask
-                );
+                    _peerIdentifier);
+                
+                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(dto);
                 node.SendMessage(request);
             }
             catch (Exception e)
