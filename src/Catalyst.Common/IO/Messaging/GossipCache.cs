@@ -40,32 +40,31 @@ namespace Catalyst.Common.IO.Messaging
     {
         /// <summary>The peer discovery</summary>
         private readonly IPeerDiscovery _peerDiscovery;
-
-        /// <summary>The peer identifier</summary>
-        private readonly IPeerIdentifier _peerIdentifier;
-
+        
         /// <summary>Initializes a new instance of the <see cref="GossipCache"/> class.</summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerDiscovery">The peer discovery.</param>
         /// <param name="cache">The cache.</param>
         /// <param name="logger">The logger.</param>
-        public GossipCache(IPeerIdentifier peerIdentifier,
-            IPeerDiscovery peerDiscovery,
+        public GossipCache(IPeerDiscovery peerDiscovery,
             IMemoryCache cache,
             ILogger logger) : base(cache, logger, TimeSpan.FromMinutes(10))
         {
             _peerDiscovery = peerDiscovery;
-            _peerIdentifier = peerIdentifier;
         }
 
         /// <inheritdoc/>
-        public List<IPeerIdentifier> GetSortedPeers()
+        public List<IPeerIdentifier> GetRandomPeers(int count)
         {
-            List<IPeerIdentifier> fullPeerList = new List<IPeerIdentifier>();
-            fullPeerList.AddRange(_peerDiscovery.Peers.ToList());
-            fullPeerList.Add(_peerIdentifier);
-            var orderedList = fullPeerList.OrderBy(t => t.ToString()).ToList();
-            return orderedList;
+            List<IPeerIdentifier> randomPeers = new List<IPeerIdentifier>();
+            Random random = new Random(Guid.NewGuid().GetHashCode());
+            var peerCount = this._peerDiscovery.Peers.Count;
+            var peerAmount = Math.Min(peerCount, count);
+            for (int i = 0; i < peerAmount; i++)
+            {
+                randomPeers.Add(_peerDiscovery.Peers.ElementAt(random.Next(peerAmount)));
+            }
+
+            return randomPeers;
         }
 
         /// <inheritdoc/>
@@ -98,15 +97,7 @@ namespace Catalyst.Common.IO.Messaging
         {
             throw new NotSupportedException();
         }
-
-        /// <inheritdoc/>
-        public int GetCurrentPosition()
-        {
-            var sortedPeers = GetSortedPeers();
-            var peerIdx = sortedPeers.IndexOf(_peerIdentifier);
-            return peerIdx;
-        }
-
+        
         /// <inheritdoc/>
         public int GetGossipCount(Guid correlationId)
         {
@@ -121,7 +112,7 @@ namespace Catalyst.Common.IO.Messaging
             AddPendingRequest(request);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IGossipCache"/>
         public override void AddPendingRequest(PendingRequest pendingRequest)
         {
             PendingRequests.Set(pendingRequest.Content.CorrelationId.ToGuid(), pendingRequest, EntryOptions);

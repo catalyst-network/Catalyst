@@ -100,42 +100,19 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// <param name="message">The message.</param>
         private void Gossip(IChanneledMessage<AnySigned> message)
         {
-            var myPosition = _gossipCache.GetCurrentPosition();
-            var gossipPeers = _gossipCache.GetSortedPeers();
+            var peersToGossip = _gossipCache.GetRandomPeers(Constants.MaxGossipPeers);
+            var deserialised = message.Payload.FromAnySigned<TProto>();
             var correlationId = message.Payload.CorrelationId.ToGuid();
             var channel = message.Context.Channel;
 
-            if (gossipPeers.Count < 1)
-            {
-                return;
-            }
-
-            gossipPeers.Remove(_peerIdentifier);
-
-            gossipPeers.RemoveRange(0, myPosition);
-
-            var gossipCount = _gossipCache.GetGossipCount(correlationId);
-            var deserialised = message.Payload.FromAnySigned<TProto>();
-            var amountToGossip = Math.Min(Constants.MaxGossipPeers, Constants.MaxGossipCount - gossipCount);
-            var positionOffset = myPosition * Constants.MaxGossipPeers;
-            
-            if (gossipCount > 0)
-            {
-                positionOffset += gossipCount;
-            }
-
-            var circularList = new CircularList<IPeerIdentifier>(gossipPeers);
-
-            var peerIdentifiers =
-                circularList.Skip(positionOffset).Take(amountToGossip);
-            foreach (var peerIdentifier in peerIdentifiers)
+            foreach (var peerIdentifier in peersToGossip)
             {
                 var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(deserialised, peerIdentifier, _peerIdentifier,
                     MessageTypes.Gossip, correlationId);
                 channel.WriteAndFlushAsync(datagramEnvelope);
             }
 
-            var updateCount = peerIdentifiers.Length;
+            var updateCount = peersToGossip.Count;
             if (updateCount > 0)
             {
                 _gossipCache.IncrementGossipCount(correlationId, updateCount);

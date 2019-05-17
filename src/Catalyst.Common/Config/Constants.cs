@@ -114,11 +114,11 @@ namespace Catalyst.Common.Config
         public const int Precision = 50;
         
         /// <summary>The maximum peers the node can gossip to for a single message, per gossip cycle</summary>
-        public static int MaxGossipPeers => 5;
+        public static int MaxGossipPeers => 2;
 
         /// <summary>The maximum gossip count</summary>
         /// <summary cref="MaxGossipPeers">Has to be greater than MaxGossipPeers constant</summary>
-        public static int MaxGossipCount => 10;
+        public static int MaxGossipCount => 6;
 
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);

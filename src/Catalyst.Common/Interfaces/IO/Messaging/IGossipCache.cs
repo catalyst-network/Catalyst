@@ -34,11 +34,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns><c>true</c> if this instance can gossip the specified correlation identifier; otherwise, <c>false</c>.</returns>
         bool CanGossip(Guid correlationId);
-
-        /// <summary>Gets the current position.</summary>
-        /// <returns></returns>
-        int GetCurrentPosition();
-
+        
         /// <summary>Gets the gossip count.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns></returns>
@@ -57,9 +53,10 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <summary>Adds the pending request.</summary>
         /// <param name="request">The request.</param>
         void AddPendingRequest(PendingRequest request);
-
-        /// <summary>Gets the sorted peers.</summary>
+        
+        /// <summary>Gets the random peers.</summary>
+        /// <param name="count">The count.</param>
         /// <returns></returns>
-        List<IPeerIdentifier> GetSortedPeers();
+        List<IPeerIdentifier> GetRandomPeers(int count);
     }
 }
