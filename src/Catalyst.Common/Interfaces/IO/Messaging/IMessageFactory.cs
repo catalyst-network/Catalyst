@@ -21,22 +21,19 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cryptography;
-using NSec.Cryptography;
+using System;
+using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Cryptography
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     NSec specific public key wrapper.
-    /// </summary>
-    internal sealed class NSecPublicKeyWrapper
-        : IPublicKey
+    public interface IMessageFactory
     {
-        private readonly PublicKey _key;
-
-        public NSecPublicKeyWrapper(PublicKey key) { _key = key; }
-
-        public PublicKey GetNSecFormatPublicKey() { return _key; }
+        /// <summary>Gets the message.</summary>
+        /// <param name="messageDto">The message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>AnySigned message</returns>
+        AnySigned GetMessage(IMessageDto messageDto,
+            Guid correlationId = default);
     }
 }

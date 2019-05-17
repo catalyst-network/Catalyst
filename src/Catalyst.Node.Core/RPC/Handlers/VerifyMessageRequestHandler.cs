@@ -29,10 +29,13 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Dawn;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
@@ -47,7 +50,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdentifier _peerIdentifier;
         private IChanneledMessage<AnySigned> _message;
-        
+        private readonly IRpcMessageFactory _rpcMessageFactory;
+
         private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
         private const string PublicKeyNotProvided = "PublicKey not provided";
         private const string SignatureEncodingInvalid = "Invalid Signature encoding";
@@ -57,9 +61,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public VerifyMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner,
-            IMessageCorrelationCache messageCorrelationCache)
+            IMessageCorrelationCache messageCorrelationCache,
+            IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)
         {
+            _rpcMessageFactory = rpcMessageFactory;
             _keySigner = keySigner;
             _peerIdentifier = peerIdentifier;
         }
@@ -113,7 +119,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Guard.Argument(pubKey).HasValue();
 
                 var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
-                    decodedSignature);
+                    new Signature(decodedSignature));
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
@@ -127,14 +133,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         private void ReturnResponse(bool result, Guid correlationGuid)
         {
-            var response = new RpcMessageFactory<VerifyMessageResponse>().GetMessage(
-                new VerifyMessageResponse
-                {
-                    IsSignedByKey = result
-                },
-                new PeerIdentifier(_message.Payload.PeerId),
-                _peerIdentifier,
-                MessageTypes.Tell,
+            var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                    new VerifyMessageResponse
+                    {
+                        IsSignedByKey = result
+                    },
+                    MessageTypes.Tell,
+                    new PeerIdentifier(_message.Payload.PeerId),
+                    _peerIdentifier),
                 correlationGuid);
 
             _message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();

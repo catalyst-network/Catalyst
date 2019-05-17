@@ -21,15 +21,21 @@
 
 #endregion
 
-using NSec.Cryptography;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Outbound;
+using Catalyst.Protocol.Common;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.Cryptography
+namespace Catalyst.Common.Interfaces.Rpc
 {
-    /// <summary>
-    ///     Wrapper for public key.
-    /// </summary>
-    public interface IPublicKey
+    public interface IRpcCorrelationCache : IMessageCorrelationCache
     {
-        PublicKey GetNSecFormatPublicKey();
+        TimeSpan CacheTtl { get; }
+        void AddPendingRequest(PendingRequest pendingRequest);
+
+        TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
+            where TRequest : class, IMessage<TRequest>
+            where TResponse : class, IMessage<TResponse>;
     }
 }

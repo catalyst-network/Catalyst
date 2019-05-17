@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
@@ -79,7 +80,11 @@ namespace Catalyst.Node.Core.UnitTest.Config
             var peerSettings = new PeerSettings(configRoot);
 
             peerSettings.Should().NotBeNull();
-            peerSettings.EndPoint.Should().NotBeNull();
+            peerSettings.Network.Name.Should().NotBeNullOrWhiteSpace().Should().Equals(networkConfig);
+            peerSettings.Port.Should().BeInRange(1025, 65535);
+            Assert.NotNull(peerSettings.Announce);
+            peerSettings.AnnounceServer.Should().BeOfType<IPEndPoint>();
+            peerSettings.BindAddress.Should().BeOfType<IPAddress>();
             peerSettings.PublicKey.Should().NotBeNullOrWhiteSpace();
             peerSettings.SeedServers.Should().NotBeEmpty();
             peerSettings.Network.Name.Should().NotBeNullOrWhiteSpace();

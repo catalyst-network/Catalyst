@@ -13,7 +13,15 @@
             "type": "Catalyst.Common.Rpc.RpcCorrelationCache, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationCache, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcCorrelationCache, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Rpc.RpcMessageFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcMessageFactory, Catalyst.Common"
                 }
             ]
         },
@@ -82,7 +90,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Cryptography.NSecCryptoContext, Catalyst.Common",
+            "type": "Catalyst.Common.Cryptography.RustCryptoContext, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Common"
@@ -158,6 +166,14 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cryptography.ICertificateStore, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Cryptography.IsaacRandom, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cryptography.IDeterministicRandom, Catalyst.Common"
                 }
             ]
         },

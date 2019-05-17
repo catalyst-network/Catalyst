@@ -21,15 +21,32 @@
 
 #endregion
 
-namespace Catalyst.Common.Cryptography
+using System;
+using Catalyst.Common.Interfaces.Attributes;
+using SharpRepository.Repository.Aspects;
+
+namespace Catalyst.Common.Attributes
 {
-    public sealed class Signature
+    public sealed class AuditAttribute : RepositoryActionBaseAttribute
     {
-        public byte[] Bytes
+        public override bool OnAddExecuting<T, TKey>(T entity, RepositoryActionContext<T, TKey> context)
         {
-            get;
+            if (entity is IAuditable tmp)
+            {
+                tmp.Created = DateTime.UtcNow;
+            }
+
+            return true;
         }
 
-        public Signature(byte[] bytes) { Bytes = bytes; }
+        public override bool OnUpdateExecuting<T, TKey>(T entity, RepositoryActionContext<T, TKey> context)
+        {
+            if (entity is IAuditable tmp)
+            {
+                tmp.Modified = DateTime.UtcNow;
+            }
+
+            return true;
+        }
     }
 }

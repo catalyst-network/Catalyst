@@ -21,14 +21,15 @@
 
 #endregion
 
+using Catalyst.Common.Config;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.P2P.Messaging
 {
-    public interface IMessageDto<out TMessage> 
-        where TMessage : class, IMessage
+    public interface IMessageDto
     {
-        TMessage Message { get; }
+        MessageTypes MessageType { get; }
+        IMessage Message { get; }
         IPeerIdentifier Recipient { get; }
         IPeerIdentifier Sender { get; }
     }

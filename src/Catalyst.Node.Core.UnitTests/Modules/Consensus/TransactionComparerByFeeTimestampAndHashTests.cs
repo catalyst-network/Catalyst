@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
@@ -158,7 +159,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
     {
         public int Compare(ByteString x, ByteString y)
         {
-            return ByteListComparer.Default.Compare(x.ToByteArray(), y.ToByteArray());
+            return ByteUtil.ByteListComparer.Default.Compare(x.ToByteArray(), y.ToByteArray());
         }
 
         public static ByteStringComparer Default { get; } = new ByteStringComparer();

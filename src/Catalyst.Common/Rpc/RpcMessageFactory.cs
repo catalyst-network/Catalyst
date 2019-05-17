@@ -21,15 +21,18 @@
 
 #endregion
 
-using NSec.Cryptography;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.Cryptography
+namespace Catalyst.Common.Rpc
 {
-    /// <summary>
-    ///     Wrapper for private key.
-    /// </summary>
-    public interface IPrivateKey : IPublicKey
+    /// <inheritdoc cref="IRpcMessageFactory" />
+    /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactory`1" />
+    public sealed class RpcMessageFactory : MessageFactory, IRpcMessageFactory
     {
-        Key GetNSecFormatPrivateKey();
+        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
     }
 }

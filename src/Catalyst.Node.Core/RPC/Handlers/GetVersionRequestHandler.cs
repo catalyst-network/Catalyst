@@ -29,26 +29,31 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.Rpc.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public class GetVersionRequestHandler
+    public sealed class GetVersionRequestHandler
         : CorrelatableMessageHandlerBase<VersionRequest, IMessageCorrelationCache>,
             IRpcRequestHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         public GetVersionRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IMessageCorrelationCache messageCorrelationCache)
+            IMessageCorrelationCache messageCorrelationCache,
+            IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)
         {
+            _rpcMessageFactory = rpcMessageFactory;
             _peerIdentifier = peerIdentifier;
         }
 
@@ -60,14 +65,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
             
             try
             {
-                var response = new RpcMessageFactory<VersionResponse>().GetMessage(
-                    new VersionResponse
-                    {
-                        Version = NodeUtil.GetVersion()
-                    },
-                    new PeerIdentifier(message.Payload.PeerId),
-                    _peerIdentifier,
-                    MessageTypes.Tell,
+                var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                        new VersionResponse
+                        {
+                            Version = NodeUtil.GetVersion()
+                        },
+                        MessageTypes.Tell,
+                        new PeerIdentifier(message.Payload.PeerId),
+                        _peerIdentifier),
                     message.Payload.CorrelationId.ToGuid());
                 
                 message.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
