@@ -38,3 +38,4 @@ namespace Catalyst.Common.Interfaces.P2P
         IList<string> SeedServers { get; }
     }
 }
+

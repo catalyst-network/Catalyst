@@ -68,4 +68,3 @@ namespace Catalyst.Node.Core.P2P
         public IList<string> SeedServers { get; }
     }
 }
-
