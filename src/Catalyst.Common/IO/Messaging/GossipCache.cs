@@ -29,27 +29,29 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
+using SharpRepository.Repository;
 
 namespace Catalyst.Common.IO.Messaging
 {
     public sealed class GossipCache
         : MessageCorrelationCacheBase, IGossipCache
     {
-        /// <summary>The peer discovery</summary>
-        private readonly IPeerDiscovery _peerDiscovery;
+        /// <summary>The peers</summary>
+        private readonly IRepository<Peer> _peers;
         
         /// <summary>Initializes a new instance of the <see cref="GossipCache"/> class.</summary>
-        /// <param name="peerDiscovery">The peer discovery.</param>
+        /// <param name="peers">The peers.</param>
         /// <param name="cache">The cache.</param>
         /// <param name="logger">The logger.</param>
-        public GossipCache(IPeerDiscovery peerDiscovery,
+        public GossipCache(IRepository<Peer> peers,
             IMemoryCache cache,
             ILogger logger) : base(cache, logger, TimeSpan.FromMinutes(10))
         {
-            _peerDiscovery = peerDiscovery;
+            _peers = peers;
         }
 
         /// <inheritdoc/>
@@ -57,11 +59,11 @@ namespace Catalyst.Common.IO.Messaging
         {
             List<IPeerIdentifier> randomPeers = new List<IPeerIdentifier>();
             Random random = new Random(Guid.NewGuid().GetHashCode());
-            var peerCount = this._peerDiscovery.Peers.Count;
-            var peerAmount = Math.Min(peerCount, count);
+            var peers = this._peers.GetAll().ToList();
+            var peerAmount = Math.Min(peers.Count, count);
             for (int i = 0; i < peerAmount; i++)
             {
-                randomPeers.Add(_peerDiscovery.Peers.ElementAt(random.Next(peerAmount)));
+                randomPeers.Add(peers[random.Next(peerAmount)].PeerIdentifier);
             }
 
             return randomPeers;
@@ -120,7 +122,7 @@ namespace Catalyst.Common.IO.Messaging
 
             if (GetGossipCount(guid) == -1)
             {
-                ((GossipRequest) pendingRequest).PeerNetworkSize = _peerDiscovery.Peers.Count;
+                ((GossipRequest) pendingRequest).PeerNetworkSize = _peers.GetAll().Count();
             }
 
             PendingRequests.Set(guid, pendingRequest, EntryOptions);
@@ -148,7 +150,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <inheritdoc/>
         public uint GetMaxGossipCycles(Guid guid)
         {
-            var peerNetworkSize = GetPendingRequestValue(guid)?.PeerNetworkSize ?? _peerDiscovery.Peers.Count;
+            var peerNetworkSize = GetPendingRequestValue(guid)?.PeerNetworkSize ?? _peers.GetAll().Count();
             return (uint) (Math.Log(peerNetworkSize / (double) Constants.MaxGossipPeersPerRound) /
                 Math.Max(1, 2 * GetGossipCount(guid) / Constants.MaxGossipPeersPerRound));
         }

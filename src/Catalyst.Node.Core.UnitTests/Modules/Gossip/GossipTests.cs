@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -32,6 +33,7 @@ using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
@@ -41,13 +43,14 @@ using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
+using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 {
     public class GossipTests
     {
-        private readonly IPeerDiscovery _peerDiscovery;
+        private readonly IRepository<Peer> _peers;
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IReputableCache _reputableCache;
@@ -59,7 +62,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 
             _fakeContext.Channel.Returns(fakeChannel);
             _logger = Substitute.For<ILogger>();
-            _peerDiscovery = Substitute.For<IPeerDiscovery>();
+            _peers = Substitute.For<IRepository<Peer>>();
             _reputableCache = Substitute.For<IReputableCache>();
         }
 
@@ -122,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var messageFactory = new P2PMessageFactory(_reputableCache);
-            var gossipCache = new GossipCache(_peerDiscovery, cache, _logger);
+            var gossipCache = new GossipCache(_peers, cache, _logger);
             var gossipMessageHandler = new GossipMessageHandler<PingRequest>(peerIdentifier, gossipCache, messageFactory);
             var correlationId = Guid.NewGuid();
 
@@ -155,7 +158,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 
         private Guid Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier, IMemoryCache cache)
         {
-            var gossipCache = new GossipCache(_peerDiscovery, cache, _logger);
+            var gossipCache = new GossipCache(_peers, cache, _logger);
             var messageFactory = new P2PMessageFactory(_reputableCache);
             var gossipMessageHandler = new GossipMessageHandler<PingRequest>(peerIdentifier, gossipCache, messageFactory);
 
@@ -175,14 +178,16 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 
         private void PopulatePeers(int count)
         {
-            List<IPeerIdentifier> peerIdentifiers = new List<IPeerIdentifier>();
+            List<Peer> peerIdentifiers = new List<Peer>();
             for (int i = 10; i < count + 10; i++)
             {
-                peerIdentifiers.Add(PeerIdentifierHelper.GetPeerIdentifier(i.ToString()));
+                peerIdentifiers.Add(new Peer()
+                {
+                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
+                });
             }
 
-            var peerCollection = new ConcurrentStack<IPeerIdentifier>(peerIdentifiers);
-            _peerDiscovery.Peers.Returns(peerCollection);
+            _peers.GetAll().Returns(peerIdentifiers);
         }
     }
 }
