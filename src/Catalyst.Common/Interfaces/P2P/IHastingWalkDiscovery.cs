@@ -35,6 +35,10 @@ namespace Catalyst.Common.Interfaces.P2P
         IDns Dns { get; }
 
         int TotalPotentialCandidates { get; set; }
+        
+        /// <summary>
+        ///     Number of peers discovered in current rwalk.
+        /// </summary>
         int DiscoveredPeerInCurrentWalk { get; set; }
         
         /// <summary>
@@ -42,6 +46,9 @@ namespace Catalyst.Common.Interfaces.P2P
         /// </summary>
         IPeerIdentifier PreviousPeer { get; }
 
+        /// <summary>
+        ///     The next degree of walk
+        /// </summary>
         IPeerIdentifier NextCandidate { get; }
 
         /// <summary>

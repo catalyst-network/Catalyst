@@ -98,24 +98,24 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             }
         }
 
-        [Fact]
-        public void CanReceiveEventsFromSubscribedStream()
-        {
-            using (_container.BeginLifetimeScope(CurrentTestName))
-            {
-                var fakeContext = Substitute.For<IChannelHandlerContext>();
-                var fakeChannel = Substitute.For<IChannel>();
-                fakeContext.Channel.Returns(fakeChannel);
-                var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
-                var observableStream = new[] {channeledAny}.ToObservable();
-            
-                var handler = new PingRequestHandler(_pid, _subbedReputableCache, _logger);
-                handler.StartObserving(observableStream);
-            
-                fakeContext.Channel.ReceivedWithAnyArgs(1)
-                   .WriteAndFlushAsync(new PingResponse().ToAnySigned(_pid.PeerId, _guid));
-            }
-        }
+        // [Fact]
+        // public void CanReceiveEventsFromSubscribedStream()
+        // {
+        //     using (_container.BeginLifetimeScope(CurrentTestName))
+        //     {
+        //         var fakeContext = Substitute.For<IChannelHandlerContext>();
+        //         var fakeChannel = Substitute.For<IChannel>();
+        //         fakeContext.Channel.Returns(fakeChannel);
+        //         var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
+        //         var observableStream = new[] {channeledAny}.ToObservable();
+        //     
+        //         var handler = new PingRequestHandler(_pid, _subbedReputableCache, _logger);
+        //         handler.StartObserving(observableStream);
+        //     
+        //         fakeContext.Channel.ReceivedWithAnyArgs(1)
+        //            .WriteAndFlushAsync(new PingResponse().ToAnySigned(_pid.PeerId, _guid));
+        //     }
+        // }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]

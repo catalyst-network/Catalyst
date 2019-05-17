@@ -61,6 +61,7 @@ namespace Catalyst.Node.Core.P2P
         /// <inheritdoc />
         public IPeerIdentifier PreviousPeer { get; private set; }
         
+        /// <inheritdoc />
         public IPeerIdentifier NextCandidate { get; private set; }
         
         /// <inheritdoc />
@@ -213,8 +214,8 @@ namespace Catalyst.Node.Core.P2P
             PeerDiscoveryMergedStreams = pingResponseObserver.Select(_ => Unit.Default)
                .Merge(_p2PCorrelationCacheEvictionStream.Select(_ => Unit.Default));                            
         }
-        
-        public void StartObservingEvictionEvents(IObservable<KeyValuePair<IPeerIdentifier, ByteString>> observer)
+
+        private void StartObservingEvictionEvents(IObservable<KeyValuePair<IPeerIdentifier, ByteString>> observer)
         {
             _p2PCorrelationCacheEvictionStream = observer
                .Where(message => message.Value != null && QueriedPeer(message, CurrentPeerNeighbours));
