@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Outbound;
+using Org.BouncyCastle.Pkcs;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
@@ -60,7 +61,8 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         List<IPeerIdentifier> GetRandomPeers(int count);
 
         /// <summary>Gets the maximum gossip cycles.</summary>
+        /// <param name="guid">The unique identifier.</param>
         /// <returns></returns>
-        uint GetMaxGossipCycles();
+        uint GetMaxGossipCycles(Guid guid);
     }
 }

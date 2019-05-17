@@ -35,7 +35,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class GossipCache
+    public sealed class GossipCache
         : MessageCorrelationCacheBase, IGossipCache
     {
         /// <summary>The peer discovery</summary>
@@ -81,16 +81,15 @@ namespace Catalyst.Common.IO.Messaging
         /// <inheritdoc/>
         public bool CanGossip(Guid correlationId)
         {
-            var found = PendingRequests.TryGetValue(correlationId, out PendingRequest request);
-            var peerCount = this._peerDiscovery.PeerRepository.Count();
-
+            var found = PendingRequests.TryGetValue(correlationId, out GossipRequest request);
+            
             // Request does not exist, we can gossip this message
             if (!found)
             {
                 return true;
             }
 
-            return request.GossipCount < request.MaxGossipCycles;
+            return request.GossipCount < GetMaxGossipCycles(correlationId);
         }
 
         /// <inheritdoc/>
@@ -117,7 +116,14 @@ namespace Catalyst.Common.IO.Messaging
         /// <inheritdoc cref="IGossipCache"/>
         public override void AddPendingRequest(PendingRequest pendingRequest)
         {
-            PendingRequests.Set(pendingRequest.Content.CorrelationId.ToGuid(), pendingRequest, EntryOptions);
+            var guid = pendingRequest.Content.CorrelationId.ToGuid();
+
+            if (GetGossipCount(guid) == -1)
+            {
+                ((GossipRequest) pendingRequest).PeerNetworkSize = _peerDiscovery.Peers.Count;
+            }
+
+            PendingRequests.Set(guid, pendingRequest, EntryOptions);
         }
 
         /// <inheritdoc/>
@@ -126,10 +132,9 @@ namespace Catalyst.Common.IO.Messaging
             var request = GetPendingRequestValue(correlationId);
             if (request == null)
             {
-                request = new PendingRequest
+                request = new GossipRequest
                 {
-                    ReceivedCount = updateCount,
-                    MaxGossipCycles = GetMaxGossipCycles()
+                    ReceivedCount = updateCount
                 };
             }
             else
@@ -140,14 +145,20 @@ namespace Catalyst.Common.IO.Messaging
             AddPendingRequest(request);
         }
 
-        public uint GetMaxGossipCycles() { return (uint) (Math.Log10(_peerDiscovery.Peers.Count) * Constants.MaxGossipPeers); }
+        /// <inheritdoc/>
+        public uint GetMaxGossipCycles(Guid guid)
+        {
+            var peerNetworkSize = GetPendingRequestValue(guid)?.PeerNetworkSize ?? _peerDiscovery.Peers.Count;
+            return (uint) (Math.Log(peerNetworkSize / (double) Constants.MaxGossipPeersPerRound) /
+                Math.Max(1, 2 * GetGossipCount(guid) / Constants.MaxGossipPeersPerRound));
+        }
 
         /// <summary>Gets the pending request value.</summary>
         /// <param name="guid">The unique identifier.</param>
         /// <returns></returns>
-        private PendingRequest GetPendingRequestValue(Guid guid)
+        private GossipRequest GetPendingRequestValue(Guid guid)
         {
-            PendingRequests.TryGetValue(guid, out PendingRequest request);
+            PendingRequests.TryGetValue(guid, out GossipRequest request);
             return request;
         }
     }

@@ -73,22 +73,22 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(peerdId);
             var correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
 
-            cache.TryGetValue(correlationId, out PendingRequest value);
-            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeers);
+            cache.TryGetValue(correlationId, out GossipRequest value);
+            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound);
             value.ReceivedCount.Should().Be(0);
         }
 
         [Fact]
         public void Not_Enough_Peers_To_Gossip()
         {
-            PopulatePeers(Constants.MaxGossipPeers - 1);
+            PopulatePeers(Constants.MaxGossipPeersPerRound - 1);
             MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var correlationId = Get_Gossip_Correlation_Id(peerIdentifier, cache);
 
-            cache.TryGetValue(correlationId, out PendingRequest value);
-            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeers - 1);
+            cache.TryGetValue(correlationId, out GossipRequest value);
+            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound - 1);
             value.ReceivedCount.Should().Be(0);
         }
 
@@ -134,8 +134,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 
             var channeledMessage = new ChanneledAnySigned(_fakeContext, messageDto);
             gossipMessageHandler.Handle(channeledMessage);
-            cache.TryGetValue(correlationId, out PendingRequest value);
-            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeers);
+            cache.TryGetValue(correlationId, out GossipRequest value);
+            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound);
             value.ReceivedCount.Should().Be(0);
 
             for (int i = 0; i < receivedCount; i++)
@@ -145,8 +145,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Gossip
 
             cache.TryGetValue(correlationId, out value);
             value.ReceivedCount.Should().Be((uint) receivedCount);
-            value.GossipCount.Should().Be((uint) Math.Min(gossipCache.GetMaxGossipCycles(),
-                (value.ReceivedCount + 1) * Constants.MaxGossipPeers));
+            value.GossipCount.Should().BeGreaterOrEqualTo((uint) Math.Min(gossipCache.GetMaxGossipCycles(correlationId),
+                (value.ReceivedCount + 1) * Constants.MaxGossipPeersPerRound));
         }
 
         private Guid Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier, IMemoryCache cache)

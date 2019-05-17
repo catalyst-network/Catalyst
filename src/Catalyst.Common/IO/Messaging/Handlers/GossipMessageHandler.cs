@@ -39,7 +39,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
     /// </summary>
     /// <typeparam name="TProto">The type of the proto.</typeparam>
     /// <seealso cref="IGossipMessageHandler" />
-    public class GossipMessageHandler<TProto> : IGossipMessageHandler where TProto : class, IMessage<TProto>
+    public sealed class GossipMessageHandler<TProto> : IGossipMessageHandler where TProto : class, IMessage<TProto>
     {
         /// <summary>The gossip cache</summary>
         private readonly IGossipCache _gossipCache;
@@ -82,13 +82,12 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
             if (gossipCount == -1)
             {
-                var request = new PendingRequest
+                var request = new GossipRequest
                 {
                     SentAt = DateTime.Now,
                     Recipient = new PeerIdentifier(message.Payload.PeerId),
                     Content = message.Payload,
                     ReceivedCount = 0,
-                    MaxGossipCycles = _gossipCache.GetMaxGossipCycles()
                 };
                 _gossipCache.AddPendingRequest(request);
             }
@@ -100,7 +99,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// <param name="message">The message.</param>
         private void Gossip(IChanneledMessage<AnySigned> message)
         {
-            var peersToGossip = _gossipCache.GetRandomPeers(Constants.MaxGossipPeers);
+            var peersToGossip = _gossipCache.GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var deserialised = message.Payload.FromAnySigned<TProto>();
             var correlationId = message.Payload.CorrelationId.ToGuid();
             var channel = message.Context.Channel;
