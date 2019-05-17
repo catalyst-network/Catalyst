@@ -115,7 +115,7 @@ namespace Catalyst.Cli.UnitTests
             var messageStream = CreateStreamWithMessage(response);
 
             _requestHandler = new GetInfoResponseHandler(_output, _subbedCorrelationCache, _logger);
-            _requestHandler.StartObservingMessageStreams(messageStream);
+            _requestHandler.StartObserving(messageStream);
 
             _output.Received(1).WriteLine(query);
         }

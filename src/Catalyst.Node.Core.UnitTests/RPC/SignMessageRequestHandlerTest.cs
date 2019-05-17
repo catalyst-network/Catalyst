@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, _subbedCorrelationCache, rpcMessageFactory);
-            handler.StartObservingMessageStreams(messageStream);
+            handler.StartObserving(messageStream);
              
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

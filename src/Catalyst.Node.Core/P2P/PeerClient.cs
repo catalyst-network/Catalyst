@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.P2P
 
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
             MessageStream = protoDatagramChannelHandler.MessageStream;
-            messageHandlers.ToList().ForEach(h => h.StartObservingMessageStreams(MessageStream));
+            messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {

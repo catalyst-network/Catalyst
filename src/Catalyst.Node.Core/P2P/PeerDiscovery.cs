@@ -187,7 +187,7 @@ namespace Catalyst.Node.Core.P2P
             } while (!_cancellationSource.IsCancellationRequested);
         }
         
-        public void StartObservingMessageStreams(IObservable<IChanneledMessage<AnySigned>> observer)
+        public void StartObserving(IObservable<IChanneledMessage<AnySigned>> observer)
         {
             // Filter stream messages to only peers we pinged from within this class.
             var pingResponseObserver = observer

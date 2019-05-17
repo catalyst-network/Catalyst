@@ -145,7 +145,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 peerDiscovery.TotalPotentialCandidates = 10;
                 peerDiscovery.DiscoveredPeerInCurrentWalk = 26;
                 peerDiscovery.CurrentPeerNeighbours.TryAdd(pid.GetHashCode(), new KeyValuePair<IPeerIdentifier, ByteString>(pid, channeledAny.Payload.CorrelationId));
-                peerDiscovery.StartObservingMessageStreams(observableStream);
+                peerDiscovery.StartObserving(observableStream);
 
                 _peerRepository.Received(1)
                    .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));   

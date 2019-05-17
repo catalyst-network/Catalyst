@@ -134,7 +134,7 @@ namespace Catalyst.Cli.UnitTests
             var messageStream = CreateStreamWithMessage(response);
 
             _handler = new PeerReputationResponseHandler(_output, correlationCache, _logger);
-            _handler.StartObservingMessageStreams(messageStream);
+            _handler.StartObserving(messageStream);
         }
 
         public void Dispose()

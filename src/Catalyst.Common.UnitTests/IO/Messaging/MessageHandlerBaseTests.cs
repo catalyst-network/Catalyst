@@ -85,7 +85,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         {
             var completingStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
-            _handler.StartObservingMessageStreams(completingStream);
+            _handler.StartObserving(completingStream);
             await completingStream.LastAsync();
 
             _handler.SubstituteObserver.Received(10).OnNext(Arg.Any<AnySigned>());
@@ -98,7 +98,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         {
             var erroringStream = new Subject<IChanneledMessage<AnySigned>>();
             
-            _handler.StartObservingMessageStreams(erroringStream);
+            _handler.StartObserving(erroringStream);
 
             foreach (var payload in _responseMessages)
             {
@@ -128,7 +128,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
-            _handler.StartObservingMessageStreams(mixedTypesStream);
+            _handler.StartObserving(mixedTypesStream);
             await mixedTypesStream.LastAsync();
 
             _handler.SubstituteObserver.Received(8).OnNext(Arg.Any<AnySigned>());
@@ -145,7 +145,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
-            _handler.StartObservingMessageStreams(mixedTypesStream);
+            _handler.StartObserving(mixedTypesStream);
             await mixedTypesStream.LastAsync();
 
             _handler.SubstituteObserver.Received(7).OnNext(Arg.Any<AnySigned>());

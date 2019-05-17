@@ -53,11 +53,9 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IReputableCache _subbedReputableCache;
         private readonly IRepository<Peer> _subbedPeerRepository;
-        private IReputableCache _subbedReputableCache;
 
         public GetNeighbourRequestHandlerTests(ITestOutputHelper output) : base(output)
         {
-            _subbedReputableCache = Substitute.For<IReputableCache>();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedReputableCache = Substitute.For<IReputableCache>();
             _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
@@ -135,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourRequestMessage.ToAnySigned(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             
-            neighbourRequestHandler.StartObservingMessageStreams(observableStream);
+            neighbourRequestHandler.StartObserving(observableStream);
             
             var peerNeighborsResponseMessage = new PeerNeighborsResponse();
             

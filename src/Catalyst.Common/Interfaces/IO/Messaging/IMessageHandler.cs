@@ -29,7 +29,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
 {
     public interface IMessageHandler
     {
-        void StartObservingMessageStreams(IObservable<IChanneledMessage<AnySigned>> messageStream);
+        void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream);
     }
 
     public interface IP2PMessageHandler : IMessageHandler { }

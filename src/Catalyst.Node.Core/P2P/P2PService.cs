@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.P2P
 
             MessageStream = protoDatagramChannelHandler.MessageStream;
             messageHandlers.ToList()
-               .ForEach(h => h.StartObservingMessageStreams(MessageStream));
+               .ForEach(h => h.StartObserving(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
@@ -64,7 +64,7 @@ namespace Catalyst.Node.Core.P2P
                 channelHandlers
             ), settings.BindAddress, settings.Port);
 
-            peerDiscovery.StartObservingMessageStreams(MessageStream);
+            peerDiscovery.StartObserving(MessageStream);
         }
     }
 }
