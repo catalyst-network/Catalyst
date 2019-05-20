@@ -59,7 +59,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             _messageFactory = messageFactory;
         }
 
-        public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream) { }
+        public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream)
+        {
+            throw new NotSupportedException();
+        }
         
         /// <inheritdoc/>
         public void Handle(IChanneledMessage<AnySigned> message)

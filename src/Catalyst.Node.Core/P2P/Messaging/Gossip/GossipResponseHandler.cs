@@ -58,6 +58,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             _gossipMessageHandler = gossipMessageHandler;
         }
 
+        /// <inheritdoc cref="ReputableResponseHandlerBase{TProto,TCounterpartMessage,TReputableCache}"/>
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
             base.HandleMessage(message);
