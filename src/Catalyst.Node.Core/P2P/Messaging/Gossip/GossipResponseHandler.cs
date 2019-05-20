@@ -30,14 +30,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
-    /// <summary>
-    /// Gossips the reputable handlers
-    /// </summary>
-    /// <typeparam name="TProto">The type of the proto message.</typeparam>
-    /// <typeparam name="TCounterpartMessage">The type of the counterpart message.</typeparam>
-    /// <typeparam name="TReputableCache">The type of the reputable cache.</typeparam>
-    /// <seealso cref="ReputableResponseHandlerBase{TProto,TCounterpartMessage,TReputableCache}" />
-    /// <seealso cref="IGossipMessageHandler" />
+    /// <inheritdoc cref="ReputableResponseHandlerBase{TProto,TCounterpartMessage,TReputableCache}"/>
     public abstract class GossipResponseHandler<TProto, TCounterpartMessage, TReputableCache> :
         ReputableResponseHandlerBase<TProto, TCounterpartMessage, TReputableCache>, IGossipMessageHandler
         where TProto : class, IMessage<TProto>
@@ -74,6 +67,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             }
         }
 
+        /// <inheritdoc cref="IGossipMessageHandler"/>
         public IGossipCache GossipCache => _gossipMessageHandler.GossipCache;
 
         /// <summary>Determines whether this instance can gossip the specified message.</summary>
