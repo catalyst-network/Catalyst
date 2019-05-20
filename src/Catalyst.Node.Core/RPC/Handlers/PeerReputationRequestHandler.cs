@@ -28,11 +28,13 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
 using Dawn;
 using Nethereum.RLP;
+using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -43,7 +45,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>
         /// The PeerReputationRequestHandler 
         /// </summary>
-        private readonly IPeerDiscovery _peerDiscovery;
+        private readonly IRepository<Peer> _peerRepository;
 
         private IChanneledMessage<AnySigned> _message;
         
@@ -52,11 +54,11 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public PeerReputationRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IRpcCorrelationCache messageCorrelationCache,
-            IPeerDiscovery peerDiscovery)
+            IRepository<Peer> peerRepository)
             : base(messageCorrelationCache, logger)
         {
             _peerId = peerIdentifier.PeerId;
-            _peerDiscovery = peerDiscovery;
+            _peerRepository = peerRepository;
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var publicKey = deserialised.PublicKey.ToStringUtf8(); 
             var ip = deserialised.Ip.ToStringUtf8();
 
-            ReturnResponse(_peerDiscovery.PeerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
+            ReturnResponse(_peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
                  && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
                .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First(), message);
 
