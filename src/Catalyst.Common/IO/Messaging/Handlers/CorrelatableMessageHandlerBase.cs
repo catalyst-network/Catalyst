@@ -33,7 +33,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 {
     public abstract class CorrelatableMessageHandlerBase<TProto, TCorrelator>
         : MessageHandlerBase<TProto>
-        where TProto : class, IMessage
+        where TProto : IMessage
         where TCorrelator : IMessageCorrelationCache
     {
         protected TCorrelator _correlationCache;
