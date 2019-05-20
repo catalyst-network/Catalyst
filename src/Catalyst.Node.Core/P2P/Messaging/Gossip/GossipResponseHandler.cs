@@ -75,6 +75,9 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
         public IGossipCache GossipCache => _gossipMessageHandler.GossipCache;
 
+        /// <summary>Determines whether this instance can gossip the specified message.</summary>
+        /// <param name="message">The message.</param>
+        /// <returns><c>true</c> if this instance can gossip the specified message; otherwise, <c>false</c>.</returns>
         public abstract bool CanGossip(IChanneledMessage<AnySigned> message);
     }
 }
