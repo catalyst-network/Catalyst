@@ -49,9 +49,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     /// The request handler to add a file to the DFS
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsRequest, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
-    public sealed class AddFileToDfsRequestHandler : CorrelatableMessageHandlerBase<AddFileToDfsRequest, IMessageCorrelationCache>,
+    public sealed class AddFileToDfsRequestHandler : CorrelatableMessageHandlerBase<AddFileToDfsRequest, IRpcCorrelationCache>,
         IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>

@@ -37,6 +37,7 @@ using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -44,35 +45,35 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     /// Remove Peer handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerRequest, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class RemovePeerRequestHandler
-        : CorrelatableMessageHandlerBase<RemovePeerRequest, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<RemovePeerRequest, IRpcCorrelationCache>,
             IRpcRequestHandler
     {
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
-        /// <summary>The peer discovery</summary>
-        private readonly IPeerDiscovery _peerDiscovery;
+        /// <summary>The peer repository</summary>
+        private readonly IRepository<Peer> _peerRepository;
 
         /// <summary>The RPC message factory</summary>
         private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestHandler"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="peerDiscovery">The peer discovery.</param>
+        /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="messageCorrelationCache">The message correlation cache.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="rpcMessageFactory"></param>
         public RemovePeerRequestHandler(IPeerIdentifier peerIdentifier,
-            IPeerDiscovery peerDiscovery,
+            IRepository<Peer> peerRepository,
             IRpcCorrelationCache messageCorrelationCache,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory) : base(messageCorrelationCache, logger)
         {
             _peerIdentifier = peerIdentifier;
-            _peerDiscovery = peerDiscovery;
+            _peerRepository = peerRepository;
             _rpcMessageFactory = rpcMessageFactory;
         }
 
@@ -92,7 +93,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 Guard.Argument(deserialised).NotNull();
                 
-                var peersToDelete = _peerDiscovery.PeerRepository.GetAll().TakeWhile(peer =>
+                var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
                     peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(deserialised.PeerIp.ToByteArray()) &&
                     (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(deserialised.PublicKey.ToByteArray()))).ToArray();
                 
@@ -100,7 +101,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 {
                     foreach (var peerToDelete in peersToDelete)
                     {
-                        _peerDiscovery.PeerRepository.Delete(peerToDelete);
+                        _peerRepository.Delete(peerToDelete);
                         peerDeletedCount += 1;
                     }
                 }

@@ -34,10 +34,10 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// The Transfer file bytes response handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{TransferFileBytesResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{TransferFileBytesResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public class TransferFileBytesResponseHandler
-        : CorrelatableMessageHandlerBase<TransferFileBytesResponse, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<TransferFileBytesResponse, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseHandler"/> class.</summary>

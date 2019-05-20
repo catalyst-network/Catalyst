@@ -38,10 +38,10 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// The response handler for removing a peer
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public sealed class RemovePeerResponseHandler
-        : CorrelatableMessageHandlerBase<RemovePeerResponse, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<RemovePeerResponse, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         /// <summary>The user output</summary>

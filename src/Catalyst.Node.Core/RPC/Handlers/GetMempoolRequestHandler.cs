@@ -43,7 +43,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class GetMempoolRequestHandler
-        : CorrelatableMessageHandlerBase<GetMempoolRequest, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<GetMempoolRequest, IRpcCorrelationCache>,
             IRpcRequestHandler
     {
         private readonly IMempool _mempool;

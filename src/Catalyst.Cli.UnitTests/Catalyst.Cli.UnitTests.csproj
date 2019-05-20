@@ -30,6 +30,6 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Config\" />
+    <Folder Include="TestUtils\" />
   </ItemGroup>
 </Project>

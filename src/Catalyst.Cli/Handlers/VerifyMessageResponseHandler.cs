@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class VerifyMessageResponseHandler
-        : CorrelatableMessageHandlerBase<VerifyMessageResponse, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<VerifyMessageResponse, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;

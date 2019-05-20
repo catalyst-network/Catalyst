@@ -41,7 +41,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetMempoolResponseHandler
-        : CorrelatableMessageHandlerBase<GetMempoolResponse, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<GetMempoolResponse, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;

@@ -44,7 +44,7 @@ using Multiformats.Base;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class VerifyMessageRequestHandler
-        : CorrelatableMessageHandlerBase<VerifyMessageRequest, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<VerifyMessageRequest, IRpcCorrelationCache>,
             IRpcRequestHandler
     {
         private readonly IKeySigner _keySigner;

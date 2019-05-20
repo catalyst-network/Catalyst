@@ -43,9 +43,9 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handles Get file from DFS response
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetFileFromDfsResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetFileFromDfsResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
-    public class GetFileFromDfsResponseHandler : CorrelatableMessageHandlerBase<GetFileFromDfsResponse, IMessageCorrelationCache>,
+    public class GetFileFromDfsResponseHandler : CorrelatableMessageHandlerBase<GetFileFromDfsResponse, IRpcCorrelationCache>,
         IRpcResponseHandler
     {
         /// <summary>The file transfer factory</summary>

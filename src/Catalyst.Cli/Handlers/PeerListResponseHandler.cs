@@ -38,10 +38,10 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handles the Peer list response from the node
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public sealed class PeerListResponseHandler
-        : CorrelatableMessageHandlerBase<GetPeerListResponse, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<GetPeerListResponse, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;

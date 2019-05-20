@@ -43,9 +43,9 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Add File to DFS Response handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
-    public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IMessageCorrelationCache>,
+    public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IRpcCorrelationCache>,
         IRpcResponseHandler
     {
         /// <summary>The upload file transfer factory</summary>
