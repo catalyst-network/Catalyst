@@ -91,7 +91,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
 
             var localLedgerStateUpdate = ByteUtil.CombineByteArrays(localHash, _producerUniqueId.PeerId.ToByteArray());
 
-            return new DeltaEntity() { LocalLedgerState = localLedgerStateUpdate, Delta = deltaState, DeltaHash = localHash };
+            return new DeltaEntity(){LocalLedgerState = localLedgerStateUpdate, Delta = deltaState, DeltaHash = localHash};
         }
 
         private List<STTransactionEntry> SortHashByLexiOrder(List<STTransactionEntry> selectedSTEntries)
