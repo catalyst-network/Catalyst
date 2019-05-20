@@ -133,7 +133,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
-            return allTransactions.Where(m => m.LockTime < 0 && m.Version == 1).ToList();
+            return allTransactions.Where(m => m.LockTime <= 0 && m.Version == 1).ToList();
         }
     }
 }
