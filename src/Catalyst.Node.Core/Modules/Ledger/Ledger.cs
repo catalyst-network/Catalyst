@@ -64,16 +64,5 @@ namespace Catalyst.Node.Core.Modules.Ledger
                 return false;
             }
         }
-
-        private void UpdateAccounts()
-        {
-            //iterate through accounts and update
-        }
-
-        private bool UpdateLedgerState(byte[] ledgerStateUpdate)
-        {
-            return false;
-        }
-
     }
 }
