@@ -26,6 +26,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -37,10 +38,10 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// The response handler for removing a peer
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public sealed class RemovePeerResponseHandler
-        : CorrelatableMessageHandlerBase<RemovePeerResponse, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<RemovePeerResponse, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         /// <summary>The user output</summary>
@@ -51,7 +52,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public RemovePeerResponseHandler(IUserOutput userOutput,
-            IMessageCorrelationCache correlationCache,
+            IRpcCorrelationCache correlationCache,
             ILogger logger) : base(correlationCache, logger)
         {
             _userOutput = userOutput;
