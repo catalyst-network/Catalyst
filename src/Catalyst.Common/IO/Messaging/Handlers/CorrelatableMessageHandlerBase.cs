@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -44,28 +45,19 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         {
             _correlationCache = correlationCache;
         }
-        
+
         public override void HandleMessage(IChanneledMessage<AnySigned> message)
         {
-            var nextHandler = true;
-            if (this is IReputationAskHandler<TCorrelator>)
+            Logger.Debug("handle message in correlatable handler");
+            try
             {
-                nextHandler = ((IReputationAskHandler<TCorrelator>) this).CanExecuteNextHandler(message);
+                Handler(message);
             }
-
-            if (nextHandler)
+            catch (Exception e)
             {
-                Logger.Debug("handle message in correlatable handler");
-                try
-                {
-                    Handler(message);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e,
-                        "Failed to handle CorrelatableMessageHandlerBase after receiving message {0}", message);
-                    message.Context.Channel.CloseAsync();
-                }
+                Logger.Error(e,
+                    "Failed to handle CorrelatableMessageHandlerBase after receiving message {0}", message);
+                message.Context.Channel.CloseAsync();
             }
         }
     }

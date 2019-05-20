@@ -61,7 +61,15 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         {
             ReputableCache = reputableCache;
         }
-        
+
+        public override void HandleMessage(IChanneledMessage<AnySigned> message)
+        {
+            if (CanExecuteNextHandler(message))
+            {
+                base.HandleMessage(message);
+            }
+        }
+
         /// <summary>
         ///     Adds a new message to the correlation cache before we flush it away down the socket.
         /// </summary>

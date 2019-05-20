@@ -60,7 +60,6 @@ namespace Catalyst.Common.IO.Messaging
         {
             Logger.Debug("Pre Handle Message Called");
             Handler(message);
-            GossipHandler?.Handle(message);
         }
 
         public virtual void HandleCompleted()
@@ -99,11 +98,5 @@ namespace Catalyst.Common.IO.Messaging
                  && !m.Equals(NullObjects.ChanneledAnySigned))
                .Subscribe(HandleMessage, HandleError, HandleCompleted);
         }
-
-        /// <summary>
-        /// This handler starts gossip, if [null] no gossip will be initiate for the current handler.
-        /// </summary>
-        /// <value>The gossip handler.</value>
-        public IGossipMessageHandler GossipHandler { get; set; }
     }
 }

@@ -228,10 +228,19 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.GossipCache, Catalyst.Common",
+            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipCache",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IGossipCache, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipMessageHandler",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IGossipMessageHandler, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

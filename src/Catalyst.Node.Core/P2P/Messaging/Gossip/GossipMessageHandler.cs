@@ -27,42 +27,40 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
 
-namespace Catalyst.Common.IO.Messaging.Handlers
+namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
-    /// <summary>
-    /// Handles gossiping of a message
-    /// </summary>
-    /// <typeparam name="TProto">The type of the proto.</typeparam>
-    /// <seealso cref="IGossipMessageHandler" />
-    public sealed class GossipMessageHandler<TProto> : IGossipMessageHandler where TProto : class, IMessage<TProto>
+    public sealed class GossipMessageHandler : IGossipMessageHandler
     {
         /// <summary>The gossip cache</summary>
         private readonly IGossipCache _gossipCache;
 
-        /// <summary>The peer 2 peer message factory</summary>
-        private readonly IP2PMessageFactory _messageFactory;
-        
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
-        /// <summary>Initializes a new instance of the <see cref="GossipMessageHandler{T}"/> class.</summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <summary>The message factory</summary>
+        private readonly IP2PMessageFactory _messageFactory;
+
+        /// <inheritdoc cref="IGossipMessageHandler"/>
+        public IGossipCache GossipCache => _gossipCache;
+
+        /// <summary>Initializes a new instance of the <see cref="GossipMessageHandler"/> class.</summary>
         /// <param name="gossipCache">The gossip cache.</param>
-        /// <param name="messageFactory">The message factory</param>
-        public GossipMessageHandler(IPeerIdentifier peerIdentifier,
-            IGossipCache gossipCache, 
-            IP2PMessageFactory messageFactory)
+        /// <param name="messageFactory">P2P message factory</param>
+        /// <param name="peerIdentifier">The peer identifier.</param>
+        public GossipMessageHandler(IGossipCache gossipCache, IP2PMessageFactory messageFactory, IPeerIdentifier peerIdentifier)
         {
             _gossipCache = gossipCache;
             _peerIdentifier = peerIdentifier;
             _messageFactory = messageFactory;
         }
 
+        public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream) { }
+        
         /// <inheritdoc/>
         public void Handle(IChanneledMessage<AnySigned> message)
         {
@@ -94,19 +92,19 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
             Gossip(message);
         }
-
+        
         /// <summary>Gossips the specified message.</summary>
         /// <param name="message">The message.</param>
         private void Gossip(IChanneledMessage<AnySigned> message)
         {
             var peersToGossip = _gossipCache.GetRandomPeers(Constants.MaxGossipPeersPerRound);
-            var deserialised = message.Payload.FromAnySigned<TProto>();
+            var deserialised = message.Payload.FromAnySigned();
             var correlationId = message.Payload.CorrelationId.ToGuid();
             var channel = message.Context.Channel;
 
             foreach (var peerIdentifier in peersToGossip)
             {
-                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(deserialised, 
+                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(deserialised,
                     MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
                 channel.WriteAndFlushAsync(datagramEnvelope);
             }
