@@ -70,12 +70,6 @@ namespace Catalyst.Node.Core.Modules.Ledger
             //iterate through accounts and update
         }
 
-        private Dictionary<string, string> BuildDelta(Transaction sTTransactionEntry)
-        {
-
-            return new Dictionary<string, string>();
-        }
-
         private bool UpdateLedgerState(byte[] ledgerStateUpdate)
         {
             return false;

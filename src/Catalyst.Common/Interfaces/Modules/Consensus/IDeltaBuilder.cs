@@ -21,11 +21,10 @@
 
 #endregion
 
-
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
     /// <summary>
-    /// The service in charge of finding the transactions that should be included in a ledger update (aka Delta)
+    /// The service in charge of building the delta state update used to update the ledger update 
     /// for a given cycle.
     /// </summary>
     public interface IDeltaBuilder
@@ -34,7 +33,7 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// <summary>
         /// Builds the delta.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns a delta entity object that contains the ledger update, delta and delta hash</returns>
         IDeltaEntity BuildDelta();
 
     }
