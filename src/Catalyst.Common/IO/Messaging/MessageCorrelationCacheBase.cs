@@ -36,7 +36,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class MessageCorrelationCacheBase
+    public abstract class MessageCorrelationCacheBase
         : IMessageCorrelationCache
     {
         public TimeSpan CacheTtl { get; }
@@ -58,11 +58,7 @@ namespace Catalyst.Common.IO.Messaging
                .RegisterPostEvictionCallback(GetInheritorDelegate());
         }
 
-        protected virtual PostEvictionDelegate GetInheritorDelegate()
-        {
-            Logger.Fatal("MessageCorrelationCache.GetInheritorDelegate() called without inheritor.");
-            throw new NotImplementedException("Inheritors that uses the default constructor must implement the GetInheritorDelegate() method."); 
-        }
+        protected abstract PostEvictionDelegate GetInheritorDelegate();
 
         public virtual void AddPendingRequest(PendingRequest pendingRequest)
         {
