@@ -1,9 +1,6 @@
 [submodule "submodules/Nethereum"]
 	path = submodules/Nethereum
-	url = https://github.com/atlascity/Nethereum.git
-[submodule "submodules/cs-multibase"]
-	path = submodules/cs-multibase
-	url = https://github.com/atlascity/cs-multibase.git
+	url = https://github.com/atlascity/Nethereum.git#
 [submodule "submodules/protocol-protobuffs"]
 	path = submodules/protocol-protobuffs
 	url = https://github.com/catalyst-network/protocol-protobuffs.git
