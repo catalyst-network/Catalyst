@@ -44,7 +44,7 @@ using Microsoft.Extensions.Configuration;
 namespace Catalyst.Cli.Handlers
 {
     public sealed class TransferFileBytesRequestHandler
-        : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         /// <summary>The download file transfer factory</summary>
@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IConfigurationRoot config,
-            IMessageCorrelationCache correlationCache,
+            IRpcCorrelationCache correlationCache,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory)
             : base(correlationCache, logger)
@@ -80,7 +80,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
-            IMessageCorrelationCache correlationCache,
+            IRpcCorrelationCache correlationCache,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory)
             : base(correlationCache, logger)
