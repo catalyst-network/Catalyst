@@ -41,10 +41,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     /// Peer count request handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerCountRequest, CatalystIMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerCountRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class PeerCountRequestHandler
-        : CorrelatableMessageHandlerBase<GetPeerCountRequest, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<GetPeerCountRequest, IRpcCorrelationCache>,
             IRpcRequestHandler
     {
         /// <summary>The peer discovery</summary>
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="rpcMessageFactory"></param>
         /// <param name="logger">The logger.</param>
         public PeerCountRequestHandler(IPeerIdentifier peerIdentifier,
-            IMessageCorrelationCache correlationCache,
+            IRpcCorrelationCache correlationCache,
             IPeerDiscovery peerDiscovery,
             IRpcMessageFactory rpcMessageFactory,
             ILogger logger) :

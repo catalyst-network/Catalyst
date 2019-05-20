@@ -49,9 +49,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     /// The request handler to get a file from the DFS
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetFileFromDfsRequest, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetFileFromDfsRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
-    public sealed class GetFileFromDfsRequestHandler : CorrelatableMessageHandlerBase<GetFileFromDfsRequest, IMessageCorrelationCache>,
+    public sealed class GetFileFromDfsRequestHandler : CorrelatableMessageHandlerBase<GetFileFromDfsRequest, IRpcCorrelationCache>,
         IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public GetFileFromDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IUploadFileTransferFactory fileTransferFactory,
-            IMessageCorrelationCache correlationCache,
+            IRpcCorrelationCache correlationCache,
             IRpcMessageFactory rpcMessageFactory,
             ILogger logger) : base(correlationCache, logger)
         {

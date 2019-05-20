@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 PeerIdentifierHelper.GetPeerIdentifier("sender")));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
+            var subbedCache = Substitute.For<IRpcCorrelationCache>();
             var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, subbedCache, rpcMessageFactory);
             handler.StartObserving(messageStream);
 
