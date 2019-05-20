@@ -58,12 +58,11 @@ namespace Catalyst.Common.IO.Messaging
         public List<IPeerIdentifier> GetRandomPeers(int count)
         {
             List<IPeerIdentifier> randomPeers = new List<IPeerIdentifier>();
-            Random random = new Random(Guid.NewGuid().GetHashCode());
             var peers = this._peers.GetAll().ToList();
             var peerAmount = Math.Min(peers.Count, count);
             for (int i = 0; i < peerAmount; i++)
             {
-                randomPeers.Add(peers[random.Next(peerAmount)].PeerIdentifier);
+                randomPeers.Add(peers.RandomElement().PeerIdentifier);
             }
 
             return randomPeers;
