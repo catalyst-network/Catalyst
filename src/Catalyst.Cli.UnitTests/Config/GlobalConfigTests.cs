@@ -25,21 +25,23 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.UnitTests.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.Config
+namespace Catalyst.Cli.UnitTests.Config
 {
     public class GlobalConfigTests : ConfigFileBasedTest
     {
-        public static readonly List<object[]> Networks = 
+        public static readonly List<object[]> Networks =
             Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
@@ -52,8 +54,10 @@ namespace Catalyst.Node.Core.UnitTest.Config
             var configFiles = new[]
                 {
                     Constants.NetworkConfigFile(network),
-                    Constants.ComponentsJsonConfigFile,
-                    Constants.SerilogJsonConfigFile
+                    Constants.ShellComponentsJsonConfigFile,
+                    Constants.SerilogJsonConfigFile,
+                    Constants.ShellNodesConfigFile,
+                    Constants.ShellConfigFile
                 }
                .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
@@ -61,25 +65,15 @@ namespace Catalyst.Node.Core.UnitTest.Config
             configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
             var configRoot = configBuilder.Build();
 
-            //assign a random port to rpc server
-            var random = new Random(network.Name.GetHashCode());
-            configRoot.GetSection("CatalystNodeConfiguration")
-                   .GetSection("Rpc").GetSection("Port").Value = 
-                random.Next(10000, 20000).ToString();
-
-            configRoot.GetSection("CatalystNodeConfiguration")
-                   .GetSection("Peer").GetSection("Port").Value =
-                random.Next(10000, 20000).ToString();
-
             ConfigureContainerBuilder(configRoot);
 
             var container = ContainerBuilder.Build();
 
             using (var scope = container.BeginLifetimeScope(CurrentTestName + network.Name))
-            using (var cancellationSource = new CancellationTokenSource(TimeSpan.FromSeconds(1)))
+            using (var cancellationSource = new CancellationTokenSource(TimeSpan.FromSeconds(0)))
             {
-                var catalystNode = scope.Resolve<ICatalystNode>();
-                catalystNode.RunAsync(cancellationSource.Token);
+                var cli = scope.Resolve<ICatalystCli>();
+                cli.AdvancedShell.RunConsole(cancellationSource.Token);
             }
         }
     }
