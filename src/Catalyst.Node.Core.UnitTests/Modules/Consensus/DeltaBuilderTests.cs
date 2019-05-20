@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContent().Returns(new List<Transaction>());
 
-            var deltaBuilder = new DeltaBuilder(_mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"), ("kUox886YuiZojgogjtgo83pkUox886YuiZ").ToUtf8ByteString().ToArray());
+            var deltaBuilder = new DeltaBuilder(mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"), ("kUox886YuiZojgogjtgo83pkUox886YuiZ").ToUtf8ByteString().ToArray());
 
             var deltaEntity = deltaBuilder.BuildDelta();
             deltaEntity.Should().BeNull();
@@ -91,7 +91,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContent().Returns(invalidtransactionList);
 
-            var deltaBuilder = new DeltaBuilder(_mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"), ("kUox886YuiZojgogjtgo83pkUox886YuiZ").ToUtf8ByteString().ToArray());
+            var deltaBuilder = new DeltaBuilder(mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"), ("kUox886YuiZojgogjtgo83pkUox886YuiZ").ToUtf8ByteString().ToArray());
 
             var deltaEntity = deltaBuilder.BuildDelta();
             deltaEntity.Should().BeNull();
