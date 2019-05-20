@@ -70,10 +70,8 @@ namespace Catalyst.Cli.UnitTests.Config
             var container = ContainerBuilder.Build();
 
             using (var scope = container.BeginLifetimeScope(CurrentTestName + network.Name))
-            using (var cancellationSource = new CancellationTokenSource(TimeSpan.FromSeconds(0)))
             {
                 var cli = scope.Resolve<ICatalystCli>();
-                cli.AdvancedShell.RunConsole(cancellationSource.Token);
             }
         }
     }
