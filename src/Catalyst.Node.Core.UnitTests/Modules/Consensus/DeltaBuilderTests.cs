@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
                 Encoding.UTF8.GetBytes("kUox886YuiZojgogjtgo83pkUox886YuiZ"));
 
             var deltaEntity = deltaBuilder.BuildDelta();
-            deltaEntity.Should().Be(DeltaBuilder.EmptyDeltaEntity); 
+            deltaEntity.Should().Be(DeltaEntity.Default); 
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
                 Encoding.UTF8.GetBytes("kUox886YuiZojgogjtgo83pkUox886YuiZ"));
 
             var deltaEntity = deltaBuilder.BuildDelta();
-            deltaEntity.Should().Be(DeltaBuilder.EmptyDeltaEntity);
+            deltaEntity.Should().Be(DeltaEntity.Default);
         }
 
         [Fact]

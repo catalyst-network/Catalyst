@@ -49,8 +49,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
         private readonly IPeerIdentifier _producerUniqueId;
 
         private readonly byte[] _previousValidLedgerStateUpdate;
-        public static IDeltaEntity EmptyDeltaEntity { get; } = new DeltaEntity() { Delta = new byte[0], DeltaHash = new byte[0], LocalLedgerState = new byte[0] };
-    
+
         public DeltaBuilder(IMempool mempool, IPeerIdentifier producerUniqueId, byte[] previousValidLedgerStateUpdate)
         {
             Guard.Argument(mempool, nameof(mempool)).NotNull();
@@ -82,7 +81,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
                 return CreateDeltaEntity(transationEntryListLexiOrder, transactionSignature);
             }
 
-            return EmptyDeltaEntity;
+            return DeltaEntity.Default;
         }
 
         private DeltaEntity CreateDeltaEntity(List<STTransactionEntry> transationEntryListLexiOrder, TransactionSignature transactionSignature)
@@ -99,7 +98,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             //wj = hj + Idj
             var localLedgerStateUpdate = ByteUtil.CombineByteArrays(localHash, _producerUniqueId.PeerId.ToByteArray());
 
-            return new DeltaEntity(){LocalLedgerState = localLedgerStateUpdate, Delta = deltaState, DeltaHash = localHash};
+            return new DeltaEntity {LocalLedgerState = localLedgerStateUpdate, Delta = deltaState, DeltaHash = localHash};
         }
 
         private List<STTransactionEntry> SortHashByLexiOrder(List<STTransactionEntry> selectedSTEntries)

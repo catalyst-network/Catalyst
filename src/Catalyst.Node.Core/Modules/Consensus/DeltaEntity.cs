@@ -40,5 +40,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
 
         /// <inheritdoc />
         public byte[] Delta { get; set; }
+
+        public static IDeltaEntity Default { get; } = new DeltaEntity {Delta = new byte[0], DeltaHash = new byte[0], LocalLedgerState = new byte[0]};
     }
 }
