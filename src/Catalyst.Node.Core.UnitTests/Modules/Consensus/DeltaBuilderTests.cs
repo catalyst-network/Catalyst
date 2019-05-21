@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus;
@@ -31,8 +32,6 @@ using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
-using Catalyst.Common.Util;
-using Catalyst.Common.Extensions;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -68,7 +67,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContent().Returns(new List<Transaction>());
 
-            var deltaBuilder = new DeltaBuilder(mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"), ("kUox886YuiZojgogjtgo83pkUox886YuiZ").ToUtf8ByteString().ToArray());
+            var deltaBuilder = new DeltaBuilder(mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"),
+                Encoding.UTF8.GetBytes("kUox886YuiZojgogjtgo83pkUox886YuiZ"));
 
             var deltaEntity = deltaBuilder.BuildDelta();
             deltaEntity.Should().Be(DeltaBuilder.EmptyDeltaEntity); 
@@ -82,18 +82,19 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var invalidtransactionList = Enumerable.Range(0, 20).Select(i =>
             {
                 var transaction = TransactionHelper.GetTransaction(
-                    version: (uint)i,
-                    transactionFees: (ulong)954,
-                    timeStamp: (ulong)157,
+                    version: (uint) i,
+                    transactionFees: 954,
+                    timeStamp: 157,
                     signature: i.ToString(),
-                    lockTime: (ulong)random.Next() + 475);
+                    lockTime: (ulong) random.Next() + 475);
                 return transaction;
             }).ToList();
 
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContent().Returns(invalidtransactionList);
 
-            var deltaBuilder = new DeltaBuilder(mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"), ("kUox886YuiZojgogjtgo83pkUox886YuiZ").ToUtf8ByteString().ToArray());
+            var deltaBuilder = new DeltaBuilder(mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"),
+                Encoding.UTF8.GetBytes("kUox886YuiZojgogjtgo83pkUox886YuiZ"));
 
             var deltaEntity = deltaBuilder.BuildDelta();
             deltaEntity.Should().Be(DeltaBuilder.EmptyDeltaEntity);
@@ -104,20 +105,21 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
         {
             //Transactions are faked and will always return results
             //Safe to get first
-            var transactionSignature = DeltaBuilder.GetValidTransactionsForDelta(_mempool.GetMemPoolContent()).FirstOrDefault().Signature.ToByteArray();
+            var transactionSignature = DeltaBuilder.GetValidTransactionsForDelta(_mempool.GetMemPoolContent())
+               .First().Signature.ToByteArray();
 
             var publicKeySeed = "randomseedm";
             var peerId = PeerIdentifierHelper.GetPeerIdentifier(publicKeySeed);
             var previousLedgerStateUpdate = "bkJsrbzIbuWm8EPSjJ2YicTIe5gIfEdfhXJK7dl7ESkjhDWUxkUox886YuiZnhEj3om5AXmWVcXvfzIAw";
 
-            var preLedgerStateUpdateByteArray = previousLedgerStateUpdate.ToUtf8ByteString().ToArray();
+            var preLedgerStateUpdateByteArray = Encoding.UTF8.GetBytes(previousLedgerStateUpdate);
 
             var deltaBuilder = new DeltaBuilder(_mempool, peerId, preLedgerStateUpdateByteArray);
             var deltaEntity = deltaBuilder.BuildDelta();
 
-
             deltaEntity.Should().NotBeNull();
-            deltaEntity.LocalLedgerState.ToByteString().ToStringUtf8().Contains(publicKeySeed).Should().BeTrue();
+
+            Encoding.UTF8.GetString(deltaEntity.LocalLedgerState).Should().Contain(publicKeySeed);
 
             deltaEntity.LocalLedgerState.Should().EndWith(deltaEntity.LocalLedgerState.TakeLast(preLedgerStateUpdateByteArray.Length));
 
