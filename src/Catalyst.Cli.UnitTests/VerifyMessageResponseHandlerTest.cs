@@ -89,7 +89,7 @@ namespace Catalyst.Cli.UnitTests
                 Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
-            var cache = Substitute.For<IMessageCorrelationCache>();
+            var cache = Substitute.For<IRpcCorrelationCache>();
 
             _handler = new VerifyMessageResponseHandler(_output, cache, _logger);
             _handler.StartObserving(messageStream);

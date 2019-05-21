@@ -110,7 +110,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
+            var subbedCache = Substitute.For<IRpcCorrelationCache>();
 
             var handler = new PeerListRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerRepository, rpcMessageFactory);
             handler.StartObserving(messageStream);

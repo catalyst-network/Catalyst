@@ -41,7 +41,7 @@ using Catalyst.Common.Rpc;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class GetVersionRequestHandler
-        : CorrelatableMessageHandlerBase<VersionRequest, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<VersionRequest, IRpcCorrelationCache>,
             IRpcRequestHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public GetVersionRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IMessageCorrelationCache messageCorrelationCache,
+            IRpcCorrelationCache messageCorrelationCache,
             IRpcMessageFactory rpcMessageFactory)
             : base(messageCorrelationCache, logger)
         {
