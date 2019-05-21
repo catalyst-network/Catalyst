@@ -29,7 +29,6 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
     /// </summary>
     public interface IDeltaBuilder
     {
-
         /// <summary>
         /// Builds the delta.
         /// </summary>
