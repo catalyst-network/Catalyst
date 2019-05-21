@@ -84,6 +84,8 @@ namespace Catalyst.Node.Core.RPC
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             if (!disposing) return;
             _cancellationSource?.Dispose();
             _certificate?.Dispose();
