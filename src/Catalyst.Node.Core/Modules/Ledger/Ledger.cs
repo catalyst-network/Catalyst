@@ -26,9 +26,6 @@ using SharpRepository.Repository;
 using Dawn;
 using Serilog;
 using System;
-using System.Collections.Generic;
-using Catalyst.Protocol.Transaction;
-
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {
@@ -55,7 +52,7 @@ namespace Catalyst.Node.Core.Modules.Ledger
 
             try
             {
-                Accounts.Add((Account)account);
+                Accounts.Add((Account) account);
                 return true;
             }
             catch (Exception e)

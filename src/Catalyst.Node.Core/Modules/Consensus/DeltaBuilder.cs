@@ -34,6 +34,7 @@ using Catalyst.Common.Util;
 using Google.Protobuf;
 using Catalyst.Common.Interfaces.P2P;
 using System;
+using System.Text;
 using Nethereum.RLP;
 using Catalyst.Common.Config;
 using Dawn;
@@ -55,7 +56,6 @@ namespace Catalyst.Node.Core.Modules.Consensus
             Guard.Argument(mempool, nameof(mempool)).NotNull();
             Guard.Argument(producerUniqueId, nameof(producerUniqueId)).NotNull();
 
-
             _mempool = mempool;
             _producerUniqueId = producerUniqueId;
             _previousValidLedgerStateUpdate = previousValidLedgerStateUpdate;
@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
         {
             var allTransactions = _mempool.GetMemPoolContent();
             Guard.Argument(allTransactions, nameof(allTransactions))
-                .NotNull("Mempool content returned null, check the mempool is actively running");
+               .NotNull("Mempool content returned null, check the mempool is actively running");
 
             var allValidatedTransactions = GetValidTransactionsForDelta(allTransactions);
 
@@ -81,6 +81,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
                 //h∆j = blake2b256(∆Ln,j)
                 return CreateDeltaEntity(transationEntryListLexiOrder, transactionSignature);
             }
+
             return EmptyDeltaEntity;
         }
 
@@ -103,27 +104,23 @@ namespace Catalyst.Node.Core.Modules.Consensus
 
         private List<STTransactionEntry> SortHashByLexiOrder(List<STTransactionEntry> selectedSTEntries)
         {
-            var transationEntryHashPairList = new SortedDictionary<byte[], STTransactionEntry>();
-
-            selectedSTEntries.ForEach(en => transationEntryHashPairList.Add(CreateTransactionEntryHash(en), en));
-
-            return transationEntryHashPairList.Select(m => m.Value).ToList();
+            return selectedSTEntries.OrderBy(CreateTransactionEntryHash).ToList();
         }
 
-        private byte[] CreateTransactionEntryHash(STTransactionEntry transEnty)
+        private byte[] CreateTransactionEntryHash(STTransactionEntry transEntry)
         {
-            var transEntyByte = transEnty.ToByteArray();
+            var transEntryByte = transEntry.ToByteArray();
 
             //HEX(Eα)
-            var hexTransactionEntry = HexByteConvertorExtensions.ToHex(transEntyByte);
+            var hexTransactionEntry = HexByteConvertorExtensions.ToHex(transEntryByte);
 
             var seed = Multihash.Encode<BLAKE2B_256>(RLP.EncodeElement(_previousValidLedgerStateUpdate));
 
-            var merkleSeedInt = Convert.ToInt32(BitConverter.ToInt32(seed.Take(Constants.MerkleTreeFirstStandardBits).ToArray(), 0));
+            var merkleSeedInt = BitConverter.ToInt32(seed.Take(Constants.MerkleTreeFirstStandardBits).ToArray(), 0);
             var random = new Random(merkleSeedInt);
    
             //s + HEX(Eα)
-            var saltHexConcat = string.Concat(random.Next().ToString(), hexTransactionEntry).ToUtf8ByteString().ToArray();
+            var saltHexConcat = Encoding.UTF8.GetBytes(string.Concat(random.Next().ToString(), hexTransactionEntry));
 
             // Oα = blake2b256[s + HEX(Eα)]
             var transEntryHash = Multihash.Encode<BLAKE2B_256>(saltHexConcat);
