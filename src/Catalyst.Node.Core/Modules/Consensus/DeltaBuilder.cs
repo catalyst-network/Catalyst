@@ -48,7 +48,8 @@ namespace Catalyst.Node.Core.Modules.Consensus
         private readonly IPeerIdentifier _producerUniqueId;
 
         private readonly byte[] _previousValidLedgerStateUpdate;
-
+        public static IDeltaEntity EmptyDeltaEntity { get; } = new DeltaEntity() { Delta = new byte[0], DeltaHash = new byte[0], LocalLedgerState = new byte[0] };
+    
         public DeltaBuilder(IMempool mempool, IPeerIdentifier producerUniqueId, byte[] previousValidLedgerStateUpdate)
         {
             Guard.Argument(mempool, nameof(mempool)).NotNull();
@@ -64,31 +65,37 @@ namespace Catalyst.Node.Core.Modules.Consensus
         public IDeltaEntity BuildDelta()
         {
             var allTransactions = _mempool.GetMemPoolContent();
-            Guard.Argument(allTransactions, nameof(allTransactions)).NotNull();
+            Guard.Argument(allTransactions, nameof(allTransactions))
+                .NotNull("Mempool content returned null, check the mempool is actively running");
 
-            var allValidatedTransactions = ValidityCheck(allTransactions);
-            Guard.Argument(allValidatedTransactions, nameof(allValidatedTransactions)).NotNull();
+            var allValidatedTransactions = GetValidTransactionsForDelta(allTransactions);
 
             if (allValidatedTransactions.Any())
             {
-                var transactionSignature = allValidatedTransactions.FirstOrDefault().Signature;
+                var transactionSignature = allValidatedTransactions.First().Signature;
                 var selectedSTEntries = allValidatedTransactions.SelectMany(ste => ste.STEntries).ToList();
 
+                //Sorted O1< O2< ... < Oβ< ... < OM
                 var transationEntryListLexiOrder = SortHashByLexiOrder(selectedSTEntries);
 
+                //h∆j = blake2b256(∆Ln,j)
                 return CreateDeltaEntity(transationEntryListLexiOrder, transactionSignature);
             }
-            return null;
+            return EmptyDeltaEntity;
         }
 
         private DeltaEntity CreateDeltaEntity(List<STTransactionEntry> transationEntryListLexiOrder, TransactionSignature transactionSignature)
         {
+            //L(f/E)
             var transationEntryListByteArray = transationEntryListLexiOrder.SelectMany(lo => lo.ToByteArray()).ToArray();
 
+            //∆Ln,j = L(f/E) + dn
             var deltaState = ByteUtil.CombineByteArrays(transationEntryListByteArray, transactionSignature.ToByteArray());
+            
+            //hj = h∆j + Idj
+            var localHash = Multihash.Encode<BLAKE2B_256>(deltaState);
 
-            var localHash = CreateLocalHash(transationEntryListByteArray, transactionSignature.ToByteArray());
-
+            //wj = hj + Idj
             var localLedgerStateUpdate = ByteUtil.CombineByteArrays(localHash, _producerUniqueId.PeerId.ToByteArray());
 
             return new DeltaEntity(){LocalLedgerState = localLedgerStateUpdate, Delta = deltaState, DeltaHash = localHash};
@@ -107,29 +114,23 @@ namespace Catalyst.Node.Core.Modules.Consensus
         {
             var transEntyByte = transEnty.ToByteArray();
 
-            var hexTransactionEntry = HexByteConvertorExtensions.ToHex(transEntyByte).HexToByteArray();
+            //HEX(Eα)
+            var hexTransactionEntry = HexByteConvertorExtensions.ToHex(transEntyByte);
 
             var seed = Multihash.Encode<BLAKE2B_256>(RLP.EncodeElement(_previousValidLedgerStateUpdate));
 
             var merkleSeedInt = Convert.ToInt32(BitConverter.ToInt32(seed.Take(Constants.MerkleTreeFirstStandardBits).ToArray(), 0));
-
             var random = new Random(merkleSeedInt);
-            var salt = new byte[Constants.StandardSaltSize];
-            random.NextBytes(salt);
+   
+            //s + HEX(Eα)
+            var saltHexConcat = string.Concat(random.Next().ToString(), hexTransactionEntry).ToUtf8ByteString().ToArray();
 
-            var transEntryHash = Multihash.Encode<BLAKE2B_256>(ByteUtil.CombineByteArrays(salt, hexTransactionEntry));
-            return transEntryHash.ToByteString().ToArray();
+            // Oα = blake2b256[s + HEX(Eα)]
+            var transEntryHash = Multihash.Encode<BLAKE2B_256>(saltHexConcat);
+            return transEntryHash;
         }
 
-        private byte[] CreateLocalHash(byte[] sortedTransationEntryList, byte[] transactionSignatureHash)
-        {
-            var localhash = Multihash.Encode<BLAKE2B_256>(ByteUtil.CombineByteArrays(sortedTransationEntryList, transactionSignatureHash));
-
-            return localhash.ToByteString().ToArray();
-        }
-
-
-        private IList<Transaction> ValidityCheck(IEnumerable<Transaction> allTransactions)
+        public static IList<Transaction> GetValidTransactionsForDelta(IEnumerable<Transaction> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now

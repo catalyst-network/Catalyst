@@ -33,7 +33,9 @@ using NSubstitute;
 using Xunit;
 using Catalyst.Common.Util;
 using Catalyst.Common.Extensions;
-
+using Google.Protobuf;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
 {
@@ -69,7 +71,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var deltaBuilder = new DeltaBuilder(mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"), ("kUox886YuiZojgogjtgo83pkUox886YuiZ").ToUtf8ByteString().ToArray());
 
             var deltaEntity = deltaBuilder.BuildDelta();
-            deltaEntity.Should().BeNull();
+            deltaEntity.Should().Be(DeltaBuilder.EmptyDeltaEntity); 
         }
 
         [Fact]
@@ -94,21 +96,34 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var deltaBuilder = new DeltaBuilder(mempool, PeerIdentifierHelper.GetPeerIdentifier("testvalue"), ("kUox886YuiZojgogjtgo83pkUox886YuiZ").ToUtf8ByteString().ToArray());
 
             var deltaEntity = deltaBuilder.BuildDelta();
-            deltaEntity.Should().BeNull();
+            deltaEntity.Should().Be(DeltaBuilder.EmptyDeltaEntity);
         }
 
-        [Theory]
-        [InlineData("randomseedm", "bkJsrbzIbuWm8EPSjJ2YicTIe5gIfEdfhXJK7dl7ESkjhDWUxkUox886YuiZnhEj3om5AXmWVcXvfzIAw")]
-        public void BuildDeltaSpecifiedValues(string seed, string previousLedgerStateUpdate)
+        [Fact]
+        public void BuildDeltaCheckForAccuracy()
         {
-            var deltaBuilder = new DeltaBuilder(_mempool, PeerIdentifierHelper.GetPeerIdentifier(seed), previousLedgerStateUpdate.ToUtf8ByteString().ToArray());
+            //Transactions are faked and will always return results
+            //Safe to get first
+            var transactionSignature = DeltaBuilder.GetValidTransactionsForDelta(_mempool.GetMemPoolContent()).FirstOrDefault().Signature.ToByteArray();
 
+            var publicKeySeed = "randomseedm";
+            var peerId = PeerIdentifierHelper.GetPeerIdentifier(publicKeySeed);
+            var previousLedgerStateUpdate = "bkJsrbzIbuWm8EPSjJ2YicTIe5gIfEdfhXJK7dl7ESkjhDWUxkUox886YuiZnhEj3om5AXmWVcXvfzIAw";
+
+            var preLedgerStateUpdateByteArray = previousLedgerStateUpdate.ToUtf8ByteString().ToArray();
+
+            var deltaBuilder = new DeltaBuilder(_mempool, peerId, preLedgerStateUpdateByteArray);
             var deltaEntity = deltaBuilder.BuildDelta();
 
+
             deltaEntity.Should().NotBeNull();
-            deltaEntity.LocalLedgerState.ToByteString().ToStringUtf8().Should().Be("��\u0002!\n\u000estandardPubKey\u0010�\u0001\n\u00011\u0012\tchallenge\n\u0002Tc\u0012\u000201\u001a\u0010\0\0\0\0\0\0\0\0\0\0\0\0\u007f\0\0\u0001\"\u000290*\u0014randomseedm\0\0\0\0\0\0\0\0\0");
-            deltaEntity.Delta.ToByteString().ToStringUtf8().Should().Be("\n\u000estandardPubKey\u0010�\u0001\n\u00011\u0012\tchallenge");
-            deltaEntity.DeltaHash.ToByteString().ToStringUtf8().Should().Be("��\u0002!\n\u000estandardPubKey\u0010�\u0001\n\u00011\u0012\tchallenge");
+            deltaEntity.LocalLedgerState.ToByteString().ToStringUtf8().Contains(publicKeySeed).Should().BeTrue();
+
+            deltaEntity.LocalLedgerState.Should().EndWith(deltaEntity.LocalLedgerState.TakeLast(preLedgerStateUpdateByteArray.Length));
+
+            deltaEntity.Delta.Should().EndWith(transactionSignature);
+
+            deltaEntity.DeltaHash.Should().ContainInOrder(Multihash.Encode<BLAKE2B_256>(deltaEntity.Delta));
         }
     }
 }
