@@ -35,6 +35,5 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// </summary>
         /// <returns>Returns a delta entity object that contains the ledger update, delta and delta hash</returns>
         IDeltaEntity BuildDelta();
-
     }
 }
