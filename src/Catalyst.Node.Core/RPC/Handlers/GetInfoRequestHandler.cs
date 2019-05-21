@@ -42,7 +42,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class GetInfoRequestHandler
-        : CorrelatableMessageHandlerBase<GetInfoRequest, IMessageCorrelationCache>,
+        : CorrelatableMessageHandlerBase<GetInfoRequest, IRpcCorrelationCache>,
             IRpcRequestHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public GetInfoRequestHandler(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
-            IMessageCorrelationCache messageCorrelationCache,
+            IRpcCorrelationCache messageCorrelationCache,
             IRpcMessageFactory rpcMessageFactory,
             ILogger logger) : base(messageCorrelationCache, logger)
         {

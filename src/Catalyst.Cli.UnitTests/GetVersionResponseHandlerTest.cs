@@ -83,7 +83,7 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetVersionResponse(string version)
         {
-            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var correlationCache = Substitute.For<IRpcCorrelationCache>();
 
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new VersionResponse

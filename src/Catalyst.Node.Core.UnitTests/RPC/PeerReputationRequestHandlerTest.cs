@@ -127,9 +127,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var peerDiscovery = Substitute.For<IPeerDiscovery>();
-            peerDiscovery.PeerRepository.Returns(peerRepository);
-
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
@@ -147,9 +144,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
+            var subbedCache = Substitute.For<IRpcCorrelationCache>();
 
-            var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerDiscovery);
+            var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerRepository);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
