@@ -21,18 +21,15 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
-using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.UnitTests.TestUtils;
+using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
@@ -46,7 +43,7 @@ namespace Catalyst.Cli.UnitTests.Config
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
-        [Theory(Skip = "Blocking CI")]
+        [Theory]
         [MemberData(nameof(Networks))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RegisteringAllConfigsShouldAllowResolvingCatalystNode(Network network)
@@ -71,7 +68,7 @@ namespace Catalyst.Cli.UnitTests.Config
 
             using (var scope = container.BeginLifetimeScope(CurrentTestName + network.Name))
             {
-                var cli = scope.Resolve<ICatalystCli>();
+                scope.TryResolve<ICatalystCli>(out _).Should().BeTrue();
             }
         }
     }
