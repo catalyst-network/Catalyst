@@ -48,7 +48,6 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// </value>
         byte[] DeltaHash { get; set; }
 
-
         /// <summary>
         /// Gets or sets the delta.
         /// </summary>
