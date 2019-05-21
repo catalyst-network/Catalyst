@@ -29,7 +29,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
     /// <summary>
     /// The gossip message handler interface
     /// </summary>
-    public interface IGossipMessageHandler : IMessageHandler
+    public interface IGossipMessageHandler
     {
         /// <summary>Starts the gossip.</summary>
         /// <param name="message">The message.</param>
