@@ -130,6 +130,12 @@ namespace Catalyst.Node.Core.Modules.Consensus
             return transEntryHash;
         }
 
+        /// <summary>
+        /// Gets the valid transactions for delta.
+        /// This method can be used to extract the collection of transactions that meet the criteria for validating delta.
+        /// </summary>
+        /// <param name="allTransactions">All transactions.</param>
+        /// <returns></returns>
         public static IList<Transaction> GetValidTransactionsForDelta(IEnumerable<Transaction> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
