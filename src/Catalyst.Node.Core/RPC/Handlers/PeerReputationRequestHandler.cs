@@ -26,6 +26,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
@@ -51,7 +52,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
         
         private readonly PeerId _peerId;
 
+        private readonly IKeySigner _keySigner;
+
         public PeerReputationRequestHandler(IPeerIdentifier peerIdentifier,
+            IKeySigner keySigner,
             ILogger logger,
             IRpcCorrelationCache messageCorrelationCache,
             IRepository<Peer> peerRepository)
@@ -94,7 +98,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 Reputation = reputation
             };
 
-            var anySignedResponse = response.ToAnySigned(_peerId, _message.Payload.CorrelationId.ToGuid());
+            var anySignedResponse = response.ToAnySigned(_keySigner, _peerId, _message.Payload.CorrelationId.ToGuid());
 
             message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
         }

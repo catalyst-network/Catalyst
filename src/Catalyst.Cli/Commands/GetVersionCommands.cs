@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                var request = _rpcMessageFactory.GetMessage(new MessageDto(
                     new VersionRequest
                     {
                         Query = true
@@ -69,7 +69,7 @@ namespace Catalyst.Cli.Commands
                     _peerIdentifier
                 ));
 
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request.ToAnySigned(_keySigner, _peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {

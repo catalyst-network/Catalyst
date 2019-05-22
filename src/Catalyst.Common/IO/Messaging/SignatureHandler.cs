@@ -17,6 +17,11 @@ namespace Catalyst.Common.IO.Messaging
         protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
         {
             bool valid = _keySigner.Verify(msg);
+
+            if (valid)
+            {
+                ctx.FireChannelRead(msg);
+            }
         }
     }
 }

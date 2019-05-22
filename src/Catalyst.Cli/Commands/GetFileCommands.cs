@@ -69,7 +69,7 @@ namespace Catalyst.Cli.Commands
                 Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                 nodeConfig.HostAddress, nodeConfig.Port), _peerIdentifier);
 
-            var messageDto = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(dto);
+            var messageDto = _rpcMessageFactory.GetMessage(dto);
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,

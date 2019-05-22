@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
 
                 Guard.Argument(node).NotNull();
 
-                var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto(
                     new GetPeerReputationRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),

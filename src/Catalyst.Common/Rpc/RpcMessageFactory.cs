@@ -21,11 +21,9 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Google.Protobuf;
 
 namespace Catalyst.Common.Rpc
 {
@@ -33,6 +31,6 @@ namespace Catalyst.Common.Rpc
     /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactory`1" />
     public sealed class RpcMessageFactory : MessageFactory, IRpcMessageFactory
     {
-        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
+        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache, IKeySigner keySigner) : base(messageCorrelationCache, keySigner) { }
     }
 }

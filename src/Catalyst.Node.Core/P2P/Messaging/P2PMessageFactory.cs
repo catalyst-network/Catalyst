@@ -25,6 +25,7 @@ using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
@@ -37,7 +38,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
     public sealed class P2PMessageFactory
         : MessageFactory
     {
-        public P2PMessageFactory(IReputableCache messageCorrelationCache) : base(messageCorrelationCache) { }
+        public P2PMessageFactory(IReputableCache messageCorrelationCache, IKeySigner keySigner) : base(messageCorrelationCache, keySigner) { }
         
         /// <summary>Gets the message in datagram envelope.</summary>
         /// <param name="messageDto">Message Dto wrapper with all params required to send message.</param>

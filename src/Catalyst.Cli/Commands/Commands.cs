@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO;
@@ -59,10 +60,14 @@ namespace Catalyst.Cli.Commands
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
         private readonly IRpcCorrelationCache _rpcMessageCorrelationCache;
+        private readonly IKeySigner _keySigner;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>
         /// </summary>
-        public Commands(INodeRpcClientFactory nodeRpcClientFactory,
+        public Commands(IRpcMessageFactory rpcMessageFactory,
+            IKeySigner keySigner,
+            INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
             ICertificateStore certificateStore,
@@ -71,6 +76,8 @@ namespace Catalyst.Cli.Commands
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)
         {
+            _rpcMessageFactory = rpcMessageFactory;
+            _keySigner = keySigner;
             _rpcMessageCorrelationCache = rpcMessageCorrelationCache;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;

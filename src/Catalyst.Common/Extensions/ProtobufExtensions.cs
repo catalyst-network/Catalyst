@@ -26,11 +26,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
+using Nethereum.RLP;
 using Type = System.Type;
 
 namespace Catalyst.Common.Extensions
@@ -64,6 +66,7 @@ namespace Catalyst.Common.Extensions
         }
 
         public static AnySigned ToAnySigned(this IMessage protobufObject,
+            IKeySigner keySigner,
             PeerId senderId,
             Guid correlationId = default)
         {
@@ -77,9 +80,9 @@ namespace Catalyst.Common.Extensions
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
-
-                //todo: sign the `correlationId` and `value` bytes with publicKey instead
-                Signature = senderId.PublicKey,
+                Signature = keySigner
+                   .Sign(protobufObject.ToByteArray(), senderId.PublicKey.ToByteArray().ToStringFromRLPDecoded())
+                   .Bytes.RawBytes.ToByteString(),
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
@@ -96,9 +99,6 @@ namespace Catalyst.Common.Extensions
 
         public static T FromAnySigned<T>(this AnySigned message) where T : IMessage<T>
         {
-            //todo check the message signature with the PeerId.PublicKey and value fields
-            if (message.PeerId.PublicKey != message.Signature)
-                throw new CryptographicException("Signature of the message doesn't match with sender's public Key");
             var empty = (T) Activator.CreateInstance(typeof(T));
             var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
             return typed;

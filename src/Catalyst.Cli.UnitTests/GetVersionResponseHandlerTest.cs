@@ -29,6 +29,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.KeyStore;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -44,6 +46,7 @@ namespace Catalyst.Cli.UnitTests
 {
     public sealed class GetVersionResponseHandlerTest : IDisposable
     {
+        private readonly IKeySigner _keySigner;
         private readonly IUserOutput _output;
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
@@ -51,7 +54,7 @@ namespace Catalyst.Cli.UnitTests
         private readonly ILogger _logger;
         private GetVersionResponseHandler _handler;
         private static IRpcCorrelationCache _subbedCorrelationCache;
-
+        
         static GetVersionResponseHandlerTest()
         {
             _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
@@ -67,6 +70,7 @@ namespace Catalyst.Cli.UnitTests
 
         public GetVersionResponseHandlerTest()
         {
+            _keySigner = Substitute.For<IKeySigner>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
@@ -85,7 +89,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IRpcCorrelationCache>();
 
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new RpcMessageFactory(_subbedCorrelationCache, _keySigner).GetMessage(new MessageDto(
                     new VersionResponse
                     {
                         Version = version

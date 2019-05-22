@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
                         nodeConfig.Port),
                     _peerIdentifier);
                 
-                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(dto);
+                var request = _rpcMessageFactory.GetMessage(dto);
                 node.SendMessage(request);
             }
             catch (Exception e)

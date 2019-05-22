@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Commands
             try
             {
                 var message = new GetInfoRequest {Query = true};
-                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(message,
+                var request = _rpcMessageFactory.GetMessage(new MessageDto(message,
                     MessageTypes.Ask,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
                     _peerIdentifier

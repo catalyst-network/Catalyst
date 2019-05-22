@@ -28,6 +28,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -66,15 +67,18 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         private readonly VanillaMessageHandler _handler;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly AnySigned[] _responseMessages;
+        private readonly IKeySigner _keySigner;
 
         public MessageHandlerBaseTests()
         {
+            _keySigner = Substitute.For<IKeySigner>();
             _handler = new VanillaMessageHandler(Substitute.For<ILogger>());
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _responseMessages = Enumerable.Range(0, 10).Select(i =>
             {
                 var message = new GetInfoResponse {Query = i.ToString()};
                 return message.ToAnySigned(
+                    _keySigner,
                     PeerIdentifierHelper.GetPeerIdentifier(i.ToString()).PeerId,
                     Guid.NewGuid());
             }).ToArray();
@@ -119,10 +123,12 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         public async Task MessageHandler_should_not_receive_messages_of_the_wrong_type()
         {
             _responseMessages[3] = new PingResponse().ToAnySigned(
+                _keySigner,
                 _responseMessages[3].PeerId, 
                 _responseMessages[3].CorrelationId.ToGuid());
 
             _responseMessages[7] = new PingRequest().ToAnySigned(
+                _keySigner,
                 _responseMessages[7].PeerId,
                 _responseMessages[7].CorrelationId.ToGuid());
 
