@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -59,8 +60,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
-        private IRpcCorrelationCache _subbedCorrelationCache;
+        private readonly IKeySigner _keySigner;
 
+        private IRpcCorrelationCache _subbedCorrelationCache;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="RemovePeerRequestHandlerTest"/> class.
         /// </summary>
@@ -71,6 +74,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+            _keySigner = new TestKeySigner();
         }
 
         /// <summary>
@@ -115,7 +119,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache, _keySigner);
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var peerToDelete = peerRepository.Get(1);
             var requestMessage = rpcMessageFactory.GetMessage(new MessageDto(

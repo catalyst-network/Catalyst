@@ -71,7 +71,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
         public MessageHandlerBaseTests()
         {
-            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner = new TestKeySigner();
             _handler = new VanillaMessageHandler(Substitute.For<ILogger>());
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _responseMessages = Enumerable.Range(0, 10).Select(i =>

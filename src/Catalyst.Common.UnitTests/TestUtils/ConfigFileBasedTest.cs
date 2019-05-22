@@ -26,7 +26,10 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.KeyStore;
+using Catalyst.Common.Modules.KeySigner;
 using Microsoft.Extensions.Configuration;
+using Nethereum.KeyStore.Model;
 using Serilog;
 using Serilog.Events;
 using SharpRepository.Ioc.Autofac;
@@ -63,7 +66,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
 
             var certificateStore = new TestCertificateStore();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
-
+            
             ConfigureLogging(config, writeLogsToTestOutput, writeLogsToFile);
         }
 

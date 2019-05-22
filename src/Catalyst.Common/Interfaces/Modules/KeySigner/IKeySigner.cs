@@ -45,5 +45,8 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         bool Verify(AnySigned anySigned);
 
         void ExportKey();
+        void ReadPassword();
+
+        void GenerateNewKey();
     }
 }

@@ -38,7 +38,7 @@ namespace Catalyst.Common.UnitTests
     {
         private static readonly IKeySigner KeySigner;
 
-        static ProtobufExtensionsTests() { KeySigner = Substitute.For<IKeySigner>(); }
+        static ProtobufExtensionsTests() { KeySigner = new TestKeySigner(); }
 
         [Fact]
         public static void ShortenedFullName_should_remove_namespace_start()

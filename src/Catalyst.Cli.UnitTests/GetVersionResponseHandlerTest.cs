@@ -70,7 +70,7 @@ namespace Catalyst.Cli.UnitTests
 
         public GetVersionResponseHandlerTest()
         {
-            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner = new TestKeySigner();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();

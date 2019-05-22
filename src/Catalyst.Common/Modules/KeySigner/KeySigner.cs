@@ -43,7 +43,6 @@ namespace Catalyst.Common.Modules.KeySigner
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
             _keySignerInitializer = initializer;
-            _keySignerInitializer.ReadPassword(this);
         }
 
         IKeyStore IKeySigner.KeyStore => _keyStore;
@@ -68,6 +67,16 @@ namespace Catalyst.Common.Modules.KeySigner
         public void ExportKey()
         {
             throw new NotImplementedException();
+        }
+
+        public void ReadPassword()
+        {
+            _keySignerInitializer.ReadPassword(this);
+        }
+
+        public void GenerateNewKey()
+        {
+            _keySignerInitializer.GenerateNewKey(this);
         }
     }
 }

@@ -27,6 +27,7 @@ using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -61,6 +62,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         private IRpcCorrelationCache _subbedCorrelationCache;
 
+        private readonly IKeySigner _keySigner;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
         /// </summary>
@@ -71,6 +74,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
             var fakeChannel = Substitute.For<IChannel>();
+            _keySigner = new TestKeySigner();
             _fakeContext.Channel.Returns(fakeChannel);
         }
 
@@ -129,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache, _keySigner);
             var request = new GetPeerReputationRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -146,7 +150,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
             var subbedCache = Substitute.For<IRpcCorrelationCache>();
 
-            var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerRepository);
+            var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _keySigner, _logger, subbedCache, peerRepository);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

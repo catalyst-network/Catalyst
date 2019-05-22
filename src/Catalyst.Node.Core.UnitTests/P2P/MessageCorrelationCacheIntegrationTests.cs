@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
@@ -46,6 +47,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
+        private readonly IKeySigner _keySigner;
 
         public MessageCorrelationCacheIntegrationTests(ITestOutputHelper output) : base(output)
         {
@@ -57,6 +59,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var container = ContainerBuilder.Build();
             _scope = container.BeginLifetimeScope(CurrentTestName);
             _logger = Substitute.For<ILogger>();
+            _keySigner = new TestKeySigner();
         }
 
         [Fact]
@@ -77,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 })
                .Select(c => new PendingRequest
                 {
-                    Content = new PingRequest().ToAnySigned(senderPeerId, c.CorrelationId),
+                    Content = new PingRequest().ToAnySigned(_keySigner, senderPeerId, c.CorrelationId),
                     Recipient = c.PeerIdentifier,
                     SentAt = DateTimeOffset.MinValue
                 }).ToList();
@@ -93,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             requests.ForEach(r => pendingRequestCache.AddPendingRequest(r));
 
-            var responseFromDude1 = new PingResponse().ToAnySigned(peerIds[1].PeerId, correlationIds[1]);
+            var responseFromDude1 = new PingResponse().ToAnySigned(_keySigner, peerIds[1].PeerId, correlationIds[1]);
             var match = pendingRequestCache.TryMatchResponse<PingRequest, PingResponse>(responseFromDude1);
             match.Should().NotBeNull();
 

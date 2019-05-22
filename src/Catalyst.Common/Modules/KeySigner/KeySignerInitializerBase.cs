@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -11,34 +9,27 @@ using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Nethereum.KeyStore.Crypto;
 using Nethereum.RLP;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Asn1.X509;
 using Serilog;
 
-namespace Catalyst.Common.KeyStore
+namespace Catalyst.Common.Modules.KeySigner
 {
     public abstract class KeySignerInitializerBase : IKeySignerInitializer
     {
-        private readonly IPeerIdentifier _peerIdentifier;
-
         private readonly IUserOutput _userOutput;
-
-        private readonly IKeyStore _keyStore;
-
+        
         private readonly ILogger _logger;
 
         private readonly IPasswordReader _passwordReader;
 
         private SecureString _password;
 
+        protected readonly IKeyStore KeyStore;
+
         protected KeySignerInitializerBase(IPasswordReader passwordReader, IKeyStore keyStore, IUserOutput userOutput, ILogger logger)
         {
-            _peerIdentifier = GetPeerIdentifier();
-            _keyStore = keyStore;
+            KeyStore = keyStore;
             _userOutput = userOutput;
             _passwordReader = passwordReader;
             _logger = logger;
@@ -48,6 +39,11 @@ namespace Catalyst.Common.KeyStore
         {
             get
             {
+                if (_password == null)
+                {
+                    return string.Empty;
+                }
+
                 IntPtr stringPointer = Marshal.SecureStringToBSTR(_password);
                 string normalString = Marshal.PtrToStringBSTR(stringPointer);
                 Marshal.ZeroFreeBSTR(stringPointer);
@@ -77,7 +73,7 @@ namespace Catalyst.Common.KeyStore
 
         public void Initialize(IKeySigner keySigner)
         {
-            var path = Path.Combine(_keyStore.GetBaseDir(), Constants.DefaultKeyStoreFile);
+            var path = Path.Combine(KeyStore.GetBaseDir(), Constants.DefaultKeyStoreFile);
             var keyStoreFileExists = File.Exists(path);
 
             try
@@ -85,10 +81,10 @@ namespace Catalyst.Common.KeyStore
                 if (keyStoreFileExists)
                 {
                     IPublicKey publicKey =
-                        _keyStore.GetKey(Constants.DefaultKeyStoreFile, Password).GetPublicKey();
+                        KeyStore.GetKey(Constants.DefaultKeyStoreFile, Password).GetPublicKey();
                     var publicKeyStr = keySigner.CryptoContext.AddressFromKey(publicKey);
                     if (!publicKeyStr.Equals(
-                        _peerIdentifier.PublicKey.ToStringFromRLPDecoded(), StringComparison.CurrentCultureIgnoreCase))
+                        GetPeerIdentifier().PublicKey.ToStringFromRLPDecoded(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         _userOutput.WriteLine("Shell.Config Public Key Configuration does not match keystore");
                         SetConfigurationValue(publicKeyStr);
@@ -110,10 +106,10 @@ namespace Catalyst.Common.KeyStore
             }
         }
 
-        private void GenerateNewKey(IKeySigner keySigner)
+        public void GenerateNewKey(IKeySigner keySigner)
         {
             var newPrivateKey = keySigner.CryptoContext.GeneratePrivateKey();
-            _keyStore.StoreKey(newPrivateKey, Constants.DefaultKeyStoreFile, Password);
+            KeyStore.StoreKey(newPrivateKey, Constants.DefaultKeyStoreFile, Password);
             var publicKey = newPrivateKey.GetPublicKey();
             var publicKeyStr = keySigner.CryptoContext.AddressFromKey(publicKey);
 

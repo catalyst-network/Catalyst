@@ -33,6 +33,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Autofac;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using DotNetty.Transport.Channels;
 
@@ -40,6 +41,8 @@ namespace Catalyst.Cli.UnitTests
 {
     public sealed class CliCommandsTests : ConfigFileBasedTest
     {
+        private IContainer container;
+
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
@@ -64,6 +67,9 @@ namespace Catalyst.Cli.UnitTests
             ConfigureContainerBuilder(config);
 
             ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
+            container = ContainerBuilder.Build();
+
+            container.Resolve<IKeySigner>().GenerateNewKey();
         }
 
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
@@ -71,7 +77,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Connect_To_Node()
         {
-            var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
@@ -83,7 +88,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
-            var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
@@ -98,7 +102,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Info()
         {
-            var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
@@ -113,7 +116,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void Cli_Can_Request_Node_Version()
         {
-            var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
@@ -128,8 +130,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact] 
         public void Cli_Can_Request_Node_Mempool()
         {
-            var container = ContainerBuilder.Build();
-
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
@@ -148,8 +148,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact] 
         public void Cli_Can_Request_Node_To_Sign_A_Message()
         {
-            var container = ContainerBuilder.Build();
-            
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
@@ -165,8 +163,6 @@ namespace Catalyst.Cli.UnitTests
         [Fact] 
         public void Cli_Can_Verify_Message()
         {
-            var container = ContainerBuilder.Build();
-
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();

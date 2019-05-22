@@ -52,10 +52,10 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
-        private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IRpcCorrelationCache _subbedCorrelationCache;
-        
+        private readonly IKeySigner _keySigner;
+
         public SignMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
             var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("Hello&?!1253Catalyst")]
         public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache, _keySigner);
             var request = rpcMessageFactory.GetMessage(new MessageDto(
                 new SignMessageRequest
                 {

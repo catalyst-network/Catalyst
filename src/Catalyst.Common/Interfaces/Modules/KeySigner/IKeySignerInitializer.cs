@@ -14,5 +14,9 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         /// <summary>Gets the password.</summary>
         /// <value>The password.</value>
         string Password { get; }
+
+        /// <summary>Generates the new key.</summary>
+        /// <param name="keySigner">The key signer.</param>
+        void GenerateNewKey(IKeySigner keySigner);
     }
 }

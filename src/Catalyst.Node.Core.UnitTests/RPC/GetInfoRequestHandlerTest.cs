@@ -27,6 +27,7 @@ using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -52,6 +53,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         private IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
         private readonly IRpcServerSettings _rpcServerSettings;
+        private readonly IKeySigner _keySigner;
         private IRpcCorrelationCache _subbedCorrelationCache;
 
         public GetInfoRequestHandlerTest(ITestOutputHelper output) : base(output)
@@ -75,12 +77,14 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             _rpcServerSettings = Substitute.For<IRpcServerSettings>();
             _rpcServerSettings.NodeConfig.Returns(_config);
+
+            _keySigner = new TestKeySigner();
         }
 
         [Fact]
         public void GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var rpcMessagefactory = new RpcMessageFactory(_subbedCorrelationCache);
+            var rpcMessagefactory = new RpcMessageFactory(_subbedCorrelationCache, _keySigner);
             var request = rpcMessagefactory.GetMessage(new MessageDto(
                 new GetInfoRequest
                 {

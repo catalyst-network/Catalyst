@@ -34,6 +34,7 @@ using Catalyst.Common.FileSystem;
 using Catalyst.Common.Config;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
@@ -126,7 +127,9 @@ namespace Catalyst.Cli
                 using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
+                    var keySigner = container.Resolve<IKeySigner>();
 
+                    keySigner.ReadPassword();
                     shell.AdvancedShell.RunConsole(_cancellationSource.Token);
                 }
 

@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging;
@@ -39,12 +40,18 @@ namespace Catalyst.Node.Core.UnitTest.P2P
     public sealed class P2PMessageFactoryTests
     {
         private readonly IReputableCache _subbedReputationCache;
-        public P2PMessageFactoryTests() { _subbedReputationCache = Substitute.For<IReputableCache>(); }
+        private readonly IKeySigner _keySigner;
+
+        public P2PMessageFactoryTests()
+        {
+            _subbedReputationCache = Substitute.For<IReputableCache>();
+            _keySigner = new TestKeySigner();
+        }
         
         [Fact]
         public void CanProduceAValidPingRequestMessage()
         {
-            var pingRequestDatagram = new P2PMessageFactory(_subbedReputationCache).GetMessageInDatagramEnvelope(new MessageDto( 
+            var pingRequestDatagram = new P2PMessageFactory(_subbedReputationCache, _keySigner).GetMessageInDatagramEnvelope(new MessageDto( 
                 new PingRequest(),
                 MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
@@ -58,7 +65,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidPingResponseMessage()
         {
-            var pingResponseDatagram = new P2PMessageFactory(_subbedReputationCache).GetMessageInDatagramEnvelope(new MessageDto(
+            var pingResponseDatagram = new P2PMessageFactory(_subbedReputationCache, _keySigner).GetMessageInDatagramEnvelope(new MessageDto(
                     new PingResponse(),
                     MessageTypes.Tell,
                     PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
@@ -74,7 +81,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void CanProduceAValidTransactionMessage()
         {
-            var transactionDatagram = new P2PMessageFactory(_subbedReputationCache).GetMessageInDatagramEnvelope(new MessageDto(
+            var transactionDatagram = new P2PMessageFactory(_subbedReputationCache, _keySigner).GetMessageInDatagramEnvelope(new MessageDto(
                 new Transaction(),
                 MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),

@@ -75,14 +75,15 @@ namespace Catalyst.Common.Extensions
             Guard.Argument(correlationId, nameof(correlationId))
                .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
+            var signature = keySigner
+               .Sign(protobufObject.ToByteArray(), senderId.PublicKey.ToByteArray().ToStringFromRLPDecoded())?
+               .Bytes?.RawBytes ?? new byte[64];
 
             var anySigned = new AnySigned
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
-                Signature = keySigner
-                   .Sign(protobufObject.ToByteArray(), senderId.PublicKey.ToByteArray().ToStringFromRLPDecoded())
-                   .Bytes.RawBytes.ToByteString(),
+                Signature = signature.ToByteString(),
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };

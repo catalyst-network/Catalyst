@@ -27,6 +27,7 @@ using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -44,6 +45,7 @@ namespace Catalyst.Cli.UnitTests
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
+        private readonly IKeySigner _keySigner;
 
         public static List<object[]> QueryContents;
 
@@ -71,13 +73,14 @@ namespace Catalyst.Cli.UnitTests
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
+            _keySigner = new TestKeySigner();
         }
 
         [Theory]
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
         {
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new RpcMessageFactory(_subbedCorrelationCache, _keySigner).GetMessage(new MessageDto(
                     new VerifyMessageResponse
                     {
                         IsSignedByKey = isSignedByNode

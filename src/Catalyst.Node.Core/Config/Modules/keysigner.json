@@ -1,13 +1,14 @@
-﻿{
-  "defaultAssembly": "Catalyst.Node.Core",
-  "components": [
-    {
-      "type": "Catalyst.Common.Modules.KeySigner.KeySigner, Catalyst.Common",
-      "services": [
+{
+    "defaultAssembly": "Catalyst.Node.Core",
+    "components": [
         {
-          "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
+            "type": "Catalyst.Common.Modules.KeySigner.KeySigner, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
-      ]
-    }
-  ]
+    ]
 }

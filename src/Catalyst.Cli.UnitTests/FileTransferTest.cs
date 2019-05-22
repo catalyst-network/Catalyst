@@ -40,6 +40,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Rpc;
@@ -58,6 +59,7 @@ namespace Catalyst.Cli.UnitTests
         private readonly IDfs _dfs;
         private readonly IRpcCorrelationCache _cache;
         private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IKeySigner _keySigner;
 
         public FileTransferTest(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -75,6 +77,7 @@ namespace Catalyst.Cli.UnitTests
             _fileDownloadFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
             _dfs = Substitute.For<IDfs>();
+            _keySigner = new TestKeySigner();
         }
 
         [Theory]
@@ -117,7 +120,7 @@ namespace Catalyst.Cli.UnitTests
                 {
                     FileSize = (ulong) byteSize,
                     ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful.Id)
-                }.ToAnySigned(nodePeer.PeerId, correlationGuid);
+                }.ToAnySigned(_keySigner, nodePeer.PeerId, correlationGuid);
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
@@ -128,7 +131,7 @@ namespace Catalyst.Cli.UnitTests
                     nodePeer,
                     _fakeContext.Channel,
                     correlationGuid,
-                    new RpcMessageFactory(_cache));
+                    new RpcMessageFactory(_cache, _keySigner));
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {

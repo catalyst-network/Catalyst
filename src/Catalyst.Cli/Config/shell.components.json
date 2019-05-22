@@ -203,6 +203,47 @@
                 }
             ],
             "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.KeyStore.LocalKeyStore, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStore, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Rpc.CliKeySignerInitializer",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySignerInitializer, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Cryptography.RustCryptoContext, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.KeyStore.KeyStoreServiceWrapped, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStoreWrapper, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Modules.KeySigner.KeySigner, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
     ]
 }

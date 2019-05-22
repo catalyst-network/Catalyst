@@ -32,6 +32,7 @@ using NSubstitute;
 using SharpRepository.Repository;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.Network;
@@ -59,6 +60,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private readonly IRepository<Peer> _peerRepository;
         private readonly ILogger _logger;
         private readonly ILookupClient _lookupClient;
+        private readonly IKeySigner _keySigner;
         private readonly List<string> _dnsDomains;
         private readonly string _seedPid;
 
@@ -67,6 +69,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
             _lookupClient = Substitute.For<ILookupClient>();
+            _keySigner = new TestKeySigner();
             _dns = new Common.Network.DnsClient(_lookupClient);
 
             _config = new ConfigurationBuilder()
@@ -155,7 +158,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             var channeledAny = new ChanneledAnySigned(fakeContext, 
-                pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+                pingRequest.ToAnySigned(_keySigner, pid.PeerId, Guid.NewGuid()));
             
             var observableStream = new[] {channeledAny}.ToObservable();
 
