@@ -86,14 +86,6 @@ namespace Catalyst.Common.Extensions
             return anySigned;
         }
 
-        public static IMessage FromAnySigned(this AnySigned message)
-        {
-            var type = Type.GetType(ProtoToClrNameMapper[message.TypeUrl]);
-            var empty = (IMessage) Activator.CreateInstance(type);
-            var innerMessage = empty.Descriptor.Parser.ParseFrom(message.Value);
-            return innerMessage;
-        }
-
         public static T FromAnySigned<T>(this AnySigned message) where T : IMessage<T>
         {
             //todo check the message signature with the PeerId.PublicKey and value fields
