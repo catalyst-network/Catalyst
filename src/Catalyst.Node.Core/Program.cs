@@ -39,6 +39,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Ioc;
 using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Node.Core
@@ -113,8 +114,10 @@ namespace Catalyst.Node.Core
 
                 containerBuilder.RegisterLogger(_logger);
                 containerBuilder.RegisterInstance(config);
+                
+                var perConfig = config.GetSection("CatalystNodeConfiguration").GetSection("PersistenceConfiguration");
 
-                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
+                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(perConfig);
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
                 var container = containerBuilder.Build();

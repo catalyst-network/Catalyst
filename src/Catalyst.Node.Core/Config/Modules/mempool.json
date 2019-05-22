@@ -16,6 +16,14 @@
           "type": "Catalyst.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Common"
         }
       ]
-    }
+    }, 
+      {
+          "type": "SharpRepository.Repository.Configuration.SharpRepositoryConfiguration, SharpRepository.Repository",
+          "services": [
+              {
+                  "type": "SharpRepository.Repository.Configuration.ISharpRepositoryConfiguration, SharpRepository.Repository"
+              }
+          ]
+      }
   ]
 }

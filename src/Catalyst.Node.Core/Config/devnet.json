@@ -44,7 +44,7 @@
     },
     "PersistenceConfiguration": {
       "repositories": {
-        "default": "inMemoryNoCaching",
+        "default": "azureCosmosDb",
         "inMemory": {
           "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository"
         },
@@ -56,7 +56,19 @@
           "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository",
           "cachingStrategy": "none",
           "cachingProvider": "noCachingProvider"
-        }
+        },
+          "azureCosmosDb": {
+              "factory": "SharpRepository.AzureCosmosDb.CosmosDbConfigRepositoryFactory, SharpRepository.AzureCosmosDb",
+              "endpointUri": "https://192.168.1.13:8081",
+              "authorizationKey": "tlENaUs/h6qkRrGDhLXCbse0eOPelza2qBwtZYDs0OqIIbz85UhnXJhz5BUY4AjB2rqckNo8JLqghXgw8YkpRA==",
+              "databaseId": "CatalystDb",
+              "collectionId": "CatalystCol",
+              "containerId": "CatalystCont",
+              "noSSL": "true",
+              "createIfNotExists": "true",
+              "disableAutomaticIdGeneration": "true",
+              "partitionKey": "/CatalystPart"
+          }
       },
       "cachingProviders": {
         "default": "inMemoryProvider",
