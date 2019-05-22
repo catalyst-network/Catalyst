@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
@@ -38,6 +39,10 @@ namespace Catalyst.Common.IO.Messaging
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
+        private readonly IGossipManager _gossipManager;
+
+        public ProtoDatagramChannelHandler(IGossipManager gossipManager) { _gossipManager = gossipManager; }
+
         protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
         {
             Guard.Argument(context).NotNull();
@@ -50,7 +55,12 @@ namespace Catalyst.Common.IO.Messaging
 
                 var message = AnySigned.Parser.ParseFrom(memoryStream);
                 var contextAny = new ChanneledAnySigned(context, message);
-                MessageSubject.OnNext(contextAny);
+
+                if (!_gossipManager.CheckIfMessageIsGossip(contextAny))
+                {
+                    MessageSubject.OnNext(contextAny);
+                } 
+
                 context.FireChannelRead(message);
             }
         }

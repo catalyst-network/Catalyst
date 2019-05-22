@@ -31,6 +31,7 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
@@ -51,12 +52,13 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="ipEndPoint"></param>
         /// <param name="messageHandlers"></param>
         public PeerClient(IPEndPoint ipEndPoint,
-            IEnumerable<IP2PMessageHandler> messageHandlers)
+            IEnumerable<IP2PMessageHandler> messageHandlers,
+            IGossipManager gossipManager)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Logger.Debug("P2P client starting");
 
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler(gossipManager);
             MessageStream = protoDatagramChannelHandler.MessageStream;
             messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
 

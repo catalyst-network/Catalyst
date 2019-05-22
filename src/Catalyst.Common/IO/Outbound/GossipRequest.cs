@@ -21,16 +21,24 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Protocol.Common;
-
 namespace Catalyst.Common.IO.Outbound
 {
-    public class PendingRequest
+    /// <summary>
+    /// Represents a gossip request to the gossip cache
+    /// </summary>
+    /// <seealso cref="Catalyst.Common.IO.Outbound.PendingRequest" />
+    public sealed class GossipRequest : PendingRequest
     {
-        public AnySigned Content { get; set; }
-        public IPeerIdentifier Recipient { get; set; }
-        public DateTimeOffset SentAt { get; set; }
+        /// <summary>Gets or sets the gossip count.</summary>
+        /// <value>The amount of messages sent due to gossiping.</value>
+        public uint GossipCount { get; set; }
+
+        /// <summary>Gets or sets the received count.</summary>
+        /// <value>The amount of times the message has been received.</value>
+        public uint ReceivedCount { get; set; }
+
+        /// <summary>Gets or sets the size of the peer network.</summary>
+        /// <value>The size of the peer network at the moment of creating this request.</value>
+        public int PeerNetworkSize { get; set; }
     }
 }

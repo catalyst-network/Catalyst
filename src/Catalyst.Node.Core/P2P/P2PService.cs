@@ -29,6 +29,7 @@ using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -45,11 +46,12 @@ namespace Catalyst.Node.Core.P2P
 
         public P2PService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,
+            IGossipManager gossipManager,
             IEnumerable<IP2PMessageHandler> messageHandlers)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Discovery = peerDiscovery;
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler(gossipManager);
 
             MessageStream = protoDatagramChannelHandler.MessageStream;
             messageHandlers.ToList()
@@ -58,7 +60,7 @@ namespace Catalyst.Node.Core.P2P
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 protoDatagramChannelHandler,
-                new GossipHandler()
+                new GossipHandler(gossipManager)
             };
             
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
