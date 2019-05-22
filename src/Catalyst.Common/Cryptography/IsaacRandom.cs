@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Cryptography;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Common.Cryptography
 {
@@ -220,6 +221,14 @@ namespace Catalyst.Common.Cryptography
         public byte NextByte()
         {
             return (byte) (NextInt() % 95 + 32);
+        }
+    }
+
+    public class IsaacRandomFactory : IDeterministicRandomFactory
+    {
+        public IDeterministicRandom GetDeterministicRandomFromSeed(byte[] seed)
+        {
+            return new IsaacRandom(seed.ToHex());
         }
     }
 }

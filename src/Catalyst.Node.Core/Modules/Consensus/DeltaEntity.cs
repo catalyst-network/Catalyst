@@ -22,25 +22,34 @@
 #endregion
 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Catalyst.Common.Interfaces.Modules.Consensus;
+using Catalyst.Protocol.Delta;
+using Google.Protobuf;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
     /// <inheritdoc />
     public class DeltaEntity : IDeltaEntity
     {
+        public DeltaEntity(Delta protoDelta, byte[] hash)
+        {
+            Delta = protoDelta;
+            DeltaHash = hash;
+        }
+
         /// <inheritdoc />
         public byte[] LocalLedgerState { get; set; }
 
         /// <inheritdoc />
-        public byte[] DeltaHash { get; set; }
+        public byte[] DeltaHash { get; }
 
         /// <inheritdoc />
-        public byte[] Delta { get; set; }
+        public Delta Delta { get; }
 
-        public static IDeltaEntity Default { get; } = new DeltaEntity {Delta = new byte[0], DeltaHash = new byte[0], LocalLedgerState = new byte[0]};
+        public static IDeltaEntity Default { get; } = 
+            new DeltaEntity(Delta.Parser.ParseFrom(new byte[0]), new byte[0])
+            {
+                LocalLedgerState = new byte[0]
+            };
     }
 }

@@ -21,9 +21,7 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Catalyst.Protocol.Delta;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
@@ -46,7 +44,7 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// <value>
         /// The delta hash.
         /// </value>
-        byte[] DeltaHash { get; set; }
+        byte[] DeltaHash { get; }
 
         /// <summary>
         /// Gets or sets the delta.
@@ -54,6 +52,6 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// <value>
         /// The delta.
         /// </value>
-        byte[] Delta { get; set; }
+        Delta Delta { get; }
     }
 }

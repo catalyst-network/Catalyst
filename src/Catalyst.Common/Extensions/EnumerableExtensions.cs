@@ -21,21 +21,27 @@
 
 #endregion
 
-using Catalyst.Protocol.Delta;
+using System;
+using System.Collections.Generic;
+using Dawn;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Extensions
 {
-    /// <summary>
-    /// The service in charge of building the delta state update used to update the ledger update 
-    /// for a given cycle.
-    /// </summary>
-    public interface IDeltaBuilder
+    public static class EnumerableExtensions
     {
-        /// <summary>
-        /// Builds a new candidate delta based on the content of its predecessor
-        /// </summary>
-        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        /// <returns>Returns a delta entity object that contains the ledger update, delta and delta hash</returns>
-        CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash);
+        public static ulong Sum<T>(this IEnumerable<T> enumerable, Func<T, ulong> selector)
+        {
+            Guard.Argument(enumerable, nameof(enumerable)).NotNull();
+
+            var sum = 0ul;
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var item in enumerable)
+            {
+                sum += selector(item);
+            }
+
+            return sum;
+        }
     }
 }

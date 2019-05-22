@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
-using Catalyst.Protocol.Delta;
 using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus
@@ -38,9 +37,9 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// <summary>
         /// Finds the identifiers of the peers which are allowed to produce the next delta.
         /// </summary>
-        /// <param name="previousDelta">The details of the delta preceding the one for which the method is being called.</param>
-        /// <returns>The list of peers which are eligible for the production of the delta following <see cref="previousDelta"/></returns>
-        IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(Delta previousDelta);
+        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
+        /// <returns>The list of peers which are eligible for the production of the delta following <see cref="previousDeltaHash"/></returns>
+        IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash);
 
         /// <summary>
         /// A peer repository containing peers eligible for the production of the next delta.

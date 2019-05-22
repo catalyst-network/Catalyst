@@ -33,4 +33,9 @@ namespace Catalyst.Common.Interfaces.Cryptography
         /// <returns>ASCII byte</returns>
         byte NextByte();
     }
+
+    public interface IDeterministicRandomFactory
+    {
+        IDeterministicRandom GetDeterministicRandomFromSeed(byte[] seed);
+    }
 }
