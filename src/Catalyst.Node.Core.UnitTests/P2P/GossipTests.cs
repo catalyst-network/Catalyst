@@ -141,8 +141,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     Thread.Sleep(500);
                     gossipMessageHandler.Received(Quantity.Exactly(1))
                        .IncomingGossip(Arg.Any<IChanneledMessage<AnySigned>>());
-                    client.Channel.CloseAsync().GetAwaiter().GetResult();
-                    server.Channel.CloseAsync().GetAwaiter().GetResult();
+                    client.Channel.CloseAsync();
+                    server.Channel.CloseAsync();
                 }
             }
         }
