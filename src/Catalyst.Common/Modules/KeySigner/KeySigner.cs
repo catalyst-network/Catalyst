@@ -27,6 +27,8 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Modules.KeySigner
 {
@@ -34,25 +36,33 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
+        private readonly IKeySignerInitializer _keySignerInitializer;
 
-        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext)
+        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeySignerInitializer initializer)
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
+            _keySignerInitializer = initializer;
+            _keySignerInitializer.ReadPassword(this);
         }
 
         IKeyStore IKeySigner.KeyStore => _keyStore;
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        public Task Sign(ReadOnlySpan<byte> data, string address, string password)
+        public ISignature Sign(byte[] data, string address)
         {
-            IPrivateKey key = _keyStore.GetKey(address, password);
-            return Task.FromResult(_cryptoContext.Sign(key, data));
+            {
+                IPrivateKey key = _keyStore.GetKey(address, _keySignerInitializer.Password);
+                return Task.FromResult(_cryptoContext.Sign(key, new ReadOnlySpan<byte>(data))).GetAwaiter().GetResult();
+            }
         }
-
-        public void Verify()
+        
+        public bool Verify(AnySigned anySigned)
         {
-            throw new NotImplementedException();
+            IPublicKey key = new PublicKey(anySigned.PeerId.PublicKey.ToByteArray());
+            byte[] payload = anySigned.Value.ToByteArray();
+            var signature = new Signature(anySigned.Signature.ToByteArray());
+            return _cryptoContext.Verify(key, payload, signature);
         }
 
         public void ExportKey()

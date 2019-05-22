@@ -76,5 +76,7 @@ namespace Catalyst.Common.KeyStore
             
             return true;
         }
+
+        public string GetBaseDir() { return _fileSystem.GetCatalystHomeDir().FullName; }
     }
 }

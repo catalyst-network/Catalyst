@@ -45,5 +45,6 @@ namespace Catalyst.Common.KeyStore
         public IPrivateKey GetKey(IPublicKey publicKey, string password) { throw new System.NotImplementedException(); }
         public IPrivateKey GetKey(string filePath, string password) { throw new System.NotImplementedException(); }
         public bool StoreKey(IPrivateKey privateKey, string address, string password) { throw new System.NotImplementedException(); }
+        public string GetBaseDir() { throw new System.NotImplementedException(); }
     }
 }

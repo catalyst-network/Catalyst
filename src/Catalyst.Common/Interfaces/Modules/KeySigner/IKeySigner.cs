@@ -21,10 +21,10 @@
 
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.Modules.KeySigner
 {
@@ -40,9 +40,10 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         /// </summary>
         ICryptoContext CryptoContext { get; }
 
-        Task Sign(ReadOnlySpan<byte> data, string address, string password);
+        ISignature Sign(byte[] data, string address);
 
-        void Verify();
+        bool Verify(AnySigned anySigned);
+
         void ExportKey();
     }
 }

@@ -122,6 +122,9 @@ namespace Catalyst.Common.Config
         /// <summary> This is the standard size for salt byte array </summary>
         public static int StandardSaltSize => 100;
 
+        /// <summary>Gets the default key store file.</summary>
+        public static string DefaultKeyStoreFile => "keystore.dat";
+
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));

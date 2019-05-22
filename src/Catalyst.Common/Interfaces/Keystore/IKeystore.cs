@@ -30,5 +30,6 @@ namespace Catalyst.Common.Interfaces.KeyStore
         IPrivateKey GetKey(IPublicKey publicKey, string password);
         IPrivateKey GetKey(string filePath, string password);
         bool StoreKey(IPrivateKey privateKey, string address, string password);
+        string GetBaseDir();
     }
 }
