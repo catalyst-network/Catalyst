@@ -57,7 +57,8 @@ namespace Catalyst.Node.Core.P2P
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
-                protoDatagramChannelHandler
+                protoDatagramChannelHandler,
+                new GossipHandler()
             };
             
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
