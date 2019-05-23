@@ -26,8 +26,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
@@ -45,6 +49,12 @@ namespace Catalyst.Common.Extensions
            .Where(t => typeof(IMessage).IsAssignableFrom(t))
            .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
            .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
+
+        private static readonly List<string> ProtoGossipAllowedMessages = typeof(AnySigned).Assembly.ExportedTypes
+           .Where(t => typeof(IMessage).IsAssignableFrom(t))
+           .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
+           .Where(t => t.CustomOptions.TryGetBool(Constants.GossipProtoExtensionOption, out var canGossip)
+             && canGossip).Select(t => t.ShortenedFullName()).ToList();
 
         public static string ShortenedFullName(this MessageDescriptor descriptor)
         {
@@ -88,7 +98,8 @@ namespace Catalyst.Common.Extensions
 
         public static bool CheckIfMessageIsGossip(this AnySigned message)
         {
-            return message.TypeUrl.EndsWith(nameof(AnySigned));
+            return message.TypeUrl.EndsWith(nameof(AnySigned)) &&
+                ProtoGossipAllowedMessages.Contains(AnySigned.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
         public static IMessage FromAnySigned(this AnySigned message)

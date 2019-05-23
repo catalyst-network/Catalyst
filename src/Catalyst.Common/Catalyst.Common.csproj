@@ -1,128 +1,130 @@
-<Project>
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RootNamespace>Catalyst.Common</RootNamespace>
-  </PropertyGroup>
-  <Import Project="../Common.Projects.props" />
-  <ItemGroup>
-    <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.4115-beta" />
-    <PackageReference Include="Ipfs.Api" Version="0.23.6" />
-    <PackageReference Include="Ipfs.Engine" Version="0.7.2" />
-    <PackageReference Include="Multiformats.Hash" Version="1.4.0" />
-    <PackageReference Include="Polly" Version="7.1.0" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
-    <PackageReference Include="Dawn.Guard" Version="1.8.0" />
-    <PackageReference Include="DnsClient" Version="1.2.0" />
-    <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="Serilog" Version="2.8.0" />
-    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.4" />
-    <PackageReference Include="libsodium" Version="[1.0.17]" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
-    <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
-    <PackageReference Include="System.IO.Abstractions" Version="4.2.8" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="4.2.8" />
-    <PackageReference Include="System.Memory" Version="4.5.2" />
-    <PackageReference Include="System.Reactive.Linq" Version="4.1.5" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
-    <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
-    <PackageReference Include="Grpc.Tools" Version="1.20.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\BigInteger.cs" Link="Hex\BigInteger.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" Link="Hex\HexConverters\Extensions\HexBigIntegerConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" Link="Hex\HexConverters\Extensions\HexByteConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" Link="Hex\HexConverters\Extensions\HexStringUTF8ConvertorExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" Link="Hex\HexConverters\HexBigIntegerBigEndianConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" Link="Hex\HexConverters\HexUTF8StringConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" Link="Hex\HexConverters\IHexConvertor.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" Link="Hex\HexTypes\HexBigInteger.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" Link="Hex\HexTypes\HexType.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" Link="Hex\HexTypes\HexTypeFactory.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" Link="Hex\HexTypes\HexTypeJsonConverter.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" Link="Hex\HexTypes\HexUTF8String.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" Link="RLP\ConvertorForRLPEncodingExtensions.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" Link="RLP\IRLPElement.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" Link="RLP\RLP.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="RLP\RLPCollection.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="RLP\RLPItem.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="RLP\RLPStringFormatter.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreService.cs" Link="KeyStore\NEthereum\KeyStoreService.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\InvalidKdfException.cs" Link="KeyStore\NEthereum\InvalidKdfException.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreServiceBase.cs" Link="KeyStore\NEthereum\KeyStoreServiceBase.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreKdfChecker.cs" Link="KeyStore\NEthereum\KeyStoreKdfChecker.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreScryptService.cs" Link="KeyStore\NEthereum\KeyStoreScryptService.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStorePbkdf2Service.cs" Link="KeyStore\NEthereum\KeyStorePdkdf2Service.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\IKeyStoreService.cs" Link="KeyStore\NEthereum\IKeyStoreService.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\KdfParams.cs" Link="KeyStore\NEthereum\Model\KdfParams.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\Pbkdf2Params.cs" Link="KeyStore\NEthereum\Model\Pbkdf2Params.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\ScryptParams.cs" Link="KeyStore\NEthereum\Model\ScryptParams.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\KeyStore.cs" Link="KeyStore\NEthereum\Model\KeyStore.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CryptoInfo.cs" Link="KeyStore\NEthereum\Model\CryptoInfo.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CipherParams.cs" Link="KeyStore\NEthereum\Model\CipherParams.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\RandomBytesGenerator.cs" Link="KeyStore\NEthereum\Crypto\RandomBytesGenerator.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\IRandomBytesGenerator.cs" Link="KeyStore\NEthereum\Crypto\IRandomBytesGenerator.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\SCrypt.cs" Link="KeyStore\NEthereum\Crypto\SCrypt.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\KeyStoreCrypto.cs" Link="KeyStore\NEthereum\Crypto\KeyStoreCrypto.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\DecryptionException.cs" Link="KeyStore\NEthereum\Crypto\DecryptionException.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\Pbkdf2ParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\Pbkdf2ParamsDTO.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KdfParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\KdfParamsDTO.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\JsonKeyStoreScryptSerialiser.cs" Link="KeyStore\NEthereum\JsonDeserialisation\JsonKeyStoreScryptSerialiser.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\JsonKeyStorePbkdf2Serialiser.cs" Link="KeyStore\NEthereum\JsonDeserialisation\JsonKeyStorePbkdf2Serialiser.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStorePbkdf2DTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\KeyStorePbkdf2DTO.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStoreScryptDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\KeyStoreScryptDTO.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStoreDTOBase.cs" Link="KeyStore\NEthereum\JsonDeserialisation\KeyStoreDTOBase.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoPbkdf2DTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CryptoInfoPbkdf2DTO.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoDTOBase.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CryptoInfoDTOBase.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CryptoInfoScryptDTO.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CipherParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CipherParamsDTO.cs" />
-    <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\ScryptParamsDTO.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />
-    <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Transaction.cs" Link="Protocol\Transaction.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Build\libs\advapi32.dll">
-      <Link>advapi32.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Build\libs\kernel32.dll">
-      <Link>kernel32.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Build\libs\ucrtbase.dll">
-      <Link>ucrtbase.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Build\libs\vcruntime140.dll">
-      <Link>vcruntime140.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hex\HexConverters\Extensions\" />
-    <Folder Include="Hex\HexTypes\" />
-    <Folder Include="RLP\" />
-    <Folder Include="Protocol" />
-    <Folder Include="Protocol\Protobuffs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protocol\Protobuffs\Common.proto" />
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Delta.proto" Link="Protocol\Protobuffs\Delta.proto" />
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\IPPN.proto" Link="Protocol\Protobuffs\IPPN.proto" />
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protocol\Protobuffs\Rpc.proto" />
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protocol\Protobuffs\Transaction.proto" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System">
-      <HintPath>System</HintPath>
-    </Reference>
-  </ItemGroup>
+﻿<Project>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>Catalyst.Common</RootNamespace>
+    </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
+    <ItemGroup>
+        <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.4115-beta" />
+        <PackageReference Include="Ipfs.Api" Version="0.23.6" />
+        <PackageReference Include="Ipfs.Engine" Version="0.7.2" />
+        <PackageReference Include="Multiformats.Hash" Version="1.4.0" />
+        <PackageReference Include="Polly" Version="7.1.0" />
+        <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
+        <PackageReference Include="Dawn.Guard" Version="1.8.0" />
+        <PackageReference Include="DnsClient" Version="1.2.0" />
+        <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+        <PackageReference Include="Serilog" Version="2.8.0" />
+        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.4" />
+        <PackageReference Include="libsodium" Version="[1.0.17]" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+        <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
+        <PackageReference Include="System.IO.Abstractions" Version="4.2.8" />
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="4.2.8" />
+        <PackageReference Include="System.Memory" Version="4.5.2" />
+        <PackageReference Include="System.Reactive.Linq" Version="4.1.5" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+        <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
+        <PackageReference Include="Grpc.Tools" Version="1.20.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\BigInteger.cs" Link="Hex\BigInteger.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexBigIntegerConvertorExtensions.cs" Link="Hex\HexConverters\Extensions\HexBigIntegerConvertorExtensions.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexByteConvertorExtensions.cs" Link="Hex\HexConverters\Extensions\HexByteConvertorExtensions.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\Extensions\HexStringUTF8ConvertorExtensions.cs" Link="Hex\HexConverters\Extensions\HexStringUTF8ConvertorExtensions.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexBigIntegerBigEndianConvertor.cs" Link="Hex\HexConverters\HexBigIntegerBigEndianConvertor.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\HexUTF8StringConvertor.cs" Link="Hex\HexConverters\HexUTF8StringConvertor.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexConvertors\IHexConvertor.cs" Link="Hex\HexConverters\IHexConvertor.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexBigInteger.cs" Link="Hex\HexTypes\HexBigInteger.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexType.cs" Link="Hex\HexTypes\HexType.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeFactory.cs" Link="Hex\HexTypes\HexTypeFactory.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexTypeJsonConverter.cs" Link="Hex\HexTypes\HexTypeJsonConverter.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.Hex\HexTypes\HexUTF8String.cs" Link="Hex\HexTypes\HexUTF8String.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\ConvertorForRLPEncodingExtensions.cs" Link="RLP\ConvertorForRLPEncodingExtensions.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\IRLPElement.cs" Link="RLP\IRLPElement.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLP.cs" Link="RLP\RLP.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPCollection.cs" Link="RLP\RLPCollection.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPItem.cs" Link="RLP\RLPItem.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.RLP\RLPStringFormatter.cs" Link="RLP\RLPStringFormatter.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreService.cs" Link="KeyStore\NEthereum\KeyStoreService.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\InvalidKdfException.cs" Link="KeyStore\NEthereum\InvalidKdfException.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreServiceBase.cs" Link="KeyStore\NEthereum\KeyStoreServiceBase.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreKdfChecker.cs" Link="KeyStore\NEthereum\KeyStoreKdfChecker.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStoreScryptService.cs" Link="KeyStore\NEthereum\KeyStoreScryptService.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\KeyStorePbkdf2Service.cs" Link="KeyStore\NEthereum\KeyStorePdkdf2Service.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\IKeyStoreService.cs" Link="KeyStore\NEthereum\IKeyStoreService.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\KdfParams.cs" Link="KeyStore\NEthereum\Model\KdfParams.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\Pbkdf2Params.cs" Link="KeyStore\NEthereum\Model\Pbkdf2Params.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\ScryptParams.cs" Link="KeyStore\NEthereum\Model\ScryptParams.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\KeyStore.cs" Link="KeyStore\NEthereum\Model\KeyStore.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CryptoInfo.cs" Link="KeyStore\NEthereum\Model\CryptoInfo.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Model\CipherParams.cs" Link="KeyStore\NEthereum\Model\CipherParams.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\RandomBytesGenerator.cs" Link="KeyStore\NEthereum\Crypto\RandomBytesGenerator.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\IRandomBytesGenerator.cs" Link="KeyStore\NEthereum\Crypto\IRandomBytesGenerator.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\SCrypt.cs" Link="KeyStore\NEthereum\Crypto\SCrypt.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\KeyStoreCrypto.cs" Link="KeyStore\NEthereum\Crypto\KeyStoreCrypto.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\Crypto\DecryptionException.cs" Link="KeyStore\NEthereum\Crypto\DecryptionException.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\Pbkdf2ParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\Pbkdf2ParamsDTO.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KdfParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\KdfParamsDTO.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\JsonKeyStoreScryptSerialiser.cs" Link="KeyStore\NEthereum\JsonDeserialisation\JsonKeyStoreScryptSerialiser.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\JsonKeyStorePbkdf2Serialiser.cs" Link="KeyStore\NEthereum\JsonDeserialisation\JsonKeyStorePbkdf2Serialiser.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStorePbkdf2DTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\KeyStorePbkdf2DTO.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStoreScryptDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\KeyStoreScryptDTO.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\KeyStoreDTOBase.cs" Link="KeyStore\NEthereum\JsonDeserialisation\KeyStoreDTOBase.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoPbkdf2DTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CryptoInfoPbkdf2DTO.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoDTOBase.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CryptoInfoDTOBase.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CryptoInfoScryptDTO.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CipherParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CipherParamsDTO.cs" />
+        <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\ScryptParamsDTO.cs" />
+        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />
+        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
+        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
+        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />
+        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\MessageOptions.cs" Link="Protocol\MessageOptions.cs" />
+        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Transaction.cs" Link="Protocol\Transaction.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\Build\libs\advapi32.dll">
+            <Link>advapi32.dll</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="..\Build\libs\kernel32.dll">
+            <Link>kernel32.dll</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="..\Build\libs\ucrtbase.dll">
+            <Link>ucrtbase.dll</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="..\Build\libs\vcruntime140.dll">
+            <Link>vcruntime140.dll</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Hex\HexConverters\Extensions\" />
+        <Folder Include="Hex\HexTypes\" />
+        <Folder Include="RLP\" />
+        <Folder Include="Protocol" />
+        <Folder Include="Protocol\Protobuffs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protocol\Protobuffs\Common.proto" />
+        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Delta.proto" Link="Protocol\Protobuffs\Delta.proto" />
+        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\IPPN.proto" Link="Protocol\Protobuffs\IPPN.proto" />
+        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protocol\Protobuffs\Rpc.proto" />
+        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\MessageOptions.proto" Link="Protocol\Protobuffs\MessageOptions.proto" />
+        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protocol\Protobuffs\Transaction.proto" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="System">
+            <HintPath>System</HintPath>
+        </Reference>
+    </ItemGroup>
 </Project>

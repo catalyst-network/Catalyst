@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -36,11 +35,11 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.P2P.Messaging.Gossip;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
@@ -141,12 +140,16 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var gossipCache = new GossipCache(_peers, cache, _logger);
             IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _messageCache, gossipCache);
-            var gossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
+            var gossipMessage = new Transaction().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
                .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
             gossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(true);
 
             var nonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
             nonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);
+            
+            var secondNonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
+               .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
+            secondNonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);
         }
 
         [Theory]
