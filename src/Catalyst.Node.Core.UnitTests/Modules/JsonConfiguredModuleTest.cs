@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
@@ -35,7 +36,6 @@ using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Contract;
-using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -72,6 +72,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new[] {"seed1.seedservers.bogus", "seed2.seedservers.bogus"});
+            peerSettings.BindAddress.Returns(IPAddress.Parse("124.220.98.2"));
+            peerSettings.Port.Returns(12);
             builder.RegisterInstance(peerSettings).As<IPeerSettings>();
         }
 

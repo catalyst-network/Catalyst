@@ -33,12 +33,15 @@ namespace Catalyst.Node.Core.Modules.Consensus
         public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
 
         public IDeltaProducersProvider DeltaProducersProvider { get; }
+        public IDeltaBuilder DeltaBuilder { get; }
 
         public Consensus(IDeltaTransactionRetriever deltaTransactionRetriever,
             IDeltaProducersProvider deltaProducersProvider,
-            ILogger logger)
+            ILogger logger,
+            IDeltaBuilder deltaBuilder)
         {
             _logger = logger;
+            DeltaBuilder = deltaBuilder;
             DeltaTransactionRetriever = deltaTransactionRetriever;
             DeltaProducersProvider = deltaProducersProvider;
             _logger.Information("Consensus service initialised.");

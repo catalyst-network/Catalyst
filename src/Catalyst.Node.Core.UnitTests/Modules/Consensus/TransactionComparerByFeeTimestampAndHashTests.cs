@@ -159,7 +159,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
     {
         public int Compare(ByteString x, ByteString y)
         {
-            return ByteUtil.ByteListComparer.Default.Compare(x.ToByteArray(), y.ToByteArray());
+            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.ToByteArray(), y.ToByteArray());
         }
 
         public static ByteStringComparer Default { get; } = new ByteStringComparer();

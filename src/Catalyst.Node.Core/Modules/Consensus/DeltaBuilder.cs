@@ -24,19 +24,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
-using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
-using Nethereum.Hex.HexConvertors.Extensions;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
 using Google.Protobuf;
 using Catalyst.Common.Interfaces.P2P;
 using System;
-using System.Text;
-using Nethereum.RLP;
-using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Protocol.Delta;
 using Dawn;
 
 namespace Catalyst.Node.Core.Modules.Consensus
@@ -44,86 +40,95 @@ namespace Catalyst.Node.Core.Modules.Consensus
     /// <inheritdoc />
     public class DeltaBuilder : IDeltaBuilder
     {
-        private readonly IMempool _mempool;
-
+        private readonly IDeltaTransactionRetriever _transactionRetriever;
+        private readonly IDeterministicRandomFactory _randomFactory;
+        private readonly IMultihashAlgorithm _hashAlgorithm;
         private readonly IPeerIdentifier _producerUniqueId;
-
-        private readonly byte[] _previousValidLedgerStateUpdate;
-
-        public DeltaBuilder(IMempool mempool, IPeerIdentifier producerUniqueId, byte[] previousValidLedgerStateUpdate)
+        
+        public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
+            IDeterministicRandomFactory randomFactory,
+            IMultihashAlgorithm hashAlgorithm,
+            IPeerIdentifier producerUniqueId)
         {
-            Guard.Argument(mempool, nameof(mempool)).NotNull();
-            Guard.Argument(producerUniqueId, nameof(producerUniqueId)).NotNull();
-
-            _mempool = mempool;
+            _transactionRetriever = transactionRetriever;
+            _randomFactory = randomFactory;
+            _hashAlgorithm = hashAlgorithm;
             _producerUniqueId = producerUniqueId;
-            _previousValidLedgerStateUpdate = previousValidLedgerStateUpdate;
         }
 
         ///<inheritdoc />
-        public IDeltaEntity BuildDelta()
+        public CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash)
         {
-            var allTransactions = _mempool.GetMemPoolContent();
+            var allTransactions = _transactionRetriever.GetMempoolTransactionsByPriority();
+
             Guard.Argument(allTransactions, nameof(allTransactions))
                .NotNull("Mempool content returned null, check the mempool is actively running");
 
-            var allValidatedTransactions = GetValidTransactionsForDelta(allTransactions);
+            var includedTransactions = GetValidTransactionsForDelta(allTransactions);
+            var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
-            if (allValidatedTransactions.Any())
+            var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
+                t => t.STEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashAlgorithm)));
+
+            // (Eα;Oα)
+            var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
+               .OrderBy(v => v.SaltedAndHashedEntry, ByteUtil.ByteListComparer.Default)
+               .SelectMany(v => v.RawEntry.ToByteArray())
+               .ToArray();
+
+            // dn
+            var signaturesInOrder = includedTransactions
+               .Select(p => p.Signature.ToByteArray())
+               .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
+               .SelectMany(b => b)
+               .ToArray();
+
+            // xf
+            var summedFees = (ulong) includedTransactions
+               .Sum(t => t.TransactionFees);
+
+            //∆Ln,j = L(f/E) + dn + E(xf, j)
+            var globalLedgerStateUpdate = shuffledEntriesBytes
+               .Concat(signaturesInOrder)
+               .Concat(new CoinbaseEntry
+                {
+                    Amount = summedFees,
+                    PubKey = _producerUniqueId.PublicKey.ToByteString(),
+                    Version = 1
+                }.ToByteArray())
+               .ToArray();
+
+            //hj
+            var candidate = new CandidateDelta
             {
-                var transactionSignature = allValidatedTransactions.First().Signature;
-                var selectedSTEntries = allValidatedTransactions.SelectMany(ste => ste.STEntries).ToList();
+                // h∆j
+                Hash = _hashAlgorithm.ComputeHash(globalLedgerStateUpdate).ToByteString(),
 
-                //Sorted O1< O2< ... < Oβ< ... < OM
-                var transationEntryListLexiOrder = SortHashByLexiOrder(selectedSTEntries);
+                // Idj
+                ProducerId = _producerUniqueId.PeerId,
+                PreviousDeltaDfsHash = previousDeltaHash.ToByteString()
+            };
 
-                //h∆j = blake2b256(∆Ln,j)
-                return CreateDeltaEntity(transationEntryListLexiOrder, transactionSignature);
+            return candidate;
+        }
+
+        private byte[] GetSaltFromPreviousDelta(byte[] previousDeltaHash)
+        {
+            var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash);
+            return BitConverter.GetBytes(isaac.NextInt());
+        }
+
+        private class RawEntryWithSaltedAndHashedEntry
+        {
+            public STTransactionEntry RawEntry { get; }
+            public byte[] SaltedAndHashedEntry { get; }
+
+            public RawEntryWithSaltedAndHashedEntry(STTransactionEntry rawEntry, byte[] salt, IMultihashAlgorithm hashAlgorithm)
+            {
+                RawEntry = rawEntry;
+                SaltedAndHashedEntry = hashAlgorithm
+                   .ComputeHash(rawEntry.ToByteArray().Concat(salt).ToArray());
             }
-
-            return DeltaEntity.Default;
-        }
-
-        private DeltaEntity CreateDeltaEntity(List<STTransactionEntry> transationEntryListLexiOrder, TransactionSignature transactionSignature)
-        {
-            //L(f/E)
-            var transationEntryListByteArray = transationEntryListLexiOrder.SelectMany(lo => lo.ToByteArray()).ToArray();
-
-            //∆Ln,j = L(f/E) + dn
-            var deltaState = ByteUtil.CombineByteArrays(transationEntryListByteArray, transactionSignature.ToByteArray());
-            
-            //hj = h∆j + Idj
-            var localHash = Multihash.Encode<BLAKE2B_256>(deltaState);
-
-            //wj = hj + Idj
-            var localLedgerStateUpdate = ByteUtil.CombineByteArrays(localHash, _producerUniqueId.PeerId.ToByteArray());
-
-            return new DeltaEntity {LocalLedgerState = localLedgerStateUpdate, Delta = deltaState, DeltaHash = localHash};
-        }
-
-        private List<STTransactionEntry> SortHashByLexiOrder(List<STTransactionEntry> selectedSTEntries)
-        {
-            return selectedSTEntries.OrderBy(CreateTransactionEntryHash).ToList();
-        }
-
-        private byte[] CreateTransactionEntryHash(STTransactionEntry transEntry)
-        {
-            var transEntryByte = transEntry.ToByteArray();
-
-            //HEX(Eα)
-            var hexTransactionEntry = HexByteConvertorExtensions.ToHex(transEntryByte);
-
-            var seed = Multihash.Encode<BLAKE2B_256>(RLP.EncodeElement(_previousValidLedgerStateUpdate));
-
-            var merkleSeedInt = BitConverter.ToInt32(seed.Take(Constants.MerkleTreeFirstStandardBits).ToArray(), 0);
-            var random = new Random(merkleSeedInt);
-   
-            //s + HEX(Eα)
-            var saltHexConcat = Encoding.UTF8.GetBytes(string.Concat(random.Next().ToString(), hexTransactionEntry));
-
-            // Oα = blake2b256[s + HEX(Eα)]
-            var transEntryHash = Multihash.Encode<BLAKE2B_256>(saltHexConcat);
-            return transEntryHash;
         }
 
         /// <summary>
