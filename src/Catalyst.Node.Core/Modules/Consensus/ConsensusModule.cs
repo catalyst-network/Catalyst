@@ -21,33 +21,22 @@
 
 #endregion
 
-using System;
-using System.IO;
 using Autofac;
-using Autofac.Configuration;
-using Dawn;
-using Microsoft.Extensions.Configuration;
+using Catalyst.Common.Cryptography;
+using Catalyst.Common.Interfaces.Cryptography;
+using Multiformats.Hash.Algorithms;
 
-namespace Catalyst.Node.Core.Modules
+namespace Catalyst.Node.Core.Modules.Consensus
 {
-    public class JsonConfiguredModule : Module
+    public class ConsensusModule : JsonConfiguredModule
     {
-        protected readonly ConfigurationModule ConfigurationModule;
+        public ConsensusModule(string configFilePath) : base(configFilePath) { }
 
-        public JsonConfiguredModule(string configFilePath)
-        {
-            var configFileFullPath = Path.Combine(Environment.CurrentDirectory, configFilePath);
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(configFileFullPath)
-               .Build();
-            ConfigurationModule = new ConfigurationModule(config);
-        }
-
-        /// <inheritdoc />
         protected override void Load(ContainerBuilder builder)
         {
-            Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.RegisterModule(ConfigurationModule);
+            builder.RegisterType<BLAKE2B_256>().As<IMultihashAlgorithm>();
+            builder.RegisterType<IsaacRandomFactory>().As<IDeterministicRandomFactory>();
+            base.Load(builder);
         }
     }
 }
