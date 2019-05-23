@@ -21,26 +21,27 @@
 
 #endregion
 
-
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Catalyst.Common.Interfaces.Modules.Consensus;
+using Dawn;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Common.Extensions
 {
-    /// <inheritdoc />
-    public class DeltaEntity : IDeltaEntity
+    public static class EnumerableExtensions
     {
-        /// <inheritdoc />
-        public byte[] LocalLedgerState { get; set; }
+        public static ulong Sum<T>(this IEnumerable<T> enumerable, Func<T, ulong> selector)
+        {
+            Guard.Argument(enumerable, nameof(enumerable)).NotNull();
 
-        /// <inheritdoc />
-        public byte[] DeltaHash { get; set; }
+            var sum = 0ul;
 
-        /// <inheritdoc />
-        public byte[] Delta { get; set; }
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var item in enumerable)
+            {
+                sum += selector(item);
+            }
 
-        public static IDeltaEntity Default { get; } = new DeltaEntity {Delta = new byte[0], DeltaHash = new byte[0], LocalLedgerState = new byte[0]};
+            return sum;
+        }
     }
 }
