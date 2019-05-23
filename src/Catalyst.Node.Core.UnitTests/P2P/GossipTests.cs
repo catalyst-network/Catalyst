@@ -24,8 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -125,27 +123,25 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .CheckIfMessageIsGossip(Arg.Any<IChanneledMessage<AnySigned>>())
                .Returns(true);
 
-            using (UdpServer server = new P2PService(serverSettings, Substitute.For<IPeerDiscovery>(),
-                gossipMessageHandler, new List<IP2PMessageHandler>()))
-            {
-                server.Bootstrap(Substitute.For<IChannelHandler>(), serverIp, port);
+            UdpServer server = new P2PService(serverSettings, Substitute.For<IPeerDiscovery>(),
+                gossipMessageHandler, new List<IP2PMessageHandler>());
 
-                using (UdpClient client = new PeerClient(new IPEndPoint(serverIp, port), new List<IP2PMessageHandler>(),
-                    gossipMessageHandler))
-                {
-                    var pingRequest = new PingRequest();
-                    var anySigned = pingRequest.ToAnySigned(peerIdentifier.PeerId, guid);
+            server.Bootstrap(Substitute.For<IChannelHandler>(), serverIp, port);
 
-                    client.Channel.WriteAndFlushAsync(messageFactory.GetMessageInDatagramEnvelope(
-                            new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)))
-                       .ConfigureAwait(false).GetAwaiter().GetResult();
+            UdpClient client = new PeerClient(new IPEndPoint(serverIp, port), new List<IP2PMessageHandler>(),
+                gossipMessageHandler);
 
-                    gossipMessageHandler.Received(Quantity.Exactly(1))
-                       .IncomingGossip(Arg.Any<IChanneledMessage<AnySigned>>());
-                    client.Channel.CloseAsync();
-                    server.Channel.CloseAsync();
-                }
-            }
+            var pingRequest = new PingRequest();
+            var anySigned = pingRequest.ToAnySigned(peerIdentifier.PeerId, guid);
+
+            client.Channel.WriteAndFlushAsync(messageFactory.GetMessageInDatagramEnvelope(
+                    new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)))
+               .ConfigureAwait(false).GetAwaiter().GetResult();
+
+            gossipMessageHandler.Received(Quantity.Exactly(1))
+               .IncomingGossip(Arg.Any<IChanneledMessage<AnySigned>>());
+            client.Channel.CloseAsync();
+            server.Channel.CloseAsync();
         }
 
         [Fact]
