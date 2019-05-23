@@ -21,16 +21,12 @@
 
 #endregion
 
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
     /// <inheritdoc />
-    public class DeltaEntity : IDeltaEntity
+    public sealed class DeltaEntity : IDeltaEntity
     {
         /// <inheritdoc />
         public byte[] LocalLedgerState { get; set; }
