@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -41,6 +42,7 @@ using Catalyst.Node.Core.P2P.Messaging.Gossip;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
 using FluentAssertions.Common;
 using Microsoft.Extensions.Caching.Memory;
@@ -109,39 +111,30 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             var messageFactory = new P2PMessageFactory(_messageCache);
             var gossipMessageHandler = Substitute.For<IGossipManager>();
             var serverSettings = Substitute.For<IPeerSettings>();
-            var serverIp = IPAddress.Parse("127.0.0.1");
-            var port = 42065;
+            var fakeIp = IPAddress.Any;
             var guid = Guid.NewGuid();
 
-            serverSettings.BindAddress.Returns(serverIp);
-            serverSettings.Port.Returns(port);
-            recipientIdentifier.Ip.Returns(serverIp);
-            recipientIdentifier.Port.Returns(port);
-            recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(serverIp, port));
+            serverSettings.BindAddress.Returns(fakeIp);
+            recipientIdentifier.Ip.Returns(fakeIp);
+            recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
 
             gossipMessageHandler
                .CheckIfMessageIsGossip(Arg.Any<IChanneledMessage<AnySigned>>())
                .Returns(true);
-
-            UdpServer server = new P2PService(serverSettings, Substitute.For<IPeerDiscovery>(),
-                gossipMessageHandler, new List<IP2PMessageHandler>());
-
-            server.Bootstrap(Substitute.For<IChannelHandler>(), serverIp, port);
-
-            UdpClient client = new PeerClient(new IPEndPoint(serverIp, port), new List<IP2PMessageHandler>(),
-                gossipMessageHandler);
-
+            
+            EmbeddedChannel channel = new EmbeddedChannel(
+                new ProtoDatagramChannelHandler(gossipMessageHandler),
+                new GossipHandler(gossipMessageHandler)
+            );
+            
             var pingRequest = new PingRequest();
             var anySigned = pingRequest.ToAnySigned(peerIdentifier.PeerId, guid);
 
-            client.Channel.WriteAndFlushAsync(messageFactory.GetMessageInDatagramEnvelope(
-                    new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)))
-               .ConfigureAwait(false).GetAwaiter().GetResult();
+            channel.WriteInbound(messageFactory.GetMessageInDatagramEnvelope(
+                new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)));
 
             gossipMessageHandler.Received(Quantity.Exactly(1))
                .IncomingGossip(Arg.Any<IChanneledMessage<AnySigned>>());
-            client.Channel.CloseAsync();
-            server.Channel.CloseAsync();
         }
 
         [Fact]
