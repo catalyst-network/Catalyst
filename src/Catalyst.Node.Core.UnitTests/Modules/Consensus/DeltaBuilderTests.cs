@@ -30,13 +30,13 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
-using NSubstitute;
-using Xunit;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
+using NSubstitute;
+using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
 {
     public sealed class DeltaBuilderTests
     {

@@ -21,6 +21,9 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus;
@@ -31,14 +34,11 @@ using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using Peer = Catalyst.Common.P2P.Peer;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
 {
     public class PoaDeltaProducersProviderTests
     {

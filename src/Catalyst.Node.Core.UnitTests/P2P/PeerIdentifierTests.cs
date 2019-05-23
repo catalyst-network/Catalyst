@@ -25,16 +25,16 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Util;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.P2P
+namespace Catalyst.Node.Core.UnitTests.P2P
 {
     public sealed class PeerIdentifierTests
     {

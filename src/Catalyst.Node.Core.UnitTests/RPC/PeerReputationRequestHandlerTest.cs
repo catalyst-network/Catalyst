@@ -21,32 +21,29 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Network;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
-using Xunit;
 using SharpRepository.Repository;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Network;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
-using Nethereum.RLP;
-using Catalyst.Common.Util;
+using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     /// <summary>
     /// Tests the peer reputation calls

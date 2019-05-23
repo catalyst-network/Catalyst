@@ -27,30 +27,30 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
 using Autofac;
-using Catalyst.Node.Core.P2P;
-using NSubstitute;
-using SharpRepository.Repository;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.Network;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
 using Serilog;
 using Serilog.Core;
 using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Common.Config.Constants;
 using Peer = Catalyst.Common.P2P.Peer;
 
-namespace Catalyst.Node.Core.UnitTest.P2P
+namespace Catalyst.Node.Core.UnitTests.P2P
 {
     public sealed class PeerDiscoveryUnitTest : ConfigFileBasedTest
     {
