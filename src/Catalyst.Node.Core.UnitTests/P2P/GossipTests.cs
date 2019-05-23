@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -105,7 +106,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void Gossip_Can_Execute_On_Handlers()
         {
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
+            /*var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var recipientIdentifier = Substitute.For<IPeerIdentifier>();
             var messageFactory = new P2PMessageFactory(_messageCache);
             var gossipMessageHandler = Substitute.For<IGossipManager>();
@@ -144,7 +145,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     client.Channel.CloseAsync();
                     server.Channel.CloseAsync();
                 }
-            }
+            }*/
         }
 
         [Fact]
