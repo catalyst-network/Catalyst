@@ -36,20 +36,20 @@ namespace Catalyst.Common.IO.Inbound
     /// <seealso cref="IGossipHandler" />
     public class GossipHandler : ObservableHandlerBase<AnySigned>, IGossipHandler
     {
-        public IGossipManager GossipManager { get; set; }
+        private readonly IGossipManager _gossipManager;
 
         /// <summary>Initializes a new instance of the <see cref="GossipHandler"/> class.</summary>
         /// <param name="gossipManager">The gossip manager.</param>
-        public GossipHandler(IGossipManager gossipManager) { GossipManager = gossipManager; }
+        public GossipHandler(IGossipManager gossipManager) { _gossipManager = gossipManager; }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
         {
             var channeledAnySigned = new ChanneledAnySigned(ctx, msg);
 
             // TODO Check sig
-            if (GossipManager.CheckIfMessageIsGossip(channeledAnySigned))
+            if (_gossipManager.CheckIfMessageIsGossip(channeledAnySigned))
             {
-                GossipManager.IncomingGossip(channeledAnySigned);
+                _gossipManager.IncomingGossip(channeledAnySigned);
                 AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);
                 MessageSubject.OnNext(new ChanneledAnySigned(ctx, originalGossipedMessage));
             }

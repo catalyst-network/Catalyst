@@ -29,10 +29,5 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
     /// The Gossip Handler interface
     /// </summary>
     /// <seealso cref="DotNetty.Transport.Channels.IChannelHandler" />
-    public interface IGossipHandler : IChannelHandler
-    {
-        /// <summary>Gets or sets the gossip manager.</summary>
-        /// <value>The gossip manager.</value>
-        IGossipManager GossipManager { get; set; }
-    }
+    public interface IGossipHandler : IChannelHandler { }
 }
