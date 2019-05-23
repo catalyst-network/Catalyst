@@ -25,7 +25,7 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils
+namespace Catalyst.Node.Core.UnitTests.TestUtils
 {
     public static class SocketPortHelper
     {

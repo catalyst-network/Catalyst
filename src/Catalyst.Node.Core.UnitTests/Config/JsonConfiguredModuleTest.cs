@@ -43,7 +43,7 @@ using Serilog;
 using Xunit;
 using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
 
-namespace Catalyst.Node.Core.UnitTest.Modules
+namespace Catalyst.Node.Core.UnitTests.Config
 {
     public sealed class JsonConfiguredModuleTest : IDisposable
     {

@@ -36,15 +36,13 @@ using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Protocol.Delta;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
+using Google.Protobuf;
+using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Xunit;
-using Google.Protobuf;
-using Ipfs;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
 {
     public sealed class DeltaBuilderTests
     {

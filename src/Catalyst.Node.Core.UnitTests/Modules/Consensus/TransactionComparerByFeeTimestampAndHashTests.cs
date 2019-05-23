@@ -28,13 +28,12 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus;
-using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
 {
     public class TransactionComparerByFeeTimestampAndHashTests
     {

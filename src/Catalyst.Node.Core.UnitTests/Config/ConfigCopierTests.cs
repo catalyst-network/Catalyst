@@ -30,7 +30,7 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.Config
+namespace Catalyst.Node.Core.UnitTests.Config
 {
     public sealed class ConfigCopierTests : FileSystemBasedTest
     {
