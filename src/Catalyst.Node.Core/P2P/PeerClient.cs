@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Inbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
@@ -51,6 +52,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="ipEndPoint"></param>
         /// <param name="messageHandlers"></param>
+        /// <param name="gossipManager"></param>
         public PeerClient(IPEndPoint ipEndPoint,
             IEnumerable<IP2PMessageHandler> messageHandlers,
             IGossipManager gossipManager)
@@ -64,7 +66,8 @@ namespace Catalyst.Node.Core.P2P
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
-                protoDatagramChannelHandler
+                protoDatagramChannelHandler,
+                new GossipHandler(gossipManager)
             };
 
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
