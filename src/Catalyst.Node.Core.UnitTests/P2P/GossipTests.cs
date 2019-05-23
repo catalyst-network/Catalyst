@@ -122,8 +122,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 new GossipHandler(gossipMessageHandler)
             );
             
-            var pingRequest = new PingRequest();
-            var anySigned = pingRequest.ToAnySigned(peerIdentifier.PeerId, guid);
+            var transaction = new Transaction();
+            var anySigned = transaction.ToAnySigned(peerIdentifier.PeerId, guid);
 
             channel.WriteInbound(messageFactory.GetMessageInDatagramEnvelope(
                 new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)));
@@ -135,11 +135,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         [Fact]
         public void Can_Recognize_Gossip_Message()
         {
-            MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
-
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
-            var gossipCache = new GossipCache(_peers, cache, _logger);
-            IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _messageCache, gossipCache);
             var gossipMessage = new Transaction().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
                .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
             gossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(true);
@@ -171,7 +167,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
 
             var messageDto = messageFactory.GetMessage(
                 new MessageDto(
-                    new PingRequest(),
+                    new Transaction(),
                     MessageTypes.Tell,
                     peerIdentifier,
                     senderIdentifier

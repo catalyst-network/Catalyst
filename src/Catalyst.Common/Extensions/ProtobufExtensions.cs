@@ -65,7 +65,7 @@ namespace Catalyst.Common.Extensions
         public static string ShortenedProtoFullName(this Type protoType)
         {
             Guard.Argument(protoType, nameof(protoType)).Require(t => typeof(IMessage).IsAssignableFrom(t));
-
+            
             //get the static field Descriptor from T
             var descriptor = (MessageDescriptor) protoType
                .GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)
