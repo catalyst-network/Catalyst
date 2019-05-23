@@ -118,7 +118,7 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IRpcCorrelationCache>();
 
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
-                    new GetPeerBlackListResponse
+                    new SetPeerBlackListResponse
                     {
                         Blacklist = false,
                         Ip = string.Empty.ToUtf8ByteString(),
@@ -142,7 +142,7 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IRpcCorrelationCache>();
 
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
-                    new GetPeerBlackListResponse
+                    new SetPeerBlackListResponse
                     {
                         Blacklist = blacklist,
                         Ip = ip.ToBytesForRLPEncoding().ToByteString(),

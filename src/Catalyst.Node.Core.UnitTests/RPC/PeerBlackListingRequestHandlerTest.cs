@@ -109,7 +109,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
-        private GetPeerBlackListResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
+        private SetPeerBlackListResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
 
@@ -133,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
-            var request = new GetPeerBlackListRequest
+            var request = new SetPeerBlackListRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = ipAddress.ToBytesForRLPEncoding().ToByteString(),
@@ -157,9 +157,9 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             receivedCalls.Count.Should().Be(1);
 
             var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(GetPeerBlackListResponse.Descriptor.ShortenedFullName());
+            sentResponse.TypeUrl.Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
 
-            return sentResponse.FromAnySigned<GetPeerBlackListResponse>();
+            return sentResponse.FromAnySigned<SetPeerBlackListResponse>();
         }
     }
 }

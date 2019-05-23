@@ -41,7 +41,7 @@ namespace Catalyst.Cli.Handlers
     /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerReputationResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public sealed class PeerBlackListingResponseHandler
-        : CorrelatableMessageHandlerBase<GetPeerBlackListResponse, IRpcCorrelationCache>,
+        : CorrelatableMessageHandlerBase<SetPeerBlackListResponse, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
@@ -71,7 +71,7 @@ namespace Catalyst.Cli.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetPeerBlackListResponse>();
+                var deserialised = message.Payload.FromAnySigned<SetPeerBlackListResponse>();
 
                 var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
                     ? "Peer not found"

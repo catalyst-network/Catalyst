@@ -67,7 +67,7 @@ namespace Catalyst.Cli.Commands
                 Guard.Argument(node).NotNull();
 
                 var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
-                    new GetPeerBlackListRequest
+                    new SetPeerBlackListRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
                         Ip = peerIp.ToBytesForRLPEncoding().ToByteString(),

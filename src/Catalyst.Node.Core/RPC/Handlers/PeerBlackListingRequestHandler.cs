@@ -40,7 +40,7 @@ using SharpRepository.Repository;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class PeerBlackListingRequestHandler
-        : CorrelatableMessageHandlerBase<GetPeerBlackListRequest, IRpcCorrelationCache>,
+        : CorrelatableMessageHandlerBase<SetPeerBlackListRequest, IRpcCorrelationCache>,
             IRpcRequestHandler
     {
         /// <summary>
@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             _message = message;
 
-            var deserialised = message.Payload.FromAnySigned<GetPeerBlackListRequest>();
+            var deserialised = message.Payload.FromAnySigned<SetPeerBlackListRequest>();
             var publicKey = deserialised.PublicKey.ToStringUtf8(); 
             var ip = deserialised.Ip.ToStringUtf8();
             var blackList = deserialised.Blacklist;
@@ -101,7 +101,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="message">The message.</param>
         private void ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip, IChanneledMessage<AnySigned> message)
         {
-            var response = new GetPeerBlackListResponse
+            var response = new SetPeerBlackListResponse
             {
                 Blacklist = blacklist,
                 Ip = ip,
