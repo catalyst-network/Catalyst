@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
@@ -56,7 +57,7 @@ namespace Catalyst.Common.IO.Messaging
                 var message = AnySigned.Parser.ParseFrom(memoryStream);
                 var contextAny = new ChanneledAnySigned(context, message);
 
-                if (!_gossipManager.CheckIfMessageIsGossip(contextAny))
+                if (!message.CheckIfMessageIsGossip())
                 {
                     MessageSubject.OnNext(contextAny);
                 } 

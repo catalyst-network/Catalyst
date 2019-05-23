@@ -39,5 +39,19 @@ namespace Catalyst.Common.Extensions
             var enumerable = list as T[] ?? value.ToArray();
             return enumerable[Rng.Next(enumerable.Length)];
         }
+
+        public static IList<T> Shuffle<T>(this IEnumerable<T> source)
+        {
+            Guard.Argument(source, nameof(source)).NotNull();
+            var list = source as List<T> ?? source.ToList();
+
+            var randomlyMapped = Enumerable.Range(0, list.Count)
+               .Select(i => new {Index = i, SortingKey = Rng.Next()})
+               .OrderBy(z => z.SortingKey)
+               .Select(z => list[z.Index])
+               .ToList();
+
+            return randomlyMapped;
+        }
     }
 }

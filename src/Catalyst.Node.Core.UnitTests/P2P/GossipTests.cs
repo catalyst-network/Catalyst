@@ -117,10 +117,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             serverSettings.BindAddress.Returns(fakeIp);
             recipientIdentifier.Ip.Returns(fakeIp);
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
-
-            gossipMessageHandler
-               .CheckIfMessageIsGossip(Arg.Any<IChanneledMessage<AnySigned>>())
-               .Returns(true);
             
             EmbeddedChannel channel = new EmbeddedChannel(
                 new ProtoDatagramChannelHandler(gossipMessageHandler),
@@ -147,14 +143,10 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _messageCache, gossipCache);
             var gossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
                .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
-            gossipMessageHandler
-               .CheckIfMessageIsGossip(new ChanneledAnySigned(_fakeContext, gossipMessage))
-               .IsSameOrEqualTo(true);
+            gossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(true);
 
             var nonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
-            gossipMessageHandler
-               .CheckIfMessageIsGossip(new ChanneledAnySigned(_fakeContext, nonGossipMessage))
-               .IsSameOrEqualTo(false);
+            nonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);
         }
 
         [Theory]

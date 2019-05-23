@@ -62,9 +62,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         }
 
         /// <inheritdoc/>
-        public bool CheckIfMessageIsGossip(IChanneledMessage<AnySigned> anySigned) { return anySigned.Payload.TypeUrl.EndsWith(nameof(AnySigned)); }
-
-        /// <inheritdoc/>
         public void Broadcast(IChanneledMessage<AnySigned> anySigned)
         {
             Gossip(anySigned);
@@ -73,7 +70,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <inheritdoc/>
         public void IncomingGossip(IChanneledMessage<AnySigned> anySigned)
         {
-            if (!CheckIfMessageIsGossip(anySigned))
+            if (!anySigned.Payload.CheckIfMessageIsGossip())
             {
                 throw new NotSupportedException("The Message is not a gossip type");
             }

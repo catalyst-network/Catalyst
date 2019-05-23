@@ -86,6 +86,11 @@ namespace Catalyst.Common.Extensions
             return anySigned;
         }
 
+        public static bool CheckIfMessageIsGossip(this AnySigned message)
+        {
+            return message.TypeUrl.EndsWith(nameof(AnySigned));
+        }
+
         public static IMessage FromAnySigned(this AnySigned message)
         {
             var type = Type.GetType(ProtoToClrNameMapper[message.TypeUrl]);

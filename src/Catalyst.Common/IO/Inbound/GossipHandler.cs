@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
@@ -30,7 +31,7 @@ namespace Catalyst.Common.IO.Inbound
 {
     /// <summary>
     /// Channel Gossip Pipeline
-    /// Handles messages AnySigned messages wrapped in AnySigned
+    /// Handles gossip messages
     /// </summary>
     /// <seealso cref="ObservableHandlerBase{AnySigned}" />
     /// <seealso cref="IGossipHandler" />
@@ -47,7 +48,7 @@ namespace Catalyst.Common.IO.Inbound
             var channeledAnySigned = new ChanneledAnySigned(ctx, msg);
 
             // TODO Check sig
-            if (_gossipManager.CheckIfMessageIsGossip(channeledAnySigned))
+            if (channeledAnySigned.Payload.CheckIfMessageIsGossip())
             {
                 _gossipManager.IncomingGossip(channeledAnySigned);
                 AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);

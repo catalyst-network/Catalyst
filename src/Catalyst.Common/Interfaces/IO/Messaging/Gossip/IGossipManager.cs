@@ -28,11 +28,6 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
 { 
     public interface IGossipManager
     {
-        /// <summary>Checks if message is gossip.</summary>
-        /// <param name="anySigned">Any signed.</param>
-        /// <returns></returns>
-        bool CheckIfMessageIsGossip(IChanneledMessage<AnySigned> anySigned);
-
         /// <summary>Broadcasts a message.</summary>
         /// <param name="anySigned">Any signed message.</param>
         void Broadcast(IChanneledMessage<AnySigned> anySigned);
