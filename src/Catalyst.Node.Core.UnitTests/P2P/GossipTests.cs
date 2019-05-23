@@ -125,30 +125,27 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                .CheckIfMessageIsGossip(Arg.Any<IChanneledMessage<AnySigned>>())
                .Returns(true);
 
-            Task.Run(() =>
+            using (UdpServer server = new P2PService(serverSettings, Substitute.For<IPeerDiscovery>(),
+                gossipMessageHandler, new List<IP2PMessageHandler>()))
             {
-                using (UdpServer server = new P2PService(serverSettings, Substitute.For<IPeerDiscovery>(),
-                    gossipMessageHandler, new List<IP2PMessageHandler>()))
+                server.Bootstrap(Substitute.For<IChannelHandler>(), serverIp, port);
+
+                using (UdpClient client = new PeerClient(new IPEndPoint(serverIp, port), new List<IP2PMessageHandler>(),
+                    gossipMessageHandler))
                 {
-                    server.Bootstrap(Substitute.For<IChannelHandler>(), serverIp, port);
+                    var pingRequest = new PingRequest();
+                    var anySigned = pingRequest.ToAnySigned(peerIdentifier.PeerId, guid);
 
-                    using (UdpClient client = new PeerClient(new IPEndPoint(serverIp, port), new List<IP2PMessageHandler>(),
-                        gossipMessageHandler))
-                    {
-                        var pingRequest = new PingRequest();
-                        var anySigned = pingRequest.ToAnySigned(peerIdentifier.PeerId, guid);
+                    client.Channel.WriteAndFlushAsync(messageFactory.GetMessageInDatagramEnvelope(
+                            new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)))
+                       .ConfigureAwait(false).GetAwaiter().GetResult();
 
-                        client.Channel.WriteAndFlushAsync(messageFactory.GetMessageInDatagramEnvelope(
-                                new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)))
-                           .GetAwaiter().GetResult();
-                        Thread.Sleep(500);
-                        gossipMessageHandler.Received(Quantity.Exactly(1))
-                           .IncomingGossip(Arg.Any<IChanneledMessage<AnySigned>>());
-                        client.Channel.CloseAsync();
-                        server.Channel.CloseAsync();
-                    }
+                    gossipMessageHandler.Received(Quantity.Exactly(1))
+                       .IncomingGossip(Arg.Any<IChanneledMessage<AnySigned>>());
+                    client.Channel.CloseAsync();
+                    server.Channel.CloseAsync();
                 }
-            }).ConfigureAwait(false).GetAwaiter().GetResult();
+            }
         }
 
         [Fact]
