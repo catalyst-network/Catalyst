@@ -155,12 +155,11 @@ namespace Catalyst.Common.Util
             return Encoding.UTF8.GetString(array);
         }
 
-        /// <remarks>
-        /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
-        /// </remarks>
-        public class ByteListMinSizeComparer : IComparer<IList<byte>>
+        public class ByteListComparerBase : IComparer<IList<byte>>
         {
-            public int Compare(IList<byte> x, IList<byte> y)
+            protected ByteListComparerBase() { }
+
+            public virtual int Compare(IList<byte> x, IList<byte> y)
             {
                 if (ReferenceEquals(x, y))
                 {
@@ -188,39 +187,22 @@ namespace Catalyst.Common.Util
 
                 return 0;
             }
+        }
 
+        /// <remarks>
+        /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
+        /// </remarks>
+        public sealed class ByteListMinSizeComparer : ByteListComparerBase
+        {
             public static IComparer<IList<byte>> Default { get; } = new ByteListMinSizeComparer();
         }
 
-        public class ByteListComparer : IComparer<IList<byte>>
+        public sealed class ByteListComparer : ByteListComparerBase
         {
-            public int Compare(IList<byte> x, IList<byte> y)
+            public override int Compare(IList<byte> x, IList<byte> y)
             {
-                if (ReferenceEquals(x, y))
-                {
-                    return 0;
-                }
-
-                if (ReferenceEquals(null, y))
-                {
-                    return 1;
-                }
-
-                if (ReferenceEquals(null, x))
-                {
-                    return -1;
-                }
-
-                for (var index = 0; index < Math.Min(x.Count, y.Count); index++)
-                {
-                    var result = x[index].CompareTo(y[index]);
-                    if (result != 0)
-                    {
-                        return Math.Sign(result);
-                    }
-                }
-
-                return Math.Sign(x.Count.CompareTo(y.Count));
+                var baseCompare = base.Compare(x, y);
+                return baseCompare != 0 ? baseCompare : Math.Sign(x.Count.CompareTo(y.Count));
             }
 
             public static IComparer<IList<byte>> Default { get; } = new ByteListComparer();

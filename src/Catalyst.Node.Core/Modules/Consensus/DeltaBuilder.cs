@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var globalLedgerStateUpdate = shuffledEntriesBytes
                .Concat(signaturesInOrder)
-               .Concat(new CoinbaseEntry()
+               .Concat(new CoinbaseEntry
                 {
                     Amount = summedFees,
                     PubKey = _producerUniqueId.PublicKey.ToByteString(),
