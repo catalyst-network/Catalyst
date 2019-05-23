@@ -175,7 +175,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash).Should().BeTrue();
 
             var expectedHash = _hashAlgorithm.ComputeHash(expectedCandidateHash);
-            candidate.DeltaHash.SequenceEqual(expectedHash).Should().BeTrue();
+            candidate.Hash.SequenceEqual(expectedHash).Should().BeTrue();
         }
     }
 }

@@ -102,7 +102,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             var candidate = new CandidateDelta
             {
                 // h∆j
-                DeltaHash = _hashAlgorithm.ComputeHash(globalLedgerStateUpdate).ToByteString(),
+                Hash = _hashAlgorithm.ComputeHash(globalLedgerStateUpdate).ToByteString(),
 
                 // Idj
                 ProducerId = _producerUniqueId.PeerId,
