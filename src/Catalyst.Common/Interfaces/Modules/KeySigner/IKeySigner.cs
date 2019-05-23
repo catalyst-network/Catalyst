@@ -40,7 +40,7 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         /// </summary>
         ICryptoContext CryptoContext { get; }
 
-        ISignature Sign(byte[] data, string address);
+        ISignature Sign(byte[] data);
 
         bool Verify(AnySigned anySigned);
 
@@ -48,5 +48,6 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         void ReadPassword();
 
         void GenerateNewKey();
+        string GetPublicKey();
     }
 }

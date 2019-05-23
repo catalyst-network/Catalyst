@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
@@ -76,7 +77,7 @@ namespace Catalyst.Common.Extensions
                .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
             var signature = keySigner
-               .Sign(protobufObject.ToByteArray(), senderId.PublicKey.ToByteArray().ToStringFromRLPDecoded())?
+               .Sign(protobufObject.ToByteArray())?
                .Bytes?.RawBytes ?? new byte[64];
 
             var anySigned = new AnySigned

@@ -35,6 +35,7 @@ using Dawn;
 using Google.Protobuf;
 using Serilog;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
@@ -58,11 +59,12 @@ namespace Catalyst.Cli.Handlers
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
-        /// <param name="config">The configuration.</param>
+        /// <param name="keySigner">The key signer</param>
         /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="rpcMessageFactory">The message factory</param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
-            IConfigurationRoot config,
+            IKeySigner keySigner,
             IRpcCorrelationCache correlationCache,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory)
@@ -70,7 +72,7 @@ namespace Catalyst.Cli.Handlers
         {
             _fileTransferFactory = fileTransferFactory;
             _rpcMessageFactory = rpcMessageFactory;
-            _peerIdentifier = Commands.Commands.BuildCliPeerId(config);
+            _peerIdentifier = Commands.Commands.BuildCliPeerId(keySigner);
         }
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>

@@ -34,6 +34,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -124,6 +125,9 @@ namespace Catalyst.Node.Core
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var node = container.Resolve<ICatalystNode>();
+                    var keySigner = container.Resolve<IKeySigner>();
+
+                    keySigner.ReadPassword();
                     node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 

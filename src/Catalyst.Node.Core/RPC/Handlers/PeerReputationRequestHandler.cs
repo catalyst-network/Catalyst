@@ -61,6 +61,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRepository<Peer> peerRepository)
             : base(messageCorrelationCache, logger)
         {
+            _keySigner = keySigner;
             _peerId = peerIdentifier.PeerId;
             _peerRepository = peerRepository;
         }

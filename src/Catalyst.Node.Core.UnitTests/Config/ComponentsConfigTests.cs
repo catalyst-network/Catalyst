@@ -43,7 +43,6 @@ namespace Catalyst.Node.Core.UnitTest.Config
     {
         private readonly string _componentsConfig;
         private const string PeerMiniConfigFile = "peerConfigSection.json";
-        private const string PublicKeyAsString = "302a300506032b65700321001783421742816abf";
 
         public ComponentsConfigTests()
         {

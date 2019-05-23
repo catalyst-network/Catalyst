@@ -213,7 +213,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Rpc.CliKeySignerInitializer",
+            "type": "Catalyst.Common.Modules.KeySigner.KeySignerInitializer, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySignerInitializer, Catalyst.Common"

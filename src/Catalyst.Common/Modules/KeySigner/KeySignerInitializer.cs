@@ -3,22 +3,16 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Nethereum.KeyStore.Crypto;
-using Nethereum.RLP;
 using Serilog;
 
 namespace Catalyst.Common.Modules.KeySigner
 {
-    public abstract class KeySignerInitializerBase : IKeySignerInitializer
+    public class KeySignerInitializer : IKeySignerInitializer
     {
-        private readonly IUserOutput _userOutput;
-        
         private readonly ILogger _logger;
 
         private readonly IPasswordReader _passwordReader;
@@ -27,10 +21,9 @@ namespace Catalyst.Common.Modules.KeySigner
 
         protected readonly IKeyStore KeyStore;
 
-        protected KeySignerInitializerBase(IPasswordReader passwordReader, IKeyStore keyStore, IUserOutput userOutput, ILogger logger)
+        public KeySignerInitializer(IPasswordReader passwordReader, IKeyStore keyStore, ILogger logger)
         {
             KeyStore = keyStore;
-            _userOutput = userOutput;
             _passwordReader = passwordReader;
             _logger = logger;
         }
@@ -71,7 +64,7 @@ namespace Catalyst.Common.Modules.KeySigner
             }
         }
 
-        public void Initialize(IKeySigner keySigner)
+        private void Initialize(IKeySigner keySigner)
         {
             var path = Path.Combine(KeyStore.GetBaseDir(), Constants.DefaultKeyStoreFile);
             var keyStoreFileExists = File.Exists(path);
@@ -80,19 +73,11 @@ namespace Catalyst.Common.Modules.KeySigner
             {
                 if (keyStoreFileExists)
                 {
-                    IPublicKey publicKey =
-                        KeyStore.GetKey(Constants.DefaultKeyStoreFile, Password).GetPublicKey();
-                    var publicKeyStr = keySigner.CryptoContext.AddressFromKey(publicKey);
-                    if (!publicKeyStr.Equals(
-                        GetPeerIdentifier().PublicKey.ToStringFromRLPDecoded(), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        _userOutput.WriteLine("Shell.Config Public Key Configuration does not match keystore");
-                        SetConfigurationValue(publicKeyStr);
-                    }
+                    _ = KeyStore.GetKey(Constants.DefaultKeyStoreFile, Password).GetPublicKey();
                 }
                 else
                 {
-                    GenerateNewKey(keySigner);
+                    keySigner.GenerateNewKey();
                 }
             }
             catch (DecryptionException)
@@ -102,25 +87,8 @@ namespace Catalyst.Common.Modules.KeySigner
             catch (Exception e)
             {
                 _logger.Error(e, "Error on IKeySignerInitializer.Initialize");
-                GenerateNewKey(keySigner);
+                keySigner.GenerateNewKey();
             }
         }
-
-        public void GenerateNewKey(IKeySigner keySigner)
-        {
-            var newPrivateKey = keySigner.CryptoContext.GeneratePrivateKey();
-            KeyStore.StoreKey(newPrivateKey, Constants.DefaultKeyStoreFile, Password);
-            var publicKey = newPrivateKey.GetPublicKey();
-            var publicKeyStr = keySigner.CryptoContext.AddressFromKey(publicKey);
-
-            SetConfigurationValue(publicKeyStr);
-
-            _userOutput.WriteLine("Generated new public key: "
-              + publicKeyStr);
-        }
-
-        public abstract void SetConfigurationValue(string publicKey);
-
-        public abstract IPeerIdentifier GetPeerIdentifier();
     }
 }

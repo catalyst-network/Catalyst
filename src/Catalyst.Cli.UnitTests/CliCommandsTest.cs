@@ -67,9 +67,8 @@ namespace Catalyst.Cli.UnitTests
             ConfigureContainerBuilder(config);
 
             ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
+            ContainerBuilder.RegisterInstance(new TestKeySigner()).As<IKeySigner>();
             container = ContainerBuilder.Build();
-
-            container.Resolve<IKeySigner>().GenerateNewKey();
         }
 
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands

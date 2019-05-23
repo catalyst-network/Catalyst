@@ -23,6 +23,8 @@
 
 using System;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.KeyStore;
@@ -35,11 +37,13 @@ namespace Catalyst.Common.Modules.KeySigner
     public class KeySigner : IKeySigner
     {
         private readonly IKeyStore _keyStore;
+        private readonly IUserOutput _userOutput;
         private readonly ICryptoContext _cryptoContext;
         private readonly IKeySignerInitializer _keySignerInitializer;
 
-        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeySignerInitializer initializer)
+        public KeySigner(IUserOutput userOutput, IKeyStore keyStore, ICryptoContext cryptoContext, IKeySignerInitializer initializer)
         {
+            _userOutput = userOutput;
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
             _keySignerInitializer = initializer;
@@ -48,14 +52,14 @@ namespace Catalyst.Common.Modules.KeySigner
         IKeyStore IKeySigner.KeyStore => _keyStore;
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        public ISignature Sign(byte[] data, string address)
+        public ISignature Sign(byte[] data)
         {
             {
-                IPrivateKey key = _keyStore.GetKey(address, _keySignerInitializer.Password);
+                IPrivateKey key = _keyStore.GetKey(Constants.DefaultKeyStoreFile, _keySignerInitializer.Password);
                 return Task.FromResult(_cryptoContext.Sign(key, new ReadOnlySpan<byte>(data))).GetAwaiter().GetResult();
             }
         }
-        
+
         public bool Verify(AnySigned anySigned)
         {
             IPublicKey key = new PublicKey(anySigned.PeerId.PublicKey.ToByteArray());
@@ -76,7 +80,20 @@ namespace Catalyst.Common.Modules.KeySigner
 
         public void GenerateNewKey()
         {
-            _keySignerInitializer.GenerateNewKey(this);
+            var newPrivateKey = _cryptoContext.GeneratePrivateKey();
+            _keyStore.StoreKey(newPrivateKey, Constants.DefaultKeyStoreFile, _keySignerInitializer.Password);
+            var publicKey = newPrivateKey.GetPublicKey();
+            var publicKeyStr = _cryptoContext.AddressFromKey(publicKey);
+
+            _userOutput.WriteLine("Generated new public key: "
+              + publicKeyStr);
+        }
+
+        public string GetPublicKey()
+        {
+            return _cryptoContext.AddressFromKey(
+                _keyStore.GetKey(Constants.DefaultKeyStoreFile, _keySignerInitializer.Password)
+                   .GetPublicKey());
         }
     }
 }

@@ -86,7 +86,7 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _downloadFileTransferFactory = downloadFileTransferFactory;
             _uploadFileTransferFactory = uploadFileTransferFactory;
-            _peerIdentifier = BuildCliPeerId(config);
+            _peerIdentifier = BuildCliPeerId(_keySigner);
             _userOutput = userOutput;
             _userOutput.WriteLine(@"Koopa Shell Start");
         }
@@ -126,14 +126,13 @@ namespace Catalyst.Cli.Commands
                     errs => false);
         }
         
-        public static IPeerIdentifier BuildCliPeerId(IConfiguration configuration)
+        public static IPeerIdentifier BuildCliPeerId(IKeySigner keySigner)
         {
             //TODO: Handle different scenarios to get the IPAddress and Port depending
             //on you whether you are connecting to a local node, or a remote one.
             //https://github.com/catalyst-network/Catalyst.Node/issues/307
 
-            return new PeerIdentifier(configuration.GetSection("CatalystCliConfig")
-                   .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
+            return new PeerIdentifier(keySigner.GetPublicKey().ToBytesForRLPEncoding(),
                 IPAddress.Loopback, IPEndPoint.MaxPort);
         }
 

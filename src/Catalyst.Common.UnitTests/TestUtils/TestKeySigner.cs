@@ -23,8 +23,9 @@ namespace Catalyst.Common.UnitTests.TestUtils
 
         public void ReadPassword() { throw new NotImplementedException(); }
         public void GenerateNewKey() { throw new NotImplementedException(); }
+        public string GetPublicKey() { return "z8Y55Tc3kESZJTtBupapV7WSmMrRPDf7PRzZJiWp6RsS1"; }
 
-        public ISignature Sign(byte[] data, string address)
+        public ISignature Sign(byte[] data)
         {
             return new Signature(new byte[64]);
         }

@@ -28,6 +28,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Network;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
@@ -93,8 +94,8 @@ namespace Catalyst.Common.P2P
             });
         }
         
-        public PeerIdentifier(IPeerSettings settings)
-            : this(settings.PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port)) { }
+        public PeerIdentifier(IPeerSettings settings, IKeySigner keySigner)
+            : this(keySigner.GetPublicKey().ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port)) { }
         
         public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
