@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
                 {
                     Amount = summedFees,
                     PubKey = _producerUniqueId.PublicKey.ToByteString(),
-                    Version = 0
+                    Version = 1
                 }.ToByteArray())
                .ToArray();
 

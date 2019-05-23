@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             _producerId = PeerIdentifierHelper.GetPeerIdentifier("producer");
 
             _previousDeltaHash = Encoding.UTF8.GetBytes("previousDelta");
-            _zeroCoinbaseEntry = new CoinbaseEntry {Amount = 0, PubKey = _producerId.PublicKey.ToByteString(), Version = 0};
+            _zeroCoinbaseEntry = new CoinbaseEntry {Amount = 0, PubKey = _producerId.PublicKey.ToByteString(), Version = 1};
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var expectedCoinBase = new CoinbaseEntry
             {
                 Amount = selectedTransactions.Sum(t => t.TransactionFees),
-                Version = 0,
+                Version = 1,
                 PubKey = _producerId.PublicKey.ToByteString()
             };
 

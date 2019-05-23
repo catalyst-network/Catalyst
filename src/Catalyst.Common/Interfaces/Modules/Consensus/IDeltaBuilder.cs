@@ -35,7 +35,8 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// Builds a new candidate delta based on the content of its predecessor
         /// </summary>
         /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        /// <returns>Returns a delta entity object that contains the ledger update, delta and delta hash</returns>
+        /// <returns>Returns a candidate delta object that contains the hash for the update,
+        /// the hash for the previous delta and the producer's PeerId</returns>
         CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash);
     }
 }
