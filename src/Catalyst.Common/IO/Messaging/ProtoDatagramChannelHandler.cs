@@ -39,11 +39,7 @@ namespace Catalyst.Common.IO.Messaging
     public sealed class ProtoDatagramChannelHandler : ObservableHandlerBase<DatagramPacket>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
-        private readonly IGossipManager _gossipManager;
-
-        public ProtoDatagramChannelHandler(IGossipManager gossipManager) { _gossipManager = gossipManager; }
-
+        
         protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
         {
             Guard.Argument(context).NotNull();

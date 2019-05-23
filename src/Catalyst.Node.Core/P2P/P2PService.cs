@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.P2P
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Discovery = peerDiscovery;
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler(gossipManager);
+            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
 
             MessageStream = protoDatagramChannelHandler.MessageStream;
             messageHandlers.ToList()
