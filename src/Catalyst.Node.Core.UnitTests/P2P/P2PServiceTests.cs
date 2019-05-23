@@ -65,7 +65,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P
         private readonly IConfigurationRoot _config;
         private readonly IReputableCache _reputableCache;
         private readonly IReputableCache _subbedReputableCache;
-        private readonly IKeySigner _keySigner;
 
         public P2PServiceTests(ITestOutputHelper output) : base(output)
         {
@@ -78,11 +77,11 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             _guid = Guid.NewGuid();
             _logger = Substitute.For<ILogger>();
-            _keySigner = new TestKeySigner();
             _pingRequest = new PingRequest();
 
             ConfigureContainerBuilder(_config, true, true);
-            
+
+            ContainerBuilder.RegisterInstance(new TestKeySigner()).As<IKeySigner>();
             _container = ContainerBuilder.Build();
             _reputableCache = _container.Resolve<IReputableCache>();
         }
@@ -108,14 +107,14 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var fakeChannel = Substitute.For<IChannel>();
                 fakeContext.Channel.Returns(fakeChannel);
-                var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_keySigner, _pid.PeerId, _guid));
+                var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
             
-                var handler = new PingRequestHandler(_pid, _subbedReputableCache, _keySigner, _logger);
+                var handler = new PingRequestHandler(_pid, _subbedReputableCache, _logger);
                 handler.StartObserving(observableStream);
             
                 fakeContext.Channel.ReceivedWithAnyArgs(1)
-                   .WriteAndFlushAsync(new PingResponse().ToAnySigned(_keySigner, _pid.PeerId, _guid));
+                   .WriteAndFlushAsync(new PingResponse().ToAnySigned(_pid.PeerId, _guid));
             }
         }
 
@@ -134,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
                     var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
 
-                    var datagramEnvelope = new P2PMessageFactory(_reputableCache, _keySigner).GetMessageInDatagramEnvelope(new MessageDto(
+                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PingResponse(),
                             MessageTypes.Tell,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
@@ -178,7 +177,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
                     
-                    var datagramEnvelope = new P2PMessageFactory(_reputableCache, _keySigner).GetMessageInDatagramEnvelope(new MessageDto(
+                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PeerNeighborsResponse(),
                             MessageTypes.Tell,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),

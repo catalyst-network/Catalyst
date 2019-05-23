@@ -39,7 +39,6 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
@@ -57,9 +56,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
-
-        private readonly IKeySigner _keySigner;
-
+        
         private IRpcCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
@@ -70,7 +67,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _keySigner = new TestKeySigner();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -103,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
             peerRepository.GetAll().Returns(peerList);
 
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache, _keySigner);
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var requestMessage = rpcMessageFactory.GetMessage(new MessageDto(

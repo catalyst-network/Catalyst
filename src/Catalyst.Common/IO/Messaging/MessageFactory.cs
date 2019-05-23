@@ -41,12 +41,10 @@ namespace Catalyst.Common.IO.Messaging
     public class MessageFactory : IMessageFactory
     {
         private readonly IMessageCorrelationCache _messageCorrelationCache;
-        private readonly IKeySigner _keySigner;
 
-        protected MessageFactory(IMessageCorrelationCache messageCorrelationCache, IKeySigner keySigner)
+        protected MessageFactory(IMessageCorrelationCache messageCorrelationCache)
         {
             _messageCorrelationCache = messageCorrelationCache;
-            _keySigner = keySigner;
         }
         
         /// <summary>Gets the message.</summary>
@@ -77,7 +75,7 @@ namespace Catalyst.Common.IO.Messaging
         {
             return correlationId == default
                 ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
-                : dto.Message.ToAnySigned(_keySigner, dto.Sender.PeerId, correlationId);
+                : dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
         }
 
         /// <summary>Builds the ask message.</summary>
@@ -85,7 +83,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <returns>AnySigned message</returns>
         private AnySigned BuildAskMessage(IMessageDto dto)
         {
-            var messageContent = dto.Message.ToAnySigned(_keySigner, dto.Sender.PeerId, Guid.NewGuid());
+            var messageContent = dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
             var correlatableRequest = new PendingRequest
             {
                 Content = messageContent,
@@ -101,7 +99,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <returns>AnySigned message</returns>
         protected AnySigned BuildGossipMessage(IMessageDto dto)
         {
-            return dto.Message.ToAnySigned(_keySigner, dto.Sender.PeerId, Guid.NewGuid());
+            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }
     }
 }

@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -39,7 +37,6 @@ using Serilog;
 using Xunit;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Network;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -59,9 +56,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
-
-        private readonly IKeySigner _keySigner;
-
+        
         private IRpcCorrelationCache _subbedCorrelationCache;
         
         /// <summary>
@@ -74,7 +69,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-            _keySigner = new TestKeySigner();
         }
 
         /// <summary>
@@ -119,7 +113,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache, _keySigner);
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var peerToDelete = peerRepository.Get(1);
             var requestMessage = rpcMessageFactory.GetMessage(new MessageDto(

@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("Hello&?!1253Catalyst")]
         public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache, _keySigner);
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
             var request = rpcMessageFactory.GetMessage(new MessageDto(
                 new SignMessageRequest
                 {

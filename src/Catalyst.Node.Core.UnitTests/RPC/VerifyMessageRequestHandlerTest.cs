@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [InlineData("", "", "", false)]
         public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
         {
-            var request = new RpcMessageFactory(_subbedCorrelationCache, _keySigner).GetMessage(new MessageDto(
+            var request = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                 new VerifyMessageRequest
                 {
                     Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),

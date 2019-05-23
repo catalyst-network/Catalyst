@@ -28,7 +28,9 @@ using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -43,6 +45,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
     {
         private readonly string _componentsConfig;
         private const string PeerMiniConfigFile = "peerConfigSection.json";
+        private static IKeySigner KeySigner;
 
         public ComponentsConfigTests()
         {
@@ -66,6 +69,9 @@ namespace Catalyst.Node.Core.UnitTest.Config
             var logger = Substitute.For<ILogger>();
             containerBuilder.RegisterInstance(logger).As<ILogger>();
 
+            KeySigner = new TestKeySigner();
+            containerBuilder.RegisterInstance(KeySigner).As<IKeySigner>();
+
             var container = containerBuilder.Build();
             return container;
         }
@@ -75,7 +81,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
         {
             var container = ConfigureAndBuildContainer(_componentsConfig);
             var resolved = container.Resolve<IPeerSettings>();
-            resolved.PublicKey.Should().Be(PublicKeyAsString);
+            resolved.PublicKey.Should().Be(KeySigner.GetPublicKey());
         }
 
         [Fact]
@@ -85,7 +91,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
 
             var resolved = container.Resolve<IPeerIdentifier>();
             resolved.PublicKey.Should()
-               .BeEquivalentTo(PublicKeyAsString.ToBytesForRLPEncoding());
+               .BeEquivalentTo(KeySigner.GetPublicKey().ToBytesForRLPEncoding());
         }
 
         [Fact]

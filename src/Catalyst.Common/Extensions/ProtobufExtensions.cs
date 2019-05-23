@@ -67,7 +67,6 @@ namespace Catalyst.Common.Extensions
         }
 
         public static AnySigned ToAnySigned(this IMessage protobufObject,
-            IKeySigner keySigner,
             PeerId senderId,
             Guid correlationId = default)
         {
@@ -76,15 +75,12 @@ namespace Catalyst.Common.Extensions
             Guard.Argument(correlationId, nameof(correlationId))
                .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
-            var signature = keySigner
-               .Sign(protobufObject.ToByteArray())?
-               .Bytes?.RawBytes ?? new byte[64];
 
             var anySigned = new AnySigned
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
-                Signature = signature.ToByteString(),
+                Signature = ByteString.Empty,
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };

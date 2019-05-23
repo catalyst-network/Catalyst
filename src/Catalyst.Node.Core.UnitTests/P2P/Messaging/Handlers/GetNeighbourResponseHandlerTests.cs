@@ -30,7 +30,6 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -51,14 +50,12 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
         private IChannelHandlerContext _fakeContext;
         private readonly ILogger _logger;
         private readonly IReputableCache _subbedReputableCache;
-        private readonly IKeySigner _keySigner;
 
         public GetNeighbourResponseHandlerTests(ITestOutputHelper output) : base(output)
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _subbedReputableCache = Substitute.For<IReputableCache>();
-            _keySigner = new TestKeySigner();
         }
 
         [Fact]
@@ -88,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourResponseMessage.ToAnySigned(_keySigner, PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourResponseMessage.ToAnySigned(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             neighbourResponseHandler.StartObserving(observableStream);
             neighbourResponseHandler.ReputableCache.ReceivedWithAnyArgs(1);
@@ -101,7 +98,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourResponseMessage.ToAnySigned(_keySigner, PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourResponseMessage.ToAnySigned(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             subbedPeerDiscovery.StartObserving(observableStream);
             subbedPeerDiscovery.GetNeighbourResponseStream.ReceivedWithAnyArgs(1);

@@ -31,7 +31,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -55,7 +54,6 @@ namespace Catalyst.Cli.UnitTests
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
-        private readonly IKeySigner _keySigner;
         private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static GetInfoResponseHandlerTest()
@@ -84,7 +82,6 @@ namespace Catalyst.Cli.UnitTests
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
-            _keySigner = new TestKeySigner();
         }
 
         private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
@@ -103,7 +100,7 @@ namespace Catalyst.Cli.UnitTests
         {
             var correlationCache = Substitute.For<IRpcCorrelationCache>();
 
-            var response = new RpcMessageFactory(_subbedCorrelationCache, _keySigner).GetMessage(new MessageDto(
+            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new GetInfoResponse
                     {
                         Query = query

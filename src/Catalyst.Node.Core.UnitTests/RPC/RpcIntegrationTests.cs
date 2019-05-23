@@ -35,7 +35,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
@@ -59,7 +58,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private const int MaxWaitInMs = 1000;
         private readonly IConfigurationRoot _config;
-        private IKeySigner _keySigner;
 
         public RpcIntegrationTests(ITestOutputHelper output) : base(output)
         {
@@ -71,8 +69,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
                .Build(), CurrentTestName);
-
-            _keySigner = new TestKeySigner();
 
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
@@ -138,7 +134,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                         var request = new GetInfoRequest();
                         var peerSettings = new PeerSettings(_config);
                         var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-                        nodeRpcClient.SendMessage(request.ToAnySigned(_keySigner, pid.PeerId, Guid.NewGuid()));
+                        nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
 
                         var tasks = new IChanneledMessageStreamer<AnySigned>[]
                             {
@@ -187,7 +183,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                         var request = new VersionRequest();
                         var peerSettings = new PeerSettings(_config);
                         var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-                        nodeRpcClient.SendMessage(request.ToAnySigned(_keySigner, pid.PeerId, Guid.NewGuid()));
+                        nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
 
                         var tasks = new IChanneledMessageStreamer<AnySigned>[]
                             {
@@ -234,7 +230,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                     var request = new GetMempoolRequest();
                     var peerSettings = new PeerSettings(_config);
                     var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-                    nodeRpcClient.SendMessage(request.ToAnySigned(_keySigner, pid.PeerId, Guid.NewGuid()));
+                    nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
@@ -285,7 +281,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
                     var peerSettings = new PeerSettings(_config);
                     var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-                    nodeRpcClient.SendMessage(request.ToAnySigned(_keySigner, pid.PeerId, Guid.NewGuid()));
+                    nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {

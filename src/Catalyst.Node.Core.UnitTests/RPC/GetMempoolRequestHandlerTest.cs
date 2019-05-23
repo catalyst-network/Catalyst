@@ -26,8 +26,6 @@ using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
@@ -50,7 +48,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private IKeySigner _keySigner;
         private IRpcCorrelationCache _subbedCorrelationCacche;
 
         public GetMempoolRequestHandlerTest()
@@ -58,7 +55,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             _subbedCorrelationCacche = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _keySigner = new TestKeySigner();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
@@ -94,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 }
             );
 
-            var rpcFactory = new RpcMessageFactory(_subbedCorrelationCacche, _keySigner);
+            var rpcFactory = new RpcMessageFactory(_subbedCorrelationCacche);
             var request = rpcFactory.GetMessage(new MessageDto(
                 new GetMempoolRequest(),
                 MessageTypes.Ask,

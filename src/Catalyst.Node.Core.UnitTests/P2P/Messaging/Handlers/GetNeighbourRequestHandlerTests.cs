@@ -30,7 +30,6 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.P2P;
@@ -54,7 +53,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRepository<Peer> _subbedPeerRepository;
         private IReputableCache _subbedReputableCache;
-        private readonly IKeySigner _keySigner;
 
         public GetNeighbourRequestHandlerTests(ITestOutputHelper output) : base(output)
         {
@@ -62,7 +60,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
-            _keySigner = new TestKeySigner();
         }
         
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
@@ -81,7 +78,6 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             var neighbourRequestHandler = new GetNeighbourRequestHandler(_peerIdentifier,
                 _subbedPeerRepository,
                 _subbedReputableCache,
-                _keySigner,
                 _subbedLogger
             );
 
@@ -128,14 +124,13 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             var neighbourRequestHandler = new GetNeighbourRequestHandler(_peerIdentifier,
                 _subbedPeerRepository,
                 _subbedReputableCache,
-                _keySigner,
                 _subbedLogger
             );
             
             var peerNeighbourRequestMessage = new PeerNeighborsRequest();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourRequestMessage.ToAnySigned(_keySigner, PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourRequestMessage.ToAnySigned(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             
             neighbourRequestHandler.StartObserving(observableStream);
@@ -148,7 +143,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
             }
             
             fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(peerNeighborsResponseMessage.ToAnySigned(_keySigner, _peerIdentifier.PeerId, Guid.NewGuid()));
+               .WriteAndFlushAsync(peerNeighborsResponseMessage.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
         }
     }
 }

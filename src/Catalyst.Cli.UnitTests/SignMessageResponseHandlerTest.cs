@@ -28,8 +28,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -47,7 +45,6 @@ namespace Catalyst.Cli.UnitTests
     public sealed class SignMessageResponseHandlerTest : IDisposable
     {
         private readonly ILogger _logger;
-        private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
         public static readonly List<object[]> QueryContents;
         
@@ -84,7 +81,6 @@ namespace Catalyst.Cli.UnitTests
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
-            _keySigner = new TestKeySigner();
         }
 
         public static SignedResponse SignMessage(string messageToSign, string signature, string pubKey)
@@ -105,7 +101,7 @@ namespace Catalyst.Cli.UnitTests
         {   
             var correlationCache = Substitute.For<IRpcCorrelationCache>();
 
-            var response = new RpcMessageFactory(_subbedCorrelationCache, _keySigner).GetMessage(new MessageDto(
+            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new SignMessageResponse
                     {
                         OriginalMessage = signedResponse.OriginalMessage,

@@ -46,7 +46,6 @@ using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Rpc;
 using Polly;
 
@@ -61,7 +60,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
         private readonly IRpcCorrelationCache _cache;
         private readonly IpfsAdapter _ipfsEngine;
         private readonly IRpcMessageFactory _rpcMessageFactory;
-        private readonly IKeySigner _keySigner;
 
         public FileTransferNodeTests(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -76,7 +74,6 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _cache = Substitute.For<IRpcCorrelationCache>();
             _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
-            _keySigner = new TestKeySigner();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
 
             var passwordReader = new TestPasswordReader("abcd");
@@ -100,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
                 Node = "node1",
                 FileName = "Test.dat",
                 FileSize = 10000
-            }.ToAnySigned(_keySigner, sender, Guid.NewGuid());
+            }.ToAnySigned(sender, Guid.NewGuid());
             request.SendToHandler(_fakeContext, handler);
 
             Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
@@ -179,7 +176,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
                 Node = "node1",
                 FileName = fileToTransfer,
                 FileSize = (ulong) byteSize
-            }.ToAnySigned(_keySigner, sender, uniqueFileKey);
+            }.ToAnySigned(sender, uniqueFileKey);
             request.SendToHandler(_fakeContext, addFileToDfsRequestHandler);
             
             Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
@@ -191,7 +188,7 @@ namespace Catalyst.Node.Core.UnitTest.FileTransfer
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-                    fakeNode.Channel, uniqueFileKey, new RpcMessageFactory(_cache, _keySigner));
+                    fakeNode.Channel, uniqueFileKey, new RpcMessageFactory(_cache));
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
                     fileUploadInformation.GetUploadMessageDto(i)

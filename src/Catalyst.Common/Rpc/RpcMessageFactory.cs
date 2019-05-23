@@ -31,6 +31,6 @@ namespace Catalyst.Common.Rpc
     /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactory`1" />
     public sealed class RpcMessageFactory : MessageFactory, IRpcMessageFactory
     {
-        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache, IKeySigner keySigner) : base(messageCorrelationCache, keySigner) { }
+        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
     }
 }

@@ -38,7 +38,7 @@ namespace Catalyst.Node.Core.P2P.Messaging
     public sealed class P2PMessageFactory
         : MessageFactory
     {
-        public P2PMessageFactory(IReputableCache messageCorrelationCache, IKeySigner keySigner) : base(messageCorrelationCache, keySigner) { }
+        public P2PMessageFactory(IReputableCache messageCorrelationCache) : base(messageCorrelationCache) { }
         
         /// <summary>Gets the message in datagram envelope.</summary>
         /// <param name="messageDto">Message Dto wrapper with all params required to send message.</param>

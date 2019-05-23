@@ -23,23 +23,17 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests
 {
     public class ProtobufExtensionsTests
     {
-        private static readonly IKeySigner KeySigner;
-
-        static ProtobufExtensionsTests() { KeySigner = new TestKeySigner(); }
-
         [Fact]
         public static void ShortenedFullName_should_remove_namespace_start()
         {
@@ -76,7 +70,7 @@ namespace Catalyst.Common.UnitTests
         public static void ToAnySigned_should_happen_new_guid_to_request_if_not_specified()
         {
             //this ensures we won't get Guid.Empty and then a risk of mismatch;
-            var wrapped = new PingRequest().ToAnySigned(KeySigner, PeerIdHelper.GetPeerId("you"));
+            var wrapped = new PingRequest().ToAnySigned(PeerIdHelper.GetPeerId("you"));
             wrapped.CorrelationId.Should().NotBeEquivalentTo(Guid.Empty.ToByteString());
         }
 
@@ -89,7 +83,7 @@ namespace Catalyst.Common.UnitTests
             var wrapped = new PeerId()
             {
                 ClientId = expectedContent.ToUtf8ByteString()
-            }.ToAnySigned(KeySigner, peerId, guid);
+            }.ToAnySigned(peerId, guid);
 
             wrapped.CorrelationId.ToGuid().Should().Be(guid);
             wrapped.PeerId.Should().Be(peerId);
@@ -106,7 +100,7 @@ namespace Catalyst.Common.UnitTests
             {
                 ClientId = expectedContent.ToUtf8ByteString()
             };
-            new Action(() => response.ToAnySigned(KeySigner, peerId))
+            new Action(() => response.ToAnySigned(peerId))
                .Should().Throw<ArgumentException>();
         }
     }

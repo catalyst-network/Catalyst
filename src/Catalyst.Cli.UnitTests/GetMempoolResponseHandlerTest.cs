@@ -30,8 +30,6 @@ using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -50,7 +48,6 @@ namespace Catalyst.Cli.UnitTests
     public sealed class GetMempoolResponseHandlerTest : IDisposable
     {
         private readonly ILogger _logger;
-        private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
         public static readonly List<object[]> QueryContents;
 
@@ -78,7 +75,6 @@ namespace Catalyst.Cli.UnitTests
 
         public GetMempoolResponseHandlerTest()
         {
-            _keySigner = new TestKeySigner();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
@@ -118,7 +114,7 @@ namespace Catalyst.Cli.UnitTests
             var correlationCache = Substitute.For<IRpcCorrelationCache>();
             var txList = mempoolContent.ToList();
 
-            var response = new RpcMessageFactory(_subbedCorrelationCache, _keySigner).GetMessage(new MessageDto(
+            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new GetMempoolResponse
                     {
                         Mempool = {txList}

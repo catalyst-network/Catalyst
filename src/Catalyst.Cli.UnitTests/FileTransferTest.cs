@@ -120,7 +120,7 @@ namespace Catalyst.Cli.UnitTests
                 {
                     FileSize = (ulong) byteSize,
                     ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful.Id)
-                }.ToAnySigned(_keySigner, nodePeer.PeerId, correlationGuid);
+                }.ToAnySigned(nodePeer.PeerId, correlationGuid);
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
@@ -131,7 +131,7 @@ namespace Catalyst.Cli.UnitTests
                     nodePeer,
                     _fakeContext.Channel,
                     correlationGuid,
-                    new RpcMessageFactory(_cache, _keySigner));
+                    new RpcMessageFactory(_cache));
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {
