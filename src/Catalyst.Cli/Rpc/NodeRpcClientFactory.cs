@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
 
 namespace Catalyst.Cli.Rpc
@@ -32,14 +33,17 @@ namespace Catalyst.Cli.Rpc
     {
         private readonly IEnumerable<IRpcResponseHandler> _responseHandlers;
 
-        public NodeRpcClientFactory(IEnumerable<IRpcResponseHandler> responseHandlers)
+        private readonly IKeySigner _keySigner;
+
+        public NodeRpcClientFactory(IKeySigner keySigner, IEnumerable<IRpcResponseHandler> responseHandlers)
         {
             _responseHandlers = responseHandlers;
+            _keySigner = keySigner;
         }
 
         public INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig)
         {
-            return new NodeRpcClient(certificate, nodeConfig, _responseHandlers);
+            return new NodeRpcClient(certificate, nodeConfig, _responseHandlers, _keySigner);
         }
     }
 }

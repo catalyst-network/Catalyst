@@ -29,6 +29,7 @@ using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -45,6 +46,7 @@ namespace Catalyst.Node.Core.P2P
 
         public P2PService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,
+            IKeySigner keySigner,
             IEnumerable<IP2PMessageHandler> messageHandlers)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
@@ -57,6 +59,7 @@ namespace Catalyst.Node.Core.P2P
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
+                new SignatureDuplexHandler(keySigner),
                 protoDatagramChannelHandler
             };
             

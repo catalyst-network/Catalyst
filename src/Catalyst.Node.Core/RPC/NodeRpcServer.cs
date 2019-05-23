@@ -32,6 +32,7 @@ using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
 using DotNetty.Codecs.Protobuf;
@@ -52,7 +53,8 @@ namespace Catalyst.Node.Core.RPC
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
             ICertificateStore certificateStore,
-            IEnumerable<IRpcRequestHandler> requestHandlers) : base(logger)
+            IEnumerable<IRpcRequestHandler> requestHandlers,
+            IKeySigner keySigner) : base(logger)
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
@@ -70,6 +72,7 @@ namespace Catalyst.Node.Core.RPC
                         new ProtobufDecoder(AnySigned.Parser),
                         new ProtobufVarint32LengthFieldPrepender(),
                         new ProtobufEncoder(),
+                        new SignatureDuplexHandler(keySigner),
                         anyTypeServerHandler
                     },
                     _certificate

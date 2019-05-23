@@ -30,7 +30,9 @@ using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Inbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -56,9 +58,11 @@ namespace Catalyst.Cli.Rpc
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
         /// <param name="responseHandlers">the collection of handlers used to process incoming response</param>
+        /// <param name="keySigner"></param>
         public NodeRpcClient(X509Certificate certificate, 
             IRpcNodeConfig nodeConfig, 
-            IEnumerable<IRpcResponseHandler> responseHandlers) 
+            IEnumerable<IRpcResponseHandler> responseHandlers,
+            IKeySigner keySigner) 
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var anySignedTypeClientHandler = new AnySignedTypeClientHandlerBase();
@@ -73,6 +77,7 @@ namespace Catalyst.Cli.Rpc
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(AnySigned.Parser),
+                new SignatureDuplexHandler(keySigner),
                 anySignedTypeClientHandler
             };
 

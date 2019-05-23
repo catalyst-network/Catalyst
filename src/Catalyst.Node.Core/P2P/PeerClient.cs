@@ -31,7 +31,9 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Inbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
@@ -50,8 +52,10 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="ipEndPoint"></param>
         /// <param name="messageHandlers"></param>
+        /// <param name="keySigner"></param>
         public PeerClient(IPEndPoint ipEndPoint,
-            IEnumerable<IP2PMessageHandler> messageHandlers)
+            IEnumerable<IP2PMessageHandler> messageHandlers,
+            IKeySigner keySigner)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Logger.Debug("P2P client starting");
@@ -62,6 +66,7 @@ namespace Catalyst.Node.Core.P2P
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
+                new SignatureDuplexHandler(keySigner),
                 protoDatagramChannelHandler
             };
 

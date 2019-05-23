@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
+using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using Nethereum.RLP;
@@ -64,6 +65,13 @@ namespace Catalyst.Common.Extensions
                .GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)
                .GetValue(null);
             return ShortenedFullName(descriptor);
+        }
+
+        public static AnySigned ToAnySigned(this DatagramPacket packet)
+        {
+            byte[] readableBytes = new byte[packet.Content.ReadableBytes];
+            packet.Content.ReadBytes(readableBytes);
+            return AnySigned.Parser.ParseFrom(readableBytes);
         }
 
         public static AnySigned ToAnySigned(this IMessage protobufObject,

@@ -51,6 +51,7 @@ namespace Catalyst.Common.IO.Messaging
                 var message = AnySigned.Parser.ParseFrom(memoryStream);
                 var contextAny = new ChanneledAnySigned(context, message);
                 MessageSubject.OnNext(contextAny);
+                context.FireChannelRead(message);
             }
         }
 

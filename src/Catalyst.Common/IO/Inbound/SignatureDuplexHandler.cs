@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
@@ -17,8 +18,12 @@ namespace Catalyst.Common.IO.Inbound
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
-            AnySigned msg = (AnySigned) message;
-            
+            bool isUdp = message is DatagramPacket;
+
+            AnySigned msg = isUdp
+                ? ((DatagramPacket) message).ToAnySigned()
+                : (AnySigned) message;
+
             bool valid = _keySigner.Verify(msg);
 
             if (valid)
@@ -30,14 +35,8 @@ namespace Catalyst.Common.IO.Inbound
         public override Task WriteAsync(IChannelHandlerContext context, object message)
         {
             bool isTcp = !(message is DatagramPacket);
-            AnySigned anySigned = isTcp ? (AnySigned) message : null;
-            DatagramPacket datagram = null;
-
-            if (!isTcp)
-            {
-                datagram = (DatagramPacket) message;
-                anySigned = AnySigned.Parser.ParseFrom(datagram.Content.Array);
-            }
+            DatagramPacket datagram = !isTcp ? ((DatagramPacket) message) : null;
+            AnySigned anySigned = isTcp ? (AnySigned) message : datagram.ToAnySigned();
 
             anySigned.Signature = _keySigner
                .Sign(anySigned.Value.ToByteArray())
