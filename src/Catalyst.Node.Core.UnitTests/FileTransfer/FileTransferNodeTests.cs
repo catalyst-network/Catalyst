@@ -22,34 +22,33 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.Modules.Dfs;
-using Catalyst.Node.Core.RPC.Handlers;
-using Catalyst.Protocol.Rpc.Node;
-using DotNetty.Transport.Channels;
-using NSubstitute;
-using Serilog;
-using Xunit;
-using Catalyst.Common.P2P;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
+using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.UnitTest.TestUtils;
+using Catalyst.Node.Core.RPC.Handlers;
+using Catalyst.Node.Core.UnitTests.TestUtils;
+using Catalyst.Protocol.Rpc.Node;
+using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
+using Polly;
+using Serilog;
+using Xunit;
 using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
-using System.Threading;
-using System.Threading.Tasks;
-using Catalyst.Common.Rpc;
-using Polly;
 
-namespace Catalyst.Node.Core.UnitTest.FileTransfer
+namespace Catalyst.Node.Core.UnitTests.FileTransfer
 {
     public sealed class FileTransferNodeTests : FileSystemBasedTest
     {

@@ -36,5 +36,8 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
 
         /// <see cref="IDeltaProducersProvider"/>
         IDeltaProducersProvider DeltaProducersProvider { get; }
+
+        /// <see cref="IDeltaProducersProvider"/>
+        IDeltaBuilder DeltaBuilder { get; }
     }
 }

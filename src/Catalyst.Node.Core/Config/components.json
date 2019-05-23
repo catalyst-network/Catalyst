@@ -262,7 +262,7 @@
             }
         },
         {
-            "type": "Catalyst.Node.Core.Modules.JsonConfiguredModule",
+            "type": "Catalyst.Node.Core.Modules.Consensus.ConsensusModule",
             "parameters": {
                 "configFilePath": "Config/Modules/consensus.json"
             }

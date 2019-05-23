@@ -30,12 +30,12 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
-using Serilog;
 using NSubstitute;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Ipfs
+namespace Catalyst.Node.Core.UnitTests.Modules.Ipfs
 {
     public sealed class IpfsAdapterTests : FileSystemBasedTest
     {
