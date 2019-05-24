@@ -46,15 +46,19 @@ namespace Catalyst.Common.Extensions
         private static readonly string ResponseSuffix = "Response";
         private static readonly string GossipSuffix = "Broadcast";
 
-        private static readonly Dictionary<string, string> ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
-           .Where(t => typeof(IMessage).IsAssignableFrom(t))
-           .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
-           .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
+        private static readonly Dictionary<string, string> ProtoToClrNameMapper;
+        private static readonly List<string> ProtoGossipAllowedMessages;
 
-        private static readonly List<string> ProtoGossipAllowedMessages = 
-            ProtoToClrNameMapper.Keys
+        static ProtobufExtensions()
+        {
+            ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
+               .Where(t => typeof(IMessage).IsAssignableFrom(t))
+               .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
+               .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
+            ProtoGossipAllowedMessages = ProtoToClrNameMapper.Keys
                .Where(t => t.EndsWith(GossipSuffix))
                .ToList();
+        }
 
         public static string ShortenedFullName(this MessageDescriptor descriptor)
         {
