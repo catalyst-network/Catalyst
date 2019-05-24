@@ -44,7 +44,7 @@ namespace Catalyst.Common.Extensions
         private const string CatalystProtocol = "Catalyst.Protocol";
         private static readonly string RequestSuffix = "Request";
         private static readonly string ResponseSuffix = "Response";
-        private static readonly string GossipSuffix = "Broadcast";
+        private static readonly string BroadcastSuffix = "Broadcast";
 
         private static readonly Dictionary<string, string> ProtoToClrNameMapper;
         private static readonly List<string> ProtoGossipAllowedMessages;
@@ -56,7 +56,7 @@ namespace Catalyst.Common.Extensions
                .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
             ProtoGossipAllowedMessages = ProtoToClrNameMapper.Keys
-               .Where(t => t.EndsWith(GossipSuffix))
+               .Where(t => t.EndsWith(BroadcastSuffix))
                .ToList();
         }
 
