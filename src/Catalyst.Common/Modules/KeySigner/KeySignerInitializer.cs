@@ -69,21 +69,16 @@ namespace Catalyst.Common.Modules.KeySigner
 
         public void ReadPassword(IKeySigner keySigner)
         {
-            bool success = false;
+            _password = _passwordReader.ReadSecurePassword("Please enter key signer password");
 
-            while (!success)
+            try
             {
-                _password = _passwordReader.ReadSecurePassword("Please enter key signer password");
-
-                try
-                {
-                    Initialize(keySigner);
-                    success = true;
-                }
-                catch (DecryptionException decryptionException)
-                {
-                    _logger.Error(decryptionException, "Error decrypting key signer IKeySignerInitializer.ReadPassword");
-                }
+                Initialize(keySigner);
+            }
+            catch (DecryptionException decryptionException)
+            {
+                _logger.Error(decryptionException, "Error decrypting key signer IKeySignerInitializer.ReadPassword");
+                throw;
             }
         }
 
@@ -95,8 +90,8 @@ namespace Catalyst.Common.Modules.KeySigner
             try
             {
                 if (keyStoreFileExists)
-                {
-                    _ = KeyStore.GetKey(Constants.DefaultKeyStoreFile, Password).GetPublicKey();
+                { 
+                    KeyStore.GetKey(Constants.DefaultKeyStoreFile, Password).GetPublicKey();
                 }
                 else
                 {

@@ -31,16 +31,17 @@ using Catalyst.Common.Modules.KeySigner;
 using Catalyst.Common.UnitTests.TestUtils;
 using FluentAssertions.Common;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Serilog;
-using System;
 using System.IO;
 using System.Security;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
+using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels.Embedded;
+using Google.Protobuf;
+using Nethereum.KeyStore.Crypto;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -76,29 +77,25 @@ namespace Catalyst.Common.UnitTests.Keystore
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Test_Key_Signer_Initializer_Password()
         {
             _keySignerInitializer.Password.IsSameOrEqualTo(Password);
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Decrypt_Key_Signer_With_Invalid_Password_Throws_Error()
         {
             _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(new SecureString());
-            _keySigner.GetPublicKey().Throws(new Exception());
+            Assert.Throws<DecryptionException>(() => _keySigner.ReadPassword());
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Decrypt_Key_Signer_With_Valid_Password()
         {
             Assert.NotNull(_keySigner.GetPublicKey());
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Test_Key_Store_Created()
         {
             Assert.True(
@@ -106,6 +103,28 @@ namespace Catalyst.Common.UnitTests.Keystore
                     Path.Combine(FileSystem.GetCatalystHomeDir().ToString(), Constants.DefaultKeyStoreFile)
                 )
             );
+        }
+
+        [Fact]
+        public void KeySigner_Can_Sign_Message() { Get_Signed_Message(); }
+        
+        [Fact]
+        public void KeySigner_Can_Verify_Message()
+        {
+            AnySigned signed = Get_Signed_Message();
+            _keySigner.Verify(signed).IsSameOrEqualTo(true);
+        }
+
+        private AnySigned Get_Signed_Message()
+        {
+            EmbeddedChannel channel = new EmbeddedChannel(new SignatureDuplexHandler(_keySigner));
+            channel.WriteOutbound(new PingRequest().ToAnySigned(PeerIdHelper.GetPeerId(_keySigner.GetPublicKey())));
+            var anySigned = (AnySigned) channel.OutboundMessages.Dequeue();
+
+            Assert.NotNull(anySigned.Signature);
+            Assert.Equal(64, anySigned.Signature.Length);
+            Assert.NotEqual(ByteString.Empty, anySigned.Signature);
+            return anySigned;
         }
     }
 }
