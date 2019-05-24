@@ -34,7 +34,7 @@ using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.P2P
+namespace Catalyst.Node.Core.UnitTests.P2P
 {
     public sealed class P2PMessageFactoryTests
     {

@@ -35,7 +35,7 @@ using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
+namespace Catalyst.Node.Core.UnitTests.Modules.Mempool
 {
     public sealed class MempoolIntegrationTests : ConfigFileBasedTest
     {
@@ -82,18 +82,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             return newJsonPath;
         }
 
-        private async Task<string> PointXmlConfigToLocalTestFolder(string mempoolConfigFile)
-        {
-            var originalContent = await
-                File.ReadAllTextAsync(Path.Combine(Constants.ConfigSubFolder, Constants.ModulesSubFolder,
-                    mempoolConfigFile));
-            var newContent =
-                originalContent.Replace("[@replace-this@]", FileSystem.GetCatalystHomeDir().Name);
-            var jsonTestingFile = Path.Combine(FileSystem.GetCatalystHomeDir().FullName, mempoolConfigFile);
-            File.WriteAllText(jsonTestingFile, newContent);
-            return jsonTestingFile;
-        }
-
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Mempool_with_InMemoryRepo_can_save_and_retrieve()
@@ -101,15 +89,6 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
             var fi = new FileInfo(Path.Combine(Constants.ConfigSubFolder, Constants.ModulesSubFolder,
                 "mempool.inmemory.json"));
             await Mempool_can_save_and_retrieve(fi);
-        }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Mempool_with_XmlRepo_can_save_and_retrieve()
-        {
-            var mempoolConfigFile = "mempool.xml.json";
-            var resultFile = await PointXmlConfigToLocalTestFolder(mempoolConfigFile);
-            await Mempool_can_save_and_retrieve(new FileInfo(resultFile));
         }
     }
 }

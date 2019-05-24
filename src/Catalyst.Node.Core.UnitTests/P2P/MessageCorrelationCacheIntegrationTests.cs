@@ -40,7 +40,7 @@ using Xunit;
 using Xunit.Abstractions;
 using PendingRequest = Catalyst.Common.IO.Outbound.PendingRequest;
 
-namespace Catalyst.Node.Core.UnitTest.P2P
+namespace Catalyst.Node.Core.UnitTests.P2P
 {
     public sealed class MessageCorrelationCacheIntegrationTests : ConfigFileBasedTest
     {

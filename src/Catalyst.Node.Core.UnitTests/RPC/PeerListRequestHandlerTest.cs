@@ -22,7 +22,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -32,17 +34,10 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
 using SharpRepository.Repository;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Network;
-using System.Collections.Generic;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
+using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     /// <summary>
     /// Tests the peer list CLI and RPC calls

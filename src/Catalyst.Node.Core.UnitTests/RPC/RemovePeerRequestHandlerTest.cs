@@ -27,24 +27,19 @@ using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Google.Protobuf;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Network;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
-using Catalyst.Common.Util;
-using Google.Protobuf;
 using SharpRepository.InMemoryRepository;
+using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     /// <summary>
     /// Tests remove peer CLI and RPC calls

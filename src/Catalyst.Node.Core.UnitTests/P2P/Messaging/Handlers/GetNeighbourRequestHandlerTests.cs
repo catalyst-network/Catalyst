@@ -37,15 +37,15 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
-using NSubstitute;
-using Serilog;
-using Xunit;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
+using Serilog;
 using SharpRepository.Repository;
+using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
+namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
 {
     public sealed class GetNeighbourRequestHandlerTests : ConfigFileBasedTest
     {

@@ -26,7 +26,7 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Ledger;
 
-namespace Catalyst.Node.Core.UnitTest.TestUtils
+namespace Catalyst.Node.Core.UnitTests.TestUtils
 {
     internal static class AccountHelper
     {
