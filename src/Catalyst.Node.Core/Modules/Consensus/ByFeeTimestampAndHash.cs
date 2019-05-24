@@ -31,7 +31,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
     /// <inheritdoc />
     public class TransactionComparerByFeeTimestampAndHash : ITransactionComparer
     {
-        public int Compare(Transaction x, Transaction y)
+        public int Compare(TransactionBroadcast x, TransactionBroadcast y)
         {
             if (ReferenceEquals(x, y))
             {

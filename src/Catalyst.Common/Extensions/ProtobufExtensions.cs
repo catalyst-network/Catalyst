@@ -26,8 +26,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
@@ -40,11 +44,21 @@ namespace Catalyst.Common.Extensions
         private const string CatalystProtocol = "Catalyst.Protocol";
         private static readonly string RequestSuffix = "Request";
         private static readonly string ResponseSuffix = "Response";
+        private static readonly string BroadcastSuffix = "Broadcast";
 
-        private static readonly Dictionary<string, string> ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
-           .Where(t => typeof(IMessage).IsAssignableFrom(t))
-           .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
-           .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
+        private static readonly Dictionary<string, string> ProtoToClrNameMapper;
+        private static readonly List<string> ProtoGossipAllowedMessages;
+
+        static ProtobufExtensions()
+        {
+            ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
+               .Where(t => typeof(IMessage).IsAssignableFrom(t))
+               .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
+               .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
+            ProtoGossipAllowedMessages = ProtoToClrNameMapper.Keys
+               .Where(t => t.EndsWith(BroadcastSuffix))
+               .ToList();
+        }
 
         public static string ShortenedFullName(this MessageDescriptor descriptor)
         {
@@ -55,7 +69,7 @@ namespace Catalyst.Common.Extensions
         public static string ShortenedProtoFullName(this Type protoType)
         {
             Guard.Argument(protoType, nameof(protoType)).Require(t => typeof(IMessage).IsAssignableFrom(t));
-
+            
             //get the static field Descriptor from T
             var descriptor = (MessageDescriptor) protoType
                .GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)
@@ -84,6 +98,12 @@ namespace Catalyst.Common.Extensions
                 Value = protobufObject.ToByteString()
             };
             return anySigned;
+        }
+
+        public static bool CheckIfMessageIsGossip(this AnySigned message)
+        {
+            return message.TypeUrl.EndsWith(nameof(AnySigned)) &&
+                ProtoGossipAllowedMessages.Contains(AnySigned.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
         public static IMessage FromAnySigned(this AnySigned message)
