@@ -35,7 +35,7 @@ using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.Config
+namespace Catalyst.Node.Core.UnitTests.Config
 {
     public class GlobalConfigTests : ConfigFileBasedTest
     {

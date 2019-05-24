@@ -21,6 +21,9 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus;
@@ -31,21 +34,18 @@ using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using Peer = Catalyst.Common.P2P.Peer;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
 {
     public class PoaDeltaProducersProviderTests
     {
         private readonly List<Peer> _peers;
         private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
-        private readonly Delta _delta;
         private readonly IMultihashAlgorithm _hashAlgorithm;
+        private readonly byte[] _previousDeltaHash;
 
         public PoaDeltaProducersProviderTests(ITestOutputHelper output)
         {
@@ -66,11 +66,9 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var peerRepository = Substitute.For<IRepository<Peer>>();
             peerRepository.GetAll().Returns(_ => _peers);
 
-            var merkleRoot = new byte[32];
-            rand.NextBytes(merkleRoot);
+            _previousDeltaHash = new byte[32];
+            rand.NextBytes(_previousDeltaHash);
             
-            _delta = new Delta() {MerkleRoot = merkleRoot.ToByteString()};
-
             _hashAlgorithm = Common.Config.Constants.HashAlgorithm;
 
             _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, logger);
@@ -82,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
             var expectedProducers = _peers.Select(p =>
                 {
                     var bytesToHash = p.PeerIdentifier.PeerId.ToByteArray()
-                       .Concat(_delta.MerkleRoot.ToByteArray()).ToArray();
+                       .Concat(_previousDeltaHash).ToArray();
                     var ranking = _hashAlgorithm.ComputeHash(bytesToHash);
                     return new
                     {
@@ -90,11 +88,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
                         ranking
                     };
                 })
-               .OrderBy(h => h.ranking, ByteUtil.ByteListComparer.Default)
+               .OrderBy(h => h.ranking, ByteUtil.ByteListMinSizeComparer.Default)
                .Select(h => h.PeerIdentifier)
                .ToList();
 
-            var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_delta);
+            var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
             producers.Count.Should().Be(expectedProducers.Count);
             producers.Should().OnlyHaveUniqueItems();

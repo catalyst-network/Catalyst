@@ -37,7 +37,7 @@ namespace Catalyst.Common.UnitTests.Utils
             var list1 = Encoding.UTF8.GetBytes("hello");
             var list2 = Encoding.UTF8.GetBytes("hello");
 
-            ByteUtil.ByteListComparer.Default.Compare(list1, list2).Should().Be(0);
+            ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(0);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Catalyst.Common.UnitTests.Utils
             var list1 = Encoding.UTF8.GetBytes("hello");
             var list2 = Encoding.UTF8.GetBytes("hello").Concat(Encoding.UTF8.GetBytes("world")).ToList();
 
-            ByteUtil.ByteListComparer.Default.Compare(list1, list2).Should().Be(0);
+            ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(0);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace Catalyst.Common.UnitTests.Utils
             var list1 = Encoding.UTF8.GetBytes("hello");
             var list2 = Encoding.UTF8.GetBytes("world").Concat(Encoding.UTF8.GetBytes("hello")).ToList();
 
-            ByteUtil.ByteListComparer.Default.Compare(list1, list2).Should().NotBe(0);
+            ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().NotBe(0);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Catalyst.Common.UnitTests.Utils
             var list1 = new byte[] {0, 1, 2, 3, 4, 5, 7, 8};
             var list2 = new byte[] {0, 1, 2, 3, 4, 5, 6, 8, 9};
 
-            ByteUtil.ByteListComparer.Default.Compare(list1, list2).Should().Be(1);
+            ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(1);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Catalyst.Common.UnitTests.Utils
             var list1 = new byte[] {0, 1, 2, 3, 4, 4, 7, 8};
             var list2 = new byte[] {0, 1, 2, 3, 4, 5, 6, 8};
 
-            ByteUtil.ByteListComparer.Default.Compare(list1, list2).Should().Be(-1);
+            ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(-1);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Catalyst.Common.UnitTests.Utils
         {
             var list1 = new byte[] { };
 
-            ByteUtil.ByteListComparer.Default.Compare(list1, null).Should().Be(1);
+            ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, null).Should().Be(1);
         }
 
         [Fact]
@@ -89,13 +89,13 @@ namespace Catalyst.Common.UnitTests.Utils
         {
             var list2 = new byte[] {3};
 
-            ByteUtil.ByteListComparer.Default.Compare(null, list2).Should().Be(-1);
+            ByteUtil.ByteListMinSizeComparer.Default.Compare(null, list2).Should().Be(-1);
         }
 
         [Fact]
         public void ByteListComparer_should_return_0_when_both_args_are_null()
         {
-            ByteUtil.ByteListComparer.Default.Compare(null, null).Should().Be(0);
+            ByteUtil.ByteListMinSizeComparer.Default.Compare(null, null).Should().Be(0);
         }
     }
 }
