@@ -51,11 +51,9 @@ namespace Catalyst.Node.Core.Modules.Consensus
             HashAlgorithm = Common.Config.Constants.HashAlgorithm;
         }
 
-        public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(Delta previousDelta)
+        public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash)
         {
             var allPeers = PeerRepository.GetAll();
-
-            var previousDeltaHash = previousDelta.MerkleRoot.ToByteArray();
 
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
@@ -67,7 +65,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
                         ranking
                     };
                 })
-               .OrderBy(h => h.ranking, ByteUtil.ByteListComparer.Default)
+               .OrderBy(h => h.ranking, ByteUtil.ByteListMinSizeComparer.Default)
                .Select(h => h.PeerIdentifier)
                .ToList();
 

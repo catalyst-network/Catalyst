@@ -21,13 +21,27 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using System;
+using System.Collections.Generic;
+using Dawn;
 
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Common.Extensions
 {
-    public interface IMessageEvictionEvent
+    public static class EnumerableExtensions
     {
-        object EvictedContent { get; }
-        IPeerIdentifier PeerIdentifier { get; }
+        public static ulong Sum<T>(this IEnumerable<T> enumerable, Func<T, ulong> selector)
+        {
+            Guard.Argument(enumerable, nameof(enumerable)).NotNull();
+
+            var sum = 0ul;
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var item in enumerable)
+            {
+                sum += selector(item);
+            }
+
+            return sum;
+        }
     }
 }

@@ -21,19 +21,17 @@
 
 #endregion
 
-using System.Linq;
-using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.UnitTest.TestUtils;
+using Catalyst.Node.Core.UnitTests.TestUtils;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
+using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using Xunit;
-using SharpRepository.InMemoryRepository;
-using FluentAssertions;
 using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
 using Account = Catalyst.Node.Core.Modules.Ledger.Account;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Ledger
+namespace Catalyst.Node.Core.UnitTests.Modules.Ledger
 {
     public sealed class LedgerTests
     {

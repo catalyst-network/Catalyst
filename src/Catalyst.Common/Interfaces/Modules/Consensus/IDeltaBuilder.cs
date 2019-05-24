@@ -21,6 +21,8 @@
 
 #endregion
 
+using Catalyst.Protocol.Delta;
+
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
     /// <summary>
@@ -30,9 +32,11 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
     public interface IDeltaBuilder
     {
         /// <summary>
-        /// Builds the delta.
+        /// Builds a new candidate delta based on the content of its predecessor
         /// </summary>
-        /// <returns>Returns a delta entity object that contains the ledger update, delta and delta hash</returns>
-        IDeltaEntity BuildDelta();
+        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
+        /// <returns>Returns a candidate delta object that contains the hash for the update,
+        /// the hash for the previous delta and the producer's PeerId</returns>
+        CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash);
     }
 }

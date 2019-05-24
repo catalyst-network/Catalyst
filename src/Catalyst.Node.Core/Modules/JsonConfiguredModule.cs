@@ -32,7 +32,7 @@ namespace Catalyst.Node.Core.Modules
 {
     public class JsonConfiguredModule : Module
     {
-        private readonly ConfigurationModule _configurationModule;
+        protected readonly ConfigurationModule ConfigurationModule;
 
         public JsonConfiguredModule(string configFilePath)
         {
@@ -40,14 +40,14 @@ namespace Catalyst.Node.Core.Modules
             var config = new ConfigurationBuilder()
                .AddJsonFile(configFileFullPath)
                .Build();
-            _configurationModule = new ConfigurationModule(config);
+            ConfigurationModule = new ConfigurationModule(config);
         }
 
         /// <inheritdoc />
         protected override void Load(ContainerBuilder builder)
         {
             Guard.Argument(builder, nameof(builder)).NotNull();
-            builder.RegisterModule(_configurationModule);
+            builder.RegisterModule(ConfigurationModule);
         }
     }
 }

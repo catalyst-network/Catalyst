@@ -10,6 +10,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.Modules.Consensus.DeltaBuilder",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.IDeltaBuilder, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.Modules.Consensus.TransactionComparerByFeeTimestampAndHash",
             "services": [
                 {

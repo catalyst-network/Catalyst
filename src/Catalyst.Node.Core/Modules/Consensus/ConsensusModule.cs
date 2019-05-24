@@ -21,22 +21,22 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus;
+using Autofac;
+using Catalyst.Common.Cryptography;
+using Catalyst.Common.Interfaces.Cryptography;
+using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
-    /// <inheritdoc />
-    public sealed class DeltaEntity : IDeltaEntity
+    public class ConsensusModule : JsonConfiguredModule
     {
-        /// <inheritdoc />
-        public byte[] LocalLedgerState { get; set; }
+        public ConsensusModule(string configFilePath) : base(configFilePath) { }
 
-        /// <inheritdoc />
-        public byte[] DeltaHash { get; set; }
-
-        /// <inheritdoc />
-        public byte[] Delta { get; set; }
-
-        public static IDeltaEntity Default { get; } = new DeltaEntity {Delta = new byte[0], DeltaHash = new byte[0], LocalLedgerState = new byte[0]};
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<BLAKE2B_256>().As<IMultihashAlgorithm>();
+            builder.RegisterType<IsaacRandomFactory>().As<IDeterministicRandomFactory>();
+            base.Load(builder);
+        }
     }
 }
