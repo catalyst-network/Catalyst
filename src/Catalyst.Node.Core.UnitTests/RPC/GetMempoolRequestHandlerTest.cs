@@ -64,12 +64,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             new List<object[]>
             {
                 new object[] {CreateTestTransactions(), 2},
-                new object[] {new List<Transaction>(), 0},
+                new object[] {new List<TransactionBroadcast>(), 0},
             };
 
-        private static List<Transaction> CreateTestTransactions()
+        private static List<TransactionBroadcast> CreateTestTransactions()
         {
-            var txLst = new List<Transaction>
+            var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<Transaction> txLst, int expectedTxs)
+        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> txLst, int expectedTxs)
         {
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>

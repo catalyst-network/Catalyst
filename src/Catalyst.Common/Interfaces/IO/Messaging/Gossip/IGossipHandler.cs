@@ -21,16 +21,13 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Outbound
+namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
 {
-    public class PendingRequest
-    {
-        public AnySigned Content { get; set; }
-        public IPeerIdentifier Recipient { get; set; }
-        public DateTimeOffset SentAt { get; set; }
-    }
+    /// <summary>
+    /// The Gossip Handler interface
+    /// </summary>
+    /// <seealso cref="DotNetty.Transport.Channels.IChannelHandler" />
+    public interface IGossipHandler : IChannelHandler { }
 }
