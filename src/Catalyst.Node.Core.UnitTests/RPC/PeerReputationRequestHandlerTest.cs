@@ -78,8 +78,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
-        [InlineData("highscored-125\0\0\0\0\0\0", "192.168.0.125")]
-        [InlineData("highscored-126\0\0\0\0\0\0", "192.168.0.126")]
+        [InlineData("zFKxP4Ygq9YmdSLpzKXzW8TzSmYC6pS4a5VNwMnCj45BW", "192.168.0.125")]
+        [InlineData("zFKxP4Ygq9YmdSLpzKXzW8TzSmYC6pS4a5VNwMnCj214W", "192.168.0.126")]
         public void TestPeerReputationRequestResponse(string publicKey, string ipAddress)
         {
             var responseContent = GetPeerReputationTest(publicKey, ipAddress);
@@ -109,13 +109,13 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
-                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}")
+                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(publicKey)
             }).ToList();
 
             //peers we are interested in
             fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer
             {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i))
+                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(publicKey, "Tc", 1, IPAddress.Parse("192.168.0." + i))
             }));
 
             // Let peerRepository return the fake peer list

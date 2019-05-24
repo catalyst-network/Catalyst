@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
@@ -31,14 +32,13 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public sealed class AnySignedTypeClientHandlerBase : ObservableHandlerBase<AnySigned>
+    public sealed class AnySignedTypeClientHandlerBase : ObservableHandlerBase<IChanneledMessage<AnySigned>>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected override void ChannelRead0(IChannelHandlerContext context, AnySigned message)
+        protected override void ChannelRead0(IChannelHandlerContext context, IChanneledMessage<AnySigned> message)
         {
-            var contextAny = new ChanneledAnySigned(context, message);
-            MessageSubject.OnNext(contextAny);
+            MessageSubject.OnNext(message);
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)

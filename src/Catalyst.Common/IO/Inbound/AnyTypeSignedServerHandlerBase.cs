@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -31,15 +32,14 @@ using Serilog;
 namespace Catalyst.Common.IO.Inbound
 {
     public sealed class AnyTypeSignedServerHandlerBase
-        : ObservableHandlerBase<AnySigned>
+        : ObservableHandlerBase<IChanneledMessage<AnySigned>>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         public override bool IsSharable => true;
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, IChanneledMessage<AnySigned> msg)
         {
-            var contextAny = new ChanneledAnySigned(ctx, msg);
-            MessageSubject.OnNext(contextAny);
+            MessageSubject.OnNext(msg);
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext ctx) => ctx.Flush();

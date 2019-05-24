@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Contract;
 using Catalyst.Common.Interfaces.Modules.Dfs;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
@@ -69,6 +70,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
         {
             builder.RegisterInstance(Substitute.For<ILogger>()).As<ILogger>();
             builder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
+            builder.RegisterInstance(new TestKeySigner()).As<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new[] {"seed1.seedservers.bogus", "seed2.seedservers.bogus"});

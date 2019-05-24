@@ -75,7 +75,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var publicKey = deserialised.PublicKey.ToStringUtf8(); 
             var ip = deserialised.Ip.ToStringUtf8();
 
-            ReturnResponse(_peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
+            ReturnResponse(_peerRepository.GetAll().Where
+                (m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
                  && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
                .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First(), message);
 

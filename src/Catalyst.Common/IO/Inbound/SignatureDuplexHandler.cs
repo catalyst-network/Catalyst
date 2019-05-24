@@ -23,6 +23,7 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
@@ -52,7 +53,8 @@ namespace Catalyst.Common.IO.Inbound
 
             if (valid)
             {
-                context.FireChannelRead(anySigned);
+                IChanneledMessage<AnySigned> channeledMessage = new ChanneledAnySigned(context, anySigned);
+                context.FireChannelRead(channeledMessage);
             }
         }
 
