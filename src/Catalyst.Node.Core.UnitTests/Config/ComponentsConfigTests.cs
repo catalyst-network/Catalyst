@@ -81,7 +81,7 @@ namespace Catalyst.Node.Core.UnitTest.Config
         {
             var container = ConfigureAndBuildContainer(_componentsConfig);
             var resolved = container.Resolve<IPeerSettings>();
-            resolved.PublicKey.Should().Be(KeySigner.GetPublicKey());
+            resolved.Should().NotBeNull();
         }
 
         [Fact]

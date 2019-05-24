@@ -30,7 +30,6 @@ namespace Catalyst.Common.Interfaces.P2P
     {
         Config.Network Network { get; }
         string PayoutAddress { get; }
-        string PublicKey { get; }
         bool Announce { get; }
         IPEndPoint AnnounceServer { get; }
         int Port { get; }

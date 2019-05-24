@@ -48,7 +48,6 @@ namespace Catalyst.Node.Core.P2P
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
-            PublicKey = section.GetSection("PublicKey").Value;
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             Announce = bool.Parse(section.GetSection("Announce").Value);
@@ -59,7 +58,6 @@ namespace Catalyst.Node.Core.P2P
         }
 
         public Network Network { get; }
-        public string PublicKey { get; }
         public int Port { get; }
         public string PayoutAddress { get; }
         public bool Announce { get; }

@@ -51,16 +51,16 @@ namespace Catalyst.Node.Core.P2P
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Discovery = peerDiscovery;
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+            var anySignedChannelHandler = new AnySignedChannelHandler();
 
-            MessageStream = protoDatagramChannelHandler.MessageStream;
+            MessageStream = anySignedChannelHandler.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 new SignatureDuplexHandler(keySigner),
-                protoDatagramChannelHandler
+                anySignedChannelHandler
             };
             
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },

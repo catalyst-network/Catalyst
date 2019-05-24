@@ -22,42 +22,32 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Reflection;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Dawn;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public sealed class ProtoDatagramChannelHandler : ObservableHandlerBase<DatagramPacket>
+    public sealed class AnySignedChannelHandler : ObservableHandlerBase<AnySigned>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
+        protected override void ChannelRead0(IChannelHandlerContext context, AnySigned packet)
         {
             Guard.Argument(context).NotNull();
-            Guard.Argument(packet.Content.ReadableBytes).NotZero().NotNegative();
 
-            using (var memoryStream = new MemoryStream())
-            {
-                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                var message = AnySigned.Parser.ParseFrom(memoryStream);
-                var contextAny = new ChanneledAnySigned(context, message);
-                MessageSubject.OnNext(contextAny);
-                context.FireChannelRead(message);
-            }
+            var contextAny = new ChanneledAnySigned(context, packet);
+            MessageSubject.OnNext(contextAny);
+            context.FireChannelRead(packet);
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
-            Logger.Error(e, "Error in ProtoDatagramChannelHandler");
+            Logger.Error(e, "Error in AnySignedChannelHandler");
             context.CloseAsync().ContinueWith(_ => MessageSubject.OnCompleted());
         }
     }

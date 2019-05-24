@@ -85,7 +85,6 @@ namespace Catalyst.Node.Core.UnitTest.Config
             Assert.NotNull(peerSettings.Announce);
             peerSettings.AnnounceServer.Should().BeOfType<IPEndPoint>();
             peerSettings.BindAddress.Should().BeOfType<IPAddress>();
-            peerSettings.PublicKey.Should().NotBeNullOrWhiteSpace();
             peerSettings.SeedServers.Should().NotBeEmpty();
             peerSettings.Network.Name.Should().NotBeNullOrWhiteSpace();
         }

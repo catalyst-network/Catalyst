@@ -60,14 +60,14 @@ namespace Catalyst.Node.Core.P2P
         {
             Logger.Debug("P2P client starting");
 
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
-            MessageStream = protoDatagramChannelHandler.MessageStream;
+            var anySignedChannelHandler = new AnySignedChannelHandler();
+            MessageStream = anySignedChannelHandler.MessageStream;
             messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 new SignatureDuplexHandler(keySigner),
-                protoDatagramChannelHandler
+                anySignedChannelHandler
             };
 
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
