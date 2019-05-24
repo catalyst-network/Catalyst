@@ -77,6 +77,7 @@ namespace Catalyst.Common.Modules.KeySigner
             IPublicKey key = _cryptoContext.GetPublicKey(anySigned.PeerId.PublicKey.ToByteArray().ToStringFromRLPDecoded());
             byte[] payload = anySigned.Value.ToByteArray();
             var signature = new Signature(anySigned.Signature.ToByteArray());
+
             return _cryptoContext.Verify(key, payload, signature);
         }
 

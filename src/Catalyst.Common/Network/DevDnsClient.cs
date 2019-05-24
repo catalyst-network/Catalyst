@@ -70,7 +70,13 @@ namespace Catalyst.Common.Network
         public IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> seedServers)
         {
             var peers = new List<IPeerIdentifier>();
-            var peerChunks = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c7a464b78503459677139596d64534c707a4b587a5738547a536d5943367053346135564e774d6e436a34354257".HexToUTF8String().Split("|");
+            var peerHex =
+                "0x41437c30317c39322e3230372e3137382e31393" +
+                "87c34323036397c7a464b78503459677139596d64" +
+                "534c707a4b587a5738547a536d594336705334613" +
+                "5564e774d6e436a34354257";
+
+            var peerChunks = peerHex.HexToUTF8String().Split("|");
 
             peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
             peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
