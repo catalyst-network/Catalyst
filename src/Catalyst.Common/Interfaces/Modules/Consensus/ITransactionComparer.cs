@@ -26,5 +26,5 @@ using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
-    public interface ITransactionComparer : IComparer<Transaction> { }
+    public interface ITransactionComparer : IComparer<TransactionBroadcast> { }
 }

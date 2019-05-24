@@ -86,7 +86,6 @@
         <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
         <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
         <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />
-        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\MessageOptions.cs" Link="Protocol\MessageOptions.cs" />
         <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Transaction.cs" Link="Protocol\Transaction.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -119,7 +118,6 @@
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Delta.proto" Link="Protocol\Protobuffs\Delta.proto" />
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\IPPN.proto" Link="Protocol\Protobuffs\IPPN.proto" />
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protocol\Protobuffs\Rpc.proto" />
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\MessageOptions.proto" Link="Protocol\Protobuffs\MessageOptions.proto" />
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protocol\Protobuffs\Transaction.proto" />
     </ItemGroup>
     <ItemGroup>

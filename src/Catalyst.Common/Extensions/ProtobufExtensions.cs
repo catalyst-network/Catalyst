@@ -44,6 +44,7 @@ namespace Catalyst.Common.Extensions
         private const string CatalystProtocol = "Catalyst.Protocol";
         private static readonly string RequestSuffix = "Request";
         private static readonly string ResponseSuffix = "Response";
+        private static readonly string GossipSuffix = "Broadcast";
 
         private static readonly Dictionary<string, string> ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
            .Where(t => typeof(IMessage).IsAssignableFrom(t))
@@ -53,8 +54,8 @@ namespace Catalyst.Common.Extensions
         private static readonly List<string> ProtoGossipAllowedMessages = typeof(AnySigned).Assembly.ExportedTypes
            .Where(t => typeof(IMessage).IsAssignableFrom(t))
            .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
-           .Where(t => t.CustomOptions.TryGetBool(Constants.GossipProtoExtensionOption, out var canGossip)
-             && canGossip).Select(t => t.ShortenedFullName()).ToList();
+           .Where(t => t.ShortenedFullName().EndsWith(GossipSuffix))
+           .Select(t => t.ShortenedFullName()).ToList();
 
         public static string ShortenedFullName(this MessageDescriptor descriptor)
         {

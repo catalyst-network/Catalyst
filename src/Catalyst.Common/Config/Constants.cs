@@ -130,8 +130,5 @@ namespace Catalyst.Common.Config
 
         /// <summary>The maximum peers the node can gossip to for a single message, per gossip cycle</summary>
         public static int MaxGossipPeersPerRound => 3;
-
-        /// <summary>The op-code for the gossip option on the proto message.</summary>
-        public static int GossipProtoExtensionOption => 50001;
     }
 }
