@@ -51,11 +51,10 @@ namespace Catalyst.Common.Extensions
            .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
            .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
 
-        private static readonly List<string> ProtoGossipAllowedMessages = typeof(AnySigned).Assembly.ExportedTypes
-           .Where(t => typeof(IMessage).IsAssignableFrom(t))
-           .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
-           .Where(t => t.ShortenedFullName().EndsWith(GossipSuffix))
-           .Select(t => t.ShortenedFullName()).ToList();
+        private static readonly List<string> ProtoGossipAllowedMessages = 
+            ProtoToClrNameMapper.Keys
+               .Where(t => t.EndsWith(GossipSuffix))
+               .ToList();
 
         public static string ShortenedFullName(this MessageDescriptor descriptor)
         {
