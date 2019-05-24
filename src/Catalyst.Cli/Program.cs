@@ -98,8 +98,10 @@ namespace Catalyst.Cli
                 containerBuilder.RegisterModule(configurationModule);
 
                 var loggerConfiguration = new LoggerConfiguration();
-                var minimumLevel = Enum.Parse<LogEventLevel>(configurationModule.Configuration["Serilog:MinimumLevel"]);
-                LogLevelSwitch = new LoggingLevelSwitch(minimumLevel);
+
+                //var minimumLevel = Enum.Parse<LogEventLevel>(configurationModule.Configuration["Serilog:MinimumLevel"]);
+
+                //LogLevelSwitch = new LoggingLevelSwitch(minimumLevel);
                 loggerConfiguration.ReadFrom.Configuration(configurationModule.Configuration);
                 loggerConfiguration.MinimumLevel.ControlledBy(LogLevelSwitch);
 
@@ -148,6 +150,6 @@ namespace Catalyst.Cli
             _cancellationSource.Cancel();
         }
 
-        public static LoggingLevelSwitch LogLevelSwitch { get; set; }
+        public static LoggingLevelSwitch LogLevelSwitch => AppLoggingLevelSwitch.LoggingLevelSwitch;
     }
 }
