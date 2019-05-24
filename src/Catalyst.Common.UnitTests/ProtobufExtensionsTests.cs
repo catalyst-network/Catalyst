@@ -37,7 +37,7 @@ namespace Catalyst.Common.UnitTests
         [Fact]
         public static void ShortenedFullName_should_remove_namespace_start()
         {
-            TransactionBroadcast.Descriptor.FullName.Should().Be("Catalyst.Protocol.TransactionBroadcast.");
+            TransactionBroadcast.Descriptor.FullName.Should().Be("Catalyst.Protocol.Transaction.TransactionBroadcast");
             TransactionBroadcast.Descriptor.ShortenedFullName().Should().Be("Transaction.TransactionBroadcast");
         }
 
