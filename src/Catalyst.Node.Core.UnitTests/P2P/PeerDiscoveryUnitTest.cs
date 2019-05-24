@@ -74,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
-            
+
             _dnsDomains = new List<string>
             {
                 "seed1.catalystnetwork.io",
@@ -83,8 +83,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 "seed4.catalystnetwork.io",
                 "seed5.catalystnetwork.io"
             };
-            
-            _seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839";
+            _seedPid =
+                "0x41437c30317c39322e3230372e3137382e31393" +
+                "87c34323036397c7a464b78503459677139596d64" +
+                "534c707a4b587a5738547a536d594336705334613" +
+                "5564e774d6e436a34354257";
         }
 
         [Fact]
@@ -116,7 +119,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             {
                 MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
             });
-            
+
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
             var seedServers = peerDiscovery.ParseDnsServersFromConfig(_config);
@@ -148,16 +151,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             {
                 MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
             });
-            
+
             var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
 
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-            var channeledAny = new ChanneledAnySigned(fakeContext, 
+            var channeledAny = new ChanneledAnySigned(fakeContext,
                 pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
-            
-            var observableStream = new[] {channeledAny}.ToObservable();
+
+            var observableStream = new[] { channeledAny }.ToObservable();
 
             peerDiscovery.StartObserving(observableStream);
 

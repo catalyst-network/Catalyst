@@ -30,6 +30,7 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.P2P;
@@ -94,6 +95,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
                .Build();
             
             ConfigureContainerBuilder(config, true, true);
+            ContainerBuilder.RegisterInstance(new TestKeySigner()).As<IKeySigner>();
 
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))

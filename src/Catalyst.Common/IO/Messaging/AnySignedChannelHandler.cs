@@ -42,7 +42,7 @@ namespace Catalyst.Common.IO.Messaging
             Guard.Argument(context).NotNull();
 
             MessageSubject.OnNext(packet);
-            context.FireChannelRead(packet);
+            context.FireChannelRead(new ChanneledAnySigned(context, packet.Payload));
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
