@@ -43,6 +43,11 @@ namespace Catalyst.Common.Modules.KeySigner
         private readonly IKeySignerInitializer _keySignerInitializer;
         private IPublicKey _publicKey;
 
+        /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
+        /// <param name="userOutput">The user output.</param>
+        /// <param name="keyStore">The key store.</param>
+        /// <param name="cryptoContext">The crypto context.</param>
+        /// <param name="initializer">The initializer.</param>
         public KeySigner(IUserOutput userOutput, IKeyStore keyStore, ICryptoContext cryptoContext, IKeySignerInitializer initializer)
         {
             _userOutput = userOutput;
@@ -51,9 +56,13 @@ namespace Catalyst.Common.Modules.KeySigner
             _keySignerInitializer = initializer;
         }
 
+        /// <inheritdoc/>
         IKeyStore IKeySigner.KeyStore => _keyStore;
+
+        /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
+        /// <inheritdoc/>
         public ISignature Sign(byte[] data)
         {
             {
@@ -62,6 +71,7 @@ namespace Catalyst.Common.Modules.KeySigner
             }
         }
 
+        /// <inheritdoc/>
         public bool Verify(AnySigned anySigned)
         {
             IPublicKey key = _cryptoContext.GetPublicKey(anySigned.PeerId.PublicKey.ToByteArray().ToStringFromRLPDecoded());
@@ -70,16 +80,19 @@ namespace Catalyst.Common.Modules.KeySigner
             return _cryptoContext.Verify(key, payload, signature);
         }
 
+        /// <inheritdoc/>
         public void ExportKey()
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public void ReadPassword()
         {
             _keySignerInitializer.ReadPassword(this);
         }
 
+        /// <inheritdoc/>
         public void GenerateNewKey()
         {
             var newPrivateKey = _cryptoContext.GeneratePrivateKey();
@@ -91,6 +104,7 @@ namespace Catalyst.Common.Modules.KeySigner
               + publicKeyStr);
         }
 
+        /// <inheritdoc/>
         public string GetPublicKey()
         {
             if (_publicKey == null)

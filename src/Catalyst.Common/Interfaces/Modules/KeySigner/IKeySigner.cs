@@ -42,12 +42,21 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
 
         ISignature Sign(byte[] data);
 
+        /// <summary>Verifies a message signature.</summary>
+        /// <param name="anySigned">The AnySigned message.</param>
+        /// <returns></returns>
         bool Verify(AnySigned anySigned);
 
+        /// <summary>Exports the key.</summary>
         void ExportKey();
+
+        /// <summary>Prompts user for the keystore password.</summary>
         void ReadPassword();
 
+        /// <summary>Generates a new private key and stores it in keystore.</summary>
         void GenerateNewKey();
+
+        /// <summary>Gets the public key.</summary>
         string GetPublicKey();
     }
 }
