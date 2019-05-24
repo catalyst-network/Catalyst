@@ -26,25 +26,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Catalyst.Common.Cryptography;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Delta;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf;
 using Multiformats.Hash.Algorithms;
+using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Xunit;
-using Nethereum.Hex.HexConvertors.Extensions;
 
-namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
     public sealed class DeltaBuilderTests
     {

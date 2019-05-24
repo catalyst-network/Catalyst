@@ -21,28 +21,29 @@
 
 #endregion
 
-using System.Threading;
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.Modules.Consensus.Delta;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Node.Core.Modules.Consensus.Delta
+namespace Catalyst.Node.Core.UnitTests.TestUtils
 {
-    public class ScoredCandidateDelta : IScoredCandidateDelta
+    public class ScoredCandidateDeltaHelper
     {
-        private int _score;
-
-        public ScoredCandidateDelta(CandidateDelta candidate, int score)
+        public static ScoredCandidateDelta GetScoredCandidateDelta(CandidateDelta candidate = default,
+            int score = 0)
         {
-            Candidate = candidate;
-            _score = score;
+            var candidateDelta = candidate ?? CandidateDeltaHelper.GetCandidateDelta();
+            return new ScoredCandidateDelta(candidateDelta, score);
         }
 
-        public CandidateDelta Candidate { get; }
-        public int Score => Volatile.Read(ref _score);
-
-        public int IncreasePopularity(int voteCount)
+        public static ScoredCandidateDelta GetScoredCandidateDelta(byte[] previousDeltaHash = null,
+            byte[] hash = null,
+            PeerId producerId = null,
+            int score = 0)
         {
-            return Interlocked.Add(ref _score, voteCount);
+            var candidateDelta = CandidateDeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId);
+            return new ScoredCandidateDelta(candidateDelta, score);
         }
     }
 }

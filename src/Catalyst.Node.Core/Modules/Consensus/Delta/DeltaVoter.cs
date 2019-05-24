@@ -22,15 +22,99 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Protocol.Delta;
+using Dawn;
+using Google.Protobuf;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
+using Nethereum.Hex.HexConvertors.Extensions;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
     public class DeltaVoter : IDeltaVoter
     {
-        public void OnCompleted() { throw new NotImplementedException(); }
-        public void OnError(Exception error) { throw new NotImplementedException(); }
-        public void OnNext(CandidateDelta value) { throw new NotImplementedException(); }
+        public static string GetCacheKey(string rawKey) => nameof(DeltaVoter) + "-" + rawKey;
+
+        private readonly IMemoryCache _scoredDeltasByHash;
+        private readonly IDeltaProducersProvider _deltaProducersProvider;
+        private readonly ILogger _logger;
+        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
+
+        public DeltaVoter(IMemoryCache scoredDeltasByPreviousHash,
+            IDeltaProducersProvider deltaProducersProvider,
+            ILogger logger)
+        {
+            _scoredDeltasByHash = scoredDeltasByPreviousHash;
+            _deltaProducersProvider = deltaProducersProvider;
+            _cacheEntryOptions = new MemoryCacheEntryOptions()
+               .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
+            _logger = logger;
+        }
+
+        public void OnCompleted()
+        {
+            _logger.Information("End of {0} stream.", nameof(CandidateDelta));
+        }
+
+        public void OnError(Exception error)
+        {
+            _logger.Error(error, "Error occured in {0} stream.", nameof(CandidateDelta));
+        }
+
+        public void OnNext(CandidateDelta candidate)
+        {
+            try
+            {
+                Guard.Argument(candidate, nameof(candidate)).NotNull()
+                   .Require(c => c.ProducerId != null, c => $"{nameof(candidate.ProducerId)} cannot be null")
+                   .Require(c => c.PreviousDeltaDfsHash != null,
+                        c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null")
+                   .Require(c => c.Hash != null, c => $"{nameof(candidate.Hash)} cannot be null");
+
+                var rankingFactor = GetProducerRankFactor(candidate);
+
+                if (rankingFactor == -1)
+                {
+                    _logger.Warning("Producer {0} should not be sending candidate deltas",
+                        candidate.ProducerId.ToByteArray().ToHex());
+                    return;
+                }
+
+                var cacheKey = GetCacheKey(candidate.Hash.ToByteArray().ToHex());
+                if (_scoredDeltasByHash.TryGetValue<IScoredCandidateDelta>(cacheKey, out var retrievedScoredDelta))
+                {
+                    retrievedScoredDelta.IncreasePopularity(1);
+                    return;
+                }
+
+                var scoredDelta = new ScoredCandidateDelta(candidate, 100 * rankingFactor + 1);
+
+                _scoredDeltasByHash.Set(cacheKey, scoredDelta, _cacheEntryOptions);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Failed to Vote on the candidate delta {0}", JsonConvert.SerializeObject(candidate));
+            }
+        }
+
+        private int GetProducerRankFactor(CandidateDelta candidate)
+        {
+            var preferredProducers = _deltaProducersProvider
+               .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray());
+            var ranking = preferredProducers.ToList()
+               .FindIndex(p => p.PeerId.Equals(candidate.ProducerId));
+            if (ranking == -1)
+            {
+                throw new KeyNotFoundException(candidate?.ProducerId?.ToByteArray()?.ToHex() ?? "null");
+            }
+
+            return ranking == -1 ? ranking : preferredProducers.Count - ranking;
+        }
     }
 }

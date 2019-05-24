@@ -27,7 +27,7 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
     public interface IScoredCandidateDelta
     {
         CandidateDelta Candidate { get; }
-        uint Score { get; }
-        uint IncreasePopularity(uint voteCount);
+        int Score { get; }
+        int IncreasePopularity(int voteCount);
     }
 }

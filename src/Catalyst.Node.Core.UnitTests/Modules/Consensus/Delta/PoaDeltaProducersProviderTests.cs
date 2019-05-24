@@ -27,23 +27,20 @@ using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
-using Catalyst.Protocol.Delta;
 using FluentAssertions;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
-using NSubstitute.Core.Arguments;
 using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 using Peer = Catalyst.Common.P2P.Peer;
 
-namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
     public class PoaDeltaProducersProviderTests
     {

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
@@ -31,7 +32,6 @@ using Catalyst.Common.Util;
 using Dawn;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -43,7 +43,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
     public class PoaDeltaProducersProvider : IDeltaProducersProvider
     {
-        private const string CacheEntriesPrefix = nameof(PoaDeltaProducersProvider);
+        private static string GetCacheKey(string rawKey) => nameof(PoaDeltaProducersProvider) + "-" + rawKey;
 
         private readonly ILogger _logger;
 
@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
 
             var previousDeltaHashAsHex = previousDeltaHash.ToHex();
 
-            if (_producersByPreviousDelta.TryGetValue(CacheEntriesPrefix + previousDeltaHashAsHex,
+            if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHashAsHex),
                 out IList<IPeerIdentifier> cachedPeerIdsInPriorityOrder))
             {
                 _logger.Information("Retrieved favorite delta producers for successor of {0} from cache.", previousDeltaHashAsHex);
@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                .ToList();
 
             _logger.Information("Adding favorite delta producers for the successor of {0} to cache.", previousDeltaHashAsHex);
-            _producersByPreviousDelta.Set(CacheEntriesPrefix + previousDeltaHashAsHex, peerIdsInPriorityOrder, _cacheEntryOptions);
+            _producersByPreviousDelta.Set(GetCacheKey(previousDeltaHashAsHex), peerIdsInPriorityOrder, _cacheEntryOptions);
 
             return peerIdsInPriorityOrder;
         }

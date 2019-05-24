@@ -33,7 +33,7 @@ using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
     public class DeltaTransactionRetrieverTests
     {
