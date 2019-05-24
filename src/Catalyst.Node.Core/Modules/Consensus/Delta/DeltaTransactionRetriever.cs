@@ -23,13 +23,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Modules.Consensus;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
     /// <inheritdoc />
     public class DeltaTransactionRetriever : IDeltaTransactionRetriever

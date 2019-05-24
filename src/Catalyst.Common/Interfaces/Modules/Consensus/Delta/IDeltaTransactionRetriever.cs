@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
     /// <summary>
     /// The service in charge of finding the transactions that should be included in a ledger update (aka Delta)

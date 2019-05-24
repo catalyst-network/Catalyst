@@ -21,22 +21,16 @@
 
 #endregion
 
+using System;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
-    /// <summary>
-    /// The service in charge of building the delta state update used to update the ledger update 
-    /// for a given cycle.
-    /// </summary>
-    public interface IDeltaBuilder
+    public class DeltaVoter : IDeltaVoter
     {
-        /// <summary>
-        /// Builds a new candidate delta based on the content of its predecessor
-        /// </summary>
-        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        /// <returns>Returns a candidate delta object that contains the hash for the update,
-        /// the hash for the previous delta and the producer's PeerId</returns>
-        CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash);
+        public void OnCompleted() { throw new NotImplementedException(); }
+        public void OnError(Exception error) { throw new NotImplementedException(); }
+        public void OnNext(CandidateDelta value) { throw new NotImplementedException(); }
     }
 }
