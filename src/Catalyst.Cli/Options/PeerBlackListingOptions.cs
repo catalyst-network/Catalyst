@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Options
 
         /// <inheritdoc />
         [Option('b', "blacklistflag", HelpText = "Blacklist flag for peer.")]
-        public string BlackListFlag { get; set; }
+        public bool BlackListFlag { get; set; }
 
         /// <inheritdoc />
         [Option('l', "ip", HelpText = "IP address of the peer to blacklist.")]

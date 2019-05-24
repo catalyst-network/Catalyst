@@ -24,7 +24,6 @@
 using System;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
@@ -38,7 +37,6 @@ using Xunit;
 using Nethereum.RLP;
 using Catalyst.Common.Util;
 
-
 namespace Catalyst.Cli.UnitTests
 {
     /// <summary>
@@ -51,15 +49,7 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private PeerBlackListingResponseHandler _handler;
-        private static readonly IRpcCorrelationCache _subbedCorrelationCache;
-
-        /// <summary>
-        /// Initializes the <see cref="GetPeerBlackListingResponseHandlerTest"/> class.
-        /// </summary>
-        static GetPeerBlackListingResponseHandlerTest()
-        {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
-        }
+        private readonly IRpcCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetPeerBlackListingResponseHandlerTest"/> class. </summary>
@@ -68,6 +58,7 @@ namespace Catalyst.Cli.UnitTests
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
+            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
         }
 
         /// <summary>
@@ -123,6 +114,7 @@ namespace Catalyst.Cli.UnitTests
         public void Dispose()
         {
             _handler?.Dispose();
+            _subbedCorrelationCache.Dispose();
         }
     }
 }
