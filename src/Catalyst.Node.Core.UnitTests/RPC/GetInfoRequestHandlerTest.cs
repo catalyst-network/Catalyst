@@ -80,8 +80,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
         [Fact]
         public void GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var rpcMessagefactory = new RpcMessageFactory(_subbedCorrelationCache);
-            var request = rpcMessagefactory.GetMessage(new MessageDto(
+            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
+            var request = rpcMessageFactory.GetMessage(new MessageDto(
                 new GetInfoRequest
                 {
                     Query = true
@@ -92,12 +92,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var subbedCache = Substitute.For<IRpcCorrelationCache>();
-            var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, subbedCache, rpcMessagefactory, _logger);
+            var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, rpcMessageFactory, _logger);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
 
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
