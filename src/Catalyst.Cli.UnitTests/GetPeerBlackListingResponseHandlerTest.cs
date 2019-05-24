@@ -22,18 +22,14 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using NSubstitute;
@@ -41,6 +37,7 @@ using Serilog;
 using Xunit;
 using Nethereum.RLP;
 using Catalyst.Common.Util;
+
 
 namespace Catalyst.Cli.UnitTests
 {
@@ -50,7 +47,6 @@ namespace Catalyst.Cli.UnitTests
     public sealed class GetPeerBlackListingResponseHandlerTest : IDisposable
     {
         private readonly IUserOutput _output;
-        public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
@@ -61,14 +57,8 @@ namespace Catalyst.Cli.UnitTests
         /// Initializes the <see cref="GetPeerBlackListingResponseHandlerTest"/> class.
         /// </summary>
         static GetPeerBlackListingResponseHandlerTest()
-        {             
+        {
             _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
-            QueryContents = new List<object[]>
-            {
-                new object[] {78},
-                new object[] {1572},
-                new object[] {22}
-            };
         }
 
         /// <summary>
@@ -80,18 +70,6 @@ namespace Catalyst.Cli.UnitTests
             _output = Substitute.For<IUserOutput>();
         }
 
-        /// <summary>
-        /// Creates the stream with message.
-        /// </summary>
-        /// <param name="response">The response.</param>
-        /// <returns></returns>
-        private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
-        {
-            var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
-        }
-        
         /// <summary>
         /// RPCs the client can handle get peer blacklisting response.
         /// </summary>
@@ -114,25 +92,8 @@ namespace Catalyst.Cli.UnitTests
         /// <param name="ip">The IP Address of the peer whose blacklist flag to change</param
         [Fact]
         public void RpcClient_Can_Handle_GetBlackListingResponseNonExistentPeers()
-        {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
-                    new SetPeerBlackListResponse
-                    {
-                        Blacklist = false,
-                        Ip = string.Empty.ToUtf8ByteString(),
-                        PublicKey = string.Empty.ToUtf8ByteString()
-                    },
-                    MessageTypes.Ask,
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")),
-                Guid.NewGuid());
-
-            var messageStream = CreateStreamWithMessage(response);
-
-            _handler = new PeerBlackListingResponseHandler(_output, correlationCache, _logger);
-            _handler.StartObserving(messageStream);
+        { 
+            TestGetBlackListResponse(false, string.Empty, string.Empty);
 
             _output.Received(1).WriteLine("Peer not found");
         }
@@ -153,7 +114,7 @@ namespace Catalyst.Cli.UnitTests
                     PeerIdentifierHelper.GetPeerIdentifier("sender")),
                 Guid.NewGuid());
 
-            var messageStream = CreateStreamWithMessage(response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
             _handler = new PeerBlackListingResponseHandler(_output, correlationCache, _logger);
             _handler.StartObserving(messageStream);

@@ -88,6 +88,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
             responseContent.Blacklist.Should().BeTrue();
+            responseContent.Ip.ToStringUtf8().Should().Be(ipAddress);
+            responseContent.PublicKey.ToStringUtf8().Should().Be(publicKey);
         }
 
         /// <summary>

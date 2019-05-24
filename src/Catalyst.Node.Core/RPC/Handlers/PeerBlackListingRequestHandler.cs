@@ -68,8 +68,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="message">The message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Guard.Argument(message).NotNull("Received message cannot be null");
-
             _message = message;
 
             var deserialised = message.Payload.FromAnySigned<SetPeerBlackListRequest>();
@@ -83,7 +81,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             if (peerItem != null)
             {
                 peerItem.BlackListed = blackList;
-                ReturnResponse(blackList, deserialised.Ip, deserialised.PublicKey, message);
+                ReturnResponse(blackList, deserialised.PublicKey, deserialised.Ip, message);
             }
             else
             {

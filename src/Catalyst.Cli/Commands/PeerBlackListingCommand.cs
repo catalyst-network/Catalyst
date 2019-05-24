@@ -52,7 +52,7 @@ namespace Catalyst.Cli.Commands
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(e.Message);
+                    _logger.Error(e.Message, "Failed to get connected node " + opts.Node + " while trying to set the peer blacklist flag");
                     return false;
                 }
 
@@ -63,8 +63,6 @@ namespace Catalyst.Cli.Commands
                 var peerIp = opts.IpAddress;
 
                 var blackListFlag = Convert.ToBoolean(opts.BlackListFlag);
-
-                Guard.Argument(node).NotNull();
 
                 var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
                     new SetPeerBlackListRequest

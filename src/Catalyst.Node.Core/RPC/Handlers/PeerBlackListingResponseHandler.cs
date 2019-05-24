@@ -75,7 +75,7 @@ namespace Catalyst.Cli.Handlers
 
                 var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
                     ? "Peer not found"
-                    : $"Peer Blacklisting Successful : {Convert.ToString(deserialised.Blacklist)}, {deserialised.PublicKey.ToStringUtf8()}, {deserialised.Ip.ToStringUtf8()}";
+                    : $"Peer Blacklisting Successful : {deserialised.Blacklist}, {deserialised.PublicKey.ToStringUtf8()}, {deserialised.Ip.ToStringUtf8()}";
                    
                 _output.WriteLine(msg);
             }
