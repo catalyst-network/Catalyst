@@ -43,7 +43,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.P2P.Messaging.Handlers
+namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
 {
     public sealed class GetNeighbourResponseHandlerTests : ConfigFileBasedTest
     {

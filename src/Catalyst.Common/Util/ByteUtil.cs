@@ -155,12 +155,11 @@ namespace Catalyst.Common.Util
             return Encoding.UTF8.GetString(array);
         }
 
-        /// <remarks>
-        /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
-        /// </remarks>
-        public class ByteListComparer : IComparer<IList<byte>>
+        public class ByteListComparerBase : IComparer<IList<byte>>
         {
-            public int Compare(IList<byte> x, IList<byte> y)
+            protected ByteListComparerBase() { }
+
+            public virtual int Compare(IList<byte> x, IList<byte> y)
             {
                 if (ReferenceEquals(x, y))
                 {
@@ -187,6 +186,23 @@ namespace Catalyst.Common.Util
                 }
 
                 return 0;
+            }
+        }
+
+        /// <remarks>
+        /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
+        /// </remarks>
+        public sealed class ByteListMinSizeComparer : ByteListComparerBase
+        {
+            public static IComparer<IList<byte>> Default { get; } = new ByteListMinSizeComparer();
+        }
+
+        public sealed class ByteListComparer : ByteListComparerBase
+        {
+            public override int Compare(IList<byte> x, IList<byte> y)
+            {
+                var baseCompare = base.Compare(x, y);
+                return baseCompare != 0 ? baseCompare : Math.Sign(x.Count.CompareTo(y.Count));
             }
 
             public static IComparer<IList<byte>> Default { get; } = new ByteListComparer();
