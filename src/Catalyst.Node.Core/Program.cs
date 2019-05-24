@@ -37,6 +37,7 @@ using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
@@ -124,10 +125,10 @@ namespace Catalyst.Node.Core
                     //Add .Net Core serviceCollection to the Autofac container.
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                    var node = container.Resolve<ICatalystNode>();
                     var keySigner = container.Resolve<IKeySigner>();
-
                     keySigner.ReadPassword();
+
+                    var node = container.Resolve<ICatalystNode>();
                     node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 

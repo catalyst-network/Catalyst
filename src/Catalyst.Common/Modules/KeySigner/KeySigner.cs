@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
+using Nethereum.RLP;
 
 namespace Catalyst.Common.Modules.KeySigner
 {
@@ -40,6 +41,7 @@ namespace Catalyst.Common.Modules.KeySigner
         private readonly IUserOutput _userOutput;
         private readonly ICryptoContext _cryptoContext;
         private readonly IKeySignerInitializer _keySignerInitializer;
+        private IPublicKey _publicKey;
 
         public KeySigner(IUserOutput userOutput, IKeyStore keyStore, ICryptoContext cryptoContext, IKeySignerInitializer initializer)
         {
@@ -62,7 +64,7 @@ namespace Catalyst.Common.Modules.KeySigner
 
         public bool Verify(AnySigned anySigned)
         {
-            IPublicKey key = new PublicKey(anySigned.PeerId.PublicKey.ToByteArray());
+            IPublicKey key = _cryptoContext.GetPublicKey(anySigned.PeerId.PublicKey.ToByteArray().ToStringFromRLPDecoded());
             byte[] payload = anySigned.Value.ToByteArray();
             var signature = new Signature(anySigned.Signature.ToByteArray());
             return _cryptoContext.Verify(key, payload, signature);
@@ -91,9 +93,12 @@ namespace Catalyst.Common.Modules.KeySigner
 
         public string GetPublicKey()
         {
-            return _cryptoContext.AddressFromKey(
-                _keyStore.GetKey(Constants.DefaultKeyStoreFile, _keySignerInitializer.Password)
-                   .GetPublicKey());
+            if (_publicKey == null)
+            {
+                _publicKey = _keyStore.GetKey(Constants.DefaultKeyStoreFile, _keySignerInitializer.Password).GetPublicKey();
+            }
+
+            return _cryptoContext.AddressFromKey(_publicKey);
         }
     }
 }

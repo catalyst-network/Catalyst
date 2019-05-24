@@ -21,11 +21,6 @@
 
 #endregion
 
-using System;
-using System.IO;
-using System.Security;
-using System.Security.Cryptography;
-using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -34,12 +29,18 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.KeyStore;
 using Catalyst.Common.Modules.KeySigner;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using FluentAssertions;
 using FluentAssertions.Common;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
+using System;
+using System.IO;
+using System.Security;
+using Catalyst.Common.Config;
+using Catalyst.Common.IO.Inbound;
+using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Embedded;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -50,15 +51,15 @@ namespace Catalyst.Common.UnitTests.Keystore
         private const string Password = "Password";
         private readonly IPasswordReader _passwordReader;
         private readonly IKeySigner _keySigner;
-        private readonly ILogger _logger;
+        private readonly IKeySignerInitializer _keySignerInitializer;
 
         public KeySignerTests(ITestOutputHelper output) : base(output)
         {
+            var logger = Substitute.For<ILogger>();
             _passwordReader = Substitute.For<IPasswordReader>();
-            _logger = Substitute.For<ILogger>();
-
+            
             var secure = new SecureString();
-            foreach (char c in Password)
+            foreach (var c in Password)
             {
                 secure.AppendChar(c);
             }
@@ -67,18 +68,44 @@ namespace Catalyst.Common.UnitTests.Keystore
 
             ICryptoContext context = new RustCryptoContext();
             IKeyStoreWrapper keyStoreWrapper = new KeyStoreServiceWrapped();
-            IKeyStore keyStore = new LocalKeyStore(context, keyStoreWrapper, FileSystem, _logger);
+            IKeyStore keyStore = new LocalKeyStore(context, keyStoreWrapper, FileSystem, logger);
+            _keySignerInitializer = new KeySignerInitializer(_passwordReader, keyStore, logger);
             _keySigner = new KeySigner(Substitute.For<IUserOutput>(),
-                keyStore, context, new KeySignerInitializer(_passwordReader, keyStore, _logger));
-            _keySigner.GenerateNewKey();
+                keyStore, context, _keySignerInitializer);
+            _keySigner.ReadPassword();
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Test_Key_Signer_Initializer_Password()
         {
-            IKeySignerInitializer initializer = new KeySignerInitializer(_passwordReader, Substitute.For<IKeyStore>(), _logger);
-            initializer.ReadPassword(Substitute.For<IKeySigner>());
-            initializer.Password.IsSameOrEqualTo(Password);
+            _keySignerInitializer.Password.IsSameOrEqualTo(Password);
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Decrypt_Key_Signer_With_Invalid_Password_Throws_Error()
+        {
+            _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(new SecureString());
+            _keySigner.GetPublicKey().Throws(new Exception());
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Decrypt_Key_Signer_With_Valid_Password()
+        {
+            Assert.NotNull(_keySigner.GetPublicKey());
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Test_Key_Store_Created()
+        {
+            Assert.True(
+                File.Exists(
+                    Path.Combine(FileSystem.GetCatalystHomeDir().ToString(), Constants.DefaultKeyStoreFile)
+                )
+            );
         }
     }
 }

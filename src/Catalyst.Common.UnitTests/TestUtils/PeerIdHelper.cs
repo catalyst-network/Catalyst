@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -42,7 +42,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
         {
             var peerIdentifier = new PeerId()
             {
-                PublicKey = (publicKey ?? new byte[20]).ToByteString(),
+                PublicKey = (publicKey ?? new byte[45]).ToByteString(),
                 ClientId = clientId.ToUtf8ByteString(),
                 ClientVersion = clientVersion.ToString("D2").ToUtf8ByteString(),
                 Ip = (ipAddress ?? IPAddress.Parse("127.0.0.1")).To16Bytes().ToByteString(),
@@ -58,8 +58,8 @@ namespace Catalyst.Common.UnitTests.TestUtils
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), 20))
-               .Take(20).ToArray();
+               .Concat(Enumerable.Repeat(default(byte), 45))
+               .Take(45).ToArray();
             return GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
         }
     }

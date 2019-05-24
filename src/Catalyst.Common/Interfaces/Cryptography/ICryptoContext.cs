@@ -79,6 +79,11 @@ namespace Catalyst.Common.Interfaces.Cryptography
         /// <returns></returns>
         IPublicKey GetPublicKey(IPrivateKey key);
 
+        /// <summary>Gets the public key.</summary>
+        /// <param name="publicKey">The public key.</param>
+        /// <returns></returns>
+        IPublicKey GetPublicKey(string publicKey);
+
         string AddressFromKey(IPublicKey key);
     }
 }

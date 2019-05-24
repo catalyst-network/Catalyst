@@ -79,7 +79,7 @@ namespace Catalyst.Common.P2P
             Guard.Argument(rawPidChunks[1]).Length(2);
             Guard.Argument(rawPidChunks[2]).Length(14);
             Guard.Argument(rawPidChunks[3]).MinLength(4).MaxLength(5);
-            Guard.Argument(rawPidChunks[4]).Length(20);
+            Guard.Argument(rawPidChunks[4]).Length(45);
             
             var peerByteChunks = new List<ByteString>();
             rawPidChunks.ToList().ForEach(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));
@@ -115,7 +115,7 @@ namespace Catalyst.Common.P2P
         private static bool ValidatePeerId(PeerId peerId)
         {
             Guard.Argument(peerId, nameof(peerId)).NotNull()
-               .Require(p => p.PublicKey.Length == 20, _ => "PublicKey should be 20 bytes")
+               .Require(p => p.PublicKey.Length == 45, _ => "PublicKey should be 45 bytes")
                .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
                .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
                .Require(p => ValidateClientId(p.ClientId.ToByteArray()),

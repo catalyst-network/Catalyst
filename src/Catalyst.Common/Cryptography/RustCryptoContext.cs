@@ -56,5 +56,11 @@ namespace Catalyst.Common.Cryptography
         public IPublicKey GetPublicKey(IPrivateKey key) { return _wrapper.GetPublicKeyFromPrivate(key); }
 
         public string AddressFromKey(IPublicKey key) { return Multibase.Encode(MultibaseEncoding.Base58Btc, key.Bytes.RawBytes); }
+
+        public IPublicKey GetPublicKey(string input)
+        {
+            byte[] inputBytes = Multibase.Decode(input, out MultibaseEncoding _, true);
+            return new PublicKey(inputBytes);
+        }
     }
 }

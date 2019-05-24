@@ -27,6 +27,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
 using Xunit;
@@ -47,6 +48,36 @@ namespace Catalyst.Common.UnitTests.IO
 
             var signatureDuplexHandler = new SignatureDuplexHandler(_keySigner);
             _channel = new EmbeddedChannel(signatureDuplexHandler);
+        }
+
+        [Fact]
+        public void Can_Block_Invalid_Signature_Message()
+        {
+            _keySigner.Verify(Arg.Any<AnySigned>()).Returns(false);
+
+            var channelHandler = Substitute.For<IChannelHandler>();
+            EmbeddedChannel channel = new EmbeddedChannel(
+                new SignatureDuplexHandler(_keySigner),
+                channelHandler
+            );
+
+            AnySigned anySigned = new AnySigned();
+            channel.WriteInbound(anySigned);
+            channelHandler.DidNotReceiveWithAnyArgs().ChannelRead(Arg.Any<IChannelHandlerContext>(), Arg.Any<object>());
+        }
+
+        [Fact]
+        public void Can_Continue_Pipeline_On_Valid_Sig()
+        {
+            var channelHandler = Substitute.For<IChannelHandler>();
+            EmbeddedChannel channel = new EmbeddedChannel(
+                new SignatureDuplexHandler(_keySigner),
+                channelHandler
+            );
+
+            AnySigned anySigned = new AnySigned();
+            channel.WriteInbound(anySigned);
+            channelHandler.Received(1).ChannelRead(Arg.Any<IChannelHandlerContext>(), Arg.Any<object>());
         }
 
         [Fact]
