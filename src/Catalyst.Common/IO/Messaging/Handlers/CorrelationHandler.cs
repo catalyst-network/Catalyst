@@ -40,7 +40,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         {
             if (_correlationManager.TryMatchResponse(message))
             {
-                ctx.FireChannelRead(ctx);                
+                ctx.FireChannelRead(message);                
             }
             else
             {
