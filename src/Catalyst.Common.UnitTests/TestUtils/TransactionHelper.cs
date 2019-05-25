@@ -28,7 +28,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
 {
     public static class TransactionHelper
     {
-        public static Transaction GetTransaction(uint standardAmount = 123,
+        public static TransactionBroadcast GetTransaction(uint standardAmount = 123,
             string standardPubKey = "standardPubKey",
             string signature = "signature",
             string challenge = "challenge",
@@ -39,7 +39,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
             ulong transactionFees = 2,
             ulong lockTime = 9876)
         {
-            var transaction = new Transaction()
+            var transaction = new TransactionBroadcast()
             {
                 STEntries =
                 {

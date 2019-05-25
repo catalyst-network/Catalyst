@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -63,7 +63,7 @@ namespace Catalyst.Common.IO.Messaging
             throw new NotImplementedException("Inheritors that uses the default constructor must implement the GetInheritorDelegate() method."); 
         }
 
-        public void AddPendingRequest(PendingRequest pendingRequest)
+        public virtual void AddPendingRequest(PendingRequest pendingRequest)
         {
             PendingRequests.Set(pendingRequest.Content.CorrelationId, pendingRequest, _entryOptions);
         }
