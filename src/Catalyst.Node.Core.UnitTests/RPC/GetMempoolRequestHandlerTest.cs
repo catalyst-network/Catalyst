@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private IRpcCorrelationCache _subbedCorrelationCacche;
+        private readonly IRpcCorrelationCache _subbedCorrelationCacche;
 
         public GetMempoolRequestHandlerTest()
         {
@@ -99,12 +99,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var subbedCache = Substitute.For<IRpcCorrelationCache>();
-            var handler = new GetMempoolRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, subbedCache, rpcFactory, _logger);
+            var handler = new GetMempoolRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, rpcFactory, _logger);
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
             
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
