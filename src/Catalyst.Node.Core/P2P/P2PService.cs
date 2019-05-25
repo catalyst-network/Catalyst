@@ -48,8 +48,8 @@ namespace Catalyst.Node.Core.P2P
         public P2PService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers,
-            ICorrelationManager correlationManager)
-            IGossipManager gossipManager,
+            ICorrelationManager correlationManager,
+            IGossipManager gossipManager)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Discovery = peerDiscovery;
@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.P2P
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 protoDatagramChannelHandler,
-                new CorrelationHandler(correlationManager)
+                new CorrelationHandler(correlationManager),
                 new GossipHandler(gossipManager)
             };
             
