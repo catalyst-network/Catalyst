@@ -21,25 +21,13 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Serilog;
+using Catalyst.Common.Interfaces.P2P;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public sealed class GetNeighbourResponseHandler
-        : MessageHandlerBase<PeerNeighborsResponse>,
-            IP2PMessageHandler
+    public interface IMessageEvictionEvent
     {
-        public GetNeighbourResponseHandler(ILogger logger) : base(logger) { }
-        
-        protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            Logger.Debug("received peer NeighbourResponse");
-        }
+        object EvictedContent { get; }
+        IPeerIdentifier PeerIdentifier { get; }
     }
 }

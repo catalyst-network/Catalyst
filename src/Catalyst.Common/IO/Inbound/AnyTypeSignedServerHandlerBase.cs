@@ -51,7 +51,7 @@ namespace Catalyst.Common.IO.Inbound
 
         public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
         {
-            Logger.Error(e, "Error in P2P server");
+            Logger.Error(e, "Error in P2P server"); // @TODO get the calling service
             ctx.CloseAsync().ContinueWith(_ => MessageSubject.OnCompleted());
         }
     }

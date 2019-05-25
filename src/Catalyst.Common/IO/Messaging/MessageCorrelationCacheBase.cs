@@ -73,7 +73,6 @@ namespace Catalyst.Common.IO.Messaging
             where TResponse : class, IMessage<TResponse>
         {
             Guard.Argument(response, nameof(response)).NotNull()
-               .Require(r => typeof(TResponse).ShortenedProtoFullName().Equals(response.TypeUrl))
                .Require(r => typeof(TRequest).ShortenedProtoFullName().Equals(r.TypeUrl.GetRequestType()));
 
             var found = PendingRequests.TryGetValue(response.CorrelationId, out PendingRequest matched);
