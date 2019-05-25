@@ -61,7 +61,7 @@ namespace Catalyst.Node.Core.P2P
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
-                protoDatagramChannelHandler,
+                new CorrelationHandler(correlationManager),
                 new CorrelationHandler(correlationManager),
                 new GossipHandler(gossipManager)
             };
