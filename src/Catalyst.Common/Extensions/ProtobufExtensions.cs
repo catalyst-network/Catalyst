@@ -102,10 +102,10 @@ namespace Catalyst.Common.Extensions
 
         public static bool CheckIfMessageIsGossip(this AnySigned message)
         {
-                ProtoGossipAllowedMessages.Contains(AnySigned.Parser.ParseFrom(message.Value).TypeUrl);
             return message.TypeUrl.EndsWith(nameof(AnySigned)) &&
-
+                ProtoGossipAllowedMessages.Contains(AnySigned.Parser.ParseFrom(message.Value).TypeUrl);
         }
+
         public static T FromAnySigned<T>(this AnySigned message) where T : IMessage<T>
         {
             //todo check the message signature with the PeerId.PublicKey and value fields
