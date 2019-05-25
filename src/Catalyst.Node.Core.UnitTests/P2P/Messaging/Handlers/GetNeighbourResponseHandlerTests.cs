@@ -47,15 +47,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
 {
     public sealed class GetNeighbourResponseHandlerTests : ConfigFileBasedTest
     {
-        private IChannelHandlerContext _fakeContext;
         private readonly ILogger _logger;
-        private readonly IReputableCache _subbedReputableCache;
 
         public GetNeighbourResponseHandlerTests(ITestOutputHelper output) : base(output)
         {
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _subbedReputableCache = Substitute.For<IReputableCache>();
         }
 
         [Fact]
@@ -78,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
             }
         }
 
-        [Fact]
+        [Fact(Skip = "This needs to be refactored as we don't hit rep cache here")] // @TODO 
         public void CanHandlerGetNeighbourRequestHandlerCorrectly()
         {
             var neighbourResponseHandler = new GetNeighbourResponseHandler(_logger);
@@ -88,7 +84,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
             var channeledAny = new ChanneledAnySigned(fakeContext, peerNeighbourResponseMessage.ToAnySigned(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             neighbourResponseHandler.StartObserving(observableStream);
-            
             // neighbourResponseHandler.ReputableCache.ReceivedWithAnyArgs(1);
         }
 
