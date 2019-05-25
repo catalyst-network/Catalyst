@@ -21,25 +21,33 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Serilog;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Common.IO.Messaging.Handlers
 {
-    public sealed class GetNeighbourResponseHandler
-        : MessageHandlerBase<PeerNeighborsResponse>,
-            IP2PMessageHandler
+    public sealed class CorrelationHandler : ChannelHandlerAdapter
     {
-        public GetNeighbourResponseHandler(ILogger logger) : base(logger) { }
-        
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        private readonly ICorrelationManager _correlationManager;
+
+        public CorrelationHandler(ICorrelationManager correlationManager)
         {
-            Logger.Debug("received peer NeighbourResponse");
+            _correlationManager = correlationManager;
+        }
+
+        public void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
+        {
+            if (_correlationManager.TryMatchResponse(message))
+            {
+                ctx.FireChannelRead(ctx);                
+            }
+            else
+            {
+                // @TODO maybe we want to send a message why we close the channel, if we do we will need a Correlation handler for Tcp && Udp to write back correctly.
+                // ctx.Channel.WriteAndFlushAsync(datagramEnvelope);
+                ctx.CloseAsync();
+            }
         }
     }
 }

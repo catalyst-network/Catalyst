@@ -21,25 +21,16 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Serilog;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public sealed class GetNeighbourResponseHandler
-        : MessageHandlerBase<PeerNeighborsResponse>,
-            IP2PMessageHandler
+    public interface ICorrelationManager
     {
-        public GetNeighbourResponseHandler(ILogger logger) : base(logger) { }
-        
-        protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            Logger.Debug("received peer NeighbourResponse");
-        }
+        void AddPendingRequest(PendingRequest pendingRequest);
+
+        bool TryMatchResponse(AnySigned response);
     }
 }

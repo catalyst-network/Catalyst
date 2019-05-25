@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolRequest>();
-
+                
                 Guard.Argument(deserialised).NotNull("The shell GetMempoolRequest cannot be null.");
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
