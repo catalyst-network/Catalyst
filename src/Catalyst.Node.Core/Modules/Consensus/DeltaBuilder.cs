@@ -137,7 +137,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
         /// </summary>
         /// <param name="allTransactions">All transactions.</param>
         /// <returns></returns>
-        public static IList<Transaction> GetValidTransactionsForDelta(IEnumerable<Transaction> allTransactions)
+        public static IList<TransactionBroadcast> GetValidTransactionsForDelta(IEnumerable<TransactionBroadcast> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now

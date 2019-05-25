@@ -40,9 +40,14 @@ namespace Catalyst.Common.IO.Inbound
         {
             var contextAny = new ChanneledAnySigned(ctx, msg);
             MessageSubject.OnNext(contextAny);
+            ctx.FireChannelRead(msg);
         }
 
-        public override void ChannelReadComplete(IChannelHandlerContext ctx) => ctx.Flush();
+        public override void ChannelReadComplete(IChannelHandlerContext ctx)
+        {
+            ctx.Flush();
+            ctx.FireChannelReadComplete();
+        }
 
         public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
         {

@@ -21,16 +21,19 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.IO.Outbound
-{
-    public class PendingRequest
+namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
+{ 
+    public interface IGossipManager
     {
-        public AnySigned Content { get; set; }
-        public IPeerIdentifier Recipient { get; set; }
-        public DateTimeOffset SentAt { get; set; }
+        /// <summary>Broadcasts a message.</summary>
+        /// <param name="anySigned">Any signed message.</param>
+        void Broadcast(IChanneledMessage<AnySigned> anySigned);
+
+        /// <summary>Handles Incoming gossip.</summary>
+        /// <param name="anySigned">Any signed message.</param>
+        void IncomingGossip(IChanneledMessage<AnySigned> anySigned);
     }
 }
