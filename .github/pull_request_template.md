@@ -16,9 +16,10 @@ assignees: CAT-OPS, nshCore
 5. [ ] Have you lint your code locally prior to submission?
 6. [ ] Does your code follows the code style of this project?
 7. [ ] Does your change require a change to the documentation.
-8. [ ] I have updated the documentation accordingly.
+    - [ ] I have updated the documentation accordingly.
 9. [ ] Have you added an explanation of what your changes do and why you'd like us to include them?
 10. [ ] Have you inserted a keyword and link to the issues the PR closes in its descriptions (ex `closes #1`) ?
+11. [ ] Is you branch up to date, have you integrated all the latest changes from develop and resolved conflicts ?
 
 * **What kind of change does this PR introduce?** (Bug fix, feature, docs update, ...)
 
