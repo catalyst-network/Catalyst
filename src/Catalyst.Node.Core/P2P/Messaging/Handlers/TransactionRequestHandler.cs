@@ -32,7 +32,7 @@ using Catalyst.Protocol.Common;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class TransactionRequestHandler
-        : MessageHandlerBase<Transaction>,
+        : MessageHandlerBase<TransactionBroadcast>,
             IP2PMessageHandler
     {
         public TransactionRequestHandler(ILogger logger)
@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAnySigned<Transaction>();
+            var deserialised = message.Payload.FromAnySigned<TransactionBroadcast>();
             Logger.Debug("transaction pong is {0}", deserialised.Signature);
         }
     }

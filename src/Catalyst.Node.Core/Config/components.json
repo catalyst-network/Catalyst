@@ -42,6 +42,14 @@
             ]
         },
         {
+            "type": "Catalyst.Common.IO.Messaging.CorrelationManager, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.ICorrelationManager, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.P2P.Messaging.P2PCorrelationCache",
             "services": [
                 {
@@ -215,6 +223,31 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.FileTransfer.IDownloadFileTransferFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipManager, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.IO.Inbound.GossipHandler, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipCache",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipCache, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

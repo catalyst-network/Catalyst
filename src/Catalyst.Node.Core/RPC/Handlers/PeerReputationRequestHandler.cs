@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,7 +40,7 @@ using SharpRepository.Repository;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class PeerReputationRequestHandler
-        : CorrelatableMessageHandlerBase<GetPeerReputationRequest, IRpcCorrelationCache>,
+        : MessageHandlerBase<GetPeerReputationRequest>,
             IRpcRequestHandler
     {
         /// <summary>
@@ -53,9 +54,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
         
         public PeerReputationRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRpcCorrelationCache messageCorrelationCache,
             IRepository<Peer> peerRepository)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _peerId = peerIdentifier.PeerId;
             _peerRepository = peerRepository;

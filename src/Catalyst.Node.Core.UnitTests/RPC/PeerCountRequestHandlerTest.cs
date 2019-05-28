@@ -108,13 +108,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
-            var subbedCache = Substitute.For<IRpcCorrelationCache>();
 
-            var handler = new PeerCountRequestHandler(sendPeerIdentifier, subbedCache, peerRepository, rpcMessageFactory, _logger);
+            var handler = new PeerCountRequestHandler(sendPeerIdentifier, peerRepository, rpcMessageFactory, _logger);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
 
             var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerCountResponse.Descriptor.ShortenedFullName());

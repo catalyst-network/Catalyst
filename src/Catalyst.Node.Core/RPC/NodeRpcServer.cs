@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
 
@@ -54,6 +55,7 @@ namespace Catalyst.Node.Core.RPC
             ILogger logger,
             ICertificateStore certificateStore,
             IEnumerable<IRpcRequestHandler> requestHandlers,
+            ICorrelationManager correlationManager,
             IKeySigner keySigner) : base(logger)
         {
             Settings = settings;
@@ -73,6 +75,7 @@ namespace Catalyst.Node.Core.RPC
                         new ProtobufVarint32LengthFieldPrepender(),
                         new ProtobufEncoder(),
                         new SignatureDuplexHandler(keySigner),
+                        new CorrelationHandler(correlationManager),
                         anyTypeServerHandler
                     },
                     _certificate

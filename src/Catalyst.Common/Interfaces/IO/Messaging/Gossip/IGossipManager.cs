@@ -21,25 +21,19 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
-{
-    public sealed class GetNeighbourResponseHandler
-        : MessageHandlerBase<PeerNeighborsResponse>,
-            IP2PMessageHandler
+namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
+{ 
+    public interface IGossipManager
     {
-        public GetNeighbourResponseHandler(ILogger logger) : base(logger) { }
-        
-        protected override void Handler(IChanneledMessage<AnySigned> message)
-        {
-            Logger.Debug("received peer NeighbourResponse");
-        }
+        /// <summary>Broadcasts a message.</summary>
+        /// <param name="anySigned">Any signed message.</param>
+        void Broadcast(IChanneledMessage<AnySigned> anySigned);
+
+        /// <summary>Handles Incoming gossip.</summary>
+        /// <param name="anySigned">Any signed message.</param>
+        void IncomingGossip(IChanneledMessage<AnySigned> anySigned);
     }
 }

@@ -39,14 +39,20 @@ namespace Catalyst.Common.IO.Inbound
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, IChanneledMessage<AnySigned> msg)
         {
-            MessageSubject.OnNext(msg);
+            var contextAny = new ChanneledAnySigned(ctx, msg);
+            MessageSubject.OnNext(contextAny);
+            ctx.FireChannelRead(msg);
         }
 
-        public override void ChannelReadComplete(IChannelHandlerContext ctx) => ctx.Flush();
+        public override void ChannelReadComplete(IChannelHandlerContext ctx)
+        {
+            ctx.Flush();
+            ctx.FireChannelReadComplete();
+        }
 
         public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
         {
-            Logger.Error(e, "Error in P2P server");
+            Logger.Error(e, "Error in P2P server"); // @TODO get the calling service
             ctx.CloseAsync().ContinueWith(_ => MessageSubject.OnCompleted());
         }
     }
