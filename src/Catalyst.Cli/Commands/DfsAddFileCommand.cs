@@ -104,13 +104,13 @@ namespace Catalyst.Cli.Commands
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
-                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%");
+                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage()}%");
                 System.Threading.Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
             {
-                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%\n");
+                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage()}%\n");
             }
             else
             {
