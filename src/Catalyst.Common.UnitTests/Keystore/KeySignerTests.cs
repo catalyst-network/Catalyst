@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -58,7 +59,7 @@ namespace Catalyst.Common.UnitTests.Keystore
         {
             var logger = Substitute.For<ILogger>();
             _passwordReader = Substitute.For<IPasswordReader>();
-            
+
             var secure = new SecureString();
             foreach (var c in Password)
             {
@@ -86,7 +87,8 @@ namespace Catalyst.Common.UnitTests.Keystore
         public void Decrypt_Key_Signer_With_Invalid_Password_Throws_Error()
         {
             _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(new SecureString());
-            Assert.Throws<DecryptionException>(() => _keySigner.ReadPassword());
+
+            Assert.Throws<InvalidOperationException>(() => _keySigner.ReadPassword());
         }
 
         [Fact]
@@ -107,7 +109,7 @@ namespace Catalyst.Common.UnitTests.Keystore
 
         [Fact]
         public void KeySigner_Can_Sign_Message() { Get_Signed_Message(); }
-        
+
         [Fact]
         public void KeySigner_Can_Verify_Message()
         {

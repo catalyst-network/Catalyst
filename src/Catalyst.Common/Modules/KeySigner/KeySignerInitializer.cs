@@ -36,6 +36,8 @@ namespace Catalyst.Common.Modules.KeySigner
 {
     public class KeySignerInitializer : IKeySignerInitializer
     {
+        private static int MaxTries => 5;
+
         private readonly ILogger _logger;
 
         private readonly IPasswordReader _passwordReader;
@@ -69,16 +71,29 @@ namespace Catalyst.Common.Modules.KeySigner
 
         public void ReadPassword(IKeySigner keySigner)
         {
-            _password = _passwordReader.ReadSecurePassword("Please enter key signer password");
+            int tries = 0;
+            bool success = false;
 
-            try
+            while (!success && tries < MaxTries)
             {
-                Initialize(keySigner);
+                _password = _passwordReader.ReadSecurePassword("Please enter key signer password");
+
+                try
+                {
+                    Initialize(keySigner);
+                    success = true;
+                }
+                catch (DecryptionException)
+                {
+                    _logger.Error("Error decrypting key signer IKeySignerInitializer.ReadPassword");
+                }
+
+                tries += 1;
             }
-            catch (DecryptionException decryptionException)
+
+            if (!success)
             {
-                _logger.Error(decryptionException, "Error decrypting key signer IKeySignerInitializer.ReadPassword");
-                throw;
+                throw new InvalidOperationException("Failed to decrypt key signer, exiting");
             }
         }
 
@@ -105,7 +120,6 @@ namespace Catalyst.Common.Modules.KeySigner
             catch (Exception e)
             {
                 _logger.Error(e, "Error on IKeySignerInitializer.Initialize");
-                keySigner.GenerateNewKey();
             }
         }
     }

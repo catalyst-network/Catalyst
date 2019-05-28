@@ -97,12 +97,19 @@ namespace Catalyst.Common.Modules.KeySigner
         public void GenerateNewKey()
         {
             var newPrivateKey = _cryptoContext.GeneratePrivateKey();
-            _keyStore.StoreKey(newPrivateKey, Constants.DefaultKeyStoreFile, _keySignerInitializer.Password);
+            var storedKey = _keyStore.StoreKey(newPrivateKey, Constants.DefaultKeyStoreFile, _keySignerInitializer.Password);
             var publicKey = newPrivateKey.GetPublicKey();
             var publicKeyStr = _cryptoContext.AddressFromKey(publicKey);
 
-            _userOutput.WriteLine("Generated new public key: "
-              + publicKeyStr);
+            if (storedKey)
+            {
+                _userOutput.WriteLine("Generated new public key: "
+                  + publicKeyStr);
+            }
+            else
+            {
+                _userOutput.WriteLine("Storing key failed.");
+            }
         }
 
         /// <inheritdoc/>
