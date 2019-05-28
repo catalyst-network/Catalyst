@@ -1,12 +1,3 @@
----
-name: Pull request template
-about: Use when creating a pull request to codebase
-title: Pull Request
-labels: 'Pull Request 🕵️'
-assignees: CAT-OPS, nshCore
-
----
-
 ### New Pull Request Submissions:
 
 1. [ ] Have you followed the guidelines in our [Contributing document](https://github.com/atlascity/Community/tree/master/CONTRIBUTING.md)?
