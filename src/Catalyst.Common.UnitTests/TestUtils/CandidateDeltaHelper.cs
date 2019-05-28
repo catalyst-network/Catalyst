@@ -27,7 +27,7 @@ using Catalyst.Protocol.Delta;
 
 namespace Catalyst.Common.UnitTests.TestUtils
 {
-    public class CandidateDeltaHelper
+    public static class CandidateDeltaHelper
     {
         public static CandidateDelta GetCandidateDelta(byte[] previousDeltaHash = null, 
             byte[] hash = null,

@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         private readonly ILogger _logger;
 
         private readonly IMemoryCache _producersByPreviousDelta;
-        private MemoryCacheEntryOptions _cacheEntryOptions;
+        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         public IMultihashAlgorithm HashAlgorithm { get; }
 
         /// <inheritdoc />
