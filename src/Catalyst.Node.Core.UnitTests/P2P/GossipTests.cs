@@ -118,7 +118,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
             
             EmbeddedChannel channel = new EmbeddedChannel(
-                new ProtoDatagramChannelHandler(),
+                new SignatureDuplexHandler(new TestKeySigner()),
+                new AnySignedChannelHandler(),
                 new GossipHandler(gossipMessageHandler)
             );
             

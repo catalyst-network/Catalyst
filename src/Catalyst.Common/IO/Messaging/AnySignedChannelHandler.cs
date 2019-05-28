@@ -23,9 +23,7 @@
 
 using System;
 using System.Reflection;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
-using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Dawn;
@@ -43,7 +41,7 @@ namespace Catalyst.Common.IO.Messaging
             Guard.Argument(context).NotNull();
 
             MessageSubject.OnNext(packet);
-            context.FireChannelRead(new ChanneledAnySigned(context, packet.Payload));
+            context.FireChannelRead(packet);
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)

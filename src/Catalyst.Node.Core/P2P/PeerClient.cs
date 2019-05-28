@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.P2P
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 new SignatureDuplexHandler(keySigner),
-                protoDatagramChannelHandler,
+                anySignedChannelHandler,
                 new GossipHandler(gossipManager)
             };
 

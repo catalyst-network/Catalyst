@@ -39,8 +39,7 @@ namespace Catalyst.Common.IO.Inbound
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, IChanneledMessage<AnySigned> msg)
         {
-            var contextAny = new ChanneledAnySigned(ctx, msg);
-            MessageSubject.OnNext(contextAny);
+            MessageSubject.OnNext(msg);
             ctx.FireChannelRead(msg);
         }
 

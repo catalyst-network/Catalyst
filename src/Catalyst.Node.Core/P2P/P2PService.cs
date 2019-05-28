@@ -30,6 +30,7 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
@@ -49,7 +50,7 @@ namespace Catalyst.Node.Core.P2P
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers,
             ICorrelationManager correlationManager,
-            IGossipManager gossipManager
+            IGossipManager gossipManager,
             IKeySigner keySigner)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
@@ -63,7 +64,7 @@ namespace Catalyst.Node.Core.P2P
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 new SignatureDuplexHandler(keySigner),
-                protoDatagramChannelHandler,
+                anySignedChannelHandler,
                 new CorrelationHandler(correlationManager),
                 new GossipHandler(gossipManager)
             };

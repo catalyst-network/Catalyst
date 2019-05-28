@@ -115,7 +115,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var fakeChannel = Substitute.For<IChannel>();
                 fakeContext.Channel.Returns(fakeChannel);
                 var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
-                var observableStream = new[] { channeledAny }.ToObservable();
+                var observableStream = new[] {channeledAny}.ToObservable();
 
                 var handler = new PingRequestHandler(_pid, _subbedReputableCache, _logger);
                 handler.StartObserving(observableStream);
@@ -134,7 +134,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var p2PService = _container.Resolve<IP2PService>();
                 var peerSettings = new PeerSettings(_config);
                 var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), new TestKeySigner());
+                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>(), new TestKeySigner());
 
                 var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                         new PingResponse(),
@@ -174,7 +174,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var p2PService = _container.Resolve<IP2PService>();
                 var peerSettings = new PeerSettings(_config);
                 var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), new TestKeySigner());
+                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>(), new TestKeySigner());
 
                 var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                         new PeerNeighborsResponse(),
