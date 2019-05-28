@@ -361,3 +361,13 @@ Icon?
 Thumbs.db
 
 *.lock
+
+src/Catalyst\.Common/Protocol/Common\.cs
+
+src/Catalyst\.Common/Protocol/Delta\.cs
+
+src/Catalyst\.Common/Protocol/IPPN\.cs
+
+src/Catalyst\.Common/Protocol/Rpc\.cs
+
+src/Catalyst\.Common/Protocol/Transaction\.cs

@@ -33,7 +33,7 @@ Is coming (don't you hate it when they say that). For now you can read through t
 - RPC core protocol methods
 - Distributed file storage (DFS) built upon IPFS
 - Confidential and Public transactions
-- Fast new and novel consensus Delegated Proof Of Real Work With Some Staking & Reputation Elements (Cheers for the unhelpfull answer here @TonyVazz)
+- Fast new and novel consensus Probabalistic BFT
 - Flexible modula design
 
 ## Real Quick Start Guide
