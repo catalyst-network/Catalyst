@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -38,7 +39,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
         public void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
         {
-            if (_correlationManager.TryMatchResponse(message))
+            if (message.CheckIfMessageIsGossip() || _correlationManager.TryMatchResponse(message))
             {
                 ctx.FireChannelRead(message);                
             }
