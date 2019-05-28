@@ -40,7 +40,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     public class GetFileFromDfsRequestHandlerTests
     {
@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
                 Assert.False(fakeStream.CanRead);
             }
         }
-
+        
         private MemoryStream GetFakeDfsStream(FileTransferResponseCodes fakeResponse)
         {
             var fakeStream = new MemoryStream();

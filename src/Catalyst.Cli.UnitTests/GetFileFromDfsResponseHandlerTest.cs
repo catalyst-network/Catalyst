@@ -77,6 +77,28 @@ namespace Catalyst.Cli.UnitTests
             _dfs = Substitute.For<IDfs>();
         }
 
+        [Fact]
+        public void CanExpireDownloadFileTransferOnError()
+        {
+            var fakeFileTransfer = Substitute.For<IDownloadFileInformation>();
+            var guid = Guid.NewGuid();
+            fakeFileTransfer.CorrelationGuid.Returns(guid);
+
+            _fileDownloadFactory.RegisterTransfer(fakeFileTransfer);
+
+            var getFileFromDfsResponseHandler =
+                new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
+
+            var getFileResponse = new GetFileFromDfsResponse
+            {
+                FileSize = (ulong) 10,
+                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Error.Id)
+            }.ToAnySigned(PeerIdHelper.GetPeerId("Test"), guid);
+            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+
+            fakeFileTransfer.Received(1).Expire();
+        }
+
         [Theory]
         [InlineData(1000L)]
         [InlineData(82000L)]

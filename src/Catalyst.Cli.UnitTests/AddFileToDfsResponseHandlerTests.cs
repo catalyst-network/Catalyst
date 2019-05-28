@@ -80,6 +80,13 @@ namespace Catalyst.Cli.UnitTests
                .FileTransferAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
         }
 
+        [Fact]
+        public void HandlerRemovesFileTransferOnError()
+        {
+            _addFileToDfsResponseHandler.HandleMessage(GetAddFileToDfsResponse(FileTransferResponseCodes.Error));
+            _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<Guid>());
+        }
+
         private IChanneledMessage<AnySigned> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
         {
             AddFileToDfsResponse addFileResponse = new AddFileToDfsResponse
