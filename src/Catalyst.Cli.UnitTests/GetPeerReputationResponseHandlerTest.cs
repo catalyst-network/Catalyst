@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;

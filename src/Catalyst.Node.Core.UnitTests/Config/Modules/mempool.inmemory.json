@@ -2,10 +2,10 @@
   "defaultAssembly": "Catalyst.Node.Core",
   "components": [
     {
-      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Protocol.Transaction.Transaction, Catalyst.Common], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Common]], SharpRepository.InMemoryRepository",
+      "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Protocol.Transaction.TransactionBroadcast, Catalyst.Common], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Common]], SharpRepository.InMemoryRepository",
       "services": [
         {
-          "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Protocol.Transaction.Transaction, Catalyst.Common], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Common]], SharpRepository.Repository"
+            "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Protocol.Transaction.TransactionBroadcast, Catalyst.Common], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Common]], SharpRepository.Repository"
         }
       ]
     },

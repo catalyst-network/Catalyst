@@ -34,6 +34,7 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
 
@@ -52,7 +53,8 @@ namespace Catalyst.Node.Core.RPC
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
             ICertificateStore certificateStore,
-            IEnumerable<IRpcRequestHandler> requestHandlers) : base(logger)
+            IEnumerable<IRpcRequestHandler> requestHandlers,
+            ICorrelationManager correlationManager) : base(logger)
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
@@ -70,6 +72,7 @@ namespace Catalyst.Node.Core.RPC
                         new ProtobufDecoder(AnySigned.Parser),
                         new ProtobufVarint32LengthFieldPrepender(),
                         new ProtobufEncoder(),
+                        new CorrelationHandler(correlationManager),
                         anyTypeServerHandler
                     },
                     _certificate

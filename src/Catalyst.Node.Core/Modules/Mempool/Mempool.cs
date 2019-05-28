@@ -39,21 +39,21 @@ namespace Catalyst.Node.Core.Modules.Mempool
     public sealed class Mempool : IMempool
     {
         private readonly ILogger _logger;
-        private readonly IRepository<Transaction, TransactionSignature> _transactionStore;
+        private readonly IRepository<TransactionBroadcast, TransactionSignature> _transactionStore;
 
         /// <inheritdoc />
-        public Mempool(IRepository<Transaction, TransactionSignature> transactionStore, ILogger logger)
+        public Mempool(IRepository<TransactionBroadcast, TransactionSignature> transactionStore, ILogger logger)
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             _transactionStore = transactionStore;
-            _transactionStore.Conventions.GetPrimaryKeyName = _ => nameof(Transaction.Signature);
+            _transactionStore.Conventions.GetPrimaryKeyName = _ => nameof(TransactionBroadcast.Signature);
 
             _logger = logger;
             _transactionStore.CachingEnabled = true;
         }
 
         /// <inheritdoc />
-        public IEnumerable<Transaction> GetMemPoolContent()
+        public IEnumerable<TransactionBroadcast> GetMemPoolContent()
         {
             var memPoolContent = _transactionStore.GetAll();
             return memPoolContent;
@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
         }
 
         /// <inheritdoc />
-        public Transaction GetTransaction(TransactionSignature key)
+        public TransactionBroadcast GetTransaction(TransactionSignature key)
         {
             Guard.Argument(key, nameof(key)).NotNull();
             var found = _transactionStore.Get(key);
@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.Modules.Mempool
         }
 
         /// <inheritdoc />
-        public bool SaveTransaction(Transaction transaction)
+        public bool SaveTransaction(TransactionBroadcast transaction)
         {
             Guard.Argument(transaction, nameof(transaction)).NotNull();
             Guard.Argument(transaction.Signature, nameof(transaction.Signature)).NotNull();

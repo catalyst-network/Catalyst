@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         }
 
         /// <inheritdoc />
-        public IList<Transaction> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
+        public IList<TransactionBroadcast> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
         {
             Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
 

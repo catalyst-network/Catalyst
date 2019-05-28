@@ -37,7 +37,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
 {
     public class DeltaTransactionRetrieverTests
     {
-        private readonly IList<Transaction> _transactions;
+        private readonly IList<TransactionBroadcast> _transactions;
         private readonly DeltaTransactionRetriever _transactionRetriever;
 
         public DeltaTransactionRetrieverTests()
