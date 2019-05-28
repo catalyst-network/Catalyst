@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         public void CanProduceAValidTransactionMessage()
         {
             var transactionDatagram = new P2PMessageFactory(_subbedReputationCache).GetMessageInDatagramEnvelope(new MessageDto(
-                new Transaction(),
+                new TransactionBroadcast(),
                 MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")

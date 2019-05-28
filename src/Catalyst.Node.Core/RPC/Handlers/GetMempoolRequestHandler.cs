@@ -43,7 +43,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class GetMempoolRequestHandler
-        : CorrelatableMessageHandlerBase<GetMempoolRequest, IRpcCorrelationCache>,
+        : MessageHandlerBase<GetMempoolRequest>,
             IRpcRequestHandler
     {
         private readonly IMempool _mempool;
@@ -52,10 +52,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         public GetMempoolRequestHandler(IPeerIdentifier peerIdentifier,
             IMempool mempool,
-            IRpcCorrelationCache messageCorrelationCache,
             IRpcMessageFactory rpcMessageFactory,
             ILogger logger)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _rpcMessageFactory = rpcMessageFactory;
             _mempool = mempool;
@@ -71,7 +70,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             try
             {
                 var deserialised = message.Payload.FromAnySigned<GetMempoolRequest>();
-
+                
                 Guard.Argument(deserialised).NotNull("The shell GetMempoolRequest cannot be null.");
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);

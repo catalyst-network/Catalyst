@@ -74,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         public void BuildDeltaEmptyPoolContent()
         {
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
-            transactionRetriever.GetMempoolTransactionsByPriority().Returns(new List<Transaction>());
+            transactionRetriever.GetMempoolTransactionsByPriority().Returns(new List<TransactionBroadcast>());
             
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId);
 

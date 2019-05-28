@@ -100,7 +100,7 @@ namespace Catalyst.Cli.UnitTests
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _cache, _logger, _rpcMessageFactory);
+                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _logger, _rpcMessageFactory);
 
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()

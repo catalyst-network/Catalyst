@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class RemovePeerRequestHandler
-        : CorrelatableMessageHandlerBase<RemovePeerRequest, IRpcCorrelationCache>,
+        : MessageHandlerBase<RemovePeerRequest>,
             IRpcRequestHandler
     {
         /// <summary>The peer identifier</summary>
@@ -68,9 +68,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="rpcMessageFactory"></param>
         public RemovePeerRequestHandler(IPeerIdentifier peerIdentifier,
             IRepository<Peer> peerRepository,
-            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger,
-            IRpcMessageFactory rpcMessageFactory) : base(messageCorrelationCache, logger)
+            IRpcMessageFactory rpcMessageFactory) : base(logger)
         {
             _peerIdentifier = peerIdentifier;
             _peerRepository = peerRepository;

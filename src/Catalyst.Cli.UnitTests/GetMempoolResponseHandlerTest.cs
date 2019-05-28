@@ -90,7 +90,7 @@ namespace Catalyst.Cli.UnitTests
 
         private static IEnumerable<string> CreateMemPoolData()
         {
-            var txLst = new List<Transaction>
+            var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")

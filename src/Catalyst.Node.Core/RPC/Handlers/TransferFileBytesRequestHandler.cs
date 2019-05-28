@@ -43,7 +43,7 @@ using Catalyst.Common.Rpc;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class TransferFileBytesRequestHandler
-        : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IRpcCorrelationCache>,
+        : MessageHandlerBase<TransferFileBytesRequest>,
             IRpcRequestHandler
     {
         /// <summary>The download file transfer factory</summary>
@@ -63,10 +63,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="rpcMessageFactory"></param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
-            IRpcCorrelationCache correlationCache,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory)
-            : base(correlationCache, logger)
+            : base(logger)
         {
             _rpcMessageFactory = rpcMessageFactory;
             _fileTransferFactory = fileTransferFactory;
