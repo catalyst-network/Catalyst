@@ -2,7 +2,7 @@
 name: Pull request template
 about: Use when creating a pull request to codebase
 title: Pull Request
-labels: ''
+labels: 'Pull Request 🕵️'
 assignees: CAT-OPS, nshCore
 
 ---
