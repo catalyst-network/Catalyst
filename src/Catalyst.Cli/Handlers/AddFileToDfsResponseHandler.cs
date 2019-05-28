@@ -75,7 +75,10 @@ namespace Catalyst.Cli.Handlers
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-            var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
+            // @TODO return int not byte
+            // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
+
+            var responseCode = (FileTransferResponseCodes) deserialised.ResponseCode[0];
 
             if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
             {
