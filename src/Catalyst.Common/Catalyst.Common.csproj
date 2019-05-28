@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -107,11 +107,11 @@
     <Folder Include="RLP\" />
   </ItemGroup>
   <ItemGroup>
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protocol\Protobuffs\Common.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" />
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Delta.proto" Link="Protocol\Protobuffs\Delta.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" />
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\IPPN.proto" Link="Protocol\Protobuffs\IPPN.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" />
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protocol\Protobuffs\Rpc.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" />
-    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protocol\Protobuffs\Transaction.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protocol\Protobuffs\Common.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None"  CompileOutputs="false" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Delta.proto" Link="Protocol\Protobuffs\Delta.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" CompileOutputs="false" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\IPPN.proto" Link="Protocol\Protobuffs\IPPN.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" CompileOutputs="false" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protocol\Protobuffs\Rpc.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" CompileOutputs="false" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protocol\Protobuffs\Transaction.proto" OutputDir="$(SolutionDir)\Catalyst.Common\Protocol" GrpcServices="None" CompileOutputs="false" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System">
