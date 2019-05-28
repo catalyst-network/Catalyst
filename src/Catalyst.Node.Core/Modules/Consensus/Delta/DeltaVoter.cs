@@ -73,18 +73,12 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull()
                    .Require(c => c.ProducerId != null, c => $"{nameof(candidate.ProducerId)} cannot be null")
-                   .Require(c => c.PreviousDeltaDfsHash != null,
-                        c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null")
-                   .Require(c => c.Hash != null, c => $"{nameof(candidate.Hash)} cannot be null");
+                   .Require(c => c.PreviousDeltaDfsHash != null && !c.PreviousDeltaDfsHash.IsEmpty,
+                        c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null or empty")
+                   .Require(c => c.Hash != null && !c.Hash.IsEmpty, 
+                        c => $"{nameof(candidate.Hash)} cannot be null or empty");
 
                 var rankingFactor = GetProducerRankFactor(candidate);
-
-                if (rankingFactor == -1)
-                {
-                    _logger.Warning("Producer {0} should not be sending candidate deltas",
-                        candidate.ProducerId.ToByteArray().ToHex());
-                    return;
-                }
 
                 var cacheKey = GetCacheKey(candidate.Hash.ToByteArray().ToHex());
                 if (_scoredDeltasByHash.TryGetValue<IScoredCandidateDelta>(cacheKey, out var retrievedScoredDelta))
@@ -109,12 +103,16 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray());
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.PeerId.Equals(candidate.ProducerId));
+
             if (ranking == -1)
             {
-                throw new KeyNotFoundException(candidate?.ProducerId?.ToByteArray()?.ToHex() ?? "null");
+                throw new KeyNotFoundException(
+                    $"Producer {candidate.ProducerId} " +
+                    $"should not be sending candidate deltas with previous hash " +
+                    $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToHex()}");
             }
 
-            return ranking == -1 ? ranking : preferredProducers.Count - ranking;
+            return preferredProducers.Count - ranking;
         }
     }
 }

@@ -51,7 +51,6 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         private DeltaVoter _voter;
         private readonly byte[] _previousDeltaHash;
         private readonly IList<IPeerIdentifier> _producerIds;
-        private readonly Random _random;
 
         static DeltaVoterTests()
         {
@@ -61,9 +60,28 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 new object[] {new CandidateDelta()},
                 new object[] 
                 {
-                    CandidateDeltaHelper.GetCandidateDelta(
-                        producerId: PeerIdHelper.GetPeerId("unknown_producer"))
-                }
+                    new CandidateDelta
+                    {
+                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
+                    }
+                },
+                new object[]
+                {
+                    new CandidateDelta
+                    {
+                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+                    }
+                },
+                new object[]
+                {
+                    new CandidateDelta
+                    {
+                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+                    }
+                },
             };
         }
 
@@ -83,11 +101,32 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
         [Theory]
         [MemberData(nameof(DodgyCandidates))]
-        public void When_candidate_is_dodgy_should_return_without_hitting_the_cache(CandidateDelta dodgyCandidate)
+        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDelta dodgyCandidate)
         {
-            _voter = new DeltaVoter(_cache, _producersProvider, Substitute.For<ILogger>());
+            var logger = Substitute.For<ILogger>();
+            _voter = new DeltaVoter(_cache, _producersProvider, logger);
 
             _voter.OnNext(dodgyCandidate);
+
+            logger.Received(1).Error(Arg.Is<Exception>(e => e is ArgumentException),
+                Arg.Any<string>(), Arg.Any<string>());
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Fact]
+        public void When_candidate_is_produced_by_unexpected_producer_should_log_and_return_without_hitting_the_cache()
+        {
+            var candidateFromUnknownProducer = CandidateDeltaHelper.GetCandidateDelta(
+                producerId: PeerIdHelper.GetPeerId("unknown_producer"));
+            var logger = Substitute.For<ILogger>();
+
+            _voter = new DeltaVoter(_cache, _producersProvider, logger);
+            _voter.OnNext(candidateFromUnknownProducer);
+
+            logger.Received(1).Error(Arg.Is<Exception>(e => e is KeyNotFoundException),
+                Arg.Any<string>(), Arg.Any<string>());
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
@@ -126,7 +165,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             var initialScore = 10;
             var cacheCandidate = ScoredCandidateDeltaHelper.GetScoredCandidateDelta(
                 producerId: _producerIds.First().PeerId,
-                previousDeltaHash: _previousDeltaHash, 
+                previousDeltaHash: _previousDeltaHash,
                 score: initialScore);
 
             var candidateHashAsHex = cacheCandidate.Candidate.Hash.ToByteArray().ToHex();
