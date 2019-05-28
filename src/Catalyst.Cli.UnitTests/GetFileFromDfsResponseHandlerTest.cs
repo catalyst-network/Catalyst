@@ -50,7 +50,7 @@ using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.Transfer
 
 namespace Catalyst.Cli.UnitTests
 {
-    public sealed class FileTransferTest : FileSystemBasedTest
+    public sealed class GetFileFromDfsResponseHandlerTest : FileSystemBasedTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
@@ -59,7 +59,7 @@ namespace Catalyst.Cli.UnitTests
         private readonly IRpcCorrelationCache _cache;
         private readonly IRpcMessageFactory _rpcMessageFactory;
 
-        public FileTransferTest(ITestOutputHelper testOutput) : base(testOutput)
+        public GetFileFromDfsResponseHandlerTest(ITestOutputHelper testOutput) : base(testOutput)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new List<string>
