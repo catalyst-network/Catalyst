@@ -184,7 +184,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         ),
                         Guid.NewGuid()
                     );
-                    
+
                     peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
@@ -200,6 +200,103 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
                 }
+            }
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Validate_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
+        {
+            using (_container.BeginLifetimeScope(CurrentTestName))
+            {
+                var p2PService = _container.Resolve<IP2PService>();
+                var serverObserver = new AnySignedMessageObserver(0, _logger);
+
+                var peerSettings = new PeerSettings(_config);
+                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
+
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
+
+                var valid = peerValidator.Validate(new PeerIdentifier(peerSettings).PeerId);
+
+                valid.Should().BeTrue();
+            }
+        }
+
+        [Theory]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [InlineData("198.51.100.14", 1574)]
+        [InlineData("198.51.100.3", 2524)]
+        public void Validate_PeerIdentifiers_Expected_To_Fail_Invalid_IP_Port(string ip, int port)
+        { 
+            using (_container.BeginLifetimeScope(CurrentTestName))
+            {
+                var p2PService = _container.Resolve<IP2PService>();
+                var serverObserver = new AnySignedMessageObserver(0, _logger);
+
+                var peerSettings = new PeerSettings(_config);
+                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
+
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
+
+                var valid = peerValidator.Validate(new PeerIdentifier(peerSettings.PublicKey.ToUtf8ByteString().ToByteArray(),
+                    IPAddress.Parse(ip),
+                    port).PeerId);
+
+                valid.Should().BeFalse();
+            }
+        }
+
+        [Theory]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [InlineData("hyodsg+eRandomValueb")]
+        [InlineData("cne2+eRandomValuebei")]
+        [InlineData("uo2+eRandomValuebez")]
+        public void Validate_PeerIdentifiers_Expected_To_Fail_Invalid_PublicKey(string publicKey)
+        {
+            using (_container.BeginLifetimeScope(CurrentTestName))
+            {
+                var p2PService = _container.Resolve<IP2PService>();
+                var serverObserver = new AnySignedMessageObserver(0, _logger);
+
+                var peerSettings = new PeerSettings(_config);
+                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
+
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
+
+                var valid = peerValidator.Validate(new PeerIdentifier(publicKey.ToUtf8ByteString().ToByteArray(),
+                    peerSettings.BindAddress,
+                    peerSettings.Port).PeerId);
+
+                valid.Should().BeFalse();
+            }
+        }
+
+        [Theory]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [InlineData("hyodsg+eRandomValueb", "198.51.100.14", 1574)]
+        [InlineData("grodoo+eRandomValueV", "198.51.100.3", 2524)]
+        public void Validate_PeerIdentifiers_Expected_To_Fail_Invalid_PublicKey_IP_Port(string publicKey, string ip, int port)
+        {
+            using (_container.BeginLifetimeScope(CurrentTestName))
+            {
+                var p2PService = _container.Resolve<IP2PService>();
+                var serverObserver = new AnySignedMessageObserver(0, _logger);
+
+                var peerSettings = new PeerSettings(_config);
+                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
+
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
+
+                var valid = peerValidator.Validate(new PeerIdentifier(publicKey.ToUtf8ByteString().ToByteArray(),
+                    IPAddress.Parse(ip),
+                    port).PeerId);
+
+                valid.Should().BeFalse();
             }
         }
     }

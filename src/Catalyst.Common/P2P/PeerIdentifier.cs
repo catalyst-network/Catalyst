@@ -64,6 +64,7 @@ namespace Catalyst.Common.P2P
         {
             Guard.Argument(peerId, nameof(peerId)).Require(ValidatePeerId);
             PeerId = peerId;
+
         }
 
         /// <summary>

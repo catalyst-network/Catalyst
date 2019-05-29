@@ -6,7 +6,7 @@
             "PfxFileName": "somepfx.pfx",
             "BindAddress": "127.0.0.1",
             "Port": 5678,
-            "PublicKey": "302a300506032b65700321001783421742816abf",
+            "PublicKey": "302a300506032b657003",
             "MaxConnections": 10,
             "AddressVersion": 23,
             "Magic": 4206942,
