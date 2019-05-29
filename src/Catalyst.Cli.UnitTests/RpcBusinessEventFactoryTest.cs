@@ -43,7 +43,7 @@ namespace Catalyst.Cli.UnitTests
             var fakeSection = Substitute.For<IConfigurationSection>();
             var configurationRoot = Substitute.For<IConfigurationRoot>();
             fakeSection.Value.Returns(ExpectedThreads.ToString());
-            fakeSection.GetSection("BusinessThreads").Returns(fakeSection);
+            fakeSection.GetSection("ClientBusinessThreads").Returns(fakeSection);
             configurationRoot.GetSection("CatalystCliRpcNodes").Returns(fakeSection);
             _eventFactory = new RpcBusinessEventFactory(configurationRoot);
         }
