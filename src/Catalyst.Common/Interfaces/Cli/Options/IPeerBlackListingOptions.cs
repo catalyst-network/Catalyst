@@ -33,10 +33,29 @@ namespace Catalyst.Common.Interfaces.Cli.Options
         /// </value>
         string Node { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether a peer has been black listed or not.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if true peer will be treated as blacklisted throughout the network;
+        ///   <c>false</c>otherwise black listing flag remains false and peer is treated as pair normal.
+        /// </value>
         bool BlackListFlag { get; set; }
 
+        /// <summary>
+        /// Gets or sets the ip address.
+        /// </summary>
+        /// <value>
+        /// The ip address.
+        /// </value>
         string IpAddress { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the public key.
+        /// </summary>
+        /// <value>
+        /// The public key.
+        /// </value>
         string PublicKey { get; set; }
     }
 }

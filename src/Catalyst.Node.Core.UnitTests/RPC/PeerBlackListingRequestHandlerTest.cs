@@ -80,8 +80,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         /// <param name="ipAddress">Ip address of the peer whose black listing flag we wish to adjust</param>
         /// <param name="blackList">Black listing flag</param>
         [Theory]
-        [InlineData("highscored-125\0\0\0\0\0\0", "192.168.0.125", "true")]
-        [InlineData("highscored-126\0\0\0\0\0\0", "192.168.0.126", "true")]
+        [InlineData("highscored-14\0\0\0\0\0\0\0", "198.51.100.14", "true")]
+        [InlineData("highscored-22\0\0\0\0\0\0\0", "198.51.100.22", "true")]
         public void TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
         {
             var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
@@ -99,8 +99,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         /// <param name="ipAddress">Ip address of the peer whose black listing flag we wish to adjust</param>
         /// <param name="blackList">Black listing flag</param>
         [Theory]
-        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "192.200.200.22", "true")]
-        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "192.111.100.26", "true")]
+        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "198.51.100.11", "true")]
+        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "198.51.100.5", "true")]
         public void TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
         {
             var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
@@ -120,9 +120,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             }).ToList();
 
             //peers we are interested in
-            fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer
+            fakePeers.AddRange(Enumerable.Range(0, 23).Select(i => new Peer
             {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i))
+                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("198.51.100." + i))
             }));
 
             // Let peerRepository return the fake peer list
