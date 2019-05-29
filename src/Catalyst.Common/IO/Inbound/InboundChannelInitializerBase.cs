@@ -36,10 +36,12 @@ namespace Catalyst.Common.IO.Inbound
         /// <inheritdoc />
         public InboundChannelInitializerBase(Action<T> initializationAction,
             IList<IChannelHandler> handlers,
+            IEventLoopGroup businessEventLoopGroup,
             X509Certificate certificate = null)
             : base(initializationAction,
                 handlers,
-                certificate == null ? null : TlsHandler.Server(certificate)) { }
+                certificate == null ? null : TlsHandler.Server(certificate),
+                businessEventLoopGroup) { }
 
         public override string ToString()
         {

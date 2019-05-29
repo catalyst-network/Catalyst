@@ -39,16 +39,19 @@ namespace Catalyst.Common.IO
         private readonly Action<T> _initializationAction;
         private readonly IReadOnlyCollection<IChannelHandler> _handlers;
         private readonly TlsHandler _tlsHandler;
+        private readonly IEventLoopGroup _businessEventLoopGroup;
 
         protected ChannelInitializerBase(Action<T> initializationAction,
             IList<IChannelHandler> handlers,
-            TlsHandler tlsHandler)
+            TlsHandler tlsHandler,
+            IEventLoopGroup businessEventLoop)
         {
             Guard.Argument(initializationAction, nameof(initializationAction)).NotNull();
             Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
             _initializationAction = initializationAction;
             _handlers = handlers.ToImmutableArray();
             _tlsHandler = tlsHandler;
+            _businessEventLoopGroup = businessEventLoop;
         }
 
         protected override void InitChannel(T channel)
@@ -62,7 +65,7 @@ namespace Catalyst.Common.IO
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
-            pipeline.AddLast(_handlers.ToArray());
+            pipeline.AddLast(_businessEventLoopGroup, _handlers.ToArray());
         }
     }
 }

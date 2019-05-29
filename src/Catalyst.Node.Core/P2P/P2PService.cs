@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -49,9 +50,11 @@ namespace Catalyst.Node.Core.P2P
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers,
             ICorrelationManager correlationManager,
-            IGossipManager gossipManager)
+            IGossipManager gossipManager,
+            INodeBusinessEventFactory eventFactory)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
+            BusinessLogicEventLoop = eventFactory.NewUdpServerLoopGroup();
             Discovery = peerDiscovery;
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
 
@@ -67,7 +70,8 @@ namespace Catalyst.Node.Core.P2P
             };
             
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
-                channelHandlers
+                channelHandlers,
+                BusinessLogicEventLoop
             ), settings.BindAddress, settings.Port);
 
             peerDiscovery.StartObserving(MessageStream);

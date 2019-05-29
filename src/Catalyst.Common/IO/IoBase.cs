@@ -34,6 +34,7 @@ namespace Catalyst.Common.IO
         protected const int BackLogValue = 100;
         protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
+        protected IEventLoopGroup BusinessLogicEventLoop;
 
         public IChannel Channel { get; set; }
 
@@ -53,6 +54,14 @@ namespace Catalyst.Common.IO
             if (WorkerEventLoop != null)
             {
                 var quietPeriod = TimeSpan.FromMilliseconds(100);
+
+                if (BusinessLogicEventLoop != null)
+                {
+                    await BusinessLogicEventLoop
+                       .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
+                       .ConfigureAwait(false);
+                }
+
                 await WorkerEventLoop
                    .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
                    .ConfigureAwait(false);

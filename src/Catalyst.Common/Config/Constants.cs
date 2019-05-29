@@ -130,5 +130,7 @@ namespace Catalyst.Common.Config
 
         /// <summary>The maximum peers the node can gossip to for a single message, per gossip cycle</summary>
         public static int MaxGossipPeersPerRound => 3;
+
+        public static int BusinessHandlerLogicDefaultThreadCount => Environment.ProcessorCount * 2;
     }
 }

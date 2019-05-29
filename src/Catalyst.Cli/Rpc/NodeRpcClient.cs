@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -35,6 +37,7 @@ using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Catalyst.Cli.Rpc
@@ -55,15 +58,19 @@ namespace Catalyst.Cli.Rpc
         /// </summary>
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
+        /// <param name="eventFactory"></param>
         /// <param name="responseHandlers">the collection of handlers used to process incoming response</param>
         public NodeRpcClient(X509Certificate certificate, 
             IRpcNodeConfig nodeConfig, 
+            IRpcBusinessEventFactory eventFactory,
             IEnumerable<IRpcResponseHandler> responseHandlers) 
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
+            BusinessLogicEventLoop = eventFactory.NewRpcClientLoopGroup();
+
             var anySignedTypeClientHandler = new AnySignedTypeClientHandlerBase();
             MessageStream = anySignedTypeClientHandler.MessageStream;
-
+            
             responseHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
 
@@ -80,6 +87,7 @@ namespace Catalyst.Cli.Rpc
                 new OutboundChannelInitializerBase<ISocketChannel>(channel => { },
                     channelHandlers,
                     nodeConfig.HostAddress,
+                    BusinessLogicEventLoop,
                     certificate
                 ), EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port)
             );

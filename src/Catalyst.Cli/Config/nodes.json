@@ -1,5 +1,6 @@
 {
     "CatalystCliRpcNodes": {
+        "BusinessThreads": 2, 
         "nodes": [
             {
                 "nodeId": "node1",

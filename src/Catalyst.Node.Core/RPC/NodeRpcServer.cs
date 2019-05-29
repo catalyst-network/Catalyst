@@ -36,7 +36,10 @@ using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Codecs.Protobuf;
+using Microsoft.Extensions.Configuration;
 using Serilog;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO;
 
 namespace Catalyst.Node.Core.RPC
 {
@@ -52,10 +55,12 @@ namespace Catalyst.Node.Core.RPC
 
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
+            INodeBusinessEventFactory eventFactory,
             ICertificateStore certificateStore,
             IEnumerable<IRpcRequestHandler> requestHandlers,
             ICorrelationManager correlationManager) : base(logger)
         {
+            BusinessLogicEventLoop = eventFactory.NewRpcServerLoopGroup();
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
@@ -75,6 +80,7 @@ namespace Catalyst.Node.Core.RPC
                         new CorrelationHandler(correlationManager),
                         anyTypeServerHandler
                     },
+                    BusinessLogicEventLoop,
                     _certificate
                 ),
                 Settings.BindAddress, Settings.Port

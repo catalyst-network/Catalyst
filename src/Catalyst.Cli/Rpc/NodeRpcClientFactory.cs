@@ -23,23 +23,31 @@
 
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
+using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Cli.Rpc
 {
     public sealed class NodeRpcClientFactory : INodeRpcClientFactory
     {
         private readonly IEnumerable<IRpcResponseHandler> _responseHandlers;
+        private readonly IConfigurationRoot _configuration;
+        private readonly IRpcBusinessEventFactory _businessEventFactory;
 
-        public NodeRpcClientFactory(IEnumerable<IRpcResponseHandler> responseHandlers)
+        public NodeRpcClientFactory(IEnumerable<IRpcResponseHandler> responseHandlers, 
+            IConfigurationRoot configurationRoot,
+            IRpcBusinessEventFactory businessEventFactory)
         {
             _responseHandlers = responseHandlers;
+            _configuration = configurationRoot;
+            _businessEventFactory = businessEventFactory;
         }
 
         public INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig)
         {
-            return new NodeRpcClient(certificate, nodeConfig, _responseHandlers);
+            return new NodeRpcClient(certificate, nodeConfig, _businessEventFactory, _responseHandlers);
         }
     }
 }
