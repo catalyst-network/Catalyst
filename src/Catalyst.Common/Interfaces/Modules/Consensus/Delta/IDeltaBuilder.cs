@@ -21,29 +21,22 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
-using SharpRepository.Repository;
+using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
     /// <summary>
-    /// This is the service in charge of providing the list of PeerIdentifiers that are eligible for the
-    /// production of the next delta.
+    /// The service in charge of building the delta state update used to update the ledger update 
+    /// for a given cycle.
     /// </summary>
-    public interface IDeltaProducersProvider
+    public interface IDeltaBuilder
     {
         /// <summary>
-        /// Finds the identifiers of the peers which are allowed to produce the next delta.
+        /// Builds a new candidate delta based on the content of its predecessor
         /// </summary>
         /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        /// <returns>The list of peers which are eligible for the production of the delta following <see cref="previousDeltaHash"/></returns>
-        IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash);
-
-        /// <summary>
-        /// A peer repository containing peers eligible for the production of the next delta.
-        /// </summary>
-        IRepository<Peer> PeerRepository { get; }
+        /// <returns>Returns a candidate delta object that contains the hash for the update,
+        /// the hash for the previous delta and the producer's PeerId</returns>
+        CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash);
     }
 }

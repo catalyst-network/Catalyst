@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Catalyst.Common.Cryptography;
 using Dawn;
 using Google.Protobuf;
 
@@ -49,9 +50,18 @@ namespace Catalyst.Common.Util
         /// <returns></returns>
         public static ulong GenerateCorrelationId()
         {
-            var buf = new byte[8];
-            Rand.NextBytes(buf);
+            var buf = GenerateRandomByteArray(8);
             return BitConverter.ToUInt64(buf, 0);
+        }
+
+        /// <summary>
+        ///     returns a random array of byte of the desired length
+        /// </summary>
+        public static byte[] GenerateRandomByteArray(int length)
+        {
+            var buf = new byte[length];
+            Rand.NextBytes(buf);
+            return buf;
         }
 
         /// <summary>

@@ -27,12 +27,13 @@ using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus;
+using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
     public class DeltaTransactionRetrieverTests
     {
