@@ -21,21 +21,21 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Protocol.Transaction;
-using Multiformats.Hash.Algorithms;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Util;
-using Google.Protobuf;
-using Catalyst.Common.Interfaces.P2P;
-using System;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Delta;
+using Catalyst.Protocol.Transaction;
 using Dawn;
+using Google.Protobuf;
+using Multiformats.Hash.Algorithms;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
     /// <inheritdoc />
     public class DeltaBuilder : IDeltaBuilder

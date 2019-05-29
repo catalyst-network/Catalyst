@@ -21,24 +21,13 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
-using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
-{
-    public interface IConsensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
+    public interface IScoredCandidateDelta
     {
-        /// <see cref="IDeltaTransactionRetriever"/>
-        IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
-
-        /// <see cref="IDeltaProducersProvider"/>
-        IDeltaProducersProvider DeltaProducersProvider { get; }
-
-        /// <see cref="IDeltaProducersProvider"/>
-        IDeltaBuilder DeltaBuilder { get; }
+        CandidateDelta Candidate { get; }
+        int Score { get; }
+        int IncreasePopularity(int voteCount);
     }
 }
