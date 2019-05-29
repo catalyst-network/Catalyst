@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
@@ -52,17 +53,20 @@ namespace Catalyst.Cli.Commands
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(e.Message, "Failed to get connected node " + opts.Node + " while trying to set the peer blacklist flag");
+                    _logger.Error(e.Message, "Failed to get connected node {0} while trying to set the peer blacklist flag", opts.Node);
                     return false;
                 }
 
                 var nodeConfig = GetNodeConfig(opts.Node);
-                Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
+                if (nodeConfig == null)
+                {
+                    throw new KeyNotFoundException($"Unable to find configuration for node {opts.Node}");
+                }
                 
                 var peerPublicKey = opts.PublicKey;
                 var peerIp = opts.IpAddress;
 
-                var blackListFlag = Convert.ToBoolean(opts.BlackListFlag);
+                var blackListFlag = opts.BlackListFlag;
 
                 var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto(
                     new SetPeerBlackListRequest

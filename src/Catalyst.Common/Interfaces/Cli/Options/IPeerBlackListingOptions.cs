@@ -33,7 +33,7 @@ namespace Catalyst.Common.Interfaces.Cli.Options
         /// </value>
         string Node { get; set; }
 
-        string BlackListFlag { get; set; }
+        bool BlackListFlag { get; set; }
 
         string IpAddress { get; set; }
         
