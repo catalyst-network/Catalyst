@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         }
 
         ///<inheritdoc />
-        public CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash)
+        public CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash)
         {
             var allTransactions = _transactionRetriever.GetMempoolTransactionsByPriority();
 
@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                .ToArray();
 
             //hj
-            var candidate = new CandidateDeltaBroadcast
+            var candidate = new CandidateDelta
             {
                 // h∆j
                 Hash = _hashAlgorithm.ComputeHash(globalLedgerStateUpdate).ToByteString(),
