@@ -59,15 +59,15 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
 
         public void OnCompleted()
         {
-            _logger.Information("End of {0} stream.", nameof(CandidateDelta));
+            _logger.Information("End of {0} stream.", nameof(CandidateDeltaBroadcast));
         }
 
         public void OnError(Exception error)
         {
-            _logger.Error(error, "Error occured in {0} stream.", nameof(CandidateDelta));
+            _logger.Error(error, "Error occured in {0} stream.", nameof(CandidateDeltaBroadcast));
         }
 
-        public void OnNext(CandidateDelta candidate)
+        public void OnNext(CandidateDeltaBroadcast candidate)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             }
         }
 
-        private int GetProducerRankFactor(CandidateDelta candidate)
+        private int GetProducerRankFactor(CandidateDeltaBroadcast candidate)
         {
             var preferredProducers = _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray());

@@ -26,7 +26,7 @@ using Catalyst.Protocol.Delta;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
-    public interface IDeltaVoter : IObserver<CandidateDelta>
+    public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
     {
 
     }

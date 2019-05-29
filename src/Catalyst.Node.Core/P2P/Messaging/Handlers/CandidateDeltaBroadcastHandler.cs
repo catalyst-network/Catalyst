@@ -21,13 +21,10 @@
 
 #endregion
 
-using Catalyst.Protocol.Delta;
-
-namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
-    public interface IScoredCandidateDelta
+namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+{
+    public class CandidateDeltaBroadcastHandler
     {
-        CandidateDeltaBroadcast Candidate { get; }
-        int Score { get; }
-        int IncreasePopularity(int voteCount);
+        
     }
 }

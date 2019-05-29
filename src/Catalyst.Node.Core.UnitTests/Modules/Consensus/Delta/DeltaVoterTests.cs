@@ -57,10 +57,10 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             DodgyCandidates = new List<object[]>
             {
                 new object[] {null},
-                new object[] {new CandidateDelta()},
+                new object[] {new CandidateDeltaBroadcast()},
                 new object[] 
                 {
-                    new CandidateDelta
+                    new CandidateDeltaBroadcast
                     {
                         Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                         PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 },
                 new object[]
                 {
-                    new CandidateDelta
+                    new CandidateDeltaBroadcast
                     {
                         Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                         ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 },
                 new object[]
                 {
-                    new CandidateDelta
+                    new CandidateDeltaBroadcast
                     {
                         PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                         ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
@@ -101,7 +101,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
         [Theory]
         [MemberData(nameof(DodgyCandidates))]
-        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDelta dodgyCandidate)
+        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
         {
             var logger = Substitute.For<ILogger>();
             _voter = new DeltaVoter(_cache, _producersProvider, logger);
