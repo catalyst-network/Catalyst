@@ -27,7 +27,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
@@ -39,7 +38,6 @@ using Catalyst.Common.IO.Inbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
@@ -54,7 +52,7 @@ namespace Catalyst.Node.Core.P2P
         /// 
         /// </summary>
         /// <param name="ipEndPoint"></param>
-        /// <param name="configurationRoot"></param>
+        /// <param name="businessEventFactory"></param>
         /// <param name="messageHandlers"></param>
         /// <param name="gossipManager"></param>
         public PeerClient(IPEndPoint ipEndPoint,

@@ -10,6 +10,14 @@
             ]
         },
         {
+            "type": "Catalyst.Cli.Rpc.RpcBusinessEventFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.IRpcBusinessEventFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Cli.Rpc.NodeRpcClientFactory",
             "services": [
                 {

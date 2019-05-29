@@ -10,6 +10,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.NodeBusinessEventFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.INodeBusinessEventFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Rpc.RpcCorrelationCache, Catalyst.Common",
             "services": [
                 {

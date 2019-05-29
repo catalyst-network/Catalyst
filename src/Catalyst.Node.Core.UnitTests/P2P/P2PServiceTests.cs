@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
@@ -130,7 +131,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                    var peerClient = new PeerClient(targetHost, _container.Resolve<IConfigurationRoot>(), _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
+                    var peerClient = new PeerClient(targetHost, _container.Resolve<INodeBusinessEventFactory>(), _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
                     var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PingResponse(),
@@ -174,7 +175,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(targetHost, _container.Resolve<IConfigurationRoot>(), _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
+                    var peerClient = new PeerClient(targetHost, _container.Resolve<INodeBusinessEventFactory>(), _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
                     
                     var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PeerNeighborsResponse(),

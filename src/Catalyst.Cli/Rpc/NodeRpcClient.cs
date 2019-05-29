@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
@@ -37,7 +36,6 @@ using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Catalyst.Cli.Rpc
