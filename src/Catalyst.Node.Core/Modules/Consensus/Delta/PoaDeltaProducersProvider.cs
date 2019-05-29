@@ -21,38 +21,67 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Catalyst.Common.Interfaces.Modules.Consensus;
+using System.Threading;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
-using Catalyst.Protocol.Delta;
+using Dawn;
 using Google.Protobuf;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using Multiformats.Hash.Algorithms;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Serilog;
 using SharpRepository.Repository;
 using Peer = Catalyst.Common.P2P.Peer;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
     public class PoaDeltaProducersProvider : IDeltaProducersProvider
     {
+        private static string GetCacheKey(string rawKey) => nameof(PoaDeltaProducersProvider) + "-" + rawKey;
+
         private readonly ILogger _logger;
+
+        private readonly IMemoryCache _producersByPreviousDelta;
+        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         public IMultihashAlgorithm HashAlgorithm { get; }
 
-        /// <inheritdoc />w
+        /// <inheritdoc />
         public IRepository<Peer> PeerRepository { get; }
 
         public PoaDeltaProducersProvider(IRepository<Peer> peerRepository,
+            IMemoryCache producersByPreviousDelta,
+            IMultihashAlgorithm hashAlgorithm,
             ILogger logger)
         {
             _logger = logger;
             PeerRepository = peerRepository;
-            HashAlgorithm = Common.Config.Constants.HashAlgorithm;
+            HashAlgorithm = hashAlgorithm;
+            _cacheEntryOptions = new MemoryCacheEntryOptions()
+               .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
+            _producersByPreviousDelta = producersByPreviousDelta;
         }
 
         public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash)
         {
+            Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
+
+            var previousDeltaHashAsHex = previousDeltaHash.ToHex();
+
+            if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHashAsHex),
+                out IList<IPeerIdentifier> cachedPeerIdsInPriorityOrder))
+            {
+                _logger.Information("Retrieved favorite delta producers for successor of {0} from cache.", previousDeltaHashAsHex);
+                return cachedPeerIdsInPriorityOrder;
+            }
+
+            _logger.Information("Calculating favorite delta producers for the successor of {0}.", previousDeltaHashAsHex);
+
             var allPeers = PeerRepository.GetAll();
 
             var peerIdsInPriorityOrder = allPeers.Select(p =>
@@ -68,6 +97,9 @@ namespace Catalyst.Node.Core.Modules.Consensus
                .OrderBy(h => h.ranking, ByteUtil.ByteListMinSizeComparer.Default)
                .Select(h => h.PeerIdentifier)
                .ToList();
+
+            _logger.Information("Adding favorite delta producers for the successor of {0} to cache.", previousDeltaHashAsHex);
+            _producersByPreviousDelta.Set(GetCacheKey(previousDeltaHashAsHex), peerIdsInPriorityOrder, _cacheEntryOptions);
 
             return peerIdsInPriorityOrder;
         }
