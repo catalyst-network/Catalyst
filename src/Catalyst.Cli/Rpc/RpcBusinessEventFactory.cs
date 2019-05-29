@@ -37,7 +37,7 @@ namespace Catalyst.Cli.Rpc
         public IEventLoopGroup NewRpcClientLoopGroup()
         {
             var threadCount = _configurationRoot.GetSection("CatalystCliRpcNodes")
-               .GetValue<int>("BusinessThreads", Constants.BusinessHandlerLogicDefaultThreadCount);
+               .GetValue<int>("ClientBusinessThreads", Constants.BusinessHandlerLogicDefaultThreadCount);
             var loopGroup = new MultithreadEventLoopGroup(threadCount);
             return loopGroup;
         }
