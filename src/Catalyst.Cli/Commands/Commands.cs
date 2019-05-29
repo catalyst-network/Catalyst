@@ -59,6 +59,7 @@ namespace Catalyst.Cli.Commands
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
         private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly ICliModule[] _cliModules;
 
         /// <summary>
         /// </summary>
@@ -69,8 +70,10 @@ namespace Catalyst.Cli.Commands
             ICertificateStore certificateStore,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
-            IUserOutput userOutput) : base(userOutput)
+            IUserOutput userOutput,
+            ICliModule[] cliModules) : base(userOutput)
         {
+            _cliModules = cliModules;
             _rpcMessageFactory = rpcMessageFactory;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
@@ -88,6 +91,13 @@ namespace Catalyst.Cli.Commands
         public override bool ParseCommand(params string[] args)
         {
             Guard.Argument(args, nameof(args)).NotNull().MinCount(1).NotEmpty();
+            foreach (var module in _cliModules)
+            {
+                if (module.HandleCommand(args))
+                {
+                    return true;
+                }
+            }
 
             return Parser.Default.ParseArguments<
                     GetInfoOptions,

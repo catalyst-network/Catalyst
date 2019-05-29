@@ -2,6 +2,22 @@
     "defaultAssembly": "Catalyst.Cli",
     "components": [
         {
+            "type": "Catalyst.Cli.Modules.Dfs.DfsCliModule",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.ICliModule, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Modules.Dfs.DfsAddFileCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.ICliCommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Cli.CatalystCli",
             "services": [
                 {
