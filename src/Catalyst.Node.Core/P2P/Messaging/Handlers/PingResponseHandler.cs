@@ -25,6 +25,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Serilog;
@@ -32,12 +33,11 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class PingResponseHandler
-        : ReputableResponseHandlerBase<PingResponse, PingRequest, IReputableCache>,
+        : MessageHandlerBase<PingResponse>,
             IP2PMessageHandler
     {
-        public PingResponseHandler(IReputableCache reputableCache,
-            ILogger logger)
-            : base(reputableCache, logger) { }
+        public PingResponseHandler(ILogger logger)
+            : base(logger) { }
 
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {

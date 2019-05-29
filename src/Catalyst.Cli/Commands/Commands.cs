@@ -47,7 +47,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Cli.Commands
 {
     /// <inheritdoc cref="ShellBase" />
-    public sealed partial class Commands : ShellBase, IAdvancedShell
+    internal sealed partial class Commands : ShellBase, IAdvancedShell
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly ICertificateStore _certificateStore;
@@ -58,20 +58,20 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
-        private readonly IRpcCorrelationCache _rpcMessageCorrelationCache;
+        private readonly IRpcMessageFactory _rpcMessageFactory;
 
         /// <summary>
         /// </summary>
-        public Commands(INodeRpcClientFactory nodeRpcClientFactory,
+        public Commands(IRpcMessageFactory rpcMessageFactory,
+            INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
             ICertificateStore certificateStore,
-            IRpcCorrelationCache rpcMessageCorrelationCache,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)
         {
-            _rpcMessageCorrelationCache = rpcMessageCorrelationCache;
+            _rpcMessageFactory = rpcMessageFactory;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _logger = logger;

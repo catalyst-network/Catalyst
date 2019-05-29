@@ -36,7 +36,7 @@ using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    internal partial class Commands
     {
         /// <inheritdoc cref="PeerBlackListingCommand" />
         public bool PeerBlackListingCommand(IPeerBlackListingOptions opts)
@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
 
                 var blackListFlag = Convert.ToBoolean(opts.BlackListFlag);
 
-                var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto(
                     new SetPeerBlackListRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),

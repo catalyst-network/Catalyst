@@ -74,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
         public void BuildDeltaEmptyPoolContent()
         {
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
-            transactionRetriever.GetMempoolTransactionsByPriority().Returns(new List<Transaction>());
+            transactionRetriever.GetMempoolTransactionsByPriority().Returns(new List<TransactionBroadcast>());
             
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId);
 
@@ -166,7 +166,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
         }
 
-        private void ValidateDeltaCandidate(CandidateDelta candidate, byte[] expectedCandidateHash)
+        private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedCandidateHash)
         {
             candidate.Should().NotBeNull();
             candidate.ProducerId.Should().Be(_producerId.PeerId);

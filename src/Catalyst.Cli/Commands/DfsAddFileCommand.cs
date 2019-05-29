@@ -39,7 +39,7 @@ using Serilog.Events;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed partial class Commands
+    internal sealed partial class Commands
     {
         /// <inheritdoc cref="DfsAddFile" />
         public bool DfsAddFile(IAddFileOnDfsOptions opts)
@@ -79,7 +79,7 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
             
-            var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+            var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto(
                 message: request,
                 messageTypes: MessageTypes.Ask,
                 recipient: nodePeerIdentifier,
@@ -92,7 +92,7 @@ namespace Catalyst.Cli.Commands
                 nodePeerIdentifier,
                 node.Channel,
                 requestMessage.CorrelationId.ToGuid(),
-                new RpcMessageFactory(_rpcMessageCorrelationCache));
+                _rpcMessageFactory);
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 
@@ -104,13 +104,13 @@ namespace Catalyst.Cli.Commands
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
-                _userOutput.Write("\rUploaded: " + fileTransfer.GetPercentage() + "%");
+                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage()}%");
                 System.Threading.Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
             {
-                _userOutput.Write("\rUploaded: " + fileTransfer.GetPercentage() + "%\n");
+                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage()}%\n");
             }
             else
             {

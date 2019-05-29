@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
         }
 
         ///<inheritdoc />
-        public CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash)
+        public CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash)
         {
             var allTransactions = _transactionRetriever.GetMempoolTransactionsByPriority();
 
@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
                .ToArray();
 
             //hj
-            var candidate = new CandidateDelta
+            var candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
                 Hash = _hashAlgorithm.ComputeHash(globalLedgerStateUpdate).ToByteString(),
@@ -137,7 +137,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
         /// </summary>
         /// <param name="allTransactions">All transactions.</param>
         /// <returns></returns>
-        public static IList<Transaction> GetValidTransactionsForDelta(IEnumerable<Transaction> allTransactions)
+        public static IList<TransactionBroadcast> GetValidTransactionsForDelta(IEnumerable<TransactionBroadcast> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
