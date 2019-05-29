@@ -64,7 +64,7 @@ namespace Catalyst.Cli.UnitTests
                 });
             }
 
-            Task.Delay(TaskDelay * ExpectedThreads * 2).ConfigureAwait(false).GetAwaiter().GetResult();
+            Task.Delay(TaskDelay * ExpectedThreads * 2 + 100).ConfigureAwait(false).GetAwaiter().GetResult();
             Assert.Equal(ExpectedThreads, threadCount);
         }
     }
