@@ -82,11 +82,11 @@
         <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CryptoInfoScryptDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CryptoInfoScryptDTO.cs" />
         <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\CipherParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\CipherParamsDTO.cs" />
         <Compile Include="..\..\submodules\Nethereum\src\Nethereum.KeyStore\JsonDeserialisation\ScryptParamsDTO.cs" Link="KeyStore\NEthereum\JsonDeserialisation\ScryptParamsDTO.cs" />
-        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />
-        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />
-        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />
-        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />
-        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Transaction.cs" Link="Protocol\Transaction.cs" />
+<!--        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\IPPN.cs" Link="Protocol\IPPN.cs" />-->
+<!--        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Common.cs" Link="Protocol\Common.cs" />-->
+<!--        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Delta.cs" Link="Protocol\Delta.cs" />-->
+<!--        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Rpc.cs" Link="Protocol\Rpc.cs" />-->
+<!--        <Compile Include="$(SolutionDir)\Catalyst.Common\obj\$(Configuration)\$(TargetFrameWork)\Transaction.cs" Link="Protocol\Transaction.cs" />-->
     </ItemGroup>
     <ItemGroup>
         <None Include="..\Build\libs\advapi32.dll">
@@ -110,8 +110,8 @@
         <Folder Include="Hex\HexConverters\Extensions\" />
         <Folder Include="Hex\HexTypes\" />
         <Folder Include="RLP\" />
-        <Folder Include="Protocol" />
-        <Folder Include="Protocol\Protobuffs" />
+<!--        <Folder Include="Protocol" />-->
+<!--        <Folder Include="Protocol\Protobuffs" />-->
     </ItemGroup>
     <ItemGroup>
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protocol\Protobuffs\Common.proto" />
