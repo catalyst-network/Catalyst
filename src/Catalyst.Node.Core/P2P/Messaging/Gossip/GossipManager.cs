@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -132,14 +133,18 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             IPEndPoint ipEndpoint = new IPEndPoint(_peerSettings.BindAddress, _peerSettings.Port);
 
             // TODO: Peer client should only be initialized once and re-used throughout the whole lifecycle #447
-            var peerClient = new PeerClient(ipEndpoint, new List<IP2PMessageHandler>(), this);
-
-            foreach (var peerIdentifier in peersToGossip)
+            Task.Run(() =>
             {
-                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
-                    MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                _ = peerClient.SendMessage(datagramEnvelope);
-            }
+                using (var peerClient = new PeerClient(ipEndpoint, new List<IP2PMessageHandler>(), this))
+                {
+                    foreach (var peerIdentifier in peersToGossip)
+                    {
+                        var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
+                            MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
+                        _ = peerClient.SendMessage(datagramEnvelope);
+                    }
+                }
+            });
 
             var updateCount = (uint) peersToGossip.Count;
             if (updateCount > 0)
