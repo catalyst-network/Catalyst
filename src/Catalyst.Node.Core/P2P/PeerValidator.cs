@@ -104,8 +104,6 @@ namespace Catalyst.Node.Core.P2P
 
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(1000));
 
-                    _p2PService.Dispose();
-
                     if (_serverObserver.Received.Payload.PeerId.PublicKey.ToStringUtf8() ==
                         peerId.PublicKey.ToStringUtf8())
                     {
@@ -119,6 +117,47 @@ namespace Catalyst.Node.Core.P2P
                 _logger.Error(e.Message);
                 _p2PService.Dispose();
             }
+            return false;
+        }
+
+
+        public bool PeerChallengeResponse(PeerId peerId)
+        {
+            try
+            {
+                using (_p2PService.MessageStream.Subscribe(_serverObserver))
+                {
+                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(
+                        new MessageDto(
+                            new PeerChallengeRequest(),
+                            MessageTypes.Tell,
+                            new PeerIdentifier(peerId),
+                            new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(),
+                                _peerSettings.BindAddress,
+                                _peerSettings.Port)
+                        ),
+                        Guid.NewGuid()
+                    );
+
+
+                    ((PeerClient)_peerClient).SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+
+
+                   
+
+                    return IsPeerValid();
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                _p2PService.Dispose();
+            }
+            return IsPeerValid();
+        }
+
+        private bool IsPeerValid()
+        {
             return false;
         }
     }

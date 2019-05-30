@@ -205,6 +205,31 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
+        {
+            using (_container.BeginLifetimeScope(CurrentTestName))
+            {
+                var p2PService = _container.Resolve<IP2PService>();
+                var serverObserver = new AnySignedMessageObserver(0, _logger);
+
+                var peerSettings = new PeerSettings(_config);
+                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
+
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
+
+                var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings).PeerId);
+
+                var ttl = TimeSpan.FromMilliseconds(2000);
+
+                Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)));
+
+                valid.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Validate_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
             using (_container.BeginLifetimeScope(CurrentTestName))
@@ -226,7 +251,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        [InlineData("198.51.100.14", 1574)]
+        [InlineData("92.207.178.198", 1574)]
         [InlineData("198.51.100.3", 2524)]
         public void Validate_PeerIdentifiers_Expected_To_Fail_Invalid_IP_Port(string ip, int port)
         { 
