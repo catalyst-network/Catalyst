@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
             Gossip(anySigned);
         }
-        
+
         /// <inheritdoc/>
         public void IncomingGossip(AnySigned anySigned)
         {

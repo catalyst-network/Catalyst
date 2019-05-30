@@ -114,12 +114,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             recipientIdentifier.Ip.Returns(fakeIp);
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
-            
+
             EmbeddedChannel channel = new EmbeddedChannel(
                 new ProtoDatagramChannelHandler(),
                 new GossipHandler(gossipMessageHandler)
             );
-            
+
             var transaction = new TransactionBroadcast();
             var anySigned = transaction.ToAnySigned(peerIdentifier.PeerId, guid);
 
@@ -144,9 +144,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             var handler = new TransactionBroadcastTestHandler(_logger, () => hasHitHandler = true);
             handler.StartObserving(allMessageStream);
-            
+
             EmbeddedChannel channel = new EmbeddedChannel(protoDatagramChannelHandler, gossipHandler);
-            
+
             var anySignedGossip = new TransactionBroadcast()
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
@@ -166,7 +166,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             var nonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
             nonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);
-            
+
             var secondNonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
                .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
             secondNonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);

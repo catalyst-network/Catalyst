@@ -24,13 +24,13 @@
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
-{ 
+{
     public interface IGossipManager
     {
         /// <summary>Broadcasts a message.</summary>
         /// <param name="anySigned">Any signed message.</param>
         void Broadcast(AnySigned anySigned);
-        
+
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
         void IncomingGossip(AnySigned anySigned);
