@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Common.IO.Messaging;
@@ -61,13 +62,20 @@ namespace Catalyst.Node.Core.P2P
             Logger.Debug("P2P client starting");
 
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
-            MessageStream = protoDatagramChannelHandler.MessageStream;
-            messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
+            var gossipHandler = new GossipHandler(gossipManager);
+            var handlerList = messageHandlers.ToList();
+
+            var allMessagesStream =
+                protoDatagramChannelHandler.MessageStream.Merge(gossipHandler.MessageStream);
+
+            MessageStream = allMessagesStream;
+
+            handlerList.ForEach(h => h.StartObserving(allMessagesStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 protoDatagramChannelHandler,
-                new GossipHandler(gossipManager)
+                gossipHandler
             };
 
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },

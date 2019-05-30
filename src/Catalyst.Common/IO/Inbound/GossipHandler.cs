@@ -50,7 +50,7 @@ namespace Catalyst.Common.IO.Inbound
             // TODO Check sig
             if (channeledAnySigned.Payload.CheckIfMessageIsGossip())
             {
-                _gossipManager.IncomingGossip(channeledAnySigned);
+                _gossipManager.IncomingGossip(channeledAnySigned.Payload);
                 AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);
                 MessageSubject.OnNext(new ChanneledAnySigned(ctx, originalGossipedMessage));
             }

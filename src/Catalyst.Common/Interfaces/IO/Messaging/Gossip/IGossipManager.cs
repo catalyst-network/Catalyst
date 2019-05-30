@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
@@ -30,10 +29,10 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
     {
         /// <summary>Broadcasts a message.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        void Broadcast(IChanneledMessage<AnySigned> anySigned);
-
+        void Broadcast(AnySigned anySigned);
+        
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        void IncomingGossip(IChanneledMessage<AnySigned> anySigned);
+        void IncomingGossip(AnySigned anySigned);
     }
 }
