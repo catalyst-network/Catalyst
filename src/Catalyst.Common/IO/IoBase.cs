@@ -72,7 +72,7 @@ namespace Catalyst.Common.IO
             }
             
             Logger.Information($"Disposing {GetType().Name}");
-            Task.WaitAll(Shutdown());
+            Shutdown().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 }
