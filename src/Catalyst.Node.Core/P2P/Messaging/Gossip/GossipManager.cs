@@ -135,15 +135,16 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             // TODO: Peer client should only be initialized once and re-used throughout the whole lifecycle #447
             Task.Run(() =>
             {
-                using (var peerClient = new PeerClient(ipEndpoint, new List<IP2PMessageHandler>(), this))
+                var peerClient = new PeerClient(ipEndpoint, new List<IP2PMessageHandler>(), this);
+                foreach (var peerIdentifier in peersToGossip)
                 {
-                    foreach (var peerIdentifier in peersToGossip)
-                    {
-                        var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
-                            MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                        _ = peerClient.SendMessage(datagramEnvelope);
-                    }
+                    var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
+                        MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
+                    _ = peerClient.SendMessage(datagramEnvelope);
                 }
+
+                peerClient.Channel.CloseAsync();
+                peerClient.Channel.DisconnectAsync();
             });
 
             var updateCount = (uint) peersToGossip.Count;
