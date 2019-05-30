@@ -138,7 +138,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
                 {
                     var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
                         MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                    peerClient.Channel.WriteAndFlushAsync(datagramEnvelope);
+                    _ = peerClient.SendMessage(datagramEnvelope);
                 }
             }
 
