@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             ConfigureContainerBuilder(_config, true, true);
 
             var subbedGossip = Substitute.For<IGossipManager>();
-            ContainerBuilder.RegisterInstance(subbedGossip);
+            ContainerBuilder.RegisterInstance(subbedGossip).SingleInstance();
             _container = ContainerBuilder.Build();
             _reputableCache = _container.Resolve<IReputableCache>();
         }
