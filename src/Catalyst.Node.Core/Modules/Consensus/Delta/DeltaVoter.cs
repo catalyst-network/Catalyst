@@ -22,10 +22,13 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Protocol;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Delta;
 using Dawn;
 using Google.Protobuf;
@@ -39,18 +42,25 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
     public class DeltaVoter : IDeltaVoter
     {
-        public static string GetCacheKey(string rawKey) => nameof(DeltaVoter) + "-" + rawKey;
+        public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate) => nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToHex();
+        public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToHex();
+        public static string GetCandidateListCacheKey(byte[] previousDeltaHash) => nameof(DeltaVoter) + "-" + previousDeltaHash.ToHex();
 
-        private readonly IMemoryCache _scoredDeltasByHash;
+        /// <summary>
+        /// This cache is used to maintain the candidates with their scores, and for each previous delta hash we found,
+        /// the list of candidates that we received.
+        /// </summary>
+        private readonly IMemoryCache _candidatesCache;
+
         private readonly IDeltaProducersProvider _deltaProducersProvider;
         private readonly ILogger _logger;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
-        public DeltaVoter(IMemoryCache scoredDeltasByPreviousHash,
+        public DeltaVoter(IMemoryCache candidatesCache,
             IDeltaProducersProvider deltaProducersProvider,
             ILogger logger)
         {
-            _scoredDeltasByHash = scoredDeltasByPreviousHash;
+            _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
@@ -71,30 +81,67 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         {
             try
             {
-                Guard.Argument(candidate, nameof(candidate)).NotNull()
-                   .Require(c => c.ProducerId != null, c => $"{nameof(candidate.ProducerId)} cannot be null")
-                   .Require(c => c.PreviousDeltaDfsHash != null && !c.PreviousDeltaDfsHash.IsEmpty,
-                        c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null or empty")
-                   .Require(c => c.Hash != null && !c.Hash.IsEmpty, 
-                        c => $"{nameof(candidate.Hash)} cannot be null or empty");
+                Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
 
                 var rankingFactor = GetProducerRankFactor(candidate);
 
-                var cacheKey = GetCacheKey(candidate.Hash.ToByteArray().ToHex());
-                if (_scoredDeltasByHash.TryGetValue<IScoredCandidateDelta>(cacheKey, out var retrievedScoredDelta))
+                var candidateCacheKey = GetCandidateCacheKey(candidate);
+                if (_candidatesCache.TryGetValue<IScoredCandidateDelta>(candidateCacheKey, out var retrievedScoredDelta))
                 {
                     retrievedScoredDelta.IncreasePopularity(1);
                     return;
                 }
 
-                var scoredDelta = new ScoredCandidateDelta(candidate, 100 * rankingFactor + 1);
-
-                _scoredDeltasByHash.Set(cacheKey, scoredDelta, _cacheEntryOptions);
+                AddCandidateToCandidateHashLookup(candidate, rankingFactor, candidateCacheKey);
+                AddCandidateToPreviousHashLookup(candidate, candidateCacheKey);
             }
             catch (Exception e)
             {
                 _logger.Error(e, "Failed to Vote on the candidate delta {0}", JsonConvert.SerializeObject(candidate));
             }
+        }
+
+        private void AddCandidateToCandidateHashLookup(CandidateDeltaBroadcast candidate,
+            int rankingFactor,
+            string candidateCacheKey)
+        {
+            var scoredDelta = new ScoredCandidateDelta(candidate, 100 * rankingFactor + 1);
+            _candidatesCache.Set(candidateCacheKey, scoredDelta, _cacheEntryOptions);
+        }
+
+        private void AddCandidateToPreviousHashLookup(CandidateDeltaBroadcast candidate, string candidateCacheKey)
+        {
+            var candidatesByPreviousHash =
+                _candidatesCache.GetOrCreate(GetCandidateListCacheKey(candidate),
+                    c =>
+                    {
+                        c.SetOptions(_cacheEntryOptions);
+                        return new ConcurrentBag<string>();
+                    });
+            candidatesByPreviousHash.Add(candidateCacheKey);
+        }
+
+        public CandidateDeltaBroadcast GetFavoriteDelta(byte[] previousDeltaDfsHash)
+        {
+            Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull().NotEmpty();
+            Log.Debug("Retrieving favorite candidate delta for the successor of delta {0}", 
+                previousDeltaDfsHash.ToHex());
+
+            var cacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
+            if (!_candidatesCache.TryGetValue(cacheKey, out ConcurrentBag<string> candidates))
+            {
+                _logger.Debug("Failed to retrieve any scored candidates with previous delta {0}",
+                    previousDeltaDfsHash.ToHex());
+                return null;
+            }
+
+            var favorite = candidates.Select(c => _candidatesCache.Get(c) as IScoredCandidateDelta)
+               .Where(c => c != null)
+               .OrderByDescending(c => c.Score)
+               .ThenBy(c => c.Candidate.Hash.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default)
+               .First();
+
+            return favorite.Candidate;
         }
 
         private int GetProducerRankFactor(CandidateDeltaBroadcast candidate)
