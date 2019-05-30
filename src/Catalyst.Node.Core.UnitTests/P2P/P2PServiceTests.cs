@@ -152,7 +152,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
 
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
+                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(5000));
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
