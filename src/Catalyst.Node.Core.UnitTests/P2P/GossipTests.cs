@@ -67,8 +67,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             _peers = Substitute.For<IRepository<Peer>>();
             _messageCache = Substitute.For<IReputableCache>();
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.BindAddress.Returns(IPAddress.Any);
-            _peerSettings.Port.Returns(10);
+            _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            _peerSettings.Port.Returns(12543);
         }
 
         [Theory]
@@ -134,8 +134,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         public void Gossip_Can_Execute_Proto_Handler()
         {
             var manager = new GossipManager(
-                PeerIdentifierHelper.GetPeerIdentifier("Test"), _messageCache, Substitute.For<IGossipCache>(), 
-                _peerSettings, Substitute.For<ILogger>());
+                PeerIdentifierHelper.GetPeerIdentifier("Test"), _messageCache, Substitute.For<IGossipCache>(), _peerSettings);
             var gossipHandler = new GossipHandler(manager);
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
 
@@ -186,7 +185,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var messageFactory = new P2PMessageFactory(_messageCache);
             var gossipCache = new GossipCache(_peers, cache, _logger);
-            IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _messageCache, gossipCache, _peerSettings, Substitute.For<ILogger>());
+            IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _messageCache, gossipCache, _peerSettings);
 
             var correlationId = Guid.NewGuid();
 
@@ -224,7 +223,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var gossipCache = new GossipCache(_peers, cache, _logger);
             var messageFactory = new P2PMessageFactory(_messageCache);
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var gossipMessageHandler = new GossipManager(senderPeerIdentifier, _messageCache, gossipCache, _peerSettings, Substitute.For<ILogger>());
+            var gossipMessageHandler = new GossipManager(senderPeerIdentifier, _messageCache, gossipCache, _peerSettings);
 
             var messageDto = messageFactory.GetMessage(
                 new MessageDto(
