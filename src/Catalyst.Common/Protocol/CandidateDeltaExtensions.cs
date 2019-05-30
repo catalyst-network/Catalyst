@@ -22,12 +22,22 @@
 #endregion
 
 using Catalyst.Protocol.Delta;
+using Dawn;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
-    public interface IScoredCandidateDelta
+namespace Catalyst.Common.Protocol
+{
+    public static class CandidateDeltaExtensions
     {
-        CandidateDeltaBroadcast Candidate { get; }
-        int Score { get; }
-        int IncreasePopularity(int voteCount);
+        public static bool IsValid(this CandidateDeltaBroadcast candidate)
+        {
+            Guard.Argument(candidate, nameof(candidate)).NotNull()
+               .Require(c => c.ProducerId != null, c => $"{nameof(candidate.ProducerId)} cannot be null")
+               .Require(c => c.PreviousDeltaDfsHash != null && !c.PreviousDeltaDfsHash.IsEmpty,
+                    c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null or empty")
+               .Require(c => c.Hash != null && !c.Hash.IsEmpty,
+                    c => $"{nameof(candidate.Hash)} cannot be null or empty");
+
+            return true;
+        }
     }
 }

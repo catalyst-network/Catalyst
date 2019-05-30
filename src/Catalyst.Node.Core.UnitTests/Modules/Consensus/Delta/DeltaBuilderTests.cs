@@ -166,7 +166,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
         }
 
-        private void ValidateDeltaCandidate(CandidateDelta candidate, byte[] expectedCandidateHash)
+        private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedCandidateHash)
         {
             candidate.Should().NotBeNull();
             candidate.ProducerId.Should().Be(_producerId.PeerId);

@@ -29,7 +29,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
 {
     public static class CandidateDeltaHelper
     {
-        public static CandidateDelta GetCandidateDelta(byte[] previousDeltaHash = null, 
+        public static CandidateDeltaBroadcast GetCandidateDelta(byte[] previousDeltaHash = null, 
             byte[] hash = null,
             PeerId producerId = null)
         {
@@ -38,7 +38,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
             var producer = producerId 
              ?? PeerIdHelper.GetPeerId(publicKey: ByteUtil.GenerateRandomByteArray(32));
 
-            return new CandidateDelta
+            return new CandidateDeltaBroadcast
             {
                 Hash = candidateHash.ToByteString(),
                 PreviousDeltaDfsHash = previousHash.ToByteString(),
