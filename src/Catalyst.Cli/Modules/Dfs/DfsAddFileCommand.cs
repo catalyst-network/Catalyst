@@ -26,8 +26,7 @@ using Catalyst.Common.Interfaces.Cli;
 
 namespace Catalyst.Cli.Modules.Dfs
 {
-    [CliModule(typeof(DfsCliModule))]
-    [CliOption(typeof(AddFileOnDfsOptions))]
+    [CliModule(typeof(DfsCliModule), typeof(AddFileOnDfsOptions))]
     public class DfsAddFileCommand : ICliCommand
     {
         public bool HandleCommand(object args)

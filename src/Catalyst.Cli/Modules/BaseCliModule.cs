@@ -48,7 +48,7 @@ namespace Catalyst.Cli.Modules
                     ((CliModuleAttribute) Attribute.GetCustomAttribute(cmd.GetType(), typeof(CliModuleAttribute)))
                    .GetModuleType() == this.GetType()).ToList();
             _optionTypes = _commands.Select(cmd =>
-                ((CliOptionAttribute) Attribute.GetCustomAttribute(cmd.GetType(), typeof(CliOptionAttribute)))
+                ((CliModuleAttribute) Attribute.GetCustomAttribute(cmd.GetType(), typeof(CliModuleAttribute)))
                .GetOptionType()).ToList();
         }
 

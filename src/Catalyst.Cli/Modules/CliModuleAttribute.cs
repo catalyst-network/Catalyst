@@ -28,12 +28,15 @@ namespace Catalyst.Cli.Modules
     internal class CliModuleAttribute : Attribute
     {
         private readonly Type _moduleType;
+        private readonly Type _optionType;
 
-        public CliModuleAttribute(Type moduleType)
+        public CliModuleAttribute(Type moduleType, Type optionType)
         {
             _moduleType = moduleType;
+            _optionType = optionType;
         }
 
         public Type GetModuleType() => _moduleType;
+        public Type GetOptionType() { return _optionType; }
     }
 }
