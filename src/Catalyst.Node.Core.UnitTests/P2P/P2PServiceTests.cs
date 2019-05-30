@@ -82,8 +82,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             ConfigureContainerBuilder(_config, true, true);
 
-            var subbedGossip = Substitute.For<IGossipManager>();
-            ContainerBuilder.RegisterInstance(subbedGossip).SingleInstance();
             _container = ContainerBuilder.Build();
             _reputableCache = _container.Resolve<IReputableCache>();
         }
@@ -127,7 +125,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = _container.Resolve<IP2PService>();
-                var logger = _container.Resolve<ILogger>();
                 var serverObserver = new AnySignedMessageObserver(0, _logger);
 
                 using (p2PService.MessageStream.Subscribe(serverObserver))
