@@ -65,9 +65,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly IConfigurationRoot _config;
         private readonly IReputableCache _reputableCache;
         private readonly IReputableCache _subbedReputableCache;
+        private readonly ITestOutputHelper _output;
 
         public P2PServiceTests(ITestOutputHelper output) : base(output)
         {
+            _output = output;
             _subbedReputableCache = Substitute.For<IReputableCache>();
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
@@ -90,6 +92,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void DoesResolveIp2PServiceCorrectly()
         {
+            _output.WriteLine(nameof(DoesResolveIp2PServiceCorrectly));
             using (var scope = _container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = _container.Resolve<IP2PService>();
@@ -103,6 +106,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void CanReceiveEventsFromSubscribedStream()
         {
+            _output.WriteLine(nameof(CanReceiveEventsFromSubscribedStream));
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -123,6 +127,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {
+            _output.WriteLine(nameof(CanReceivePingRequests));
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = _container.Resolve<IP2PService>();
@@ -167,6 +172,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceiveNeighbourRequests()
         {
+            _output.WriteLine(nameof(CanReceiveNeighbourRequests));
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = _container.Resolve<IP2PService>();
