@@ -134,7 +134,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         public void Gossip_Can_Execute_Proto_Handler()
         {
             var manager = new GossipManager(
-                PeerIdentifierHelper.GetPeerIdentifier("Test"), _messageCache, Substitute.For<IGossipCache>(), _peerSettings);
+                PeerIdentifierHelper.GetPeerIdentifier("Test"), _messageCache, Substitute.For<IGossipCache>(), 
+                _peerSettings, Substitute.For<ILogger>());
             var gossipHandler = new GossipHandler(manager);
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
 
@@ -185,7 +186,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var messageFactory = new P2PMessageFactory(_messageCache);
             var gossipCache = new GossipCache(_peers, cache, _logger);
-            IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _messageCache, gossipCache, _peerSettings);
+            IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _messageCache, gossipCache, _peerSettings, Substitute.For<ILogger>());
 
             var correlationId = Guid.NewGuid();
 
@@ -223,7 +224,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var gossipCache = new GossipCache(_peers, cache, _logger);
             var messageFactory = new P2PMessageFactory(_messageCache);
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var gossipMessageHandler = new GossipManager(senderPeerIdentifier, _messageCache, gossipCache, _peerSettings);
+            var gossipMessageHandler = new GossipManager(senderPeerIdentifier, _messageCache, gossipCache, _peerSettings, Substitute.For<ILogger>());
 
             var messageDto = messageFactory.GetMessage(
                 new MessageDto(

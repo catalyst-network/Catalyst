@@ -33,6 +33,7 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
@@ -54,6 +55,9 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <summary>The peer settings</summary>
         private readonly IPeerSettings _peerSettings;
 
+        /// <summary>The logger</summary>
+        private readonly ILogger _logger;
+
         /// <summary>Initializes a new instance of the <see cref="GossipManager"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="reputableCache">The reputable cache.</param>
@@ -62,12 +66,14 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         public GossipManager(IPeerIdentifier peerIdentifier,
             IReputableCache reputableCache,
             IGossipCache gossipCache,
-            IPeerSettings peerSettings)
+            IPeerSettings peerSettings,
+            ILogger logger)
         {
             _gossipCache = gossipCache;
             _peerIdentifier = peerIdentifier;
             _messageFactory = new P2PMessageFactory(reputableCache);
             _peerSettings = peerSettings;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -127,21 +133,27 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <param name="message">The message.</param>
         private void SendGossipMessages(AnySigned message)
         {
+            _logger.Debug("THIS1");
             var peersToGossip = _gossipCache.GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
             IPEndPoint ipEndpoint = new IPEndPoint(_peerSettings.BindAddress, _peerSettings.Port);
+            _logger.Debug("THIS2");
 
             // TODO: Peer client should only be initialized once and re-used throughout the whole lifecycle #447
             using (var peerClient = new PeerClient(ipEndpoint, new List<IP2PMessageHandler>(), this))
             {
+                _logger.Debug("THIS3");
                 foreach (var peerIdentifier in peersToGossip)
                 {
                     var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
                         MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
                     peerClient.Channel.WriteAndFlushAsync(datagramEnvelope);
                 }
+
+                _logger.Debug("THIS4");
             }
 
+            _logger.Debug("THIS5");
             var updateCount = (uint) peersToGossip.Count;
             if (updateCount > 0)
             {
