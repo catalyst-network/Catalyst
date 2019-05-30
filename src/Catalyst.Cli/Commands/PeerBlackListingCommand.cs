@@ -42,6 +42,8 @@ namespace Catalyst.Cli.Commands
         /// <inheritdoc cref="PeerBlackListingCommand" />
         public bool PeerBlackListingCommand(IPeerBlackListingOptions opts)
         {
+			Guard.Argument(opts).NotNull().Compatible<IPeerBlackListingOptions>();
+ 
             try
             {
                 Guard.Argument(opts).NotNull().Compatible<IPeerBlackListingOptions>();
