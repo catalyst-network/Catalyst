@@ -46,7 +46,6 @@ namespace Catalyst.Cli.Commands
  
             try
             {
-                Guard.Argument(opts).NotNull().Compatible<IPeerBlackListingOptions>();
 
                 INodeRpcClient node;
                 try
