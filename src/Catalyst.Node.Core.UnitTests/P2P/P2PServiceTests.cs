@@ -84,7 +84,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var subbedGossip = Substitute.For<IGossipManager>();
             ContainerBuilder.RegisterInstance(subbedGossip);
             _container = ContainerBuilder.Build();
-            _container.Resolve<IGossipManager>().Returns(subbedGossip);
             _reputableCache = _container.Resolve<IReputableCache>();
         }
 
