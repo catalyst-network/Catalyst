@@ -21,32 +21,29 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Network;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
-using Xunit;
 using SharpRepository.Repository;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Network;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
-using Nethereum.RLP;
-using Catalyst.Common.Util;
+using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     /// <summary>
     /// Tests the peer reputation calls
@@ -127,9 +124,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var peerDiscovery = Substitute.For<IPeerDiscovery>();
-            peerDiscovery.PeerRepository.Returns(peerRepository);
-
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
@@ -147,9 +141,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
-            var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerDiscovery);
+            var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

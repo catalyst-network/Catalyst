@@ -34,7 +34,7 @@ using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    internal partial class Commands
     {
         /// <inheritdoc cref="GetMempoolCommand" />
         public bool GetMempoolCommand(IGetMempoolOptions opts)
@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
                         nodeConfig.Port),
                     _peerIdentifier);
                 
-                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(dto);
+                var request = _rpcMessageFactory.GetMessage(dto);
                 node.SendMessage(request);
             }
             catch (Exception e)

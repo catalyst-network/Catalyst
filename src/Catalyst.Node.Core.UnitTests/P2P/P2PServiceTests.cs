@@ -31,17 +31,18 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
-using Catalyst.Node.Core.UnitTest.TestUtils;
+using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
@@ -52,7 +53,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTest.P2P
+namespace Catalyst.Node.Core.UnitTests.P2P
 {
     public sealed class P2PServiceTests : ConfigFileBasedTest
     {
@@ -128,8 +129,8 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
+                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
+                    var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
                     var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PingResponse(),
@@ -173,7 +174,7 @@ namespace Catalyst.Node.Core.UnitTest.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
+                    var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
                     
                     var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PeerNeighborsResponse(),

@@ -90,7 +90,7 @@ namespace Catalyst.Cli.UnitTests
 
         private static IEnumerable<string> CreateMemPoolData()
         {
-            var txLst = new List<Transaction>
+            var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
@@ -112,7 +112,7 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
         {
-            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var correlationCache = Substitute.For<IRpcCorrelationCache>();
             var txList = mempoolContent.ToList();
 
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(

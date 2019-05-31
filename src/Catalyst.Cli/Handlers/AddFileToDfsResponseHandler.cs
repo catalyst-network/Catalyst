@@ -43,9 +43,9 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Add File to DFS Response handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
-    public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IMessageCorrelationCache>,
+    public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IRpcCorrelationCache>,
         IRpcResponseHandler
     {
         /// <summary>The upload file transfer factory</summary>
@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Handlers
         /// <param name="logger">The logger.</param>
         /// <param name="rpcFileTransferFactory">The upload file transfer factory</param>
         /// <param name="userOutput"></param>
-        public AddFileToDfsResponseHandler(IMessageCorrelationCache correlationCache,
+        public AddFileToDfsResponseHandler(IRpcCorrelationCache correlationCache,
             ILogger logger,
             IUploadFileTransferFactory rpcFileTransferFactory, 
             IUserOutput userOutput) : base(correlationCache, logger)
@@ -74,6 +74,9 @@ namespace Catalyst.Cli.Handlers
             var deserialised = message.Payload.FromAnySigned<AddFileToDfsResponse>();
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
+
+            // @TODO return int not byte
+            // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
             var responseCode = (FileTransferResponseCodes) deserialised.ResponseCode[0];
 

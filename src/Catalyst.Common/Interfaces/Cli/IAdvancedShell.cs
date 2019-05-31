@@ -95,7 +95,11 @@ namespace Catalyst.Common.Interfaces.Cli
         /// <param name="opts">The options.</param>
         /// <returns></returns>
         bool PeerReputationCommand(IPeerReputationOptions opts);
-        
+
+        /// <param name="opts">The options.</param>
+        /// <returns></returns>
+        bool PeerBlackListingCommand(IPeerBlackListingOptions opts);
+
         /// <param name="opts">The options.</param>
         /// <returns></returns>
         bool DfsAddFile(IAddFileOnDfsOptions opts);

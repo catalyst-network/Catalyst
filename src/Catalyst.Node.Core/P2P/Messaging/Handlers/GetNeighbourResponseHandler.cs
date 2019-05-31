@@ -24,7 +24,7 @@
 using System;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Serilog;
@@ -32,14 +32,13 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 {
     public sealed class GetNeighbourResponseHandler
-        : ReputableResponseHandlerBase<PeerNeighborsResponse, PeerNeighborsRequest, IReputableCache>,
+        : MessageHandlerBase<PeerNeighborsResponse>,
             IP2PMessageHandler
     {
-        public GetNeighbourResponseHandler(IReputableCache reputableCache, ILogger logger) : base(reputableCache, logger) { }
+        public GetNeighbourResponseHandler(ILogger logger) : base(logger) { }
         
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            base.Handler(message);
             Logger.Debug("received peer NeighbourResponse");
         }
     }

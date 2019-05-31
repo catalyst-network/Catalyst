@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
     /// <summary>
     /// The service in charge of finding the transactions that should be included in a ledger update (aka Delta)
@@ -47,6 +47,6 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
         /// </summary>
         /// <param name="maxCount">The maximum number of transactions to be returned by the method.</param>
         /// <returns>The top <see cref="maxCount"/> transactions in order of </returns>
-        IList<Transaction> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
+        IList<TransactionBroadcast> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
     }
 }

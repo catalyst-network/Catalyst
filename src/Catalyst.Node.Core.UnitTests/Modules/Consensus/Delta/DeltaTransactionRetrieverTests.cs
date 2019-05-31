@@ -24,20 +24,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus;
+using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Consensus
+namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
     public class DeltaTransactionRetrieverTests
     {
-        private readonly IList<Transaction> _transactions;
+        private readonly IList<TransactionBroadcast> _transactions;
         private readonly DeltaTransactionRetriever _transactionRetriever;
 
         public DeltaTransactionRetrieverTests()

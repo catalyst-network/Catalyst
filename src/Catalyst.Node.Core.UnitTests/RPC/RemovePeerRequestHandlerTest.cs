@@ -26,27 +26,25 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Network;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Google.Protobuf;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Network;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
-using Catalyst.Common.Util;
-using Google.Protobuf;
 using SharpRepository.InMemoryRepository;
+using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     /// <summary>
     /// Tests remove peer CLI and RPC calls
@@ -115,9 +113,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var peerDiscovery = Substitute.For<IPeerDiscovery>();
-            peerDiscovery.PeerRepository.Returns(peerRepository);
-
             var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var peerToDelete = peerRepository.Get(1);
@@ -133,9 +128,8 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
-            var handler = new RemovePeerRequestHandler(sendPeerIdentifier, peerDiscovery, subbedCache, _logger, rpcMessageFactory);
+            var handler = new RemovePeerRequestHandler(sendPeerIdentifier, peerRepository, _logger, rpcMessageFactory);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

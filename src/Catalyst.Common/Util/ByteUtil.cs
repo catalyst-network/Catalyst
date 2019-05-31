@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Catalyst.Common.Cryptography;
 using Dawn;
 using Google.Protobuf;
 
@@ -49,9 +50,18 @@ namespace Catalyst.Common.Util
         /// <returns></returns>
         public static ulong GenerateCorrelationId()
         {
-            var buf = new byte[8];
-            Rand.NextBytes(buf);
+            var buf = GenerateRandomByteArray(8);
             return BitConverter.ToUInt64(buf, 0);
+        }
+
+        /// <summary>
+        ///     returns a random array of byte of the desired length
+        /// </summary>
+        public static byte[] GenerateRandomByteArray(int length)
+        {
+            var buf = new byte[length];
+            Rand.NextBytes(buf);
+            return buf;
         }
 
         /// <summary>
@@ -155,12 +165,11 @@ namespace Catalyst.Common.Util
             return Encoding.UTF8.GetString(array);
         }
 
-        /// <remarks>
-        /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
-        /// </remarks>
-        public class ByteListComparer : IComparer<IList<byte>>
+        public class ByteListComparerBase : IComparer<IList<byte>>
         {
-            public int Compare(IList<byte> x, IList<byte> y)
+            protected ByteListComparerBase() { }
+
+            public virtual int Compare(IList<byte> x, IList<byte> y)
             {
                 if (ReferenceEquals(x, y))
                 {
@@ -187,6 +196,23 @@ namespace Catalyst.Common.Util
                 }
 
                 return 0;
+            }
+        }
+
+        /// <remarks>
+        /// Warning: this comparer assumes that the tail of the longest list is not relevant for comparison
+        /// </remarks>
+        public sealed class ByteListMinSizeComparer : ByteListComparerBase
+        {
+            public static IComparer<IList<byte>> Default { get; } = new ByteListMinSizeComparer();
+        }
+
+        public sealed class ByteListComparer : ByteListComparerBase
+        {
+            public override int Compare(IList<byte> x, IList<byte> y)
+            {
+                var baseCompare = base.Compare(x, y);
+                return baseCompare != 0 ? baseCompare : Math.Sign(x.Count.CompareTo(y.Count));
             }
 
             public static IComparer<IList<byte>> Default { get; } = new ByteListComparer();

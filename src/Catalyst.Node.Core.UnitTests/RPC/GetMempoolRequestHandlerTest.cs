@@ -26,7 +26,6 @@ using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
@@ -43,13 +42,13 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC 
+namespace Catalyst.Node.Core.UnitTests.RPC 
 {
     public sealed class GetMempoolRequestHandlerTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private IRpcCorrelationCache _subbedCorrelationCacche;
+        private readonly IRpcCorrelationCache _subbedCorrelationCacche;
 
         public GetMempoolRequestHandlerTest()
         {
@@ -65,12 +64,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             new List<object[]>
             {
                 new object[] {CreateTestTransactions(), 2},
-                new object[] {new List<Transaction>(), 0},
+                new object[] {new List<TransactionBroadcast>(), 0},
             };
 
-        private static List<Transaction> CreateTestTransactions()
+        private static List<TransactionBroadcast> CreateTestTransactions()
         {
-            var txLst = new List<Transaction>
+            var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
@@ -81,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
 
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<Transaction> txLst, int expectedTxs)
+        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> txLst, int expectedTxs)
         {
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
@@ -100,12 +99,11 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new GetMempoolRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, subbedCache, rpcFactory, _logger);
+            var handler = new GetMempoolRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, rpcFactory, _logger);
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
             
             var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());

@@ -25,18 +25,18 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
-using Serilog;
 using NSubstitute;
+using Polly;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Cryptography;
-using Polly;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
+namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
 {
     public sealed class IpfsDfsLiveTests : FileSystemBasedTest
     {

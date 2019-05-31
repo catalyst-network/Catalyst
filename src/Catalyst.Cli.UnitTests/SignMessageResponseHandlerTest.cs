@@ -100,7 +100,7 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]  
         public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
         {   
-            var correlationCache = Substitute.For<IMessageCorrelationCache>();
+            var correlationCache = Substitute.For<IRpcCorrelationCache>();
 
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new SignMessageResponse

@@ -28,16 +28,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using Ipfs;
 using Ipfs.CoreApi;
-using Multiformats.Base;
-using Serilog;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Dfs
+namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
 {
     public sealed class IpfsDfsTests : IDisposable
     {

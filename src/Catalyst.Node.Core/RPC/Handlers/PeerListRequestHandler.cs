@@ -44,10 +44,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     ///     Handles the PeerListRequest message
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListRequest, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class PeerListRequestHandler
-        : CorrelatableMessageHandlerBase<GetPeerListRequest, IMessageCorrelationCache>,
+        : MessageHandlerBase<GetPeerListRequest>,
             IRpcRequestHandler
     {
         /// <summary>
@@ -75,10 +75,9 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="rpcMessageFactory"></param>
         public PeerListRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IMessageCorrelationCache messageCorrelationCache,
             IRepository<Peer> peerRepository,
             IRpcMessageFactory rpcMessageFactory)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _peerIdentifier = peerIdentifier;
             _peerRepository = peerRepository;

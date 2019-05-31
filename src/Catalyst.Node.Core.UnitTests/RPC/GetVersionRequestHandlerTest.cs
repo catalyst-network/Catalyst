@@ -25,7 +25,6 @@ using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Rpc;
@@ -40,7 +39,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     public sealed class GetVersionRequestHandlerTest
     {
@@ -70,8 +69,7 @@ namespace Catalyst.Node.Core.UnitTest.RPC
                 PeerIdentifierHelper.GetPeerIdentifier("sender")));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
-            var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, subbedCache, rpcMessageFactory);
+            var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, rpcMessageFactory);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

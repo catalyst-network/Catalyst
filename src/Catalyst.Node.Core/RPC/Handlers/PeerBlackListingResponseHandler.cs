@@ -27,6 +27,7 @@ using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
@@ -37,22 +38,22 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handles the Peer reputation response
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerReputationResponse, IMessageCorrelationCache}" />
+    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerReputationResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
-    public sealed class PeerReputationResponseHandler
-        : CorrelatableMessageHandlerBase<GetPeerReputationResponse, IMessageCorrelationCache>,
+    public sealed class PeerBlackListingResponseHandler
+        : CorrelatableMessageHandlerBase<SetPeerBlackListResponse, IRpcCorrelationCache>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerReputationResponseHandler"/> class.
+        /// Initializes a new instance of the <see cref="PeerBlackListingResponseHandler"/> class.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <param name="messageCorrelationCache">The message correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public PeerReputationResponseHandler(IUserOutput output,
-            IMessageCorrelationCache messageCorrelationCache,
+        public PeerBlackListingResponseHandler(IUserOutput output,
+            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
             : base(messageCorrelationCache, logger)
         {
@@ -65,19 +66,23 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">The GetPeerReputationResponse message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Logger.Debug("Handling GetPeerReputation response");
+            Logger.Debug("Handling GetPeerBlackList response");
             Guard.Argument(message).NotNull("Received message cannot be null");
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetPeerReputationResponse>();
-                var msg = deserialised.Reputation == int.MinValue ? "Peer not found" : deserialised.Reputation.ToString();
-                _output.WriteLine("Peer Reputation: " + msg);
+                var deserialised = message.Payload.FromAnySigned<SetPeerBlackListResponse>();
+
+                var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
+                    ? "Peer not found"
+                    : $"Peer Blacklisting Successful : {deserialised.Blacklist}, {deserialised.PublicKey.ToStringUtf8()}, {deserialised.Ip.ToStringUtf8()}";
+                   
+                _output.WriteLine(msg);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetPeerReputationResponse after receiving message {0}", message);
+                    "Failed to handle GetPeerBlackListingResponse after receiving message {0}", message);
                 throw;
             }
         }

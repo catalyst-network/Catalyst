@@ -115,11 +115,20 @@ namespace Catalyst.Common.Config
 
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
+      
+        /// <summary> This merkle tree first n bits. In this case 5 </summary>
+        public static int MerkleTreeFirstStandardBits => 5;
+
+        /// <summary> This is the standard size for salt byte array </summary>
+        public static int StandardSaltSize => 100;
 
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
 
         public static string NetworkConfigFile(Network network) { return string.Format(JsonFilePattern, network.Name); }
+
+        /// <summary>The maximum peers the node can gossip to for a single message, per gossip cycle</summary>
+        public static int MaxGossipPeersPerRound => 3;
     }
 }

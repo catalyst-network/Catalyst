@@ -35,13 +35,13 @@ using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
+namespace Catalyst.Node.Core.UnitTests.Modules.Mempool
 {
     public sealed class MempoolTests
     {
         public MempoolTests()
         {
-            _transactionStore = Substitute.For<IRepository<Transaction, TransactionSignature>>();
+            _transactionStore = Substitute.For<IRepository<TransactionBroadcast, TransactionSignature>>();
             var logger = Substitute.For<ILogger>();
             _memPool = new Core.Modules.Mempool.Mempool(_transactionStore, logger);
 
@@ -50,16 +50,16 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
         private readonly Core.Modules.Mempool.Mempool _memPool;
 
-        private readonly IRepository<Transaction, TransactionSignature> _transactionStore;
-        private readonly Transaction _transaction;
+        private readonly IRepository<TransactionBroadcast, TransactionSignature> _transactionStore;
+        private readonly TransactionBroadcast _transaction;
 
-        private static void AddKeyValueStoreEntryExpectation(Transaction transaction,
-            IRepository<Transaction, TransactionSignature> store)
+        private static void AddKeyValueStoreEntryExpectation(TransactionBroadcast transaction,
+            IRepository<TransactionBroadcast, TransactionSignature> store)
         {
             store.Get(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)))
                .Returns(transaction);
             store.TryGet(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)),
-                    out Arg.Any<Transaction>())
+                    out Arg.Any<TransactionBroadcast>())
                .Returns(ci =>
                 {
                     ci[1] = transaction;
@@ -70,11 +70,11 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
         private sealed class ProducerConsumer
         {
             private static readonly object Locker = new object();
-            private readonly IRepository<Transaction, TransactionSignature> _keyValueStore;
+            private readonly IRepository<TransactionBroadcast, TransactionSignature> _keyValueStore;
             private readonly IMempool _memPool;
             public int? FirstThreadId;
 
-            public ProducerConsumer(IMempool memPool, IRepository<Transaction, TransactionSignature> keyValueStore)
+            public ProducerConsumer(IMempool memPool, IRepository<TransactionBroadcast, TransactionSignature> keyValueStore)
             {
                 _memPool = memPool;
                 _keyValueStore = keyValueStore;
@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules.Mempool
 
             public void Writer()
             {
-                Transaction transaction;
+                TransactionBroadcast transaction;
                 lock (Locker)
                 {
                     var id = Thread.CurrentThread.ManagedThreadId;

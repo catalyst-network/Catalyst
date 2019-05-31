@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -63,7 +63,7 @@ namespace Catalyst.Common.IO.Messaging
             throw new NotImplementedException("Inheritors that uses the default constructor must implement the GetInheritorDelegate() method."); 
         }
 
-        public void AddPendingRequest(PendingRequest pendingRequest)
+        public virtual void AddPendingRequest(PendingRequest pendingRequest)
         {
             PendingRequests.Set(pendingRequest.Content.CorrelationId, pendingRequest, _entryOptions);
         }
@@ -73,7 +73,6 @@ namespace Catalyst.Common.IO.Messaging
             where TResponse : class, IMessage<TResponse>
         {
             Guard.Argument(response, nameof(response)).NotNull()
-               .Require(r => typeof(TResponse).ShortenedProtoFullName().Equals(response.TypeUrl))
                .Require(r => typeof(TRequest).ShortenedProtoFullName().Equals(r.TypeUrl.GetRequestType()));
 
             var found = PendingRequests.TryGetValue(response.CorrelationId, out PendingRequest matched);

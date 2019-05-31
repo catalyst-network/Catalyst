@@ -22,9 +22,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Network;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -33,18 +39,10 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
 using SharpRepository.Repository;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Network;
-using System.Collections.Generic;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
+using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     /// <summary>
     /// Tests the peer count CLI and RPC calls
@@ -96,8 +94,6 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var peerDiscovery = Substitute.For<IPeerDiscovery>();
-            peerDiscovery.PeerRepository.Returns(peerRepository);
             peerRepository.GetAll().Returns(peerList);
 
             var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
@@ -111,13 +107,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
-            var handler = new PeerCountRequestHandler(sendPeerIdentifier, subbedCache, peerDiscovery, rpcMessageFactory, _logger);
+            var handler = new PeerCountRequestHandler(sendPeerIdentifier, peerRepository, rpcMessageFactory, _logger);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
 
             var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerCountResponse.Descriptor.ShortenedFullName());

@@ -22,9 +22,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Network;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -33,18 +39,10 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
 using SharpRepository.Repository;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Network;
-using System.Collections.Generic;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
+using Xunit;
 
-namespace Catalyst.Node.Core.UnitTest.RPC
+namespace Catalyst.Node.Core.UnitTests.RPC
 {
     /// <summary>
     /// Tests the peer list CLI and RPC calls
@@ -110,13 +108,12 @@ namespace Catalyst.Node.Core.UnitTest.RPC
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
-            var subbedCache = Substitute.For<IMessageCorrelationCache>();
 
-            var handler = new PeerListRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerRepository, rpcMessageFactory);
+            var handler = new PeerListRequestHandler(sendPeerIdentifier, _logger, peerRepository, rpcMessageFactory);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
 
             var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerListResponse.Descriptor.ShortenedFullName());

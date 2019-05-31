@@ -10,6 +10,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaBuilder",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaBuilder, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.Modules.Consensus.TransactionComparerByFeeTimestampAndHash",
             "services": [
                 {
@@ -18,18 +26,34 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.DeltaTransactionRetriever",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaTransactionRetriever",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.IDeltaTransactionRetriever, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaTransactionRetriever, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.PoaDeltaProducersProvider",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.PoaDeltaProducersProvider",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.IDeltaProducersProvider, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaProducersProvider, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaHub",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaHub, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaVoter",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaVoter, Catalyst.Common"
                 }
             ]
         },

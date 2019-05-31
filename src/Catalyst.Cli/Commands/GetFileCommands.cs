@@ -39,7 +39,7 @@ using Serilog.Events;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed partial class Commands
+    internal sealed partial class Commands
     {
         /// <summary>Called when [get file options].</summary>
         /// <param name="opts">The opts.</param>
@@ -69,7 +69,7 @@ namespace Catalyst.Cli.Commands
                 Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                 nodeConfig.HostAddress, nodeConfig.Port), _peerIdentifier);
 
-            var messageDto = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(dto);
+            var messageDto = _rpcMessageFactory.GetMessage(dto);
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,

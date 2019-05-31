@@ -33,11 +33,13 @@ namespace Catalyst.Node.Core.Modules.Ledger
     ///  This class represents a ledger and is a collection of accounts and data store.
     /// </summary>
     /// <seealso cref="Catalyst.Common.Interfaces.Modules.Ledger.ILedger" />
-    public sealed class Ledger : ILedger
+    public class Ledger : ILedger
     {
         public IRepository<Account> Accounts { get; }
         private readonly ILogger _logger;
 
+        public byte[] LedgerStateUpdate { get; set; }
+ 
         public Ledger(IRepository<Account> accounts, ILogger logger)
         {
             Accounts = accounts;

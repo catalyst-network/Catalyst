@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
@@ -40,8 +41,9 @@ using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
 
-namespace Catalyst.Node.Core.UnitTest.Modules
+namespace Catalyst.Node.Core.UnitTests.Config
 {
     public sealed class JsonConfiguredModuleTest : IDisposable
     {
@@ -70,6 +72,8 @@ namespace Catalyst.Node.Core.UnitTest.Modules
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new[] {"seed1.seedservers.bogus", "seed2.seedservers.bogus"});
+            peerSettings.BindAddress.Returns(IPAddress.Parse("124.220.98.2"));
+            peerSettings.Port.Returns(12);
             builder.RegisterInstance(peerSettings).As<IPeerSettings>();
         }
 
@@ -82,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTest.Modules
         [InlineData(typeof(IConsensus), typeof(Core.Modules.Consensus.Consensus))]
         [InlineData(typeof(IContract), typeof(Contract))]
         [InlineData(typeof(IDfs), typeof(Core.Modules.Dfs.Dfs))]
-        [InlineData(typeof(ILedger), typeof(Core.Modules.Ledger.Ledger))]
+        [InlineData(typeof(ILedger), typeof(LedgerService))]
         [InlineData(typeof(IMempool), typeof(Core.Modules.Mempool.Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)

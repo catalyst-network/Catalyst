@@ -31,7 +31,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
     /// <inheritdoc />
     public class TransactionComparerByFeeTimestampAndHash : ITransactionComparer
     {
-        public int Compare(Transaction x, Transaction y)
+        public int Compare(TransactionBroadcast x, TransactionBroadcast y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
             var xSignature = x.SchnorrSignature.ToByteArray();
             var ySignature = y.SchnorrSignature.ToByteArray();
 
-            var signatureComparison = ByteUtil.ByteListComparer.Default.Compare(xSignature, ySignature);
+            var signatureComparison = ByteUtil.ByteListMinSizeComparer.Default.Compare(xSignature, ySignature);
             if (signatureComparison != 0)
             {
                 return signatureComparison;
@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.Modules.Consensus
 
             var xComponent = x.SchnorrComponent.ToByteArray();
             var yComponent = y.SchnorrComponent.ToByteArray();
-            return ByteUtil.ByteListComparer.Default.Compare(xComponent, yComponent);
+            return ByteUtil.ByteListMinSizeComparer.Default.Compare(xComponent, yComponent);
         }
 
         public static IComparer<TransactionSignature> Default { get; } = new SignatureComparer();

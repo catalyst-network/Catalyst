@@ -50,7 +50,7 @@ using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.Transfer
 
 namespace Catalyst.Cli.UnitTests
 {
-    public sealed class FileTransferTest : FileSystemBasedTest
+    public sealed class GetFileFromDfsResponseHandlerTest : FileSystemBasedTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
@@ -59,7 +59,7 @@ namespace Catalyst.Cli.UnitTests
         private readonly IRpcCorrelationCache _cache;
         private readonly IRpcMessageFactory _rpcMessageFactory;
 
-        public FileTransferTest(ITestOutputHelper testOutput) : base(testOutput)
+        public GetFileFromDfsResponseHandlerTest(ITestOutputHelper testOutput) : base(testOutput)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new List<string>
@@ -75,6 +75,28 @@ namespace Catalyst.Cli.UnitTests
             _fileDownloadFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
             _dfs = Substitute.For<IDfs>();
+        }
+
+        [Fact]
+        public void CanExpireDownloadFileTransferOnError()
+        {
+            var fakeFileTransfer = Substitute.For<IDownloadFileInformation>();
+            var guid = Guid.NewGuid();
+            fakeFileTransfer.CorrelationGuid.Returns(guid);
+
+            _fileDownloadFactory.RegisterTransfer(fakeFileTransfer);
+
+            var getFileFromDfsResponseHandler =
+                new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
+
+            var getFileResponse = new GetFileFromDfsResponse
+            {
+                FileSize = (ulong) 10,
+                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Error.Id)
+            }.ToAnySigned(PeerIdHelper.GetPeerId("Test"), guid);
+            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+
+            fakeFileTransfer.Received(1).Expire();
         }
 
         [Theory]
@@ -100,7 +122,7 @@ namespace Catalyst.Cli.UnitTests
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _cache, _logger, _rpcMessageFactory);
+                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _logger, _rpcMessageFactory);
 
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
