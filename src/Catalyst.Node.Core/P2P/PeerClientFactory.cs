@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.P2P
         }
 
         /// <inheritdoc cref="IDisposable"/>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             Client?.Dispose();
         }
