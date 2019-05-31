@@ -21,24 +21,27 @@
 
 #endregion
 
-using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.Loader;
-using System.Threading;
 using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
-using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Util;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Threading;
 using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Node.Core
@@ -84,7 +87,7 @@ namespace Catalyst.Node.Core
 #elif (RELEASE)
                 new ConfigCopier().RunConfigStartUp(targetConfigFolder, network);
 #endif
-                
+
                 var config = new ConfigurationBuilder()
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.NetworkConfigFile(network)))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ComponentsJsonConfigFile))
@@ -106,7 +109,7 @@ namespace Catalyst.Node.Core
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
 
                 _logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, LogFileName), 
+                   .File(Path.Combine(targetConfigFolder, LogFileName),
                         rollingInterval: RollingInterval.Day,
                         outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                    .CreateLogger().ForContext(DeclaringType);
@@ -124,6 +127,10 @@ namespace Catalyst.Node.Core
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var node = container.Resolve<ICatalystNode>();
+
+                    container.Resolve<IPeerClientFactory>()
+                       .Initialize(container.Resolve<IEnumerable<IP2PMessageHandler>>());
+
                     node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 

@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -127,8 +128,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                    var peerClient = (PeerClient) _container.Resolve<IPeerClientFactory>().Client;
+                    var peerClientFactory = _container.Resolve<IPeerClientFactory>();
+                    peerClientFactory.Initialize(_container.Resolve<IEnumerable<IP2PMessageHandler>>());
+                    var peerClient = (PeerClient) peerClientFactory.Client;
 
                     var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PingResponse(),
@@ -170,8 +172,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                    var peerClient = (PeerClient) _container.Resolve<IPeerClientFactory>().Client;
+                    var peerClientFactory = _container.Resolve<IPeerClientFactory>();
+                    peerClientFactory.Initialize(_container.Resolve<IEnumerable<IP2PMessageHandler>>());
+
+                    var peerClient = (PeerClient) peerClientFactory.Client;
 
                     var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PeerNeighborsResponse(),

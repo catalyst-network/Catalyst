@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
@@ -30,5 +32,9 @@ namespace Catalyst.Common.Interfaces.P2P
         /// <summary>Gets the peer client.</summary>
         /// <value>The client.</value>
         IPeerClient Client { get; }
+
+        /// <summary>Initializes the peer client with the specified handlers.</summary>
+        /// <param name="handlers">The handlers.</param>
+        void Initialize(IEnumerable<IP2PMessageHandler> handlers);
     }
 }

@@ -138,7 +138,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 _messageCache, Substitute.For<IGossipCache>());
             var handler = new TransactionBroadcastTestHandler(_logger, () => hasHitHandler = true);
 
-            var peerClientFactory = new PeerClientFactory(_peerSettings, new List<IP2PMessageHandler>() {handler}, gossipManagerContext);
+            var peerClientFactory = new PeerClientFactory(_peerSettings, gossipManagerContext);
+            peerClientFactory.Initialize(new List<IP2PMessageHandler>() {handler});
             var manager = new GossipManager(peerClientFactory, gossipManagerContext);
             var gossipHandler = new GossipHandler(manager);
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
@@ -184,7 +185,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var messageFactory = new P2PMessageFactory(_messageCache);
             var gossipCache = new GossipCache(_peers, cache, _logger);
             var gossipManagerContext = new GossipManagerContext(peerIdentifier, _messageCache, gossipCache);
-            var peerClientFactory = new PeerClientFactory(_peerSettings, new List<IP2PMessageHandler>(), gossipManagerContext);
+            var peerClientFactory = new PeerClientFactory(_peerSettings, gossipManagerContext);
+            peerClientFactory.Initialize(new List<IP2PMessageHandler>());
             IGossipManager gossipMessageHandler = new GossipManager(peerClientFactory, gossipManagerContext);
 
             var correlationId = Guid.NewGuid();
@@ -224,8 +226,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var messageFactory = new P2PMessageFactory(_messageCache);
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var gossipManagerContext = new GossipManagerContext(senderPeerIdentifier, _messageCache, gossipCache);
-            var peerClientFactory = new PeerClientFactory(_peerSettings, new List<IP2PMessageHandler>(), gossipManagerContext);
-
+            var peerClientFactory = new PeerClientFactory(_peerSettings, gossipManagerContext);
+            peerClientFactory.Initialize(new List<IP2PMessageHandler>());
             var gossipMessageHandler = new
                 GossipManager(peerClientFactory, gossipManagerContext);
 
