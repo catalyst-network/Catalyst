@@ -64,10 +64,12 @@ namespace Catalyst.Cli.UnitTests
         /// <summary>
         /// RPCs the client can handle get peer blacklisting response.
         /// </summary>
-        /// <param name="rep">The rep.</param>
+        /// <param name="blacklist">The black list flag.</param>
+        /// <param name="publicKey">The publicKey of the peer whose blacklist flag to change</param>
+        /// <param name="ip">The IP Address of the peer whose blacklist flag to change</param>
         [Theory]
-        [InlineData("true", "192.200.200.22", "cne2+eRandomValuebeingusedherefprtestingIOp")]
-        [InlineData("false", "207.112.46.22", "uebeingusedhere44j6jhdhdhandomValfprtestingItn")]
+        [InlineData("true", "198.51.100.22", "cne2+eRandomValuebeingusedherefprtestingIOp")]
+        [InlineData("false", "198.51.100.14", "uebeingusedhere44j6jhdhdhandomValfprtestingItn")]
         public void RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string publicKey, string ip)
         {
             TestGetBlackListResponse(blacklist, publicKey, ip);
@@ -78,9 +80,6 @@ namespace Catalyst.Cli.UnitTests
         /// <summary>
         /// RPCs the client can handle get peer blacklisting response non existent peers.
         /// </summary>
-        /// <param name="blacklist">The black list flag.</param>
-        /// <param name="publicKey">The publicKey of the peer whose blacklist flag to change</param>
-        /// <param name="ip">The IP Address of the peer whose blacklist flag to change</param
         [Fact]
         public void RpcClient_Can_Handle_GetBlackListingResponseNonExistentPeers()
         { 
