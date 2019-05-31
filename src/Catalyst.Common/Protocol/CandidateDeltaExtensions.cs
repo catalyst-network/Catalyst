@@ -21,28 +21,23 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Serilog;
+using Catalyst.Protocol.Delta;
+using Dawn;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Handlers
+namespace Catalyst.Common.Protocol
 {
-    public sealed class PeerChallengeResponseHandler
-        : MessageHandlerBase<PeerChallengeResponse>,
-            IP2PMessageHandler
+    public static class CandidateDeltaExtensions
     {
-        public PeerChallengeResponseHandler(ILogger logger)
-            : base(logger) { }
-
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        public static bool IsValid(this CandidateDeltaBroadcast candidate)
         {
-            Logger.Debug("received peer challenge response");
-            var deserialised = message.Payload.FromAnySigned<PeerChallengeResponse>();
+            Guard.Argument(candidate, nameof(candidate)).NotNull()
+               .Require(c => c.ProducerId != null, c => $"{nameof(candidate.ProducerId)} cannot be null")
+               .Require(c => c.PreviousDeltaDfsHash != null && !c.PreviousDeltaDfsHash.IsEmpty,
+                    c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null or empty")
+               .Require(c => c.Hash != null && !c.Hash.IsEmpty,
+                    c => $"{nameof(candidate.Hash)} cannot be null or empty");
+
+            return true;
         }
     }
 }

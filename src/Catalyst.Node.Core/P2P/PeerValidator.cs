@@ -22,25 +22,19 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 using Nethereum.RLP;
 
@@ -55,16 +49,13 @@ namespace Catalyst.Node.Core.P2P
         private readonly IP2PService _p2PService;
         private readonly AnySignedMessageObserver _serverObserver;
         private readonly ILogger _logger;
-        private readonly IP2PChallengeCache _timedChallengedCache; 
-
 
         public PeerValidator(IPeerClient peerClient,
             IReputableCache reputableCache,
             IPeerSettings peerSettings,
             IP2PService p2PService,
             AnySignedMessageObserver serverObserver, 
-            ILogger logger,
-            IP2PChallengeCache timedChallengedCache)
+            ILogger logger)
         {
             _peerClient = peerClient;
             _reputableCache = reputableCache;
@@ -72,7 +63,6 @@ namespace Catalyst.Node.Core.P2P
             _p2PService = p2PService;
             _serverObserver = serverObserver;
             _logger = logger;
-            _timedChallengedCache = timedChallengedCache;
         }
 
         public bool Validate(PeerId peerId)
@@ -93,8 +83,7 @@ namespace Catalyst.Node.Core.P2P
                         Guid.NewGuid()
                     );
 
-
-                    ((PeerClient)_peerClient).SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    ((PeerClient) _peerClient).SendMessage(datagramEnvelope).GetAwaiter().GetResult();
 
                     //there is a Better way of doing all this
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
@@ -112,6 +101,7 @@ namespace Catalyst.Node.Core.P2P
                     {
                         return true;
                     }
+
                     return false;
                 }
             }
@@ -120,41 +110,14 @@ namespace Catalyst.Node.Core.P2P
                 _logger.Error(e.Message);
                 _p2PService.Dispose();
             }
+
             return false;
         }
 
-        public bool PeerChallengeResponse(PeerIdentifier recipientPeerIdentifier)
+        public async Task<bool> PeerChallengeResponseAsync(PeerIdentifier recipientPeerIdentifier)
         {
             try
             {
-                var senderPeerIdentifier = new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(),
-                    _peerSettings.BindAddress,
-                    _peerSettings.Port);
-
-                var requests = new List<PendingRequest>();
-                requests.Add(new PendingRequest()
-                {
-                    Content = new PingRequest().ToAnySigned(senderPeerIdentifier.PeerId, new Guid()),
-                    Recipient = recipientPeerIdentifier,
-                    SentAt = DateTimeOffset.MinValue
-                });
-
-                var reputations = requests.ToDictionary(r => r.Recipient, r => 0);
-
-                var cache = new MemoryCache(new MemoryCacheOptions());
-                var ttl = TimeSpan.FromMilliseconds(25000);
-
-                var pendingRequestCache = new P2PCorrelationCache(cache, _logger, ttl);
-
-                pendingRequestCache.PeerRatingChanges
-                   .Subscribe(c => reputations[c.PeerIdentifier] += c.ReputationChange);
-                requests.ForEach(r => pendingRequestCache.AddPendingRequest(r));
-
-
-
-
-
-
                 using (_p2PService.MessageStream.Subscribe(_serverObserver))
                 {
                     var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(
@@ -168,14 +131,18 @@ namespace Catalyst.Node.Core.P2P
                         ),
                         Guid.NewGuid()
                     );
-                    ((PeerClient)_peerClient).SendMessage(datagramEnvelope).GetAwaiter().GetResult();
 
+                    ((PeerClient) _peerClient).SendMessage(datagramEnvelope).GetAwaiter().GetResult();
 
-                    //var responseFromDude1 = new PingResponse().ToAnySigned(peerIds[1].PeerId, correlationIds[1]);
-                    //var match = pendingRequestCache.TryMatchResponse<PingRequest, PingResponse>(responseFromDude1);
+                    await Task.Delay(TimeSpan.FromMilliseconds(2000));
 
-                    //At the place of peerchallengeresponse handler there must either delegate callback to peer validator
-                    // return IsPeerValid();
+                    if (_serverObserver.Received.Payload.PeerId.PublicKey.ToStringUtf8() ==
+                        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+                    {
+                        return true;
+                    }
+
+                    return false;
                 }
             }
             catch (Exception e)
@@ -184,17 +151,6 @@ namespace Catalyst.Node.Core.P2P
                 _p2PService.Dispose();
             }
 
-
-
-
-
-
-
-            return IsPeerValid();
-        }
-
-        private bool IsPeerValid()
-        {
             return false;
         }
     }

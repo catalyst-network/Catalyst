@@ -146,22 +146,6 @@
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PeerChallengeRequestHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Handlers.PeerChallengeResponseHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IP2PMessageHandler, Catalyst.Common"
-                }
-            ]
         }
     ]
 }

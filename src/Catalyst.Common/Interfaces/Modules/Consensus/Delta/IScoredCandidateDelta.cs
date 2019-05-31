@@ -26,7 +26,7 @@ using Catalyst.Protocol.Delta;
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
     public interface IScoredCandidateDelta
     {
-        CandidateDelta Candidate { get; }
+        CandidateDeltaBroadcast Candidate { get; }
         int Score { get; }
         int IncreasePopularity(int voteCount);
     }

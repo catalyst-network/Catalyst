@@ -217,21 +217,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                 var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
 
-                var cache = new MemoryCache(new MemoryCacheOptions());
+                var valid = peerValidator.PeerChallengeResponseAsync(new PeerIdentifier(peerSettings));
 
-                var peerActiveId = new PeerIdentifier(peerSettings).PeerId;
-                var p2pChallengeCache = new P2PChallengeCache(peerActiveId, cache, _logger);
-
-                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger, p2pChallengeCache);
-
-                var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings));
-
-                var ttl = TimeSpan.FromMilliseconds(2000);
-
-                Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)));
-
-                valid.Should().BeTrue();
+                valid.Result.Should().BeTrue();
             }
         }
 
@@ -251,13 +241,41 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var cache = new MemoryCache(new MemoryCacheOptions());
 
                 var peerActiveId = new PeerIdentifier(peerSettings).PeerId;
-                var p2pChallengeCache = new P2PChallengeCache(peerActiveId, cache, _logger);
 
-                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger, p2pChallengeCache);
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
 
                 var valid = peerValidator.Validate(peerActiveId);
 
                 valid.Should().BeTrue();
+            }
+        }
+
+        [Theory]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [InlineData("92.207.178.198", 1574)]
+        [InlineData("198.51.100.3", 2524)]
+        public void PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string ip, int port)
+        {
+            using (_container.BeginLifetimeScope(CurrentTestName))
+            {
+                var p2PService = _container.Resolve<IP2PService>();
+                var serverObserver = new AnySignedMessageObserver(0, _logger);
+
+                var peerSettings = new PeerSettings(_config);
+                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+                var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
+
+                var cache = new MemoryCache(new MemoryCacheOptions());
+
+                var peerActiveId = new PeerIdentifier(peerSettings.PublicKey.ToUtf8ByteString().ToByteArray(),
+                    IPAddress.Parse(ip),
+                    port);
+
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
+
+                var valid = peerValidator.PeerChallengeResponseAsync(peerActiveId);
+
+                valid.Result.Should().BeTrue();
             }
         }
 
@@ -276,12 +294,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                 var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
-                var cache = new MemoryCache(new MemoryCacheOptions());
-
-                var peerActiveId = new PeerIdentifier(peerSettings).PeerId;
-                var p2pChallengeCache = new P2PChallengeCache(peerActiveId, cache, _logger);
-
-                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger, p2pChallengeCache);
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
 
                 var valid = peerValidator.Validate(new PeerIdentifier(peerSettings.PublicKey.ToUtf8ByteString().ToByteArray(),
                     IPAddress.Parse(ip),
@@ -307,14 +320,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                 var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
-
-                var cache = new MemoryCache(new MemoryCacheOptions());
-
                 var peerActiveId = new PeerIdentifier(peerSettings).PeerId;
-                var p2pChallengeCache = new P2PChallengeCache(peerActiveId, cache, _logger, TimeSpan.FromSeconds(1500));
 
-                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger, p2pChallengeCache);
-
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
 
                 var valid = peerValidator.Validate(peerActiveId);
 
@@ -337,12 +345,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                 var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
-                var cache = new MemoryCache(new MemoryCacheOptions());
-
-                var peerActiveId = new PeerIdentifier(peerSettings).PeerId;
-                var p2pChallengeCache = new P2PChallengeCache(peerActiveId, cache, _logger);
-
-                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger, p2pChallengeCache);
+                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
 
                 var valid = peerValidator.Validate(new PeerIdentifier(publicKey.ToUtf8ByteString().ToByteArray(),
                     IPAddress.Parse(ip),

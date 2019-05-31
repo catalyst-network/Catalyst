@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -57,10 +58,10 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             DodgyCandidates = new List<object[]>
             {
                 new object[] {null},
-                new object[] {new CandidateDelta()},
+                new object[] {new CandidateDeltaBroadcast()},
                 new object[] 
                 {
-                    new CandidateDelta
+                    new CandidateDeltaBroadcast
                     {
                         Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                         PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
@@ -68,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 },
                 new object[]
                 {
-                    new CandidateDelta
+                    new CandidateDeltaBroadcast
                     {
                         Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                         ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
@@ -76,7 +77,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 },
                 new object[]
                 {
-                    new CandidateDelta
+                    new CandidateDeltaBroadcast
                     {
                         PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                         ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
@@ -101,7 +102,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
         [Theory]
         [MemberData(nameof(DodgyCandidates))]
-        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDelta dodgyCandidate)
+        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
         {
             var logger = Substitute.For<ILogger>();
             _voter = new DeltaVoter(_cache, _producersProvider, logger);
@@ -142,6 +143,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 producerId: _producerIds.First().PeerId);
 
             var candidateHashAsHex = candidate.Hash.ToByteArray().ToHex();
+            var previousHashAsHex = candidate.PreviousDeltaDfsHash.ToByteArray().ToHex();
 
             var addedEntry = Substitute.For<ICacheEntry>();
             _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsHex)))
@@ -150,7 +152,10 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             _voter.OnNext(candidate);
 
             _cache.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHashAsHex)), out Arg.Any<object>());
+
+            _cache.ReceivedWithAnyArgs(2).CreateEntry(Arg.Any<object>());
             _cache.Received(1).CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsHex)));
+
             addedEntry.Value.Should().BeAssignableTo<IScoredCandidateDelta>();
             var scoredCandidateDelta = (IScoredCandidateDelta) addedEntry.Value;
             scoredCandidateDelta.Candidate.Hash.SequenceEqual(candidate.Hash).Should().BeTrue();
@@ -191,28 +196,141 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             {
                 _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
-                var topCandidate = CandidateDeltaHelper.GetCandidateDelta(_previousDeltaHash,
-                    producerId: _producerIds.First().PeerId);
-
-                var secondCandidate = CandidateDeltaHelper.GetCandidateDelta(_previousDeltaHash,
-                    producerId: _producerIds.Skip(1).First().PeerId);
-
                 var firstVotesCount = 10;
                 var secondVotesCount = 100 + 100 / 2;
-                var candidateStream = Enumerable.Repeat(topCandidate, firstVotesCount)
-                   .Concat(Enumerable.Repeat(secondCandidate, secondVotesCount))
-                   .Shuffle().ToObservable();
 
-                candidateStream.Subscribe(_voter);
+                var retrievedCandidates = AddCandidatesToCacheAndVote(firstVotesCount, secondVotesCount, realCache);
 
-                var firstKey = DeltaVoter.GetCacheKey(topCandidate.Hash.ToByteArray().ToHex());
-                var secondKey = DeltaVoter.GetCacheKey(secondCandidate.Hash.ToByteArray().ToHex());
+                retrievedCandidates[0].Score.Should().Be(100 * _producerIds.Count + firstVotesCount);
+                retrievedCandidates[1].Score.Should().Be(100 * (_producerIds.Count - 1) + secondVotesCount);
+            }
+        }
 
-                realCache.TryGetValue(firstKey, out IScoredCandidateDelta firstRetrieved).Should().BeTrue();
-                realCache.TryGetValue(secondKey, out IScoredCandidateDelta secondRetrieved).Should().BeTrue();
+        private List<IScoredCandidateDelta> AddCandidatesToCacheAndVote(int firstVotesCount,
+            int secondVotesCount,
+            MemoryCache realCache)
+        {
+            var firstCandidate = CandidateDeltaHelper.GetCandidateDelta(_previousDeltaHash,
+                producerId: _producerIds.First().PeerId);
 
-                firstRetrieved.Score.Should().Be(100 * _producerIds.Count + firstVotesCount);
-                secondRetrieved.Score.Should().Be(100 * (_producerIds.Count - 1) + secondVotesCount);
+            var secondCandidate = CandidateDeltaHelper.GetCandidateDelta(_previousDeltaHash,
+                producerId: _producerIds.Skip(1).First().PeerId);
+
+            var candidateStream = Enumerable.Repeat(firstCandidate, firstVotesCount)
+               .Concat(Enumerable.Repeat(secondCandidate, secondVotesCount))
+               .Shuffle().ToObservable();
+
+            candidateStream.Subscribe(_voter);
+
+            var firstKey = DeltaVoter.GetCandidateCacheKey(firstCandidate);
+            var secondKey = DeltaVoter.GetCandidateCacheKey(secondCandidate);
+
+            realCache.TryGetValue(firstKey, out IScoredCandidateDelta firstRetrieved).Should().BeTrue();
+            realCache.TryGetValue(secondKey, out IScoredCandidateDelta secondRetrieved).Should().BeTrue();
+
+            return new List<IScoredCandidateDelta> {firstRetrieved, secondRetrieved};
+        }
+
+        [Fact]
+        public void When_candidates_not_in_cache_should_create_or_update_a_previous_hash_entry()
+        {
+            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            {
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
+
+                var candidate1 = CandidateDeltaHelper.GetCandidateDelta(
+                    previousDeltaHash: _previousDeltaHash,
+                    producerId: _producerIds.First().PeerId);
+                var candidate1CacheKey = DeltaVoter.GetCandidateCacheKey(candidate1);
+
+                var candidate2 = CandidateDeltaHelper.GetCandidateDelta(
+                    previousDeltaHash: _previousDeltaHash,
+                    producerId: _producerIds.Last().PeerId);
+                var candidate2CacheKey = DeltaVoter.GetCandidateCacheKey(candidate2);
+
+                var previousDeltaCacheKey = DeltaVoter.GetCandidateListCacheKey(candidate1);
+
+                _voter.OnNext(candidate1);
+
+                realCache.TryGetValue(candidate1CacheKey, 
+                    out ScoredCandidateDelta retrievedCandidate1).Should().BeTrue();
+                retrievedCandidate1.Candidate.ProducerId.Should().Be(_producerIds.First().PeerId);
+
+                realCache.TryGetValue(previousDeltaCacheKey, 
+                    out ConcurrentBag<string> retrievedCandidateList).Should().BeTrue();
+                retrievedCandidateList.Should().BeEquivalentTo(new[] {candidate1CacheKey});
+
+                _voter.OnNext(candidate2);
+
+                realCache.TryGetValue(candidate2CacheKey,
+                    out ScoredCandidateDelta retrievedCandidate2).Should().BeTrue();
+                retrievedCandidate2.Candidate.ProducerId.Should().Be(_producerIds.Last().PeerId);
+
+                realCache.TryGetValue(previousDeltaCacheKey,
+                    out ConcurrentBag<string> retrievedUpdatedCandidateList).Should().BeTrue();
+                retrievedUpdatedCandidateList.Should().BeEquivalentTo(new[]
+                {
+                    candidate1CacheKey, candidate2CacheKey
+                });
+            }
+        }
+
+        [Fact]
+        public void GetFavoriteDelta_should_retrieve_favorite_delta()
+        {
+            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            {
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
+
+                var scoredCandidates = AddCandidatesToCacheAndVote(10, 500, realCache);
+
+                scoredCandidates[1].Score.Should().BeGreaterThan(scoredCandidates[0].Score);
+
+                var previousDeltaHash = scoredCandidates[0].Candidate.PreviousDeltaDfsHash.ToByteArray();
+
+                var favoriteCandidate = _voter.GetFavoriteDelta(previousDeltaHash);
+
+                favoriteCandidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(previousDeltaHash).Should().BeTrue();
+                favoriteCandidate.Hash.ToByteArray().SequenceEqual(scoredCandidates[1].Candidate.Hash.ToByteArray()).Should().BeTrue();
+                favoriteCandidate.ProducerId.Should().Be(scoredCandidates[1].Candidate.ProducerId);
+            }
+        }
+
+        [Fact]
+        public void GetFavoriteDelta_should_return_null_on_unknown_previous_delta_hash()
+        {
+            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            {
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
+
+                var scoredCandidates = AddCandidatesToCacheAndVote(10, 500, realCache);
+
+                var favoriteCandidate = _voter.GetFavoriteDelta(ByteUtil.GenerateRandomByteArray(32));
+
+                favoriteCandidate.Should().BeNull();
+            }
+        }
+        
+        [Fact]
+        public void GetFavoriteDelta_should_return_lowest_hash_when_candidate_scores_are_equal()
+        {
+            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            {
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
+
+                var scoredCandidates = AddCandidatesToCacheAndVote(10, 110, realCache);
+
+                scoredCandidates.Select(c => c.Score).Distinct().Count().Should().Be(1);
+                scoredCandidates.Select(c => c.Candidate.Hash).Distinct().Count().Should().Be(2);
+                scoredCandidates.Select(c => c.Candidate.PreviousDeltaDfsHash).Distinct().Count().Should().Be(1);
+
+                var favoriteCandidate = _voter.GetFavoriteDelta(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray());
+
+                var expectedFavorite = scoredCandidates
+                   .OrderBy(c => c.Candidate.Hash.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default)
+                   .First();
+
+                favoriteCandidate.Hash.ToByteArray().SequenceEqual(expectedFavorite.Candidate.Hash.ToByteArray());
             }
         }
 

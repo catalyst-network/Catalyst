@@ -42,6 +42,22 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaHub",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaHub, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaVoter",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaVoter, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.InMemoryRepository",
             "services": [
                 {
