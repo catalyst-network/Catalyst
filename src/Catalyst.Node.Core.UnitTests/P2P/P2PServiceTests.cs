@@ -152,7 +152,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
 
-        [Fact]
+        [Fact(Skip = "y")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {
