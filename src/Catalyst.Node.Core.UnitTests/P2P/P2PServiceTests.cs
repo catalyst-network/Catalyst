@@ -130,7 +130,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     var peerClientFactory = _container.Resolve<IPeerClientFactory>();
                     peerClientFactory.Initialize(_container.Resolve<IEnumerable<IP2PMessageHandler>>());
                     var peerClient = (PeerClient) peerClientFactory.Client;
-
+                    
                     var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
                             new PingResponse(),
                             MessageTypes.Tell,
@@ -142,7 +142,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         Guid.NewGuid()
                     );
 
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    peerClient.SendMessage(datagramEnvelope).ConfigureAwait(false).GetAwaiter().GetResult();
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
@@ -155,7 +155,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
-                    peerClient.Dispose();
+                    peerClientFactory.Dispose();
                 }
             }
         }
@@ -186,7 +186,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         Guid.NewGuid()
                     );
 
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    peerClient.SendMessage(datagramEnvelope).ConfigureAwait(false).GetAwaiter().GetResult();
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
@@ -200,7 +200,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
-                    peerClient.Dispose();
+                    peerClientFactory.Dispose();
                 }
             }
         }
