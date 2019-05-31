@@ -142,7 +142,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
 
-                Task[] tasks = new IChanneledMessageStreamer<AnySigned>[]
+                Task<IChanneledMessage<AnySigned>>[] tasks = new IChanneledMessageStreamer<AnySigned>[]
                     {
                         p2PService, peerClient
                     }
@@ -150,12 +150,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                    .ToArray();
 
-                Task.WaitAll(tasks, TimeSpan.FromSeconds(2));
+                int taskIdx = Task.WaitAny(tasks, TimeSpan.FromSeconds(2));
+                Assert.True(taskIdx > -1);
 
-                var message = p2PService
-                   .MessageStream
-                   .FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned).GetAwaiter()
-                   .GetResult();
+                var message = tasks[taskIdx].Result;
 
                 message.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
                 p2PService.Dispose();
@@ -188,7 +186,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
                 
-                Task[] tasks = new IChanneledMessageStreamer<AnySigned>[]
+                Task<IChanneledMessage<AnySigned>>[] tasks = new IChanneledMessageStreamer<AnySigned>[]
                     {
                         p2PService, peerClient
                     }
@@ -196,10 +194,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                    .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                    .ToArray();
 
-                Task.WaitAll(tasks, TimeSpan.FromSeconds(2));
+                int taskIdx = Task.WaitAny(tasks, TimeSpan.FromSeconds(2));
+                Assert.True(taskIdx > -1);
 
-                var message = p2PService.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned).GetAwaiter()
-                   .GetResult();
+                var message = tasks[taskIdx].Result;
 
                 message.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                 p2PService.Dispose();
