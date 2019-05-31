@@ -81,7 +81,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
                 throw new NotSupportedException("The Message is not a gossip type");
             }
 
-            // TODO: Check Gossip inner signature and outer signature #
+            // TODO: Check Gossip inner signature and outer signature
             AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(anySigned.Value);
             _gossipCache.IncrementReceivedCount(originalGossipedMessage.CorrelationId.ToGuid(), 1);
         }

@@ -44,7 +44,11 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Protocol.Common;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -138,7 +142,19 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
 
-                var message = p2PService.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned).GetAwaiter()
+                Task[] tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    {
+                        p2PService, peerClient
+                    }
+                   .AsParallel()
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                   .ToArray();
+
+                Task.WaitAll(tasks, TimeSpan.FromSeconds(2));
+
+                var message = p2PService
+                   .MessageStream
+                   .FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned).GetAwaiter()
                    .GetResult();
 
                 message.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
@@ -171,6 +187,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 );
 
                 peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                
+                Task[] tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    {
+                        p2PService, peerClient
+                    }
+                   .AsParallel()
+                   .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                   .ToArray();
+
+                Task.WaitAll(tasks, TimeSpan.FromSeconds(2));
 
                 var message = p2PService.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned).GetAwaiter()
                    .GetResult();
