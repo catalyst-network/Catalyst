@@ -153,6 +153,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var gossipMessage = anySignedGossip.ToDatagram(new IPEndPoint(IPAddress.Any, 5050));
             channel.WriteInbound(gossipMessage);
             hasHitHandler.IsSameOrEqualTo(true);
+            peerClientFactory.Dispose();
         }
 
         [Fact]
@@ -218,6 +219,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             value.ReceivedCount.Should().Be((uint) receivedCount + 1);
             value.GossipCount.Should().BeGreaterOrEqualTo((uint) Math.Min(gossipCache.GetMaxGossipCycles(correlationId),
                 value.ReceivedCount * Constants.MaxGossipPeersPerRound));
+            peerClientFactory.Dispose();
         }
 
         private Guid Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier, IMemoryCache cache)
