@@ -94,12 +94,13 @@ namespace Catalyst.Cli.Commands
                     GetVersionOptions,
                     GetMempoolOptions,
                     ConnectOptions,
-                    SignOptions,
+                    SignOptions, 
                     VerifyOptions,
                     PeerListOptions,
                     PeerCountOptions,
                     RemovePeerOptions,
                     PeerReputationOptions,
+                    PeerBlackListingOptions,
                     AddFileOnDfsOptions,
                     GetFileOptions>(args)
                .MapResult(
@@ -112,6 +113,7 @@ namespace Catalyst.Cli.Commands
                     (PeerCountOptions opts) => PeerCountCommand(opts),
                     (RemovePeerOptions opts) => PeerRemoveCommand(opts),
                     (PeerReputationOptions opts) => PeerReputationCommand(opts),
+                    (PeerBlackListingOptions opts) => PeerBlackListingCommand(opts),
                     (AddFileOnDfsOptions opts) => DfsAddFile(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (ConnectOptions opts) => DisconnectNode(opts.NodeId),
