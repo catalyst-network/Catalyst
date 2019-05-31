@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
@@ -47,6 +48,7 @@ using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -119,26 +121,31 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         public class SimpleP2PMessageHandler : IP2PMessageHandler, IDisposable
         {
             private IDisposable _subscription;
+            private readonly ILogger _logger;
 
             public AnySignedMessageObserver AnyObserver { get; }
 
             public SimpleP2PMessageHandler()
             {
-                AnyObserver = new AnySignedMessageObserver(0, Substitute.For<ILogger>());
+                _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+                AnyObserver = new AnySignedMessageObserver(0, _logger);
             }
 
             protected void Handler(IChanneledMessage<AnySigned> message)
             {
+                _logger.Debug("SimpleP2PMessageHandler Handling {0}", JsonConvert.SerializeObject(message));
                 AnyObserver.OnNext(message);
             }
 
             public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream)
             {
+                _logger.Debug("subscribing to {0}", messageStream.GetType());
                 _subscription = messageStream.Subscribe(AnyObserver);
             }
 
             public void Dispose()
             {
+                _logger.Debug("disposing of {0}", nameof(SimpleP2PMessageHandler));
                 _subscription.Dispose();
             }
         }
