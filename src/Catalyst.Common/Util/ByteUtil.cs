@@ -149,7 +149,7 @@ namespace Catalyst.Common.Util
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static string ByteToString(byte[] array)
+        internal static string ByteToString(byte[] array)
         {
             Guard.Argument(array, nameof(array)).NotNull().NotEmpty();
             return Encoding.UTF8.GetString(array);

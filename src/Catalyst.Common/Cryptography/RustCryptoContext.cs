@@ -30,31 +30,56 @@ using Multiformats.Base;
 
 namespace Catalyst.Common.Cryptography
 {
-    public class RustCryptoContext : ICryptoContext
+    public sealed class RustCryptoContext : ICryptoContext
     {
-        private static readonly IWrapper _wrapper = new CryptoWrapper();
-        public IPrivateKey GeneratePrivateKey() { return _wrapper.GenerateKey(); }
+        private static readonly IWrapper Wrapper = new CryptoWrapper();
 
-        public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob) { return new PublicKey(blob.ToArray()); }
+        /// <inheritdoc />
+        public IPrivateKey GeneratePrivateKey()
+        {
+            return Wrapper.GenerateKey();
+        }
 
-        public byte[] ExportPublicKey(IPublicKey key) { return key.Bytes.RawBytes; }
+        /// <inheritdoc />
+        public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob)
+        {
+            return new PublicKey(blob.ToArray());
+        }
 
-        public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob) { return new PrivateKey(blob.ToArray()); }
+        /// <inheritdoc />
+        public byte[] ExportPublicKey(IPublicKey key)
+        {
+            return key.Bytes.RawBytes;
+        }
 
-        public byte[] ExportPrivateKey(IPrivateKey key) { return key.Bytes.RawBytes; }
+        /// <inheritdoc />
+        public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob)
+        {
+            return new PrivateKey(blob.ToArray());
+        }
 
+        /// <inheritdoc />
+        public byte[] ExportPrivateKey(IPrivateKey key)
+        {
+            return key.Bytes.RawBytes;
+        }
+
+        /// <inheritdoc />
         public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
         {
-            return _wrapper.StdSign(privateKey, data.ToArray());
+            return Wrapper.StdSign(privateKey, data.ToArray());
         }
-
+        
+        /// <inheritdoc />
         public bool Verify(IPublicKey key, ReadOnlySpan<byte> message, ISignature signature)
         {
-            return _wrapper.StdVerify(signature, key, message.ToArray());
+            return Wrapper.StdVerify(signature, key, message.ToArray());
         }
 
-        public IPublicKey GetPublicKey(IPrivateKey key) { return _wrapper.GetPublicKeyFromPrivate(key); }
-
-        public string AddressFromKey(IPublicKey key) { return Multibase.Encode(MultibaseEncoding.Base58Btc, key.Bytes.RawBytes); }
+        /// <inheritdoc />
+        public IPublicKey GetPublicKey(IPrivateKey key)
+        {
+            return Wrapper.GetPublicKeyFromPrivate(key);
+        }
     }
 }

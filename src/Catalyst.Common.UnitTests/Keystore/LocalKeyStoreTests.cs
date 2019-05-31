@@ -22,88 +22,71 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.KeyStore;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using FluentAssertions;
+using Catalyst.Common.Util;
+using Multiformats.Hash.Algorithms;
+using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Common.UnitTests.Keystore
 {
-    public sealed class LocalKeyStoreTests : FileSystemBasedTest
+    public sealed class LocalKeyStoreTests : ConfigFileBasedTest
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
-        private readonly IKeyStoreWrapper _keyStoreService;
-        private readonly IPrivateKey _privateKey;
-        private readonly byte[] _privateKeyBytes;
-        private readonly string _fileName;
-        private readonly string _password;
-
+        
+        private readonly string scryptKeyStoreDocument = @"{
+                ""crypto"" : {
+                ""cipher"" : ""aes-128-ctr"",
+                ""cipherparams"" : {
+                    ""iv"" : ""83dbcc02d8ccb40e466191a123791e0e""
+                },
+                ""ciphertext"" : ""d172bf743a674da9cdad04534d56926ef8358534d458fffccd4e6ad2fbde479c"",
+                ""kdf"" : ""scrypt"",
+                ""kdfparams"" : {
+                   ""dklen"" : 32,
+                    ""n"" : 262144,
+                    ""r"" : 1,
+                    ""p"" : 8,
+                    ""salt"" : ""ab0c7876052600dd703518d6fc3fe8984592145b591fc8fb5c6d43190334ba19""
+                },
+                ""mac"" : ""2103ac29920d71da29f15d75b4a16dbe95cfd7ff8faea1056c33131d846e3097""
+                },
+                ""id"" : ""3198bc9c-6672-5ab3-d995-4942343ae5b6"",
+                ""version"" : 3
+        }";
+        
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
-            //we cannot currently use a mock for CryptoContext because part of the interface uses the "in"
-            //parameter modifier: https://github.com/castleproject/Core/issues/430
             _context = new RustCryptoContext();
 
             var logger = Substitute.For<ILogger>();
-            _keyStoreService = Substitute.For<IKeyStoreWrapper>();
-            _keystore = new LocalKeyStore(_context, _keyStoreService, FileSystem, logger);
+            var passwordReader = new TestPasswordReader("testPassword");
 
-            _privateKey = _context.GeneratePrivateKey();
-            _privateKeyBytes = _context.ExportPrivateKey(_privateKey);
-            _fileName = "myKey.json";
-            _password = "password123";
+            _keystore = new LocalKeyStore(passwordReader,
+                _context,
+                new KeyStoreServiceWrapped(),
+                FileSystem,
+                logger,
+                new AddressHelper(new BLAKE2B_256())
+            );
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void TestStoreAndRetrieveKey()
+        public async void ShouldGenerateAccountAndCreateKeyStoreFileScrypt()
         {
-            var fakeJsonData = "this is the json data to be stored on disk file";
-            _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(_password, Arg.Any<byte[]>(), _fileName)
-               .Returns(fakeJsonData);
+            var catKey = _context.GeneratePrivateKey();
 
-            _keystore.StoreKey(_privateKey, _fileName, _password);
-
-            _keyStoreService.DecryptKeyStoreFromFile(_password, Arg.Is<string>(s => s.EndsWith(_fileName)))
-               .Returns(_privateKeyBytes);
-
-            IPrivateKey retrievedKey = _keystore.GetKey(_fileName, _password);
-            retrievedKey.Should().NotBeNull();
-
-            // we can't export the key and test its value directly so we test it produces the same encryption for a given message
-            var testMessage = Encoding.UTF8.GetBytes("test message");
-            var testKeyBySigning = _context.Sign(retrievedKey, testMessage);
-            var expectedSignedMessage = _context.Sign(_privateKey, testMessage);
-
-            testKeyBySigning.Should().BeEquivalentTo(expectedSignedMessage, "the stored and retrieve key should be the same");
-
-            var storedData = File.ReadAllText(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, _fileName));
-            storedData.Should().Be(fakeJsonData);
-        }
-
-        [Fact]
-        public void TestWrongPasswordStoreAndRetrieveKey()
-        {
-            _keystore.StoreKey(_privateKey, _fileName, _password);
-
-            _keyStoreService.DecryptKeyStoreFromFile(Arg.Any<string>(), Arg.Is<string>(s => s.EndsWith(_fileName)))
-               .Throws(new CryptographicException("wrong password"));
-
-            string password2 = "incorrect password";
-            Action action = () => _keystore.GetKey(_fileName, password2);
-            action.Should().Throw<CryptographicException>("we should not be able to retrieve a key with the wrong password");
+            var json = await _keystore.KeyStoreGenerate(catKey, "testPassword");
+            var key = _keystore.KeyStoreDecrypt("testPassword", json);
+            Assert.Equal(catKey.Bytes.RawBytes.ToHex(), key.ToHex(false));
         }
     }
 }

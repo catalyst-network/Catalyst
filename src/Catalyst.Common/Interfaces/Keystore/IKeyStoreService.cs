@@ -23,11 +23,10 @@
 
 namespace Catalyst.Common.Interfaces.KeyStore
 {
-    public interface IKeyStoreWrapper
+    public interface IKeyStoreService
     {
         string GetAddressFromKeyStore(string json);
         string GenerateUTCFileName(string address);
-        byte[] DecryptKeyStoreFromFile(string password, string filePath);
         byte[] DecryptKeyStoreFromJson(string password, string json);
         string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
     }
