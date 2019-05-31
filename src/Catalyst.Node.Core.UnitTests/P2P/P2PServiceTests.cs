@@ -121,32 +121,33 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         public class SimpleP2PMessageHandler : IP2PMessageHandler, IDisposable
         {
             private IDisposable _subscription;
-            private readonly ILogger _logger;
 
             public AnySignedMessageObserver AnyObserver { get; }
+            public ILogger Logger { get; set; }
 
             public SimpleP2PMessageHandler()
             {
-                _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-                _logger.Debug("{0} constructor", nameof(SimpleP2PMessageHandler));
-                AnyObserver = new AnySignedMessageObserver(0, _logger);
+                Logger = Log.Logger.ForContext(GetType());
+                Logger.Debug("{0} constructor", nameof(SimpleP2PMessageHandler));
+                Logger.Debug("Counting {0} processor", Environment.ProcessorCount);
+                AnyObserver = new AnySignedMessageObserver(0, Logger);
             }
 
             protected void Handler(IChanneledMessage<AnySigned> message)
             {
-                _logger.Debug("SimpleP2PMessageHandler Handling {0}", JsonConvert.SerializeObject(message));
+                Logger.Debug("SimpleP2PMessageHandler Handling {0}", JsonConvert.SerializeObject(message));
                 AnyObserver.OnNext(message);
             }
 
             public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream)
             {
-                _logger.Debug("subscribing to {0}", messageStream.GetType());
+                Logger.Debug("subscribing to {0}", messageStream.GetType());
                 _subscription = messageStream.Subscribe(AnyObserver);
             }
 
             public void Dispose()
             {
-                _logger.Debug("disposing of {0}", nameof(SimpleP2PMessageHandler));
+                Logger.Debug("disposing of {0}", nameof(SimpleP2PMessageHandler));
                 _subscription.Dispose();
             }
         }
@@ -158,8 +159,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var serverObserver = new SimpleP2PMessageHandler();
             ContainerBuilder.RegisterInstance(serverObserver).As<IP2PMessageHandler>();
             _container = ContainerBuilder.Build();
+            
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
+                serverObserver.Logger = _container.Resolve<ILogger>();
+                serverObserver.Logger.Debug("Logger 876 set");
+
                 _reputableCache = _container.Resolve<IReputableCache>();
                 var p2PService = _container.Resolve<IP2PService>();
 
