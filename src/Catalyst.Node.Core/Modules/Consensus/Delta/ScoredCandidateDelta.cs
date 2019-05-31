@@ -31,13 +31,13 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
     {
         private int _score;
 
-        public ScoredCandidateDelta(CandidateDelta candidate, int score)
+        public ScoredCandidateDelta(CandidateDeltaBroadcast candidate, int score)
         {
             Candidate = candidate;
             _score = score;
         }
 
-        public CandidateDelta Candidate { get; }
+        public CandidateDeltaBroadcast Candidate { get; }
         public int Score => Volatile.Read(ref _score);
 
         public int IncreasePopularity(int voteCount)

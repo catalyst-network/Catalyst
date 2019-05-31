@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;

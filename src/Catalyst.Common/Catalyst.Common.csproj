@@ -110,7 +110,6 @@
         <Folder Include="Hex\HexConverters\Extensions\" />
         <Folder Include="Hex\HexTypes\" />
         <Folder Include="RLP\" />
-        <Folder Include="Protocol" />
         <Folder Include="Protocol\Protobuffs" />
     </ItemGroup>
     <ItemGroup>
