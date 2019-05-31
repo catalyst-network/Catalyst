@@ -21,19 +21,15 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
+using System;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
@@ -52,23 +48,18 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <summary>The message factory</summary>
         private readonly P2PMessageFactory _messageFactory;
 
-        /// <summary>The peer settings</summary>
-        private readonly IPeerSettings _peerSettings;
+        /// <summary>The peer client factory</summary>
+        private readonly IPeerClientFactory _peerClientFactory;
 
         /// <summary>Initializes a new instance of the <see cref="GossipManager"/> class.</summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="reputableCache">The reputable cache.</param>
-        /// <param name="gossipCache">The gossip cache.</param>
-        /// <param name="peerSettings">The peer settings for the channel</param>
-        public GossipManager(IPeerIdentifier peerIdentifier,
-            IReputableCache reputableCache,
-            IGossipCache gossipCache,
-            IPeerSettings peerSettings)
+        /// <param name="peerClientFactory">The peer client factory</param>
+        /// <param name="gossipManagerContext">The gossip manager context.</param>
+        public GossipManager(IPeerClientFactory peerClientFactory, IGossipManagerContext gossipManagerContext)
         {
-            _gossipCache = gossipCache;
-            _peerIdentifier = peerIdentifier;
-            _messageFactory = new P2PMessageFactory(reputableCache);
-            _peerSettings = peerSettings;
+            _gossipCache = gossipManagerContext.GossipCache;
+            _peerIdentifier = gossipManagerContext.PeerIdentifier;
+            _messageFactory = new P2PMessageFactory(gossipManagerContext.ReputableCache);
+            _peerClientFactory = peerClientFactory;
         }
 
         /// <inheritdoc/>
@@ -130,17 +121,12 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         {
             var peersToGossip = _gossipCache.GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
-            IPEndPoint ipEndpoint = new IPEndPoint(_peerSettings.BindAddress, _peerSettings.Port);
 
-            // TODO: Peer client should only be initialized once and re-used throughout the whole lifecycle #447
-            using (var peerClient = new PeerClient(ipEndpoint, new List<IP2PMessageHandler>(), this))
+            foreach (var peerIdentifier in peersToGossip)
             {
-                foreach (var peerIdentifier in peersToGossip)
-                {
-                    var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
-                        MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                    _ = peerClient.SendMessage(datagramEnvelope);
-                }
+                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
+                    MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
+                _ = ((PeerClient) _peerClientFactory.Client).SendMessage(datagramEnvelope);
             }
 
             var updateCount = (uint) peersToGossip.Count;

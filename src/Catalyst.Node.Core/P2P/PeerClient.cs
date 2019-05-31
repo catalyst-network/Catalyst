@@ -63,6 +63,7 @@ namespace Catalyst.Node.Core.P2P
 
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
             var gossipHandler = new GossipHandler(gossipManager);
+
             var handlerList = messageHandlers.ToList();
 
             var allMessagesStream =

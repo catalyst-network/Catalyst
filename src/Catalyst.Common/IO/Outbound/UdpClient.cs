@@ -21,13 +21,13 @@
 
 #endregion
 
-using System.Net;
-using System.Net.Sockets;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Serilog;
+using System.Net;
+using System.Net.Sockets;
 
 namespace Catalyst.Common.IO.Outbound
 {
