@@ -85,6 +85,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         public void DoesResolveIp2PServiceCorrectly()
         {
             _reputableCache = _container.Resolve<IReputableCache>();
+            _container = ContainerBuilder.Build();
             using (var scope = _container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = _container.Resolve<IP2PService>();
