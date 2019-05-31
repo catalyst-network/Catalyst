@@ -27,10 +27,19 @@ namespace Catalyst.Common.Interfaces.IO
 {
     public interface INodeBusinessEventFactory
     {
+        /// <summary>Creates a new Rpc Server loop group with a specified amount of threads
+        /// located inside <see cref="Microsoft.Extensions.Configuration.IConfigurationRoot"/> </summary>
+        /// <returns><see cref="IEventLoopGroup"/>The event loop group</returns>
         IEventLoopGroup NewRpcServerLoopGroup();
 
+        /// <summary>Creates a new UDP Server loop group with a specified amount of threads
+        /// located inside <see cref="Microsoft.Extensions.Configuration.IConfigurationRoot"/> </summary>
+        /// <returns><see cref="IEventLoopGroup"/>The event loop group</returns>
         IEventLoopGroup NewUdpServerLoopGroup();
 
+        /// <summary>Creates a new UDP Client loop group with a specified amount of threads
+        /// located inside <see cref="Microsoft.Extensions.Configuration.IConfigurationRoot"/> </summary>
+        /// <returns><see cref="IEventLoopGroup"/>The event loop group</returns>
         IEventLoopGroup NewUdpClientLoopGroup();
     }
 }

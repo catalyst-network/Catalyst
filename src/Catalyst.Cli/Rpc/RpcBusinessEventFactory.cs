@@ -34,6 +34,7 @@ namespace Catalyst.Cli.Rpc
 
         public RpcBusinessEventFactory(IConfigurationRoot configurationRoot) { _configurationRoot = configurationRoot; }
 
+        /// <inheritdoc cref="IRpcBusinessEventFactory"/>
         public IEventLoopGroup NewRpcClientLoopGroup()
         {
             var threadCount = _configurationRoot.GetSection("CatalystCliRpcNodes")

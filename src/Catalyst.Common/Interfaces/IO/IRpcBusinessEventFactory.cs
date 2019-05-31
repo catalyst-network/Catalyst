@@ -27,6 +27,9 @@ namespace Catalyst.Common.Interfaces.IO
 {
     public interface IRpcBusinessEventFactory
     {
+        /// <summary>Creates a new Rpc Client loop group with a specified amount of threads
+        /// located inside <see cref="Microsoft.Extensions.Configuration.IConfigurationRoot"/> </summary>
+        /// <returns><see cref="IEventLoopGroup"/>The event loop group</returns>
         IEventLoopGroup NewRpcClientLoopGroup();
     }
 }

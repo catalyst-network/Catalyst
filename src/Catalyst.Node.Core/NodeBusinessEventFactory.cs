@@ -37,6 +37,7 @@ namespace Catalyst.Node.Core
             _configurationRoot = configurationRoot;
         }
 
+        /// <inheritdoc cref="INodeBusinessEventFactory"/>
         public IEventLoopGroup NewRpcServerLoopGroup()
         {
             var businessThreads = _configurationRoot
@@ -47,6 +48,7 @@ namespace Catalyst.Node.Core
             return new MultithreadEventLoopGroup(businessThreads);
         }
 
+        /// <inheritdoc cref="INodeBusinessEventFactory"/>
         public IEventLoopGroup NewUdpServerLoopGroup()
         {
             var businessThreads = _configurationRoot
@@ -56,6 +58,7 @@ namespace Catalyst.Node.Core
             return new MultithreadEventLoopGroup(businessThreads);
         }
 
+        /// <inheritdoc cref="INodeBusinessEventFactory"/>
         public IEventLoopGroup NewUdpClientLoopGroup()
         {
             var businessThreads = _configurationRoot
