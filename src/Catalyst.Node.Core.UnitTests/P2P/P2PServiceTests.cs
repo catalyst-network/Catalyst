@@ -42,11 +42,15 @@ using NSubstitute;
 using Serilog;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions.Common;
 using Xunit;
 using Xunit.Abstractions;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Node.Core.UnitTests.P2P
 {
@@ -133,9 +137,20 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             channel.WriteInbound(datagramEnvelope);
 
-            var channeledMessage = protoDatagramChannelHandler.MessageStream
-               .FirstAsync(t => t != null && t != NullObjects.ChanneledAnySigned).GetAwaiter().GetResult();
-            channeledMessage.Payload.TypeUrl.IsSameOrEqualTo(PingResponse.Descriptor.ShortenedFullName());
+            Task<IChanneledMessage<AnySigned>>[] tasks = new IChanneledMessageStreamer<AnySigned>[]
+                {
+                    protoDatagramChannelHandler
+                }
+               .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+               .ToArray();
+            tasks[0].ConfigureAwait(false);
+
+            Task.WaitAll(tasks, TimeSpan.FromSeconds(2));
+            
+            var channeledMessage = tasks.FirstOrDefault()?.Result;
+
+            channeledMessage.Should().NotBeNull();
+            channeledMessage?.Payload.TypeUrl.IsSameOrEqualTo(PingResponse.Descriptor.ShortenedFullName());
         }
 
         [Fact]
@@ -160,9 +175,20 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             channel.WriteInbound(datagramEnvelope);
 
-            var channeledMessage = protoDatagramChannelHandler.MessageStream
-               .FirstAsync(t => t != null && t != NullObjects.ChanneledAnySigned).GetAwaiter().GetResult();
-            channeledMessage.Payload.TypeUrl.IsSameOrEqualTo(PeerNeighborsResponse.Descriptor.ShortenedFullName());
+            Task<IChanneledMessage<AnySigned>>[] tasks = new IChanneledMessageStreamer<AnySigned>[]
+                {
+                    protoDatagramChannelHandler
+                }
+               .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+               .ToArray();
+            tasks[0].ConfigureAwait(false);
+
+            Task.WaitAll(tasks, TimeSpan.FromSeconds(2));
+
+            var channeledMessage = tasks.FirstOrDefault()?.Result;
+
+            channeledMessage.Should().NotBeNull();
+            channeledMessage?.Payload.TypeUrl.IsSameOrEqualTo(PeerNeighborsResponse.Descriptor.ShortenedFullName());
         }
     }
 }
