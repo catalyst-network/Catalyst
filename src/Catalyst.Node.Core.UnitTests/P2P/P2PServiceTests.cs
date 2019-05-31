@@ -128,6 +128,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             public SimpleP2PMessageHandler()
             {
                 _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+                _logger.Debug("{0} constructor", nameof(SimpleP2PMessageHandler));
                 AnyObserver = new AnySignedMessageObserver(0, _logger);
             }
 
