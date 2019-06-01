@@ -23,8 +23,10 @@
 
 using System;
 using System.IO;
+using System.IO.Abstractions;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.FileSystem;
+using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.Common.FileSystem
 {
@@ -32,16 +34,33 @@ namespace Catalyst.Common.FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        public DirectoryInfo GetCatalystHomeDir()
+        public DirectoryInfo GetCatalystDataDir()
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
             return new DirectoryInfo(path);
         }
 
+        public async Task<IFileInfo> WriteFileToCdd(string fileName, string contents)
+        {
+            var fullPath = Path.Combine(GetCatalystDataDir().ToString(), fileName);
+
+            using (var file = File.CreateText(fullPath))
+            {
+                await file.WriteAsync(contents).ConfigureAwait(false);
+                await file.FlushAsync().ConfigureAwait(false);
+            }
+
+            return FileInfo.FromFileName(fullPath);
+        }
+
+        public bool DataFileExists(string fileName)
+        {
+            return File.Exists(Path.Combine(GetCatalystDataDir().ToString(), fileName));
+        }
+        
         private static string GetUserHomeDir()
         {
-            var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return homePath;
+            return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
     }
 }
