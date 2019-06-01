@@ -21,27 +21,23 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
-using Serilog;
+using Catalyst.Protocol.Delta;
+using Dawn;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Common.Protocol
 {
-    public class Consensus : IConsensus
+    public static class CandidateDeltaExtensions
     {
-        private readonly ILogger _logger;
-
-        public IDeltaBuilder DeltaBuilder { get; }
-        public IDeltaHub DeltaHub { get; }
-
-        public Consensus(IDeltaBuilder deltaBuilder,
-            IDeltaHub deltaHub,
-            ILogger logger)
+        public static bool IsValid(this CandidateDeltaBroadcast candidate)
         {
-            _logger = logger;
-            DeltaBuilder = deltaBuilder;
-            DeltaHub = deltaHub;
-            _logger.Information("Consensus service initialised.");
+            Guard.Argument(candidate, nameof(candidate)).NotNull()
+               .Require(c => c.ProducerId != null, c => $"{nameof(candidate.ProducerId)} cannot be null")
+               .Require(c => c.PreviousDeltaDfsHash != null && !c.PreviousDeltaDfsHash.IsEmpty,
+                    c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null or empty")
+               .Require(c => c.Hash != null && !c.Hash.IsEmpty,
+                    c => $"{nameof(candidate.Hash)} cannot be null or empty");
+
+            return true;
         }
     }
 }

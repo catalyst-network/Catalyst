@@ -21,27 +21,28 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus;
+using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
-using Serilog;
+using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
-    public class Consensus : IConsensus
+    public class ScoredCandidateDelta : IScoredCandidateDelta
     {
-        private readonly ILogger _logger;
+        private int _score;
 
-        public IDeltaBuilder DeltaBuilder { get; }
-        public IDeltaHub DeltaHub { get; }
-
-        public Consensus(IDeltaBuilder deltaBuilder,
-            IDeltaHub deltaHub,
-            ILogger logger)
+        public ScoredCandidateDelta(CandidateDeltaBroadcast candidate, int score)
         {
-            _logger = logger;
-            DeltaBuilder = deltaBuilder;
-            DeltaHub = deltaHub;
-            _logger.Information("Consensus service initialised.");
+            Candidate = candidate;
+            _score = score;
+        }
+
+        public CandidateDeltaBroadcast Candidate { get; }
+        public int Score => Volatile.Read(ref _score);
+
+        public int IncreasePopularity(int voteCount)
+        {
+            return Interlocked.Add(ref _score, voteCount);
         }
     }
 }

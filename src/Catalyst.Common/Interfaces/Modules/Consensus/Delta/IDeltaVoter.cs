@@ -21,27 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
-using Serilog;
+using System;
+using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Node.Core.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
-    public class Consensus : IConsensus
+    /// <summary>
+    /// This component is meant to be used to produce and retrieve ranking/voting data
+    /// about the different candidate deltas observed on the network, in order to be
+    /// able to determine which candidate should eventually make it to the DFS.
+    /// </summary>
+    public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
     {
-        private readonly ILogger _logger;
-
-        public IDeltaBuilder DeltaBuilder { get; }
-        public IDeltaHub DeltaHub { get; }
-
-        public Consensus(IDeltaBuilder deltaBuilder,
-            IDeltaHub deltaHub,
-            ILogger logger)
-        {
-            _logger = logger;
-            DeltaBuilder = deltaBuilder;
-            DeltaHub = deltaHub;
-            _logger.Information("Consensus service initialised.");
-        }
+        CandidateDeltaBroadcast GetFavoriteDelta(byte[] previousDeltaDfsHash);
     }
 }

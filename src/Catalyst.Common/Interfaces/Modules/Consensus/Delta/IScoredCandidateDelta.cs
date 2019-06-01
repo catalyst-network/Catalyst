@@ -23,20 +23,11 @@
 
 using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
-{
-    /// <summary>
-    /// The service in charge of building the delta state update used to update the ledger update 
-    /// for a given cycle.
-    /// </summary>
-    public interface IDeltaBuilder
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
+    public interface IScoredCandidateDelta
     {
-        /// <summary>
-        /// Builds a new candidate delta based on the content of its predecessor
-        /// </summary>
-        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        /// <returns>Returns a candidate delta object that contains the hash for the update,
-        /// the hash for the previous delta and the producer's PeerId</returns>
-        CandidateDelta BuildCandidateDelta(byte[] previousDeltaHash);
+        CandidateDeltaBroadcast Candidate { get; }
+        int Score { get; }
+        int IncreasePopularity(int voteCount);
     }
 }
