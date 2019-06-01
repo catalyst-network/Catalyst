@@ -30,10 +30,7 @@ using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -51,14 +48,12 @@ namespace Catalyst.Cli.UnitTests
         private readonly ILogger _logger;
         private GetInfoResponseHandler _requestHandler;
 
-        public static readonly List<object[]> QueryContents;
+        private static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
-        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static GetInfoResponseHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -98,7 +93,7 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new MessageFactory().GetMessage(new MessageDto(
                     new GetInfoResponse
                     {
                         Query = query

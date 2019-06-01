@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
@@ -65,7 +64,7 @@ namespace Catalyst.Common.UnitTests.Keystore
 
             var json = _keystore.KeyStoreGenerate(catKey, "testPassword").GetAwaiter().GetResult();
             var key = _keystore.KeyStoreDecrypt("testPassword", json);
-            Assert.Equal(catKey.Bytes.RawBytes.ToHex(), key.ToHex(false));
+            Assert.Equal(catKey.Bytes.RawBytes.ToHex(), key.ToHex());
         }
     }
 }

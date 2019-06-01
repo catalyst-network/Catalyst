@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 
@@ -64,7 +63,7 @@ namespace Catalyst.Cli.Commands
                         nodeConfig.Port),
                     _peerIdentifier);
                 
-                var request = _rpcMessageFactory.GetMessage(dto);
+                var request = _messageFactory.GetMessage(dto);
                 node.SendMessage(request);
             }
             catch (Exception e)

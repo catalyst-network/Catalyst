@@ -42,7 +42,7 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Google.Protobuf;
 using Polly;
 using Xunit.Abstractions;
@@ -56,8 +56,7 @@ namespace Catalyst.Cli.UnitTests
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _fileDownloadFactory;
         private readonly IDfs _dfs;
-        private readonly IRpcCorrelationCache _cache;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         public GetFileFromDfsResponseHandlerTest(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -70,8 +69,7 @@ namespace Catalyst.Cli.UnitTests
 
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _cache = Substitute.For<IRpcCorrelationCache>();
-            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
+            _messageFactory = Substitute.For<IMessageFactory>();
             _fileDownloadFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
             _dfs = Substitute.For<IDfs>();
@@ -122,7 +120,7 @@ namespace Catalyst.Cli.UnitTests
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseHandler(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _logger, _rpcMessageFactory);
+                    new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _logger, _messageFactory);
 
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
@@ -150,7 +148,7 @@ namespace Catalyst.Cli.UnitTests
                     nodePeer,
                     _fakeContext.Channel,
                     correlationGuid,
-                    new RpcMessageFactory(_cache));
+                    new MessageFactory());
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {

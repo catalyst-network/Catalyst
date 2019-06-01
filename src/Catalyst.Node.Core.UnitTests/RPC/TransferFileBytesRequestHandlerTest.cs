@@ -26,8 +26,7 @@ using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,7 +38,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC
 {
-    public class TransferFileBytesRequestHandlerTest
+    public sealed class TransferFileBytesRequestHandlerTest
     {
         private readonly TransferFileBytesRequestHandler _handler;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
@@ -54,7 +53,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             _handler = new TransferFileBytesRequestHandler(_downloadFileTransferFactory, peerIdentifier,
                 Substitute.For<ILogger>(), 
-                new RpcMessageFactory(Substitute.For<IRpcCorrelationCache>()));
+                new MessageFactory());
         }
 
         [Fact]

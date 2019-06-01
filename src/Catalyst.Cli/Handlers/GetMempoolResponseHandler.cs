@@ -23,11 +23,9 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -48,12 +46,13 @@ namespace Catalyst.Cli.Handlers
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Constructor. Calls the base class <see cref="CorrelatableMessageHandlerBase{TProto,TCorrelator}"/> constructor.
-        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
-        /// <param name="logger">Logger to log debug related information.</param>
+        /// <param name="output">
+        ///     A service used to output the result of the messages handling to the user.
+        /// </param>
+        /// <param name="logger">
+        ///     Logger to log debug related information.
+        /// </param>
         /// </summary>
-        /// <param name="output"></param>
-        /// <param name="logger">Logger to log debug related information.</param>
         public GetMempoolResponseHandler(IUserOutput output,
             ILogger logger)
             : base(logger)

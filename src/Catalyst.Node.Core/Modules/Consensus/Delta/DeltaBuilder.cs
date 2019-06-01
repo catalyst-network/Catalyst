@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                .ToArray();
 
             // xf
-            var summedFees = (ulong) includedTransactions
+            var summedFees = includedTransactions
                .Sum(t => t.TransactionFees);
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)

@@ -32,7 +32,6 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Serilog.Events;
@@ -79,7 +78,7 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
             
-            var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+            var requestMessage = _messageFactory.GetMessage(new MessageDto(
                 message: request,
                 messageTypes: MessageTypes.Ask,
                 recipient: nodePeerIdentifier,
@@ -92,7 +91,7 @@ namespace Catalyst.Cli.Commands
                 nodePeerIdentifier,
                 node.Channel,
                 requestMessage.CorrelationId.ToGuid(),
-                _rpcMessageFactory);
+                _messageFactory);
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 
@@ -104,13 +103,13 @@ namespace Catalyst.Cli.Commands
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
-                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage()}%");
+                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%");
                 System.Threading.Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
             {
-                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage()}%\n");
+                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%\n");
             }
             else
             {

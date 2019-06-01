@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
-using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Delta

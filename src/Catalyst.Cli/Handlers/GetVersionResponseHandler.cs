@@ -23,11 +23,9 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;

@@ -23,17 +23,14 @@
 
 using System.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
-using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;
 using SharpRepository.Repository;

@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -39,23 +38,20 @@ using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     /// <summary>
     /// The request handler to add a file to the DFS
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class AddFileToDfsRequestHandler : MessageHandlerBase<AddFileToDfsRequest>,
         IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
@@ -70,16 +66,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
-        /// <param name="correlationCache">The correlation cache.</param>
-        /// <param name="rpcMessageFactory"></param>
+        /// <param name="messageFactory"></param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IDownloadFileTransferFactory fileTransferFactory,
-            IRpcMessageFactory rpcMessageFactory,
+            IMessageFactory messageFactory,
             ILogger logger) : base(logger)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
@@ -168,12 +163,13 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <param name="responseCode">The response code.</param>
+        /// <param name="correlationGuid"></param>
         private void ReturnResponse(IFileTransferInformation fileTransferInformation, FileTransferResponseCodes responseCode, Guid correlationGuid)
         {
             Logger.Information("File transfer response code: " + responseCode);
             if (responseCode == FileTransferResponseCodes.Successful)
             {
-                Logger.Information($"Initialised file transfer, FileName: {fileTransferInformation.FileOutputPath}, Chunks: {fileTransferInformation.MaxChunk}");
+                Logger.Information($"Initialised file transfer, FileName: {fileTransferInformation.FileOutputPath}, Chunks: {fileTransferInformation.MaxChunk.ToString()}");
             }
 
             var dfsHash = responseCode == FileTransferResponseCodes.Finished ? fileTransferInformation.DfsHash : string.Empty;
@@ -186,7 +182,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             };
 
             // Send Response
-            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+            var responseMessage = _messageFactory.GetMessage(new MessageDto(
                     response,
                     MessageTypes.Tell,
                     fileTransferInformation.RecipientIdentifier,

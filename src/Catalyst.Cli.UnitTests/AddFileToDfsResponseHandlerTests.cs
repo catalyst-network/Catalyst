@@ -29,7 +29,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
