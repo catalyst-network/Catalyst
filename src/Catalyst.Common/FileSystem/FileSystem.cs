@@ -40,28 +40,27 @@ namespace Catalyst.Common.FileSystem
             return new DirectoryInfo(path);
         }
 
-        public async Task<IFileInfo> WriteFileToCDD(string fileName, string contents)
+        public async Task<IFileInfo> WriteFileToCdd(string fileName, string contents)
         {
             var fullPath = Path.Combine(GetCatalystDataDir().ToString(), fileName);
 
             using (var file = File.CreateText(fullPath))
             {
-                await file.WriteAsync(contents);
-                await file.FlushAsync();
+                await file.WriteAsync(contents).ConfigureAwait(false);
+                await file.FlushAsync().ConfigureAwait(false);
             }
 
             return FileInfo.FromFileName(fullPath);
         }
 
-        public async Task<bool> DataFileExists(string fileName)
+        public bool DataFileExists(string fileName)
         {
             return File.Exists(Path.Combine(GetCatalystDataDir().ToString(), fileName));
         }
         
         private static string GetUserHomeDir()
         {
-            var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return homePath;
+            return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
     }
 }
