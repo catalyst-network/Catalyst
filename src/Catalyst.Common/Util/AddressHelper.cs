@@ -21,19 +21,33 @@
 
 #endregion
 
-using System.Threading.Tasks;
+using System;
+using Catalyst.Common.Interfaces.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Multiformats.Hash.Algorithms;
+using Nethereum.Hex.HexConvertors.Extensions;
 
-namespace Catalyst.Common.Interfaces.KeyStore
+namespace Catalyst.Common.Util
 {
-    public interface IKeyStore
+    public class AddressHelper : IAddressHelper
     {
-        /// <summary>Gets the password.</summary>
-        /// <value>The password.</value>
-        string Password { get; }
+        private readonly IMultihashAlgorithm _hashAlgorithm;
 
-        byte[] KeyStoreDecrypt(string password, string json);
+        public AddressHelper(IMultihashAlgorithm hashAlgorithm)
+        {
+            _hashAlgorithm = hashAlgorithm;
+        }
 
-        Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password);
+        /// <summary>
+        ///     returns a 20byte
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <returns></returns>
+        public string GenerateAddress(IPublicKey publicKey)
+        {
+            var addressHashBytes = _hashAlgorithm.ComputeHash(publicKey.Bytes.RawBytes);
+            var lastTwentyBytes = ByteUtil.Slice(addressHashBytes, 12, 32);
+            return lastTwentyBytes.ToHex();
+        }
     }
 }

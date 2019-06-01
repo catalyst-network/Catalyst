@@ -64,9 +64,6 @@ namespace Catalyst.Common.Network
         }
         
         /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="seedServers"></param>
         public IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> seedServers)
         {
             var peers = new List<IPeerIdentifier>();

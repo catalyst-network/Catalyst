@@ -21,16 +21,17 @@
 
 #endregion
 
-using System.IO;
-using System.IO.Abstractions;
-using System.Threading.Tasks;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
-namespace Catalyst.Common.Interfaces.FileSystem
+namespace Catalyst.Common.Interfaces.Util
 {
-    public interface IFileSystem
+    public interface IAddressHelper
     {
-        DirectoryInfo GetCatalystDataDir();
-        Task<IFileInfo> WriteFileToCdd(string fileName, string contents);
-        bool DataFileExists(string fileName);
+        /// <summary>
+        ///     returns a 20byte
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <returns></returns>
+        string GenerateAddress(IPublicKey publicKey);
     }
 }
