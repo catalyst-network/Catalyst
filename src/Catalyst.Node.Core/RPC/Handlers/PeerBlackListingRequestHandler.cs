@@ -75,8 +75,8 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var ip = deserialised.Ip.ToStringUtf8();
             var blackList = deserialised.Blacklist;
 
-            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == ip.ToString() 
-             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey);
+            var peerItem = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString() 
+             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey).FirstOrDefault();
 
             if (peerItem != null)
             {
