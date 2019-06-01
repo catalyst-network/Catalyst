@@ -66,11 +66,5 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             hub.BroadcastCandidate(myCandidate);
             _gossipManager.Received(1).Broadcast(null);
         }
-
-        [Fact]
-        public void BroadcastFavoriteCandidateDelta()
-        {
-
-        }
     }
 }

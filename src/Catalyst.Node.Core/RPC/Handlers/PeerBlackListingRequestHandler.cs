@@ -87,6 +87,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             {
                 ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString(), message);
             }
+
             Logger.Debug("received message of type PeerBlackListingRequest");
         }
 
