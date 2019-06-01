@@ -45,6 +45,9 @@ namespace Catalyst.Common.P2P
         public int Reputation { get; set; }
 
         /// <inheritdoc />
+        public bool BlackListed { get; set; }
+
+        /// <inheritdoc />
         /// <summary>
         ///     When peer was first seen by the peer.
         /// </summary>
