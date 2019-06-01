@@ -21,22 +21,33 @@
 
 #endregion
 
-using Catalyst.Protocol.Delta;
+using System;
+using Catalyst.Common.Interfaces.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Multiformats.Hash.Algorithms;
+using Nethereum.Hex.HexConvertors.Extensions;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
+namespace Catalyst.Common.Util
 {
-    /// <summary>
-    /// The service in charge of building the delta state update used to update the ledger update 
-    /// for a given cycle.
-    /// </summary>
-    public interface IDeltaBuilder
+    public class AddressHelper : IAddressHelper
     {
+        private readonly IMultihashAlgorithm _hashAlgorithm;
+
+        public AddressHelper(IMultihashAlgorithm hashAlgorithm)
+        {
+            _hashAlgorithm = hashAlgorithm;
+        }
+
         /// <summary>
-        /// Builds a new candidate delta based on the content of its predecessor
+        ///     returns a 20byte
         /// </summary>
-        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        /// <returns>Returns a candidate delta object that contains the hash for the update,
-        /// the hash for the previous delta and the producer's PeerId</returns>
-        CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash);
+        /// <param name="publicKey"></param>
+        /// <returns></returns>
+        public string GenerateAddress(IPublicKey publicKey)
+        {
+            var addressHashBytes = _hashAlgorithm.ComputeHash(publicKey.Bytes.RawBytes);
+            var lastTwentyBytes = ByteUtil.Slice(addressHashBytes, 12, 32);
+            return lastTwentyBytes.ToHex();
+        }
     }
 }

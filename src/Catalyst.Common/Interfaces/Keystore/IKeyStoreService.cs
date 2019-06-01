@@ -21,13 +21,13 @@
 
 #endregion
 
-using Catalyst.Protocol.Delta;
-
-namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
-    public interface IScoredCandidateDelta
+namespace Catalyst.Common.Interfaces.KeyStore
+{
+    public interface IKeyStoreService
     {
-        CandidateDeltaBroadcast Candidate { get; }
-        int Score { get; }
-        int IncreasePopularity(int voteCount);
+        string GetAddressFromKeyStore(string json);
+        string GenerateUTCFileName(string address);
+        byte[] DecryptKeyStoreFromJson(string password, string json);
+        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
     }
 }

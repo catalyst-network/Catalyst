@@ -31,20 +31,16 @@ namespace Catalyst.Node.Core.Modules.Consensus
     {
         private readonly ILogger _logger;
 
-        public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
-
-        public IDeltaProducersProvider DeltaProducersProvider { get; }
         public IDeltaBuilder DeltaBuilder { get; }
+        public IDeltaHub DeltaHub { get; }
 
-        public Consensus(IDeltaTransactionRetriever deltaTransactionRetriever,
-            IDeltaProducersProvider deltaProducersProvider,
-            ILogger logger,
-            IDeltaBuilder deltaBuilder)
+        public Consensus(IDeltaBuilder deltaBuilder,
+            IDeltaHub deltaHub,
+            ILogger logger)
         {
             _logger = logger;
             DeltaBuilder = deltaBuilder;
-            DeltaTransactionRetriever = deltaTransactionRetriever;
-            DeltaProducersProvider = deltaProducersProvider;
+            DeltaHub = deltaHub;
             _logger.Information("Consensus service initialised.");
         }
     }

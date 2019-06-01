@@ -26,8 +26,13 @@ using Catalyst.Protocol.Delta;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
-    public interface IDeltaVoter : IObserver<CandidateDelta>
+    /// <summary>
+    /// This component is meant to be used to produce and retrieve ranking/voting data
+    /// about the different candidate deltas observed on the network, in order to be
+    /// able to determine which candidate should eventually make it to the DFS.
+    /// </summary>
+    public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
     {
-
+        CandidateDeltaBroadcast GetFavoriteDelta(byte[] previousDeltaDfsHash);
     }
 }

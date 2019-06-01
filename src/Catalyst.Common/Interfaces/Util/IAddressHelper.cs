@@ -21,13 +21,17 @@
 
 #endregion
 
-using Catalyst.Protocol.Delta;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
-    public interface IScoredCandidateDelta
+namespace Catalyst.Common.Interfaces.Util
+{
+    public interface IAddressHelper
     {
-        CandidateDeltaBroadcast Candidate { get; }
-        int Score { get; }
-        int IncreasePopularity(int voteCount);
+        /// <summary>
+        ///     returns a 20byte
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <returns></returns>
+        string GenerateAddress(IPublicKey publicKey);
     }
 }

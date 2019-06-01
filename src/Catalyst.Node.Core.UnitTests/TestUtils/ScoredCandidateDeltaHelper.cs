@@ -30,7 +30,7 @@ namespace Catalyst.Node.Core.UnitTests.TestUtils
 {
     public class ScoredCandidateDeltaHelper
     {
-        public static ScoredCandidateDelta GetScoredCandidateDelta(CandidateDelta candidate = default,
+        public static ScoredCandidateDelta GetScoredCandidateDelta(CandidateDeltaBroadcast candidate = default,
             int score = 0)
         {
             var candidateDelta = candidate ?? CandidateDeltaHelper.GetCandidateDelta();

@@ -94,7 +94,7 @@
             "type": "Catalyst.Common.KeyStore.KeyStoreServiceWrapped, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStoreWrapper, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStoreService, Catalyst.Common"
                 }
             ]
         },
@@ -103,6 +103,14 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cli.IUserOutput, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Util.AddressHelper, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Util.IAddressHelper, Catalyst.Common"
                 }
             ]
         },

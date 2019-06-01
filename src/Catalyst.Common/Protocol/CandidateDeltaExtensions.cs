@@ -21,14 +21,23 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.KeyStore
+using Catalyst.Protocol.Delta;
+using Dawn;
+
+namespace Catalyst.Common.Protocol
 {
-    public interface IKeyStoreWrapper
+    public static class CandidateDeltaExtensions
     {
-        string GetAddressFromKeyStore(string json);
-        string GenerateUTCFileName(string address);
-        byte[] DecryptKeyStoreFromFile(string password, string filePath);
-        byte[] DecryptKeyStoreFromJson(string password, string json);
-        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
+        public static bool IsValid(this CandidateDeltaBroadcast candidate)
+        {
+            Guard.Argument(candidate, nameof(candidate)).NotNull()
+               .Require(c => c.ProducerId != null, c => $"{nameof(candidate.ProducerId)} cannot be null")
+               .Require(c => c.PreviousDeltaDfsHash != null && !c.PreviousDeltaDfsHash.IsEmpty,
+                    c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null or empty")
+               .Require(c => c.Hash != null && !c.Hash.IsEmpty,
+                    c => $"{nameof(candidate.Hash)} cannot be null or empty");
+
+            return true;
+        }
     }
 }
