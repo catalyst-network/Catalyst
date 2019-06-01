@@ -111,8 +111,7 @@ namespace Catalyst.Cli.UnitTests
         [Theory]
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
-        {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
+        { 
             var txList = mempoolContent.ToList();
 
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
@@ -128,7 +127,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new GetMempoolResponseHandler(_output, correlationCache, _logger);
+            _handler = new GetMempoolResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(txList.Count).WriteLine(Arg.Any<string>());

@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,7 +42,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetMempoolResponseHandler
-        : CorrelatableMessageHandlerBase<GetMempoolResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<GetMempoolResponse>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
@@ -52,12 +53,10 @@ namespace Catalyst.Cli.Handlers
         /// <param name="logger">Logger to log debug related information.</param>
         /// </summary>
         /// <param name="output"></param>
-        /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
         public GetMempoolResponseHandler(IUserOutput output,
-            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _output = output;
         }

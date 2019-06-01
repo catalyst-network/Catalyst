@@ -53,7 +53,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
 
             _handler = new TransferFileBytesRequestHandler(_downloadFileTransferFactory, peerIdentifier,
-                Substitute.For<IRpcCorrelationCache>(), 
                 Substitute.For<ILogger>(), 
                 new RpcMessageFactory(Substitute.For<IRpcCorrelationCache>()));
         }

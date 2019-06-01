@@ -57,7 +57,6 @@ namespace Catalyst.Cli.UnitTests
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
             _addFileToDfsResponseHandler = new AddFileToDfsResponseHandler(
-                Substitute.For<IRpcCorrelationCache>(),
                 Substitute.For<ILogger>(),
                 _uploadFileTransferFactory,
                 _userOutput

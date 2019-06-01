@@ -98,8 +98,6 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new GetInfoResponse
                     {
@@ -113,7 +111,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _requestHandler = new GetInfoResponseHandler(_output, correlationCache, _logger);
+            _requestHandler = new GetInfoResponseHandler(_output, _logger);
             _requestHandler.StartObserving(messageStream);
 
             _output.Received(1).WriteLine(query);

@@ -83,8 +83,6 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetVersionResponse(string version)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new VersionResponse
                     {
@@ -98,7 +96,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new GetVersionResponseHandler(_output, correlationCache, _logger);
+            _handler = new GetVersionResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
 
             _output.Received(1).WriteLine($"Node Version: {version}");

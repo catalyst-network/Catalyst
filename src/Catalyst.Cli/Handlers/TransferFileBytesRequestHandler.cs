@@ -44,7 +44,7 @@ using Microsoft.Extensions.Configuration;
 namespace Catalyst.Cli.Handlers
 {
     public sealed class TransferFileBytesRequestHandler
-        : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IRpcCorrelationCache>,
+        : MessageHandlerBase<TransferFileBytesRequest>,
             IRpcResponseHandler
     {
         /// <summary>The download file transfer factory</summary>
@@ -59,14 +59,13 @@ namespace Catalyst.Cli.Handlers
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="config">The configuration.</param>
-        /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="rpcMessageFactory"></param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
-            IConfigurationRoot config,
-            IRpcCorrelationCache correlationCache,
+            IConfiguration config,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory)
-            : base(correlationCache, logger)
+            : base(logger)
         {
             _fileTransferFactory = fileTransferFactory;
             _rpcMessageFactory = rpcMessageFactory;
@@ -76,14 +75,13 @@ namespace Catalyst.Cli.Handlers
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="rpcMessageFactory"></param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
-            IRpcCorrelationCache correlationCache,
             ILogger logger,
             IRpcMessageFactory rpcMessageFactory)
-            : base(correlationCache, logger)
+            : base(logger)
         {
             _fileTransferFactory = fileTransferFactory;
             _rpcMessageFactory = rpcMessageFactory;

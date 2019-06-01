@@ -82,8 +82,6 @@ namespace Catalyst.Common.IO.Messaging
         ///     Return what's found or emit an-uncorrectable event 
         /// </summary>
         /// <param name="response"></param>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
         /// <returns></returns>
         public bool TryMatchResponse(AnySigned response)
         {

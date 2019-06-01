@@ -36,6 +36,7 @@ using Serilog;
 using Xunit;
 using Nethereum.RLP;
 using Catalyst.Common.Util;
+using Catalyst.Node.Core.RPC.Handlers;
 
 namespace Catalyst.Cli.UnitTests
 {
@@ -90,8 +91,6 @@ namespace Catalyst.Cli.UnitTests
 
         private void TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new SetPeerBlackListResponse
                     {
@@ -106,7 +105,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _handler = new PeerBlackListingResponseHandler(_output, correlationCache, _logger);
+            _handler = new PeerBlackListingResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
         }
 

@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
@@ -38,10 +39,9 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handles the Peer count response
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerCountResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public sealed class PeerCountResponseHandler
-        : CorrelatableMessageHandlerBase<GetPeerCountResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<GetPeerCountResponse>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
@@ -50,12 +50,10 @@ namespace Catalyst.Cli.Handlers
         /// Initializes a new instance of the <see cref="PeerCountResponseHandler"/> class.
         /// </summary>
         /// <param name="output">The output.</param>
-        /// <param name="messageCorrelationCache">The message correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public PeerCountResponseHandler(IUserOutput output,
-            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _output = output;
         }

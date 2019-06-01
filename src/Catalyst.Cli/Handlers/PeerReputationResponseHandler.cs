@@ -27,6 +27,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -38,10 +39,9 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handles the Peer reputation response
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerReputationResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public sealed class PeerReputationResponseHandler
-        : CorrelatableMessageHandlerBase<GetPeerReputationResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<GetPeerReputationResponse>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
@@ -50,12 +50,10 @@ namespace Catalyst.Cli.Handlers
         /// Initializes a new instance of the <see cref="PeerReputationResponseHandler"/> class.
         /// </summary>
         /// <param name="output">The output.</param>
-        /// <param name="messageCorrelationCache">The message correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public PeerReputationResponseHandler(IUserOutput output,
-            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _output = output;
         }

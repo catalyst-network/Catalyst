@@ -87,11 +87,11 @@ namespace Catalyst.Cli.UnitTests
             _fileDownloadFactory.RegisterTransfer(fakeFileTransfer);
 
             var getFileFromDfsResponseHandler =
-                new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
+                new GetFileFromDfsResponseHandler(_logger, _fileDownloadFactory);
 
             var getFileResponse = new GetFileFromDfsResponse
             {
-                FileSize = (ulong) 10,
+                FileSize = 10,
                 ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Error.Id)
             }.ToAnySigned(PeerIdHelper.GetPeerId("Test"), guid);
             getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
@@ -116,11 +116,11 @@ namespace Catalyst.Cli.UnitTests
                 var rpcPeer = new PeerIdentifier(rpcPeerId);
                 var correlationGuid = Guid.NewGuid();
                 var fakeFileOutputPath = Path.GetTempFileName();
-                IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer,
+                var fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer,
                     nodePeer,
                     _fakeContext.Channel, correlationGuid, fakeFileOutputPath, 0);
                 var getFileFromDfsResponseHandler =
-                    new GetFileFromDfsResponseHandler(_cache, _logger, _fileDownloadFactory);
+                    new GetFileFromDfsResponseHandler(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
                     new TransferFileBytesRequestHandler(_fileDownloadFactory, rpcPeer, _logger, _rpcMessageFactory);
 

@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -43,9 +44,8 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Add File to DFS Response handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{AddFileToDfsResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
-    public sealed class AddFileToDfsResponseHandler : CorrelatableMessageHandlerBase<AddFileToDfsResponse, IRpcCorrelationCache>,
+    public sealed class AddFileToDfsResponseHandler : MessageHandlerBase<AddFileToDfsResponse>,
         IRpcResponseHandler
     {
         /// <summary>The upload file transfer factory</summary>
@@ -54,14 +54,12 @@ namespace Catalyst.Cli.Handlers
         private readonly IUserOutput _userOutput;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseHandler"/> class.</summary>
-        /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="rpcFileTransferFactory">The upload file transfer factory</param>
         /// <param name="userOutput"></param>
-        public AddFileToDfsResponseHandler(IRpcCorrelationCache correlationCache,
-            ILogger logger,
+        public AddFileToDfsResponseHandler(ILogger logger,
             IUploadFileTransferFactory rpcFileTransferFactory, 
-            IUserOutput userOutput) : base(correlationCache, logger)
+            IUserOutput userOutput) : base(logger)
         {
             _userOutput = userOutput;
             _rpcFileTransferFactory = rpcFileTransferFactory;

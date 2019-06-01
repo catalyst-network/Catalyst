@@ -99,9 +99,7 @@ namespace Catalyst.Cli.UnitTests
         [Theory]
         [MemberData(nameof(QueryContents))]  
         public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
-        {   
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
+        {
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new SignMessageResponse
                     {
@@ -116,7 +114,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
             
-            _handler = new SignMessageResponseHandler(_output, correlationCache, _logger);
+            _handler = new SignMessageResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(1).WriteLine(Arg.Any<string>());

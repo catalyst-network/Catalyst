@@ -120,8 +120,6 @@ namespace Catalyst.Cli.UnitTests
 
         private void TestGetReputationResponse(int rep)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
             var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
                     new GetPeerReputationResponse
                     {
@@ -134,7 +132,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new PeerReputationResponseHandler(_output, correlationCache, _logger);
+            _handler = new PeerReputationResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
         }
 

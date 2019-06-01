@@ -27,6 +27,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -38,10 +39,9 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// The response handler for removing a peer
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public sealed class RemovePeerResponseHandler
-        : CorrelatableMessageHandlerBase<RemovePeerResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<RemovePeerResponse>,
             IRpcResponseHandler
     {
         /// <summary>The user output</summary>
@@ -49,11 +49,9 @@ namespace Catalyst.Cli.Handlers
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerResponseHandler"/> class.</summary>
         /// <param name="userOutput">The user output.</param>
-        /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public RemovePeerResponseHandler(IUserOutput userOutput,
-            IRpcCorrelationCache correlationCache,
-            ILogger logger) : base(correlationCache, logger)
+            ILogger logger) : base(logger)
         {
             _userOutput = userOutput;
         }
@@ -71,7 +69,7 @@ namespace Catalyst.Cli.Handlers
                 var deserialised = message.Payload.FromAnySigned<RemovePeerResponse>();
                 var deletedCount = deserialised.DeletedCount;
 
-                _userOutput.WriteLine($"Deleted {deletedCount} peers");
+                _userOutput.WriteLine($"Deleted {deletedCount.ToString()} peers");
             }
             catch (Exception ex)
             {
