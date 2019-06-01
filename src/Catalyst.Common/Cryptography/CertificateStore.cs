@@ -47,7 +47,7 @@ namespace Catalyst.Common.Cryptography
 
         public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader)
         {
-            _storageFolder = fileSystem.GetCatalystHomeDir();
+            _storageFolder = fileSystem.GetCatalystDataDir();
             _passwordReader = passwordReader;
         }
 
