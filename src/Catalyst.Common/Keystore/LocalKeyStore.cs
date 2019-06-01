@@ -22,15 +22,15 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
 
@@ -90,7 +90,12 @@ namespace Catalyst.Common.KeyStore
 
                 try
                 {
-                    return _keyStoreService.DecryptKeyStoreFromJson(Password, json);
+                    var keyStore = _keyStoreService.DecryptKeyStoreFromJson(Password, json);
+                    
+                    if (keyStore != null && keyStore.Length > 0)
+                    {
+                        return keyStore;
+                    }
                 }
                 catch (DecryptionException)
                 {
@@ -100,7 +105,7 @@ namespace Catalyst.Common.KeyStore
                 tries += 1;
             }
 
-            throw new InvalidOperationException("Failed to decrypt key signer, exiting");
+            throw new AuthenticationException("Password incorrect for keystore.");
         }
         
         public async Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password)
