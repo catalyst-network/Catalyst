@@ -101,7 +101,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         /// <inheritdoc />
         public void OpenInBrowser(string id)
         {
-            var url = _gateway.IpfsUrl(id) + "?filename=foo.txt";
+            var url = _gateway.IpfsUrl(id);
 
             // thanks to mellinoe https://github.com/dotnet/corefx/issues/10361#issuecomment-235502080
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
