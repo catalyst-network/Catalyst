@@ -118,7 +118,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             }
             else
             {
-                throw new NotSupportedException($"Browsing on the platform '{RuntimeInformation.OSDescription}' is not supported.");
+                throw new PlatformNotSupportedException($"Browsing on the platform '{RuntimeInformation.OSDescription}' is not supported.");
             }
         }
     }
