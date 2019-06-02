@@ -103,6 +103,20 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             }
         }
 
+        [Fact(Skip = "Cannot run a browser while testing.")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task DFS_should_add_and_browse_text()
+        {
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+            const string text = "good morning from IPFS!!";
+            var dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
+            var id = await dfs.AddTextAsync(text, cts.Token);
+
+            dfs.OpenInBrowser(id);
+            await Task.Delay(TimeSpan.FromMinutes(4));
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

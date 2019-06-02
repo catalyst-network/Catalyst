@@ -27,8 +27,11 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Ipfs;
+using Ipfs.HttpGateway;
 using Serilog;
 using Ipfs.CoreApi;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
@@ -41,12 +44,16 @@ namespace Catalyst.Node.Core.Modules.Dfs
         };
 
         private readonly ICoreApi _ipfs;
-
+        private readonly GatewayHost _gateway;
         private readonly ILogger _logger;
 
         public Dfs(ICoreApi ipfsAdapter, ILogger logger)
         {
             _ipfs = ipfsAdapter;
+
+            // Make sure IPFS and the gateway is started.
+            var _ = _ipfs.Generic.IdAsync().Result;
+            _gateway = new GatewayHost(_ipfs);
             _logger = logger;
         }
 
@@ -89,6 +96,30 @@ namespace Catalyst.Node.Core.Modules.Dfs
         {
             _logger.Debug("Reading content at path {0} from Ipfs", id);
             return _ipfs.FileSystem.ReadFileAsync(id, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public void OpenInBrowser(string id)
+        {
+            var url = _gateway.IpfsUrl(id) + "?filename=foo.txt";
+
+            // thanks to mellinoe https://github.com/dotnet/corefx/issues/10361#issuecomment-235502080
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}"));
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", url);
+            }
+            else
+            {
+                throw new NotSupportedException($"Browsing on the platform '{RuntimeInformation.OSDescription}' is not supported.");
+            }
         }
     }
 }
