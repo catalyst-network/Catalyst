@@ -26,34 +26,27 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
 using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using Serilog;
 
 namespace Catalyst.Common.IO.Messaging
 {
     public class CorrelationManager : ICorrelationManager, IDisposable
     {
-        public TimeSpan CacheTtl { get; }
-
-        private readonly ILogger Logger;
+        private TimeSpan CacheTtl { get; }
         private readonly IMemoryCache _pendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
         private readonly ReplaySubject<IMessageEvictionEvent> _evictionEvent;
         public IObservable<IMessageEvictionEvent> EvictionEvents => _evictionEvent.AsObservable();
         
         public CorrelationManager(IMemoryCache cache,
-            ILogger logger,
             TimeSpan cacheTtl = default)
         {
-            Logger = logger;
             CacheTtl = cacheTtl == default ? Constants.CorrelationTtl : cacheTtl;
             _pendingRequests = cache;
 
@@ -82,8 +75,6 @@ namespace Catalyst.Common.IO.Messaging
         ///     Return what's found or emit an-uncorrectable event 
         /// </summary>
         /// <param name="response"></param>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
         /// <returns></returns>
         public bool TryMatchResponse(AnySigned response)
         {

@@ -27,7 +27,6 @@ using System.Reactive.Subjects;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -37,8 +36,7 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Messaging
 {
     public sealed class P2PCorrelationCache
-        : MessageCorrelationCacheBase,
-            IReputableCache
+        : MessageCorrelationCacheBase
     {
         private readonly ReplaySubject<IPeerReputationChange> _ratingChangeSubject;
         public IObservable<IPeerReputationChange> PeerRatingChanges => _ratingChangeSubject.AsObservable();

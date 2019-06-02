@@ -35,7 +35,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Ledger
 {
     public sealed class LedgerTests
     {
-        private IRepository<Account> _accounts;    
+        private readonly IRepository<Account> _accounts;    
         private readonly LedgerService _ledger;
 
         public LedgerTests()

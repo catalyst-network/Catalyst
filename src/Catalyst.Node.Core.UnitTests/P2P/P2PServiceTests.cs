@@ -40,7 +40,6 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
@@ -63,12 +62,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly IContainer _container;
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
-        private readonly IReputableCache _reputableCache;
-        private readonly IReputableCache _subbedReputableCache;
 
         public P2PServiceTests(ITestOutputHelper output) : base(output)
         {
-            _subbedReputableCache = Substitute.For<IReputableCache>();
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -82,7 +78,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             ConfigureContainerBuilder(_config, true, true);
             
             _container = ContainerBuilder.Build();
-            _reputableCache = _container.Resolve<IReputableCache>();
         }
 
         [Fact]
@@ -109,7 +104,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
             
-                var handler = new PingRequestHandler(_pid, _subbedReputableCache, _logger);
+                var handler = new PingRequestHandler(_pid, _logger);
                 handler.StartObserving(observableStream);
             
                 fakeContext.Channel.ReceivedWithAnyArgs(1)
@@ -132,7 +127,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
                     var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
-                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
+                    var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingResponse(),
                             MessageTypes.Tell,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
@@ -176,7 +171,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
                     var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
                     
-                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
+                    var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PeerNeighborsResponse(),
                             MessageTypes.Tell,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),

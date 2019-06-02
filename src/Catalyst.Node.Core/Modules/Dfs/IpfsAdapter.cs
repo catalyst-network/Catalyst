@@ -37,7 +37,6 @@ using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
-    /// <inheritdoc />
     /// <summary>
     ///   Modifies the IPFS behaviour to meet the Catalyst requirements.
     /// </summary>

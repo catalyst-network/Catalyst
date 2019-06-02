@@ -24,19 +24,16 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
@@ -45,14 +42,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
             IRpcRequestHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         public GetVersionRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRpcMessageFactory rpcMessageFactory)
+            IMessageFactory messageFactory)
             : base(logger)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _peerIdentifier = peerIdentifier;
         }
 
@@ -64,7 +61,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             
             try
             {
-                var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                var response = _messageFactory.GetMessage(new MessageDto(
                         new VersionResponse
                         {
                             Version = NodeUtil.GetVersion()
