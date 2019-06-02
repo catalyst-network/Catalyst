@@ -18,10 +18,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Rpc.RpcMessageFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.MessageFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcMessageFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageFactory, Catalyst.Common"
                 }
             ]
         },
@@ -42,12 +42,13 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Rpc.RpcCorrelationCache, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.CorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcCorrelationCache, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.ICorrelationManager, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Cli.Commands.Commands",

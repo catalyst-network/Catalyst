@@ -25,11 +25,9 @@ using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -56,14 +54,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
-        private IRpcCorrelationCache _subbedCorrelationCache;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
         /// </summary>
         public PeerReputationRequestHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
@@ -126,14 +121,14 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
+            var messageFactory = new MessageFactory();
             var request = new GetPeerReputationRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = ipAddress.ToBytesForRLPEncoding().ToByteString()
             };
 
-            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto(
+            var requestMessage = messageFactory.GetMessage(new MessageDto(
                 request,
                 MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),

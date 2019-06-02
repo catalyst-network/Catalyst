@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -67,7 +66,7 @@ namespace Catalyst.Cli.Commands
 
                 var blackListFlag = opts.BlackListFlag;
 
-                var requestMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+                var requestMessage = _messageFactory.GetMessage(new MessageDto(
                     new SetPeerBlackListRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),

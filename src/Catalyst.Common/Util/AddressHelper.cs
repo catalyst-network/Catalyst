@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Multiformats.Hash.Algorithms;
@@ -29,7 +28,7 @@ using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Common.Util
 {
-    public class AddressHelper : IAddressHelper
+    public sealed class AddressHelper : IAddressHelper
     {
         private readonly IMultihashAlgorithm _hashAlgorithm;
 

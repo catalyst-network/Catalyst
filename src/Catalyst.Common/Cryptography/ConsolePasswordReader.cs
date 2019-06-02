@@ -45,7 +45,7 @@ namespace Catalyst.Common.Cryptography
             return pwd;
         }
 
-        private static int ReadCharsFromConsole(IUserOutput userOutput,
+        private static void ReadCharsFromConsole(IUserOutput userOutput,
             string passwordContext,
             Action<char, int> appendChar,
             Action<int> removeChar,
@@ -90,8 +90,6 @@ namespace Catalyst.Common.Cryptography
                     waitForInput = false;
                 }
             }
-
-            return inputLength;
         }
     }
 }

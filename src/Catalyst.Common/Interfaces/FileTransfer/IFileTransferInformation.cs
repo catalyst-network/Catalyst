@@ -22,9 +22,7 @@
 #endregion
 
 using System;
-using System.IO.Abstractions;
 using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
