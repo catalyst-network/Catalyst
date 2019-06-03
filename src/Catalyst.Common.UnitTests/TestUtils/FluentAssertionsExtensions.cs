@@ -28,7 +28,6 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using FluentAssertions.Collections;
 using FluentAssertions.Execution;
-using Google.Protobuf.WellKnownTypes;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.TestUtils

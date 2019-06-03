@@ -22,42 +22,46 @@
 #endregion
 
 using Catalyst.Common.Interfaces.KeyStore;
+using Dawn;
 using Nethereum.KeyStore;
 
 namespace Catalyst.Common.KeyStore
 {
-    public class KeyStoreServiceWrapped : IKeyStoreWrapper
+    public class KeyStoreServiceWrapped : IKeyStoreService
     {
-        private readonly KeyStoreService _keyStoreWrapperImplementation;
+        private readonly KeyStoreService _keyStoreService;
         
         public KeyStoreServiceWrapped()
         {
-            _keyStoreWrapperImplementation = new KeyStoreService();
+            _keyStoreService = new KeyStoreService();
         }
 
         public string GetAddressFromKeyStore(string json)
         {
-            return _keyStoreWrapperImplementation.GetAddressFromKeyStore(json);
+            return _keyStoreService.GetAddressFromKeyStore(json);
         }
 
         public string GenerateUTCFileName(string address)
         {
-            return _keyStoreWrapperImplementation.GenerateUTCFileName(address);
+            return _keyStoreService.GenerateUTCFileName(address);
         }
 
         public byte[] DecryptKeyStoreFromFile(string password, string filePath)
         {
-            return _keyStoreWrapperImplementation.DecryptKeyStoreFromFile(password, filePath);
+            return _keyStoreService.DecryptKeyStoreFromFile(password, filePath);
         }
 
         public byte[] DecryptKeyStoreFromJson(string password, string json)
         {
-            return _keyStoreWrapperImplementation.DecryptKeyStoreFromJson(password, json);
+            return _keyStoreService.DecryptKeyStoreFromJson(password, json);
         }
 
         public string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address)
         {
-            return _keyStoreWrapperImplementation.EncryptAndGenerateDefaultKeyStoreAsJson(password, key, address);
+            Guard.Argument(key, nameof(key)).MinCount(32).MaxCount(32);
+            Guard.Argument(address, nameof(address)).NotEmpty().NotNull().NotWhiteSpace();
+            Guard.Argument(password, nameof(password)).NotEmpty().NotNull().NotWhiteSpace();
+            return _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(password, key, address);
         }
     }
 }

@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
-using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Delta
@@ -74,11 +73,8 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             _logger.Debug("Started gossiping candidate {0}", candidate);
         }
 
-        /// <inheritdoc />
-        public void BroadcastFavoriteCandidateDelta(byte[] previousHashRoot)
-        {
-        }
-        
+        public void BroadcastFavoriteCandidateDelta(byte[] previousHashRoot) { throw new NotImplementedException(); }
+
         /// <inheritdoc />
         public void SubscribeToFavoriteCandidateStream(IObservable<CandidateDeltaBroadcast> favoriteCandidateStream) { throw new NotImplementedException(); }
 

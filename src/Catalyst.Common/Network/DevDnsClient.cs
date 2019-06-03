@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,9 +63,6 @@ namespace Catalyst.Common.Network
         }
         
         /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="seedServers"></param>
         public IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> seedServers)
         {
             var peers = new List<IPeerIdentifier>();

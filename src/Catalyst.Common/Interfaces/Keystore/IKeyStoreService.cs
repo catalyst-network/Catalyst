@@ -21,18 +21,13 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Google.Protobuf;
-
-namespace Catalyst.Common.Rpc
+namespace Catalyst.Common.Interfaces.KeyStore
 {
-    /// <inheritdoc cref="IRpcMessageFactory" />
-    /// <seealso cref="T:Catalyst.Common.IO.Messaging.MessageFactory`1" />
-    public sealed class RpcMessageFactory : MessageFactory, IRpcMessageFactory
+    public interface IKeyStoreService
     {
-        public RpcMessageFactory(IRpcCorrelationCache messageCorrelationCache) : base(messageCorrelationCache) { }
+        string GetAddressFromKeyStore(string json);
+        string GenerateUTCFileName(string address);
+        byte[] DecryptKeyStoreFromJson(string password, string json);
+        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
     }
 }

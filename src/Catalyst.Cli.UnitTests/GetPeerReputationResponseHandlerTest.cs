@@ -28,12 +28,8 @@ using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -54,14 +50,12 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private PeerReputationResponseHandler _handler;
-        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
         /// Initializes the <see cref="GetPeerReputationResponseHandlerTest"/> class.
         /// </summary>
         static GetPeerReputationResponseHandlerTest()
         {             
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[] {78},
@@ -120,9 +114,7 @@ namespace Catalyst.Cli.UnitTests
 
         private void TestGetReputationResponse(int rep)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new MessageFactory().GetMessage(new MessageDto(
                     new GetPeerReputationResponse
                     {
                         Reputation = rep
@@ -134,7 +126,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new PeerReputationResponseHandler(_output, correlationCache, _logger);
+            _handler = new PeerReputationResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
         }
 

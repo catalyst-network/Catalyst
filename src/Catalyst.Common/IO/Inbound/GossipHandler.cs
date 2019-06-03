@@ -33,9 +33,11 @@ namespace Catalyst.Common.IO.Inbound
     /// Channel Gossip Pipeline
     /// Handles gossip messages
     /// </summary>
-    /// <seealso cref="ObservableHandlerBase{AnySigned}" />
+    /// <seealso cref="ObservableServiceHandler" />
     /// <seealso cref="IGossipHandler" />
-    public class GossipHandler : ObservableHandlerBase<AnySigned>, IGossipHandler
+    public sealed class GossipHandler 
+        : SimpleChannelInboundHandler<AnySigned>,
+            IGossipHandler
     {
         private readonly IGossipManager _gossipManager;
 
@@ -47,12 +49,9 @@ namespace Catalyst.Common.IO.Inbound
         {
             var channeledAnySigned = new ChanneledAnySigned(ctx, msg);
 
-            // TODO Check sig
             if (channeledAnySigned.Payload.CheckIfMessageIsGossip())
             {
                 _gossipManager.IncomingGossip(channeledAnySigned);
-                AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);
-                MessageSubject.OnNext(new ChanneledAnySigned(ctx, originalGossipedMessage));
             }
 
             ctx.FireChannelRead(ctx);

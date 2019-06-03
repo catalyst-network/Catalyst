@@ -23,7 +23,6 @@
 
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {

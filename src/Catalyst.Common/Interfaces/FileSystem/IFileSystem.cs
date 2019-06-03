@@ -22,11 +22,15 @@
 #endregion
 
 using System.IO;
+using System.IO.Abstractions;
+using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.FileSystem
 {
     public interface IFileSystem
     {
-        DirectoryInfo GetCatalystHomeDir();
+        DirectoryInfo GetCatalystDataDir();
+        Task<IFileInfo> WriteFileToCdd(string fileName, string contents);
+        bool DataFileExists(string fileName);
     }
 }
