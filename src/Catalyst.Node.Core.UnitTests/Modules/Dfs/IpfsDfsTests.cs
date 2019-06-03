@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.AddTextAsync(Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[2]).ConfigureAwait(false).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[2]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
 
@@ -136,7 +136,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[3]).ConfigureAwait(false).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[3]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
 
@@ -152,7 +152,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.ReadAllTextAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).ConfigureAwait(false).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult("some content");
                 });
 
@@ -168,7 +168,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).ConfigureAwait(false).GetAwaiter().GetResult();
+                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult(Stream.Null);
                 });
 

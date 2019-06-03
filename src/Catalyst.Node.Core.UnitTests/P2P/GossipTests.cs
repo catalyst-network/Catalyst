@@ -60,7 +60,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly IRepository<Peer> _peers;
         private readonly ILogger _logger;
         private readonly IPeerSettings _peerSettings;
-        private readonly IChannelHandlerContext _fakeContext;
 
         public GossipTests()
         {
