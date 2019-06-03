@@ -100,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] { channeledAny }.ToObservable();
 
-                var handler = new PingRequestHandler(_pid, _subbedReputableCache, _logger);
+                var handler = new PingRequestHandler(_pid, _logger);
                 handler.StartObserving(observableStream);
 
                 fakeContext.Channel.ReceivedWithAnyArgs(1)

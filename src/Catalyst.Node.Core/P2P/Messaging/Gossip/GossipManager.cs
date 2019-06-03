@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
@@ -40,11 +41,8 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     public sealed class GossipManager : IGossipManager
     {
         /// <summary>The gossip cache</summary>
-        private readonly IGossipCache _gossipCache;
-
-        /// <summary>The peer identifier</summary>
-        private readonly IPeerIdentifier _peerIdentifier;
-
+        private readonly IGossipManagerContext _gossipManagerContext;
+            
         /// <summary>The message factory</summary>
         private readonly IMessageFactory _messageFactory;
 
@@ -54,12 +52,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <summary>Initializes a new instance of the <see cref="GossipManager"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="gossipCache">The gossip cache.</param>
-        public GossipManager(IPeerIdentifier peerIdentifier, IGossipCache gossipCache, IPeerClientFactory peerClientFactory)
+        public GossipManager(IPeerClientFactory peerClientFactory, IGossipManagerContext context)
         {
-            _gossipCache = gossipCache;
-            _peerIdentifier = peerIdentifier;
-            _messageFactory = new MessageFactory();
             _peerClientFactory = peerClientFactory;
+            _gossipManagerContext = context;
+            _messageFactory = new MessageFactory();
         }
 
         /// <inheritdoc/>
@@ -83,16 +80,17 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
             // TODO: Check Gossip inner signature and outer signature
             AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(anySigned.Value);
-            _gossipCache.IncrementReceivedCount(originalGossipedMessage.CorrelationId.ToGuid(), 1);
+            _gossipManagerContext.GossipCache.IncrementReceivedCount(originalGossipedMessage.CorrelationId.ToGuid(), 1);
         }
 
         /// <summary>Gossips the specified message.</summary>
         /// <param name="message">The message.</param>
         private void Gossip(AnySigned message)
         {
+            var gossipCache = _gossipManagerContext.GossipCache;
             var correlationId = message.CorrelationId.ToGuid();
-            var gossipCount = _gossipCache.GetGossipCount(correlationId);
-            var canGossip = _gossipCache.CanGossip(correlationId);
+            var gossipCount = gossipCache.GetGossipCount(correlationId);
+            var canGossip = gossipCache.CanGossip(correlationId);
             bool isInCache = gossipCount != -1;
 
             if (!canGossip)
@@ -109,7 +107,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
                     Content = message,
                     ReceivedCount = 1,
                 };
-                _gossipCache.AddPendingRequest(request);
+                gossipCache.AddPendingRequest(request);
             }
 
             SendGossipMessages(message);
@@ -119,20 +117,21 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <param name="message">The message.</param>
         private void SendGossipMessages(AnySigned message)
         {
-            var peersToGossip = _gossipCache.GetRandomPeers(Constants.MaxGossipPeersPerRound);
+            var gossipCache = _gossipManagerContext.GossipCache;
+            var peersToGossip = gossipCache.GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
 
             foreach (var peerIdentifier in peersToGossip)
             {
-                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message,
-                    MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                _ = ((PeerClient) _peerClientFactory.Client).SendMessage(datagramEnvelope);
+                var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
+                    MessageTypes.Gossip, peerIdentifier, _gossipManagerContext.PeerIdentifier), correlationId);
+                 _peerClientFactory.Client.SendMessage(datagramEnvelope);
             }
 
             var updateCount = (uint) peersToGossip.Count;
             if (updateCount > 0)
             {
-                _gossipCache.IncrementGossipCount(correlationId, updateCount);
+                gossipCache.IncrementGossipCount(correlationId, updateCount);
             }
         }
     }

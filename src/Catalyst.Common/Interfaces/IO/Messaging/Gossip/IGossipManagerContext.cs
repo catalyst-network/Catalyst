@@ -30,11 +30,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
         /// <summary>Gets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
         IPeerIdentifier PeerIdentifier { get; }
-
-        /// <summary>Gets the reputable cache.</summary>
-        /// <value>The reputable cache.</value>
-        IReputableCache ReputableCache { get; }
-
+        
         /// <summary>Gets the gossip cache.</summary>
         /// <value>The gossip cache.</value>
         IGossipCache GossipCache { get; }

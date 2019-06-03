@@ -29,16 +29,13 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
     public class GossipManagerContext : IGossipManagerContext
     {
-        public GossipManagerContext(IPeerIdentifier peerIdentifier, IReputableCache reputableCache, IGossipCache gossipCache)
+        public GossipManagerContext(IPeerIdentifier peerIdentifier, IGossipCache gossipCache)
         {
             PeerIdentifier = peerIdentifier;
-            ReputableCache = reputableCache;
             GossipCache = gossipCache;
         }
 
         public IPeerIdentifier PeerIdentifier { get; }
-
-        public IReputableCache ReputableCache { get; }
 
         public IGossipCache GossipCache { get; }
     }

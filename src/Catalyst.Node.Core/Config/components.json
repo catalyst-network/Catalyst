@@ -27,14 +27,6 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Common.Rpc.RpcMessageFactory, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcMessageFactory, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
             "services": [
                 {
