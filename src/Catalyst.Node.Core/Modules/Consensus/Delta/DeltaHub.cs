@@ -23,9 +23,9 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;

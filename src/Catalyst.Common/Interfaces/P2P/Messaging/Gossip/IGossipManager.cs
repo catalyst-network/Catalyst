@@ -23,7 +23,7 @@
 
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
+namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
 { 
     public interface IGossipManager
     {
