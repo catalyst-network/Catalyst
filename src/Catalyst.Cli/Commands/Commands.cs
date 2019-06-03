@@ -58,11 +58,11 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>
         /// </summary>
-        public Commands(IRpcMessageFactory rpcMessageFactory,
+        public Commands(IMessageFactory messageFactory,
             INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
@@ -71,7 +71,7 @@ namespace Catalyst.Cli.Commands
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _logger = logger;
@@ -94,12 +94,13 @@ namespace Catalyst.Cli.Commands
                     GetVersionOptions,
                     GetMempoolOptions,
                     ConnectOptions,
-                    SignOptions,
+                    SignOptions, 
                     VerifyOptions,
                     PeerListOptions,
                     PeerCountOptions,
                     RemovePeerOptions,
                     PeerReputationOptions,
+                    PeerBlackListingOptions,
                     AddFileOnDfsOptions,
                     GetFileOptions>(args)
                .MapResult(
@@ -112,6 +113,7 @@ namespace Catalyst.Cli.Commands
                     (PeerCountOptions opts) => PeerCountCommand(opts),
                     (RemovePeerOptions opts) => PeerRemoveCommand(opts),
                     (PeerReputationOptions opts) => PeerReputationCommand(opts),
+                    (PeerBlackListingOptions opts) => PeerBlackListingCommand(opts),
                     (AddFileOnDfsOptions opts) => DfsAddFile(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (ConnectOptions opts) => DisconnectNode(opts.NodeId),

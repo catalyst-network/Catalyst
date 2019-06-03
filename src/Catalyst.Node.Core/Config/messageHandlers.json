@@ -99,7 +99,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.RPC.Handlers.PeerReputationRequestHandler",
+            "type": "Catalyst.Node.Core.RPC.Handlers.PeerBlackListingRequestHandler",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcRequestHandler, Catalyst.Common"

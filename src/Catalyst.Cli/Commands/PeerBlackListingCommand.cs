@@ -22,42 +22,57 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
     internal partial class Commands
     {
-        /// <inheritdoc cref="PeerListCommand" />
-        public bool PeerListCommand(IPeerListOptions opts)
+        /// <inheritdoc cref="PeerBlackListingCommand" />
+        public bool PeerBlackListingCommand(IPeerBlackListingOptions opts)
         {
-            Guard.Argument(opts).NotNull().Compatible<IPeerListOptions>();
+            Guard.Argument(opts).NotNull().Compatible<IPeerBlackListingOptions>();
+            try
+            {
+                INodeRpcClient node;
+                try
+                {
+                    node = GetConnectedNode(opts.Node);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e.Message, "Failed to get connected node {0} while trying to set the peer blacklist flag", opts.Node);
+                    return false;
+                }
 
-            INodeRpcClient node;
-            try
-            {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-            
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-            
-            try
-            {
+                var nodeConfig = GetNodeConfig(opts.Node);
+                if (nodeConfig == null)
+                {
+                    throw new KeyNotFoundException($"Unable to find configuration for node {opts.Node}");
+                }
+                
+                var peerPublicKey = opts.PublicKey;
+                var peerIp = opts.IpAddress;
+
+                var blackListFlag = opts.BlackListFlag;
+
                 var requestMessage = _messageFactory.GetMessage(new MessageDto(
-                    new GetPeerListRequest(),
+                    new SetPeerBlackListRequest
+                    {
+                        PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
+                        Ip = peerIp.ToBytesForRLPEncoding().ToByteString(),
+                        Blacklist = blackListFlag
+                    },
                     MessageTypes.Ask,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),

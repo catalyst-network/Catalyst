@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
@@ -44,20 +45,20 @@ using Xunit;
 namespace Catalyst.Node.Core.UnitTests.RPC
 {
     /// <summary>
-    /// Tests the peer reputation calls
+    /// Tests the peer black listing calls
     /// </summary>
-    public sealed class PeerReputationRequestHandlerTest
+    public sealed class PeerBlackListingRequestHandlerTest
     {
         /// <summary>The logger</summary>
         private readonly ILogger _logger;
 
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
-
+        
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerListRequestHandlerTest"/> class.
+        /// Initializes a new instance of the <see cref="PeerBlackListingRequestHandlerTest"/> class.
         /// </summary>
-        public PeerReputationRequestHandlerTest()
+        public PeerBlackListingRequestHandlerTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -67,38 +68,44 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         }
 
         /// <summary>
-        /// Tests the peer reputation request and response via RPC.
+        /// Tests the peer black listing request and response via RPC.
         /// Peer is expected to be found in this case
         /// </summary>
-        /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
-        /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
+        /// <param name="publicKey">Public key of the peer whose black listing flag we wish to adjust</param>
+        /// <param name="ipAddress">Ip address of the peer whose black listing flag we wish to adjust</param>
+        /// <param name="blackList">Black listing flag</param>
         [Theory]
-        [InlineData("highscored-125\0\0\0\0\0\0", "192.168.0.125")]
-        [InlineData("highscored-126\0\0\0\0\0\0", "192.168.0.126")]
-        public void TestPeerReputationRequestResponse(string publicKey, string ipAddress)
+        [InlineData("highscored-14\0\0\0\0\0\0\0", "198.51.100.14", "true")]
+        [InlineData("highscored-22\0\0\0\0\0\0\0", "198.51.100.22", "true")]
+        public void TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
         {
-            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
+            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
-            responseContent.Reputation.Should().Be(125);
+            responseContent.Blacklist.Should().BeTrue();
+            responseContent.Ip.ToStringUtf8().Should().Be(ipAddress);
+            responseContent.PublicKey.ToStringUtf8().Should().Be(publicKey);
         }
 
         /// <summary>
-        /// Tests the peer reputation request and response via RPC.
+        /// Tests the peer black listing request and response via RPC.
         /// Peer is NOT expected to be found in this case, as they do not exist
         /// </summary>
-        /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
-        /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
+        /// <param name="publicKey">Public key of the peer whose black listing flag we wish to adjust</param>
+        /// <param name="ipAddress">Ip address of the peer whose black listing flag we wish to adjust</param>
+        /// <param name="blackList">Black listing flag</param>
         [Theory]
-        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "192.200.200.22")]
-        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "192.111.100.26")]
-        public void TestPeerReputationRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
+        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "198.51.100.11", "true")]
+        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "198.51.100.5", "true")]
+        public void TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
         {
-            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
+            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
-            responseContent.Reputation.Should().Be(int.MinValue);
+            responseContent.Blacklist.Should().Be(false);
+            responseContent.Ip.Should().BeNullOrEmpty();
+            responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
-        private GetPeerReputationResponse GetPeerReputationTest(string publicKey, string ipAddress)
+        private SetPeerBlackListResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
 
@@ -108,9 +115,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             }).ToList();
 
             //peers we are interested in
-            fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer
+            fakePeers.AddRange(Enumerable.Range(0, 23).Select(i => new Peer
             {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i))
+                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("198.51.100." + i))
             }));
 
             // Let peerRepository return the fake peer list
@@ -122,10 +129,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var messageFactory = new MessageFactory();
-            var request = new GetPeerReputationRequest
+            var request = new SetPeerBlackListRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = ipAddress.ToBytesForRLPEncoding().ToByteString()
+                Ip = ipAddress.ToBytesForRLPEncoding().ToByteString(),
+                Blacklist = Convert.ToBoolean(blacklist)
             };
 
             var requestMessage = messageFactory.GetMessage(new MessageDto(
@@ -137,16 +145,16 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 
-            var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, peerRepository);
+            var handler = new PeerBlackListingRequestHandler(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(GetPeerReputationResponse.Descriptor.ShortenedFullName());
+            sentResponse.TypeUrl.Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
 
-            return sentResponse.FromAnySigned<GetPeerReputationResponse>();
+            return sentResponse.FromAnySigned<SetPeerBlackListResponse>();
         }
     }
 }

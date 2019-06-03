@@ -21,28 +21,32 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.P2P;
-using Google.Protobuf;
-using Microsoft.Extensions.Caching.Memory;
+using Catalyst.Common.Interfaces.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Multiformats.Hash.Algorithms;
+using Nethereum.Hex.HexConvertors.Extensions;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Util
 {
-    public interface IReputableCache : IMessageCorrelationCache
+    public sealed class AddressHelper : IAddressHelper
     {
+        private readonly IMultihashAlgorithm _hashAlgorithm;
+
+        public AddressHelper(IMultihashAlgorithm hashAlgorithm)
+        {
+            _hashAlgorithm = hashAlgorithm;
+        }
+
         /// <summary>
-        ///     Stream of reputation changes events raised by requests being answered or expired.
+        ///     returns a 20byte
         /// </summary>
-        IObservable<IPeerReputationChange> PeerRatingChanges { get; }
-    
-        /// <summary>
-        ///     Manipulate a peers reputation on eviction from a cache
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="reason"></param>
-        /// <param name="state"></param>
-        void ChangeReputationOnEviction(object key, object value, EvictionReason reason, object state);
+        /// <param name="publicKey"></param>
+        /// <returns></returns>
+        public string GenerateAddress(IPublicKey publicKey)
+        {
+            var addressHashBytes = _hashAlgorithm.ComputeHash(publicKey.Bytes.RawBytes);
+            var lastTwentyBytes = ByteUtil.Slice(addressHashBytes, 12, 32);
+            return lastTwentyBytes.ToHex();
+        }
     }
 }

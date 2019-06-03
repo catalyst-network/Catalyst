@@ -26,16 +26,13 @@ using System.Collections.Generic;
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
@@ -48,15 +45,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IMempool _mempool;
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         public GetMempoolRequestHandler(IPeerIdentifier peerIdentifier,
             IMempool mempool,
-            IRpcMessageFactory rpcMessageFactory,
+            IMessageFactory messageFactory,
             ILogger logger)
             : base(logger)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _mempool = mempool;
             _peerIdentifier = peerIdentifier;
         }
@@ -75,7 +72,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
 
-                var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                var response = _messageFactory.GetMessage(new MessageDto(
                         new GetMempoolResponse
                         {
                             Mempool = {GetMempoolContent()}

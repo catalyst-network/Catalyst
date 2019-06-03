@@ -74,7 +74,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
             _testDirectory.Create();
 
             FileSystem = Substitute.For<IFileSystem>();
-            FileSystem.GetCatalystHomeDir().Returns(_testDirectory);
+            FileSystem.GetCatalystDataDir().Returns(_testDirectory);
 
             Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }

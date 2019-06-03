@@ -31,18 +31,18 @@ using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
-using Dawn;
+using Google.Protobuf;
 using Nethereum.RLP;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
-    public sealed class PeerReputationRequestHandler
-        : MessageHandlerBase<GetPeerReputationRequest>,
+    public sealed class PeerBlackListingRequestHandler
+        : MessageHandlerBase<SetPeerBlackListRequest>,
             IRpcRequestHandler
     {
         /// <summary>
-        /// The PeerReputationRequestHandler 
+        /// The PeerBlackListingRequestHandler 
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
 
@@ -50,7 +50,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         
         private readonly PeerId _peerId;
 
-        public PeerReputationRequestHandler(IPeerIdentifier peerIdentifier,
+        public PeerBlackListingRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IRepository<Peer> peerRepository)
             : base(logger)
@@ -65,31 +65,43 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="message">The message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Guard.Argument(message).NotNull("Received message cannot be null");
-
             _message = message;
 
-            var deserialised = message.Payload.FromAnySigned<GetPeerReputationRequest>();
+            var deserialised = message.Payload.FromAnySigned<SetPeerBlackListRequest>();
             var publicKey = deserialised.PublicKey.ToStringUtf8(); 
             var ip = deserialised.Ip.ToStringUtf8();
+            var blackList = deserialised.Blacklist;
 
-            ReturnResponse(_peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                 && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
-               .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First(), message);
+            var peerItem = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString() 
+             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey).FirstOrDefault();
 
-            Logger.Debug("received message of type PeerReputationRequest");
+            if (peerItem != null)
+            {
+                peerItem.BlackListed = blackList;
+                ReturnResponse(blackList, deserialised.PublicKey, deserialised.Ip, message);
+            }
+            else
+            {
+                ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString(), message);
+            }
+
+            Logger.Debug("received message of type PeerBlackListingRequest");
         }
 
         /// <summary>
         /// Returns the response.
         /// </summary>
-        /// <param name="reputation"></param>
-        /// <param name="message"></param>
-        private void ReturnResponse(int reputation, IChanneledMessage<AnySigned> message)
+        /// <param name="blacklist">if set to <c>true</c> [blacklist].</param>
+        /// <param name="publicKey">The public key.</param>
+        /// <param name="ip">The ip.</param>
+        /// <param name="message">The message.</param>
+        private void ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip, IChanneledMessage<AnySigned> message)
         {
-            var response = new GetPeerReputationResponse
+            var response = new SetPeerBlackListResponse
             {
-                Reputation = reputation
+                Blacklist = blacklist,
+                Ip = ip,
+                PublicKey = publicKey
             };
 
             var anySignedResponse = response.ToAnySigned(_peerId, _message.Payload.CorrelationId.ToGuid());

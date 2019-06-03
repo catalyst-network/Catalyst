@@ -28,10 +28,7 @@ using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -50,11 +47,9 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private GetVersionResponseHandler _handler;
-        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static GetVersionResponseHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[]
@@ -83,9 +78,7 @@ namespace Catalyst.Cli.UnitTests
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetVersionResponse(string version)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new MessageFactory().GetMessage(new MessageDto(
                     new VersionResponse
                     {
                         Version = version
@@ -98,7 +91,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _handler = new GetVersionResponseHandler(_output, correlationCache, _logger);
+            _handler = new GetVersionResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
 
             _output.Received(1).WriteLine($"Node Version: {version}");

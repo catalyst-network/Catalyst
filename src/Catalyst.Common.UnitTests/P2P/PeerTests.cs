@@ -54,7 +54,7 @@ namespace Catalyst.Common.UnitTests.P2P
             retrievedPeer.Touch();
             repo.Update(retrievedPeer);
             var retrievedmodified = repo.Get(peer.PkId);
-            DateTime now = DateTime.UtcNow.Date;
+            var now = DateTime.UtcNow.Date;
             var dateComparer = retrievedmodified.Modified?.Date.ToString("MM/dd/yyyy");
             dateComparer.Should().Equals(now.ToString("MM/dd/yyyy"));
         }

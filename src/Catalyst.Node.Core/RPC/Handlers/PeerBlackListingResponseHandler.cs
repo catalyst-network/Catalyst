@@ -32,24 +32,24 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Cli.Handlers
+namespace Catalyst.Node.Core.RPC.Handlers
 {
     /// <summary>
     /// Handles the Peer reputation response
     /// </summary>
     /// <seealso cref="IRpcResponseHandler" />
-    public sealed class PeerReputationResponseHandler
-        : MessageHandlerBase<GetPeerReputationResponse>,
+    public sealed class PeerBlackListingResponseHandler
+        : MessageHandlerBase<SetPeerBlackListResponse>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerReputationResponseHandler"/> class.
+        /// Initializes a new instance of the <see cref="PeerBlackListingResponseHandler"/> class.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <param name="logger">The logger.</param>
-        public PeerReputationResponseHandler(IUserOutput output,
+        public PeerBlackListingResponseHandler(IUserOutput output,
             ILogger logger)
             : base(logger)
         {
@@ -62,19 +62,23 @@ namespace Catalyst.Cli.Handlers
         /// <param name="message">The GetPeerReputationResponse message.</param>
         protected override void Handler(IChanneledMessage<AnySigned> message)
         {
-            Logger.Debug("Handling GetPeerReputation response");
+            Logger.Debug("Handling GetPeerBlackList response");
             Guard.Argument(message).NotNull("Received message cannot be null");
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetPeerReputationResponse>();
-                var msg = deserialised.Reputation == int.MinValue ? "Peer not found" : deserialised.Reputation.ToString();
-                _output.WriteLine("Peer Reputation: " + msg);
+                var deserialised = message.Payload.FromAnySigned<SetPeerBlackListResponse>();
+
+                var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
+                    ? "Peer not found"
+                    : $"Peer Blacklisting Successful : {deserialised.Blacklist}, {deserialised.PublicKey.ToStringUtf8()}, {deserialised.Ip.ToStringUtf8()}";
+                   
+                _output.WriteLine(msg);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetPeerReputationResponse after receiving message {0}", message);
+                    "Failed to handle GetPeerBlackListingResponse after receiving message {0}", message);
                 throw;
             }
         }

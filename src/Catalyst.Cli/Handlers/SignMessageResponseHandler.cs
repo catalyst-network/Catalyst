@@ -23,11 +23,10 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -42,7 +41,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class SignMessageResponseHandler
-        : CorrelatableMessageHandlerBase<SignMessageResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<SignMessageResponse>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
@@ -50,12 +49,10 @@ namespace Catalyst.Cli.Handlers
         /// <summary>
         /// </summary>
         /// <param name="output"></param>
-        /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
         public SignMessageResponseHandler(IUserOutput output,
-            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _output = output;
         }

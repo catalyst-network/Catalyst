@@ -21,21 +21,17 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Outbound;
-using Catalyst.Protocol.Common;
-using Google.Protobuf;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
-namespace Catalyst.Common.Interfaces.Rpc
+namespace Catalyst.Common.Interfaces.Util
 {
-    public interface IRpcCorrelationCache : IMessageCorrelationCache
+    public interface IAddressHelper
     {
-        TimeSpan CacheTtl { get; }
-        void AddPendingRequest(PendingRequest pendingRequest);
-
-        TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
-            where TRequest : class, IMessage<TRequest>
-            where TResponse : class, IMessage<TResponse>;
+        /// <summary>
+        ///     returns a 20byte
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <returns></returns>
+        string GenerateAddress(IPublicKey publicKey);
     }
 }

@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -32,7 +31,6 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Serilog.Events;
@@ -69,7 +67,7 @@ namespace Catalyst.Cli.Commands
                 Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                 nodeConfig.HostAddress, nodeConfig.Port), _peerIdentifier);
 
-            var messageDto = _rpcMessageFactory.GetMessage(dto);
+            var messageDto = _messageFactory.GetMessage(dto);
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,
@@ -90,13 +88,13 @@ namespace Catalyst.Cli.Commands
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
-                _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%");
+                _userOutput.Write($"\rDownloaded: {fileTransfer.GetPercentage().ToString()}%");
                 System.Threading.Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
             {
-                _userOutput.Write("\rDownloaded: " + fileTransfer.GetPercentage() + "%\n");
+                _userOutput.Write($"\rDownloaded: {fileTransfer.GetPercentage().ToString()}%\n");
             }
             else
             {

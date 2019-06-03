@@ -25,9 +25,7 @@ using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -45,11 +43,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private IRpcCorrelationCache _subbedCorrelationCache;
 
         public GetVersionRequestHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
 
@@ -61,15 +57,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Fact]
         public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
         {
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
-            var request = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var messageFactory = new MessageFactory();
+            var request = new MessageFactory().GetMessage(new MessageDto(
                 new VersionRequest(),
                 MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("recepient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender")));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, rpcMessageFactory);
+            var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, messageFactory);
             handler.StartObserving(messageStream);
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
