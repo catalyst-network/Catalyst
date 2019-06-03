@@ -23,22 +23,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 using SharpRepository.Repository;
+using CorrelationManager = Catalyst.Common.IO.Messaging.CorrelationManager;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
-    public sealed class GossipCache
-        : MessageCorrelationCacheBase, IGossipCache
+    public sealed class GossipCache : CorrelationManager, IGossipCache
     {
         /// <summary>The peers</summary>
         private readonly IRepository<Peer> _peers;
@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <param name="logger">The logger.</param>
         public GossipCache(IRepository<Peer> peers,
             IMemoryCache cache,
-            ILogger logger) : base(cache, logger, TimeSpan.FromMinutes(10))
+            ILogger logger) : base(cache, TimeSpan.FromMinutes(10))
         {
             _peers = peers;
         }
@@ -60,12 +60,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             var peers = _peers.GetAll().Shuffle();
             var peerAmount = Math.Min(peers.Count, count);
             return peers.Select(x => x.PeerIdentifier).Take(peerAmount).ToList();
-        }
-
-        /// <inheritdoc/>
-        protected override PostEvictionDelegate GetInheritorDelegate()
-        {
-            return ChangeReputationOnEviction;
         }
 
         private void ChangeReputationOnEviction(object key, object value, EvictionReason reason, object state)
@@ -103,7 +97,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         }
 
         /// <inheritdoc cref="IGossipCache"/>
-        public override void AddPendingRequest(PendingRequest pendingRequest)
+        public void AddPendingRequest(PendingRequest pendingRequest)
         {
             var guid = pendingRequest.Content.CorrelationId.ToGuid();
 
@@ -111,8 +105,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             {
                 ((GossipRequest) pendingRequest).PeerNetworkSize = _peers.GetAll().Count();
             }
-
-            base.AddPendingRequest(pendingRequest);
         }
 
         /// <inheritdoc/>
@@ -147,7 +139,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <returns></returns>
         private GossipRequest GetPendingRequestValue(Guid guid)
         {
-            PendingRequests.TryGetValue(guid.ToByteString(), out GossipRequest request);
+            _pendingRequests.TryGetValue(guid.ToByteString(), out GossipRequest request);
             return request;
         }
     }

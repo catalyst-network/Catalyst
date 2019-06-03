@@ -58,7 +58,7 @@ namespace Catalyst.Common.IO.Messaging
                  && !m.Equals(NullObjects.ChanneledAnySigned))
                .Subscribe(HandleMessage, HandleError, HandleCompleted);
         }
-
+        
         public void HandleMessage(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("Pre Handle Message Called");

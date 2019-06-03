@@ -38,14 +38,14 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class P2PService
+    public sealed class PeerService
         : UdpServer,
-            IP2PService
+            IPeerService
     {
         public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
-        public P2PService(IPeerSettings settings,
+        public PeerService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers,
             ICorrelationManager correlationManager,
@@ -53,21 +53,20 @@ namespace Catalyst.Node.Core.P2P
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Discovery = peerDiscovery;
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+            var peerServiceHandler = new ObservableServiceHandler(Logger);
 
-            MessageStream = protoDatagramChannelHandler.MessageStream;
+            MessageStream = peerServiceHandler.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
-
-            IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
-            {
-                protoDatagramChannelHandler,
-                new CorrelationHandler(correlationManager),
-                new GossipHandler(gossipManager)
-            };
             
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
-                channelHandlers
+                new List<IChannelHandler>
+                {
+                    new ProtoDatagramHandler(),
+                    new CorrelationHandler(correlationManager),
+                    new GossipHandler(gossipManager), 
+                    peerServiceHandler
+                }
             ), settings.BindAddress, settings.Port);
 
             peerDiscovery.StartObserving(MessageStream);
