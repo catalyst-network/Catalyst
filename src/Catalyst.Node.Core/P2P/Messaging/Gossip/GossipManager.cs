@@ -127,7 +127,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
                     Content = message,
                     ReceivedCount = 1,
                 };
-                AddPendingRequest(request);
+                AddPendingRequest(correlationId, request);
             }
 
             SendGossipMessages(message);
@@ -194,21 +194,20 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         {
             var request = GetPendingRequestValue(correlationId);
             request.GossipCount += updateCount;
-            AddPendingRequest(request);
+            AddPendingRequest(correlationId, request);
         }
 
         /// <summary>Adds the gossip request.</summary>
         /// <param name="gossipRequest">The gossip request.</param>
-        private void AddPendingRequest(GossipRequest gossipRequest)
+        /// <param name="correlationId">The message correlation ID</param>
+        private void AddPendingRequest(Guid correlationId, GossipRequest gossipRequest)
         {
-            var guid = gossipRequest.Content.CorrelationId.ToGuid();
-
-            if (GetGossipCount(guid) == -1)
+            if (GetGossipCount(correlationId) == -1)
             {
                 gossipRequest.PeerNetworkSize = _peers.GetAll().Count();
             }
 
-            _pendingRequests.Set(gossipRequest.Content.CorrelationId, gossipRequest, _entryOptions);
+            _pendingRequests.Set(correlationId, gossipRequest, _entryOptions);
         }
 
         /// <summary>Increments the received count.</summary>
@@ -229,7 +228,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
                 request.ReceivedCount += updateCount;
             }
 
-            AddPendingRequest(request);
+            AddPendingRequest(correlationId, request);
         }
 
         /// <summary>Gets the maximum gossip cycles.</summary>

@@ -137,8 +137,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var handler = new TransactionBroadcastTestHandler(_logger, () => hasHitHandler = true);
             var manager = new GossipManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>(), Substitute.For<IPeerClientFactory>());
             var gossipHandler = new GossipHandler(manager);
+
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
-            
+            var allMessageStream = protoDatagramChannelHandler.MessageStream.Merge(gossipHandler.MessageStream);
+            handler.StartObserving(allMessageStream);
+
             EmbeddedChannel channel = new EmbeddedChannel(protoDatagramChannelHandler, gossipHandler);
 
             var anySignedGossip = new TransactionBroadcast()
@@ -147,7 +150,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             var gossipMessage = anySignedGossip.ToDatagram(new IPEndPoint(IPAddress.Any, 5050));
             channel.WriteInbound(gossipMessage);
-            hasHitHandler.IsSameOrEqualTo(true);
+            hasHitHandler.Should().BeTrue();
         }
 
         [Fact]
@@ -250,9 +253,15 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             private readonly Action _action;
 
-            public TransactionBroadcastTestHandler(ILogger logger, Action action) : base(logger) { _action = action; }
+            public TransactionBroadcastTestHandler(ILogger logger, Action action) : base(logger)
+            {
+                _action = action;
+            }
 
-            protected override void Handler(IChanneledMessage<AnySigned> message) { _action(); }
+            protected override void Handler(IChanneledMessage<AnySigned> message)
+            {
+                _action();
+            }
         }
     }
 }
