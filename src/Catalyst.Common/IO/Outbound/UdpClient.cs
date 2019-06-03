@@ -23,6 +23,7 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
@@ -35,15 +36,16 @@ namespace Catalyst.Common.IO.Outbound
     {
         protected UdpClient(ILogger logger) : base(logger) { }
 
-        protected sealed override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected sealed override async Task Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
         {
-            Channel = new Bootstrap()
+            Channel = await new Bootstrap()
                .Group(WorkerEventLoop)
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
-               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort).GetAwaiter().GetResult();
+               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort)
+               .ConfigureAwait(false);
         }
     }
 }

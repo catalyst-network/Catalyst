@@ -23,19 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -59,7 +52,7 @@ namespace Catalyst.Node.Core.P2P
                     new ProtoDatagramHandler()
                 },
                 ipEndPoint.Address
-            ), ipEndPoint);
+            ), ipEndPoint).ConfigureAwait(false);
         }
 
         public async Task SendMessage(IByteBufferHolder datagramPacket)

@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.P2P
                 }
             ), settings.BindAddress, settings.Port);
 
-            peerDiscovery.StartObserving(MessageStream);
+            // peerDiscovery.StartObserving(MessageStream);
         }
     }
 }
