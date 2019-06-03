@@ -18,10 +18,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.PeerClientFactory",
+            "type": "Catalyst.Node.Core.P2P.PeerClient",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClientFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

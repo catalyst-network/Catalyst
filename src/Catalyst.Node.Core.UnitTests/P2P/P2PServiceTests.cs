@@ -122,9 +122,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
-                    var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                    var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
+                    var peerSettings = Substitute.For<IPeerSettings>();
+                    peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+                    peerSettings.Port.Returns(5050);
+
+                    var peerClient = new PeerClient(peerSettings);
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingResponse(),
@@ -151,6 +153,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
+                    peerClient.Dispose();
                 }
             }
         }
@@ -166,10 +169,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
-                    var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>());
+                    var peerSettings = Substitute.For<IPeerSettings>();
+                    peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+                    peerSettings.Port.Returns(5050);
 
+                    var peerClient = new PeerClient(peerSettings);
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PeerNeighborsResponse(),
                             MessageTypes.Tell,
@@ -193,6 +197,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
+                    peerClient.Dispose();
                 }
             }
         }

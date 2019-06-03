@@ -128,9 +128,6 @@ namespace Catalyst.Node.Core
                 {
                     var node = container.Resolve<ICatalystNode>();
 
-                    container.Resolve<IPeerClientFactory>()
-                       .Initialize(container.Resolve<IEnumerable<IP2PMessageHandler>>());
-
                     node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 

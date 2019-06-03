@@ -21,24 +21,18 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Reactive.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.P2P
 {
@@ -52,28 +46,13 @@ namespace Catalyst.Node.Core.P2P
         /// 
         /// </summary>
         /// <param name="ipEndPoint"></param>
-        /// <param name="messageHandlers"></param>
-        /// <param name="gossipManager"></param>
-        public PeerClient(IPEndPoint ipEndPoint,
-            IEnumerable<IP2PMessageHandler> messageHandlers)
+        public PeerClient(IPeerSettings peerSettings)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Logger.Debug("P2P client starting");
-
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
-            var handlerList = messageHandlers.ToList();
-            
-            MessageStream = protoDatagramChannelHandler.MessageStream;
-
-            handlerList.ForEach(h => h.StartObserving(MessageStream));
-
-            IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
-            {
-                protoDatagramChannelHandler
-            };
-
+            IPEndPoint ipEndPoint = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + 10);
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
-                channelHandlers,
+                new List<IChannelHandler>(),
                 ipEndPoint.Address
             ), ipEndPoint);
         }
