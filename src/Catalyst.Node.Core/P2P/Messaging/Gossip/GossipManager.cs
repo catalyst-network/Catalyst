@@ -246,7 +246,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <returns></returns>
         private GossipRequest GetPendingRequestValue(Guid guid)
         {
-            _pendingRequests.TryGetValue(guid.ToByteString(), out GossipRequest request);
+            _pendingRequests.TryGetValue(guid, out GossipRequest request);
             return request;
         }
     }
