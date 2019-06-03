@@ -276,7 +276,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         }
 
         [Fact]
-        public void GetFavoriteDelta_should_retrieve_favorite_delta()
+        public void GetFavouriteDelta_should_retrieve_favourite_delta()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
@@ -288,16 +288,16 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
                 var previousDeltaHash = scoredCandidates[0].Candidate.PreviousDeltaDfsHash.ToByteArray();
 
-                var favoriteCandidate = _voter.GetFavoriteDelta(previousDeltaHash);
+                var favouriteCandidate = _voter.GetFavouriteDelta(previousDeltaHash);
 
-                favoriteCandidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(previousDeltaHash).Should().BeTrue();
-                favoriteCandidate.Hash.ToByteArray().SequenceEqual(scoredCandidates[1].Candidate.Hash.ToByteArray()).Should().BeTrue();
-                favoriteCandidate.ProducerId.Should().Be(scoredCandidates[1].Candidate.ProducerId);
+                favouriteCandidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(previousDeltaHash).Should().BeTrue();
+                favouriteCandidate.Hash.ToByteArray().SequenceEqual(scoredCandidates[1].Candidate.Hash.ToByteArray()).Should().BeTrue();
+                favouriteCandidate.ProducerId.Should().Be(scoredCandidates[1].Candidate.ProducerId);
             }
         }
 
         [Fact]
-        public void GetFavoriteDelta_should_return_null_on_unknown_previous_delta_hash()
+        public void GetFavouriteDelta_should_return_null_on_unknown_previous_delta_hash()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
@@ -305,14 +305,14 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
                 var scoredCandidates = AddCandidatesToCacheAndVote(10, 500, realCache);
 
-                var favoriteCandidate = _voter.GetFavoriteDelta(ByteUtil.GenerateRandomByteArray(32));
+                var favouriteCandidate = _voter.GetFavouriteDelta(ByteUtil.GenerateRandomByteArray(32));
 
-                favoriteCandidate.Should().BeNull();
+                favouriteCandidate.Should().BeNull();
             }
         }
         
         [Fact]
-        public void GetFavoriteDelta_should_return_lowest_hash_when_candidate_scores_are_equal()
+        public void GetFavouriteDelta_should_return_lowest_hash_when_candidate_scores_are_equal()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
@@ -324,13 +324,13 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 scoredCandidates.Select(c => c.Candidate.Hash).Distinct().Count().Should().Be(2);
                 scoredCandidates.Select(c => c.Candidate.PreviousDeltaDfsHash).Distinct().Count().Should().Be(1);
 
-                var favoriteCandidate = _voter.GetFavoriteDelta(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray());
+                var favouriteCandidate = _voter.GetFavouriteDelta(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray());
 
-                var expectedFavorite = scoredCandidates
+                var expectedFavourite = scoredCandidates
                    .OrderBy(c => c.Candidate.Hash.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default)
                    .First();
 
-                favoriteCandidate.Hash.ToByteArray().SequenceEqual(expectedFavorite.Candidate.Hash.ToByteArray());
+                favouriteCandidate.Hash.ToByteArray().SequenceEqual(expectedFavourite.Candidate.Hash.ToByteArray());
             }
         }
 

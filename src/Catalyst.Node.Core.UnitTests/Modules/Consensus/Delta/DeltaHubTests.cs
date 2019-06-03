@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         }
 
         [Fact]
-        public void BroadcastFavoriteCandidateDelta()
+        public void BroadcastFavouriteCandidateDelta()
         {
 
         }

@@ -75,12 +75,23 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         }
 
         /// <inheritdoc />
-        public void BroadcastFavoriteCandidateDelta(byte[] previousHashRoot)
+        public void BroadcastFavouriteCandidateDelta(byte[] previousDeltaDfsHash)
         {
+            {
+                var favourite = _deltaVoter.GetFavouriteDelta(previousDeltaDfsHash);
+                if (favourite == null)
+                {
+                    _logger.Debug("No favourite delta has been retrieved for broadcast.");
+                    return;
+                }
+
+                // https://github.com/catalyst-network/Catalyst.Node/pull/448
+                _gossipManager.Broadcast(null);
+            }
         }
-        
+
         /// <inheritdoc />
-        public void SubscribeToFavoriteCandidateStream(IObservable<CandidateDeltaBroadcast> favoriteCandidateStream) { throw new NotImplementedException(); }
+        public void SubscribeToFavouriteCandidateStream(IObservable<CandidateDeltaBroadcast> favouriteCandidateStream) { throw new NotImplementedException(); }
 
         /// <inheritdoc />
         public void SubscribeToCandidateStream(IObservable<CandidateDeltaBroadcast> candidateStream)

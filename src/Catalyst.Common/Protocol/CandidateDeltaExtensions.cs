@@ -26,7 +26,7 @@ using Dawn;
 
 namespace Catalyst.Common.Protocol
 {
-    public static class CandidateDeltaExtensions
+    public static class DeltaExtensions
     {
         public static bool IsValid(this CandidateDeltaBroadcast candidate)
         {
@@ -36,6 +36,23 @@ namespace Catalyst.Common.Protocol
                     c => $"{nameof(candidate.PreviousDeltaDfsHash)} cannot be null or empty")
                .Require(c => c.Hash != null && !c.Hash.IsEmpty,
                     c => $"{nameof(candidate.Hash)} cannot be null or empty");
+
+            return true;
+        }
+
+        public static bool IsValid(this FavouriteDeltaBroadcast favourite)
+        {
+            //trying to reuse the above code to validate the inner candidate seems to throw the code into an infinite loop
+            //so I copied it for now.
+            Guard.Argument(favourite, nameof(favourite)).NotNull()
+               .Require(c => c.Candidate != null)
+               .Require(c => c.Candidate.ProducerId != null, c => $"{nameof(c.Candidate.ProducerId)} cannot be null")
+               .Require(c => c.Candidate.PreviousDeltaDfsHash != null && !c.Candidate.PreviousDeltaDfsHash.IsEmpty,
+                    c => $"{nameof(c.Candidate.PreviousDeltaDfsHash)} cannot be null or empty")
+               .Require(c => c.Candidate.Hash != null && !c.Candidate.Hash.IsEmpty,
+                    c => $"{nameof(c.Candidate.Hash)} cannot be null or empty")
+               .Require(c => c.VoterId != null,
+                    c => $"{nameof(favourite.VoterId)} cannot be null");
 
             return true;
         }

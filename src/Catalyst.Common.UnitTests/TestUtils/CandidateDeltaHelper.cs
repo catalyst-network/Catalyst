@@ -46,4 +46,22 @@ namespace Catalyst.Common.UnitTests.TestUtils
             };
         }
     }
+
+    public static class FavouriteDeltaHelper
+    {
+        public static FavouriteDeltaBroadcast GetFavouriteDelta(byte[] previousDeltaHash = null,
+            byte[] hash = null,
+            PeerId producerId = null,
+            PeerId voterId = null)
+        {
+            var candidate = CandidateDeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId);
+            var voter = voterId ?? PeerIdHelper.GetPeerId();
+
+            return new FavouriteDeltaBroadcast
+            {
+                Candidate = candidate,
+                VoterId = voter
+            };
+        }
+    }
 }
