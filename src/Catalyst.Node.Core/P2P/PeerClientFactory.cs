@@ -39,26 +39,22 @@ namespace Catalyst.Node.Core.P2P
     {
         /// <inheritdoc cref="IPeerClientFactory"/>
         public IPeerClient Client { get; set; }
-
+        
         /// <summary>The target host</summary>
         private readonly IPEndPoint _targetHost;
-
-        /// <summary>The gossip manager context</summary>
-        private readonly IGossipManagerContext _gossipManagerContext;
 
         /// <summary>Initializes a new instance of the <see cref="PeerClientFactory"/> class.</summary>
         /// <param name="peerSettings">The peer settings.</param>
         /// <param name="gossipManagerContext">The gossip manager context.</param>
-        public PeerClientFactory(IPeerSettings peerSettings, IGossipManagerContext gossipManagerContext)
+        public PeerClientFactory(IPeerSettings peerSettings)
         {
-            _gossipManagerContext = gossipManagerContext;
             _targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
         }
 
         /// <inheritdoc cref="IPeerClientFactory"/>
         public void Initialize(IEnumerable<IP2PMessageHandler> messageHandlers)
         {
-            Client = new PeerClient(_targetHost, messageHandlers, new GossipManager(this, _gossipManagerContext));
+            Client = new PeerClient(_targetHost, messageHandlers);
         }
 
         public void Dispose()

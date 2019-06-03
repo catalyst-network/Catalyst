@@ -222,21 +222,13 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipManagerContext",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipManagerContext, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
-        },
-        {
             "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipManager",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipManager, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Common.IO.Inbound.GossipHandler, Catalyst.Common",
@@ -245,15 +237,6 @@
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipHandler, Catalyst.Common"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipCache",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipCache, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
         }
     ],
     "modules": [
