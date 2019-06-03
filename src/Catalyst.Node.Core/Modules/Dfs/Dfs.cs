@@ -32,6 +32,7 @@ using Serilog;
 using Ipfs.CoreApi;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
@@ -52,7 +53,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             _ipfs = ipfsAdapter;
 
             // Make sure IPFS and the gateway is started.
-            var _ = _ipfs.Generic.IdAsync().Result;
+            _ipfs.Generic.IdAsync().Wait();
             _gateway = new GatewayHost(_ipfs);
             _logger = logger;
         }
@@ -118,8 +119,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             }
             else
             {
-//                throw new Exception();
-//                throw new PlatformNotSupportedException($"Browsing on the platform '{RuntimeInformation.OSDescription}' is not supported.");
+                throw new PlatformNotSupportedException($"Browsing on the platform '{RuntimeInformation.OSDescription}' is not supported.");
             }
         }
     }

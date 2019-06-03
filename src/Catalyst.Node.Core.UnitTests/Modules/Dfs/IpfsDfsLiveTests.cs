@@ -107,10 +107,9 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_browse_text()
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-
-            const string text = "good morning from IPFS!!";
+            const string text = "good morning from IPFS!";
             var dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var id = await dfs.AddTextAsync(text, cts.Token);
 
             dfs.OpenInBrowser(id);
