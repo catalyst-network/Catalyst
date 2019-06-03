@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
 
-        [Fact(Skip = "y")]
+        [Fact]
         public void CanReceiveEventsFromSubscribedStream()
         {
             _container = ContainerBuilder.Build();
@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
 
-        [Fact(Skip = "y")]
+        [Fact]
         public void CanReceivePingResponse()
         {
             AnySigned message = null;
