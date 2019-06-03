@@ -216,10 +216,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             var messageFactory = new MessageFactory();
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var peerClientFactory = new PeerClient(_peerSettings);
+            var peerClient = new PeerClient(_peerSettings);
 
             var gossipMessageHandler = new
-                GossipManager(senderPeerIdentifier, _peers, cache, peerClientFactory);
+                GossipManager(senderPeerIdentifier, _peers, cache, peerClient);
 
             var messageDto = messageFactory.GetMessage(
                 new MessageDto(
@@ -231,6 +231,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             );
 
             gossipMessageHandler.Broadcast(messageDto);
+            peerClient.Dispose();
             return messageDto.CorrelationId.ToGuid();
         }
 
