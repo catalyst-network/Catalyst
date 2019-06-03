@@ -135,7 +135,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             var cacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(cacheKey, out ConcurrentBag<string> candidates))
             {
-                _logger.Debug("Failed to retrieve any scored candidates with previous delta {0}",
+                _logger.Debug("Failed to retrieve any scored candidate with previous delta {0}",
                     previousDeltaDfsHash.ToHex());
                 return null;
             }

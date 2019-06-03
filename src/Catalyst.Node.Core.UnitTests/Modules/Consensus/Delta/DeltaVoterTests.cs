@@ -143,7 +143,6 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 producerId: _producerIds.First().PeerId);
 
             var candidateHashAsHex = candidate.Hash.ToByteArray().ToHex();
-            var previousHashAsHex = candidate.PreviousDeltaDfsHash.ToByteArray().ToHex();
 
             var addedEntry = Substitute.For<ICacheEntry>();
             _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsHex)))
@@ -220,15 +219,16 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                .Concat(Enumerable.Repeat(secondCandidate, secondVotesCount))
                .Shuffle().ToObservable();
 
-            candidateStream.Subscribe(_voter);
+            using (candidateStream.Subscribe(_voter))
+            {
+                var firstKey = DeltaVoter.GetCandidateCacheKey(firstCandidate);
+                var secondKey = DeltaVoter.GetCandidateCacheKey(secondCandidate);
 
-            var firstKey = DeltaVoter.GetCandidateCacheKey(firstCandidate);
-            var secondKey = DeltaVoter.GetCandidateCacheKey(secondCandidate);
+                realCache.TryGetValue(firstKey, out IScoredCandidateDelta firstRetrieved).Should().BeTrue();
+                realCache.TryGetValue(secondKey, out IScoredCandidateDelta secondRetrieved).Should().BeTrue();
 
-            realCache.TryGetValue(firstKey, out IScoredCandidateDelta firstRetrieved).Should().BeTrue();
-            realCache.TryGetValue(secondKey, out IScoredCandidateDelta secondRetrieved).Should().BeTrue();
-
-            return new List<IScoredCandidateDelta> {firstRetrieved, secondRetrieved};
+                return new List<IScoredCandidateDelta> { firstRetrieved, secondRetrieved };
+            }
         }
 
         [Fact]

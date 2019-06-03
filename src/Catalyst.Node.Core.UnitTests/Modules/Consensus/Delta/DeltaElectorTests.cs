@@ -22,13 +22,20 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Delta;
+using FluentAssertions;
+using FluentAssertions.Common;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
+using PeerTalk.PubSub;
 using Serilog;
 using Xunit;
 
@@ -59,41 +66,154 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
     public class DeltaElectorTests
     {
         private readonly ILogger _logger;
-        private readonly IMemoryCache _popularityCache;
-        
+        private readonly IMemoryCache _cache;
+
         public DeltaElectorTests()
         {
             _logger = Substitute.For<ILogger>();
-            _popularityCache = Substitute.For<IMemoryCache>();
+            _cache = Substitute.For<IMemoryCache>();
         }
 
         [Theory]
         [ClassData(typeof(BadFavouritesData))]
         public void When_receiving_bad_favourite_should_log_and_not_hit_the_cache(FavouriteDeltaBroadcast badFavourite)
         {
-            var elector = new DeltaElector(_popularityCache, _logger);
+            var elector = new DeltaElector(_cache, _logger);
 
             elector.OnNext(badFavourite);
 
             _logger.Received(1).Error(Arg.Is<Exception>(e => e is ArgumentException),
                 Arg.Any<string>(), Arg.Any<string>());
 
-            _popularityCache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
-            _popularityCache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }
 
         [Fact]
-        public void When_receiving_valid_favourite_should_store_in_cache()
+        public void When_receiving_new_valid_favourite_should_store_in_cache()
         {
             var favourite = FavouriteDeltaHelper.GetFavouriteDelta();
-            var elector = new DeltaElector(_popularityCache, _logger);
+            var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
+            var elector = new DeltaElector(_cache, _logger);
+
+            var addedEntry = Substitute.For<ICacheEntry>();
+            _cache.CreateEntry(Arg.Is<string>(s => s.Equals(candidateListKey)))
+               .Returns(addedEntry);
 
             elector.OnNext(favourite);
 
-            var cacheKey = DeltaElector.GetCandidateListCacheKey(favourite);
+            _cache.Received(1).TryGetValue(Arg.Is<string>(s => s.Equals(candidateListKey)), out Arg.Any<object>());
+            _cache.Received(1).CreateEntry(Arg.Is<string>(s => s.Equals(candidateListKey)));
 
-            _popularityCache.Received(1).TryGetValue(Arg.Is<string>(s => s.Equals(cacheKey)), out Arg.Any<object>());
-            _popularityCache.Received(1).CreateEntry(Arg.Is<string>(s => s.Equals(cacheKey)));
+            var candidateKey = DeltaElector.GetFavouriteCacheKey(favourite);
+            var addedValue = addedEntry.Value;
+            addedValue.Should().BeAssignableTo<IDictionary<string, bool>>();
+            ((IDictionary<string, bool>) addedValue).Should().ContainKey(candidateKey);
+        }
+
+        [Fact]
+        public void When_receiving_known_favourite_should_not_store_in_cache()
+        {
+            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            {
+                var favourite = FavouriteDeltaHelper.GetFavouriteDelta();
+                var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
+
+                var elector = new DeltaElector(realCache, _logger);
+
+                elector.OnNext(favourite);
+                elector.OnNext(favourite);
+
+                realCache.TryGetValue(candidateListKey, out IDictionary<string, bool> retrieved)
+                   .Should().BeTrue();
+
+                retrieved.Keys.Count.Should().Be(1);
+                retrieved.Should().ContainKey(DeltaElector.GetFavouriteCacheKey(favourite));
+            }
+        }
+
+        [Fact]
+        public void When_favourite_has_different_producer_it_should_not_create_duplicate_entries()
+        {
+            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            {
+                var producers = "abc".Select(c => PeerIdHelper.GetPeerId(c.ToString()))
+                   .ToArray();
+                var hashProduced = ByteUtil.GenerateRandomByteArray(32);
+                var previousHash = ByteUtil.GenerateRandomByteArray(32);
+                var candidates = producers.Select((p, i) =>
+                    CandidateDeltaHelper.GetCandidateDelta(previousHash, hashProduced, producers[i])
+                ).ToArray();
+
+                var votersCount = 4;
+                var favourites = Enumerable.Repeat(candidates[0], 5)
+                   .Concat(Enumerable.Repeat(candidates[1], 2))
+                   .Concat(Enumerable.Repeat(candidates[2], 8))
+                   .Select((c, j) => new FavouriteDeltaBroadcast
+                    {
+                        Candidate = c,
+                        VoterId = PeerIdHelper.GetPeerId((j % votersCount).ToString())
+                    }).ToArray();
+
+                var elector = new DeltaElector(realCache, _logger);
+
+                var favouriteStream = favourites.ToObservable();
+                using (var subscription = favouriteStream.Subscribe(elector))
+                {
+                    var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourites.First());
+
+                    realCache.TryGetValue(candidateListKey, out IDictionary<string, bool> retrieved)
+                       .Should().BeTrue();
+
+                    retrieved.Keys.Count.Should().Be(votersCount,
+                        "all these favourites are giving the same hash, and only different voters" +
+                        "should result in new entries if we don't want to double count.");
+
+                    var expectedKeys = favourites.Select(DeltaElector.GetFavouriteCacheKey).Distinct();
+                    retrieved.Keys.Should().BeEquivalentTo(expectedKeys);
+                }
+            }
+        }
+
+        [Fact]
+        public void GetMostPopularCandidateDelta_should_return_the_favourite_with_most_voter_ids()
+        {
+            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            {
+                var producers = "ab".Select(c => PeerIdHelper.GetPeerId(c.ToString()))
+                   .ToArray();
+                var previousHash = ByteUtil.GenerateRandomByteArray(32);
+                var candidates = producers.Select((p, i) =>
+                    CandidateDeltaHelper.GetCandidateDelta(previousHash,
+                        ByteUtil.GenerateRandomByteArray(32),
+                        producers[i])
+                ).ToArray();
+
+                var firstVotesCount = 41;
+                var secondVoteCount = 119;
+                var favourites = Enumerable.Repeat(candidates[0], firstVotesCount)
+                   .Concat(Enumerable.Repeat(candidates[1], secondVoteCount))
+                   .Shuffle()
+                   .Select((c, j) => new FavouriteDeltaBroadcast
+                    {
+                        Candidate = c,
+                        VoterId = PeerIdHelper.GetPeerId(j.ToString())
+                    }).ToArray();
+
+                var elector = new DeltaElector(realCache, _logger);
+
+                var favouriteStream = favourites.ToObservable();
+                using (var subscription = favouriteStream.Subscribe(elector))
+                {
+                    var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourites.First());
+
+                    realCache.TryGetValue(candidateListKey, out IDictionary<string, bool> retrieved)
+                       .Should().BeTrue();
+
+                    retrieved.Keys.Count.Should().Be(secondVoteCount + firstVotesCount,
+                        "all these favourites are being voted for by different peers.");
+                }
+            }
         }
     }
 }
