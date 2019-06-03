@@ -218,6 +218,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings));
 
                 valid.Should().BeTrue();
+
+                peerClient.Dispose();
+                p2PService.Dispose();
             }
         }
 
@@ -245,6 +248,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var valid = peerValidator.PeerChallengeResponse(peerActiveId);
 
                 valid.Should().BeFalse();
+
+                peerClient.Dispose();
+                p2PService.Dispose();
             }
         }
     }

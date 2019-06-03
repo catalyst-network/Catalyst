@@ -154,6 +154,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.P2P.PeerValidator",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerValidator, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Cryptography.CertificateStore, Catalyst.Common",
             "services": [
                 {

@@ -80,7 +80,6 @@ namespace Catalyst.Node.Core.P2P
 
                     ((PeerClient) _peerClient).SendMessage(datagramEnvelope).GetAwaiter().GetResult();
 
-                    //there is a Better way of doing all this
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
                             _p2PService, _peerClient
@@ -90,8 +89,6 @@ namespace Catalyst.Node.Core.P2P
                        .ToArray();
 
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
-                    _peerClient.Dispose();
-                    _p2PService.Dispose();
 
                     if (_serverObserver.Received.Payload.PeerId.PublicKey.ToStringUtf8() ==
                         recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
@@ -105,8 +102,6 @@ namespace Catalyst.Node.Core.P2P
             catch (Exception e)
             {
                 _logger.Error(e.Message);
-                _peerClient.Dispose();
-                _p2PService.Dispose();
             }
 
             return false;
