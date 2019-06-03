@@ -22,12 +22,9 @@
 #endregion
 
 using System;
-using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -36,6 +33,7 @@ using Serilog;
 using Xunit;
 using Nethereum.RLP;
 using Catalyst.Common.Util;
+using Catalyst.Node.Core.RPC.Handlers;
 
 namespace Catalyst.Cli.UnitTests
 {
@@ -49,7 +47,6 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private PeerBlackListingResponseHandler _handler;
-        private readonly IRpcCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetPeerBlackListingResponseHandlerTest"/> class. </summary>
@@ -58,7 +55,6 @@ namespace Catalyst.Cli.UnitTests
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
         }
 
         /// <summary>
@@ -90,9 +86,7 @@ namespace Catalyst.Cli.UnitTests
 
         private void TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new MessageFactory().GetMessage(new MessageDto(
                     new SetPeerBlackListResponse
                     {
                         Blacklist = blacklist,
@@ -106,14 +100,13 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _handler = new PeerBlackListingResponseHandler(_output, correlationCache, _logger);
+            _handler = new PeerBlackListingResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
         }
 
         public void Dispose()
         {
             _handler?.Dispose();
-            _subbedCorrelationCache.Dispose();
         }
     }
 }

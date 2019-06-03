@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <inheritdoc/>
         public List<IPeerIdentifier> GetRandomPeers(int count)
         {
-            var peers = this._peers.GetAll().Shuffle();
+            var peers = _peers.GetAll().Shuffle();
             var peerAmount = Math.Min(peers.Count, count);
             return peers.Select(x => x.PeerIdentifier).Take(peerAmount).ToList();
         }

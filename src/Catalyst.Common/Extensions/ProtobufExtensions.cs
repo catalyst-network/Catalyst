@@ -26,12 +26,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
-using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
 using Catalyst.Common.Util;
-using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
@@ -42,20 +38,19 @@ namespace Catalyst.Common.Extensions
     public static class ProtobufExtensions
     {
         private const string CatalystProtocol = "Catalyst.Protocol";
-        private static readonly string RequestSuffix = "Request";
-        private static readonly string ResponseSuffix = "Response";
-        private static readonly string BroadcastSuffix = "Broadcast";
+        private const string RequestSuffix = "Request";
+        private const string ResponseSuffix = "Response";
+        private const string BroadcastSuffix = "Broadcast";
 
-        private static readonly Dictionary<string, string> ProtoToClrNameMapper;
         private static readonly List<string> ProtoGossipAllowedMessages;
 
         static ProtobufExtensions()
         {
-            ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
+            var protoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
                .Where(t => typeof(IMessage).IsAssignableFrom(t))
                .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
-            ProtoGossipAllowedMessages = ProtoToClrNameMapper.Keys
+            ProtoGossipAllowedMessages = protoToClrNameMapper.Keys
                .Where(t => t.EndsWith(BroadcastSuffix))
                .ToList();
         }

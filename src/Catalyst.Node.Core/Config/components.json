@@ -10,10 +10,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Rpc.RpcCorrelationCache, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.MessageFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcCorrelationCache, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageFactory, Catalyst.Common"
                 }
             ]
         },
@@ -59,14 +59,6 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Messaging.P2PCorrelationCache",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IReputableCache, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Node.Core.P2P.PeerSettings",
             "services": [
                 {
@@ -95,14 +87,6 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStoreService, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Cli.IUserOutput, Catalyst.Common"
                 }
             ]
         },
@@ -210,6 +194,7 @@
                 }
             ]
         },
+        // WHY USE CLI BASED CLASS AND NOT IN COMMON???
         {
             "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",
             "services": [

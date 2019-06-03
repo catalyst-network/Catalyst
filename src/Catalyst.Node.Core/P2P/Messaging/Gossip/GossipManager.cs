@@ -37,7 +37,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     /// The Gossip Manager used to broadcast and receive gossip messages
     /// </summary>
     /// <seealso cref="IGossipManager" />
-    public class GossipManager : IGossipManager
+    public sealed class GossipManager : IGossipManager
     {
         /// <summary>The gossip cache</summary>
         private readonly IGossipCache _gossipCache;
@@ -46,19 +46,19 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The message factory</summary>
-        private readonly P2PMessageFactory _messageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>The peer client factory</summary>
         private readonly IPeerClientFactory _peerClientFactory;
 
         /// <summary>Initializes a new instance of the <see cref="GossipManager"/> class.</summary>
-        /// <param name="peerClientFactory">The peer client factory</param>
-        /// <param name="gossipManagerContext">The gossip manager context.</param>
-        public GossipManager(IPeerClientFactory peerClientFactory, IGossipManagerContext gossipManagerContext)
+        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <param name="gossipCache">The gossip cache.</param>
+        public GossipManager(IPeerIdentifier peerIdentifier, IGossipCache gossipCache, IPeerClientFactory peerClientFactory)
         {
-            _gossipCache = gossipManagerContext.GossipCache;
-            _peerIdentifier = gossipManagerContext.PeerIdentifier;
-            _messageFactory = new P2PMessageFactory(gossipManagerContext.ReputableCache);
+            _gossipCache = gossipCache;
+            _peerIdentifier = peerIdentifier;
+            _messageFactory = new MessageFactory();
             _peerClientFactory = peerClientFactory;
         }
 

@@ -23,7 +23,8 @@
 
 using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta {
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
+{
     public interface IScoredCandidateDelta
     {
         CandidateDeltaBroadcast Candidate { get; }

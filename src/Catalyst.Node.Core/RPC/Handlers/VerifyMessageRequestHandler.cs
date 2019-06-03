@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -48,7 +47,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdentifier _peerIdentifier;
         private IChanneledMessage<AnySigned> _message;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
         private const string PublicKeyNotProvided = "PublicKey not provided";
@@ -59,10 +58,10 @@ namespace Catalyst.Node.Core.RPC.Handlers
         public VerifyMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner,
-            IRpcMessageFactory rpcMessageFactory)
+            IMessageFactory messageFactory)
             : base(logger)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _keySigner = keySigner;
             _peerIdentifier = peerIdentifier;
         }
@@ -130,7 +129,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         private void ReturnResponse(bool result, Guid correlationGuid)
         {
-            var response = _rpcMessageFactory.GetMessage(new MessageDto(
+            var response = _messageFactory.GetMessage(new MessageDto(
                     new VerifyMessageResponse
                     {
                         IsSignedByKey = result

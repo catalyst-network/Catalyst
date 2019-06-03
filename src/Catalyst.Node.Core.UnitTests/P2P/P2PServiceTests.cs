@@ -58,11 +58,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private IContainer _container;
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
-        private readonly IReputableCache _subbedReputableCache;
 
         public P2PServiceTests(ITestOutputHelper output) : base(output)
         {
-            _subbedReputableCache = Substitute.For<IReputableCache>();
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))

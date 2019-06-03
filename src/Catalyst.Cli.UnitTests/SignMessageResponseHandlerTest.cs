@@ -28,10 +28,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -51,7 +48,6 @@ namespace Catalyst.Cli.UnitTests
         
         private readonly IUserOutput _output;
         private SignMessageResponseHandler _handler;
-        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         //@TODO why not mock the actual response object? if we ever change it then the test will pass but fail in real world
         public struct SignedResponse
@@ -62,13 +58,12 @@ namespace Catalyst.Cli.UnitTests
         }
 
         static SignMessageResponseHandlerTest()
-        {   
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
+        {
             QueryContents = new List<object[]>
             {
                 new object[]
                 {
-                    SignMessage("hello", "this is a fake signature", "this is a fake public key")
+                    SignMessage($@"hello", $@"this is a fake signature", $@"this is a fake public key")
                 },
                 new object[]
                 {
@@ -84,7 +79,7 @@ namespace Catalyst.Cli.UnitTests
             _output = Substitute.For<IUserOutput>();
         }
 
-        public static SignedResponse SignMessage(string messageToSign, string signature, string pubKey)
+        private static SignedResponse SignMessage(string messageToSign, string signature, string pubKey)
         {
             var signedResponse = new SignedResponse
             {
@@ -99,10 +94,8 @@ namespace Catalyst.Cli.UnitTests
         [Theory]
         [MemberData(nameof(QueryContents))]  
         public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
-        {   
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+        {
+            var response = new MessageFactory().GetMessage(new MessageDto(
                     new SignMessageResponse
                     {
                         OriginalMessage = signedResponse.OriginalMessage,
@@ -116,7 +109,7 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
             
-            _handler = new SignMessageResponseHandler(_output, correlationCache, _logger);
+            _handler = new SignMessageResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
             
             _output.Received(1).WriteLine(Arg.Any<string>());
