@@ -55,28 +55,21 @@ namespace Catalyst.Node.Core.P2P
         /// <param name="messageHandlers"></param>
         /// <param name="gossipManager"></param>
         public PeerClient(IPEndPoint ipEndPoint,
-            IEnumerable<IP2PMessageHandler> messageHandlers,
-            IGossipManager gossipManager)
+            IEnumerable<IP2PMessageHandler> messageHandlers)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Logger.Debug("P2P client starting");
 
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
-            var gossipHandler = new GossipHandler(gossipManager);
-
             var handlerList = messageHandlers.ToList();
+            
+            MessageStream = protoDatagramChannelHandler.MessageStream;
 
-            var allMessagesStream =
-                protoDatagramChannelHandler.MessageStream.Merge(gossipHandler.MessageStream);
-
-            MessageStream = allMessagesStream;
-
-            handlerList.ForEach(h => h.StartObserving(allMessagesStream));
+            handlerList.ForEach(h => h.StartObserving(MessageStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
-                protoDatagramChannelHandler,
-                gossipHandler
+                protoDatagramChannelHandler
             };
 
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
