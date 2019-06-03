@@ -40,9 +40,6 @@ using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Constants = Catalyst.Common.Config.Constants;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using System.Collections.Generic;
 
 namespace Catalyst.Node.Core
 {
