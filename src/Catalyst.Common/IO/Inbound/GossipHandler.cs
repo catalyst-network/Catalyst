@@ -45,12 +45,10 @@ namespace Catalyst.Common.IO.Inbound
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
         {
-            var channeledAnySigned = new ChanneledAnySigned(ctx, msg);
-
             // TODO Check sig
-            if (channeledAnySigned.Payload.CheckIfMessageIsGossip())
+            if (msg.CheckIfMessageIsGossip())
             {
-                _gossipManager.IncomingGossip(channeledAnySigned);
+                _gossipManager.IncomingGossip(msg);
                 AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);
                 MessageSubject.OnNext(new ChanneledAnySigned(ctx, originalGossipedMessage));
             }

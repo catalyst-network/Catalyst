@@ -21,18 +21,26 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
+using Serilog;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using NSubstitute;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
-{ 
-    public interface IGossipManager
+namespace Catalyst.Node.Core.UnitTests.TestUtils
+{
+    public class TestP2PMessageHandler<TProto> : MessageHandlerBase<TProto>, IP2PMessageHandler where TProto : IMessage
     {
-        /// <summary>Broadcasts a message.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void Broadcast(AnySigned anySigned);
+        private readonly Action<AnySigned> _action;
 
-        /// <summary>Handles Incoming gossip.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void IncomingGossip(AnySigned anySigned);
+        public TestP2PMessageHandler(Action<AnySigned> action = null) : base(Substitute.For<ILogger>()) { _action = action; }
+
+        protected override void Handler(IChanneledMessage<AnySigned> message)
+        {
+            _action?.Invoke(message.Payload);
+        }
     }
 }

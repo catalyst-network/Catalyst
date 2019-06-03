@@ -21,18 +21,22 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
+using Catalyst.Common.Interfaces.P2P;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
-{ 
-    public interface IGossipManager
+namespace Catalyst.Node.Core.P2P.Messaging.Gossip
+{
+    public class GossipManagerContext : IGossipManagerContext
     {
-        /// <summary>Broadcasts a message.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void Broadcast(AnySigned anySigned);
+        public GossipManagerContext(IPeerIdentifier peerIdentifier, IGossipCache gossipCache)
+        {
+            PeerIdentifier = peerIdentifier;
+            GossipCache = gossipCache;
+        }
 
-        /// <summary>Handles Incoming gossip.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void IncomingGossip(AnySigned anySigned);
+        public IPeerIdentifier PeerIdentifier { get; }
+
+        public IGossipCache GossipCache { get; }
     }
 }

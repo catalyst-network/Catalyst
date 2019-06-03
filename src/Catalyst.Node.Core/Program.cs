@@ -40,6 +40,9 @@ using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Constants = Catalyst.Common.Config.Constants;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using System.Collections.Generic;
 
 namespace Catalyst.Node.Core
 {
@@ -124,6 +127,10 @@ namespace Catalyst.Node.Core
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var node = container.Resolve<ICatalystNode>();
+
+                    container.Resolve<IPeerClientFactory>()
+                       .Initialize(container.Resolve<IEnumerable<IP2PMessageHandler>>());
+
                     node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 

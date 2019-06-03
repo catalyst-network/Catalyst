@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reflection;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
@@ -54,18 +55,22 @@ namespace Catalyst.Node.Core.P2P
         {
             Discovery = peerDiscovery;
             var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+            var gossipHandler = new GossipHandler(gossipManager);
 
-            MessageStream = protoDatagramChannelHandler.MessageStream;
-            messageHandlers.ToList()
-               .ForEach(h => h.StartObserving(MessageStream));
+            var allMessagesStream = 
+                protoDatagramChannelHandler.MessageStream.Merge(gossipHandler.MessageStream);
+            MessageStream = allMessagesStream;
+
+            var messageHandlerList = messageHandlers.ToList();
+            messageHandlerList.ForEach(h => h.StartObserving(allMessagesStream));
 
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 protoDatagramChannelHandler,
                 new CorrelationHandler(correlationManager),
-                new GossipHandler(gossipManager)
+                gossipHandler
             };
-            
+
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
                 channelHandlers
             ), settings.BindAddress, settings.Port);

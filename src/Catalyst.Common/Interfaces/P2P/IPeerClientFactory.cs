@@ -21,18 +21,20 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
+using System;
+using System.Collections.Generic;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
-{ 
-    public interface IGossipManager
+namespace Catalyst.Common.Interfaces.P2P
+{
+    public interface IPeerClientFactory : IDisposable
     {
-        /// <summary>Broadcasts a message.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void Broadcast(AnySigned anySigned);
+        /// <summary>Gets the peer client.</summary>
+        /// <value>The client.</value>
+        IPeerClient Client { get; }
 
-        /// <summary>Handles Incoming gossip.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void IncomingGossip(AnySigned anySigned);
+        /// <summary>Initializes the peer client with the specified handlers.</summary>
+        /// <param name="handlers">The handlers.</param>
+        void Initialize(IEnumerable<IP2PMessageHandler> handlers);
     }
 }
