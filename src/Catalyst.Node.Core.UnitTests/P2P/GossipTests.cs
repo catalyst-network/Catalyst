@@ -24,9 +24,11 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
@@ -34,6 +36,8 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.P2P.Messaging.Gossip;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -55,16 +59,15 @@ namespace Catalyst.Node.Core.UnitTests.P2P
     {
         private readonly IRepository<Peer> _peers;
         private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
+        private readonly IPeerSettings _peerSettings;
 
         public GossipTests()
         {
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-
-            _fakeContext.Channel.Returns(fakeChannel);
             _logger = Substitute.For<ILogger>();
             _peers = Substitute.For<IRepository<Peer>>();
+            _peerSettings = Substitute.For<IPeerSettings>();
+            _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            _peerSettings.Port.Returns(12543);
         }
 
         [Theory]
@@ -105,19 +108,17 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var recipientIdentifier = Substitute.For<IPeerIdentifier>();
             var messageFactory = new MessageFactory();
             var gossipMessageHandler = Substitute.For<IGossipManager>();
-            var serverSettings = Substitute.For<IPeerSettings>();
             var fakeIp = IPAddress.Any;
             var guid = Guid.NewGuid();
 
-            serverSettings.BindAddress.Returns(fakeIp);
             recipientIdentifier.Ip.Returns(fakeIp);
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
-            
+
             EmbeddedChannel channel = new EmbeddedChannel(
                 new ProtoDatagramChannelHandler(),
                 new GossipHandler(gossipMessageHandler)
             );
-            
+
             var transaction = new TransactionBroadcast();
             var anySigned = transaction.ToAnySigned(peerIdentifier.PeerId, guid);
 
@@ -125,7 +126,31 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)));
 
             gossipMessageHandler.Received(Quantity.Exactly(1))
-               .IncomingGossip(Arg.Any<IChanneledMessage<AnySigned>>());
+               .IncomingGossip(Arg.Any<AnySigned>());
+        }
+
+        [Fact]
+        public void Gossip_Can_Execute_Proto_Handler()
+        {
+            bool hasHitHandler = false;
+            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
+            var gossipCache = Substitute.For<IGossipCache>();
+            var gossipManagerContext = new GossipManagerContext(peerIdentifier, gossipCache);
+            var handler = new TransactionBroadcastTestHandler(_logger, () => hasHitHandler = true);
+
+            var manager = new GossipManager(Substitute.For<IPeerClientFactory>(), gossipManagerContext);
+            var gossipHandler = new GossipHandler(manager);
+            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+            
+            EmbeddedChannel channel = new EmbeddedChannel(protoDatagramChannelHandler, gossipHandler);
+
+            var anySignedGossip = new TransactionBroadcast()
+               .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
+               .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
+
+            var gossipMessage = anySignedGossip.ToDatagram(new IPEndPoint(IPAddress.Any, 5050));
+            channel.WriteInbound(gossipMessage);
+            hasHitHandler.IsSameOrEqualTo(true);
         }
 
         [Fact]
@@ -138,7 +163,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             var nonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
             nonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);
-            
+
             var secondNonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
                .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
             secondNonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);
@@ -156,8 +181,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var messageFactory = new MessageFactory();
-            var gossipCache = new GossipCache(_peers, cache, _logger);
-            IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, gossipCache);
+            var gossipCache = new GossipCache(_peers, cache);
+            var gossipManagerContext = new GossipManagerContext(peerIdentifier, gossipCache);
+            IGossipManager gossipMessageHandler = new GossipManager(Substitute.For<IPeerClientFactory>(), gossipManagerContext);
 
             var correlationId = Guid.NewGuid();
 
@@ -169,18 +195,19 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     senderIdentifier
                 ),
                 correlationId
-            ).ToAnySigned(senderIdentifier.PeerId, correlationId);
+            );
 
-            var channeledMessage = new ChanneledAnySigned(_fakeContext, messageDto);
-            gossipMessageHandler.Broadcast(channeledMessage);
+            var gossipDto = messageDto.ToAnySigned(senderIdentifier.PeerId, correlationId);
+
+            gossipMessageHandler.Broadcast(messageDto);
             cache.TryGetValue(correlationId.ToByteString(), out GossipRequest value);
             value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound);
             value.ReceivedCount.Should().Be(1);
 
             for (var i = 0; i < receivedCount; i++)
             {
-                gossipMessageHandler.IncomingGossip(channeledMessage);
-                gossipMessageHandler.Broadcast(channeledMessage);
+                gossipMessageHandler.IncomingGossip(gossipDto);
+                gossipMessageHandler.Broadcast(messageDto);
             }
 
             cache.TryGetValue(correlationId.ToByteString(), out value);
@@ -191,10 +218,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
         private Guid Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier, IMemoryCache cache)
         {
-            var gossipCache = new GossipCache(_peers, cache, _logger);
+            var gossipCache = new GossipCache(_peers, cache);
             var messageFactory = new MessageFactory();
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var gossipMessageHandler = new GossipManager(senderPeerIdentifier, gossipCache);
+            var gossipManagerContext = new GossipManagerContext(senderPeerIdentifier, gossipCache);
+            var peerClientFactory = new PeerClientFactory(_peerSettings, gossipManagerContext);
+            peerClientFactory.Initialize(new List<IP2PMessageHandler>());
+            var gossipMessageHandler = new
+                GossipManager(peerClientFactory, gossipManagerContext);
 
             var messageDto = messageFactory.GetMessage(
                 new MessageDto(
@@ -204,9 +235,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     senderPeerIdentifier
                 )
             );
-            var channeledMessage = new ChanneledAnySigned(_fakeContext, messageDto);
 
-            gossipMessageHandler.Broadcast(channeledMessage);
+            gossipMessageHandler.Broadcast(messageDto);
             return messageDto.CorrelationId.ToGuid();
         }
 
@@ -222,6 +252,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
 
             _peers.GetAll().Returns(peerIdentifiers);
+        }
+
+        internal class TransactionBroadcastTestHandler : MessageHandlerBase<TransactionBroadcast>,
+            IP2PMessageHandler
+        {
+            private readonly Action _action;
+
+            public TransactionBroadcastTestHandler(ILogger logger, Action action) : base(logger) { _action = action; }
+
+            protected override void Handler(IChanneledMessage<AnySigned> message) { _action(); }
         }
     }
 }

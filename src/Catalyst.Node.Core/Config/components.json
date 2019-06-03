@@ -18,6 +18,15 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.P2P.PeerClientFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClientFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
             "services": [
                 {
@@ -208,6 +217,15 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.FileTransfer.IDownloadFileTransferFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipManagerContext",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipManagerContext, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"
