@@ -28,9 +28,7 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Node.Core.UnitTests.TestUtils;
@@ -53,7 +51,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IRpcCorrelationCache _subbedCorrelationCache;
         
         public SignMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
@@ -72,7 +69,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
         
@@ -82,8 +78,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [InlineData("Hello&?!1253Catalyst")]
         public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
-            var request = rpcMessageFactory.GetMessage(new MessageDto(
+            var messageFactory = new MessageFactory();
+            var request = messageFactory.GetMessage(new MessageDto(
                 new SignMessageRequest
                 {
                     Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
@@ -94,7 +90,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, rpcMessageFactory);
+            var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, messageFactory);
             handler.StartObserving(messageStream);
              
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

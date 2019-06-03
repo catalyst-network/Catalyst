@@ -26,10 +26,9 @@ using System.Linq;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -53,12 +52,10 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
-        private IRpcCorrelationCache _subbedCorrelationCache;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         public VerifyMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -72,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             _scope = container.BeginLifetimeScope(CurrentTestName);
             
             _keySigner = container.Resolve<IKeySigner>();
-            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
+            _messageFactory = Substitute.For<IMessageFactory>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
@@ -89,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [InlineData("", "", "", false)]
         public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
         {
-            var request = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var request = new MessageFactory().GetMessage(new MessageDto(
                 new VerifyMessageRequest
                 {
                     Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
@@ -102,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new VerifyMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, _rpcMessageFactory);
+            var handler = new VerifyMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, _messageFactory);
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

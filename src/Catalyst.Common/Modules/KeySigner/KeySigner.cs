@@ -22,8 +22,6 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.KeyStore;
@@ -36,12 +34,10 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
-        
+
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
-        /// <param name="userOutput">The user output.</param>
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
-        /// <param name="addressHelper"></param>
         public KeySigner(IKeyStore keyStore,
             ICryptoContext cryptoContext)
         {

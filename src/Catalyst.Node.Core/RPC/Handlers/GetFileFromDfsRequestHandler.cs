@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -33,15 +32,14 @@ using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Core.RPC.Handlers
@@ -49,13 +47,12 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     /// The request handler to get a file from the DFS
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetFileFromDfsRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class GetFileFromDfsRequestHandler : MessageHandlerBase<GetFileFromDfsRequest>,
         IRpcRequestHandler
     {
         /// <summary>The RPC message factory</summary>
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
@@ -70,15 +67,15 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
-        /// <param name="correlationCache">The correlation cache.</param>
+        /// <param name="messageFactory"></param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestHandler(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IUploadFileTransferFactory fileTransferFactory,
-            IRpcMessageFactory rpcMessageFactory,
+            IMessageFactory messageFactory,
             ILogger logger) : base(logger)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
@@ -112,7 +109,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                         recipientPeerIdentifier,
                         message.Context.Channel,
                         correlationGuid,
-                        _rpcMessageFactory
+                        _messageFactory
                     );
                     responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
                 }
@@ -142,7 +139,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="responseCode">The response code.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="fileSize">Size of the file.</param>
-        private void ReturnResponse(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, FileTransferResponseCodes responseCode, Guid correlationGuid, long fileSize)
+        private void ReturnResponse(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Enumeration responseCode, Guid correlationGuid, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
             
@@ -154,7 +151,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             };
 
             // Send Response
-            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+            var responseMessage = _messageFactory.GetMessage(new MessageDto(
                     response,
                     MessageTypes.Tell,
                     recipientIdentifier,

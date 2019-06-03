@@ -25,45 +25,51 @@ using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
+using DotNetty.Buffers;
 
 namespace Catalyst.Common.IO.Messaging
 {
     /// <summary>
     /// The base class to handle building of AnySigned messages
     /// </summary>
-    public class MessageFactory : IMessageFactory
+    public sealed class MessageFactory : IMessageFactory
     {
-        private readonly IMessageCorrelationCache _messageCorrelationCache;
-
-        protected MessageFactory(IMessageCorrelationCache messageCorrelationCache)
-        {
-            _messageCorrelationCache = messageCorrelationCache;
-        }
-        
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>AnySigned message</returns>
-        public virtual AnySigned GetMessage(IMessageDto messageDto,
+        public AnySigned GetMessage(IMessageDto messageDto,
             Guid correlationId = default)
         {
             if (messageDto.MessageType == MessageTypes.Ask)
             {
                 return BuildAskMessage(messageDto);
             }
-
+            
             if (messageDto.MessageType == MessageTypes.Tell)
             {
                 return BuildTellMessage(messageDto, correlationId);   
             }
 
+            if (messageDto.MessageType == MessageTypes.Gossip)
+            {
+                return BuildGossipMessage(messageDto);
+            }
+
             throw new ArgumentException();
+        }
+        
+        /// <summary>Gets the message in datagram envelope.</summary>
+        /// <param name="messageDto">Message Dto wrapper with all params required to send message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns></returns>
+        public IByteBufferHolder GetDatagramMessage(IMessageDto messageDto,
+            Guid correlationId = default)
+        {
+            return GetMessage(messageDto, correlationId).ToDatagram(messageDto.Recipient.IpEndPoint);
         }
 
         /// <summary>Builds the tell message.</summary>
@@ -89,14 +95,14 @@ namespace Catalyst.Common.IO.Messaging
                 Recipient = dto.Recipient,
                 SentAt = DateTimeOffset.MinValue
             };
-            _messageCorrelationCache.AddPendingRequest(correlatableRequest);
+
             return messageContent;
         }
 
         /// <summary>Builds the gossip message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>AnySigned message</returns>
-        protected AnySigned BuildGossipMessage(IMessageDto dto)
+        private AnySigned BuildGossipMessage(IMessageDto dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }

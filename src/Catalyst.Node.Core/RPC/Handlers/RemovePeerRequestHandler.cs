@@ -25,15 +25,12 @@ using System;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -45,7 +42,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     /// Remove Peer handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{RemovePeerRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class RemovePeerRequestHandler
         : MessageHandlerBase<RemovePeerRequest>,
@@ -58,22 +54,21 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IRepository<Peer> _peerRepository;
 
         /// <summary>The RPC message factory</summary>
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestHandler"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerRepository">The peer discovery.</param>
-        /// <param name="messageCorrelationCache">The message correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="rpcMessageFactory"></param>
+        /// <param name="messageFactory"></param>
         public RemovePeerRequestHandler(IPeerIdentifier peerIdentifier,
             IRepository<Peer> peerRepository,
             ILogger logger,
-            IRpcMessageFactory rpcMessageFactory) : base(logger)
+            IMessageFactory messageFactory) : base(logger)
         {
             _peerIdentifier = peerIdentifier;
             _peerRepository = peerRepository;
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -110,7 +105,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     DeletedCount = peerDeletedCount
                 };
 
-                var removePeerMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+                var removePeerMessage = _messageFactory.GetMessage(new MessageDto(
                         removePeerResponse,
                         MessageTypes.Tell,
                         new PeerIdentifier(message.Payload.PeerId),

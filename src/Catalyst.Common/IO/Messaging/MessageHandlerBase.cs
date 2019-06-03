@@ -59,7 +59,7 @@ namespace Catalyst.Common.IO.Messaging
                .Subscribe(HandleMessage, HandleError, HandleCompleted);
         }
 
-        public virtual void HandleMessage(IChanneledMessage<AnySigned> message)
+        public void HandleMessage(IChanneledMessage<AnySigned> message)
         {
             Logger.Debug("Pre Handle Message Called");
             Handler(message);
@@ -77,7 +77,7 @@ namespace Catalyst.Common.IO.Messaging
 
         protected abstract void Handler(IChanneledMessage<AnySigned> message);
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

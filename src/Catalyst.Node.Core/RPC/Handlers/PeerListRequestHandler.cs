@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -31,10 +30,8 @@ using Catalyst.Protocol.Rpc.Node;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Dawn;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
@@ -44,7 +41,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     ///     Handles the PeerListRequest message
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerListRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class PeerListRequestHandler
         : MessageHandlerBase<GetPeerListRequest>,
@@ -63,25 +59,24 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>
         ///     The RPC message factory
         /// </summary>
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PeerListRequestHandler"/> class.
         /// </summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="messageCorrelationCache">The message correlation cache.</param>
         /// <param name="peerRepository"></param>
-        /// <param name="rpcMessageFactory"></param>
+        /// <param name="messageFactory"></param>
         public PeerListRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IRepository<Peer> peerRepository,
-            IRpcMessageFactory rpcMessageFactory)
+            IMessageFactory messageFactory)
             : base(logger)
         {
             _peerIdentifier = peerIdentifier;
             _peerRepository = peerRepository;
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
         }
 
         /// <summary>
@@ -107,7 +102,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);
             
-            var responseMessage = _rpcMessageFactory.GetMessage(new MessageDto(
+            var responseMessage = _messageFactory.GetMessage(new MessageDto(
                     response,
                     MessageTypes.Tell,
                     new PeerIdentifier(message.Payload.PeerId),

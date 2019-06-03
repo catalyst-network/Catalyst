@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     /// The Gossip Manager used to broadcast and receive gossip messages
     /// </summary>
     /// <seealso cref="IGossipManager" />
-    public class GossipManager : IGossipManager
+    public sealed class GossipManager : IGossipManager
     {
         /// <summary>The gossip cache</summary>
         private readonly IGossipCache _gossipCache;
@@ -48,17 +48,16 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The message factory</summary>
-        private readonly P2PMessageFactory _messageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>Initializes a new instance of the <see cref="GossipManager"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="reputableCache">The reputable cache.</param>
         /// <param name="gossipCache">The gossip cache.</param>
-        public GossipManager(IPeerIdentifier peerIdentifier, IReputableCache reputableCache, IGossipCache gossipCache)
+        public GossipManager(IPeerIdentifier peerIdentifier, IGossipCache gossipCache)
         {
             _gossipCache = gossipCache;
             _peerIdentifier = peerIdentifier;
-            _messageFactory = new P2PMessageFactory(reputableCache);
+            _messageFactory = new MessageFactory();
         }
 
         /// <inheritdoc/>
@@ -119,7 +118,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
             foreach (var peerIdentifier in peersToGossip)
             {
-                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message.Payload,
+                var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message.Payload,
                     MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
                 channel.WriteAndFlushAsync(datagramEnvelope);
             }
