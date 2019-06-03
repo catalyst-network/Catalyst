@@ -22,12 +22,13 @@
 #endregion
 
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
+using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
+using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Inbound
+namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
     /// <summary>
     /// Channel Gossip Pipeline

@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new[] {"seed1.seedservers.bogus", "seed2.seedservers.bogus"});
-            peerSettings.BindAddress.Returns(IPAddress.Parse("124.220.98.2"));
+            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(12);
             builder.RegisterInstance(peerSettings).As<IPeerSettings>();
         }
@@ -91,12 +91,15 @@ namespace Catalyst.Node.Core.UnitTests.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
-            var resolvedType = _container.Resolve(interfaceType);
-            resolvedType.Should().NotBeNull();
-            resolvedType.Should().BeOfType(resolutionType);
-            if (typeof(IDisposable).IsAssignableFrom(resolutionType))
+            using (_container.BeginLifetimeScope(Guid.NewGuid()))
             {
-                ((IDisposable) resolvedType).Dispose();
+                var resolvedType = _container.Resolve(interfaceType);
+                resolvedType.Should().NotBeNull();
+                resolvedType.Should().BeOfType(resolutionType);
+                if (typeof(IDisposable).IsAssignableFrom(resolutionType))
+                {
+                    ((IDisposable) resolvedType).Dispose();
+                }
             }
         }
     }

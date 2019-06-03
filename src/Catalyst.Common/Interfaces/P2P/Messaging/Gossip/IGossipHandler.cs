@@ -23,7 +23,7 @@
 
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
+namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
 {
     /// <summary>
     /// The Gossip Handler interface
