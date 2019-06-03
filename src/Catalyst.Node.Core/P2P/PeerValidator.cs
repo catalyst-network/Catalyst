@@ -32,50 +32,45 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Serilog;
 using Nethereum.RLP;
-
 
 namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerValidator : IPeerValidator
     {
         private readonly IPeerClient _peerClient;
-        private readonly IReputableCache _reputableCache;
         private readonly IPeerSettings _peerSettings;
         private readonly IP2PService _p2PService;
         private readonly AnySignedMessageObserver _serverObserver;
         private readonly ILogger _logger;
 
         public PeerValidator(IPeerClient peerClient,
-            IReputableCache reputableCache,
             IPeerSettings peerSettings,
             IP2PService p2PService,
             AnySignedMessageObserver serverObserver, 
             ILogger logger)
         {
             _peerClient = peerClient;
-            _reputableCache = reputableCache;
             _peerSettings = peerSettings;
             _p2PService = p2PService;
             _serverObserver = serverObserver;
             _logger = logger;
         }
 
-        public bool Validate(PeerId peerId)
+        public bool PeerChallengeResponse(PeerIdentifier recipientPeerIdentifier)
         {
             try
             {
                 using (_p2PService.MessageStream.Subscribe(_serverObserver))
                 {
-                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(
+                    var datagramEnvelope = new MessageFactory().GetDatagramMessage(
                         new MessageDto(
                             new PingRequest(),
                             MessageTypes.Tell,
-                            new PeerIdentifier(peerId),
+                            new PeerIdentifier(recipientPeerIdentifier.PeerId),
                             new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(),
                                 _peerSettings.BindAddress,
                                 _peerSettings.Port)
@@ -94,47 +89,9 @@ namespace Catalyst.Node.Core.P2P
                             await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
 
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(1000));
-
-                    if (_serverObserver.Received.Payload.PeerId.PublicKey.ToStringUtf8() ==
-                        peerId.PublicKey.ToStringUtf8())
-                    {
-                        return true;
-                    }
-
-                    return false;
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                _p2PService.Dispose();
-            }
-
-            return false;
-        }
-
-        public async Task<bool> PeerChallengeResponseAsync(PeerIdentifier recipientPeerIdentifier)
-        {
-            try
-            {
-                using (_p2PService.MessageStream.Subscribe(_serverObserver))
-                {
-                    var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(
-                        new MessageDto(
-                            new PingRequest(),
-                            MessageTypes.Tell,
-                            new PeerIdentifier(recipientPeerIdentifier.PeerId),
-                            new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(),
-                                _peerSettings.BindAddress,
-                                _peerSettings.Port)
-                        ),
-                        Guid.NewGuid()
-                    );
-
-                    ((PeerClient) _peerClient).SendMessage(datagramEnvelope).GetAwaiter().GetResult();
-
-                    await Task.Delay(TimeSpan.FromMilliseconds(2000));
+                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
+                    _peerClient.Dispose();
+                    _p2PService.Dispose();
 
                     if (_serverObserver.Received.Payload.PeerId.PublicKey.ToStringUtf8() ==
                         recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
@@ -148,6 +105,7 @@ namespace Catalyst.Node.Core.P2P
             catch (Exception e)
             {
                 _logger.Error(e.Message);
+                _peerClient.Dispose();
                 _p2PService.Dispose();
             }
 

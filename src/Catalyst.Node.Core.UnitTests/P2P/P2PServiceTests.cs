@@ -46,12 +46,13 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+
+
 
 namespace Catalyst.Node.Core.UnitTests.P2P
 {
@@ -209,14 +210,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var serverObserver = new AnySignedMessageObserver(0, _logger);
 
                 var peerSettings = new PeerSettings(_config);
-                var targetHost = new IPEndPoint(peerSettings.BindAddress, 3547);
+                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
                 var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
-                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
+                var peerValidator = new PeerValidator(peerClient, peerSettings, p2PService, serverObserver, _logger);
 
-                var valid = peerValidator.PeerChallengeResponseAsync(new PeerIdentifier(peerSettings));
+                var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings));
 
-                valid.Result.Should().BeTrue();
+                valid.Should().BeTrue();
             }
         }
 
@@ -232,18 +233,18 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var serverObserver = new AnySignedMessageObserver(0, _logger);
 
                 var peerSettings = new PeerSettings(_config);
-                var targetHost = new IPEndPoint(peerSettings.BindAddress, 5812);
+                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
                 var peerClient = new PeerClient(targetHost, _container.Resolve<IEnumerable<IP2PMessageHandler>>(), _container.Resolve<IGossipManager>());
 
                 var peerActiveId = new PeerIdentifier(publicKey.ToUtf8ByteString().ToByteArray(),
                     IPAddress.Parse(ip),
                     port);
 
-                var peerValidator = new PeerValidator(peerClient, _reputableCache, peerSettings, p2PService, serverObserver, _logger);
+                var peerValidator = new PeerValidator(peerClient, peerSettings, p2PService, serverObserver, _logger);
 
-                var valid = peerValidator.PeerChallengeResponseAsync(peerActiveId);
+                var valid = peerValidator.PeerChallengeResponse(peerActiveId);
 
-                valid.Result.Should().BeFalse();
+                valid.Should().BeFalse();
             }
         }
     }
