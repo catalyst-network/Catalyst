@@ -85,10 +85,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             using (var scope = _container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = _container.Resolve<IP2PService>();
+                var peerClient = _container.Resolve<IPeerClient>();
                 Assert.NotNull(p2PService);
                 p2PService.Should().BeOfType(typeof(P2PService));
                 p2PService.Dispose();
                 scope.Dispose();
+                peerClient.Dispose();
             }
         }
 
@@ -122,11 +124,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
-                    var peerSettings = Substitute.For<IPeerSettings>();
-                    peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-                    peerSettings.Port.Returns(5050);
-
-                    var peerClient = new PeerClient(peerSettings);
+                    var peerSettings = new PeerSettings(_config);
+                    var peerClient = _container.Resolve<IPeerClient>();
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingResponse(),
@@ -143,7 +142,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
-                            p2PService, peerClient
+                            p2PService
                         }
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
@@ -169,11 +168,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 using (p2PService.MessageStream.Subscribe(serverObserver))
                 {
-                    var peerSettings = Substitute.For<IPeerSettings>();
-                    peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-                    peerSettings.Port.Returns(5050);
+                    var peerSettings = new PeerSettings(_config);
+                    var peerClient = _container.Resolve<IPeerClient>();
 
-                    var peerClient = new PeerClient(peerSettings);
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PeerNeighborsResponse(),
                             MessageTypes.Tell,
@@ -187,7 +184,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
-                            p2PService, peerClient
+                            p2PService
                         }
                        .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();

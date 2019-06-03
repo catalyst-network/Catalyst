@@ -50,7 +50,8 @@ namespace Catalyst.Node.Core.P2P
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Logger.Debug("P2P client starting");
-            IPEndPoint ipEndPoint = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + 10);
+            IPEndPoint ipEndPoint = new IPEndPoint(peerSettings.BindAddress, IPEndPoint.MinPort);
+
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
                 new List<IChannelHandler>(),
                 ipEndPoint.Address
