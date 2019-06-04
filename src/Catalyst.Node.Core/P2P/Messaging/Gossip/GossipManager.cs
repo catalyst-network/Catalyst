@@ -36,6 +36,7 @@ using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
@@ -48,10 +49,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     {
         /// <summary>The message factory</summary>
         private readonly IMessageFactory _messageFactory;
-
-        /// <summary>The peer client</summary>
-        private readonly IPeerClient _peerClient;
-
+        
         /// <summary>The peers</summary>
         private readonly IRepository<Peer> _peers;
 
@@ -69,10 +67,9 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <param name="peers">The peers.</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
-        public GossipManager(IPeerIdentifier peerIdentifier, IRepository<Peer> peers, IMemoryCache memoryCache, IPeerClient peerClient)
+        public GossipManager(IPeerIdentifier peerIdentifier, IRepository<Peer> peers, IMemoryCache memoryCache)
         {
             _peerIdentifier = peerIdentifier;
-            _peerClient = peerClient;
             _pendingRequests = memoryCache;
             _peers = peers;
             _messageFactory = new MessageFactory();
@@ -140,11 +137,14 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
 
-            foreach (var peerIdentifier in peersToGossip)
+            using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Broadcast, IPEndPoint.MinPort)))
             {
-                var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
-                    MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                 _peerClient.SendMessage(datagramEnvelope);
+                foreach (var peerIdentifier in peersToGossip)
+                {
+                    var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
+                        MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
+                    _ = peerClient.SendMessage(datagramEnvelope);
+                }
             }
 
             var updateCount = (uint) peersToGossip.Count;

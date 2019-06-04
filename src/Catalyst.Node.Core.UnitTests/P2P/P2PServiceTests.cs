@@ -85,12 +85,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             using (var scope = _container.BeginLifetimeScope(CurrentTestName))
             {
                 var p2PService = _container.Resolve<IPeerService>();
-                var peerClient = _container.Resolve<IPeerClient>();
                 Assert.NotNull(p2PService);
                 p2PService.Should().BeOfType(typeof(PeerService));
                 p2PService.Dispose();
                 scope.Dispose();
-                peerClient.Dispose();
             }
         }
 
@@ -125,7 +123,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
-                    var peerClient = _container.Resolve<IPeerClient>();
+                    var peerClient = new PeerClient(new IPEndPoint(peerSettings.BindAddress, peerSettings.Port));
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingRequest(),
@@ -167,7 +165,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
-                    var peerClient = _container.Resolve<IPeerClient>();
+                    var peerClient = new PeerClient(new IPEndPoint(peerSettings.BindAddress, peerSettings.Port));
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PeerNeighborsResponse(),

@@ -130,7 +130,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             bool hasHitHandler = false;
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             var handler = new TransactionBroadcastTestHandler(_logger, () => hasHitHandler = true);
-            var manager = new GossipManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>(), Substitute.For<IPeerClient>());
+            var manager = new GossipManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>());
             var gossipHandler = new GossipHandler(manager);
 
             var protoDatagramChannelHandler = new ObservableServiceHandler(_logger);
@@ -174,7 +174,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var messageFactory = new MessageFactory();
-            IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _peers, cache, Substitute.For<IPeerClient>());
+            IGossipManager gossipMessageHandler = new GossipManager(peerIdentifier, _peers, cache);
 
             var correlationId = Guid.NewGuid();
 
@@ -209,10 +209,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             var messageFactory = new MessageFactory();
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var peerClient = new PeerClient(_peerSettings);
 
             var gossipMessageHandler = new
-                GossipManager(senderPeerIdentifier, _peers, cache, peerClient);
+                GossipManager(senderPeerIdentifier, _peers, cache);
 
             var messageDto = messageFactory.GetMessage(
                 new MessageDto(
@@ -224,7 +223,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             );
 
             gossipMessageHandler.Broadcast(messageDto);
-            peerClient.Dispose();
             return messageDto.CorrelationId.ToGuid();
         }
 
