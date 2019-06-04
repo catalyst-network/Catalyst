@@ -137,7 +137,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
 
-            using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Broadcast, IPEndPoint.MinPort)))
+            using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort)))
             {
                 foreach (var peerIdentifier in peersToGossip)
                 {
