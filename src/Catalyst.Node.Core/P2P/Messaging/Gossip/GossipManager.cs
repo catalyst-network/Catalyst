@@ -38,6 +38,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using Serilog;
+using System.Reflection;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
@@ -137,15 +139,20 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
 
+            Console.WriteLine("1");
             using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort)))
             {
+                Console.WriteLine("2");
                 foreach (var peerIdentifier in peersToGossip)
                 {
                     var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
                         MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                    peerClient.SendMessage(datagramEnvelope);
+                    _ = peerClient.SendMessage(datagramEnvelope);
+
+                    Console.WriteLine("3");
                 }
             }
+            Console.WriteLine("4");
 
             var updateCount = (uint) peersToGossip.Count;
             if (updateCount > 0)
