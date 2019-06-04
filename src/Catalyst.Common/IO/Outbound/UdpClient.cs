@@ -44,7 +44,7 @@ namespace Catalyst.Common.IO.Outbound
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
-               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort)
+               .BindAsync(IPEndPoint.MinPort)
                .ConfigureAwait(false)
                .GetAwaiter()
                .GetResult();
