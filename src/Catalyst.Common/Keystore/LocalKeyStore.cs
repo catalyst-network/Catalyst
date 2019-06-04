@@ -22,59 +22,112 @@
 #endregion
 
 using System;
-using System.IO;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Security.Authentication;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.KeyStore;
+using Catalyst.Common.Interfaces.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Nethereum.KeyStore.Crypto;
 using Serilog;
 
 namespace Catalyst.Common.KeyStore
 {
     public sealed class LocalKeyStore : IKeyStore
     {
-        private readonly ICryptoContext _cryptoContext;
-        private readonly IKeyStoreWrapper _keyStoreService;
         private readonly ILogger _logger;
+        private readonly IAddressHelper _addressHelper;
         private readonly IFileSystem _fileSystem;
+        private readonly ICryptoContext _cryptoContext;
+        private readonly IPasswordReader _passwordReader;
+        private readonly IKeyStoreService _keyStoreService;
 
-        public LocalKeyStore(ICryptoContext cryptoContext, IKeyStoreWrapper keyStoreService, IFileSystem fileSystem, ILogger logger)
+        private SecureString _password;
+        private static int MaxTries => 5;
+
+        public string Password
         {
+            get
+            {
+                if (_password == null)
+                {
+                    return string.Empty;
+                }
+
+                var stringPointer = Marshal.SecureStringToBSTR(_password);
+                var normalString = Marshal.PtrToStringBSTR(stringPointer);
+                Marshal.ZeroFreeBSTR(stringPointer);
+                return normalString;
+            }
+        }
+        
+        public LocalKeyStore(IPasswordReader passwordReader,
+            ICryptoContext cryptoContext,
+            IKeyStoreService keyStoreService,
+            IFileSystem fileSystem,
+            ILogger logger,
+            IAddressHelper addressHelper)
+        {
+            _passwordReader = passwordReader;
             _cryptoContext = cryptoContext;
             _keyStoreService = keyStoreService;
             _logger = logger;
+            _addressHelper = addressHelper;
             _keyStoreService = keyStoreService;
             _fileSystem = fileSystem;
         }
-
-        public IPrivateKey GetKey(IPublicKey publicKey, string password) { throw new NotImplementedException(); }
-
-        public IPrivateKey GetKey(string fileName, string password)
+        
+        public byte[] KeyStoreDecrypt(string password, string json)
         {
-            var fullFilePath = Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, fileName);
-            var decryptKeyStoreFromFile = _keyStoreService.DecryptKeyStoreFromFile(password, fullFilePath);
-            return _cryptoContext.ImportPrivateKey(new ReadOnlySpan<byte>(decryptKeyStoreFromFile));
+            var tries = 0;
+
+            while (tries < MaxTries)
+            {
+                _password = _passwordReader.ReadSecurePassword("Please enter key signer password");
+
+                try
+                {
+                    var keyStore = _keyStoreService.DecryptKeyStoreFromJson(Password, json);
+                    
+                    if (keyStore != null && keyStore.Length > 0)
+                    {
+                        return keyStore;
+                    }
+                }
+                catch (DecryptionException)
+                {
+                    _logger.Error("Error decrypting keystore");
+                }
+
+                tries += 1;
+            }
+
+            throw new AuthenticationException("Password incorrect for keystore.");
         }
-
-        public bool StoreKey(IPrivateKey privateKey, string fileName, string password)
+        
+        public async Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password)
         {
-            var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(password, _cryptoContext.ExportPrivateKey(privateKey), fileName);
-
+            var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());
+            
+            var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
+                password: password, 
+                key: _cryptoContext.ExportPrivateKey(privateKey),
+                address: address);
+            
             try
             {
-                using (var keyStoreFile = File.CreateText(Path.Combine(_fileSystem.GetCatalystHomeDir().FullName, fileName)))
-                {
-                    keyStoreFile.Write(json);
-                    keyStoreFile.Flush();
-                }
+                await _fileSystem.WriteFileToCdd(_keyStoreService.GenerateUTCFileName(address), json);
             }
             catch (Exception e)
             {
                 _logger.Error(e.Message);
-                return false;
+                throw;
             }
             
-            return true;
+            return json;
         }
     }
 }

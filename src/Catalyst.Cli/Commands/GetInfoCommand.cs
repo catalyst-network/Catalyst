@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 
@@ -58,7 +57,7 @@ namespace Catalyst.Cli.Commands
             try
             {
                 var message = new GetInfoRequest {Query = true};
-                var request = _rpcMessageFactory.GetMessage(new MessageDto(message,
+                var request = _messageFactory.GetMessage(new MessageDto(message,
                     MessageTypes.Ask,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
                     _peerIdentifier

@@ -34,6 +34,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
@@ -45,33 +46,18 @@ namespace Catalyst.Node.Core.P2P
         : UdpClient,
             IPeerClient
     {
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="ipEndPoint"></param>
-        /// <param name="messageHandlers"></param>
-        /// <param name="gossipManager"></param>
-        public PeerClient(IPEndPoint ipEndPoint,
-            IEnumerable<IP2PMessageHandler> messageHandlers,
-            IGossipManager gossipManager)
+        public PeerClient(IPEndPoint ipEndPoint)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            Logger.Debug("P2P client starting");
-
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
-            MessageStream = protoDatagramChannelHandler.MessageStream;
-            messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
-
-            IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
-            {
-                protoDatagramChannelHandler,
-                new GossipHandler(gossipManager)
-            };
-
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
-                channelHandlers,
+                new List<IChannelHandler>
+                {
+                    new ProtoDatagramHandler()
+                },
                 ipEndPoint.Address
             ), ipEndPoint);
         }

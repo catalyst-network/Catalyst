@@ -22,11 +22,11 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
 namespace Catalyst.Common.Modules.KeySigner
 {
@@ -35,29 +35,42 @@ namespace Catalyst.Common.Modules.KeySigner
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
 
-        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext)
+        /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
+        /// <param name="keyStore">The key store.</param>
+        /// <param name="cryptoContext">The crypto context.</param>
+        public KeySigner(IKeyStore keyStore,
+            ICryptoContext cryptoContext)
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
         }
 
+        /// <inheritdoc/>
         IKeyStore IKeySigner.KeyStore => _keyStore;
+
+        /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        public Task Sign(ReadOnlySpan<byte> data, string address, string password)
+        /// <inheritdoc/>
+        public ISignature Sign(byte[] data)
         {
-            IPrivateKey key = _keyStore.GetKey(address, password);
-            return Task.FromResult(_cryptoContext.Sign(key, data));
+            {
+                // var key = _keyStore.KeyStoreDecrypt(_keyStore.Password);
+                // return Task.FromResult(_cryptoContext.Sign(key, new ReadOnlySpan<byte>(data))).GetAwaiter().GetResult();
+            }
+            return new Signature(new byte[0]);
         }
 
-        public void Verify()
+        /// <inheritdoc/>
+        public bool Verify(IPublicKey key, ReadOnlySpan<byte> message, ISignature signature)
         {
-            throw new NotImplementedException();
+            return _cryptoContext.Verify(key, message, signature);
         }
 
+        /// <inheritdoc/>
         public void ExportKey()
         {
             throw new NotImplementedException();
-        }
+        }    
     }
 }

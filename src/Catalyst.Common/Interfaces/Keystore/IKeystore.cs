@@ -21,14 +21,19 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
 namespace Catalyst.Common.Interfaces.KeyStore
 {
     public interface IKeyStore
     {
-        IPrivateKey GetKey(IPublicKey publicKey, string password);
-        IPrivateKey GetKey(string filePath, string password);
-        bool StoreKey(IPrivateKey privateKey, string address, string password);
+        /// <summary>Gets the password.</summary>
+        /// <value>The password.</value>
+        string Password { get; }
+
+        byte[] KeyStoreDecrypt(string password, string json);
+
+        Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password);
     }
 }

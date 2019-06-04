@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
             var newContent =
                 originalContent.Replace("\"Config/Modules/moduleWithRepository.json\"",
                     JsonConvert.ToString(mempoolConfigFile.FullName));
-            var newJsonPath = Path.Combine(FileSystem.GetCatalystHomeDir().FullName,
+            var newJsonPath = Path.Combine(FileSystem.GetCatalystDataDir().FullName,
                 $"components.{mempoolConfigFile.Name}");
             File.WriteAllText(newJsonPath, newContent);
             return newJsonPath;
@@ -107,8 +107,8 @@ namespace Catalyst.Node.Core.UnitTests.Config
                 File.ReadAllTextAsync(Path.Combine(Constants.ConfigSubFolder, Constants.ModulesSubFolder,
                     mempoolConfigFile));
             var newContent =
-                originalContent.Replace("[@replace-this@]", FileSystem.GetCatalystHomeDir().Name);
-            var jsonTestingFile = Path.Combine(FileSystem.GetCatalystHomeDir().FullName, mempoolConfigFile);
+                originalContent.Replace("[@replace-this@]", FileSystem.GetCatalystDataDir().Name);
+            var jsonTestingFile = Path.Combine(FileSystem.GetCatalystDataDir().FullName, mempoolConfigFile);
             File.WriteAllText(jsonTestingFile, newContent);
             return jsonTestingFile;
         }

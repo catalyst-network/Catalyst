@@ -28,8 +28,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.Dfs;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -42,20 +42,19 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC
 {
-    public class GetFileFromDfsRequestHandlerTests
+    public sealed class GetFileFromDfsRequestHandlerTests
     {
-        private readonly IRpcMessageFactory _rpcMessageFactory;
         private readonly IUploadFileTransferFactory _fileTransferFactory;
         private readonly IDfs _dfs;
         private readonly GetFileFromDfsRequestHandler _handler;
 
         public GetFileFromDfsRequestHandlerTests()
         {
-            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
+            var messageFactory = Substitute.For<IMessageFactory>();
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("test");
-            _handler = new GetFileFromDfsRequestHandler(_dfs, peerIdentifier, _fileTransferFactory, _rpcMessageFactory, Substitute.For<ILogger>());
+            _handler = new GetFileFromDfsRequestHandler(_dfs, peerIdentifier, _fileTransferFactory, messageFactory, Substitute.For<ILogger>());
         }
 
         [Fact]

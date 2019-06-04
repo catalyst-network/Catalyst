@@ -27,7 +27,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
-    public class Consensus : IConsensus
+    public sealed class Consensus : IConsensus
     {
         private readonly ILogger _logger;
 
@@ -38,7 +38,6 @@ namespace Catalyst.Node.Core.Modules.Consensus
             IDeltaHub deltaHub,
             ILogger logger)
         {
-            _logger = logger;
             DeltaBuilder = deltaBuilder;
             DeltaHub = deltaHub;
             _logger.Information("Consensus service initialised.");

@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
