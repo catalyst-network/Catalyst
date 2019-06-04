@@ -36,16 +36,17 @@ namespace Catalyst.Common.IO.Outbound
     {
         protected UdpClient(ILogger logger) : base(logger) { }
 
-        protected sealed override async Task Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected sealed override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
         {
-            Channel = await new Bootstrap()
+            Channel = new Bootstrap()
                .Group(WorkerEventLoop)
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
                .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort)
-               .ConfigureAwait(false);
+               .GetAwaiter()
+               .GetResult();
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.P2P
                     new ProtoDatagramHandler()
                 },
                 ipEndPoint.Address
-            ), ipEndPoint).ConfigureAwait(false);
+            ), ipEndPoint);
         }
 
         public async Task SendMessage(IByteBufferHolder datagramPacket)

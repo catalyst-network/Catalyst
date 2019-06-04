@@ -128,8 +128,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     var peerClient = new PeerClient(targetHost);
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
-                            new PingResponse(),
-                            MessageTypes.Tell,
+                            new PingRequest(),
+                            MessageTypes.Ask,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
                                 peerSettings.Port),
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
@@ -150,7 +150,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                     serverObserver.Received.Should().NotBeNull();
-                    serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
+                    serverObserver.Received.Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
                     peerService.Dispose();
                 }
             }

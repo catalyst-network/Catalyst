@@ -34,16 +34,17 @@ namespace Catalyst.Common.IO.Outbound
     {
         protected TcpClient(ILogger logger) : base(logger) { }
 
-        protected sealed override async Task Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected sealed override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
         {
-            Channel = await new Bootstrap()
+            Channel = new Bootstrap()
                .Group(WorkerEventLoop)
                .Channel<TChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
                .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port)
-               .ConfigureAwait(false);
+               .GetAwaiter()
+               .GetResult();
         }
     }
 }
