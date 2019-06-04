@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Net;
 using System.Net.Sockets;
 using Catalyst.Common.Interfaces.IO.Outbound;
@@ -47,6 +48,7 @@ namespace Catalyst.Common.IO.Outbound
                .ConfigureAwait(false)
                .GetAwaiter()
                .GetResult();
+            Console.WriteLine("Initialized channel");
         }
     }
 }
