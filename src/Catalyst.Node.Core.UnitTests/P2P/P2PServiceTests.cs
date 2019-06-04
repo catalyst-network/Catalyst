@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -22,7 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -32,7 +32,6 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
@@ -89,7 +88,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 Assert.NotNull(peerService);
                 peerService.Should().BeOfType(typeof(PeerService));
                 peerService.Dispose();
-                scope.Dispose();
             }
         }
 
@@ -112,7 +110,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
 
-        [Fact(Skip = "due to reputation refactor")] // @TODO
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {
@@ -125,11 +123,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                    var peerClient = new PeerClient(targetHost);
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
-                            new PingResponse(),
-                            MessageTypes.Tell,
+                            new PingRequest(),
+                            MessageTypes.Ask,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
                                 peerSettings.Port),
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
@@ -137,8 +134,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         ),
                         Guid.NewGuid()
                     );
-                    
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+
+                    using (var peerClient = new PeerClient(targetHost))
+                    {
+                        peerClient.SendMessage(datagramEnvelope);
+                    }
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
@@ -149,14 +149,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
-                    serverObserver.Received.Should().NotBeNull();
-                    serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
+                    serverObserver.Received.LastOrDefault().Should().NotBeNull();
+                    serverObserver.Received.Last().Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
                     peerService.Dispose();
                 }
             }
         }
 
-        [Fact(Skip = "due to peer service refactor")] // @TODO
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceiveNeighbourRequests()
         {
@@ -180,7 +180,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         Guid.NewGuid()
                     );
                     
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    peerClient.SendMessage(datagramEnvelope);
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
@@ -191,8 +191,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
-                    serverObserver.Received.Should().NotBeNull();
-                    serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
+                    serverObserver.Received.FirstOrDefault().Should().NotBeNull();
+                    serverObserver.Received.First().Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                     peerService.Dispose();
                 }
             }

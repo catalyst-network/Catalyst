@@ -21,31 +21,28 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
-    public sealed class CorrelationHandler : SimpleChannelInboundHandler<AnySigned>
+    public class SignatureHandler : SimpleChannelInboundHandler<AnySigned>
     {
-        private readonly ICorrelationManager _correlationManager;
+        private readonly IKeySigner _keySigner;
 
-        public CorrelationHandler(ICorrelationManager correlationManager)
+        public SignatureHandler(IKeySigner keySigner)
         {
-            _correlationManager = correlationManager;
+            _keySigner = keySigner;
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
         {
-            if (message.CheckIfMessageIsGossip())
-            {
-                ctx.FireChannelRead(message);
-            }
-            
-            //@TODO should not negate try match response but currently not storing in cache when sent
-            else if (!_correlationManager.TryMatchResponse(message))
+            if (_keySigner.Verify(
+                new PublicKey(message.PeerId.PublicKey.ToByteArray()),
+                message.Value.ToByteArray(),
+                new Signature(message.Signature.ToByteArray())))
             {
                 ctx.FireChannelRead(message);                
             }

@@ -22,41 +22,10 @@
 #endregion
 
 using System;
-using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Handlers
 {
-    public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<AnySigned>, IDisposable
-    {
-        bool IsSharable { get; }
-
-        /// <summary>
-        ///     Reads the channel once accepted and pushed into a stream.
-        /// </summary>
-        /// <param name="ctx"></param>
-        /// <param name="msg"></param>
-        void ChannelRead(IChannelHandlerContext ctx, object msg);
-
-        void ChannelReadComplete(IChannelHandlerContext ctx);
-        void ExceptionCaught(IChannelHandlerContext context, Exception e);
-        void Dispose();
-        void ChannelRegistered(IChannelHandlerContext context);
-        void ChannelUnregistered(IChannelHandlerContext context);
-        void ChannelActive(IChannelHandlerContext context);
-        void ChannelInactive(IChannelHandlerContext context);
-        void HandlerAdded(IChannelHandlerContext context);
-        void HandlerRemoved(IChannelHandlerContext context);
-        void UserEventTriggered(IChannelHandlerContext context, object evt);
-        Task WriteAsync(IChannelHandlerContext context, object message);
-        void Flush(IChannelHandlerContext context);
-        Task BindAsync(IChannelHandlerContext context, EndPoint localAddress);
-        Task ConnectAsync(IChannelHandlerContext context, EndPoint remoteAddress, EndPoint localAddress);
-        Task DisconnectAsync(IChannelHandlerContext context);
-        Task CloseAsync(IChannelHandlerContext context);
-        Task DeregisterAsync(IChannelHandlerContext context);
-        void Read(IChannelHandlerContext context);
-    }
+    public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<AnySigned>, IDisposable { }
 }
