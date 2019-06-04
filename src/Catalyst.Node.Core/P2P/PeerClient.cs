@@ -23,7 +23,8 @@
 
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
@@ -40,8 +41,6 @@ namespace Catalyst.Node.Core.P2P
         : UdpClient,
             IPeerClient
     {
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
-
         /// <summary>
         /// 
         /// </summary>

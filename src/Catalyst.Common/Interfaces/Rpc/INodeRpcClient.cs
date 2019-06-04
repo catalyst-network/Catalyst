@@ -27,5 +27,5 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned> { }
+    public interface INodeRpcClient : ISocketClient { }
 }

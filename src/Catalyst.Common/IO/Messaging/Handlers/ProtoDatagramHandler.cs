@@ -21,38 +21,29 @@
 
 #endregion
 
-using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using Catalyst.Common.Util;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using System.IO;
 using Catalyst.Protocol.Common;
+using Dawn;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
-    public abstract class ObservableHandlerBase<T>
-        : SimpleChannelInboundHandler<T>,
-            IChanneledMessageStreamer<AnySigned>,
-            IDisposable
+    public sealed class ProtoDatagramHandler : SimpleChannelInboundHandler<DatagramPacket>
     {
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream => MessageSubject.AsObservable();
-
-        protected readonly BehaviorSubject<IChanneledMessage<AnySigned>> MessageSubject 
-            = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
-
-        private void Dispose(bool disposing)
+        protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
         {
-            if (disposing)
+            Guard.Argument(context).NotNull();
+            Guard.Argument(packet.Content.ReadableBytes).NotZero().NotNegative();
+
+            using (var memoryStream = new MemoryStream())
             {
-                MessageSubject?.Dispose();
-            }
-        }
+                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
+                memoryStream.Seek(0, SeekOrigin.Begin);
 
-        public void Dispose()
-        {
-            Dispose(true);
+                var message = AnySigned.Parser.ParseFrom(memoryStream);
+                context.FireChannelRead(message);
+            }
         }
     }
 }

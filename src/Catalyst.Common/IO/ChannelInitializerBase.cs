@@ -37,7 +37,7 @@ namespace Catalyst.Common.IO
         where T : IChannel
     {
         private readonly Action<T> _initializationAction;
-        private readonly IReadOnlyCollection<IChannelHandler> _handlers;
+        private readonly IImmutableList<IChannelHandler> _handlers;
         private readonly TlsHandler _tlsHandler;
 
         protected ChannelInitializerBase(Action<T> initializationAction,
@@ -46,7 +46,7 @@ namespace Catalyst.Common.IO
         {
             Guard.Argument(initializationAction, nameof(initializationAction)).NotNull();
             _initializationAction = initializationAction;
-            _handlers = handlers.ToImmutableArray();
+            _handlers = handlers.ToImmutableList();
             _tlsHandler = tlsHandler;
         }
 

@@ -155,10 +155,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.P2PService",
+            "type": "Catalyst.Node.Core.P2P.PeerService",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IP2PService, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService, Catalyst.Common"
                 }
             ]
         },
