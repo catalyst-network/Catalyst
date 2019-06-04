@@ -54,7 +54,7 @@ namespace Catalyst.Common.IO.Inbound
                 _gossipManager.IncomingGossip(channeledAnySigned);
             }
 
-            ctx.FireChannelRead(ctx);
+            ctx.FireChannelRead(msg);
         }
     }
 }
