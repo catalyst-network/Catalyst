@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Outbound;
 using DotNetty.Buffers;
@@ -45,14 +44,12 @@ namespace Catalyst.Node.Core.P2P
         public PeerClient(IPEndPoint ipEndPoint)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            Console.WriteLine("P2P client starting");
+            Logger.Debug("P2P client starting");
 
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
                 new List<IChannelHandler>(),
                 ipEndPoint.Address
             ), ipEndPoint);
-
-            Console.WriteLine("P2P client bootstrap complete");
         }
 
         public async Task SendMessage(IByteBufferHolder datagramPacket)
