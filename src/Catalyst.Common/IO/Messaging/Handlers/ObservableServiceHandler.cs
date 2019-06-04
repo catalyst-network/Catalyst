@@ -45,8 +45,8 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         private readonly ILogger _logger;
         public IObservable<IChanneledMessage<AnySigned>> MessageStream => _messageSubject.AsObservable();
 
-        private readonly BehaviorSubject<IChanneledMessage<AnySigned>> _messageSubject 
-            = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
+        private readonly ReplaySubject<IChanneledMessage<AnySigned>> _messageSubject 
+            = new ReplaySubject<IChanneledMessage<AnySigned>>(0);
         
         public ObservableServiceHandler(ILogger logger)
         {
