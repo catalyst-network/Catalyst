@@ -41,11 +41,10 @@ namespace Catalyst.Node.Core.P2P
         /// 
         /// </summary>
         /// <param name="ipEndPoint"></param>
-        public PeerClient(IPeerSettings peerSettings)
+        public PeerClient(IPEndPoint ipEndPoint)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Logger.Debug("P2P client starting");
-            IPEndPoint ipEndPoint = new IPEndPoint(peerSettings.BindAddress, IPEndPoint.MinPort);
 
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
                 new List<IChannelHandler>(),
