@@ -30,6 +30,6 @@ namespace Catalyst.Common.Interfaces.IO.Outbound
     public interface ISocketClient : ISocket
     {
         IChannel Channel { get; set; }
-        Task SendMessage(AnySigned message);
+        void SendMessage(AnySigned message);
     }
 }

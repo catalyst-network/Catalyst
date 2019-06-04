@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
                     _peerIdentifier
                 ));
 
-                node.SendMessage(requestMessage).Wait();
+                node.SendMessage(requestMessage);
             }
             catch (Exception e)
             {

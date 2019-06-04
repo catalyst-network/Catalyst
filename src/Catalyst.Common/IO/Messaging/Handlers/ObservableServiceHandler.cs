@@ -40,32 +40,17 @@ namespace Catalyst.Common.IO.Messaging.Handlers
     ///     This handler terminates dotnetty involvement and passes service messages into rx land,
     ///     by this point all messages should be treated as genuine and sanitised.
     /// </summary>
-    public sealed class ObservableServiceHandler : ChannelHandlerAdapter, IObservableServiceHandler
+    public sealed class ObservableServiceHandler : SimpleChannelInboundHandler<AnySigned>, IObservableServiceHandler
     {
         private readonly ILogger _logger;
         public IObservable<IChanneledMessage<AnySigned>> MessageStream => _messageSubject.AsObservable();
 
-        private readonly BehaviorSubject<IChanneledMessage<AnySigned>> _messageSubject 
-            = new BehaviorSubject<IChanneledMessage<AnySigned>>(NullObjects.ChanneledAnySigned);
-
-        private readonly bool _autoRelease;
-        public override bool IsSharable => true;
-
+        private readonly ReplaySubject<IChanneledMessage<AnySigned>> _messageSubject 
+            = new ReplaySubject<IChanneledMessage<AnySigned>>(0);
+        
         public ObservableServiceHandler(ILogger logger)
-            : this(true)
         {
             _logger = logger;
-        }
-
-        private ObservableServiceHandler(bool autoRelease)
-        {
-            _autoRelease = autoRelease;
-        }
-
-        private bool AcceptInboundMessage(object msg)
-        {
-            //@TODO hook now into keySigner
-            return msg is AnySigned;
         }
 
         /// <summary>
@@ -73,42 +58,16 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="msg"></param>
-        public override void ChannelRead(IChannelHandlerContext ctx, object msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
         {
-            var flag = true;
-            try
-            {
-                if (AcceptInboundMessage(msg))
-                {
-                    var contextAny = new ChanneledAnySigned(ctx, (AnySigned) msg);
-                    _messageSubject.OnNext(contextAny);
-                }
-                else
-                {
-                    // can't accept it so shut it down.
-                    flag = false;
-                    ctx.CloseAsync();
-                }
-            }
-            finally
-            {
-                if (_autoRelease & flag)
-                {
-                    ReferenceCountUtil.Release(msg);
-                }
-            }
+            var contextAny = new ChanneledAnySigned(ctx, message);
+            _messageSubject.OnNext(contextAny);
         }
         
-        public override void ChannelReadComplete(IChannelHandlerContext ctx)
-        {
-            ctx.Flush();
-            ctx.FireChannelReadComplete();
-        }
-
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
-            _logger.Error(e, "Error in ProtoDatagramChannelHandler");
-            context.CloseAsync().ContinueWith(_ => _messageSubject.OnCompleted());
+            _logger.Error(e, "Error in ObservableServiceHandler");
+            context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
         }
 
         private void Dispose(bool disposing)
