@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.P2P
             var peerServiceHandler = new ObservableServiceHandler(Logger);
             var gossipHandler = new GossipHandler(gossipManager);
 
-            MessageStream = peerServiceHandler.MessageStream.Merge(gossipHandler.MessageStream);
+            MessageStream = peerServiceHandler.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
             

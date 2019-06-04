@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -36,7 +35,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     /// </summary>
     /// <seealso cref="ObservableServiceHandler" />
     /// <seealso cref="IGossipHandler" />
-    public sealed class GossipHandler 
+    public sealed class GossipHandler
         : SimpleChannelInboundHandler<AnySigned>,
             IGossipHandler
     {
@@ -44,7 +43,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
         /// <summary>Initializes a new instance of the <see cref="GossipHandler"/> class.</summary>
         /// <param name="gossipManager">The gossip manager.</param>
-        public GossipHandler(IGossipManager gossipManager) { _gossipManager = gossipManager; }
+        public GossipHandler(IGossipManager gossipManager)
+        {
+            _gossipManager = gossipManager;
+        }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
         {
@@ -52,11 +54,14 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             if (msg.CheckIfMessageIsGossip())
             {
                 _gossipManager.IncomingGossip(msg);
-                AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);
-                MessageSubject.OnNext(new ChanneledAnySigned(ctx, originalGossipedMessage));
-            }
 
-            ctx.FireChannelRead(ctx);
+                AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);
+                ctx.FireChannelRead(originalGossipedMessage);
+            }
+            else
+            {
+                ctx.FireChannelRead(msg);
+            }
         }
     }
 }
