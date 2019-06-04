@@ -96,6 +96,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             }
         }
 
+        /// <inheritdoc />
         public CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash)
         {
             var candidateListCacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);

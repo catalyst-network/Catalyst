@@ -26,15 +26,13 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
-using Catalyst.Protocol.Common;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
-    public class DeltaHubTests
+    public sealed class DeltaHubTests
     {
         private readonly IGossipManager _gossipManager;
         private readonly ILogger _logger;
@@ -65,12 +63,6 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
             hub.BroadcastCandidate(myCandidate);
             _gossipManager.Received(1).Broadcast(null);
-        }
-
-        [Fact]
-        public void BroadcastFavouriteCandidateDelta()
-        {
-
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
     public interface IConsensus
     {
-        /// <see cref="IDeltaBuilder"/>
+        /// <see cref="IDeltaBuilder" />
         IDeltaBuilder DeltaBuilder { get; }
 
         /// <see cref="IDeltaHub" />
