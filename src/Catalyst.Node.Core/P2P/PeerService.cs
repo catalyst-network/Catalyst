@@ -40,14 +40,14 @@ using Catalyst.Node.Core.P2P.Messaging.Gossip;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class P2PService
+    public sealed class PeerService
         : UdpServer,
-            IP2PService
+            IPeerService
     {
         public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
 
-        public P2PService(IPeerSettings settings,
+        public PeerService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers,
             ICorrelationManager correlationManager,
@@ -55,25 +55,21 @@ namespace Catalyst.Node.Core.P2P
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Discovery = peerDiscovery;
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
+            var peerServiceHandler = new ObservableServiceHandler(Logger);
             var gossipHandler = new GossipHandler(gossipManager);
 
-            var allMessagesStream = 
-                protoDatagramChannelHandler.MessageStream.Merge(gossipHandler.MessageStream);
-            MessageStream = allMessagesStream;
-
-            var messageHandlerList = messageHandlers.ToList();
-            messageHandlerList.ForEach(h => h.StartObserving(allMessagesStream));
-
-            IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
-            {
-                protoDatagramChannelHandler,
-                new CorrelationHandler(correlationManager),
-                gossipHandler
-            };
-
+            MessageStream = peerServiceHandler.MessageStream.Merge(gossipHandler.MessageStream);
+            messageHandlers.ToList()
+               .ForEach(h => h.StartObserving(MessageStream));
+            
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
-                channelHandlers
+                new List<IChannelHandler>
+                {
+                    new ProtoDatagramHandler(),
+                    new CorrelationHandler(correlationManager),
+                    gossipHandler, 
+                    peerServiceHandler
+                }
             ), settings.BindAddress, settings.Port);
 
             peerDiscovery.StartObserving(MessageStream);

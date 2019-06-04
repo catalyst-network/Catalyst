@@ -34,9 +34,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     /// Channel Gossip Pipeline
     /// Handles gossip messages
     /// </summary>
-    /// <seealso cref="ObservableHandlerBase{AnySigned}" />
+    /// <seealso cref="ObservableServiceHandler" />
     /// <seealso cref="IGossipHandler" />
-    public class GossipHandler : ObservableHandlerBase<AnySigned>, IGossipHandler
+    public sealed class GossipHandler 
+        : SimpleChannelInboundHandler<AnySigned>,
+            IGossipHandler
     {
         private readonly IGossipManager _gossipManager;
 

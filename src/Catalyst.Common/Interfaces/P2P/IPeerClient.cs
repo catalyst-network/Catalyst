@@ -22,15 +22,12 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerClient : IChanneledMessageStreamer<AnySigned>, IDisposable, ISocketClient
+    public interface IPeerClient : IDisposable, ISocketClient
     {
         Task SendMessage(IByteBufferHolder datagramPacket);
     }
