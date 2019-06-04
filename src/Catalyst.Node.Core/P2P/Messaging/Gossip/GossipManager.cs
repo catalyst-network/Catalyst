@@ -143,7 +143,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
                 {
                     var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
                         MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                    _ = peerClient.SendMessage(datagramEnvelope);
+                    peerClient.SendMessage(datagramEnvelope);
                 }
             }
 
