@@ -43,13 +43,13 @@ namespace Catalyst.Node.Core.P2P
     {
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
-        private readonly IP2PService _p2PService;
+        private readonly IPeerService _p2PService;
         private readonly AnySignedMessageObserver _serverObserver;
         private readonly ILogger _logger;
 
         public PeerValidator(IPeerClient peerClient,
             IPeerSettings peerSettings,
-            IP2PService p2PService,
+            IPeerService p2PService,
             AnySignedMessageObserver serverObserver, 
             ILogger logger)
         {
@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core.P2P
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
-                            _p2PService, _peerClient
+                            _p2PService
                         }
                        .Select(async p =>
                             await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))

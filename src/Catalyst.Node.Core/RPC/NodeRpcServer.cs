@@ -32,6 +32,7 @@ using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Handlers;
@@ -54,14 +55,15 @@ namespace Catalyst.Node.Core.RPC
             ILogger logger,
             ICertificateStore certificateStore,
             IEnumerable<IRpcRequestHandler> requestHandlers,
-            ICorrelationManager correlationManager) : base(logger)
+            ICorrelationManager correlationManager,
+            IObservableServiceHandler observableServiceHandler) : base(logger)
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            var anyTypeServerHandler = new AnyTypeSignedServerHandlerBase();
-            MessageStream = anyTypeServerHandler.MessageStream;
+            MessageStream = observableServiceHandler.MessageStream;
+            
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
            
             Bootstrap(
@@ -73,7 +75,7 @@ namespace Catalyst.Node.Core.RPC
                         new ProtobufVarint32LengthFieldPrepender(),
                         new ProtobufEncoder(),
                         new CorrelationHandler(correlationManager),
-                        anyTypeServerHandler
+                        observableServiceHandler
                     },
                     _certificate
                 ),
