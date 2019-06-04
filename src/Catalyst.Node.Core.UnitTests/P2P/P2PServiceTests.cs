@@ -84,10 +84,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             using (var scope = _container.BeginLifetimeScope(CurrentTestName))
             {
-                var p2PService = _container.Resolve<IP2PService>();
+                var p2PService = _container.Resolve<IPeerService>();
                 var peerClient = _container.Resolve<IPeerClient>();
                 Assert.NotNull(p2PService);
-                p2PService.Should().BeOfType(typeof(P2PService));
+                p2PService.Should().BeOfType(typeof(PeerService));
                 p2PService.Dispose();
                 scope.Dispose();
                 peerClient.Dispose();
@@ -151,7 +151,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
-                    p2PService.Dispose();
                 }
             }
         }
@@ -192,7 +191,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
-                    peerService.Dispose();
                 }
             }
         }

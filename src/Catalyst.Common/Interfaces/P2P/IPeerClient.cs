@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Buffers;
 

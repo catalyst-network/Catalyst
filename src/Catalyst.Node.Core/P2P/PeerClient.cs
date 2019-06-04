@@ -21,15 +21,11 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.IO.Messaging.Handlers;
-using Catalyst.Protocol.Common;
+using Catalyst.Common.IO.Outbound;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using Serilog;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;

@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -115,15 +116,15 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
 
             EmbeddedChannel channel = new EmbeddedChannel(
-                new ProtoDatagramChannelHandler(),
-                new GossipHandler(gossipMessageHandler)
+                new GossipHandler(gossipMessageHandler),
+                new ObservableServiceHandler(_logger)
             );
 
             var transaction = new TransactionBroadcast();
-            var anySigned = transaction.ToAnySigned(peerIdentifier.PeerId, guid);
+            var anySigned = transaction.ToAnySigned(peerIdentifier.PeerId, guid)
+               .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
 
-            channel.WriteInbound(messageFactory.GetDatagramMessage(
-                new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)));
+            channel.WriteInbound(anySigned);
 
             gossipMessageHandler.Received(Quantity.Exactly(1))
                .IncomingGossip(Arg.Any<AnySigned>());
@@ -138,18 +139,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var manager = new GossipManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>(), Substitute.For<IPeerClient>());
             var gossipHandler = new GossipHandler(manager);
 
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
-            var allMessageStream = protoDatagramChannelHandler.MessageStream.Merge(gossipHandler.MessageStream);
-            handler.StartObserving(allMessageStream);
+            var protoDatagramChannelHandler = new ObservableServiceHandler(_logger);
+            handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
-            EmbeddedChannel channel = new EmbeddedChannel(protoDatagramChannelHandler, gossipHandler);
+            EmbeddedChannel channel = new EmbeddedChannel(gossipHandler, protoDatagramChannelHandler);
 
             var anySignedGossip = new TransactionBroadcast()
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
 
-            var gossipMessage = anySignedGossip.ToDatagram(new IPEndPoint(IPAddress.Any, 5050));
-            channel.WriteInbound(gossipMessage);
+            channel.WriteInbound(anySignedGossip);
             hasHitHandler.Should().BeTrue();
         }
 
