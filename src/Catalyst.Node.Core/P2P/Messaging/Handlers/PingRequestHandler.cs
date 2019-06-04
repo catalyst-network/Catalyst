@@ -61,7 +61,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
                 message.Payload.CorrelationId.ToGuid()
             );
 
-            message.Context.Channel.WriteAndFlushAsync(datagramEnvelope);
+            message.Context.Channel.WriteAndFlushAsync(datagramEnvelope).GetAwaiter().GetResult();
         }
     }
 }

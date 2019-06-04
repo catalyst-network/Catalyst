@@ -36,9 +36,9 @@ namespace Catalyst.Common.IO.Outbound
 
         protected abstract void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
 
-        public async Task SendMessage(AnySigned message)
+        public void SendMessage(AnySigned message)
         {
-            await Channel.WriteAndFlushAsync(message);
+            Channel.WriteAndFlushAsync(message).GetAwaiter().GetResult();
         }
     }
 }

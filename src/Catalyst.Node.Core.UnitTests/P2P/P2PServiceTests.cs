@@ -137,17 +137,15 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         ),
                         Guid.NewGuid()
                     );
+
+                    peerClient.SendMessage(datagramEnvelope);
                     
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
-                    
-                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    new IChanneledMessageStreamer<AnySigned>[]
                         {
                             peerService
                         }
-                       .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                       .Select(p => p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned).GetAwaiter().GetResult())
                        .ToArray();
-
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
@@ -179,18 +177,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         ),
                         Guid.NewGuid()
                     );
+
+                    peerClient.SendMessage(datagramEnvelope);
                     
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
-                    
-                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    new IChanneledMessageStreamer<AnySigned>[]
                         {
                             peerService
                         }
-                       .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                       .Select(p => p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned).GetAwaiter().GetResult())
                        .ToArray();
-
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
-
+                    
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                     peerService.Dispose();

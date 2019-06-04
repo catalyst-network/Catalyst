@@ -55,9 +55,11 @@ namespace Catalyst.Node.Core.P2P
             ), ipEndPoint);
         }
 
-        public async Task SendMessage(IByteBufferHolder datagramPacket)
+        public void SendMessage(IByteBufferHolder datagramPacket)
         {
-            await Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
+            Channel.WriteAndFlushAsync(datagramPacket)
+               .GetAwaiter()
+               .GetResult();
         }
     }
 }
