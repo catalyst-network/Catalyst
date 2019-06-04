@@ -69,10 +69,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <param name="peers">The peers.</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
-        public GossipManager(IPeerIdentifier peerIdentifier, IRepository<Peer> peers, IMemoryCache memoryCache, IPeerClient peerClient)
+        public GossipManager(IPeerIdentifier peerIdentifier, IRepository<Peer> peers, IMemoryCache memoryCache)
         {
             _peerIdentifier = peerIdentifier;
-            _peerClient = peerClient;
+            //_peerClient = peerClient;
             _pendingRequests = memoryCache;
             _peers = peers;
             _messageFactory = new MessageFactory();
@@ -144,7 +144,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             {
                 var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
                     MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                 _peerClient.SendMessage(datagramEnvelope);
+                 _peerClient?.SendMessage(datagramEnvelope);
             }
 
             var updateCount = (uint) peersToGossip.Count;
