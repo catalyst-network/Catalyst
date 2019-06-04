@@ -38,15 +38,13 @@ namespace Catalyst.Common.IO.Outbound
 
         protected sealed override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
         {
-            Console.WriteLine("MIN PORT: "+IPEndPoint.MinPort);
-            Console.WriteLine("LOOPBACK ADDR: "+IPAddress.Loopback.ToString());
             Channel = new Bootstrap()
                .Group(WorkerEventLoop)
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
-               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort)
+               .BindAsync(IPEndPoint.MinPort)
                .ConfigureAwait(false)
                .GetAwaiter()
                .GetResult();
