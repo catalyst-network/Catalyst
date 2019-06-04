@@ -39,6 +39,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
         {
+            //@TODO should not negate try match response but currently not storing in cache when sent
             if (!message.CheckIfMessageIsGossip() && !_correlationManager.TryMatchResponse(message))
             {
                 ctx.FireChannelRead(message);                

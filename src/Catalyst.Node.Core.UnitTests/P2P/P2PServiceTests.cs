@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -122,7 +123,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                    var peerClient = new PeerClient(targetHost);
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingRequest(),
@@ -134,8 +134,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         ),
                         Guid.NewGuid()
                     );
-                    
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+
+                    using (var peerClient = new PeerClient(targetHost))
+                    {
+                        peerClient.SendMessage(datagramEnvelope);
+                    }
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
@@ -177,7 +180,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         Guid.NewGuid()
                     );
                     
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    peerClient.SendMessage(datagramEnvelope);
                     
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {

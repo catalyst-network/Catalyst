@@ -62,18 +62,11 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         {
             var contextAny = new ChanneledAnySigned(ctx, message);
             _messageSubject.OnNext(contextAny);
-            ctx.FireChannelRead(message);
         }
         
-        public override void ChannelReadComplete(IChannelHandlerContext ctx)
-        {
-            ctx.Flush();
-            ctx.FireChannelReadComplete();
-        }
-
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
-            _logger.Error(e, "Error in ProtoDatagramChannelHandler");
+            _logger.Error(e, "Error in ObservableServiceHandler");
             context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
         }
 

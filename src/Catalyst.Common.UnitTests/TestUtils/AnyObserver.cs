@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -24,8 +25,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
