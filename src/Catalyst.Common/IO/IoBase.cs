@@ -21,12 +21,11 @@
 
 #endregion
 
+using System;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO;
 using DotNetty.Transport.Channels;
 using Serilog;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Catalyst.Common.IO
 {
@@ -71,16 +70,9 @@ namespace Catalyst.Common.IO
             {
                 return;
             }
+            
             Logger.Information($"Disposing {GetType().Name}");
-            using (var cancellationSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(500)))
-            {
-                var cancellationSourceToken = cancellationSource.Token;
-                try { Task.Run(Shutdown, cancellationSourceToken).ConfigureAwait(false).GetAwaiter().GetResult(); }
-                catch (TaskCanceledException e)
-                {
-                    Logger.Warning(e, "Failed to dispose before cancellation token expiration.");
-                }
-            }
+            Task.WaitAll(Shutdown());
         }
     }
 }
