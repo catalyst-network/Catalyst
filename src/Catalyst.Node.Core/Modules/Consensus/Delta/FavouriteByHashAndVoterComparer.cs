@@ -48,10 +48,8 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 return -1;
             }
 
-            var candidateHashComparison =
-                ByteUtil.ByteListMinSizeComparer.Default.Compare(
-                    x.Candidate?.Hash?.ToByteArray(),
-                    y.Candidate?.Hash?.ToByteArray());
+            var candidateHashComparison = CompareCandidateHash(x.Candidate, y.Candidate);
+
             if (candidateHashComparison != 0)
             {
                 return candidateHashComparison;
@@ -60,6 +58,16 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             return ByteUtil.ByteListComparer.Default.Compare(
                 x.VoterId?.ToByteArray(),
                 y.VoterId?.ToByteArray());
+        }
+
+        private static int CompareCandidateHash(CandidateDeltaBroadcast x, CandidateDeltaBroadcast y)
+        {
+            var xByteArray = x?.Hash?.ToByteArray();
+            var yByteArray = y?.Hash?.ToByteArray();
+            return 
+                ByteUtil.ByteListMinSizeComparer.Default.Compare(
+                    xByteArray,
+                    yByteArray);
         }
 
         public static IEqualityComparer<FavouriteDeltaBroadcast> Default { get; } = new FavouriteByHashAndVoterComparer();
@@ -71,7 +79,11 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
 
         public int GetHashCode(FavouriteDeltaBroadcast favourite)
         {
-            if (favourite == null) return 0;
+            if (favourite == null)
+            {
+                return 0;
+            }
+
             unchecked
             {
                 var candidateHash = favourite.Candidate?.Hash == null ? 0 : favourite.Candidate.Hash.GetHashCode();
