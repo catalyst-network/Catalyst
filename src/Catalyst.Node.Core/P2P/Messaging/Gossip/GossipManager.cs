@@ -140,7 +140,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             var correlationId = message.CorrelationId.ToGuid();
 
             Console.WriteLine("1");
-            using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort)))
+            using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), IPEndPoint.MinPort)))
             {
                 Console.WriteLine("2");
                 foreach (var peerIdentifier in peersToGossip)
