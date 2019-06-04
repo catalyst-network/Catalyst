@@ -113,7 +113,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
 
-        [Fact(Skip = "Hanging on CI")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {
@@ -128,7 +128,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     var peerClient = _container.Resolve<IPeerClient>();
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
-                            new PingResponse(),
+                            new PingRequest(),
                             MessageTypes.Tell,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
                                 peerSettings.Port),
@@ -150,14 +150,13 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                     serverObserver.Received.Should().NotBeNull();
-                    serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
+                    serverObserver.Received.Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
-                    peerClient.Dispose();
                 }
             }
         }
 
-        [Fact(Skip = "Hanging on CI")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceiveNeighbourRequests()
         {
@@ -194,7 +193,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                     p2PService.Dispose();
-                    peerClient.Dispose();
                 }
             }
         }
