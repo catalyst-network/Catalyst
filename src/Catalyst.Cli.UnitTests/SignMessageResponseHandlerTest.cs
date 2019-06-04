@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -111,7 +113,8 @@ namespace Catalyst.Cli.UnitTests
             
             _handler = new SignMessageResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
-            
+            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
+
             _output.Received(1).WriteLine(Arg.Any<string>());
         }
         

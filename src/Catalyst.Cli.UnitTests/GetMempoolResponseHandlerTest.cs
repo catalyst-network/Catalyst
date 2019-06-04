@@ -21,15 +21,10 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
@@ -39,6 +34,12 @@ using DotNetty.Transport.Channels;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Text;
 using Xunit;
 
 namespace Catalyst.Cli.UnitTests
@@ -124,7 +125,9 @@ namespace Catalyst.Cli.UnitTests
 
             _handler = new GetMempoolResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
-            
+
+            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
+
             _output.Received(txList.Count).WriteLine(Arg.Any<string>());
         }
 

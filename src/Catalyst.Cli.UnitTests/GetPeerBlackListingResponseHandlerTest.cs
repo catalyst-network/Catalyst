@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
@@ -102,6 +104,9 @@ namespace Catalyst.Cli.UnitTests
 
             _handler = new PeerBlackListingResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
+
+            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
+
         }
 
         public void Dispose()

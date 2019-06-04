@@ -24,6 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
@@ -126,6 +128,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var handler = new RemovePeerRequestHandler(sendPeerIdentifier, peerRepository, _logger, messageFactory);
             handler.StartObserving(messageStream);
+
+            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
@@ -128,6 +129,8 @@ namespace Catalyst.Cli.UnitTests
 
             _handler = new PeerReputationResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
+
+            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
         }
 
         public void Dispose()

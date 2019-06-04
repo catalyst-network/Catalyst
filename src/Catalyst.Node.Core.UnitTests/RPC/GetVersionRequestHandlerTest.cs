@@ -21,8 +21,12 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
@@ -55,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         }
 
         [Fact]
-        public void GetVersion_UsingValidRequest_ShouldSendVersionResponse()
+        public async Task GetVersion_UsingValidRequest_ShouldSendVersionResponse()
         {
             var messageFactory = new MessageFactory();
             var request = new MessageFactory().GetMessage(new MessageDto(
@@ -67,6 +71,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var handler = new GetVersionRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, messageFactory);
             handler.StartObserving(messageStream);
+
+            await messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);
