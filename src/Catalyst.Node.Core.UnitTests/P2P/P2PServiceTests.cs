@@ -49,6 +49,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
+using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -60,24 +61,24 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _pid;
         private readonly IContainer _container;
-        private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
 
         public PeerServiceTests(ITestOutputHelper output) : base(output)
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
-               .Build(), CurrentTestName);
+               .Build();
             _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             _guid = Guid.NewGuid();
-            _logger = Substitute.For<ILogger>();
-            _pingRequest = new PingRequest();
 
             ConfigureContainerBuilder(_config, true, true);
             
             _container = ContainerBuilder.Build();
+            
+            _logger = _container.Resolve<ILogger>();
+            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(_logger));
         }
 
         [Fact]
@@ -101,7 +102,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var fakeChannel = Substitute.For<IChannel>();
                 fakeContext.Channel.Returns(fakeChannel);
-                var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
+                var channeledAny = new ChanneledAnySigned(fakeContext, new PingRequest().ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
             
                 var handler = new PingRequestHandler(_pid, _logger);
@@ -124,9 +125,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                    var peerClient = new PeerClient(targetHost);
-
+                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+                    
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingRequest(),
                             MessageTypes.Ask,
@@ -137,19 +137,23 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         ),
                         Guid.NewGuid()
                     );
-
-                    peerClient.SendMessage(datagramEnvelope);
+                    
+                    using (var peerClient = new PeerClient(targetHost))
+                    {
+                        peerClient.SendMessage(datagramEnvelope);    
+                    }
                     
                     new IChanneledMessageStreamer<AnySigned>[]
                         {
                             peerService
                         }
-                       .Select(p => p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned).GetAwaiter().GetResult())
+                       .Select(p => p.MessageStream.All(a => a != null && a != NullObjects.ChanneledAnySigned)
+                           .GetAwaiter()
+                           .GetResult())
                        .ToArray();
 
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
-                    peerService.Dispose();
                 }
             }
         }
@@ -189,7 +193,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     
                     serverObserver.Received.Should().NotBeNull();
                     serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
-                    peerService.Dispose();
                 }
             }
         }

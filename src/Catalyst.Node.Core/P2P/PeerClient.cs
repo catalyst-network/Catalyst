@@ -39,6 +39,8 @@ namespace Catalyst.Node.Core.P2P
         : UdpClient,
             IPeerClient
     {
+        public PeerClient(IPeerIdentifier peerIdentifier) : this(peerIdentifier.IpEndPoint) { }
+            
         /// <summary>
         /// 
         /// </summary>
@@ -55,11 +57,6 @@ namespace Catalyst.Node.Core.P2P
             ), ipEndPoint);
         }
 
-        public void SendMessage(IByteBufferHolder datagramPacket)
-        {
-            Channel.WriteAndFlushAsync(datagramPacket)
-               .GetAwaiter()
-               .GetResult();
-        }
+        public void SendMessage(IByteBufferHolder datagramPacket) { Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false); }
     }
 }

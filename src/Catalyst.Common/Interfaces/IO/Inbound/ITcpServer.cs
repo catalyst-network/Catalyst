@@ -27,10 +27,9 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO.Inbound
 {
-    public interface ITcpServer
+    internal interface ITcpServer
     {
         void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
-        Task Shutdown();
         IChannel Channel { get; set; }
     }
 }

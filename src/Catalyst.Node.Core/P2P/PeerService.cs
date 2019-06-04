@@ -35,6 +35,7 @@ using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace Catalyst.Node.Core.P2P
 {
