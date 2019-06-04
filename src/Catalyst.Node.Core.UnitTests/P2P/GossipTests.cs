@@ -21,37 +21,32 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Node.Core.P2P.Messaging.Gossip;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
-using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using Serilog;
 using SharpRepository.Repository;
+using System;
+using System.Collections.Generic;
+using System.Net;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P
@@ -107,7 +102,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var recipientIdentifier = Substitute.For<IPeerIdentifier>();
-            var messageFactory = new MessageFactory();
             var gossipMessageHandler = Substitute.For<IGossipManager>();
             var fakeIp = IPAddress.Any;
             var guid = Guid.NewGuid();
@@ -158,14 +152,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var gossipMessage = new TransactionBroadcast().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
                .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
-            gossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(true);
+            gossipMessage.CheckIfMessageIsGossip().Should().BeTrue();
 
             var nonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
-            nonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);
+            nonGossipMessage.CheckIfMessageIsGossip().Should().BeFalse();
 
             var secondNonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
                .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
-            secondNonGossipMessage.CheckIfMessageIsGossip().IsSameOrEqualTo(false);
+            secondNonGossipMessage.CheckIfMessageIsGossip().Should().BeFalse();
         }
 
         [Theory]
