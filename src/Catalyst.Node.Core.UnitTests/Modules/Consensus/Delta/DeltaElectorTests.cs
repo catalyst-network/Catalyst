@@ -165,10 +165,8 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                        .Should().BeTrue();
 
                     retrieved.Keys.Count.Should().Be(votersCount,
-                        "all these favourites are giving the same hash, and only different voters " +
-                        "should result in new entries if we don't want to double count");
-
-                    //retrieved.Keys.Should().BeEquivalentTo(expectedKeys);
+                        $"all these favourites are giving the same hash, with only {votersCount} different voters " +
+                        $"overall, this should result in only {votersCount} new entries if we don't want to double count");
                 }
             }
         }
@@ -212,6 +210,19 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                         "all these favourites are being voted for by different peers.");
                 }
             }
+        }
+
+        [Fact]
+        public void GetMostPopularCandidateDelta_should_return_null_on_unknown_previous_delta_hash()
+        {
+            _cache.TryGetValue(Arg.Any<object>(), out Arg.Any<object>()).Returns(false);
+
+            var elector = new DeltaElector(_cache, _logger);
+            
+            var popular = elector.GetMostPopularCandidateDelta(ByteUtil.GenerateRandomByteArray(32));
+
+            popular.Should().BeNull();
+            _logger.Received(1).Debug(Arg.Any<string>(), Arg.Any<string>());
         }
     }
 }
