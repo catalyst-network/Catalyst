@@ -71,7 +71,7 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// <seealso cref="https://github.com/catalyst-network/Catalyst.Node/blob/develop/Documentation/PoA.md#voting-phase"/>
         /// <param name="favouriteCandidateStream">The stream on which the incoming favourite deltas votes are
         /// expected to be pushed.</param>
-        void SubscribeToFavouriteCandidateStream(IObservable<CandidateDeltaBroadcast> favouriteCandidateStream);
+        void SubscribeToFavouriteCandidateStream(IObservable<FavouriteDeltaBroadcast> favouriteCandidateStream);
 
         /// <summary>
         /// Once a delta has been elected, if the node possesses the full content for the elected delta,

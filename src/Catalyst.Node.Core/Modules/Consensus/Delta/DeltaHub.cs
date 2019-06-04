@@ -41,17 +41,21 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         private readonly IGossipManager _gossipManager;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDeltaVoter _deltaVoter;
+        private readonly IDeltaElector _deltaElector;
         private readonly ILogger _logger;
         private IDisposable _incomingCandidateSubscription;
+        private IDisposable _incomingFavouriteCandidateSubscription;
 
         public DeltaHub(IGossipManager gossipManager,
             IPeerIdentifier peerIdentifier,
             IDeltaVoter deltaVoter,
+            IDeltaElector deltaElector,
             ILogger logger)
         {
             _gossipManager = gossipManager;
             _peerIdentifier = peerIdentifier;
             _deltaVoter = deltaVoter;
+            _deltaElector = deltaElector;
             _logger = logger;
         }
 
@@ -91,7 +95,11 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         }
 
         /// <inheritdoc />
-        public void SubscribeToFavouriteCandidateStream(IObservable<CandidateDeltaBroadcast> favouriteCandidateStream) { throw new NotImplementedException(); }
+        public void SubscribeToFavouriteCandidateStream(IObservable<FavouriteDeltaBroadcast> favouriteCandidateStream)
+        {
+            _incomingFavouriteCandidateSubscription = favouriteCandidateStream.Subscribe(_deltaElector);
+            _logger.Debug("Subscribed to favourite candidate delta incoming stream.");
+        }
 
         /// <inheritdoc />
         public void SubscribeToCandidateStream(IObservable<CandidateDeltaBroadcast> candidateStream)
@@ -114,6 +122,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             }
 
             _incomingCandidateSubscription?.Dispose();
+            _incomingFavouriteCandidateSubscription?.Dispose();
         }
 
         /// <inheritdoc />
