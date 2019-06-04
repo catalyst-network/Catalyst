@@ -52,6 +52,7 @@ namespace Catalyst.Common.IO
 
         protected override void InitChannel(T channel)
         {
+            Console.WriteLine("INIT CHANNEL START");
             _initializationAction(channel);
             var pipeline = channel.Pipeline;
 
@@ -66,6 +67,7 @@ namespace Catalyst.Common.IO
             {
                 pipeline.AddLast(_handlers.ToArray());
             }
+            Console.WriteLine("INIT CHANNEL COMPLETE");
         }
     }
 }
