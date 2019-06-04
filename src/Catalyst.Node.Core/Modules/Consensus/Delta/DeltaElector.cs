@@ -32,7 +32,6 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Delta;
 using Catalyst.Protocol.Transaction;
 using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -47,11 +46,6 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         private readonly IMemoryCache _candidatesCache;
         private readonly ILogger _logger;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
-
-        public static string GetFavouriteCacheKey(FavouriteDeltaBroadcast favourite) =>
-            nameof(DeltaElector)
-          + "-" + favourite.Candidate.Hash.ToByteString().ToByteArray().ToHex() 
-          + "-" + favourite.VoterId.ToByteArray().ToHex();
 
         public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate) =>
             nameof(DeltaElector) + "-" + candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToHex();
@@ -85,7 +79,6 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
 
                 var candidateListKey = GetCandidateListCacheKey(candidate);
-                var favouriteKey = GetFavouriteCacheKey(candidate);
 
                 if (_candidatesCache.TryGetValue(candidateListKey, out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
                 {
@@ -121,57 +114,6 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                     ByteUtil.ByteListMinSizeComparer.Default);
 
             return favourites.First().Favourite.Candidate;
-        }
-    }
-
-    public class FavouriteByHashAndVoterComparer : IEqualityComparer<FavouriteDeltaBroadcast>,
-        IComparer<FavouriteDeltaBroadcast>
-    {
-        public int Compare(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return 0;
-            }
-
-            if (ReferenceEquals(null, y))
-            {
-                return 1;
-            }
-
-            if (ReferenceEquals(null, x))
-            {
-                return -1;
-            }
-
-            var candidateHashComparison =
-                ByteUtil.ByteListMinSizeComparer.Default.Compare(
-                    x.Candidate?.Hash?.ToByteArray(),
-                    y.Candidate?.Hash?.ToByteArray());
-            if (candidateHashComparison != 0)
-            {
-                return candidateHashComparison;
-            }
-
-            return ByteUtil.ByteListComparer.Default.Compare(
-                x.VoterId?.ToByteArray(),
-                y.VoterId?.ToByteArray());
-        }
-
-        public static IEqualityComparer<FavouriteDeltaBroadcast> Default { get; } = new FavouriteByHashAndVoterComparer();
-
-        public bool Equals(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y)
-        {
-            return Compare(x, y) == 0;
-        }
-
-        public int GetHashCode(FavouriteDeltaBroadcast favourite)
-        {
-            if (favourite == null) return 0;
-            unchecked
-            {
-                return (favourite.Candidate.GetHashCode() * 397) ^ favourite.VoterId.GetHashCode();
-            }
         }
     }
 }
