@@ -147,7 +147,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
                     serverObserver.Received.Should().NotBeNull();
-                    serverObserver.Received.Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
+                    serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
                     peerService.Dispose();
                 }
             }
