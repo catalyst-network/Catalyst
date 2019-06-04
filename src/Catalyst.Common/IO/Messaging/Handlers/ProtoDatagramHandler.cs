@@ -39,7 +39,6 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             using (var memoryStream = new MemoryStream())
             {
                 memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
-                memoryStream.Flush();
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
                 var message = AnySigned.Parser.ParseFrom(memoryStream);
