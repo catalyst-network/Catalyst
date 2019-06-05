@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -21,6 +22,12 @@
 
 #endregion
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -111,7 +118,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
 
-        [Fact(Skip = "due to reputation refactor")] // @TODO
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {
@@ -127,7 +134,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingRequest(),
-                            MessageTypes.Tell,
+                            MessageTypes.Ask,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
                                 peerSettings.Port),
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
@@ -153,7 +160,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
 
-        [Fact(Skip = "due to peer service refactor")] // @TODO
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceiveNeighbourRequests()
         {

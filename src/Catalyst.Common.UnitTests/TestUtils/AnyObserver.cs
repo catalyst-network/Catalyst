@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -22,6 +23,8 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
@@ -32,14 +35,18 @@ namespace Catalyst.Common.UnitTests.TestUtils
     public sealed class AnySignedMessageObserver : IObserver<IChanneledMessage<AnySigned>>
     {
         private readonly ILogger _logger;
+        private readonly ConcurrentStack<IChanneledMessage<AnySigned>> _received;
 
         public AnySignedMessageObserver(int index, ILogger logger)
         {
             _logger = logger;
-            Index = index; 
+            Index = index;
+            _received = new ConcurrentStack<IChanneledMessage<AnySigned>>();
         }
 
-        public IChanneledMessage<AnySigned> Received { get; private set; }
+        public IReadOnlyCollection<IChanneledMessage<AnySigned>> Received =>
+            Array.AsReadOnly(_received.ToArray());
+
         public int Index { get; }
 
         public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
@@ -53,7 +60,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
             }
 
             _logger.Debug($"observer {Index} received message of type {value?.Payload?.TypeUrl ?? "(null)"}");
-            Received = value;
+            _received.Push(value);
         }
     }
 }
