@@ -22,12 +22,6 @@
 
 #endregion
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -49,7 +43,6 @@ using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -177,7 +170,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    
+
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PeerNeighborsResponse(),
                             MessageTypes.Tell,
