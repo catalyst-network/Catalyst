@@ -180,7 +180,8 @@ namespace Catalyst.Cli.Commands
             var node = _socketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(node, nameof(node)).Require(IsSocketChannelActive(node));
 
-            node.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
+            node.Dispose();
+            _socketClientRegistry.RemoveClientFromRegistry(registryId);
 
             return true;
         }

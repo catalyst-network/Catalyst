@@ -39,7 +39,5 @@ namespace Catalyst.Common.Interfaces.IO.Inbound
         /// <param name="port"></param>
         /// <returns></returns>
         void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
-
-        Task Shutdown();
     }
 }

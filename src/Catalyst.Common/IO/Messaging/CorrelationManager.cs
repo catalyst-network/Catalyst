@@ -83,7 +83,7 @@ namespace Catalyst.Common.IO.Messaging
             return _pendingRequests.TryGetValue(response.CorrelationId, out _);
         }
         
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing)
             {

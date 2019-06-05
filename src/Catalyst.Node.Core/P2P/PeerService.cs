@@ -27,7 +27,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -71,8 +70,12 @@ namespace Catalyst.Node.Core.P2P
                     peerServiceHandler
                 }
             ), settings.BindAddress, settings.Port);
+            
+            MessageStream = peerServiceHandler.MessageStream;
+            messageHandlers.ToList()
+               .ForEach(h => h.StartObserving(MessageStream));
 
-            peerDiscovery.StartObserving(MessageStream);
+            // peerDiscovery.StartObserving(MessageStream);
         }
     }
 }
