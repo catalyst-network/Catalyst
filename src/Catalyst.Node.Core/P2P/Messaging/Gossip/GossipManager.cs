@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
@@ -49,7 +50,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     {
         /// <summary>The message factory</summary>
         private readonly IMessageFactory _messageFactory;
-        
+
         /// <summary>The peers</summary>
         private readonly IRepository<Peer> _peers;
 
@@ -137,15 +138,18 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
 
-            using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort)))
+            Task.Run(() =>
             {
-                foreach (var peerIdentifier in peersToGossip)
+                using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort)))
                 {
-                    var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
-                        MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    foreach (var peerIdentifier in peersToGossip)
+                    {
+                        var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
+                            MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
+                        peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    }
                 }
-            }
+            });
 
             var updateCount = (uint) peersToGossip.Count;
             if (updateCount > 0)
