@@ -56,7 +56,7 @@ namespace Catalyst.Common.IO
             
             Logger.Information($"Disposing {GetType().Name}");
 
-            Channel?.CloseAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            Channel?.CloseAsync();
 
             if (WorkerEventLoop == null)
             {
