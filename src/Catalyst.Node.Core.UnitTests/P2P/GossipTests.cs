@@ -190,15 +190,13 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             var gossipDto = messageDto.ToAnySigned(senderIdentifier.PeerId, correlationId);
 
-            gossipMessageHandler.Broadcast(messageDto);
+            gossipMessageHandler.IncomingGossip(gossipDto);
             cache.TryGetValue(correlationId, out GossipRequest value);
-            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound);
             value.ReceivedCount.Should().Be(1);
 
             for (var i = 0; i < receivedCount; i++)
             {
                 gossipMessageHandler.IncomingGossip(gossipDto);
-                gossipMessageHandler.Broadcast(messageDto);
             }
 
             cache.TryGetValue(correlationId, out value);
