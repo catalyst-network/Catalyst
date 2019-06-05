@@ -38,6 +38,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDeltaVoter _deltaVoter;
+        private readonly IDeltaElector _deltaElector;
 
         public DeltaHubTests()
         {
@@ -45,12 +46,13 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             _logger = Substitute.For<ILogger>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("me");
             _deltaVoter = Substitute.For<IDeltaVoter>();
+            _deltaElector = Substitute.For<IDeltaElector>();
         }
 
         [Fact]
         public void BroadcastCandidate_should_only_gossip_round_nodes_own_candidate()
         {
-            var hub = new DeltaHub(_gossipManager, _peerIdentifier, _deltaVoter, _logger);
+            var hub = new DeltaHub(_gossipManager, _peerIdentifier, _deltaVoter, _deltaElector, _logger);
 
             var notMyCandidate = CandidateDeltaHelper.GetCandidateDelta(
                 producerId: PeerIdHelper.GetPeerId("not me"));

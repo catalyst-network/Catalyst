@@ -211,7 +211,7 @@ namespace Catalyst.Common.Util
             public override int Compare(IList<byte> x, IList<byte> y)
             {
                 var baseCompare = base.Compare(x, y);
-                return baseCompare != 0 ? baseCompare : Math.Sign(x.Count.CompareTo(y.Count));
+                return baseCompare != 0 ? baseCompare : Math.Sign(Nullable.Compare(x?.Count, y?.Count));
             }
 
             public static IComparer<IList<byte>> Default { get; } = new ByteListComparer();
