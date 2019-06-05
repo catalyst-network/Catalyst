@@ -23,9 +23,11 @@
 
 using System;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -37,6 +39,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -94,10 +97,10 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _handler.SubstituteObserver.Received(1).OnCompleted();
         }
 
-        [Fact(Skip = "Will find something clever tomorrow")]
+        [Fact]
         public async Task MessageHandler_should_subscribe_to_next_and_error()
         {
-            var erroringStream = new Subject<IChanneledMessage<AnySigned>>();
+            var erroringStream = new ReplaySubject<IChanneledMessage<AnySigned>>(10);
             
             _handler.StartObserving(erroringStream);
 
@@ -110,7 +113,9 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
                 erroringStream.OnNext(new ChanneledAnySigned(_fakeContext, payload));
             }
-            
+
+            await erroringStream.AsObservable().Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).Take(1).FirstAsync();
+
             _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<AnySigned>());
             _handler.SubstituteObserver.Received(1).OnError(Arg.Is<Exception>(e => e is DataMisalignedException));
             _handler.SubstituteObserver.Received(0).OnCompleted();

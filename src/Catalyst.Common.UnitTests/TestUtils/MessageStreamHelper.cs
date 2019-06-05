@@ -36,11 +36,6 @@ namespace Catalyst.Common.UnitTests.TestUtils
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler<T>(this AnySigned[] messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
-        {
-            CreateChanneledMessage(fakeContext, messages).ForEach(handler.HandleMessage);
-        }
-
         public static void SendToHandler<T>(this AnySigned messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
         {
             handler.HandleMessage(CreateChanneledMessage(fakeContext, messages));
@@ -65,18 +60,6 @@ namespace Catalyst.Common.UnitTests.TestUtils
         private static ChanneledAnySigned CreateChanneledMessage(IChannelHandlerContext fakeContext, AnySigned responseMessage)
         {
             return new ChanneledAnySigned(fakeContext, responseMessage);
-        }
-
-        private static List<ChanneledAnySigned> CreateChanneledMessage(IChannelHandlerContext fakeContext, params AnySigned[] responseMessages)
-        {
-            List<ChanneledAnySigned> stream = new List<ChanneledAnySigned>();
-            foreach (var message in responseMessages)
-            {
-                var channeledAny = new ChanneledAnySigned(fakeContext, message);
-                stream.Add(channeledAny);
-            }
-
-            return stream;
         }
     }
 }

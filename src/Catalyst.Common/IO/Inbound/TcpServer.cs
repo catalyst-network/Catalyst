@@ -36,6 +36,8 @@ namespace Catalyst.Common.IO.Inbound
         : IoBase,
             ITcpServer
     {
+        private const int BackLogValue = 100;
+
         private readonly IEventLoopGroup _supervisorEventLoop;
 
         /// <summary>
@@ -61,17 +63,16 @@ namespace Catalyst.Common.IO.Inbound
                .GetResult();
         }
 
-        public override async Task Shutdown()
+        protected override void Dispose(bool disposing)
         {
-            await base.Shutdown().ConfigureAwait(false);
-
             if (_supervisorEventLoop != null)
             {
                 var quietPeriod = TimeSpan.FromMilliseconds(100);
-                await _supervisorEventLoop
-                   .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
-                   .ConfigureAwait(false);
+                _supervisorEventLoop
+                   .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod);
             }
+
+            base.Dispose(true);
         }
     }
 }

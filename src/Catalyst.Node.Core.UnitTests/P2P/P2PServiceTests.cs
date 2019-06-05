@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -31,7 +32,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
@@ -125,7 +125,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                    var peerClient = new PeerClient(targetHost);
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingRequest(),
@@ -137,13 +136,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         ),
                         Guid.NewGuid()
                     );
-                    
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+
+                    using (var peerClient = new PeerClient(targetHost))
+                    {
+                        peerClient.SendMessage(datagramEnvelope);
+                    }
                     
                     await peerService.MessageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
                     
-                    serverObserver.Received.Should().NotBeNull();
-                    serverObserver.Received.Payload.TypeUrl.Should().Be(PingResponse.Descriptor.ShortenedFullName());
+                    serverObserver.Received.LastOrDefault().Should().NotBeNull();
+                    serverObserver.Received.Last().Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
                     peerService.Dispose();
                 }
             }
@@ -173,12 +175,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         Guid.NewGuid()
                     );
                     
-                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    peerClient.SendMessage(datagramEnvelope);
 
                     await peerService.MessageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
 
-                    serverObserver.Received.Should().NotBeNull();
-                    serverObserver.Received.Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
+                    serverObserver.Received.FirstOrDefault().Should().NotBeNull();
+                    serverObserver.Received.First().Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
                     peerService.Dispose();
                 }
             }

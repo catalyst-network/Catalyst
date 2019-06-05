@@ -34,6 +34,7 @@ using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace Catalyst.Node.Core.P2P
 {
@@ -53,10 +54,6 @@ namespace Catalyst.Node.Core.P2P
         {
             Discovery = peerDiscovery;
             var peerServiceHandler = new ObservableServiceHandler(Logger);
-
-            MessageStream = peerServiceHandler.MessageStream;
-            messageHandlers.ToList()
-               .ForEach(h => h.StartObserving(MessageStream));
             
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
                 new List<IChannelHandler>
@@ -67,6 +64,10 @@ namespace Catalyst.Node.Core.P2P
                     peerServiceHandler
                 }
             ), settings.BindAddress, settings.Port);
+            
+            MessageStream = peerServiceHandler.MessageStream;
+            messageHandlers.ToList()
+               .ForEach(h => h.StartObserving(MessageStream));
 
             // peerDiscovery.StartObserving(MessageStream);
         }
