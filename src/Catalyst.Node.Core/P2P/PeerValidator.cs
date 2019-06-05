@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
@@ -43,19 +44,19 @@ namespace Catalyst.Node.Core.P2P
     {
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
-        private readonly IPeerService _p2PService;
+        private readonly IPeerService _peerService;
         private readonly AnySignedMessageObserver _serverObserver;
         private readonly ILogger _logger;
 
         public PeerValidator(IPeerClient peerClient,
             IPeerSettings peerSettings,
-            IPeerService p2PService,
+            IPeerService peerService,
             AnySignedMessageObserver serverObserver, 
             ILogger logger)
         {
             _peerClient = peerClient;
             _peerSettings = peerSettings;
-            _p2PService = p2PService;
+            _peerService = peerService;
             _serverObserver = serverObserver;
             _logger = logger;
         }
@@ -64,7 +65,7 @@ namespace Catalyst.Node.Core.P2P
         {
             try
             {
-                using (_p2PService.MessageStream.Subscribe(_serverObserver))
+                using (_peerService.MessageStream.Subscribe(_serverObserver))
                 {
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(
                         new MessageDto(
@@ -78,22 +79,24 @@ namespace Catalyst.Node.Core.P2P
                         Guid.NewGuid()
                     );
 
-                    ((PeerClient) _peerClient).SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                    ((PeerClient) _peerClient).SendMessage(datagramEnvelope);
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
                         {
-                            _p2PService
+                            _peerService
                         }
-                       .Select(async p =>
-                            await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                       .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
                        .ToArray();
 
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
 
-                    if (_serverObserver.Received.Payload.PeerId.PublicKey.ToStringUtf8() ==
-                        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+                    if (_serverObserver.Received.Any())
                     {
-                        return true;
+                        if (_serverObserver.Received.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
+                            recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+                        {
+                            return true;
+                        }
                     }
 
                     return false;

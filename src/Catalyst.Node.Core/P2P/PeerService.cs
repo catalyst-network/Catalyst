@@ -68,8 +68,6 @@ namespace Catalyst.Node.Core.P2P
             MessageStream = peerServiceHandler.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
-
-            // peerDiscovery.StartObserving(MessageStream);
         }
     }
 }
