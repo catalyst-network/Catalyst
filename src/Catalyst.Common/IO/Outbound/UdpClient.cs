@@ -40,11 +40,10 @@ namespace Catalyst.Common.IO.Outbound
         {
             Channel = new Bootstrap()
                .Group(WorkerEventLoop)
-               .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
+               .Channel<SocketDatagramChannel>()
                .Handler(channelInitializer)
-               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort)
+               .BindAsync(IPEndPoint.MinPort)
                .GetAwaiter()
                .GetResult();
         }
