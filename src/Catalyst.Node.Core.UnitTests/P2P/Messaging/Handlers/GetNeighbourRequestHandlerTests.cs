@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -102,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
         }
 
         [Fact]
-        public void CanHandlerGetNeighbourRequestHandlerCorrectly()
+        public async Task CanHandlerGetNeighbourRequestHandlerCorrectly()
         {
             // mock a random set of peers
             var randomPeers = new List<Peer>
@@ -137,8 +138,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
             {
                 peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId());
             }
-            
-            fakeContext.Channel.ReceivedWithAnyArgs(1)
+
+            await observableStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+
+            await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(peerNeighborsResponseMessage.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
         }
     }
