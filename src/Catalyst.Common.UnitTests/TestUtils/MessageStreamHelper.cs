@@ -37,7 +37,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler<T>(this AnySigned messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
+        public static void SendToHandler<T>(this ProtocolMessage messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
         {
             handler.HandleMessage(CreateChanneledMessage(fakeContext, messages));
         }

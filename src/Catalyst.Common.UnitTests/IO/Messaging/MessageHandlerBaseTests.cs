@@ -97,7 +97,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         [Fact]
         public async Task MessageHandler_should_subscribe_to_next_and_error()
         {
-            var erroringStream = new ReplaySubject<IChanneledMessage<AnySigned>>(10);
+            var erroringStream = new ReplaySubject<IChanneledMessage<ProtocolMessage>>(10);
             
             _handler.StartObserving(erroringStream);
 
@@ -113,7 +113,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
             await erroringStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
-            _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<AnySigned>());
+            _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<ProtocolMessage>());
             _handler.SubstituteObserver.Received(1).OnError(Arg.Is<Exception>(e => e is DataMisalignedException));
             _handler.SubstituteObserver.Received(0).OnCompleted();
         }

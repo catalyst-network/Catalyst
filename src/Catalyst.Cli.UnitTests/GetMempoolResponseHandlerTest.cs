@@ -35,8 +35,11 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Inbound;
+using Catalyst.Protocol.Common;
 using Xunit;
 
 namespace Catalyst.Cli.UnitTests
@@ -72,13 +75,6 @@ namespace Catalyst.Cli.UnitTests
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
-        }
-
-        private IObservable<ProtocolMessageDto> CreateStreamWithMessage(ProtocolMessage response)
-        {
-            var channeledAny = new ProtocolMessageDto(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
         }
 
         private static IEnumerable<string> CreateMemPoolData()

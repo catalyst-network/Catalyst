@@ -73,18 +73,6 @@ namespace Catalyst.Cli.UnitTests
         }
 
         /// <summary>
-        /// Creates the stream with message.
-        /// </summary>
-        /// <param name="response">The response.</param>
-        /// <returns></returns>
-        private IObservable<ProtocolMessageDto> CreateStreamWithMessage(ProtocolMessage response)
-        {
-            var channeledAny = new ProtocolMessageDto(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
-        }
-        
-        /// <summary>
         /// RPCs the client can handle get reputation response.
         /// </summary>
         /// <param name="rep">The rep.</param>

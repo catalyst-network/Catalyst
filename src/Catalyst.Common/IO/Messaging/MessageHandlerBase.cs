@@ -56,7 +56,7 @@ namespace Catalyst.Common.IO.Messaging
             _messageSubscription = messageStream
                .Where(m => m != null
                  && m.Payload?.TypeUrl == filterMessageType
-                 && !m.Equals(NullObjects.ChanneledAnySigned))
+                 && !m.Equals(NullObjects.ProtocolMessageDto))
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(HandleMessage, HandleError, HandleCompleted);
         }

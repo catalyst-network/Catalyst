@@ -64,14 +64,7 @@ namespace Catalyst.Cli.UnitTests
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
-
-        private IObservable<ProtocolMessageDto> CreateStreamWithMessage(ProtocolMessage response)
-        {
-            var channeledAny = new ProtocolMessageDto(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
-        }
-
+        
         [Theory]
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
