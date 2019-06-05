@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.P2P
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(
                         new MessageDto(
                             new PingRequest(),
-                            MessageTypes.Tell,
+                            MessageTypes.Ask,
                             new PeerIdentifier(recipientPeerIdentifier.PeerId),
                             new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(),
                                 _peerSettings.BindAddress,
