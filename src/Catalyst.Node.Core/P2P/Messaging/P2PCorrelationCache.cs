@@ -67,7 +67,7 @@
 //             _ratingChangeSubject.OnNext(new PeerReputationChange(pendingRequest.Recipient, -Constants.BaseReputationChange));
 //         }
 //
-//         public override TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
+//         public override TRequest TryMatchResponse<TRequest, TResponse>(ProtocolMessage response)
 //         {
 //             var matched = base.TryMatchResponse<TRequest, TResponse>(response);
 //

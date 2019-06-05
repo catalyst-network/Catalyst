@@ -46,7 +46,7 @@ namespace Catalyst.Common.Extensions
 
         static ProtobufExtensions()
         {
-            var protoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
+            var protoToClrNameMapper = typeof(ProtocolMessage).Assembly.ExportedTypes
                .Where(t => typeof(IMessage).IsAssignableFrom(t))
                .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
@@ -72,7 +72,7 @@ namespace Catalyst.Common.Extensions
             return ShortenedFullName(descriptor);
         }
 
-        public static AnySigned ToAnySigned(this IMessage protobufObject,
+        public static ProtocolMessage ToAnySigned(this IMessage protobufObject,
             PeerId senderId,
             Guid correlationId = default)
         {
@@ -82,30 +82,34 @@ namespace Catalyst.Common.Extensions
                .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
 
-            var anySigned = new AnySigned
+            var protcolMessage = new ProtocolMessage
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
 
                 //todo: sign the `correlationId` and `value` bytes with publicKey instead
-                Signature = senderId.PublicKey,
+                // Signature = senderId.PublicKey,
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
-            return anySigned;
+            return protcolMessage;
         }
 
-        public static bool CheckIfMessageIsGossip(this AnySigned message)
+        public static bool CheckIfMessageIsGossip(this ProtocolMessage message)
         {
-            return message.TypeUrl.EndsWith(nameof(AnySigned)) &&
-                ProtoGossipAllowedMessages.Contains(AnySigned.Parser.ParseFrom(message.Value).TypeUrl);
+            return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
+                ProtoGossipAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
-        public static T FromAnySigned<T>(this AnySigned message) where T : IMessage<T>
+        public static T FromAnySigned<T>(this ProtocolMessage message) where T : IMessage<T>
         {
-            //todo check the message signature with the PeerId.PublicKey and value fields
-            if (message.PeerId.PublicKey != message.Signature)
-                throw new CryptographicException("Signature of the message doesn't match with sender's public Key");
+            // Should need to do this as we do it in handler
+            // //todo check the message signature with the PeerId.PublicKey and value fields
+            // if (message.PeerId.PublicKey != message.Signature)
+            // {
+            //     throw new CryptographicException("Signature of the message doesn't match with sender's public Key");
+            // }
+    
             var empty = (T) Activator.CreateInstance(typeof(T));
             var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
             return typed;

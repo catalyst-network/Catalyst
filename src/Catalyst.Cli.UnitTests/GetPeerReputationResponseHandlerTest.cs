@@ -79,9 +79,9 @@ namespace Catalyst.Cli.UnitTests
         /// </summary>
         /// <param name="response">The response.</param>
         /// <returns></returns>
-        private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
+        private IObservable<ProtocolMessageDto> CreateStreamWithMessage(ProtocolMessage response)
         {
-            var channeledAny = new ChanneledAnySigned(_fakeContext, response);
+            var channeledAny = new ProtocolMessageDto(_fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }

@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             var deserialised = message.Payload.FromAnySigned<GetFileFromDfsRequest>();
 

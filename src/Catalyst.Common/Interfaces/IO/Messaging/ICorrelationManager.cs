@@ -30,6 +30,6 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
     {
         void AddPendingRequest(PendingRequest pendingRequest);
 
-        bool TryMatchResponse(AnySigned response);
+        bool TryMatchResponse(ProtocolMessage response);
     }
 }

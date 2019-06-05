@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
 
-        private IChanneledMessage<AnySigned> _message;
+        private IChanneledMessage<ProtocolMessage> _message;
         
         private readonly PeerId _peerId;
 
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Handlers the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             _message = message;
 
@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="publicKey">The public key.</param>
         /// <param name="ip">The ip.</param>
         /// <param name="message">The message.</param>
-        private void ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip, IChanneledMessage<AnySigned> message)
+        private void ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip, IChanneledMessage<ProtocolMessage> message)
         {
             var response = new SetPeerBlackListResponse
             {

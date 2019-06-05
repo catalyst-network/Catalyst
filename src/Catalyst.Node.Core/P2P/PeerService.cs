@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.P2P
             IPeerService
     {
         public IPeerDiscovery Discovery { get; }
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
+        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
 
         public PeerService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,

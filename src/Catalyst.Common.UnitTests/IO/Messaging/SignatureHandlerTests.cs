@@ -55,10 +55,10 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _signatureHandler.ChannelRead(_fakeContext, signedPingMessage);
         }
 
-        [Fact]
-        private void ClosesChannelOnInvalidSignature()
-        {
-            
-        }
+        // [Fact]
+        // private void ClosesChannelOnInvalidSignature()
+        // {
+        //     
+        // }
     }
 }

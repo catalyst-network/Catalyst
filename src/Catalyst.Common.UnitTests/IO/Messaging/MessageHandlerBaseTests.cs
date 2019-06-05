@@ -44,14 +44,14 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 {
     public class VanillaMessageHandler : MessageHandlerBase<GetInfoResponse>
     {
-        public IObserver<AnySigned> SubstituteObserver { get; }
+        public IObserver<ProtocolMessage> SubstituteObserver { get; }
 
         public VanillaMessageHandler(ILogger logger) : base(logger)
         {
-            SubstituteObserver = Substitute.For<IObserver<AnySigned>>();
+            SubstituteObserver = Substitute.For<IObserver<ProtocolMessage>>();
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             SubstituteObserver.OnNext(message.Payload);
         }
@@ -65,7 +65,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
     {
         private readonly VanillaMessageHandler _handler;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly AnySigned[] _responseMessages;
+        private readonly ProtocolMessage[] _responseMessages;
 
         public MessageHandlerBaseTests()
         {
@@ -88,7 +88,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _handler.StartObserving(completingStream);
             await completingStream.LastAsync();
 
-            _handler.SubstituteObserver.Received(10).OnNext(Arg.Any<AnySigned>());
+            _handler.SubstituteObserver.Received(10).OnNext(Arg.Any<ProtocolMessage>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());
             _handler.SubstituteObserver.Received(1).OnCompleted();
         }
@@ -96,7 +96,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         [Fact]
         public void MessageHandler_should_subscribe_to_next_and_error()
         {
-            var erroringStream = new Subject<IChanneledMessage<AnySigned>>();
+            var erroringStream = new Subject<IChanneledMessage<ProtocolMessage>>();
             
             _handler.StartObserving(erroringStream);
 
@@ -107,10 +107,10 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                     erroringStream.OnError(new DataMisalignedException("5 erred"));
                 }
 
-                erroringStream.OnNext(new ChanneledAnySigned(_fakeContext, payload));
+                erroringStream.OnNext(new ProtocolMessageDto(_fakeContext, payload));
             }
 
-            _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<AnySigned>());
+            _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<ProtocolMessage>());
             _handler.SubstituteObserver.Received(1).OnError(Arg.Is<Exception>(e => e is DataMisalignedException));
             _handler.SubstituteObserver.Received(0).OnCompleted();
         }
@@ -131,7 +131,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _handler.StartObserving(mixedTypesStream);
             await mixedTypesStream.LastAsync();
 
-            _handler.SubstituteObserver.Received(8).OnNext(Arg.Any<AnySigned>());
+            _handler.SubstituteObserver.Received(8).OnNext(Arg.Any<ProtocolMessage>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());
             _handler.SubstituteObserver.Received(1).OnCompleted();
         }
@@ -140,7 +140,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         public async Task MessageHandler_should_not_receive_null_or_untyped_messages()
         {
             _responseMessages[2].TypeUrl = "";
-            _responseMessages[5] = NullObjects.AnySigned;
+            _responseMessages[5] = NullObjects.ProtocolMessage;
             _responseMessages[9] = null;
 
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
@@ -148,7 +148,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _handler.StartObserving(mixedTypesStream);
             await mixedTypesStream.LastAsync();
 
-            _handler.SubstituteObserver.Received(7).OnNext(Arg.Any<AnySigned>());
+            _handler.SubstituteObserver.Received(7).OnNext(Arg.Any<ProtocolMessage>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());
             _handler.SubstituteObserver.Received(1).OnCompleted();
         }

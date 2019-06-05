@@ -36,43 +36,44 @@ namespace Catalyst.Common.UnitTests.TestUtils
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler<T>(this AnySigned[] messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
+        public static void SendToHandler<T>(this ProtocolMessage[] messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
         {
             CreateChanneledMessage(fakeContext, messages).ForEach(handler.HandleMessage);
         }
 
-        public static void SendToHandler<T>(this AnySigned messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
+        public static void SendToHandler<T>(this ProtocolMessage messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
         {
             handler.HandleMessage(CreateChanneledMessage(fakeContext, messages));
         }
 
-        public static IObservable<IChanneledMessage<AnySigned>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, AnySigned response)
+        public static IObservable<IChanneledMessage<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, ProtocolMessage response)
         {   
-            var channeledAny = new ChanneledAnySigned(fakeContext, response);
+            var channeledAny = new ProtocolMessageDto(fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }
 
-        public static IObservable<IChanneledMessage<AnySigned>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params AnySigned[] responseMessages)
+        public static IObservable<IChanneledMessage<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
         {
             var stream = responseMessages
-               .Select(message => new ChanneledAnySigned(fakeContext, message));
+               .Select(message => new ProtocolMessageDto(fakeContext, message));
 
             var messageStream = stream.ToObservable();
             return messageStream;
         }
 
-        private static ChanneledAnySigned CreateChanneledMessage(IChannelHandlerContext fakeContext, AnySigned responseMessage)
+        private static ProtocolMessageDto CreateChanneledMessage(IChannelHandlerContext fakeContext, ProtocolMessage responseMessage)
         {
-            return new ChanneledAnySigned(fakeContext, responseMessage);
+            return new ProtocolMessageDto(fakeContext, responseMessage);
         }
 
-        private static List<ChanneledAnySigned> CreateChanneledMessage(IChannelHandlerContext fakeContext, params AnySigned[] responseMessages)
+        private static List<ProtocolMessageDto> CreateChanneledMessage(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
         {
-            List<ChanneledAnySigned> stream = new List<ChanneledAnySigned>();
+            var stream = new List<ProtocolMessageDto>();
+
             foreach (var message in responseMessages)
             {
-                var channeledAny = new ChanneledAnySigned(fakeContext, message);
+                var channeledAny = new ProtocolMessageDto(fakeContext, message);
                 stream.Add(channeledAny);
             }
 
