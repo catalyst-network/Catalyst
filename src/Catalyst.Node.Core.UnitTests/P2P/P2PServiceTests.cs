@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
 
-        [Fact(Skip = "due to reputation refactor")] // @TODO
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void CanReceivePingRequests()
         {
