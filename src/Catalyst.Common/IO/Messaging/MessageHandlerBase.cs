@@ -23,6 +23,7 @@
 
 using System;
 using System.Data;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
@@ -55,7 +56,8 @@ namespace Catalyst.Common.IO.Messaging
             _messageSubscription = messageStream
                .Where(m => m != null
                  && m.Payload?.TypeUrl == filterMessageType
-                 && !m.Equals(NullObjects.ProtocolMessageDto))
+                 && !m.Equals(NullObjects.ChanneledAnySigned))
+               .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(HandleMessage, HandleError, HandleCompleted);
         }
         

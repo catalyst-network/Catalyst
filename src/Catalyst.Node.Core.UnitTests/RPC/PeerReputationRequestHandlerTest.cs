@@ -21,8 +21,12 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
@@ -75,9 +79,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData("highscored-125\0\0\0\0\0\0", "192.168.0.125")]
         [InlineData("highscored-126\0\0\0\0\0\0", "192.168.0.126")]
-        public void TestPeerReputationRequestResponse(string publicKey, string ipAddress)
+        public async Task TestPeerReputationRequestResponse(string publicKey, string ipAddress)
         {
-            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
+            var responseContent = await GetPeerReputationTest(publicKey, ipAddress);
 
             responseContent.Reputation.Should().Be(125);
         }
@@ -91,14 +95,14 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "192.200.200.22")]
         [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "192.111.100.26")]
-        public void TestPeerReputationRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
+        public async Task TestPeerReputationRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
         {
-            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
+            var responseContent = await GetPeerReputationTest(publicKey, ipAddress);
 
             responseContent.Reputation.Should().Be(int.MinValue);
         }
 
-        private GetPeerReputationResponse GetPeerReputationTest(string publicKey, string ipAddress)
+        private async Task<GetPeerReputationResponse> GetPeerReputationTest(string publicKey, string ipAddress)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
 
@@ -139,6 +143,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var handler = new PeerReputationRequestHandler(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

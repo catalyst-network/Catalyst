@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
@@ -73,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData("FakePeer1", "FakePeer2")]
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
-        public void TestRemovePeer(params string[] fakePeers) { ExecuteTestCase(fakePeers, true); }
+        public async Task TestRemovePeer(params string[] fakePeers) { await ExecuteTestCase(fakePeers, true); }
 
         /// <summary>
         /// Tests peer removal via IP only.
@@ -82,12 +83,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData("FakePeer1", "FakePeer2")]
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
-        public void TestRemovePeerWithoutPublicKey(params string[] fakePeers) { ExecuteTestCase(fakePeers, false); }
+        public async Task TestRemovePeerWithoutPublicKey(params string[] fakePeers) { await ExecuteTestCase(fakePeers, false); }
 
         /// <summary>Executes the test case.</summary>
         /// <param name="fakePeers">The fake peers.</param>
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
-        private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
+        private async Task ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var peerRepository = new InMemoryRepository<Peer>();
 
@@ -126,6 +127,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var handler = new RemovePeerRequestHandler(sendPeerIdentifier, peerRepository, _logger, messageFactory);
             handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);

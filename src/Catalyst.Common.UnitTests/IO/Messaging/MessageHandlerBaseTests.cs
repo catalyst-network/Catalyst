@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -86,7 +87,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var completingStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
             _handler.StartObserving(completingStream);
-            await completingStream.LastAsync();
+            await completingStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _handler.SubstituteObserver.Received(10).OnNext(Arg.Any<ProtocolMessage>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());
@@ -94,9 +95,9 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         }
 
         [Fact]
-        public void MessageHandler_should_subscribe_to_next_and_error()
+        public async Task MessageHandler_should_subscribe_to_next_and_error()
         {
-            var erroringStream = new Subject<IChanneledMessage<ProtocolMessage>>();
+            var erroringStream = new ReplaySubject<IChanneledMessage<AnySigned>>(10);
             
             _handler.StartObserving(erroringStream);
 
@@ -110,7 +111,9 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                 erroringStream.OnNext(new ProtocolMessageDto(_fakeContext, payload));
             }
 
-            _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<ProtocolMessage>());
+            await erroringStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+
+            _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<AnySigned>());
             _handler.SubstituteObserver.Received(1).OnError(Arg.Is<Exception>(e => e is DataMisalignedException));
             _handler.SubstituteObserver.Received(0).OnCompleted();
         }
@@ -129,7 +132,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
             _handler.StartObserving(mixedTypesStream);
-            await mixedTypesStream.LastAsync();
+            await mixedTypesStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _handler.SubstituteObserver.Received(8).OnNext(Arg.Any<ProtocolMessage>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());
@@ -146,7 +149,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
             _handler.StartObserving(mixedTypesStream);
-            await mixedTypesStream.LastAsync();
+            await mixedTypesStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _handler.SubstituteObserver.Received(7).OnNext(Arg.Any<ProtocolMessage>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());

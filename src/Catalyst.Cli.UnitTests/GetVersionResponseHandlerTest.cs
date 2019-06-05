@@ -23,14 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using NSubstitute;
@@ -76,7 +74,7 @@ namespace Catalyst.Cli.UnitTests
 
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void RpcClient_Can_Handle_GetVersionResponse(string version)
+        public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
         {
             var response = new MessageFactory().GetMessage(new MessageDto(
                     new VersionResponse
@@ -89,10 +87,12 @@ namespace Catalyst.Cli.UnitTests
                 ),
                 Guid.NewGuid());
 
-            var messageStream = CreateStreamWithMessage(response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
             _handler = new GetVersionResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _output.Received(1).WriteLine($"Node Version: {version}");
         }

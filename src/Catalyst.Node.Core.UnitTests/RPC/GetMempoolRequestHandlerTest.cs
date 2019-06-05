@@ -21,9 +21,13 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Mempool;
@@ -76,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> txLst, int expectedTxs)
+        public async Task GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> txLst, int expectedTxs)
         {
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
@@ -97,7 +101,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var handler = new GetMempoolRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, messageFactory, _logger);
             handler.StartObserving(messageStream);
-            
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             

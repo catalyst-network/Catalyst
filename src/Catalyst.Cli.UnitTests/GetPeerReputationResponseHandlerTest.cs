@@ -23,14 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using NSubstitute;
@@ -92,9 +90,9 @@ namespace Catalyst.Cli.UnitTests
         /// <param name="rep">The rep.</param>
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void RpcClient_Can_Handle_GetReputationResponse(int rep)
+        public async Task RpcClient_Can_Handle_GetReputationResponse(int rep)
         {
-            TestGetReputationResponse(rep);
+            await TestGetReputationResponse(rep);
 
             _output.Received(1).WriteLine($"Peer Reputation: {rep}");
         }
@@ -105,14 +103,14 @@ namespace Catalyst.Cli.UnitTests
         /// <param name="rep">The rep.</param>
         [Theory]
         [InlineData(int.MinValue)]
-        public void RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
+        public async Task RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
         {
-            TestGetReputationResponse(rep);
+            await TestGetReputationResponse(rep);
 
             _output.Received(1).WriteLine("Peer Reputation: Peer not found");
         }
 
-        private void TestGetReputationResponse(int rep)
+        private async Task TestGetReputationResponse(int rep)
         {
             var response = new MessageFactory().GetMessage(new MessageDto(
                     new GetPeerReputationResponse
@@ -124,10 +122,12 @@ namespace Catalyst.Cli.UnitTests
                     PeerIdentifierHelper.GetPeerIdentifier("sender")),
                 Guid.NewGuid());
 
-            var messageStream = CreateStreamWithMessage(response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
             _handler = new PeerReputationResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
         }
 
         public void Dispose()

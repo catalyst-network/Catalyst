@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
@@ -71,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData(40)]
         [InlineData(20)]
-        public void TestPeerListRequestResponse(int fakePeers)
+        public async Task TestPeerListRequestResponse(int fakePeers)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
             var peerList = new List<Peer>();
@@ -105,6 +106,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var handler = new PeerCountRequestHandler(sendPeerIdentifier, peerRepository, messageFactory, _logger);
             handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

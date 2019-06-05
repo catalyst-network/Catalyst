@@ -75,11 +75,11 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHashAsHex),
                 out IList<IPeerIdentifier> cachedPeerIdsInPriorityOrder))
             {
-                _logger.Information("Retrieved favorite delta producers for successor of {0} from cache.", previousDeltaHashAsHex);
+                _logger.Information("Retrieved favourite delta producers for successor of {0} from cache.", previousDeltaHashAsHex);
                 return cachedPeerIdsInPriorityOrder;
             }
 
-            _logger.Information("Calculating favorite delta producers for the successor of {0}.", previousDeltaHashAsHex);
+            _logger.Information("Calculating favourite delta producers for the successor of {0}.", previousDeltaHashAsHex);
 
             var allPeers = PeerRepository.GetAll();
 
@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                .Select(h => h.PeerIdentifier)
                .ToList();
 
-            _logger.Information("Adding favorite delta producers for the successor of {0} to cache.", previousDeltaHashAsHex);
+            _logger.Information("Adding favourite delta producers for the successor of {0} to cache.", previousDeltaHashAsHex);
             _producersByPreviousDelta.Set(GetCacheKey(previousDeltaHashAsHex), peerIdsInPriorityOrder, _cacheEntryOptions);
 
             return peerIdsInPriorityOrder;
