@@ -111,7 +111,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                 erroringStream.OnNext(new ChanneledAnySigned(_fakeContext, payload));
             }
 
-            await erroringStream.AsObservable().Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).Take(1).FirstAsync();
+            await erroringStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
             _handler.SubstituteObserver.Received(5).OnNext(Arg.Any<AnySigned>());
             _handler.SubstituteObserver.Received(1).OnError(Arg.Is<Exception>(e => e is DataMisalignedException));
