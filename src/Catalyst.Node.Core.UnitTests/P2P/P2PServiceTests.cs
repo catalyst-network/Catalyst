@@ -138,7 +138,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     using (var peerClient = new PeerClient(targetHost))
                     {
-                        peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                        peerClient.SendMessage(datagramEnvelope);
                     }
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
@@ -185,7 +185,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     using (var peerClient = new PeerClient(targetHost))
                     {
-                        peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
+                        peerClient.SendMessage(datagramEnvelope);
                     }
 
                     var tasks = new IChanneledMessageStreamer<AnySigned>[]
