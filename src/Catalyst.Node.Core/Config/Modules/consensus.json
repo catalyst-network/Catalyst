@@ -58,6 +58,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaElector",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaElector, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.InMemoryRepository",
             "services": [
                 {
