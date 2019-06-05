@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging;
@@ -79,9 +80,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData("highscored-14\0\0\0\0\0\0\0", "198.51.100.14", "true")]
         [InlineData("highscored-22\0\0\0\0\0\0\0", "198.51.100.22", "true")]
-        public void TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
+        public async Task TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
         {
-            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
+            var responseContent = await ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
             responseContent.Blacklist.Should().BeTrue();
             responseContent.Ip.ToStringUtf8().Should().Be(ipAddress);
@@ -98,16 +99,16 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "198.51.100.11", "true")]
         [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "198.51.100.5", "true")]
-        public void TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
+        public async Task TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
         {
-            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
+            var responseContent = await ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
             responseContent.Blacklist.Should().Be(false);
             responseContent.Ip.Should().BeNullOrEmpty();
             responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
-        private SetPeerBlackListResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
+        private async Task<SetPeerBlackListResponse> ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
 
@@ -150,7 +151,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var handler = new PeerBlackListingRequestHandler(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
-            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

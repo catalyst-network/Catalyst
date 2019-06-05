@@ -23,11 +23,9 @@
 
 using System;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -39,7 +37,6 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
-using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -90,7 +87,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var completingStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
             _handler.StartObserving(completingStream);
-            await completingStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).LastAsync();
+            await completingStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _handler.SubstituteObserver.Received(10).OnNext(Arg.Any<AnySigned>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());
@@ -135,7 +132,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
             _handler.StartObserving(mixedTypesStream);
-            await mixedTypesStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).LastAsync();
+            await mixedTypesStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _handler.SubstituteObserver.Received(8).OnNext(Arg.Any<AnySigned>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());
@@ -152,7 +149,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 
             _handler.StartObserving(mixedTypesStream);
-            await mixedTypesStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).LastAsync();
+            await mixedTypesStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _handler.SubstituteObserver.Received(7).OnNext(Arg.Any<AnySigned>());
             _handler.SubstituteObserver.Received(0).OnError(Arg.Any<Exception>());

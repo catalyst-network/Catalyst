@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
     public sealed class GetInfoRequestHandlerTest : ConfigFileBasedTest
     {
         private readonly ILogger _logger;
-        private IChannelHandlerContext _fakeContext;
+        private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
         private readonly IRpcServerSettings _rpcServerSettings;
 
@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, messageFactory, _logger);
             handler.StartObserving(messageStream);
 
-            await messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

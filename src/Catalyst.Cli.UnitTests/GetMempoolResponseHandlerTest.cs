@@ -24,10 +24,8 @@
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
@@ -37,9 +35,8 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Catalyst.Cli.UnitTests
@@ -77,13 +74,6 @@ namespace Catalyst.Cli.UnitTests
             _output = Substitute.For<IUserOutput>();
         }
 
-        private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
-        {
-            var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
-        }
-
         private static IEnumerable<string> CreateMemPoolData()
         {
             var txLst = new List<TransactionBroadcast>
@@ -106,7 +96,7 @@ namespace Catalyst.Cli.UnitTests
 
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
+        public async Task RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
         { 
             var txList = mempoolContent.ToList();
 
@@ -121,12 +111,12 @@ namespace Catalyst.Cli.UnitTests
                 ),
                 Guid.NewGuid());
 
-            var messageStream = CreateStreamWithMessage(response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, response);
 
             _handler = new GetMempoolResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
 
-            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _output.Received(txList.Count).WriteLine(Arg.Any<string>());
         }

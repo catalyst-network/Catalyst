@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -140,9 +139,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
                 peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId());
             }
 
-            await observableStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
+            await observableStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
-            fakeContext.Channel.ReceivedWithAnyArgs(1)
+            await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(peerNeighborsResponseMessage.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
         }
     }

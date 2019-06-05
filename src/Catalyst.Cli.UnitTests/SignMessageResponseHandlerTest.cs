@@ -23,8 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -95,7 +94,7 @@ namespace Catalyst.Cli.UnitTests
 
         [Theory]
         [MemberData(nameof(QueryContents))]  
-        public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
+        public async Task RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
         {
             var response = new MessageFactory().GetMessage(new MessageDto(
                     new SignMessageResponse
@@ -113,7 +112,8 @@ namespace Catalyst.Cli.UnitTests
             
             _handler = new SignMessageResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
-            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _output.Received(1).WriteLine(Arg.Any<string>());
         }

@@ -22,8 +22,7 @@
 #endregion
 
 using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
@@ -68,9 +67,9 @@ namespace Catalyst.Cli.UnitTests
         [Theory]
         [InlineData("true", "198.51.100.22", "cne2+eRandomValuebeingusedherefprtestingIOp")]
         [InlineData("false", "198.51.100.14", "uebeingusedhere44j6jhdhdhandomValfprtestingItn")]
-        public void RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string publicKey, string ip)
+        public async Task RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string publicKey, string ip)
         {
-            TestGetBlackListResponse(blacklist, publicKey, ip);
+            await TestGetBlackListResponse(blacklist, publicKey, ip);
 
             _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist}, {publicKey}, {ip}");
         }
@@ -79,14 +78,14 @@ namespace Catalyst.Cli.UnitTests
         /// RPCs the client can handle get peer blacklisting response non existent peers.
         /// </summary>
         [Fact]
-        public void RpcClient_Can_Handle_GetBlackListingResponseNonExistentPeers()
+        public async Task RpcClient_Can_Handle_GetBlackListingResponseNonExistentPeers()
         { 
-            TestGetBlackListResponse(false, string.Empty, string.Empty);
+            await TestGetBlackListResponse(false, string.Empty, string.Empty);
 
             _output.Received(1).WriteLine("Peer not found");
         }
 
-        private void TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
+        private async Task TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
             var response = new MessageFactory().GetMessage(new MessageDto(
                     new SetPeerBlackListResponse
@@ -105,8 +104,7 @@ namespace Catalyst.Cli.UnitTests
             _handler = new PeerBlackListingResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
 
-            messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync().GetAwaiter().GetResult();
-
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
         }
 
         public void Dispose()

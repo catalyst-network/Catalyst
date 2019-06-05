@@ -24,8 +24,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
@@ -97,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, messageFactory);
             handler.StartObserving(messageStream);
 
-            await messageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

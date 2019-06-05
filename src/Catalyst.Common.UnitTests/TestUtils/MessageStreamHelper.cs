@@ -22,9 +22,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
@@ -60,6 +61,22 @@ namespace Catalyst.Common.UnitTests.TestUtils
         private static ChanneledAnySigned CreateChanneledMessage(IChannelHandlerContext fakeContext, AnySigned responseMessage)
         {
             return new ChanneledAnySigned(fakeContext, responseMessage);
+        }
+
+        public static IObservable<T> DelayAndSubscribeOnTaskPool<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)
+        {
+            var delay = customDelay == default ? TimeSpan.FromMilliseconds(30) : customDelay;
+            return messageStream.Delay(delay).SubscribeOn(TaskPoolScheduler.Default);
+        }
+
+        public static async Task<T> WaitForEndOfDelayedStreamOnTaskPoolScheduler<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)
+        {
+            return await messageStream.DelayAndSubscribeOnTaskPool(customDelay).LastAsync();
+        }
+
+        public static async Task<T> WaitForItemsOnDelayedStreamOnTaskPoolScheduler<T>(this IObservable<T> messageStream, int numberOfItemsToWaitFor = 1, TimeSpan customDelay = default)
+        {
+            return await messageStream.Take(numberOfItemsToWaitFor).DelayAndSubscribeOnTaskPool(customDelay).LastAsync();
         }
     }
 }

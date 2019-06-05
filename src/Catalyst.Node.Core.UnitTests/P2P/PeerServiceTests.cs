@@ -26,7 +26,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -41,7 +40,6 @@ using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Node.Core.UnitTests.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -105,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var handler = new PingRequestHandler(_pid, _logger);
                 handler.StartObserving(observableStream);
 
-                await observableStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
+                await observableStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
                 await fakeContext.Channel.ReceivedWithAnyArgs(1)
                    .WriteAndFlushAsync(new PingResponse().ToAnySigned(_pid.PeerId, _guid));
@@ -123,8 +121,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
-                    var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
+                    var peerSettings = _container.Resolve<IPeerSettings>();
+                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingRequest(),
@@ -142,7 +140,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         peerClient.SendMessage(datagramEnvelope);
                     }
                     
-                    await peerService.MessageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
+                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
                     
                     serverObserver.Received.LastOrDefault().Should().NotBeNull();
                     serverObserver.Received.Last().Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
@@ -177,7 +175,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     
                     peerClient.SendMessage(datagramEnvelope);
 
-                    await peerService.MessageStream.Delay(TimeSpan.FromMilliseconds(100)).SubscribeOn(TaskPoolScheduler.Default).FirstAsync();
+                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
                     serverObserver.Received.FirstOrDefault().Should().NotBeNull();
                     serverObserver.Received.First().Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
