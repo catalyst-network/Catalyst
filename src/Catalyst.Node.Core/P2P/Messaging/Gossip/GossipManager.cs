@@ -138,18 +138,15 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
 
-            Task.Run(() =>
+            using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort)))
             {
-                using (var peerClient = new PeerClient(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort)))
+                foreach (var peerIdentifier in peersToGossip)
                 {
-                    foreach (var peerIdentifier in peersToGossip)
-                    {
-                        var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
-                            MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                        peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
-                    }
+                    var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
+                        MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
+                    peerClient.SendMessage(datagramEnvelope).GetAwaiter().GetResult();
                 }
-            });
+            }
 
             var updateCount = (uint) peersToGossip.Count;
             if (updateCount > 0)
