@@ -28,7 +28,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
-    public class SignatureHandler : SimpleChannelInboundHandler<AnySigned>
+    public sealed class SignatureHandler : SimpleChannelInboundHandler<AnySigned>
     {
         private readonly IKeySigner _keySigner;
 
