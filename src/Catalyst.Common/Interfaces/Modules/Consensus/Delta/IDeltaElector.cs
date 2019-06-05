@@ -26,13 +26,16 @@ using Catalyst.Protocol.Delta;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
-    /// <summary>
-    /// This component is meant to be used to produce and retrieve ranking/voting data
-    /// about the different candidate deltas observed on the network, in order to be
-    /// able to determine which candidate should eventually make it to the DFS.
-    /// </summary>
-    public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
+    public interface IDeltaElector : IObserver<FavouriteDeltaBroadcast>
     {
-        CandidateDeltaBroadcast GetFavouriteDelta(byte[] previousDeltaDfsHash);
+        /// <summary>
+        /// When the election phase is over, this method can be called to retrieve which candidate
+        /// has been the most popular for a given cycle. If the candidate is popular enough, it
+        /// will then be appointed as the next official delta.
+        /// </summary>
+        /// <param name="previousDeltaDfsHash">The DFS hash of the delta for which we are
+        /// trying to produce a successor.</param>
+        /// <returns>The most popular candidate for a given cycle.</returns>
+        CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash);
     }
 }
