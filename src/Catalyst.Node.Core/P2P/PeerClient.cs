@@ -38,11 +38,6 @@ namespace Catalyst.Node.Core.P2P
         : UdpClient,
             IPeerClient
     {
-        static PeerClient()
-        {
-            DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider());
-        }
-
         public PeerClient(IPeerIdentifier peerIdentifier) : this(peerIdentifier.IpEndPoint) { }
             
         /// <summary>
