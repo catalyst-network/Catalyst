@@ -29,9 +29,8 @@ using Serilog;
 
 namespace Catalyst.Common.IO
 {
-    public class IoBase : ISocket, IDisposable
+    public class IoBase : ISocket
     {
-        protected const int BackLogValue = 100;
         protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
 
@@ -41,22 +40,6 @@ namespace Catalyst.Common.IO
         {
             Logger = logger;
             WorkerEventLoop = new MultithreadEventLoopGroup();
-        }
-
-        public virtual async Task Shutdown()
-        {
-            if (Channel != null)
-            {
-                await Channel.CloseAsync().ConfigureAwait(false);
-            }
-
-            if (WorkerEventLoop != null)
-            {
-                var quietPeriod = TimeSpan.FromMilliseconds(100);
-                await WorkerEventLoop
-                   .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
-                   .ConfigureAwait(false);
-            }
         }
 
         public void Dispose()
@@ -72,7 +55,18 @@ namespace Catalyst.Common.IO
             }
             
             Logger.Information($"Disposing {GetType().Name}");
-            Task.WaitAll(Shutdown());
+
+            Channel?.CloseAsync();
+
+            if (WorkerEventLoop == null)
+            {
+                return;
+            }
+            
+            var quietPeriod = TimeSpan.FromMilliseconds(100);
+
+            WorkerEventLoop?
+               .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod);
         }
     }
 }

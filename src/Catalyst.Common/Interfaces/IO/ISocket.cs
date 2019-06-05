@@ -21,12 +21,13 @@
 
 #endregion
 
-using System.Threading.Tasks;
+using System;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO
 {
-    public interface ISocket
+    public interface ISocket : IDisposable
     {
-        Task Shutdown();
+        IChannel Channel { get; set; }
     }
 }

@@ -47,14 +47,13 @@ namespace Catalyst.Common.IO.Inbound
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
         {
-            var channeledAnySigned = new ChanneledAnySigned(ctx, msg);
-
-            if (channeledAnySigned.Payload.CheckIfMessageIsGossip())
+            if (msg.CheckIfMessageIsGossip())
             {
+                var channeledAnySigned = new ChanneledAnySigned(ctx, msg);
                 _gossipManager.IncomingGossip(channeledAnySigned);
             }
 
-            ctx.FireChannelRead(ctx);
+            ctx.FireChannelRead(msg);
         }
     }
 }

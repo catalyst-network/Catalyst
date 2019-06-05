@@ -23,6 +23,7 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
@@ -43,7 +44,9 @@ namespace Catalyst.Common.IO.Outbound
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
-               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort).GetAwaiter().GetResult();
+               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort)
+               .GetAwaiter()
+               .GetResult();
         }
     }
 }
