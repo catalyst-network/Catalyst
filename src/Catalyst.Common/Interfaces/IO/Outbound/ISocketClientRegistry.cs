@@ -23,9 +23,8 @@
 
 using System.Collections.Generic;
 using System.Net;
-using Catalyst.Common.Interfaces.IO.Outbound;
 
-namespace Catalyst.Common.Interfaces.IO
+namespace Catalyst.Common.Interfaces.IO.Outbound
 {
     public interface ISocketClientRegistry<TSocketChannel> where TSocketChannel : class, ISocketClient
     {
