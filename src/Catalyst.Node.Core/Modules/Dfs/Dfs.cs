@@ -27,12 +27,8 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Ipfs;
-using Ipfs.HttpGateway;
 using Serilog;
 using Ipfs.CoreApi;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-using System;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {

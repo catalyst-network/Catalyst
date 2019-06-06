@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public void Dispose()
         {
-            _gateway?.Dispose(); ;
+            _gateway?.Dispose();
         }
 
         /// <inheritdoc />
