@@ -65,15 +65,8 @@ namespace Catalyst.Common.IO
                    .GetResult();   
             }
 
-            if (WorkerEventLoop == null)
-            {
-                return;
-            }
-            
-            var quietPeriod = TimeSpan.FromMilliseconds(100);
-
             WorkerEventLoop?
-               .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
+               .ShutdownGracefullyAsync()
                .GetAwaiter()
                .GetResult();
         }
