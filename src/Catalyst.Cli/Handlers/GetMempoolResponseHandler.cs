@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull("The message cannot be null");
             

@@ -27,7 +27,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface INodeRpcServer : IChanneledMessageStreamer<AnySigned>, IDisposable
+    public interface INodeRpcServer : IChanneledMessageStreamer<ProtocolMessage>, IDisposable
     {
         IRpcServerSettings Settings { get; }
     }

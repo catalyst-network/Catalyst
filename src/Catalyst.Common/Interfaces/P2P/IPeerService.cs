@@ -27,7 +27,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerService : IChanneledMessageStreamer<AnySigned>, IDisposable
+    public interface IPeerService : IChanneledMessageStreamer<ProtocolMessage>, IDisposable
     {
         /// <summary>
         ///     The discovery mechanism for the peer network.

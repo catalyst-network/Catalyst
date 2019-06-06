@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             }.ToAnySigned(PeerIdHelper.GetPeerId("Test"), guid);
             request.SendToHandler(_context, _handler);
             _context.Channel.Received().WriteAndFlushAsync(
-                Arg.Is<AnySigned>(signed =>
+                Arg.Is<ProtocolMessage>(signed =>
                     signed.FromAnySigned<TransferFileBytesResponse>().ResponseCode[0] == 
                     (byte) FileTransferResponseCodes.Error));
         }

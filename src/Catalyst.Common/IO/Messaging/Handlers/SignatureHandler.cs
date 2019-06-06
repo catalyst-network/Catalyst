@@ -25,10 +25,11 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
-    public class SignatureHandler : SimpleChannelInboundHandler<AnySigned>
+    public sealed class SignatureHandler : SimpleChannelInboundHandler<ProtocolMessageSigned>
     {
         private readonly IKeySigner _keySigner;
 
@@ -37,14 +38,15 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             _keySigner = keySigner;
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
         {
             if (_keySigner.Verify(
-                new PublicKey(message.PeerId.PublicKey.ToByteArray()),
-                message.Value.ToByteArray(),
-                new Signature(message.Signature.ToByteArray())))
+                new PublicKey(signedMessage.Message.PeerId.PublicKey.ToByteArray()),
+                signedMessage.Message.ToByteString().ToByteArray(),
+                new Signature(signedMessage.Signature.ToByteArray()))
+            )
             {
-                ctx.FireChannelRead(message);                
+                ctx.FireChannelRead(signedMessage.Message);                
             }
             else
             {
