@@ -40,6 +40,6 @@ namespace Catalyst.Common.Interfaces.P2P.Messaging
         /// <summary>Determines whether this instance [can execute next handler] the specified message.</summary>
         /// <param name="message">The message.</param>
         /// <returns><c>true</c> if this instance [can execute next handler] the specified message; otherwise, <c>false</c>.</returns>
-        bool CanExecuteNextHandler(IChanneledMessage<AnySigned> message);
+        bool CanExecuteNextHandler(IChanneledMessage<ProtocolMessage> message);
     }
 }

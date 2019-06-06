@@ -76,7 +76,7 @@ namespace Catalyst.Common.IO.Messaging
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public bool TryMatchResponse(AnySigned response)
+        public bool TryMatchResponse(ProtocolMessage response)
         {
             Guard.Argument(response, nameof(response)).NotNull();
 

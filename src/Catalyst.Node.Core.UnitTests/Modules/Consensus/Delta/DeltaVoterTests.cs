@@ -227,7 +227,10 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 realCache.TryGetValue(firstKey, out IScoredCandidateDelta firstRetrieved).Should().BeTrue();
                 realCache.TryGetValue(secondKey, out IScoredCandidateDelta secondRetrieved).Should().BeTrue();
 
-                return new List<IScoredCandidateDelta> { firstRetrieved, secondRetrieved };
+                return new List<IScoredCandidateDelta>
+                {
+                    firstRetrieved, secondRetrieved
+                };
             }
         }
 

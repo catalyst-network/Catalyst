@@ -88,15 +88,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             return fakeStream;
         }
 
-        private IChanneledMessage<AnySigned> GetFileFromDfsRequestMessage()
+        private IChanneledMessage<ProtocolMessage> GetFileFromDfsRequestMessage()
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
                 DfsHash = "test"
             };
-            var anySigned = getFileFromDfsRequestMessage
+            var protocolMessage = getFileFromDfsRequestMessage
                .ToAnySigned(PeerIdHelper.GetPeerId("TestMan"), Guid.NewGuid());
-            return new ChanneledAnySigned(Substitute.For<IChannelHandlerContext>(), anySigned);
+            return new ProtocolMessageDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
     }
 }

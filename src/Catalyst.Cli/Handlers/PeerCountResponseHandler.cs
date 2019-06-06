@@ -60,7 +60,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the peer count response.
         /// </summary>
         /// <param name="message">The GetPeerCountResponse message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Debug("Handling GetPeerCount response");
             Guard.Argument(message).NotNull("Received message cannot be null");

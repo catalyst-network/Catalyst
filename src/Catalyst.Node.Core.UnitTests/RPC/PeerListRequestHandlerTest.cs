@@ -113,7 +113,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
+            var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerListResponse.Descriptor.ShortenedFullName());
 
             var responseContent = sentResponse.FromAnySigned<GetPeerListResponse>();

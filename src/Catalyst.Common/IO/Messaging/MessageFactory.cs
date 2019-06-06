@@ -33,15 +33,15 @@ using DotNetty.Buffers;
 namespace Catalyst.Common.IO.Messaging
 {
     /// <summary>
-    /// The base class to handle building of AnySigned messages
+    /// The base class to handle building of ProtocolMessage messages
     /// </summary>
     public sealed class MessageFactory : IMessageFactory
     {
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>AnySigned message</returns>
-        public AnySigned GetMessage(IMessageDto messageDto,
+        /// <returns>ProtocolMessage message</returns>
+        public ProtocolMessage GetMessage(IMessageDto messageDto,
             Guid correlationId = default)
         {
             if (messageDto.MessageType == MessageTypes.Ask)
@@ -75,8 +75,8 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>Builds the tell message.</summary>
         /// <param name="dto">The dto.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>AnySigned message</returns>
-        private AnySigned BuildTellMessage(IMessageDto dto, Guid correlationId)
+        /// <returns>ProtocolMessage message</returns>
+        private ProtocolMessage BuildTellMessage(IMessageDto dto, Guid correlationId)
         {
             return correlationId == default
                 ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
@@ -85,8 +85,8 @@ namespace Catalyst.Common.IO.Messaging
 
         /// <summary>Builds the ask message.</summary>
         /// <param name="dto">The dto.</param>
-        /// <returns>AnySigned message</returns>
-        private AnySigned BuildAskMessage(IMessageDto dto)
+        /// <returns>ProtocolMessage message</returns>
+        private ProtocolMessage BuildAskMessage(IMessageDto dto)
         {
             var messageContent = dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
             var correlatableRequest = new PendingRequest
@@ -101,8 +101,8 @@ namespace Catalyst.Common.IO.Messaging
 
         /// <summary>Builds the gossip message.</summary>
         /// <param name="dto">The dto.</param>
-        /// <returns>AnySigned message</returns>
-        private AnySigned BuildGossipMessage(IMessageDto dto)
+        /// <returns>ProtocolMessage message</returns>
+        private ProtocolMessage BuildGossipMessage(IMessageDto dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }

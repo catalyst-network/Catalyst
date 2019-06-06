@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdentifier _peerIdentifier;
-        private IChanneledMessage<AnySigned> _message;
+        private IChanneledMessage<ProtocolMessage> _message;
         private readonly IMessageFactory _messageFactory;
 
         private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             _peerIdentifier = peerIdentifier;
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             _message = message;
             
