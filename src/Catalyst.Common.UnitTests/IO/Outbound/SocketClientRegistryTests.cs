@@ -29,12 +29,12 @@ using System.Net;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO;
+using Catalyst.Common.IO.Outbound;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO
+namespace Catalyst.Common.UnitTests.IO.Outbound
 {
     public sealed class SocketClientRegistryTests
     {
