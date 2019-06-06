@@ -26,11 +26,11 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Ledger;
 
-namespace Catalyst.Node.Core.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
-    internal static class AccountHelper
+    public static class AccountHelper
     {
-        internal static Account GetAccount(BigDecimal balance,
+        public static Account GetAccount(BigDecimal balance,
             uint coinType = 0,
             string accountType = "NonConfidentialAccount",
             string publicAddress = "0x32Be343B94f860124dC4fEe278FDCBD38C102D88")
