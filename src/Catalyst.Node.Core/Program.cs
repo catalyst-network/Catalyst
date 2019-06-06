@@ -124,7 +124,6 @@ namespace Catalyst.Node.Core
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var node = container.Resolve<ICatalystNode>();
-
                     node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                 }
 
