@@ -32,12 +32,17 @@ namespace Catalyst.Node.Core.UnitTests.TestUtils
         public static IConfigurationRoot AlterConfigurationToGetUniquePort(IConfigurationRoot config, string currentTestName)
         {
             var serverSection = config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
+            var peerSection = config.GetSection("CatalystNodeConfiguration").GetSection("Peer");
+
             var randomPort = int.Parse(serverSection.GetSection("Port").Value) +
                 new Random(currentTestName.GetHashCode()).Next(0, 500);
 
             serverSection.GetSection("Port").Value = randomPort.ToString();
+            peerSection.GetSection("Port").Value = (randomPort + 1).ToString();
+
             var clientSection = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
             clientSection.GetChildren().ToList().ForEach(c => { c.GetSection("port").Value = randomPort.ToString(); });
+
             return config;
         }
     }

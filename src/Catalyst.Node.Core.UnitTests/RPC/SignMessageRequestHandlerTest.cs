@@ -21,9 +21,11 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -76,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [InlineData("Hello Catalyst")]
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
-        public void RpcServer_Can_Handle_SignMessageRequest(string message)
+        public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var messageFactory = new MessageFactory();
             var request = messageFactory.GetMessage(new MessageDto(
@@ -92,7 +94,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, messageFactory);
             handler.StartObserving(messageStream);
-             
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
