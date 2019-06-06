@@ -24,11 +24,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Dawn;
 
-namespace Catalyst.Common.IO
+namespace Catalyst.Common.IO.Outbound
 {
     public sealed class SocketClientRegistry<TSocketChannel>
         : ISocketClientRegistry<TSocketChannel>

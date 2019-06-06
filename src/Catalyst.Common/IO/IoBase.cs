@@ -37,7 +37,7 @@ namespace Catalyst.Common.IO
         protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
 
-        public IChannel Channel { get; set; }
+        public IChannel Channel { get; protected set; }
 
         protected IoBase(ILogger logger)
         {
