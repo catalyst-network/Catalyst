@@ -22,85 +22,107 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
+using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Serilog;
-using Nethereum.RLP;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerValidator : IPeerValidator
+    public sealed class PeerValidator : IPeerValidator,
+        IDisposable
     {
-        private readonly IPeerClient _peerClient;
+        private readonly IPEndPoint _hostEndPoint;
         private readonly IPeerSettings _peerSettings;
         private readonly IPeerService _peerService;
-        private readonly AnySignedMessageObserver _serverObserver;
         private readonly ILogger _logger;
 
-        public PeerValidator(IPeerClient peerClient,
+        private readonly IDisposable _incomingPingResponseSubscription;
+        private readonly ConcurrentStack<IChanneledMessage<AnySigned>> _receivedResponses;
+
+        public PeerValidator(IPEndPoint hostEndPoint,
             IPeerSettings peerSettings,
             IPeerService peerService,
-            AnySignedMessageObserver serverObserver, 
             ILogger logger)
         {
-            _peerClient = peerClient;
             _peerSettings = peerSettings;
             _peerService = peerService;
-            _serverObserver = serverObserver;
+            _hostEndPoint = hostEndPoint;
+
             _logger = logger;
+            _receivedResponses = new ConcurrentStack<IChanneledMessage<AnySigned>>();
+            _incomingPingResponseSubscription = peerService.MessageStream.Subscribe(this);
+
+        }
+
+        public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(AnySigned)); }
+
+        public void OnError(Exception error)
+        {
+            _logger.Error(error, "Error occured in {0} stream.", nameof(AnySigned));
+        }
+
+        public void OnNext(IChanneledMessage<AnySigned> response)
+        {
+            if (response == NullObjects.ChanneledAnySigned)
+            {
+                return;
+            }
+
+            _receivedResponses.Push(response);
         }
 
         public bool PeerChallengeResponse(PeerIdentifier recipientPeerIdentifier)
         {
             try
             {
-                using (_peerService.MessageStream.Subscribe(_serverObserver))
+                var datagramEnvelope = new MessageFactory().GetDatagramMessage(
+                    new MessageDto(
+                        new PingRequest(),
+                        MessageTypes.Ask,
+                        new PeerIdentifier(recipientPeerIdentifier.PeerId),
+                        new PeerIdentifier(_peerSettings)
+                    ),
+                    Guid.NewGuid()
+                );
+
+                using (var peerClient = new PeerClient(_hostEndPoint))
                 {
-                    var datagramEnvelope = new MessageFactory().GetDatagramMessage(
-                        new MessageDto(
-                            new PingRequest(),
-                            MessageTypes.Ask,
-                            new PeerIdentifier(recipientPeerIdentifier.PeerId),
-                            new PeerIdentifier(_peerSettings.PublicKey.ToBytesForRLPEncoding(),
-                                _peerSettings.BindAddress,
-                                _peerSettings.Port)
-                        ),
-                        Guid.NewGuid()
-                    );
-
-                    ((PeerClient) _peerClient).SendMessage(datagramEnvelope);
-
-                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
-                        {
-                            _peerService
-                        }
-                       .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
-                       .ToArray();
-
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
-
-                    if (_serverObserver.Received.Any())
-                    {
-                        if (_serverObserver.Received.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
-                            recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false;
+                    peerClient.SendMessage(datagramEnvelope);
                 }
+
+                var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    {
+                        _peerService 
+                    }
+                   .Select(async p =>
+                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                   .ToArray();
+
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));
+
+                if (_receivedResponses.Any())
+                {
+                    if (_receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
+                        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
             catch (Exception e)
             {
@@ -108,6 +130,11 @@ namespace Catalyst.Node.Core.P2P
             }
 
             return false;
+        }
+
+        public void Dispose()
+        {
+            _incomingPingResponseSubscription?.Dispose();
         }
     }
 }

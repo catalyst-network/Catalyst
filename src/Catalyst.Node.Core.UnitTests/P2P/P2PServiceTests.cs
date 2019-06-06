@@ -206,21 +206,19 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
-                var peerService = _container.Resolve<IPeerService>();
-                var serverObserver = new AnySignedMessageObserver(0, _logger);
+                using (var peerService = _container.Resolve<IPeerService>())
+                {
+                    var peerSettings = new PeerSettings(_config);
+                    var targetHost = new IPEndPoint(peerSettings.BindAddress,
+                        peerSettings.Port + new Random().Next(0, 5000));
 
-                var peerSettings = new PeerSettings(_config);
-                var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
-                var peerClient = new PeerClient(targetHost);
+                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger))
+                    {
+                        var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings));
 
-                var peerValidator = new PeerValidator(peerClient, peerSettings, peerService, serverObserver, _logger);
-
-                var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings));
-
-                valid.Should().BeTrue();
-
-                peerClient.Dispose();
-                peerService.Dispose();
+                        valid.Should().BeTrue();
+                    }
+                }
             }
         }
 
@@ -243,7 +241,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     IPAddress.Parse(ip),
                     port);
 
-                var peerValidator = new PeerValidator(peerClient, peerSettings, peerService, serverObserver, _logger);
+                var peerValidator = new PeerValidator(host, peerSettings, peerService, _logger);
 
                 var valid = peerValidator.PeerChallengeResponse(peerActiveId);
 

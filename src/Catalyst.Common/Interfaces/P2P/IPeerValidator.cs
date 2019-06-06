@@ -21,14 +21,18 @@
 
 #endregion
 
+using System;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.P2P;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
     /// <summary>
     /// This class is used to validate peers by carrying out a peer challenge response
     /// </summary>
-    public interface IPeerValidator
+    public interface IPeerValidator : IObserver<IChanneledMessage<AnySigned>>
     {
         /// <summary>
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
