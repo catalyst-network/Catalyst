@@ -22,7 +22,7 @@
 #endregion
 
 using System.Net;
-using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -32,9 +32,10 @@ namespace Catalyst.Common.IO.Outbound
 {
     public abstract class ClientBase : IoBase, ISocketClient
     {
-        protected ClientBase(ILogger logger) : base(logger) { }
+        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
+            : base(channelFactory, logger) { }
 
-        protected abstract void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
+        protected abstract void Bootstrap(IChannelHandler channelHandler, IPEndPoint ipEndPoint);
 
         public void SendMessage(ProtocolMessage message)
         {

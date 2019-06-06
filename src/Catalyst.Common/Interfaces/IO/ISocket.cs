@@ -30,4 +30,9 @@ namespace Catalyst.Common.Interfaces.IO
     {
         IChannel Channel { get; }
     }
+
+    public interface IChannelFactory
+    {
+        IChannel BuildChannel();
+    }
 }

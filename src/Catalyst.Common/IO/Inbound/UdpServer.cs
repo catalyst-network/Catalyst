@@ -24,6 +24,7 @@
 using System.Net;
 using System.Net.Sockets;
 using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -39,8 +40,8 @@ namespace Catalyst.Common.IO.Inbound
         ///
         /// </summary>
         /// <param name="logger"></param>
-        protected UdpServer(ILogger logger)
-            : base(logger) { }
+        protected UdpServer(IUdpChannelFactory channelFactory, ILogger logger)
+            : base(channelFactory, logger) { }
 
         /// <summary>
         /// 
@@ -53,7 +54,7 @@ namespace Catalyst.Common.IO.Inbound
         {
             Channel = new Bootstrap()
                .Group(WorkerEventLoop)
-               .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
+               .ChannelFactory(ChannelFactory.BuildChannel)
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)

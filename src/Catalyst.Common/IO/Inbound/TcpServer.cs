@@ -25,6 +25,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotNetty.Handlers.Logging;
@@ -32,6 +33,11 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Inbound
 {
+    public class TcpChannelFactory : ITcpChannelFactory
+    {
+        public IChannel BuildChannel() => new TcpServerSocketChannel();
+    }
+
     public class TcpServer
         : IoBase,
             ITcpServer
@@ -44,8 +50,8 @@ namespace Catalyst.Common.IO.Inbound
         ///
         /// </summary>
         /// <param name="logger"></param>
-        protected TcpServer(ILogger logger)
-            : base(logger)
+        protected TcpServer(ITcpChannelFactory tcpChannelFactory, ILogger logger)
+            : base(tcpChannelFactory, logger)
         {
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }
@@ -54,7 +60,7 @@ namespace Catalyst.Common.IO.Inbound
         {
             Channel = new ServerBootstrap()
                .Group(_supervisorEventLoop, childGroup: WorkerEventLoop)
-               .ChannelFactory(() => new TcpServerSocketChannel())
+               .ChannelFactory(() => ChannelFactory.BuildChannel() as IServerChannel)
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelInitializer)

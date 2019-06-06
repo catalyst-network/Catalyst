@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
@@ -46,7 +48,7 @@ namespace Catalyst.Node.Core.P2P
         /// </summary>
         /// <param name="ipEndPoint"></param>
         public PeerClient(IPEndPoint ipEndPoint)
-            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+            : base((IUdpChannelFactory) null, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(
                 new List<IChannelHandler>

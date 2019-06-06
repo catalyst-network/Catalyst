@@ -34,15 +34,18 @@ namespace Catalyst.Common.IO
 {
     public class IoBase : ISocket
     {
+        protected readonly IChannelFactory ChannelFactory;
         protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
 
         public IChannel Channel { get; protected set; }
 
-        protected IoBase(ILogger logger)
+        protected IoBase(IChannelFactory channelFactory, ILogger logger)
         {
+            ChannelFactory = channelFactory;
             Logger = logger;
             WorkerEventLoop = new MultithreadEventLoopGroup();
+            Channel = channelFactory.BuildChannel();
         }
 
         public void Dispose()

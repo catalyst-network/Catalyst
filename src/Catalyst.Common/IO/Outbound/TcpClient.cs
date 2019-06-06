@@ -22,6 +22,7 @@
 #endregion
 
 using System.Net;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
@@ -33,16 +34,16 @@ namespace Catalyst.Common.IO.Outbound
     {
         private const int BackLogValue = 100;
 
-        protected TcpClient(ILogger logger) : base(logger) { }
+        protected TcpClient(ILogger logger) : base((IChannelFactory) null, logger) { }
 
-        protected sealed override void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint)
+        protected sealed override void Bootstrap(IChannelHandler channelHandler, IPEndPoint ipEndPoint)
         {
             Channel = new Bootstrap()
                .Group(WorkerEventLoop)
                .Channel<TChannel>()
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer)
+               .Handler(channelHandler)
                .ConnectAsync(ipEndPoint.Address, ipEndPoint.Port)
                .GetAwaiter()
                .GetResult();

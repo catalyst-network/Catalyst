@@ -24,4 +24,6 @@
 namespace Catalyst.Common.Interfaces.IO.Outbound
 {
     public interface ITcpClient : ISocketClient { }
+
+    public interface ITcpChannelFactory : IChannelFactory { }
 }
