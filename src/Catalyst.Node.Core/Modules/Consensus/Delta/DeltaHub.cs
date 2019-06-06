@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 return;
             }
 
-            var ProtocolMessage = candidate.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid());
+            var protocolMessage = candidate.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid());
             _gossipManager.Broadcast(null);
 
             _logger.Debug("Started gossiping candidate {0}", candidate);
