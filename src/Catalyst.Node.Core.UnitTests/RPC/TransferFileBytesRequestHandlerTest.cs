@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;

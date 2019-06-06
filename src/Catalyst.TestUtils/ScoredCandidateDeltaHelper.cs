@@ -26,7 +26,7 @@ using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Node.Core.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public class ScoredCandidateDeltaHelper
     {

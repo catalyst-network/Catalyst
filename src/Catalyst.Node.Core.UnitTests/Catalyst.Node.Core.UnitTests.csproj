@@ -2,15 +2,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Catalyst.Node.Core.UnitTests</RootNamespace>
+  </PropertyGroup>
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
     <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Config\Modules\mempool.inmemory.json">
@@ -30,6 +27,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
+    <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
   </ItemGroup>
 </Project>

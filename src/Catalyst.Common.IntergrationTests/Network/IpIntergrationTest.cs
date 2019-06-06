@@ -32,9 +32,9 @@ using Catalyst.Common.UnitTests.TestUtils;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.Network
+namespace Catalyst.Common.IntergrationTests.Network
 {
-    public class IpTests
+    public sealed class IpIntergrationTest
     {
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]

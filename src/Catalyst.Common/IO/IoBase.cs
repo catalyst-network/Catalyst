@@ -68,7 +68,10 @@ namespace Catalyst.Common.IO
                 var closeChannelTask = Channel?.CloseAsync();
                 var closeWorkerLoopTask = WorkerEventLoop?.ShutdownGracefullyAsync(quietPeriod, quietPeriod);
 
-                Task.WaitAll(new[] { closeChannelTask, closeWorkerLoopTask }.Where(t => t != null).ToArray(),
+                Task.WaitAll(new[]
+                    {
+                        closeChannelTask, closeWorkerLoopTask
+                    }.Where(t => t != null).ToArray(),
                     quietPeriod * 3);
             }
             catch (Exception e)
