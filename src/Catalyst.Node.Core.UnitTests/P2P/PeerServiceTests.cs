@@ -53,41 +53,6 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.P2P
 {
-    public class PeerClientFixture : 
-        IDisposable
-    {
-        //private readonly IConfigurationRoot _config;
-
-        public PeerClientFixture()
-        {
-            //_config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
-            //   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-            //   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-            //   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
-            //   .Build(), CurrentTestName);
-
-
-           // var peerSettings = new PeerSettings(_config);
-            var targetHost = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8827);
-
-            UniversalPeerClient = new PeerClient(targetHost);
-
-            // ... initialize data in the test database ...
-        }
-
-        public void Dispose()
-        {
-            // ... clean up test data from the database ...
-            UniversalPeerClient.Dispose();
-        }
-
-        public PeerClient UniversalPeerClient { get; private set; }
-    }
-
-
-
-
-
     public sealed class PeerServiceTests : ConfigFileBasedTest,
          IClassFixture<PeerClientFixture>
     {
@@ -305,4 +270,25 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }
         }
     }
+
+    public class PeerClientFixture : IDisposable
+    {
+        public PeerClientFixture()
+        {
+            var targetHost = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8827);
+
+            UniversalPeerClient = new PeerClient(targetHost);
+
+            // ... initialize data in the test database ...
+        }
+
+        public void Dispose()
+        {
+            // ... clean up test data from the database ...
+            UniversalPeerClient.Dispose();
+        }
+
+        public PeerClient UniversalPeerClient { get; private set; }
+    }
+
 }
