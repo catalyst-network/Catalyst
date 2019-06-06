@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
@@ -40,6 +41,7 @@ using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Node.Core.UnitTests.TestUtils;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -51,7 +53,43 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.P2P
 {
-    public sealed class PeerServiceTests : ConfigFileBasedTest
+    public class PeerClientFixture : 
+        IDisposable
+    {
+        //private readonly IConfigurationRoot _config;
+
+        public PeerClientFixture()
+        {
+            //_config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            //   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
+            //   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
+            //   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
+            //   .Build(), CurrentTestName);
+
+
+           // var peerSettings = new PeerSettings(_config);
+            var targetHost = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8827);
+
+            UniversalPeerClient = new PeerClient(targetHost);
+
+            // ... initialize data in the test database ...
+        }
+
+        public void Dispose()
+        {
+            // ... clean up test data from the database ...
+            UniversalPeerClient.Dispose();
+        }
+
+        public PeerClient UniversalPeerClient { get; private set; }
+    }
+
+
+
+
+
+    public sealed class PeerServiceTests : ConfigFileBasedTest,
+         IClassFixture<PeerClientFixture>
     {
         private readonly Guid _guid;
         private readonly ILogger _logger;
@@ -60,7 +98,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
 
-        public PeerServiceTests(ITestOutputHelper output) : base(output)
+        private PeerClientFixture _peerClientFixture;
+
+        public PeerServiceTests(ITestOutputHelper output, PeerClientFixture peerClientFixture) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
@@ -71,6 +111,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             _guid = Guid.NewGuid();
             _logger = Substitute.For<ILogger>();
             _pingRequest = new PingRequest();
+
+            this._peerClientFixture = peerClientFixture;
 
             ConfigureContainerBuilder(_config, true, true);
             
@@ -135,13 +177,26 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         Guid.NewGuid()
                     );
 
-                    using (var peerClient = new PeerClient(targetHost))
-                    {
-                        peerClient.SendMessage(datagramEnvelope);
-                    }
-                    
-                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
-                    
+                    _peerClientFixture.UniversalPeerClient.SendMessage(datagramEnvelope);
+
+                    //using (var peerClient = new PeerClient(targetHost))
+                    //{
+                    //    peerClient.SendMessage(datagramEnvelope);
+                    //}
+
+                    //await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+
+
+                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                        {
+                            peerService
+                        }
+                       .Select(async p =>
+                            await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                       .ToArray();
+
+                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));
+
                     serverObserver.Received.LastOrDefault().Should().NotBeNull();
                     serverObserver.Received.Last().Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
                     peerService.Dispose();
@@ -175,9 +230,22 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         Guid.NewGuid()
                     );
 
-                    peerClient.SendMessage(datagramEnvelope);
+                    _peerClientFixture.UniversalPeerClient.SendMessage(datagramEnvelope);
 
-                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+
+                    //peerClient.SendMessage(datagramEnvelope);
+
+                    //await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+
+                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                        {
+                            peerService
+                        }
+                       .Select(async p =>
+                            await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                       .ToArray();
+
+                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));
 
                     serverObserver.Received.FirstOrDefault().Should().NotBeNull();
                     serverObserver.Received.First().Payload.TypeUrl.Should()
@@ -199,7 +267,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress,
                         peerSettings.Port + new Random().Next(0, 5000));
 
-                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger))
+                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger, _peerClientFixture.UniversalPeerClient))
                     {
                         var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings));
 
@@ -223,7 +291,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress,
                         peerSettings.Port + new Random().Next(0, 5000));
 
-                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger))
+                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger, _peerClientFixture.UniversalPeerClient))
                     {
                         var peerActiveId = new PeerIdentifier(publicKey.ToUtf8ByteString().ToByteArray(),
                             IPAddress.Parse(ip),

@@ -52,10 +52,13 @@ namespace Catalyst.Node.Core.P2P
         private readonly IDisposable _incomingPingResponseSubscription;
         private readonly ConcurrentStack<IChanneledMessage<AnySigned>> _receivedResponses;
 
+        private readonly IPeerClient _peerClient;
+
         public PeerValidator(IPEndPoint hostEndPoint,
             IPeerSettings peerSettings,
             IPeerService peerService,
-            ILogger logger)
+            ILogger logger,
+            IPeerClient peerClient)
         {
             _peerSettings = peerSettings;
             _peerService = peerService;
@@ -65,6 +68,7 @@ namespace Catalyst.Node.Core.P2P
             _receivedResponses = new ConcurrentStack<IChanneledMessage<AnySigned>>();
             _incomingPingResponseSubscription = peerService.MessageStream.Subscribe(this);
 
+            _peerClient = peerClient;
         }
 
         public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(AnySigned)); }
@@ -98,10 +102,12 @@ namespace Catalyst.Node.Core.P2P
                     Guid.NewGuid()
                 );
 
-                using (var peerClient = new PeerClient(_hostEndPoint))
-                {
-                    peerClient.SendMessage(datagramEnvelope);
-                }
+                //using (var peerClient = new PeerClient(_hostEndPoint))
+                //{
+                //    peerClient.SendMessage(datagramEnvelope);
+                //}
+
+                ((PeerClient)_peerClient).SendMessage(datagramEnvelope);
 
                 var tasks = new IChanneledMessageStreamer<AnySigned>[]
                     {
