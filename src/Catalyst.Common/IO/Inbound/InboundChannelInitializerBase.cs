@@ -34,11 +34,9 @@ namespace Catalyst.Common.IO.Inbound
         : ChannelInitializerBase<T> where T : IChannel
     {
         /// <inheritdoc />
-        public InboundChannelInitializerBase(Action<T> initializationAction,
-            IList<IChannelHandler> handlers,
+        public InboundChannelInitializerBase(IList<IChannelHandler> handlers,
             X509Certificate certificate = null)
-            : base(initializationAction,
-                handlers,
+            : base(handlers,
                 certificate == null ? null : TlsHandler.Server(certificate)) { }
 
         public override string ToString()

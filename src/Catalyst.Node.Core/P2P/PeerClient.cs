@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.P2P
         public PeerClient(IPEndPoint ipEndPoint)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
+            Bootstrap(new OutboundChannelInitializerBase<IChannel>(
                 new List<IChannelHandler>
                 {
                     new ProtoDatagramHandler()

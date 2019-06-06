@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.RPC
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
            
             Bootstrap(
-                new InboundChannelInitializerBase<ISocketChannel>(channel => { },
+                new InboundChannelInitializerBase<ISocketChannel>(
                     new List<IChannelHandler>
                     {
                         new ProtobufVarint32FrameDecoder(),

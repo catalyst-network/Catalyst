@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.P2P
             Discovery = peerDiscovery;
             var peerServiceHandler = new ObservableServiceHandler(Logger);
             
-            Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
+            Bootstrap(new InboundChannelInitializerBase<IChannel>(
                 new List<IChannelHandler>
                 {
                     new ProtoDatagramHandler(),

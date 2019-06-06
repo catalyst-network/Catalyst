@@ -21,18 +21,12 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -67,8 +61,7 @@ namespace Catalyst.Cli.Rpc
             };
 
             Bootstrap(
-                new OutboundChannelInitializerBase<ISocketChannel>(channel => { },
-                    channelHandlers,
+                new OutboundChannelInitializerBase<ISocketChannel>(channelHandlers,
                     nodeConfig.HostAddress,
                     certificate
                 ), EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port)
