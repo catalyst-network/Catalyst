@@ -82,7 +82,7 @@ namespace Catalyst.Common.Extensions
                .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
 
-            var protcolMessage = new ProtocolMessage
+            var protocolMessage = new ProtocolMessage
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
@@ -92,7 +92,7 @@ namespace Catalyst.Common.Extensions
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
-            return protcolMessage;
+            return protocolMessage;
         }
 
         public static bool CheckIfMessageIsGossip(this ProtocolMessage message)
