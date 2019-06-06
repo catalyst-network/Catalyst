@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _dfsHttp = new DfsHttp(_ipfs);
         }
 
-        [Fact(Skip = "just testing")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Should_have_a_URL_for_content()
         {
@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             url.Should().StartWith("http");
         }
 
-        [Fact(Skip = "just testing")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Should_serve_the_content()
         {
