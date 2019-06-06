@@ -21,28 +21,27 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Enumerator;
-using Catalyst.Common.Modules;
-using FluentAssertions;
-using Xunit;
-
-namespace Catalyst.Common.UnitTests.Modules
+namespace Catalyst.Common.Interfaces.Modules.Dfs
 {
-    public static class ModuleNamesTests
+    /// <summary>
+    ///   Provides read-only access to the distribute files system via HTTP.
+    /// </summary>
+    /// <seealso cref="IDfs"/>
+    public interface IDfsHttp
     {
-        [Fact]
-        public static void All_should_return_all_declared_names()
-        {
-            var allModuleNames = Enumeration.GetAll<ModuleName>().Select(m => m.Name);
+        /// <summary>
+        ///   Gets the URL of DFS content.
+        /// </summary>
+        /// <param name="id">The unique ID of the content in the DFS.</param>
+        /// <returns>
+        ///   The URL of the DFS <paramref name="id"/>.
+        /// </returns>
+        string ContentUrl(string id);
 
-            var expectedList = new List<string>
-            {
-                "Consensus", "Contract", "Dfs", "DfsHttp", "Ledger", "Mempool", "KeySigner"
-            };
-
-            allModuleNames.Should().BeEquivalentTo(expectedList);
-        }
+        /// <summary>
+        ///   Opens a web browser on the DFS content.
+        /// </summary>
+        /// <param name="id">The unique ID of the content in the DFS.</param>
+        void OpenInBrowser(string id);
     }
 }

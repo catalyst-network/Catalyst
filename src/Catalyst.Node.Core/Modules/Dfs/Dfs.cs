@@ -45,16 +45,11 @@ namespace Catalyst.Node.Core.Modules.Dfs
         };
 
         private readonly ICoreApi _ipfs;
-        private readonly GatewayHost _gateway;
         private readonly ILogger _logger;
 
         public Dfs(ICoreApi ipfsAdapter, ILogger logger)
         {
             _ipfs = ipfsAdapter;
-
-            // Make sure IPFS and the gateway is started.
-            _ipfs.Generic.IdAsync().Wait();
-            _gateway = new GatewayHost(_ipfs);
             _logger = logger;
         }
 
@@ -99,28 +94,5 @@ namespace Catalyst.Node.Core.Modules.Dfs
             return _ipfs.FileSystem.ReadFileAsync(id, cancellationToken);
         }
 
-        /// <inheritdoc />
-        public void OpenInBrowser(string id)
-        {
-            var url = _gateway.IpfsUrl(id);
-
-            // thanks to mellinoe https://github.com/dotnet/corefx/issues/10361#issuecomment-235502080
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}"));
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                Process.Start("xdg-open", url);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                Process.Start("open", url);
-            }
-            else
-            {
-                throw new PlatformNotSupportedException($"Browsing on the platform '{RuntimeInformation.OSDescription}' is not supported.");
-            }
-        }
     }
 }

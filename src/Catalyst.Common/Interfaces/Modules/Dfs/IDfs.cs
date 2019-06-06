@@ -27,6 +27,9 @@ using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.Modules.Dfs
 {
+    /// <summary>
+    ///   Provides read-write access to a distributed file system.
+    /// </summary>
     public interface IDfs
     {
         /// <summary>
@@ -64,11 +67,5 @@ namespace Catalyst.Common.Interfaces.Modules.Dfs
         ///   The returned <see cref="T:System.IO.Stream" /> must be disposed.
         /// </remarks>
         Task<Stream> ReadAsync(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        ///   Opens a web browser on the DFS content.
-        /// </summary>
-        /// <param name="id">The unique ID of the content in the DFS.</param>
-        void OpenInBrowser(string id);
     }
 }

@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -31,19 +32,20 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;
 using FluentAssertions;
 using NSubstitute;
-using Polly;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
 {
-    public sealed class IpfsDfsLiveTests : FileSystemBasedTest
+    public sealed class DfsHttpTests : FileSystemBasedTest
     {
         private readonly IpfsAdapter _ipfs;
+        private readonly Core.Modules.Dfs.Dfs _dfs;
         private readonly ILogger _logger;
+        private readonly DfsHttp _dfsHttp;
 
-        public IpfsDfsLiveTests(ITestOutputHelper output) : base(output)
+        public DfsHttpTests(ITestOutputHelper output) : base(output)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new[]
@@ -56,51 +58,46 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
             _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
+            _dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
+            _dfsHttp = new DfsHttp(_ipfs);
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task DFS_should_add_and_read_text()
+        public async Task Should_have_a_URL_for_content()
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            const string text = "good evening from IPFS!";
+            var id = await _dfs.AddTextAsync(text);
+            string url = _dfsHttp.ContentUrl(id);
+            url.Should().StartWith("http");
+        }
 
-            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-               .WaitAndRetryAsync(5, retryAttempt =>
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task Should_serve_the_content()
+        {
+            const string text = "good afternoon from IPFS!";
+            var id = await _dfs.AddTextAsync(text);
+            string url = _dfsHttp.ContentUrl(id);
+
+            var httpClient = new HttpClient();
+
+            // The gateway takes some time to startup.
+            var end = DateTime.Now.AddSeconds(10);
+            string content = null;
+            while (content != null && DateTime.Now < end)
+            {
+                try
                 {
-                    var timeSpan = TimeSpan.FromMilliseconds(retryAttempt + 5);
-                    cts = new CancellationTokenSource(timeSpan);
-                    return timeSpan;
-                });
-
-            const string text = "good morning";
-            var dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
-            var id = await linearBackOffRetryPolicy.ExecuteAsync(
-                () => dfs.AddTextAsync(text, cts.Token)
-            );
-            var content = await linearBackOffRetryPolicy.ExecuteAsync(
-                () => dfs.ReadTextAsync(id, cts.Token)
-            );
-            content.Should().Be(text);
-        }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task DFS_should_add_and_read_binary()
-        {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var binary = new byte[]
-            {
-                1, 2, 3
-            };
-            var ms = new MemoryStream(binary);
-            var dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
-            var id = await dfs.AddAsync(ms, "", cts.Token);
-            using (var stream = await dfs.ReadAsync(id, cts.Token))
-            {
-                var content = new byte[binary.Length];
-                stream.Read(content, 0, content.Length);
-                content.Should().Equal(binary);
+                    content = await httpClient.GetStringAsync(url);
+                }
+                catch (Exception)
+                {
+                    await Task.Delay(200);
+                }
             }
+
+            content.Should().Equals(text);
         }
 
         protected override void Dispose(bool disposing)
@@ -108,6 +105,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             if (disposing)
             {
                 _ipfs?.Dispose();
+                _dfsHttp?.Dispose();
             }
 
             base.Dispose(disposing);
