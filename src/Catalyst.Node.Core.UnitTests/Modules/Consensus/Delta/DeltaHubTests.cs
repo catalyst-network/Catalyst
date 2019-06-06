@@ -21,9 +21,9 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using NSubstitute;
