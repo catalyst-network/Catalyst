@@ -162,7 +162,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    
+                    var peerClient = new PeerClient(targetHost);
+
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PeerNeighborsResponse(),
                             MessageTypes.Tell,
@@ -172,10 +173,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         Guid.NewGuid()
                     );
 
-                    using (var peerClient = new PeerClient(targetHost))
-                    {
-                        peerClient.SendMessage(datagramEnvelope);
-                    }
+                    peerClient.SendMessage(datagramEnvelope);
 
                     await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
