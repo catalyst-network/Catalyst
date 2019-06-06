@@ -28,9 +28,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -41,14 +39,14 @@ using Xunit;
 using Xunit.Abstractions;
 using PendingRequest = Catalyst.Common.IO.Outbound.PendingRequest;
 
-namespace Catalyst.Node.Core.UnitTests.P2P
+namespace Catalyst.Node.Core.IntergrationTests.P2P
 {
-    public sealed class MessageCorrelationCacheIntegrationTests : ConfigFileBasedTest
+    public sealed class PeerCorrelationCacheIntegrationTest : ConfigFileBasedTest
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
 
-        public MessageCorrelationCacheIntegrationTests(ITestOutputHelper output) : base(output)
+        public PeerCorrelationCacheIntegrationTest(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
@@ -102,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             await Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)));
 
-            correlationIds.Select(c => cache.TryGetValue(c.ToByteString(), out _))
+            correlationIds.Select<Guid, bool>(c => cache.TryGetValue(c.ToByteString(), out _))
                .Should().AllBeEquivalentTo(false, "entries are removed by matching or expiring");
 
             reputations.Where(p => !p.Key.Equals(peerIds[1])).Select(p => p.Value < 0)

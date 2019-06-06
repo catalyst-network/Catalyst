@@ -3,11 +3,14 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>Catalyst.Cli.UnitTests</RootNamespace>
+    <RootNamespace>Catalyst.Common.IntergrationTests</RootNamespace>
   </PropertyGroup>
-  <Import Project="../Common.UnitTests.props" />
+  <Import Project="../Common.IntergrationTests.props" />
   <ItemGroup>
-    <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
+    <Folder Include="Rpc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
     <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
   </ItemGroup>
 </Project>

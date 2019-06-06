@@ -42,7 +42,7 @@ using Xunit;
 
 namespace Catalyst.Cli.UnitTests
 {
-    public class AddFileToDfsResponseHandlerTests
+    public sealed class AddFileToDfsResponseHandlerTests
     {
         private readonly IUserOutput _userOutput;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
