@@ -56,17 +56,11 @@ namespace Catalyst.Common.IO
             
             Logger.Debug($"Disposing {GetType().Name}");
 
-            if (Channel != null)
-            {
-                Channel.Flush();
-
-                Channel.CloseAsync()
-                   .GetAwaiter()
-                   .GetResult();   
-            }
+            Channel?.Flush();
+            Channel?.CloseAsync();
 
             WorkerEventLoop?
-               .ShutdownGracefullyAsync().Wait(100);
+               .ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
         }
     }
 }
