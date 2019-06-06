@@ -49,9 +49,9 @@ using Xunit;
 using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 
-namespace Catalyst.Node.Core.UnitTests.FileTransfer
+namespace Catalyst.Node.Core.IntegrationTests.FileTransfer
 {
-    public sealed class FileTransferNodeTests : FileSystemBasedTest
+    public sealed class NodeFileTransferIntegrationTest : FileSystemBasedTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
@@ -60,13 +60,13 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
         private readonly IpfsAdapter _ipfsEngine;
         private readonly IMessageFactory _messageFactory;
 
-        public FileTransferNodeTests(ITestOutputHelper testOutput) : base(testOutput)
+        public NodeFileTransferIntegrationTest(ITestOutputHelper testOutput) : base(testOutput)
         {
             var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build(), "FileTransferNodeTests");
+               .Build(), "NodeFileTransferIntegrationTest");
 
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
@@ -80,27 +80,9 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
             _logger = Substitute.For<ILogger>();
             _dfs = new Dfs(_ipfsEngine, _logger);
         }
-
+        
         [Fact]
-        public void Node_Initialize_File_Transfer()
-        {
-            var sender = PeerIdHelper.GetPeerId("sender");
-            var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
-                _nodeFileTransferFactory, _messageFactory, _logger);
-
-            //Create a response object and set its return value
-            var request = new AddFileToDfsRequest
-            {
-                Node = "node1",
-                FileName = "Test.dat",
-                FileSize = 10000
-            }.ToAnySigned(sender, Guid.NewGuid());
-            request.SendToHandler(_fakeContext, handler);
-
-            Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
-        }
-
-        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Cancel_File_Transfer()
         {
             var sender = new PeerIdentifier(PeerIdHelper.GetPeerId("sender"));
@@ -116,7 +98,7 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
             var cancellationTokenSource = new CancellationTokenSource();
             _nodeFileTransferFactory.RegisterTransfer(fileTransferInformation);
             _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, cancellationTokenSource.Token);
-            Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
+            Assert.Single(_nodeFileTransferFactory.Keys);
             cancellationTokenSource.Cancel();
 
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -141,12 +123,13 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
 
             var fileCleanedUp = !File.Exists(fileTransferInformation.TempPath);
 
-            Assert.Equal(true, fileTransferInformation.IsExpired());
-            Assert.Equal(true, fileCleanedUp);
-            Assert.Equal(0, _nodeFileTransferFactory.Keys.Length);
+            Assert.True(fileTransferInformation.IsExpired());
+            Assert.True(fileCleanedUp);
+            Assert.Empty(_nodeFileTransferFactory.Keys);
         }
 
         [Theory]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData(1000L)]
         [InlineData(82000L)]
         [InlineData(100000L)]
@@ -176,7 +159,7 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
             }.ToAnySigned(sender, uniqueFileKey);
             request.SendToHandler(_fakeContext, addFileToDfsRequestHandler);
             
-            Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
+            Assert.Single(_nodeFileTransferFactory.Keys);
 
             var fileTransferInformation =
                 _nodeFileTransferFactory.GetFileTransferInformation(uniqueFileKey);
