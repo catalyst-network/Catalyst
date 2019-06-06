@@ -22,7 +22,9 @@
 #endregion
 
 using System.Net;
+using System.Net.Sockets;
 using Catalyst.Common.Interfaces.IO.Outbound;
+using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Serilog;
@@ -37,10 +39,11 @@ namespace Catalyst.Common.IO.Outbound
         {
             Channel = new Bootstrap()
                .Group(WorkerEventLoop)
+               .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
-               .Channel<SocketDatagramChannel>()
+               .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelInitializer)
-               .BindAsync(IPEndPoint.MinPort)
+               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort)
                .GetAwaiter()
                .GetResult();
         }

@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Messaging.Handlers;
 
 namespace Catalyst.Node.Core.P2P
 {
@@ -50,7 +51,10 @@ namespace Catalyst.Node.Core.P2P
             Logger.Debug("P2P client starting");
 
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
-                new List<IChannelHandler>(),
+                new List<IChannelHandler>
+                {
+                    new ProtoDatagramHandler()
+                },
                 ipEndPoint.Address
             ), ipEndPoint);
         }
