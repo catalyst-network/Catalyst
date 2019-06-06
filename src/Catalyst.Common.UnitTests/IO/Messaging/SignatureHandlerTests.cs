@@ -46,7 +46,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _signatureHandler = new SignatureHandler(Substitute.For<IKeySigner>());
         }
 
-        [Fact]
+        [Fact(Skip = "INCOMPLETE")]
         private void CanFireNextPipelineOnValidSignature()
         {
             var pingRequest = new PingRequest();
