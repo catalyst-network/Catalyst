@@ -22,9 +22,12 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO;
 using DotNetty.Transport.Channels;
+using Nito.AsyncEx.Synchronous;
 using Serilog;
 
 namespace Catalyst.Common.IO
@@ -53,14 +56,25 @@ namespace Catalyst.Common.IO
             {
                 return;
             }
-            
+
             Logger.Debug($"Disposing {GetType().Name}");
 
-            Channel?.Flush();
-            Channel?.CloseAsync().ConfigureAwait(false);
+            var quietPeriod = TimeSpan.FromMilliseconds(100);
+            Logger?.Information($"Disposing {GetType().Name}");
 
-            WorkerEventLoop?
-               .ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+            try
+            {
+                Channel?.Flush();
+                var closeChannelTask = Channel?.CloseAsync();
+                var closeWorkerLoopTask = WorkerEventLoop?.ShutdownGracefullyAsync(quietPeriod, quietPeriod);
+
+                Task.WaitAll(new[] { closeChannelTask, closeWorkerLoopTask }.Where(t => t != null).ToArray(),
+                    quietPeriod * 3);
+            }
+            catch (Exception e)
+            {
+                Logger?.Error(e, "Dispose failed to complete.");
+            }
         }
     }
 }

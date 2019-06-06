@@ -138,12 +138,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     using (var peerClient = new PeerClient(targetHost))
                     {
                         peerClient.SendMessage(datagramEnvelope);
+                        await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
                     }
-                    
-                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
-                    
+
                     serverObserver.Received.LastOrDefault().Should().NotBeNull();
-                    serverObserver.Received.Last().Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
+                    serverObserver.Received.Last().Payload.TypeUrl.Should()
+                       .Be(PingRequest.Descriptor.ShortenedFullName());
                     peerService.Dispose();
                 }
             }
@@ -175,9 +175,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     using (var peerClient = new PeerClient(targetHost))
                     {
                         peerClient.SendMessage(datagramEnvelope);
+                        await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
                     }
-                    
-                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
                     serverObserver.Received.FirstOrDefault().Should().NotBeNull();
                     serverObserver.Received.First().Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
