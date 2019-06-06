@@ -56,7 +56,14 @@ namespace Catalyst.Common.IO
             
             Logger.Information($"Disposing {GetType().Name}");
 
-            Channel?.CloseAsync();
+            if (Channel != null)
+            {
+                Channel.Flush();
+
+                Channel.CloseAsync()
+                   .GetAwaiter()
+                   .GetResult();   
+            }
 
             if (WorkerEventLoop == null)
             {
@@ -66,7 +73,9 @@ namespace Catalyst.Common.IO
             var quietPeriod = TimeSpan.FromMilliseconds(100);
 
             WorkerEventLoop?
-               .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod);
+               .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
+               .GetAwaiter()
+               .GetResult();
         }
     }
 }
