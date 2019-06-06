@@ -28,7 +28,7 @@ namespace Catalyst.Common.Util
 {
     public static class NullObjects
     {
-        public static readonly AnySigned AnySigned = new AnySigned();
-        public static readonly ChanneledAnySigned ChanneledAnySigned = new ChanneledAnySigned(null, new AnySigned());
+        public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
+        public static readonly ProtocolMessageDto ProtocolMessageDto = new ProtocolMessageDto(null, new ProtocolMessage());
     }
 }

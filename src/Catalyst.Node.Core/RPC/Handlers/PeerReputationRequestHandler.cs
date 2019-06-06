@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
 
-        private IChanneledMessage<AnySigned> _message;
+        private IChanneledMessage<ProtocolMessage> _message;
         
         private readonly PeerId _peerId;
 
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Handlers the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull("Received message cannot be null");
 
@@ -85,7 +85,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         /// <param name="reputation"></param>
         /// <param name="message"></param>
-        private void ReturnResponse(int reputation, IChanneledMessage<AnySigned> message)
+        private void ReturnResponse(int reputation, IChanneledMessage<ProtocolMessage> message)
         {
             var response = new GetPeerReputationResponse
             {

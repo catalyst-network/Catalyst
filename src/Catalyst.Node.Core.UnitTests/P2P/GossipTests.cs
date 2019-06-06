@@ -121,13 +121,13 @@
 //             );
 //             
 //             var transaction = new TransactionBroadcast();
-//             var anySigned = transaction.ToAnySigned(peerIdentifier.PeerId, guid);
+//             var ProtocolMessage = transaction.ToAnySigned(peerIdentifier.PeerId, guid);
 //
 //             channel.WriteInbound(messageFactory.GetDatagramMessage(
 //                 new MessageDto(anySigned, MessageTypes.Gossip, recipientIdentifier, peerIdentifier)));
 //
 //             gossipMessageHandler.Received(Quantity.Exactly(1))
-//                .IncomingGossip(Arg.Any<IChanneledMessage<AnySigned>>());
+//                .IncomingGossip(Arg.Any<IChanneledMessage<ProtocolMessage>>());
 //         }
 //
 //         [Fact]

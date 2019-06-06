@@ -60,7 +60,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the GetInfoResponse message.
         /// </summary>
         /// <param name="message">An object of GetInfoResponse</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull("The message cannot be null");
             

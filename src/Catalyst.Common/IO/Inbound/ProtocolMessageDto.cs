@@ -27,13 +27,13 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Inbound
 {
-    public sealed class ChanneledAnySigned
-        : IChanneledMessage<AnySigned>
+    public sealed class ProtocolMessageDto
+        : IChanneledMessage<ProtocolMessage>
     {
-        public AnySigned Payload { get; }
+        public ProtocolMessage Payload { get; }
         public IChannelHandlerContext Context { get; }
 
-        public ChanneledAnySigned(IChannelHandlerContext context, AnySigned message)
+        public ProtocolMessageDto(IChannelHandlerContext context, ProtocolMessage message)
         {
             Payload = message;
             Context = context;

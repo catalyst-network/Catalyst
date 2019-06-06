@@ -137,7 +137,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             fakeContext.Channel.Returns(fakeChannel);
 
-            var channeledAny = new ChanneledAnySigned(fakeContext, nonCorrelatedMessage);
+            var channeledAny = new ProtocolMessageDto(fakeContext, nonCorrelatedMessage);
             var observableStream = new[] {channeledAny}.ToObservable();
 
             var handler = new PingResponseHandler(_logger);

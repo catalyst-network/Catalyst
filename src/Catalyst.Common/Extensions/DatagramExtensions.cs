@@ -31,7 +31,7 @@ namespace Catalyst.Common.Extensions
 {
     public static class DatagramExtensions
     {
-        public static DatagramPacket ToDatagram(this AnySigned anySignedMessage, IPEndPoint recipient)
+        public static DatagramPacket ToDatagram(this ProtocolMessage anySignedMessage, IPEndPoint recipient)
         {
             return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
         }

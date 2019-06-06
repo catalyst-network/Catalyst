@@ -57,7 +57,7 @@ namespace Catalyst.Cli.Handlers
             _output = output;
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull("The message cannot be null");
             
