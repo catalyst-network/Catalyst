@@ -57,10 +57,10 @@ namespace Catalyst.Common.IO
             Logger.Debug($"Disposing {GetType().Name}");
 
             Channel?.Flush();
-            Channel?.CloseAsync();
+            Channel?.CloseAsync().ConfigureAwait(false);
 
             WorkerEventLoop?
-               .ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
+               .ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)).ConfigureAwait(false);
         }
     }
 }
