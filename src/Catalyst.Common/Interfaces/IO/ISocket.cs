@@ -28,6 +28,6 @@ namespace Catalyst.Common.Interfaces.IO
 {
     public interface ISocket : IDisposable
     {
-        IChannel Channel { get; set; }
+        IChannel Channel { get; }
     }
 }
