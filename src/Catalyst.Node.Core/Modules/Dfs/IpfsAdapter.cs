@@ -37,7 +37,6 @@ using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Dfs
 {
-    /// <inheritdoc />
     /// <summary>
     ///   Modifies the IPFS behaviour to meet the Catalyst requirements.
     /// </summary>
@@ -78,7 +77,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
             // The IPFS repository is inside the catalyst home folder.
             _ipfs.Options.Repository.Folder = Path.Combine(
-                fileSystem.GetCatalystHomeDir().FullName,
+                fileSystem.GetCatalystDataDir().FullName,
                 Constants.DfsDataSubDir);
 
             // The seed nodes for the catalyst network.

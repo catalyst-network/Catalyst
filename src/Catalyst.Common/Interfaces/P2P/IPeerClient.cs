@@ -22,11 +22,9 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerClient : IChanneledMessageStreamer<AnySigned>, IDisposable, ISocketClient { }
+    public interface IPeerClient : IDisposable, ISocketClient { }
 }

@@ -22,29 +22,23 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.Consensus;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus
 {
-    public class Consensus : IConsensus
+    public sealed class Consensus : IConsensus
     {
-        private readonly ILogger _logger;
-
-        public IDeltaTransactionRetriever DeltaTransactionRetriever { get; }
-
-        public IDeltaProducersProvider DeltaProducersProvider { get; }
         public IDeltaBuilder DeltaBuilder { get; }
+        public IDeltaHub DeltaHub { get; }
 
-        public Consensus(IDeltaTransactionRetriever deltaTransactionRetriever,
-            IDeltaProducersProvider deltaProducersProvider,
-            ILogger logger,
-            IDeltaBuilder deltaBuilder)
+        public Consensus(IDeltaBuilder deltaBuilder,
+            IDeltaHub deltaHub,
+            ILogger logger)
         {
-            _logger = logger;
             DeltaBuilder = deltaBuilder;
-            DeltaTransactionRetriever = deltaTransactionRetriever;
-            DeltaProducersProvider = deltaProducersProvider;
-            _logger.Information("Consensus service initialised.");
+            DeltaHub = deltaHub;
+            logger.Information("Consensus service initialised.");
         }
     }
 }

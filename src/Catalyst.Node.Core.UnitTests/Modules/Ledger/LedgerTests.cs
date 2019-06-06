@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Node.Core.UnitTests.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
@@ -30,12 +29,13 @@ using SharpRepository.Repository;
 using Xunit;
 using LedgerService = Catalyst.Node.Core.Modules.Ledger.Ledger;
 using Account = Catalyst.Node.Core.Modules.Ledger.Account;
+using Catalyst.TestUtils;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Ledger
 {
     public sealed class LedgerTests
     {
-        private IRepository<Account> _accounts;    
+        private readonly IRepository<Account> _accounts;    
         private readonly LedgerService _ledger;
 
         public LedgerTests()

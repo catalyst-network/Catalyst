@@ -24,33 +24,29 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
 using Serilog;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class TransferFileBytesRequestHandler
-        : CorrelatableMessageHandlerBase<TransferFileBytesRequest, IRpcCorrelationCache>,
+        : MessageHandlerBase<TransferFileBytesRequest>,
             IRpcRequestHandler
     {
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The RPC message factory</summary>
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -58,24 +54,22 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestHandler"/> class.</summary>
         /// <param name="fileTransferFactory">The download transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="rpcMessageFactory"></param>
+        /// <param name="messageFactory"></param>
         public TransferFileBytesRequestHandler(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
-            IRpcCorrelationCache correlationCache,
             ILogger logger,
-            IRpcMessageFactory rpcMessageFactory)
-            : base(correlationCache, logger)
+            IMessageFactory messageFactory)
+            : base(logger)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _fileTransferFactory = fileTransferFactory;
             _peerIdentifier = peerIdentifier;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             var deserialised = message.Payload.FromAnySigned<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
@@ -98,7 +92,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
             };
 
-            var responseDto = _rpcMessageFactory.GetMessage(new MessageDto(
+            var responseDto = _messageFactory.GetMessage(new MessageDto(
                     responseMessage,
                     MessageTypes.Tell,
                     new PeerIdentifier(message.Payload.PeerId),

@@ -21,21 +21,21 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
-using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
@@ -53,7 +53,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IRpcCorrelationCache _subbedCorrelationCache;
         
         public SignMessageRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
@@ -72,7 +71,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
         
@@ -80,10 +78,10 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [InlineData("Hello Catalyst")]
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
-        public void RpcServer_Can_Handle_SignMessageRequest(string message)
+        public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
-            var request = rpcMessageFactory.GetMessage(new MessageDto(
+            var messageFactory = new MessageFactory();
+            var request = messageFactory.GetMessage(new MessageDto(
                 new SignMessageRequest
                 {
                     Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
@@ -94,13 +92,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, _subbedCorrelationCache, rpcMessageFactory);
+            var handler = new SignMessageRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, messageFactory);
             handler.StartObserving(messageStream);
-             
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
             
             var responseContent = sentResponse.FromAnySigned<SignMessageResponse>();

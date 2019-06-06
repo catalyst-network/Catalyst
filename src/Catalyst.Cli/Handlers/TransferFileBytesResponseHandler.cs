@@ -23,8 +23,7 @@
 
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
@@ -34,21 +33,18 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// The Transfer file bytes response handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{TransferFileBytesResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public class TransferFileBytesResponseHandler
-        : CorrelatableMessageHandlerBase<TransferFileBytesResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<TransferFileBytesResponse>,
             IRpcResponseHandler
     {
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseHandler"/> class.</summary>
-        /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesResponseHandler(IRpcCorrelationCache correlationCache,
-            ILogger logger) : base(correlationCache, logger) { }
+        public TransferFileBytesResponseHandler(ILogger logger) : base(logger) { }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             // Response for a node writing a chunk via bytes transfer.
             // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer

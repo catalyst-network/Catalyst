@@ -39,32 +39,25 @@ namespace Catalyst.Common.Config
         : Enumeration,
             IEnumerableMessageType
     {
-        /// <summary>The message map</summary>
-        private static Dictionary<string, RpcMessages> _messageMap;
-
         /// <summary>The RPC message namespace</summary>
-        private static readonly string _messageNamespace = "Catalyst.Protocol.Rpc.Node";
+        private const string MessageNamespace = "Catalyst.Protocol.Rpc.Node";
 
         /// <summary>Initializes the <see cref="RpcMessages"/> class.</summary>
         static RpcMessages()
         {
-            _messageMap = new Dictionary<string, RpcMessages>();
+            var messageMap = new Dictionary<string, RpcMessages>();
             var types = AppDomain.CurrentDomain.GetAssemblies()
                .SelectMany(t => t.GetTypes())
-               .Where(t => t.IsClass && t.Namespace == _messageNamespace
+               .Where(t => t.IsClass && t.Namespace == MessageNamespace
                  && typeof(IMessage).IsAssignableFrom(t));
 
             var id = 0;
             foreach (var type in types)
             {
-                _messageMap.Add(type.Name, new RpcMessages(id, type.Name));
+                messageMap.Add(type.Name, new RpcMessages(id, type.Name));
                 id += 1;
             }
         }
-
-        /// <summary>Gets the messages.</summary>
-        /// <value>The messages.</value>
-        public static IEnumerable<RpcMessages> Messages => _messageMap.Values.AsEnumerable();
 
         /// <summary>Initializes a new instance of the <see cref="RpcMessages"/> class.</summary>
         /// <param name="id">The identifier.</param>

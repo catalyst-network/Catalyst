@@ -21,19 +21,22 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
-using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -48,14 +51,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC
     public sealed class GetInfoRequestHandlerTest : ConfigFileBasedTest
     {
         private readonly ILogger _logger;
-        private IChannelHandlerContext _fakeContext;
+        private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
         private readonly IRpcServerSettings _rpcServerSettings;
-        private IRpcCorrelationCache _subbedCorrelationCache;
 
         public GetInfoRequestHandlerTest(ITestOutputHelper output) : base(output)
         {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
@@ -77,10 +78,10 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         }
 
         [Fact]
-        public void GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
+        public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var rpcMessagefactory = new RpcMessageFactory(_subbedCorrelationCache);
-            var request = rpcMessagefactory.GetMessage(new MessageDto(
+            var messageFactory = new MessageFactory();
+            var request = messageFactory.GetMessage(new MessageDto(
                 new GetInfoRequest
                 {
                     Query = true
@@ -91,14 +92,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var subbedCache = Substitute.For<IRpcCorrelationCache>();
-            var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, subbedCache, rpcMessagefactory, _logger);
+            var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, messageFactory, _logger);
             handler.StartObserving(messageStream);
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
-            var sentResponse = (AnySigned) receivedCalls.Single().GetArguments().Single();
+            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            receivedCalls.Count.Should().Be(1);
+
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
 
             var responseContent = sentResponse.FromAnySigned<GetInfoResponse>();

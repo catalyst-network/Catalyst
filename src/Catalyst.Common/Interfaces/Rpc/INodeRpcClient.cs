@@ -21,11 +21,9 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface INodeRpcClient : ISocketClient, IChanneledMessageStreamer<AnySigned> { }
+    public interface INodeRpcClient : ISocketClient { }
 }

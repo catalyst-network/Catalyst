@@ -21,25 +21,7 @@
 
 #endregion
 
-using System.Net;
-using System.Threading.Tasks;
-using DotNetty.Transport.Channels;
-
 namespace Catalyst.Common.Interfaces.IO.Inbound
 {
-    internal interface IUdpServer
-    {
-        IChannel Channel { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="channelInitializer"></param>
-        /// <param name="listenAddress"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
-        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
-
-        Task Shutdown();
-    }
+    internal interface IUdpServer { }
 }

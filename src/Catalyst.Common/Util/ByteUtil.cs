@@ -49,9 +49,18 @@ namespace Catalyst.Common.Util
         /// <returns></returns>
         public static ulong GenerateCorrelationId()
         {
-            var buf = new byte[8];
-            Rand.NextBytes(buf);
+            var buf = GenerateRandomByteArray(8);
             return BitConverter.ToUInt64(buf, 0);
+        }
+
+        /// <summary>
+        ///     returns a random array of byte of the desired length
+        /// </summary>
+        public static byte[] GenerateRandomByteArray(int length)
+        {
+            var buf = new byte[length];
+            Rand.NextBytes(buf);
+            return buf;
         }
 
         /// <summary>
@@ -149,7 +158,7 @@ namespace Catalyst.Common.Util
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static string ByteToString(byte[] array)
+        internal static string ByteToString(byte[] array)
         {
             Guard.Argument(array, nameof(array)).NotNull().NotEmpty();
             return Encoding.UTF8.GetString(array);
@@ -202,7 +211,7 @@ namespace Catalyst.Common.Util
             public override int Compare(IList<byte> x, IList<byte> y)
             {
                 var baseCompare = base.Compare(x, y);
-                return baseCompare != 0 ? baseCompare : Math.Sign(x.Count.CompareTo(y.Count));
+                return baseCompare != 0 ? baseCompare : Math.Sign(Nullable.Compare(x?.Count, y?.Count));
             }
 
             public static IComparer<IList<byte>> Default { get; } = new ByteListComparer();

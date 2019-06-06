@@ -25,52 +25,58 @@ using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
+using DotNetty.Buffers;
 
 namespace Catalyst.Common.IO.Messaging
 {
     /// <summary>
-    /// The base class to handle building of AnySigned messages
+    /// The base class to handle building of ProtocolMessage messages
     /// </summary>
-    public class MessageFactory : IMessageFactory
+    public sealed class MessageFactory : IMessageFactory
     {
-        private readonly IMessageCorrelationCache _messageCorrelationCache;
-
-        protected MessageFactory(IMessageCorrelationCache messageCorrelationCache)
-        {
-            _messageCorrelationCache = messageCorrelationCache;
-        }
-        
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>AnySigned message</returns>
-        public virtual AnySigned GetMessage(IMessageDto messageDto,
+        /// <returns>ProtocolMessage message</returns>
+        public ProtocolMessage GetMessage(IMessageDto messageDto,
             Guid correlationId = default)
         {
             if (messageDto.MessageType == MessageTypes.Ask)
             {
                 return BuildAskMessage(messageDto);
             }
-
+            
             if (messageDto.MessageType == MessageTypes.Tell)
             {
                 return BuildTellMessage(messageDto, correlationId);   
             }
 
+            if (messageDto.MessageType == MessageTypes.Gossip)
+            {
+                return BuildGossipMessage(messageDto);
+            }
+
             throw new ArgumentException();
+        }
+        
+        /// <summary>Gets the message in datagram envelope.</summary>
+        /// <param name="messageDto">Message Dto wrapper with all params required to send message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns></returns>
+        public IByteBufferHolder GetDatagramMessage(IMessageDto messageDto,
+            Guid correlationId = default)
+        {
+            return GetMessage(messageDto, correlationId).ToDatagram(messageDto.Recipient.IpEndPoint);
         }
 
         /// <summary>Builds the tell message.</summary>
         /// <param name="dto">The dto.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>AnySigned message</returns>
-        private AnySigned BuildTellMessage(IMessageDto dto, Guid correlationId)
+        /// <returns>ProtocolMessage message</returns>
+        private ProtocolMessage BuildTellMessage(IMessageDto dto, Guid correlationId)
         {
             return correlationId == default
                 ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
@@ -79,8 +85,8 @@ namespace Catalyst.Common.IO.Messaging
 
         /// <summary>Builds the ask message.</summary>
         /// <param name="dto">The dto.</param>
-        /// <returns>AnySigned message</returns>
-        private AnySigned BuildAskMessage(IMessageDto dto)
+        /// <returns>ProtocolMessage message</returns>
+        private ProtocolMessage BuildAskMessage(IMessageDto dto)
         {
             var messageContent = dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
             var correlatableRequest = new PendingRequest
@@ -89,14 +95,14 @@ namespace Catalyst.Common.IO.Messaging
                 Recipient = dto.Recipient,
                 SentAt = DateTimeOffset.MinValue
             };
-            _messageCorrelationCache.AddPendingRequest(correlatableRequest);
+
             return messageContent;
         }
 
         /// <summary>Builds the gossip message.</summary>
         /// <param name="dto">The dto.</param>
-        /// <returns>AnySigned message</returns>
-        protected AnySigned BuildGossipMessage(IMessageDto dto)
+        /// <returns>ProtocolMessage message</returns>
+        private ProtocolMessage BuildGossipMessage(IMessageDto dto)
         {
             return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
         }

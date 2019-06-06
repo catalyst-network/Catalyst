@@ -23,17 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using NSubstitute;
@@ -53,14 +48,12 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private PeerReputationResponseHandler _handler;
-        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
         /// Initializes the <see cref="GetPeerReputationResponseHandlerTest"/> class.
         /// </summary>
         static GetPeerReputationResponseHandlerTest()
         {             
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[] {78},
@@ -80,26 +73,14 @@ namespace Catalyst.Cli.UnitTests
         }
 
         /// <summary>
-        /// Creates the stream with message.
-        /// </summary>
-        /// <param name="response">The response.</param>
-        /// <returns></returns>
-        private IObservable<ChanneledAnySigned> CreateStreamWithMessage(AnySigned response)
-        {
-            var channeledAny = new ChanneledAnySigned(_fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
-            return messageStream;
-        }
-        
-        /// <summary>
         /// RPCs the client can handle get reputation response.
         /// </summary>
         /// <param name="rep">The rep.</param>
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void RpcClient_Can_Handle_GetReputationResponse(int rep)
+        public async Task RpcClient_Can_Handle_GetReputationResponse(int rep)
         {
-            TestGetReputationResponse(rep);
+            await TestGetReputationResponse(rep);
 
             _output.Received(1).WriteLine($"Peer Reputation: {rep}");
         }
@@ -110,18 +91,16 @@ namespace Catalyst.Cli.UnitTests
         /// <param name="rep">The rep.</param>
         [Theory]
         [InlineData(int.MinValue)]
-        public void RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
+        public async Task RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
         {
-            TestGetReputationResponse(rep);
+            await TestGetReputationResponse(rep);
 
             _output.Received(1).WriteLine("Peer Reputation: Peer not found");
         }
 
-        private void TestGetReputationResponse(int rep)
+        private async Task TestGetReputationResponse(int rep)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new MessageFactory().GetMessage(new MessageDto(
                     new GetPeerReputationResponse
                     {
                         Reputation = rep
@@ -131,10 +110,12 @@ namespace Catalyst.Cli.UnitTests
                     PeerIdentifierHelper.GetPeerIdentifier("sender")),
                 Guid.NewGuid());
 
-            var messageStream = CreateStreamWithMessage(response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _handler = new PeerReputationResponseHandler(_output, correlationCache, _logger);
+            _handler = new PeerReputationResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
         }
 
         public void Dispose()

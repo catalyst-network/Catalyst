@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -36,7 +35,7 @@ using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    internal partial class Commands
     {
         /// <inheritdoc cref="PeerReputationCommand" />
         public bool PeerReputationCommand(IPeerReputationOptions opts)
@@ -64,7 +63,7 @@ namespace Catalyst.Cli.Commands
 
                 Guard.Argument(node).NotNull();
 
-                var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                var requestMessage = _messageFactory.GetMessage(new MessageDto(
                     new GetPeerReputationRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -76,7 +75,7 @@ namespace Catalyst.Cli.Commands
                     _peerIdentifier
                 ));
 
-                node.SendMessage(requestMessage).Wait();
+                node.SendMessage(requestMessage);
             }
             catch (Exception e)
             {

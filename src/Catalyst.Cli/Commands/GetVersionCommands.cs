@@ -29,13 +29,12 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    internal partial class Commands
     {
         /// <inheritdoc cref="GetVersionCommand" />
         public bool GetVersionCommand(IGetVersionOptions opts)
@@ -58,7 +57,7 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                var request = _messageFactory.GetMessage(new MessageDto(
                     new VersionRequest
                     {
                         Query = true

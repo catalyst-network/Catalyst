@@ -43,7 +43,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <typeparam name="TResponse">The (CLR) type of the response we are receiving.</typeparam>
         /// <param name="response"></param>
         /// <returns></returns>
-        TRequest TryMatchResponse<TRequest, TResponse>(AnySigned response)
+        TRequest TryMatchResponse<TRequest, TResponse>(ProtocolMessage response)
             where TRequest : class, IMessage<TRequest>
             where TResponse : class, IMessage<TResponse>;
 

@@ -23,13 +23,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Cli.Handlers;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -48,11 +48,9 @@ namespace Catalyst.Cli.UnitTests
         public static List<object[]> QueryContents;
 
         private VerifyMessageResponseHandler _handler;
-        private static IRpcCorrelationCache _subbedCorrelationCache;
 
         static VerifyMessageResponseHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             QueryContents = new List<object[]>
             {
                 new object[]
@@ -75,9 +73,9 @@ namespace Catalyst.Cli.UnitTests
 
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public void RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
+        public async Task RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
         {
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new MessageFactory().GetMessage(new MessageDto(
                     new VerifyMessageResponse
                     {
                         IsSignedByKey = isSignedByNode
@@ -89,10 +87,11 @@ namespace Catalyst.Cli.UnitTests
                 Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
-            var cache = Substitute.For<IRpcCorrelationCache>();
 
-            _handler = new VerifyMessageResponseHandler(_output, cache, _logger);
+            _handler = new VerifyMessageResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             _output.Received(1).WriteLine(isSignedByNode.ToString());
         }

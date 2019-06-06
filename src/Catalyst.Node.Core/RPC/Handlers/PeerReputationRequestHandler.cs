@@ -23,11 +23,10 @@
 
 using System.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,7 +38,7 @@ using SharpRepository.Repository;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class PeerReputationRequestHandler
-        : CorrelatableMessageHandlerBase<GetPeerReputationRequest, IRpcCorrelationCache>,
+        : MessageHandlerBase<GetPeerReputationRequest>,
             IRpcRequestHandler
     {
         /// <summary>
@@ -47,15 +46,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
 
-        private IChanneledMessage<AnySigned> _message;
+        private IChanneledMessage<ProtocolMessage> _message;
         
         private readonly PeerId _peerId;
 
         public PeerReputationRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRpcCorrelationCache messageCorrelationCache,
             IRepository<Peer> peerRepository)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _peerId = peerIdentifier.PeerId;
             _peerRepository = peerRepository;
@@ -65,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Handlers the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull("Received message cannot be null");
 
@@ -87,7 +85,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         /// <param name="reputation"></param>
         /// <param name="message"></param>
-        private void ReturnResponse(int reputation, IChanneledMessage<AnySigned> message)
+        private void ReturnResponse(int reputation, IChanneledMessage<ProtocolMessage> message)
         {
             var response = new GetPeerReputationResponse
             {

@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
@@ -32,8 +33,11 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>AnySigned message</returns>
-        AnySigned GetMessage(IMessageDto messageDto,
+        /// <returns>ProtocolMessage message</returns>
+        ProtocolMessage GetMessage(IMessageDto messageDto,
+            Guid correlationId = default);
+        
+        IByteBufferHolder GetDatagramMessage(IMessageDto messageDto,
             Guid correlationId = default);
     }
 }

@@ -23,16 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Outbound;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Protocol.Common;
+using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -43,37 +39,27 @@ namespace Catalyst.Node.Core.P2P
         : UdpClient,
             IPeerClient
     {
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
-
+        public PeerClient(IPeerIdentifier peerIdentifier) : this(peerIdentifier.IpEndPoint) { }
+            
         /// <summary>
         /// 
         /// </summary>
         /// <param name="ipEndPoint"></param>
-        /// <param name="messageHandlers"></param>
-        public PeerClient(IPEndPoint ipEndPoint,
-            IEnumerable<IP2PMessageHandler> messageHandlers)
+        public PeerClient(IPEndPoint ipEndPoint)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            Logger.Debug("P2P client starting");
-
-            var protoDatagramChannelHandler = new ProtoDatagramChannelHandler();
-            MessageStream = protoDatagramChannelHandler.MessageStream;
-            messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
-
-            IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
-            {
-                protoDatagramChannelHandler
-            };
-
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
-                channelHandlers,
+                new List<IChannelHandler>
+                {
+                    new ProtoDatagramHandler()
+                },
                 ipEndPoint.Address
             ), ipEndPoint);
         }
 
-        public async Task SendMessage(IByteBufferHolder datagramPacket)
+        public void SendMessage(IByteBufferHolder datagramPacket)
         {
-            await Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
+            Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
         }
     }
 }

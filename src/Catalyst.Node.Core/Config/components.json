@@ -10,18 +10,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Rpc.RpcCorrelationCache, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.MessageFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcCorrelationCache, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.Rpc.RpcMessageFactory, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcMessageFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageFactory, Catalyst.Common"
                 }
             ]
         },
@@ -42,10 +34,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Messaging.P2PCorrelationCache",
+            "type": "Catalyst.Common.IO.Messaging.CorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IReputableCache, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.ICorrelationManager, Catalyst.Common"
                 }
             ]
         },
@@ -77,15 +69,15 @@
             "type": "Catalyst.Common.KeyStore.KeyStoreServiceWrapped, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStoreWrapper, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.KeyStore.IKeyStoreService, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",
+            "type": "Catalyst.Common.Util.AddressHelper, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Cli.IUserOutput, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Util.IAddressHelper, Catalyst.Common"
                 }
             ]
         },
@@ -154,10 +146,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.P2PService",
+            "type": "Catalyst.Node.Core.P2P.PeerService",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IP2PService, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService, Catalyst.Common"
                 }
             ]
         },
@@ -185,6 +177,7 @@
                 }
             ]
         },
+        // WHY USE CLI BASED CLASS AND NOT IN COMMON???
         {
             "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",
             "services": [
@@ -215,6 +208,31 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.FileTransfer.IDownloadFileTransferFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipManager, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.IO.Inbound.GossipHandler, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipCache",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipCache, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

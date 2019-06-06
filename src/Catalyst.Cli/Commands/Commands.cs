@@ -30,11 +30,11 @@ using Catalyst.Cli.Rpc;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO;
+using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Shell;
@@ -47,7 +47,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Cli.Commands
 {
     /// <inheritdoc cref="ShellBase" />
-    public sealed partial class Commands : ShellBase, IAdvancedShell
+    internal sealed partial class Commands : ShellBase, IAdvancedShell
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly ICertificateStore _certificateStore;
@@ -58,20 +58,20 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
-        private readonly IRpcCorrelationCache _rpcMessageCorrelationCache;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>
         /// </summary>
-        public Commands(INodeRpcClientFactory nodeRpcClientFactory,
+        public Commands(IMessageFactory messageFactory,
+            INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
             ICertificateStore certificateStore,
-            IRpcCorrelationCache rpcMessageCorrelationCache,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)
         {
-            _rpcMessageCorrelationCache = rpcMessageCorrelationCache;
+            _messageFactory = messageFactory;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _logger = logger;
@@ -94,12 +94,13 @@ namespace Catalyst.Cli.Commands
                     GetVersionOptions,
                     GetMempoolOptions,
                     ConnectOptions,
-                    SignOptions,
+                    SignOptions, 
                     VerifyOptions,
                     PeerListOptions,
                     PeerCountOptions,
                     RemovePeerOptions,
                     PeerReputationOptions,
+                    PeerBlackListingOptions,
                     AddFileOnDfsOptions,
                     GetFileOptions>(args)
                .MapResult(
@@ -112,6 +113,7 @@ namespace Catalyst.Cli.Commands
                     (PeerCountOptions opts) => PeerCountCommand(opts),
                     (RemovePeerOptions opts) => PeerRemoveCommand(opts),
                     (PeerReputationOptions opts) => PeerReputationCommand(opts),
+                    (PeerBlackListingOptions opts) => PeerBlackListingCommand(opts),
                     (AddFileOnDfsOptions opts) => DfsAddFile(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (ConnectOptions opts) => DisconnectNode(opts.NodeId),
@@ -178,7 +180,8 @@ namespace Catalyst.Cli.Commands
             var node = _socketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(node, nameof(node)).Require(IsSocketChannelActive(node));
 
-            node.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
+            node.Dispose();
+            _socketClientRegistry.RemoveClientFromRegistry(registryId);
 
             return true;
         }

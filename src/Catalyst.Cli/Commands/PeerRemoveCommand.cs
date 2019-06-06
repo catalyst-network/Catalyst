@@ -30,7 +30,6 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
@@ -38,7 +37,7 @@ using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    internal partial class Commands
     {
         /// <inheritdoc cref="PeerRemoveCommand" />
         public bool PeerRemoveCommand(IRemovePeerOptions opts)
@@ -59,7 +58,7 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = GetNodeConfig(opts.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
-            var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+            var requestMessage = _messageFactory.GetMessage(new MessageDto(
                 new RemovePeerRequest
                 {
                     PeerIp = ByteString.CopyFrom(IPAddress.Parse(opts.Ip).To16Bytes()),
@@ -73,7 +72,7 @@ namespace Catalyst.Cli.Commands
                 _peerIdentifier
             ));
 
-            node.SendMessage(requestMessage).Wait();
+            node.SendMessage(requestMessage);
 
             return true;
         }

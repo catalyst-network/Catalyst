@@ -35,6 +35,10 @@ namespace Catalyst.Common.Interfaces.P2P
         /// <value>The reputation.</value>
         int Reputation { get; }
 
+        /// <summary>Gets the blacklisting state of the peer.</summary>
+        /// <value>The black listing flag.</value>
+        bool BlackListed { get; set; }
+
         /// <summary>Gets the last seen.</summary>
         /// <value>The last seen.</value>
         DateTime LastSeen { get; }

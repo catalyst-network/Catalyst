@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Mempool
             var newContent =
                 originalContent.Replace("\"Config/Modules/mempool.json\"",
                     JsonConvert.ToString(mempoolConfigFile.FullName));
-            var newJsonPath = Path.Combine(FileSystem.GetCatalystHomeDir().FullName,
+            var newJsonPath = Path.Combine(FileSystem.GetCatalystDataDir().FullName,
                 $"components.{mempoolConfigFile.Name}");
             File.WriteAllText(newJsonPath, newContent);
             return newJsonPath;

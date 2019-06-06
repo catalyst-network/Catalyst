@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -27,9 +27,9 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public sealed class PendingRequest
+    public class PendingRequest
     {
-        public AnySigned Content { get; set; }
+        public ProtocolMessage Content { get; set; }
         public IPeerIdentifier Recipient { get; set; }
         public DateTimeOffset SentAt { get; set; }
     }

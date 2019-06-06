@@ -28,13 +28,12 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed partial class Commands
+    internal sealed partial class Commands
     {
         /// <inheritdoc cref="GetInfoCommand" />
         public bool GetInfoCommand(IGetInfoOptions opts)
@@ -58,7 +57,7 @@ namespace Catalyst.Cli.Commands
             try
             {
                 var message = new GetInfoRequest {Query = true};
-                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(message,
+                var request = _messageFactory.GetMessage(new MessageDto(message,
                     MessageTypes.Ask,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
                     _peerIdentifier

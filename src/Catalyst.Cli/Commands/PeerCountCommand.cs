@@ -28,13 +28,12 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    internal partial class Commands
     {
         /// <inheritdoc cref="PeerCountCommand" />
         public bool PeerCountCommand(IPeerCountOptions opts)
@@ -57,7 +56,7 @@ namespace Catalyst.Cli.Commands
             
             try
             {
-                var requestMessage = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                var requestMessage = _messageFactory.GetMessage(new MessageDto(
                     new GetPeerCountRequest(),
                     MessageTypes.Ask,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
@@ -65,7 +64,7 @@ namespace Catalyst.Cli.Commands
                     _peerIdentifier
                 ));
 
-                node.SendMessage(requestMessage).Wait();
+                node.SendMessage(requestMessage);
             }
             catch (Exception e)
             {

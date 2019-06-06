@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -36,7 +35,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Cli.Commands
 {
-    public partial class Commands
+    internal partial class Commands
     {
         /// <inheritdoc cref="MessageSignCommand" />
         public bool MessageSignCommand(ISignOptions opts)
@@ -59,7 +58,7 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = new RpcMessageFactory(_rpcMessageCorrelationCache).GetMessage(new MessageDto(
+                var request = _messageFactory.GetMessage(new MessageDto(
                     new SignMessageRequest
                     {
                         Message = ByteString.CopyFrom(opts.Message.Trim('\"'), Encoding.UTF8)
@@ -70,7 +69,7 @@ namespace Catalyst.Cli.Commands
                         nodeConfig.Port),
                     _peerIdentifier
                 ));
-                node.SendMessage(request).Wait();
+                node.SendMessage(request);
             }
             catch (Exception e)
             {
